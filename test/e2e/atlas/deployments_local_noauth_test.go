@@ -114,9 +114,6 @@ func TestDeploymentsLocal(t *testing.T) {
 
 	ctx := context.Background()
 	const localFile = "sampledata.archive"
-	var client *mongo.Client
-	var myDB *mongo.Database
-	var myCol *mongo.Collection
 	var connectionString string
 
 	t.Run("Get connection string", func(t *testing.T) {
@@ -283,14 +280,12 @@ func TestDeploymentsLocal(t *testing.T) {
 	})
 
 	t.Run("Test Search Index", func(t *testing.T) {
-		client, err = mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
+		client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
 		require.NoError(t, err)
-		myDB = client.Database(databaseName)
-		myCol = myDB.Collection(collectionName)
 		t.Cleanup(func() {
 			require.NoError(t, client.Disconnect(ctx))
 		})
-		c, err := myCol.Aggregate(ctx, bson.A{
+		c, err := client.Database(databaseName).Collection(collectionName).Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
 					"index": searchIndexName,
@@ -315,6 +310,8 @@ func TestDeploymentsLocal(t *testing.T) {
 		err = json.Unmarshal(b, &pipeline)
 		req.NoError(err)
 
+		client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
+		require.NoError(t, err)
 		c, err := client.Database(vectorSearchDB).Collection(vectorSearchCol).Aggregate(ctx, pipeline)
 		req.NoError(err)
 		var results []bson.M

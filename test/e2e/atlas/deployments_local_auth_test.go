@@ -18,6 +18,7 @@ package atlas_test
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -207,6 +208,33 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		assert.Contains(t, out, "Search index created with ID:")
 	})
 
+	t.Run("Create vectorSearch Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"create",
+			"--deploymentName",
+			deploymentName,
+			"--username",
+			dbUsername,
+			"--password",
+			dbUserPassword,
+			"--type",
+			"local",
+			"--file",
+			"data/sample_vector_search.json",
+			"-w",
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := e2e.RunAndGetStdOut(cmd)
+		out := string(r)
+		require.NoError(t, err, out)
+		assert.Contains(t, out, "Search index created with ID:")
+	})
+
 	var indexID string
 
 	t.Run("Index List", func(t *testing.T) {
@@ -268,9 +296,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		t.Cleanup(func() {
 			require.NoError(t, client.Disconnect(ctx))
 		})
-		db := client.Database(databaseName)
-		col := db.Collection(collectionName)
-		c, err := col.Aggregate(ctx, bson.A{
+		c, err := client.Database(databaseName).Collection(collectionName).Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
 					"index": searchIndexName,
@@ -295,6 +321,30 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		var results []bson.M
 		require.NoError(t, c.All(ctx, &results))
 		assert.Len(t, results, 5)
+	})
+
+	t.Run("Test vectorSearch Index", func(t *testing.T) {
+		b, err := os.ReadFile("data/sample_vector_search_pipeline.json")
+		req.NoError(err)
+
+		var pipeline []map[string]any
+		err = json.Unmarshal(b, &pipeline)
+		req.NoError(err)
+
+		client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
+		req.NoError(err)
+		t.Cleanup(func() {
+			require.NoError(t, client.Disconnect(ctx))
+		})
+		c, err := client.Database(vectorSearchDB).Collection(vectorSearchCol).Aggregate(ctx, pipeline)
+		req.NoError(err)
+		var results []bson.M
+		req.NoError(c.All(ctx, &results))
+		t.Log(results)
+		req.Len(results, 3)
+		for _, v := range results {
+			req.Greater(v["score"], float64(0))
+		}
 	})
 
 	t.Run("Delete Index", func(t *testing.T) {

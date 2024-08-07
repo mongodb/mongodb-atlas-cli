@@ -59,7 +59,7 @@ Options
    * - --all
      - 
      - false
-     - Update all plugins.
+     - update all plugins
    * - -h, --help
      - 
      - false

@@ -45,6 +45,10 @@ var (
 	errCreatePluginAssetFromPlugin  = errors.New("failed to create plugin asset from plugin")
 )
 
+const (
+	latest = "latest"
+)
+
 type GithubAsset struct {
 	ghClient *github.Client
 	owner    string
@@ -56,14 +60,15 @@ func (g *GithubAsset) repository() string {
 	return fmt.Sprintf("%s/%s", g.owner, g.name)
 }
 
-func createGithubAssetFromPlugin(p *plugin.Plugin) (*GithubAsset, error) {
+func createGithubAssetFromPlugin(p *plugin.Plugin, version *semver.Version) (*GithubAsset, error) {
 	if !p.HasGithub() {
 		return nil, errCreatePluginAssetFromPlugin
 	}
 
 	return &GithubAsset{
-		owner: p.Github.Owner,
-		name:  p.Github.Name,
+		owner:   p.Github.Owner,
+		name:    p.Github.Name,
+		version: version,
 	}, nil
 }
 
@@ -91,7 +96,7 @@ func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 		}
 
 		if err != nil {
-			return nil, fmt.Errorf("could not find the release %s release for %s", g.name, g.repository())
+			return nil, fmt.Errorf("could not find the release %s for %s", g.version, g.repository())
 		}
 	}
 
@@ -147,7 +152,7 @@ func parseGithubReleaseValues(arg string) (*GithubAsset, error) {
 
 	githubRelease := &GithubAsset{owner: groupMap["owner"], name: groupMap["name"]}
 
-	if version, ok := groupMap["version"]; ok && version != "latest" && version != "" {
+	if version, ok := groupMap["version"]; ok && version != latest && version != "" {
 		semverVersion, err := semver.NewVersion(version)
 		if err != nil {
 			return nil, fmt.Errorf(`the specified version "%s" is invalid, it needs to follow the rules of Semantic Versioning`, version)

@@ -198,6 +198,8 @@ func Test_parseGithubRepoValues(t *testing.T) {
 }
 
 func Test_createGithubAssetFromPlugin(t *testing.T) {
+	var expectedVersion, _ = semver.NewVersion("1.0.0")
+
 	tests := []struct {
 		name        string
 		plugin      *plugin.Plugin
@@ -214,8 +216,9 @@ func Test_createGithubAssetFromPlugin(t *testing.T) {
 			},
 			expectedErr: nil,
 			expected: &GithubAsset{
-				owner: "test-owner",
-				name:  "test-repo",
+				owner:   "test-owner",
+				name:    "test-repo",
+				version: expectedVersion,
 			},
 		},
 		{
@@ -228,14 +231,14 @@ func Test_createGithubAssetFromPlugin(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := createGithubAssetFromPlugin(tt.plugin)
+			got, err := createGithubAssetFromPlugin(tt.plugin, expectedVersion)
 
 			if !errors.Is(err, tt.expectedErr) {
 				t.Errorf("expected error: %v, got: %v", tt.expectedErr, err)
 			}
 
 			if err == nil && tt.expected != nil {
-				if got.owner != tt.expected.owner || got.name != tt.expected.name {
+				if got.owner != tt.expected.owner || got.name != tt.expected.name || !got.version.Equal(expectedVersion) {
 					t.Errorf("expected: %v, got: %v", tt.expected, got)
 				}
 			}

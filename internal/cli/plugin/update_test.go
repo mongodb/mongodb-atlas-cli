@@ -17,40 +17,17 @@
 package plugin
 
 import (
-	"bytes"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
-func TestLoginBuilder(t *testing.T) {
+func Test_UpdateBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		ListBuilder(&Opts{}),
+		UpdateBuilder(&Opts{}),
 		0,
-		[]string{},
+		[]string{flag.All},
 	)
-}
-
-func TestList_Run(t *testing.T) {
-	plugins := getTestPlugins(t)
-
-	listOpts := &ListOps{
-		Opts: Opts{
-			plugins: plugins,
-		},
-		OutputOpts: cli.OutputOpts{
-			Template:  listTemplate,
-			OutWriter: new(bytes.Buffer),
-		},
-	}
-
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-}
-
-func TestList_Template(t *testing.T) {
-	test.VerifyOutputTemplate(t, listTemplate, getTestPlugins(t))
 }

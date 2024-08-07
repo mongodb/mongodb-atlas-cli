@@ -19,16 +19,24 @@ package plugin
 import (
 	"testing"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/require"
 )
 
-func getTestPlugins() []*plugin.Plugin {
+func getTestPlugins(t *testing.T) []*plugin.Plugin {
+	t.Helper()
+	version1, err := semver.NewVersion("1.4.5")
+	require.NoError(t, err)
+	version2, err := semver.NewVersion("1.2.3")
+	require.NoError(t, err)
+
 	return []*plugin.Plugin{
 		{
 			Name:        "plugin1",
 			Description: "plugin1 description",
-			Version:     "1.4.5",
+			Version:     version1,
 			Commands: []*plugin.Command{
 				{Name: "command1"},
 				{Name: "command 2"},
@@ -41,7 +49,7 @@ func getTestPlugins() []*plugin.Plugin {
 		{
 			Name:        "plugin2",
 			Description: "plugin2 description",
-			Version:     "1.2.3",
+			Version:     version2,
 			Commands: []*plugin.Command{
 				{Name: "command3"},
 				{Name: "command4"},
@@ -54,7 +62,7 @@ func getTestPlugins() []*plugin.Plugin {
 		{
 			Name:        "plugin3",
 			Description: "plugin3 description",
-			Version:     "1.2.3",
+			Version:     version2,
 			Commands: []*plugin.Command{
 				{Name: "command5"},
 				{Name: "command6"},
@@ -67,25 +75,78 @@ func getTestPlugins() []*plugin.Plugin {
 	}
 }
 
+func Test_findPluginWithArg(t *testing.T) {
+	tests := []struct {
+		name    string
+		arg     string
+		want    string
+		wantErr bool
+	}{
+		{
+			name:    "Plugin found with plugin name",
+			arg:     "plugin3",
+			want:    "plugin3",
+			wantErr: false,
+		},
+		{
+			name:    "Plugin found with github values",
+			arg:     "owner1/repo1@v1",
+			want:    "plugin1",
+			wantErr: false,
+		},
+		{
+			name:    "Plugin found with github URL",
+			arg:     "https://github.com/owner2/repo2/",
+			want:    "plugin2",
+			wantErr: false,
+		},
+		{
+			name:    "Plugin not found",
+			arg:     "this is not a valid args",
+			want:    "",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := &Opts{
+				plugins: getTestPlugins(t),
+			}
+			got, err := opts.findPluginWithArg(tt.arg)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("findPluginByGithubValues() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != nil && got.Name != tt.want {
+				t.Errorf("findPluginByGithubValues() = %v, want %v", got.Name, tt.want)
+			}
+			if got == nil && tt.want != "" {
+				t.Errorf("findPluginByGithubValues() = nil, want %v", tt.want)
+			}
+		})
+	}
+}
+
 func Test_findPluginWithGithubValues(t *testing.T) {
 	tests := []struct {
 		name      string
-		owner     string
-		nameValue string
+		repoOwner string
+		repoName  string
 		want      string
 		wantErr   bool
 	}{
 		{
 			name:      "Plugin found",
-			owner:     "owner3",
-			nameValue: "repo3",
+			repoOwner: "owner3",
+			repoName:  "repo3",
 			want:      "plugin3",
 			wantErr:   false,
 		},
 		{
 			name:      "Plugin not found",
-			owner:     "owner4",
-			nameValue: "repo4",
+			repoOwner: "owner4",
+			repoName:  "repo4",
 			want:      "",
 			wantErr:   true,
 		},
@@ -94,9 +155,9 @@ func Test_findPluginWithGithubValues(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			opts := &Opts{
-				plugins: getTestPlugins(),
+				plugins: getTestPlugins(t),
 			}
-			got, err := opts.findPluginWithGithubValues(tt.owner, tt.nameValue)
+			got, err := opts.findPluginWithGithubValues(tt.repoOwner, tt.repoName)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("findPluginByGithubValues() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -135,7 +196,7 @@ func Test_findPluginWithName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
 			opts := &Opts{
-				plugins: getTestPlugins(),
+				plugins: getTestPlugins(t),
 			}
 			got, err := opts.findPluginWithName(tt.name)
 			if (err != nil) != tt.wantErr {
@@ -152,11 +213,27 @@ func Test_findPluginWithName(t *testing.T) {
 	}
 }
 
+func Test_validateManifest(t *testing.T) {
+	validManifest := &plugin.Manifest{
+		Name:        "name",
+		Description: "description",
+		Binary:      "binary",
+		Version:     "1.0.0",
+		Commands: map[string]plugin.ManifestCommand{
+			"command1": {Description: "command description"},
+		},
+	}
+	invalidManifest := &plugin.Manifest{}
+
+	require.NoError(t, validateManifest(validManifest))
+	require.Error(t, validateManifest(invalidManifest))
+}
+
 func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		Builder(nil, nil),
-		3,
+		4,
 		[]string{},
 	)
 }

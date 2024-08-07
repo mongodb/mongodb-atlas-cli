@@ -31,7 +31,6 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v61/github"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -43,55 +42,63 @@ var (
 	errCreatePluginZipFile          = errors.New("could not create plugin zip file")
 	errSaveAssetToPluginDir         = errors.New("failed to save asset to plugin directory")
 	errCreateDirToExtractAssetFiles = errors.New("failed to create to plugin directory to extract assets in")
+	errCreatePluginAssetFromPlugin  = errors.New("failed to create plugin asset from plugin")
 )
 
-type GithubRelease struct {
-	owner   string
-	name    string
-	version *semver.Version
+type GithubAsset struct {
+	ghClient *github.Client
+	owner    string
+	name     string
+	version  *semver.Version
 }
 
-type AssetOpts struct {
-	existingCommands []*cobra.Command
-	ghClient         *github.Client
-	githubRelease    *GithubRelease
+func (g *GithubAsset) repository() string {
+	return fmt.Sprintf("%s/%s", g.owner, g.name)
 }
 
-func (opts *AssetOpts) repository() string {
-	if opts.githubRelease == nil {
-		return ""
+func createGithubAssetFromPlugin(p *plugin.Plugin) (*GithubAsset, error) {
+	if !p.HasGithub() {
+		return nil, errCreatePluginAssetFromPlugin
 	}
-	return fmt.Sprintf("%s/%s", opts.githubRelease.owner, opts.githubRelease.name)
+
+	return &GithubAsset{
+		owner: p.Github.Owner,
+		name:  p.Github.Name,
+	}, nil
 }
 
-func (opts *AssetOpts) getPluginAssetInfo() ([]*github.ReleaseAsset, error) {
+func (g *GithubAsset) getPluginDirectoryName() string {
+	return fmt.Sprintf("%s@%s", g.owner, g.name)
+}
+
+func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 	var err error
 	var release *github.RepositoryRelease
 
 	// download latest release if version is not specified
-	if opts.githubRelease.version == nil {
-		release, _, err = opts.ghClient.Repositories.GetLatestRelease(context.Background(), opts.githubRelease.owner, opts.githubRelease.name)
+	if g.version == nil {
+		release, _, err = g.ghClient.Repositories.GetLatestRelease(context.Background(), g.owner, g.name)
 
 		if err != nil {
-			return nil, fmt.Errorf("could not find latest release for %s", opts.repository())
+			return nil, fmt.Errorf("could not find latest release for %s", g.repository())
 		}
 	} else {
 		// try to find the release with the version tag with v prefix, if it does not exist try again without the prefix
-		release, _, err = opts.ghClient.Repositories.GetReleaseByTag(context.Background(), opts.githubRelease.owner, opts.githubRelease.name, "v"+opts.githubRelease.version.String())
+		release, _, err = g.ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, "v"+g.version.String())
 
 		if release == nil || err != nil {
-			release, _, err = opts.ghClient.Repositories.GetReleaseByTag(context.Background(), opts.githubRelease.owner, opts.githubRelease.name, opts.githubRelease.version.String())
+			release, _, err = g.ghClient.Repositories.GetReleaseByTag(context.Background(), g.owner, g.name, g.version.String())
 		}
 
 		if err != nil {
-			return nil, fmt.Errorf("could not find the release %s release for %s", opts.githubRelease.name, opts.repository())
+			return nil, fmt.Errorf("could not find the release %s release for %s", g.name, g.repository())
 		}
 	}
 
 	return release.Assets, nil
 }
 
-func (opts *AssetOpts) getAssetID(assets []*github.ReleaseAsset) (int64, error) {
+func (g *GithubAsset) getID(assets []*github.ReleaseAsset) (int64, error) {
 	operatingSystem, architecture := runtime.GOOS, runtime.GOARCH
 	for _, asset := range assets {
 		if *asset.ContentType != "application/gzip" {
@@ -104,20 +111,20 @@ func (opts *AssetOpts) getAssetID(assets []*github.ReleaseAsset) (int64, error) 
 		}
 	}
 
-	return 0, fmt.Errorf("could not find an asset to download from %s for %s %s", opts.repository(), operatingSystem, architecture)
+	return 0, fmt.Errorf("could not find an asset to download from %s for %s %s", g.repository(), operatingSystem, architecture)
 }
 
-func (opts *AssetOpts) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser, error) {
-	rc, _, err := opts.ghClient.Repositories.DownloadReleaseAsset(context.Background(), opts.githubRelease.owner, opts.githubRelease.name, assetID, http.DefaultClient)
+func (g *GithubAsset) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser, error) {
+	rc, _, err := g.ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, assetID, http.DefaultClient)
 
 	if err != nil {
-		return nil, fmt.Errorf("could not download asset with ID %d from %s", assetID, opts.repository())
+		return nil, fmt.Errorf("could not download asset with ID %d from %s", assetID, g.repository())
 	}
 
 	return rc, nil
 }
 
-func parseGithubReleaseValues(arg string) (*GithubRelease, error) {
+func parseGithubReleaseValues(arg string) (*GithubAsset, error) {
 	regexPattern := `^((https?://(www\.)?)?github\.com/)?(?P<owner>[\w.\-]+)/(?P<name>[\w.\-]+)/?(@(?P<version>v?(\d+)(\.\d+)?(\.\d+)?|latest))?$`
 	regex, err := regexp.Compile(regexPattern)
 	if err != nil {
@@ -138,7 +145,7 @@ func parseGithubReleaseValues(arg string) (*GithubRelease, error) {
 		groupMap[names[i]] = match
 	}
 
-	githubRelease := &GithubRelease{owner: groupMap["owner"], name: groupMap["name"]}
+	githubRelease := &GithubAsset{owner: groupMap["owner"], name: groupMap["name"]}
 
 	if version, ok := groupMap["version"]; ok && version != "latest" && version != "" {
 		semverVersion, err := semver.NewVersion(version)
@@ -235,13 +242,13 @@ func saveReadCloserToPluginAssetZipFile(rc io.ReadCloser) (string, error) {
 	return pluginZipFilePath, nil
 }
 
-func (opts *AssetOpts) extractPluginAssetZipFile(pluginZipFilePath string) (string, error) {
+func extractPluginAssetZipFile(pluginZipFilePath string, pluginDirectoryName string) (string, error) {
 	pluginsDefaultDirectory, err := plugin.GetDefaultPluginDirectory()
 	if err != nil {
 		return "", err
 	}
 
-	pluginDirectoryPath := filepath.Join(pluginsDefaultDirectory, fmt.Sprintf("%s@%s", opts.githubRelease.owner, opts.githubRelease.name))
+	pluginDirectoryPath := filepath.Join(pluginsDefaultDirectory, pluginDirectoryName)
 	err = os.MkdirAll(pluginDirectoryPath, os.ModePerm)
 	if err != nil {
 		return "", errCreateDirToExtractAssetFiles

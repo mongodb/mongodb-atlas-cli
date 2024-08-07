@@ -19,28 +19,17 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
 
 type UninstallOpts struct {
 	cli.OutputOpts
 	Opts
-	pluginName string
+	pluginArg string
 }
 
 func (opts *UninstallOpts) Run() error {
-	// try to parse input to github values
-	// if parsing fails it will be assumed that the input is the plugin name
-	githubValues, err := parseGithubReleaseValues(opts.pluginName)
-	var pluginToUninstall *plugin.Plugin
-
-	if err == nil {
-		pluginToUninstall, err = opts.findPluginWithGithubValues(githubValues.owner, githubValues.name)
-	} else {
-		pluginToUninstall, err = opts.findPluginWithName(opts.pluginName)
-	}
-
+	pluginToUninstall, err := opts.findPluginWithArg(opts.pluginArg)
 	if err != nil {
 		return err
 	}
@@ -53,12 +42,9 @@ func (opts *UninstallOpts) Run() error {
 	return opts.Print(fmt.Sprintf("Plugin %s uninstalled successfully", pluginToUninstall.Name))
 }
 
-func UninstallBuilder(plugins []*plugin.Plugin) *cobra.Command {
-	opts := &UninstallOpts{
-		Opts: Opts{
-			plugins: plugins,
-		},
-	}
+func UninstallBuilder(pluginOpts *Opts) *cobra.Command {
+	opts := &UninstallOpts{}
+	opts.Opts = *pluginOpts
 
 	const use = "uninstall"
 	cmd := &cobra.Command{
@@ -76,7 +62,7 @@ You can specify a plugin to uninstall using either the "<github-owner>/<github-r
   atlas plugin uninstall mongodb/atlas-cli-plugin-example
   atlas plugin uninstall atlas-cli-plugin-example`,
 		PreRun: func(_ *cobra.Command, arg []string) {
-			opts.pluginName = arg[0]
+			opts.pluginArg = arg[0]
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()

@@ -21,6 +21,7 @@ import (
 	"os/exec"
 	"path"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/cobra"
@@ -77,7 +78,12 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	// Convert manifests to plugins
 	plugins := make([]*Plugin, 0, len(manifests))
 	for _, manifest := range manifests {
-		plugins = append(plugins, createPluginFromManifest(manifest))
+		plugin, err := createPluginFromManifest(manifest)
+		if err != nil {
+			logPluginWarning(err.Error())
+			continue
+		}
+		plugins = append(plugins, plugin)
 	}
 
 	return plugins
@@ -123,7 +129,7 @@ type Plugin struct {
 	Description         string
 	PluginDirectoryPath string
 	BinaryName          string
-	Version             string
+	Version             *semver.Version
 	Commands            []*Command
 	Github              *Github
 }
@@ -145,6 +151,10 @@ func (p *Plugin) Uninstall() error {
 	return os.RemoveAll(p.PluginDirectoryPath)
 }
 
+func (p *Plugin) HasGithub() bool {
+	return p.Github != nil && p.Github.Name != "" && p.Github.Owner != ""
+}
+
 func (p *Plugin) GetCobraCommands() []*cobra.Command {
 	commands := make([]*cobra.Command, 0, len(p.Commands))
 
@@ -153,7 +163,8 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 			Use:   pluginCmd.Name,
 			Short: pluginCmd.Description,
 			Annotations: map[string]string{
-				"sourceType": SourceType,
+				"sourceType":       SourceType,
+				"sourcePluginName": p.Name,
 			},
 			RunE: p.Run,
 		}
@@ -164,13 +175,18 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 	return commands
 }
 
-func createPluginFromManifest(manifest *Manifest) *Plugin {
+func createPluginFromManifest(manifest *Manifest) (*Plugin, error) {
+	version, err := semver.NewVersion(manifest.Version)
+	if err != nil {
+		return nil, fmt.Errorf("invalid version in manifest file %s", manifest.Name)
+	}
+
 	plugin := Plugin{
 		Name:                manifest.Name,
 		Description:         manifest.Description,
 		PluginDirectoryPath: manifest.PluginDirectoryPath,
 		BinaryName:          manifest.Binary,
-		Version:             manifest.Version,
+		Version:             version,
 		Commands:            make([]*Command, 0, len(manifest.Commands)),
 	}
 
@@ -185,7 +201,7 @@ func createPluginFromManifest(manifest *Manifest) *Plugin {
 		plugin.Commands = append(plugin.Commands, &Command{Name: cmdName, Description: value.Description})
 	}
 
-	return &plugin
+	return &plugin, nil
 }
 
 func logPluginWarning(message string, args ...any) {

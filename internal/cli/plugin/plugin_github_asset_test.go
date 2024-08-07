@@ -17,22 +17,25 @@
 package plugin
 
 import (
+	"errors"
 	"fmt"
 	"runtime"
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v61/github"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_repository(t *testing.T) {
-	opts := &AssetOpts{githubRelease: &GithubRelease{owner: "repoOwner", name: "repoName"}}
+	opts := &GithubAsset{owner: "repoOwner", name: "repoName"}
 
-	assert.Equal(t, opts.githubRelease.owner+"/"+opts.githubRelease.name, opts.repository())
+	assert.Equal(t, opts.owner+"/"+opts.name, opts.repository())
 }
 
-func Test_getAssetID(t *testing.T) {
+func Test_getID(t *testing.T) {
 	validAssetName := fmt.Sprintf("plugin_%s_%s", runtime.GOOS, runtime.GOARCH)
 
 	tests := []struct {
@@ -81,9 +84,9 @@ func Test_getAssetID(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			opts := &AssetOpts{}
+			opts := &GithubAsset{}
 
-			assetID, err := opts.getAssetID(tt.pluginAssets)
+			assetID, err := opts.getID(tt.pluginAssets)
 			if (err != nil) != tt.expectError {
 				t.Errorf("expected error: %v, got: %v", tt.expectError, err)
 			}
@@ -192,4 +195,55 @@ func Test_parseGithubRepoValues(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_createGithubAssetFromPlugin(t *testing.T) {
+	tests := []struct {
+		name        string
+		plugin      *plugin.Plugin
+		expectedErr error
+		expected    *GithubAsset
+	}{
+		{
+			name: "Plugin with GitHub values",
+			plugin: &plugin.Plugin{
+				Github: &plugin.Github{
+					Owner: "test-owner",
+					Name:  "test-repo",
+				},
+			},
+			expectedErr: nil,
+			expected: &GithubAsset{
+				owner: "test-owner",
+				name:  "test-repo",
+			},
+		},
+		{
+			name:        "Plugin without GitHub values",
+			plugin:      &plugin.Plugin{},
+			expectedErr: errCreatePluginAssetFromPlugin,
+			expected:    nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := createGithubAssetFromPlugin(tt.plugin)
+
+			if !errors.Is(err, tt.expectedErr) {
+				t.Errorf("expected error: %v, got: %v", tt.expectedErr, err)
+			}
+
+			if err == nil && tt.expected != nil {
+				if got.owner != tt.expected.owner || got.name != tt.expected.name {
+					t.Errorf("expected: %v, got: %v", tt.expected, got)
+				}
+			}
+		})
+	}
+}
+
+func Test_getPluginDirectoryName(t *testing.T) {
+	githubAsset := &GithubAsset{owner: "owner", name: "name"}
+	require.Equal(t, "owner@name", githubAsset.getPluginDirectoryName())
 }

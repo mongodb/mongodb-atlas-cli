@@ -15,7 +15,9 @@
 package plugin
 
 import (
+	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
@@ -23,7 +25,29 @@ import (
 )
 
 type Opts struct {
-	plugins []*plugin.Plugin
+	plugins          []*plugin.Plugin
+	existingCommands []*cobra.Command
+}
+
+// finding a plugin given the input argument of a plugin command
+// the input arg can be the plugin name, the github values (<repo-owner>/<repo-name>) or the entire github URL of the plugin.
+func (opts *Opts) findPluginWithArg(arg string) (*plugin.Plugin, error) {
+	// try to parse input to github values
+	// if parsing fails it will be assumed that the input is the plugin name
+	githubValues, err := parseGithubReleaseValues(arg)
+	var pluginToUninstall *plugin.Plugin
+
+	if err == nil {
+		pluginToUninstall, err = opts.findPluginWithGithubValues(githubValues.owner, githubValues.name)
+	} else {
+		pluginToUninstall, err = opts.findPluginWithName(arg)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pluginToUninstall, nil
 }
 
 func (opts *Opts) findPluginWithGithubValues(owner string, name string) (*plugin.Plugin, error) {
@@ -54,6 +78,19 @@ func RegisterCommands(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(Builder(plugins, rootCmd.Commands()))
 }
 
+func validateManifest(manifest *plugin.Manifest) error {
+	if valid, errorList := manifest.IsValid(); !valid {
+		var manifestErrorLog strings.Builder
+		manifestErrorLog.WriteString(fmt.Sprintf("plugin in directory \"%s\" could not be loaded due to the following error(s) in the manifest.yaml:\n", manifest.PluginDirectoryPath))
+		for _, err := range errorList {
+			manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
+		}
+
+		return errors.New(manifestErrorLog.String())
+	}
+	return nil
+}
+
 func Builder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra.Command {
 	const use = "plugin"
 	cmd := &cobra.Command{
@@ -62,10 +99,16 @@ func Builder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra
 		Short:   "Manage plugins for the AtlasCLI.",
 	}
 
+	pluginOpts := &Opts{
+		plugins:          plugins,
+		existingCommands: existingCommands,
+	}
+
 	cmd.AddCommand(
-		ListBuilder(plugins),
-		InstallBuilder(plugins, existingCommands),
-		UninstallBuilder(plugins),
+		ListBuilder(pluginOpts),
+		InstallBuilder(pluginOpts),
+		UninstallBuilder(pluginOpts),
+		UpdateBuilder(pluginOpts),
 	)
 
 	return cmd

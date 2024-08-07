@@ -19,6 +19,7 @@ package plugin
 import (
 	"testing"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -28,7 +29,7 @@ import (
 func Test_InstallBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
-		InstallBuilder(nil, nil),
+		InstallBuilder(&Opts{}),
 		0,
 		[]string{},
 	)
@@ -38,11 +39,16 @@ func Test_checkForDuplicatePlugins(t *testing.T) {
 	github1 := &plugin.Github{Name: "repoName1", Owner: "repoOwner1"}
 	github2 := &plugin.Github{Name: "repoName2", Owner: "repoOwner2"}
 
+	version1, err := semver.NewVersion("1.4.5")
+	require.NoError(t, err)
+	version2, err := semver.NewVersion("1.2.3")
+	require.NoError(t, err)
+
 	plugins := []*plugin.Plugin{
 		{
 			Name:        "plugin1",
 			Description: "plugin1 description",
-			Version:     "1.4.5",
+			Version:     version1,
 			Github:      github1,
 			Commands: []*plugin.Command{
 				{Name: "command1"},
@@ -52,7 +58,7 @@ func Test_checkForDuplicatePlugins(t *testing.T) {
 		{
 			Name:        "plugin2",
 			Description: "plugin2 description",
-			Version:     "1.2.3",
+			Version:     version2,
 			Github:      github2,
 			Commands: []*plugin.Command{
 				{Name: "command3"},
@@ -67,12 +73,12 @@ func Test_checkForDuplicatePlugins(t *testing.T) {
 		},
 	}
 
-	opts.githubRelease = &GithubRelease{name: github1.Name, owner: github1.Owner}
-	err := opts.checkForDuplicatePlugins()
+	opts.githubAsset = &GithubAsset{name: github1.Name, owner: github1.Owner}
+	err = opts.checkForDuplicatePlugins()
 	require.Error(t, err)
 
-	opts.githubRelease.name = github2.Name
-	opts.githubRelease.owner = "differentOwner"
+	opts.githubAsset.name = github2.Name
+	opts.githubAsset.owner = "differentOwner"
 	err = opts.checkForDuplicatePlugins()
 	assert.NoError(t, err)
 }

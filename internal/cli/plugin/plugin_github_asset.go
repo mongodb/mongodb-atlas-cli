@@ -45,33 +45,33 @@ var (
 	errCreatePluginAssetFromPlugin  = errors.New("failed to create plugin asset from plugin")
 )
 
-type GithubAssetManager struct {
+type GithubAsset struct {
 	ghClient *github.Client
 	owner    string
 	name     string
 	version  *semver.Version
 }
 
-func (g *GithubAssetManager) repository() string {
+func (g *GithubAsset) repository() string {
 	return fmt.Sprintf("%s/%s", g.owner, g.name)
 }
 
-func createGithubAssetManagerFromPlugin(p *plugin.Plugin) (*GithubAssetManager, error) {
+func createGithubAssetFromPlugin(p *plugin.Plugin) (*GithubAsset, error) {
 	if !p.HasGithub() {
 		return nil, errCreatePluginAssetFromPlugin
 	}
 
-	return &GithubAssetManager{
+	return &GithubAsset{
 		owner: p.Github.Owner,
 		name:  p.Github.Name,
 	}, nil
 }
 
-func (g *GithubAssetManager) getPluginDirectoryName() string {
+func (g *GithubAsset) getPluginDirectoryName() string {
 	return fmt.Sprintf("%s@%s", g.owner, g.name)
 }
 
-func (g *GithubAssetManager) getPluginAssetInfo() ([]*github.ReleaseAsset, error) {
+func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 	var err error
 	var release *github.RepositoryRelease
 
@@ -98,7 +98,7 @@ func (g *GithubAssetManager) getPluginAssetInfo() ([]*github.ReleaseAsset, error
 	return release.Assets, nil
 }
 
-func (g *GithubAssetManager) getAssetID(assets []*github.ReleaseAsset) (int64, error) {
+func (g *GithubAsset) getID(assets []*github.ReleaseAsset) (int64, error) {
 	operatingSystem, architecture := runtime.GOOS, runtime.GOARCH
 	for _, asset := range assets {
 		if *asset.ContentType != "application/gzip" {
@@ -114,7 +114,7 @@ func (g *GithubAssetManager) getAssetID(assets []*github.ReleaseAsset) (int64, e
 	return 0, fmt.Errorf("could not find an asset to download from %s for %s %s", g.repository(), operatingSystem, architecture)
 }
 
-func (g *GithubAssetManager) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser, error) {
+func (g *GithubAsset) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser, error) {
 	rc, _, err := g.ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, assetID, http.DefaultClient)
 
 	if err != nil {
@@ -124,7 +124,7 @@ func (g *GithubAssetManager) getPluginAssetAsReadCloser(assetID int64) (io.ReadC
 	return rc, nil
 }
 
-func parseGithubReleaseValues(arg string) (*GithubAssetManager, error) {
+func parseGithubReleaseValues(arg string) (*GithubAsset, error) {
 	regexPattern := `^((https?://(www\.)?)?github\.com/)?(?P<owner>[\w.\-]+)/(?P<name>[\w.\-]+)/?(@(?P<version>v?(\d+)(\.\d+)?(\.\d+)?|latest))?$`
 	regex, err := regexp.Compile(regexPattern)
 	if err != nil {
@@ -145,7 +145,7 @@ func parseGithubReleaseValues(arg string) (*GithubAssetManager, error) {
 		groupMap[names[i]] = match
 	}
 
-	githubRelease := &GithubAssetManager{owner: groupMap["owner"], name: groupMap["name"]}
+	githubRelease := &GithubAsset{owner: groupMap["owner"], name: groupMap["name"]}
 
 	if version, ok := groupMap["version"]; ok && version != "latest" && version != "" {
 		semverVersion, err := semver.NewVersion(version)

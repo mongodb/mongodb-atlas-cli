@@ -30,12 +30,12 @@ import (
 )
 
 func Test_repository(t *testing.T) {
-	opts := &GithubAssetManager{owner: "repoOwner", name: "repoName"}
+	opts := &GithubAsset{owner: "repoOwner", name: "repoName"}
 
 	assert.Equal(t, opts.owner+"/"+opts.name, opts.repository())
 }
 
-func Test_getAssetID(t *testing.T) {
+func Test_getID(t *testing.T) {
 	validAssetName := fmt.Sprintf("plugin_%s_%s", runtime.GOOS, runtime.GOARCH)
 
 	tests := []struct {
@@ -84,9 +84,9 @@ func Test_getAssetID(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			opts := &GithubAssetManager{}
+			opts := &GithubAsset{}
 
-			assetID, err := opts.getAssetID(tt.pluginAssets)
+			assetID, err := opts.getID(tt.pluginAssets)
 			if (err != nil) != tt.expectError {
 				t.Errorf("expected error: %v, got: %v", tt.expectError, err)
 			}
@@ -197,12 +197,12 @@ func Test_parseGithubRepoValues(t *testing.T) {
 	}
 }
 
-func Test_createGithubAssetManagerFromPlugin(t *testing.T) {
+func Test_createGithubAssetFromPlugin(t *testing.T) {
 	tests := []struct {
 		name        string
 		plugin      *plugin.Plugin
 		expectedErr error
-		expected    *GithubAssetManager
+		expected    *GithubAsset
 	}{
 		{
 			name: "Plugin with GitHub values",
@@ -213,7 +213,7 @@ func Test_createGithubAssetManagerFromPlugin(t *testing.T) {
 				},
 			},
 			expectedErr: nil,
-			expected: &GithubAssetManager{
+			expected: &GithubAsset{
 				owner: "test-owner",
 				name:  "test-repo",
 			},
@@ -228,7 +228,7 @@ func Test_createGithubAssetManagerFromPlugin(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := createGithubAssetManagerFromPlugin(tt.plugin)
+			got, err := createGithubAssetFromPlugin(tt.plugin)
 
 			if !errors.Is(err, tt.expectedErr) {
 				t.Errorf("expected error: %v, got: %v", tt.expectedErr, err)
@@ -244,6 +244,6 @@ func Test_createGithubAssetManagerFromPlugin(t *testing.T) {
 }
 
 func Test_getPluginDirectoryName(t *testing.T) {
-	githubAssetManager := &GithubAssetManager{owner: "owner", name: "name"}
-	require.Equal(t, "owner@name", githubAssetManager.getPluginDirectoryName())
+	githubAsset := &GithubAsset{owner: "owner", name: "name"}
+	require.Equal(t, "owner@name", githubAsset.getPluginDirectoryName())
 }

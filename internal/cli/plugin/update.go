@@ -33,7 +33,7 @@ import (
 var (
 	errTooManyArguments        = errors.New(`either the "--all" flag or the plugin identifier can be provided, but not both`)
 	errNotEnoughArguments      = errors.New(`either the "--all" flag or the plugin identifier needs to be provided`)
-	errPluginHasNoGithubValues = errors.New(`specified plugin does not have any Github values`)
+	errPluginHasNoGithubValues = errors.New(`specified plugin does not contain any Github values in its manifest.yaml file. This issue may have occurred because the plugin was added manually instead of using the "plugin install" command`)
 )
 
 type UpdateOpts struct {
@@ -87,15 +87,15 @@ func (opts *UpdateOpts) validatePlugin(pluginDirectoryPath string) error {
 	return nil
 }
 
-func (opts *UpdateOpts) updatePlugin(githubAssetRelease *GithubAssetManager, existingPlugin *plugin.Plugin) error {
+func (opts *UpdateOpts) updatePlugin(githubAssetRelease *GithubAsset, existingPlugin *plugin.Plugin) error {
 	// get all plugin assets info from github repository
-	assets, err := githubAssetRelease.getPluginAssetInfo()
+	assets, err := githubAssetRelease.getReleaseAssets()
 	if err != nil {
 		return err
 	}
 
 	// find correct assetID using system requirements
-	assetID, err := githubAssetRelease.getAssetID(assets)
+	assetID, err := githubAssetRelease.getID(assets)
 	if err != nil {
 		return err
 	}
@@ -105,6 +105,7 @@ func (opts *UpdateOpts) updatePlugin(githubAssetRelease *GithubAssetManager, exi
 	if err != nil {
 		return err
 	}
+	defer rc.Close()
 
 	// use the ReadCloser to save the asset zip file in the default plugin directory
 	pluginZipFilePath, err := saveReadCloserToPluginAssetZipFile(rc)
@@ -166,16 +167,16 @@ func (opts *UpdateOpts) Run() error {
 
 			opts.Print(fmt.Sprintf(`Updating plugin "%s"`, p.Name))
 
-			// create GithubAssetManager and use it to update to update plugin
-			githubAssetManager, err := createGithubAssetManagerFromPlugin(p)
+			// create GithubAsset and use it to update to update plugin
+			githubAsset, err := createGithubAssetFromPlugin(p)
 			if err != nil {
 				printPluginUpdateWarning(p, err)
 				continue
 			}
 
-			// update using GithubAssetManager
-			githubAssetManager.ghClient = ghClient
-			err = opts.updatePlugin(githubAssetManager, p)
+			// update using GithubAsset
+			githubAsset.ghClient = ghClient
+			err = opts.updatePlugin(githubAsset, p)
 			if err != nil {
 				printPluginUpdateWarning(p, err)
 			}
@@ -192,21 +193,21 @@ func (opts *UpdateOpts) Run() error {
 			return errPluginHasNoGithubValues
 		}
 
-		// create GithubAssetManager and use it to update to update plugin
-		githubAssetManager, err := createGithubAssetManagerFromPlugin(existingPlugin)
+		// create GithubAsset and use it to update to update plugin
+		githubAsset, err := createGithubAssetFromPlugin(existingPlugin)
 		if err != nil {
 			return err
 		}
 
 		// make sure the specified version is greater than currently installed version
-		if githubAssetManager.version != nil && !githubAssetManager.version.GreaterThan(existingPlugin.Version) {
-			return fmt.Errorf("the specified version %s is not greater than the currently installed version %s", githubAssetManager.version.String(), existingPlugin.Version.String())
+		if githubAsset.version != nil && !githubAsset.version.GreaterThan(existingPlugin.Version) {
+			return fmt.Errorf("the specified version %s is not greater than the currently installed version %s", githubAsset.version.String(), existingPlugin.Version.String())
 		}
 
-		// update using GithubAssetManager
+		// update using GithubAsset
 		opts.Print(fmt.Sprintf(`Updating plugin "%s"`, existingPlugin.Name))
-		githubAssetManager.ghClient = ghClient
-		err = opts.updatePlugin(githubAssetManager, existingPlugin)
+		githubAsset.ghClient = ghClient
+		err = opts.updatePlugin(githubAsset, existingPlugin)
 		if err != nil {
 			return err
 		}

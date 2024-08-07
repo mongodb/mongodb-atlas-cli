@@ -29,6 +29,8 @@ type Opts struct {
 	existingCommands []*cobra.Command
 }
 
+// finding a plugin given the input argument of a plugin command
+// the input arg can be the plugin name, the github values (<repo-owner>/<repo-name>) or the entire github URL of the plugin.
 func (opts *Opts) findPluginWithArg(arg string) (*plugin.Plugin, error) {
 	// try to parse input to github values
 	// if parsing fails it will be assumed that the input is the plugin name

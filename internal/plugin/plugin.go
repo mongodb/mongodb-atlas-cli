@@ -81,6 +81,7 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 		plugin, err := createPluginFromManifest(manifest)
 		if err != nil {
 			logPluginWarning(err.Error())
+			continue
 		}
 		plugins = append(plugins, plugin)
 	}

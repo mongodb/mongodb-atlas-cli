@@ -73,12 +73,12 @@ func Test_checkForDuplicatePlugins(t *testing.T) {
 		},
 	}
 
-	opts.githubAssetManager = &GithubAssetManager{name: github1.Name, owner: github1.Owner}
+	opts.githubAsset = &GithubAsset{name: github1.Name, owner: github1.Owner}
 	err = opts.checkForDuplicatePlugins()
 	require.Error(t, err)
 
-	opts.githubAssetManager.name = github2.Name
-	opts.githubAssetManager.owner = "differentOwner"
+	opts.githubAsset.name = github2.Name
+	opts.githubAsset.owner = "differentOwner"
 	err = opts.checkForDuplicatePlugins()
 	assert.NoError(t, err)
 }

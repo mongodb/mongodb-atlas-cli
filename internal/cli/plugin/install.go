@@ -29,16 +29,16 @@ type InstallOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
 	Opts
-	githubAssetManager *GithubAssetManager
+	githubAsset *GithubAsset
 }
 
 func (opts *InstallOpts) checkForDuplicatePlugins() error {
-	_, err := opts.findPluginWithGithubValues(opts.githubAssetManager.owner, opts.githubAssetManager.name)
+	_, err := opts.findPluginWithGithubValues(opts.githubAsset.owner, opts.githubAsset.name)
 	if err != nil {
 		return nil
 	}
 
-	return fmt.Errorf("a plugin from the repository %s is already installed.\nTo update the plugin run: \n\tatlas plugin update %s", opts.githubAssetManager.repository(), opts.githubAssetManager.repository())
+	return fmt.Errorf("a plugin from the repository %s is already installed.\nTo update the plugin run: \n\tatlas plugin update %s", opts.githubAsset.repository(), opts.githubAsset.repository())
 }
 
 // checks if the plugin manifest is valid and that the plugin
@@ -68,7 +68,7 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 		existingCommandsMap[cmd.Name()] = true
 	}
 	if plugin.HasDuplicateCommand(manifest, existingCommandsMap) {
-		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, opts.githubAssetManager.repository())
+		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, opts.githubAsset.repository())
 	}
 
 	return nil
@@ -76,22 +76,23 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 
 func (opts *InstallOpts) Run() error {
 	// get all plugin assets info from github repository
-	assets, err := opts.githubAssetManager.getPluginAssetInfo()
+	assets, err := opts.githubAsset.getReleaseAssets()
 	if err != nil {
 		return err
 	}
 
 	// find correct assetID using system requirements
-	assetID, err := opts.githubAssetManager.getAssetID(assets)
+	assetID, err := opts.githubAsset.getID(assets)
 	if err != nil {
 		return err
 	}
 
 	// download plugin asset zip file and save it as ReadCloser
-	rc, err := opts.githubAssetManager.getPluginAssetAsReadCloser(assetID)
+	rc, err := opts.githubAsset.getPluginAssetAsReadCloser(assetID)
 	if err != nil {
 		return err
 	}
+	defer rc.Close()
 
 	// use the ReadCloser to save the asset zip file in the default plugin directory
 	pluginZipFilePath, err := saveReadCloserToPluginAssetZipFile(rc)
@@ -101,7 +102,7 @@ func (opts *InstallOpts) Run() error {
 	defer os.Remove(pluginZipFilePath) // delete zip file after install command finishes
 
 	// try to extract content of plugin zip file and save it in default plugin directory
-	pluginDirectoryPath, err := extractPluginAssetZipFile(pluginZipFilePath, opts.githubAssetManager.getPluginDirectoryName())
+	pluginDirectoryPath, err := extractPluginAssetZipFile(pluginZipFilePath, opts.githubAsset.getPluginDirectoryName())
 	if err != nil {
 		return err
 	}
@@ -114,7 +115,7 @@ func (opts *InstallOpts) Run() error {
 		return err
 	}
 
-	return opts.Print(fmt.Sprintf("Plugin %s successfully installed", opts.githubAssetManager.repository()))
+	return opts.Print(fmt.Sprintf("Plugin %s successfully installed", opts.githubAsset.repository()))
 }
 
 func InstallBuilder(pluginOpts *Opts) *cobra.Command {
@@ -149,8 +150,8 @@ MongoDB provides an example plugin: https://github.com/mongodb/atlas-cli-plugin-
 			if err != nil {
 				return err
 			}
-			opts.githubAssetManager = githubAssetRelease
-			opts.githubAssetManager.ghClient = github.NewClient(nil)
+			opts.githubAsset = githubAssetRelease
+			opts.githubAsset.ghClient = github.NewClient(nil)
 
 			return opts.PreRunE(opts.checkForDuplicatePlugins)
 		},

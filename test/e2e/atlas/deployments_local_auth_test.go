@@ -341,7 +341,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		var results []bson.M
 		req.NoError(c.All(ctx, &results))
 		t.Log(results)
-		req.Len(results, 3)
+		req.Len(results, 10)
 		for _, v := range results {
 			req.Greater(v["score"], float64(0))
 		}

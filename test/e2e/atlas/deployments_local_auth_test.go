@@ -122,11 +122,8 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 	ctx := context.Background()
 	const localFile = "sampledata.archive"
 	var connectionString string
-	var client *mongo.Client
-	var myDB *mongo.Database
-	var myCol *mongo.Collection
 
-	t.Run("Connect to database", func(t *testing.T) {
+	t.Run("Get connection string", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"connect",
@@ -147,14 +144,6 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		require.NoError(t, err, string(r))
 
 		connectionString = strings.TrimSpace(string(r))
-		client, err = mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
-		req.NoError(err)
-		myDB = client.Database(databaseName)
-		myCol = myDB.Collection(collectionName)
-	})
-
-	t.Cleanup(func() {
-		require.NoError(t, client.Disconnect(ctx))
 	})
 
 	t.Run("Download sample dataset", func(t *testing.T) {
@@ -274,21 +263,38 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 	})
 
 	t.Run("Test Search Index", func(t *testing.T) {
-		c, err := myCol.Aggregate(ctx, bson.A{
+		client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
+		req.NoError(err)
+		t.Cleanup(func() {
+			require.NoError(t, client.Disconnect(ctx))
+		})
+		db := client.Database(databaseName)
+		col := db.Collection(collectionName)
+		c, err := col.Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
 					"index": searchIndexName,
 					"text": bson.M{
-						"query": "test1",
-						"path":  "name",
+						"query": "baseball",
+						"path":  "plot",
 					},
+				},
+			},
+			bson.M{
+				"$limit": 5,
+			},
+			bson.M{
+				"$project": bson.M{
+					"_id":   0,
+					"title": 1,
+					"plot":  1,
 				},
 			},
 		})
 		require.NoError(t, err)
 		var results []bson.M
 		require.NoError(t, c.All(ctx, &results))
-		assert.Len(t, results, 1)
+		assert.Len(t, results, 5)
 	})
 
 	t.Run("Delete Index", func(t *testing.T) {

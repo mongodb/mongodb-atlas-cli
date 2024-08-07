@@ -24,7 +24,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -281,8 +280,8 @@ func TestStreams(t *testing.T) {
 		got := []struct {
 			Name, Type, BootstrapServers string
 		}{
-			{Name: connections[0].GetName(), Type: connections[0].GetType(), BootstrapServers: pointer.GetOrZero(connections[0].BootstrapServers)},
-			{Name: connections[1].GetName(), Type: connections[1].GetType(), BootstrapServers: pointer.GetOrZero(connections[1].BootstrapServers)},
+			{Name: connections[0].GetName(), Type: connections[0].GetType(), BootstrapServers: connections[0].GetBootstrapServers()},
+			{Name: connections[1].GetName(), Type: connections[1].GetType(), BootstrapServers: connections[1].GetBootstrapServers()},
 		}
 
 		a.ElementsMatch(expected, got)

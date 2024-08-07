@@ -20,6 +20,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
@@ -111,11 +113,13 @@ func TestDeploymentsLocal(t *testing.T) {
 	})
 
 	ctx := context.Background()
+	const localFile = "sampledata.archive"
 	var client *mongo.Client
 	var myDB *mongo.Database
 	var myCol *mongo.Collection
+	var connectionString string
 
-	t.Run("Connect to database", func(t *testing.T) {
+	t.Run("Get connection string", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"connect",
@@ -131,38 +135,31 @@ func TestDeploymentsLocal(t *testing.T) {
 		r, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
 
-		connectionString := strings.TrimSpace(string(r))
-		client, err = mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
+		connectionString = strings.TrimSpace(string(r))
+	})
+
+	t.Run("Download sample dataset", func(t *testing.T) {
+		out, err := os.Create(localFile)
 		require.NoError(t, err)
-		myDB = client.Database(databaseName)
-		myCol = myDB.Collection(collectionName)
+		defer out.Close()
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://atlas-education.s3.amazonaws.com/sampledata.archive", nil)
+		require.NoError(t, err)
+		resp, err := http.DefaultClient.Do(req)
+		require.NoError(t, err)
+		defer resp.Body.Close()
+		_, err = io.Copy(out, resp.Body)
+		require.NoError(t, err)
 	})
-
-	t.Cleanup(func() {
-		require.NoError(t, client.Disconnect(ctx))
-	})
-
 	t.Run("Seed database", func(t *testing.T) {
-		ids, err := myCol.InsertMany(ctx, []any{
-			bson.M{
-				"name": "test1",
-			},
-			bson.M{
-				"name": "test2",
-			},
-		})
-		require.NoError(t, err)
-		t.Log(ids)
+		cmd := exec.Command("mongorestore",
+			"--uri", connectionString,
+			"--archive="+localFile,
+		)
 
-		b, err := os.ReadFile("data/sample_embedded_movies.json")
-		require.NoError(t, err)
+		cmd.Env = os.Environ()
 
-		var movies []any
-		require.NoError(t, json.Unmarshal(b, &movies))
-
-		ids, err = client.Database(vectorSearchDB).Collection(vectorSearchCol).InsertMany(ctx, movies)
-		req.NoError(err)
-		t.Log(ids)
+		r, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(r))
 	})
 
 	t.Run("Create Search Index", func(t *testing.T) {
@@ -189,6 +186,52 @@ func TestDeploymentsLocal(t *testing.T) {
 		out := string(r)
 		require.NoError(t, err, out)
 		assert.Contains(t, out, "Search index created with ID:")
+	})
+
+	t.Run("Create vectorSearch Index", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"create",
+			"--deploymentName",
+			deploymentName,
+			"--type",
+			"local",
+			"--file",
+			"data/sample_vector_search.json",
+			"-w",
+		)
+
+		cmd.Env = os.Environ()
+
+		r, err := e2e.RunAndGetStdOut(cmd)
+		out := string(r)
+		require.NoError(t, err, out)
+		assert.Contains(t, out, "Search index created with ID:")
+	})
+
+	t.Run("Index List vectorSearch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			searchEntity,
+			indexEntity,
+			"ls",
+			"--deploymentName",
+			deploymentName,
+			"--db",
+			vectorSearchDB,
+			"--collection",
+			vectorSearchCol,
+			"--type",
+			"local",
+		)
+
+		cmd.Env = os.Environ()
+
+		o, e, err := splitOutput(cmd)
+		req.NoError(err, e)
+		assert.Contains(t, o, "sampleVectorSearch")
 	})
 
 	var indexID string
@@ -240,6 +283,13 @@ func TestDeploymentsLocal(t *testing.T) {
 	})
 
 	t.Run("Test Search Index", func(t *testing.T) {
+		client, err = mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
+		require.NoError(t, err)
+		myDB = client.Database(databaseName)
+		myCol = myDB.Collection(collectionName)
+		t.Cleanup(func() {
+			require.NoError(t, client.Disconnect(ctx))
+		})
 		c, err := myCol.Aggregate(ctx, bson.A{
 			bson.M{
 				"$search": bson.M{
@@ -255,6 +305,25 @@ func TestDeploymentsLocal(t *testing.T) {
 		var results []bson.M
 		require.NoError(t, c.All(ctx, &results))
 		assert.Len(t, results, 1)
+	})
+
+	t.Run("Test vectorSearch Index", func(t *testing.T) {
+		b, err := os.ReadFile("data/sample_vector_search_pipeline.json")
+		req.NoError(err)
+
+		var pipeline []map[string]any
+		err = json.Unmarshal(b, &pipeline)
+		req.NoError(err)
+
+		c, err := client.Database(vectorSearchDB).Collection(vectorSearchCol).Aggregate(ctx, pipeline)
+		req.NoError(err)
+		var results []bson.M
+		req.NoError(c.All(ctx, &results))
+		t.Log(results)
+		req.Len(results, 3)
+		for _, v := range results {
+			req.Greater(v["score"], float64(0))
+		}
 	})
 
 	t.Run("Delete Index", func(t *testing.T) {
@@ -279,71 +348,6 @@ func TestDeploymentsLocal(t *testing.T) {
 		cmd.Stderr = &e
 		require.NoError(t, cmd.Run(), e.String())
 		assert.Contains(t, o.String(), fmt.Sprintf("Index '%s' deleted", indexID))
-	})
-
-	t.Run("Create vectorSearch Index", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			searchEntity,
-			indexEntity,
-			"create",
-			"--deploymentName",
-			deploymentName,
-			"--type",
-			"local",
-			"--file",
-			"data/sample_vector_search.json",
-			"-w",
-		)
-
-		cmd.Env = os.Environ()
-
-		r, err := e2e.RunAndGetStdOut(cmd)
-		out := string(r)
-		require.NoError(t, err, out)
-		assert.Contains(t, out, "Search index created with ID:")
-	})
-
-	t.Run("Index List vectorSearch", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			deploymentEntity,
-			searchEntity,
-			indexEntity,
-			"ls",
-			"--deploymentName",
-			deploymentName,
-			"--db",
-			vectorSearchDB,
-			"--collection",
-			vectorSearchCol,
-			"--type",
-			"local",
-		)
-
-		cmd.Env = os.Environ()
-
-		o, e, err := splitOutput(cmd)
-		req.NoError(err, e)
-		assert.Contains(t, o, "sampleVectorSearch")
-	})
-
-	t.Run("Test vectorSearch Index", func(t *testing.T) {
-		b, err := os.ReadFile("data/sample_vector_search_pipeline.json")
-		req.NoError(err)
-
-		var pipeline []map[string]any
-		err = json.Unmarshal(b, &pipeline)
-		req.NoError(err)
-
-		c, err := client.Database(vectorSearchDB).Collection(vectorSearchCol).Aggregate(ctx, pipeline)
-		req.NoError(err)
-		var results []bson.M
-		req.NoError(c.All(ctx, &results))
-		t.Log(results)
-		req.Len(results, 3)
-		for _, v := range results {
-			req.Greater(v["score"], float64(0))
-		}
 	})
 
 	t.Run("Pause Deployment", func(t *testing.T) {

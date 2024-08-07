@@ -19,7 +19,9 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"regexp"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v61/github"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -34,17 +36,54 @@ var (
 	errTooManyArguments        = errors.New(`either the "--all" flag or the plugin identifier can be provided, but not both`)
 	errNotEnoughArguments      = errors.New(`either the "--all" flag or the plugin identifier needs to be provided`)
 	errPluginHasNoGithubValues = errors.New(`specified plugin does not contain any Github values in its manifest.yaml file. This issue may have occurred because the plugin was added manually instead of using the "plugin install" command`)
+	errUpdateArgInvalid        = errors.New(`the format of the plugin indentifier is invalid. You can specify a plugin to update using either the "<github-owner>/<github-repository-name>" format or the plugin name`)
 )
 
 type UpdateOpts struct {
 	cli.OutputOpts
 	Opts
-	UpdateAll bool
-	pluginArg string
+	UpdateAll           bool
+	pluginSpecifier     string
+	pluginUpdateVersion *semver.Version
 }
 
 func printPluginUpdateWarning(p *plugin.Plugin, err error) {
 	_, _ = log.Warningf("could not update plugin %s because: %v\n", p.Name, err)
+}
+
+// extract plugin specifier and version given the input argument of the update command.
+func extractPluginSpecifierAndVersionFromArg(arg string) (string, *semver.Version, error) {
+	regexPattern := `^(?P<pluginValue>[^\s@]+)(@(?P<version>v?(\d+)(\.\d+)?(\.\d+)?|latest))?$`
+	regex, err := regexp.Compile(regexPattern)
+	if err != nil {
+		return "", nil, fmt.Errorf("error compiling regex: %w", err)
+	}
+
+	matches := regex.FindStringSubmatch(arg)
+	if matches == nil {
+		return "", nil, errUpdateArgInvalid
+	}
+
+	names := regex.SubexpNames()
+	groupMap := make(map[string]string)
+	for i, match := range matches {
+		if i == 0 {
+			continue
+		}
+		groupMap[names[i]] = match
+	}
+
+	var version *semver.Version
+
+	if versionValue, ok := groupMap["version"]; ok && versionValue != latest && versionValue != "" {
+		semverVersion, err := semver.NewVersion(versionValue)
+		if err != nil {
+			return "", nil, fmt.Errorf(`the specified version "%s" is invalid, it needs to follow the rules of Semantic Versioning`, versionValue)
+		}
+		version = semverVersion
+	}
+
+	return groupMap["pluginValue"], version, nil
 }
 
 // checks if the plugin manifest is valid and that the plugin
@@ -168,7 +207,7 @@ func (opts *UpdateOpts) Run() error {
 			opts.Print(fmt.Sprintf(`Updating plugin "%s"`, p.Name))
 
 			// create GithubAsset and use it to update to update plugin
-			githubAsset, err := createGithubAssetFromPlugin(p)
+			githubAsset, err := createGithubAssetFromPlugin(p, nil)
 			if err != nil {
 				printPluginUpdateWarning(p, err)
 				continue
@@ -183,7 +222,7 @@ func (opts *UpdateOpts) Run() error {
 		}
 	} else {
 		// find existing plugin using plugin args
-		existingPlugin, err := opts.findPluginWithArg(opts.pluginArg)
+		existingPlugin, err := opts.findPluginWithArg(opts.pluginSpecifier)
 		if err != nil {
 			return err
 		}
@@ -194,7 +233,7 @@ func (opts *UpdateOpts) Run() error {
 		}
 
 		// create GithubAsset and use it to update to update plugin
-		githubAsset, err := createGithubAssetFromPlugin(existingPlugin)
+		githubAsset, err := createGithubAssetFromPlugin(existingPlugin, opts.pluginUpdateVersion)
 		if err != nil {
 			return err
 		}
@@ -250,7 +289,13 @@ Additionally, you can use the "--all" flag to update all plugins.
 				return errNotEnoughArguments
 			}
 			if !opts.UpdateAll {
-				opts.pluginArg = arg[0]
+				// extract plugin value and version from arg
+				pluginSpecifier, version, err := extractPluginSpecifierAndVersionFromArg(arg[0])
+				if err != nil {
+					return err
+				}
+				opts.pluginSpecifier = pluginSpecifier
+				opts.pluginUpdateVersion = version
 			}
 
 			return nil

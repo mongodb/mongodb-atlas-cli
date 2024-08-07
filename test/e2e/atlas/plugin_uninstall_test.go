@@ -17,12 +17,9 @@
 package atlas_test
 
 import (
-	"os"
 	"os/exec"
-	"path"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/require"
 )
@@ -31,14 +28,14 @@ func TestPluginUninstall(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	runPluginUninstallTest(t, cliPath, "Uninstall Successful with repository values", false, "mongodb/atlas-cli-plugin-example")
-	runPluginUninstallTest(t, cliPath, "Uninstall Successful with plugin name", false, "atlas-cli-plugin-example")
+	runPluginUninstallTest(t, cliPath, "Uninstall Successful with repository values", false, examplePluginRepository)
+	runPluginUninstallTest(t, cliPath, "Uninstall Successful with plugin name", false, examplePluginName)
 	runPluginUninstallTest(t, cliPath, "Plugin could not be found", true, "invalid plugin")
 }
 
 func runPluginUninstallTest(t *testing.T, cliPath string, testName string, requireError bool, pluginValue string) {
 	t.Helper()
-	installExamplePlugin(t, cliPath)
+	installExamplePlugin(t, cliPath, "latest")
 	t.Run(testName, func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"plugin",
@@ -51,23 +48,5 @@ func runPluginUninstallTest(t *testing.T, cliPath string, testName string, requi
 			require.NoError(t, err, string(resp))
 		}
 	})
-	deleteExamplePlugin(t)
-}
-
-func installExamplePlugin(t *testing.T, cliPath string) {
-	t.Helper()
-	cmd := exec.Command(cliPath,
-		"plugin",
-		"install",
-		"mongodb/atlas-cli-plugin-example")
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	require.NoError(t, err, string(resp))
-}
-
-func deleteExamplePlugin(t *testing.T) {
-	t.Helper()
-	defaultPluginDir, err := plugin.GetDefaultPluginDirectory()
-	require.NoError(t, err)
-	err = os.RemoveAll(path.Join(defaultPluginDir, "mongodb@atlas-cli-plugin-example"))
-	require.NoError(t, err)
+	deleteAllPlugins(t)
 }

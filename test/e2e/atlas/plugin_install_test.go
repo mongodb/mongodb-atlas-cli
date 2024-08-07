@@ -28,10 +28,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const (
-	examplePluginRepository = "mongodb/atlas-cli-plugin-example"
-)
-
 func generateTestPluginDirectory(directoryName string) (string, error) {
 	defaultPluginDir, err := plugin.GetDefaultPluginDirectory()
 	if err != nil {
@@ -74,15 +70,6 @@ func generateTestPlugin(directoryName string, binaryName string, manifestContent
 	return nil
 }
 
-func deleteAllPlugins() error {
-	defaultPluginDir, err := plugin.GetDefaultPluginDirectory()
-	if err != nil {
-		return err
-	}
-	err = os.RemoveAll(defaultPluginDir)
-	return err
-}
-
 func TestPluginInstall(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
@@ -94,8 +81,8 @@ func TestPluginInstall(t *testing.T) {
 	runPluginInstallTest(t, cliPath, "Install Successful", false, examplePluginRepository)
 	runPluginInstallTest(t, cliPath, "Plugin already installed", true, examplePluginRepository)
 
-	err = deleteAllPlugins()
-	require.NoError(t, err)
+	deleteAllPlugins(t)
+
 	err = generateTestPlugin("testplugin", "binary", `name: testplugin
 description: description
 version: 1.2.3
@@ -106,8 +93,8 @@ commands:
 	require.NoError(t, err)
 	runPluginInstallTest(t, cliPath, "Plugin with same command already installed", true, examplePluginRepository)
 
-	err = deleteAllPlugins()
-	require.NoError(t, err)
+	deleteAllPlugins(t)
+
 	err = generateTestPlugin("testplugin", "binary", `name: atlas-cli-plugin-example
 description: description
 version: 1.2.3

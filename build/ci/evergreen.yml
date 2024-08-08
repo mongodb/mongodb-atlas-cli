@@ -1152,7 +1152,7 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
-  - name: e2e_local_deployments_docker
+  - name: e2e_local_deployments_ubuntu
     display_name: "E2E Local Deployments Tests (ubuntu/docker)"
     run_on:
       - ubuntu2204-small
@@ -1160,6 +1160,10 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
+        depends_on:
+        - name: compile
+          variant: "code_health"
+          patch_optional: true
   - name: e2e_atlas_streams_with_clusters
     display_name: "E2E Atlas Streams with Clusters Tests"
     run_on:

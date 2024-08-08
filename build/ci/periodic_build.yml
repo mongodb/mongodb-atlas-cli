@@ -28,7 +28,7 @@ post:
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
 buildvariants:
-  - name: e2e_local_deployments_podman
+  - name: e2e_local_deployments_rhel
     display_name: "E2E Local Deployments Tests (rhel/podman)"
     tags:
       - localdev

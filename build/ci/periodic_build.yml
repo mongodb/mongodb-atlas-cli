@@ -30,6 +30,8 @@ post:
 buildvariants:
   - name: e2e_local_deployments_podman
     display_name: "E2E Local Deployments Tests (rhel/podman)"
+    tags:
+      - localdev
     run_on:
       - rhel90-small
     expansions:

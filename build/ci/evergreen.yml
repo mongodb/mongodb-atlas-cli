@@ -1168,3 +1168,7 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .streams"
+patch_aliases:
+  - alias: "localdev"
+    variant_tags: ["localdev"]
+    task_tags: ["local"]

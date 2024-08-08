@@ -52,10 +52,17 @@ functions:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         shell: bash
+        env:
+          <<: *go_env
+          MONGODB_DATABASE_TOOLS_VERSION: 100.10.0
         script: |
           set -Eeou pipefail
           mkdir -p mongodb-database-tools
-          curl -sfL https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-100.10.0.tgz | tar zx -C mongodb-database-tools --strip-components 1
+          URL=https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-$MONGODB_DATABASE_TOOLS_VERSION.tgz
+          if [[ "$(uname -s)" == "Darwin"* ]]; then
+            URL=https://fastdl.mongodb.org/tools/db/mongodb-database-tools-macos-arm64-$MONGODB_DATABASE_TOOLS_VERSION.zip
+          fi
+          curl -sfL $URL | tar zx -C mongodb-database-tools --strip-components 1
           mv mongodb-database-tools/bin/* .
           rm -rf mongodb-database-tools
   "e2e test":

@@ -1172,14 +1172,14 @@ patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]
     task_tags: ["local"]
-git_tag_aliases:
-  git_tag: "atlascli/v*"
-  variant: ["^release_atlascli"]
-  task: [".*"]
 github_pr_aliases:
-  - variant: ["code_health"]
+  - variant: "code_health"
     task_tags: ["code_health"]
-  - variant: ["e2e_generic"]
+  - variant: "e2e_generic"
     task_tags: ["e2e", "generic"]
-  - variant: ["e2e_required"]
+  - variant: "e2e_required"
     task_tags: ["e2e", "required"]
+git_tag_aliases:
+  - git_tag: "atlascli/v*"
+    variant: "^release_atlascli"
+    task: ".*"

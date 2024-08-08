@@ -137,10 +137,6 @@ tasks:
     tags: ["e2e","deployments","local","noauth"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
     commands:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
@@ -169,10 +165,6 @@ tasks:
     tags: ["e2e","deployments","local","auth"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
     commands:
       - func: "install gotestsum"
       - func: "install mongodb database tools"

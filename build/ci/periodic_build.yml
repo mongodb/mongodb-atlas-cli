@@ -27,6 +27,55 @@ post:
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
+functions:
+  "install packer":
+    - command: shell.exec
+      params:
+        add_to_path:
+          - ${workdir}/bin
+          - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        env:
+          PACKER_VERSION: 1.11.2
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          curl -sLo packer.zip https://releases.hashicorp.com/packer/$PACKER_VERSION/packer_$(echo $PACKER_VERSION)_linux_amd64.zip
+          unzip packer.zip
+          rm packer.zip LICENSE.txt
+          packer -v
+  "run packer":
+    - command: shell.exec
+      params:
+        add_to_path:
+          - ${workdir}/bin
+          - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/packer
+        env:
+          AZURE_APP_ID: ${azure_app_id}
+          AZURE_DISPLAY_NAME: ${azure_display_name}
+          AZURE_PASSWORD: ${azure_password}
+          AZURE_TENANT: ${azure_tenant}
+          AZURE_SUBSCRIPTION_ID: ${azure_subscription_id}
+        shell: bash
+        script: |
+          packer init ${file}
+          packer build -force ${file}
+tasks:
+  - name: build_win11_image
+    tags: ["packer", "windows", "win11"]
+    commands:
+      - func: "install packer"
+      - func: "run packer"
+        vars:
+          file: "windows-11-azure.pkr.hcl"
+  - name: build_win10_image
+    tags: ["packer", "windows", "win10"]
+    commands:
+      - func: "install packer"
+      - func: "run packer"
+        vars:
+          file: "windows-10-azure.pkr.hcl"
 buildvariants:
   - name: e2e_local_deployments_rhel
     display_name: "E2E Local Deployments Tests (rhel/podman)"
@@ -48,3 +97,11 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
+  - name: build_images
+    display_name: "Build Windows Images"
+    tags:
+      - packer
+    run_on:
+      - rhel80-small
+    tasks:
+      - name: ".packer .windows"

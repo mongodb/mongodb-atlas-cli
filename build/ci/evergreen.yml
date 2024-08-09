@@ -1172,14 +1172,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .streams"
-  - name: build_images
-    display_name: "Build Windows Images"
-    tags:
-      - packer
-    run_on:
-      - rhel80-small
-    tasks:
-      - name: ".packer .windows"
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]

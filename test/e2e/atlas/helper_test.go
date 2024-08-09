@@ -147,8 +147,8 @@ const (
 
 // Local Development constants.
 const (
-	collectionName  = "myCol"
-	databaseName    = "myDB"
+	collectionName  = "movies"
+	databaseName    = "sample_mflix"
 	searchIndexName = "indexTest"
 	vectorSearchDB  = "sample_mflix"
 	vectorSearchCol = "embedded_movies"

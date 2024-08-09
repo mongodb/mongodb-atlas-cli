@@ -16,6 +16,9 @@ exec_timeout_secs: 4200 # automatically fail any task if it takes longer than 1h
 stepback: true
 command_type: system
 pre_error_fails_task: true
+include:
+  - filename: build/ci/release.yml
+  - filename: build/ci/evergreen_common.yml
 
 variables:
   - &go_linux_version
@@ -41,92 +44,6 @@ variables:
     working_dir: src/github.com/mongodb/mongodb-atlas-cli
     env:
       <<: *go_env
-functions:
-  "clone":
-    - command: git.get_project
-      type: setup
-      params:
-        directory: src/github.com/mongodb/mongodb-atlas-cli
-  "build":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        command: make build
-  "e2e test":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        include_expansions_in_env:
-          - go_base_path
-          - workdir
-          - MCLI_ORG_ID
-          - MCLI_PROJECT_ID
-          - MCLI_PRIVATE_API_KEY
-          - MCLI_PUBLIC_API_KEY
-          - MCLI_SERVICE
-          - TEST_CMD
-          - E2E_TAGS
-          - E2E_TEST_BUCKET
-          - E2E_CLOUD_ROLE_ID
-          - MCLI_OPS_MANAGER_URL
-          - OM_VERSION
-          - LOCAL_KEY
-          - KMIP_CA
-          - KMIP_CERT
-          - GCP_CREDENTIALS
-          - AWS_ACCESS_KEY
-          - AWS_SECRET_ACCESS_KEY
-          - AZURE_TENANT_ID
-          - AZURE_CLIENT_ID
-          - AZURE_CLIENT_SECRET
-          - E2E_TIMEOUT
-          - E2E_SERVERLESS_INSTANCE_NAME
-          - E2E_PARALLEL
-          - IDENTITY_PROVIDER_ID
-          - revision
-        env:
-          <<: *go_env
-          MCLI_SKIP_UPDATE_CHECK: "yes"
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-        command: make e2e-test
-  "install gotestsum":
-    - command: shell.exec
-      type: setup
-      params:
-        <<: *go_options
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
-        shell: bash
-        script: |
-          set -Eeou pipefail
-          export PATH="$ADD_PATH:$PATH"
-          curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
-  "generate evergreen":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        include_expansions_in_env:
-          - go_base_path
-          - workdir
-          - task_type
-        binary: build/ci/evergreen-generate-tasks.sh
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/json}
-        display_name: internal-bucket
-    - command: generate.tasks
-      params:
-        files:
-          - tasks.json
 pre:
   - func: "clone"
 post:
@@ -1148,68 +1065,6 @@ tasks:
           E2E_TAGS: atlas,cleanup
           E2E_TIMEOUT: 3h
           E2E_PARALLEL: 16
-  - name: atlas_deployments_local_noauth_e2e
-    tags: ["e2e","deployments","local","noauth"]
-    must_have_test_results: true
-    exec_timeout_secs: 11400 # 3 hours 10 minutes
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          script: |
-            set -e
-            cat /proc/sys/fs/inotify/max_user_watches
-            cat /proc/sys/fs/inotify/max_user_instances
-            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
-            cat /proc/sys/fs/inotify/max_user_instances
-      - func: "e2e test"
-        timeout_secs: 11400 # 3 hours 10 minutes
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,deployments,local,noauth
-          E2E_TIMEOUT: 3h
-  - name: atlas_deployments_local_auth_e2e
-    tags: ["e2e","deployments","local","auth"]
-    must_have_test_results: true
-    exec_timeout_secs: 11400 # 3 hours 10 minutes
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          script: |
-            set -e
-            cat /proc/sys/fs/inotify/max_user_watches
-            cat /proc/sys/fs/inotify/max_user_instances
-            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
-            cat /proc/sys/fs/inotify/max_user_instances
-      - func: "e2e test"
-        timeout_secs: 11400 # 3 hours 10 minutes
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,deployments,local,auth
-          E2E_TIMEOUT: 3h
   - name: atlas_deployments_atlas_clusters_e2e
     tags: ["e2e","deployments","atlas"]
     must_have_test_results: true
@@ -1353,23 +1208,7 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
-  - name: e2e_local_deployments_podman
-    display_name: "E2E Local Deployments Tests (rhel/podman)"
-    run_on:
-      - rhel90-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .deployments .local"
-  - name: e2e_plugin
-    display_name: "E2E Plugin Tests"
-    run_on:
-      - rhel90-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .atlas .plugin"
-  - name: e2e_local_deployments_docker
+  - name: e2e_local_deployments_ubuntu
     display_name: "E2E Local Deployments Tests (ubuntu/docker)"
     run_on:
       - ubuntu2204-small
@@ -1377,6 +1216,10 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
+        depends_on:
+        - name: compile
+          variant: "code_health"
+          patch_optional: true
   - name: e2e_atlas_streams_with_clusters
     display_name: "E2E Atlas Streams with Clusters Tests"
     run_on:
@@ -1385,5 +1228,26 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .streams"
-include:
-  - filename: build/ci/release.yml
+  - name: e2e_plugin
+    display_name: "E2E Plugin Tests"
+    run_on:
+      - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas .plugin"
+patch_aliases:
+  - alias: "localdev"
+    variant_tags: ["localdev"]
+    task_tags: ["local"]
+github_pr_aliases:
+  - variant: "code_health"
+    task_tags: ["code_health"]
+  - variant: "e2e_generic"
+    task_tags: ["e2e", "generic"]
+  - variant: "e2e_required"
+    task_tags: ["e2e", "required"]
+git_tag_aliases:
+  - git_tag: "atlascli/v*"
+    variant: "^release_atlascli"
+    task: ".*"

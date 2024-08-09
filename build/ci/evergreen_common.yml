@@ -179,13 +179,13 @@ tasks:
     tags: ["packer", "windows", "win11"]
     commands:
       - func: "run packer"
-        params:
+        vars:
           file: "windows-11-azure.pkr.hcl"
   - name: build_win10_image
     tags: ["packer", "windows", "win10"]
     commands:
       - func: "run packer"
-        params:
+        vars:
           file: "windows-10-azure.pkr.hcl"
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]

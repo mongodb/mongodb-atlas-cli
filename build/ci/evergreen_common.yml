@@ -155,10 +155,14 @@ tasks:
           shell: bash
           script: |
             set -e
-            cat /proc/sys/fs/inotify/max_user_watches
-            cat /proc/sys/fs/inotify/max_user_instances
-            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
-            cat /proc/sys/fs/inotify/max_user_instances
+            if [[ "$(uname -s)" == "Darwin"* ]]; then
+              echo "No need to increase inotify limits on macOS"
+            else
+              cat /proc/sys/fs/inotify/max_user_watches
+              cat /proc/sys/fs/inotify/max_user_instances
+              echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
+              cat /proc/sys/fs/inotify/max_user_instances
+            fi
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -182,11 +186,15 @@ tasks:
         params:
           shell: bash
           script: |
-            set -e
-            cat /proc/sys/fs/inotify/max_user_watches
-            cat /proc/sys/fs/inotify/max_user_instances
-            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
-            cat /proc/sys/fs/inotify/max_user_instances
+            if [[ "$(uname -s)" == "Darwin"* ]]; then
+              echo "No need to increase inotify limits on macOS"
+            else
+              set -e
+              cat /proc/sys/fs/inotify/max_user_watches
+              cat /proc/sys/fs/inotify/max_user_instances
+              echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
+              cat /proc/sys/fs/inotify/max_user_instances
+            fi
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

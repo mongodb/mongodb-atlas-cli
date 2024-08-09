@@ -146,6 +146,20 @@ functions:
       params:
         files:
           - tasks.json
+  "increase inotify limits":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |
+          set -e
+          if [[ "$(uname -s)" == "Darwin"* ]]; then
+            echo "No need to increase inotify limits on macOS"
+          else
+            cat /proc/sys/fs/inotify/max_user_watches
+            cat /proc/sys/fs/inotify/max_user_instances
+            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
+            cat /proc/sys/fs/inotify/max_user_instances
+          fi
 tasks:
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
@@ -154,29 +168,7 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          script: |
-            set -e
-            if [[ "$(uname -s)" == "Darwin"* ]]; then
-              echo "No need to increase inotify limits on macOS"
-            else
-              cat /proc/sys/fs/inotify/max_user_watches
-              cat /proc/sys/fs/inotify/max_user_instances
-              echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
-              cat /proc/sys/fs/inotify/max_user_instances
-            fi
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          script: |
-            set -e
-            if [[ "$(uname -s)" == "Darwin"* ]]; then
-              open /Applications/Docker.app/Contents/MacOS/Docker\ Desktop.app
-            fi
+      - func: "increase inotify limits"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -195,29 +187,7 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          script: |
-            if [[ "$(uname -s)" == "Darwin"* ]]; then
-              echo "No need to increase inotify limits on macOS"
-            else
-              set -e
-              cat /proc/sys/fs/inotify/max_user_watches
-              cat /proc/sys/fs/inotify/max_user_instances
-              echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
-              cat /proc/sys/fs/inotify/max_user_instances
-            fi
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          script: |
-            set -e
-            if [[ "$(uname -s)" == "Darwin"* ]]; then
-              open /Applications/Docker.app/Contents/MacOS/Docker\ Desktop.app
-            fi
+      - func: "increase inotify limits"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

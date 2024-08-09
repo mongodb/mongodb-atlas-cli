@@ -54,16 +54,17 @@ functions:
         shell: bash
         env:
           <<: *go_env
+          MONGODB_DATABASE_TOOLS_VERSION: 100.10.0
         script: |
           set -Eeou pipefail
           if [[ "$(uname -s)" == "Darwin"* ]]; then
-            curl -sfLO "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-macos-arm64-100.10.0.zip"
-            unzip mongodb-database-tools-macos-arm64-100.10.0.zip
-            mv mongodb-database-tools-macos-arm64-100.10.0/bin/* .
-            rm -rf mongodb-database-tools-macos-arm64-100.10.0 mongodb-database-tools-macos-arm64-100.10.0.zip
+            curl -sLo mongodb-database-tools.zip "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-macos-arm64-$MONGODB_DATABASE_TOOLS_VERSION.zip"
+            unzip mongodb-database-tools.zip
+            mv mongodb-database-tools-*/bin/* .
+            rm -rf mongodb-database-tools-* mongodb-database-tools.zip
           else
             mkdir -p mongodb-database-tools
-            curl -sfL "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-100.10.0.tgz" | tar zx -C mongodb-database-tools --strip-components 1
+            curl -sfL "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-$MONGODB_DATABASE_TOOLS_VERSION.tgz" | tar zx -C mongodb-database-tools --strip-components 1
             mv mongodb-database-tools/bin/* .
             rm -rf mongodb-database-tools
           fi

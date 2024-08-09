@@ -1172,16 +1172,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .streams"
-  - name: e2e_local_deployments_macos
-    display_name: "E2E Local Deployments Tests (macos/docker)"
-    tags:
-      - localdev
-    run_on:
-      - macos-14-arm64-docker
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .deployments .local"
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]

@@ -54,17 +54,19 @@ functions:
         shell: bash
         env:
           <<: *go_env
-          MONGODB_DATABASE_TOOLS_VERSION: 100.10.0
         script: |
           set -Eeou pipefail
-          mkdir -p mongodb-database-tools
           if [[ "$(uname -s)" == "Darwin"* ]]; then
-            curl -sfL "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-macos-arm64-$MONGODB_DATABASE_TOOLS_VERSION.zip" | tar x -C mongodb-database-tools --strip-components 1
+            curl -sfLO "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-macos-arm64-100.10.0.zip"
+            unzip mongodb-database-tools-macos-arm64-100.10.0.zip
+            mv mongodb-database-tools-macos-arm64-100.10.0/bin/* .
+            rm -rf mongodb-database-tools-macos-arm64-100.10.0 mongodb-database-tools-macos-arm64-100.10.0.zip
           else
-            curl -sfL "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-$MONGODB_DATABASE_TOOLS_VERSION.tgz" | tar zx -C mongodb-database-tools --strip-components 1
+            mkdir -p mongodb-database-tools
+            curl -sfL "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-100.10.0.tgz" | tar zx -C mongodb-database-tools --strip-components 1
+            mv mongodb-database-tools/bin/* .
+            rm -rf mongodb-database-tools
           fi
-          mv mongodb-database-tools/bin/* .
-          rm -rf mongodb-database-tools
   "e2e test":
     - command: subprocess.exec
       type: test

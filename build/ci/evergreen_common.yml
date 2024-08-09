@@ -168,6 +168,15 @@ tasks:
               echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
               cat /proc/sys/fs/inotify/max_user_instances
             fi
+      - command: shell.exec
+        type: setup
+        params:
+          shell: bash
+          script: |
+            set -e
+            if [[ "$(uname -s)" == "Darwin"* ]]; then
+              open /Applications/Docker.app/Contents/MacOS/Docker\ Desktop.app
+            fi
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -199,6 +208,15 @@ tasks:
               cat /proc/sys/fs/inotify/max_user_instances
               echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
               cat /proc/sys/fs/inotify/max_user_instances
+            fi
+      - command: shell.exec
+        type: setup
+        params:
+          shell: bash
+          script: |
+            set -e
+            if [[ "$(uname -s)" == "Darwin"* ]]; then
+              open /Applications/Docker.app/Contents/MacOS/Docker\ Desktop.app
             fi
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes

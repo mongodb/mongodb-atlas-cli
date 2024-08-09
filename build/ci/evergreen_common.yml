@@ -120,7 +120,7 @@ functions:
           else
             URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz
           fi
-          curl -sfL URL | tar zx
+          curl -sfL $URL | tar zx
   "generate evergreen":
     - command: subprocess.exec
       type: test

@@ -173,7 +173,7 @@ functions:
           unzip packer.zip
           rm packer.zip LICENSE.txt
   "run packer":
-    - command: subprocess.exec
+    - command: shell.exec
       params:
         add_to_path:
           - src/github.com/mongodb/mongodb-atlas-cli/bin
@@ -184,7 +184,8 @@ functions:
           AZURE_PASSWORD: ${azure_password}
           AZURE_TENANT: ${azure_tenant}
           AZURE_SUBSCRIPTION_ID: ${azure_subscription_id}
-        command: packer build -force ${file}
+        script: |
+          packer build -force ${file}
 tasks:
   - name: build_win11_image
     tags: ["packer", "windows", "win11"]

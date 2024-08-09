@@ -189,12 +189,14 @@ tasks:
   - name: build_win11_image
     tags: ["packer", "windows", "win11"]
     commands:
+      - func: "install packer"
       - func: "run packer"
         vars:
           file: "windows-11-azure.pkr.hcl"
   - name: build_win10_image
     tags: ["packer", "windows", "win10"]
     commands:
+      - func: "install packer"
       - func: "run packer"
         vars:
           file: "windows-10-azure.pkr.hcl"

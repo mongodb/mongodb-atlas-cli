@@ -18,8 +18,6 @@ package plugin
 
 import (
 	"testing"
-
-	"github.com/spf13/cobra"
 )
 
 func TestManifest_IsValid(t *testing.T) {
@@ -153,9 +151,9 @@ func TestManifest_IsValid(t *testing.T) {
 }
 
 func Test_getUniqueManifests(t *testing.T) {
-	existingCommands := []*cobra.Command{
-		{Use: "existingCmd1"},
-		{Use: "existingCmd2"},
+	existingCommandsMap := map[string]bool{
+		"existingCmd1": true,
+		"existingCmd2": true,
 	}
 
 	manifests := []*Manifest{
@@ -191,7 +189,7 @@ func Test_getUniqueManifests(t *testing.T) {
 		},
 	}
 
-	uniqueManifests, duplicateManifests := getUniqueManifests(manifests, existingCommands)
+	uniqueManifests, duplicateManifests := getUniqueManifests(manifests, existingCommandsMap)
 
 	if len(uniqueManifests) != 2 {
 		t.Errorf("expected 2 unique manifests, got %d", len(uniqueManifests))

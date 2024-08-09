@@ -253,6 +253,11 @@ Use the --help flag with any command for more info on that command.`,
 	)
 
 	pluginCmd.RegisterCommands(rootCmd)
+	err := pluginCmd.RegisterFirstClassPluginCommands(rootCmd)
+
+	if err != nil {
+		_, _ = log.Warningln("Could not load first class plugins: %w", err)
+	}
 
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)

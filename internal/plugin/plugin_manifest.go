@@ -23,7 +23,6 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
@@ -210,14 +209,10 @@ func removeManifestsWithDuplicateNames(manifests []*Manifest) ([]*Manifest, []st
 	return uniqueManifests, duplicateManifestNames
 }
 
-func getUniqueManifests(manifests []*Manifest, existingCommands []*cobra.Command) ([]*Manifest, []*Manifest) {
-	existingCommandsMap := make(map[string]bool)
+func getUniqueManifests(manifests []*Manifest, existingCommandsMap map[string]bool) ([]*Manifest, []*Manifest) {
 	uniqueManifests := make([]*Manifest, 0, len(manifests))
 	var duplicateManifests []*Manifest
 
-	for _, cmd := range existingCommands {
-		existingCommandsMap[cmd.Name()] = true
-	}
 	existingCommandsMap["plugin"] = true
 
 	for _, manifest := range manifests {

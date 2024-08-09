@@ -43,7 +43,19 @@ func IsPluginCmd(cmd *cobra.Command) bool {
 	return false
 }
 
-func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
+func GetPluginWithName(name string, existingCommandsMap map[string]bool) (*Plugin, error) {
+	plugins := GetAllValidPlugins(existingCommandsMap)
+
+	for _, plugin := range plugins {
+		if plugin.Name == name {
+			return plugin, nil
+		}
+	}
+
+	return nil, fmt.Errorf("could not find plugin %s", name)
+}
+
+func GetAllValidPlugins(existingCommandsMap map[string]bool) []*Plugin {
 	var manifests []*Manifest
 
 	// Load manifests from plugin directories
@@ -70,7 +82,7 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	}
 
 	// Remove manifests that contain already existing commands
-	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommands)
+	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommandsMap)
 	for _, manifest := range duplicateManifest {
 		logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
 	}

@@ -1,0 +1,15 @@
+[
+    {
+        "name": "atlas-cli-plugin-example",
+        "github": {
+            "owner": "mongodb",
+            "name": "atlas-cli-plugin-example"
+        },
+        "commands": [
+            {
+                "name": "example",
+                "description": "Root command of the atlas cli plugin example"
+            }
+        ]
+    }
+]

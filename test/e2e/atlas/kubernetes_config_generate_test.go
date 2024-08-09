@@ -53,6 +53,7 @@ import (
 const targetNamespace = "importer-namespace"
 const credSuffixTest = "-credentials"
 const activeStatus = "ACTIVE"
+const sampleStreamName = "sample_stream_solar"
 
 var federationSettingsID string
 var identityProviderStatus string
@@ -1039,6 +1040,14 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 									),
 									Namespace: targetNamespace,
 								},
+								// sample_stream_solar is a sample connection which is added by default to new stream instances
+								{
+									Name: resources.NormalizeAtlasName(
+										fmt.Sprintf("%s-%s-%s", generator.projectName, generator.streamInstanceName, sampleStreamName),
+										resources.AtlasNameToKubernetesName(),
+									),
+									Namespace: targetNamespace,
+								},
 							},
 						},
 						Status: akov2status.AtlasStreamInstanceStatus{
@@ -1052,52 +1061,84 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 			}
 
 			if connection, ok := object.(*akov2.AtlasStreamConnection); ok {
-				assert.Equal(
-					t,
-					&akov2.AtlasStreamConnection{
-						TypeMeta: metav1.TypeMeta{
-							Kind:       "AtlasStreamConnection",
-							APIVersion: "atlas.mongodb.com/v1",
-						},
-						ObjectMeta: metav1.ObjectMeta{
-							Name: resources.NormalizeAtlasName(
-								fmt.Sprintf("%s-%s-%s", generator.projectName, generator.streamInstanceName, generator.streamConnectionName),
-								resources.AtlasNameToKubernetesName(),
-							),
-							Namespace: targetNamespace,
-							Labels: map[string]string{
-								"mongodb.com/atlas-resource-version": "2.4.0",
+				if connection.Spec.Name == sampleStreamName {
+					assert.Equal(
+						t,
+						&akov2.AtlasStreamConnection{
+							TypeMeta: metav1.TypeMeta{
+								Kind:       "AtlasStreamConnection",
+								APIVersion: "atlas.mongodb.com/v1",
+							},
+							ObjectMeta: metav1.ObjectMeta{
+								Name: resources.NormalizeAtlasName(
+									fmt.Sprintf("%s-%s-%s", generator.projectName, generator.streamInstanceName, sampleStreamName),
+									resources.AtlasNameToKubernetesName(),
+								),
+								Namespace: targetNamespace,
+								Labels: map[string]string{
+									"mongodb.com/atlas-resource-version": "2.4.0",
+								},
+							},
+							Spec: akov2.AtlasStreamConnectionSpec{
+								Name:           sampleStreamName,
+								ConnectionType: "Sample",
+							},
+							Status: akov2status.AtlasStreamConnectionStatus{
+								Common: akoapi.Common{
+									Conditions: []akoapi.Condition{},
+								},
 							},
 						},
-						Spec: akov2.AtlasStreamConnectionSpec{
-							Name:           generator.streamConnectionName,
-							ConnectionType: "Kafka",
-							KafkaConfig: &akov2.StreamsKafkaConnection{
-								Authentication: akov2.StreamsKafkaAuthentication{
-									Mechanism: "SCRAM-256",
-									Credentials: akov2common.ResourceRefNamespaced{
-										Name: resources.NormalizeAtlasName(
-											fmt.Sprintf("%s-%s-%s-userpass", generator.projectName, generator.streamInstanceName, generator.streamConnectionName),
-											resources.AtlasNameToKubernetesName(),
-										),
-										Namespace: targetNamespace,
+						connection,
+					)
+				} else {
+					assert.Equal(
+						t,
+						&akov2.AtlasStreamConnection{
+							TypeMeta: metav1.TypeMeta{
+								Kind:       "AtlasStreamConnection",
+								APIVersion: "atlas.mongodb.com/v1",
+							},
+							ObjectMeta: metav1.ObjectMeta{
+								Name: resources.NormalizeAtlasName(
+									fmt.Sprintf("%s-%s-%s", generator.projectName, generator.streamInstanceName, generator.streamConnectionName),
+									resources.AtlasNameToKubernetesName(),
+								),
+								Namespace: targetNamespace,
+								Labels: map[string]string{
+									"mongodb.com/atlas-resource-version": "2.4.0",
+								},
+							},
+							Spec: akov2.AtlasStreamConnectionSpec{
+								Name:           generator.streamConnectionName,
+								ConnectionType: "Kafka",
+								KafkaConfig: &akov2.StreamsKafkaConnection{
+									Authentication: akov2.StreamsKafkaAuthentication{
+										Mechanism: "SCRAM-256",
+										Credentials: akov2common.ResourceRefNamespaced{
+											Name: resources.NormalizeAtlasName(
+												fmt.Sprintf("%s-%s-%s-userpass", generator.projectName, generator.streamInstanceName, generator.streamConnectionName),
+												resources.AtlasNameToKubernetesName(),
+											),
+											Namespace: targetNamespace,
+										},
 									},
+									BootstrapServers: "example.com:8080,fraud.example.com:8000",
+									Security: akov2.StreamsKafkaSecurity{
+										Protocol: "PLAINTEXT",
+									},
+									Config: map[string]string{"auto.offset.reset": "earliest"},
 								},
-								BootstrapServers: "example.com:8080,fraud.example.com:8000",
-								Security: akov2.StreamsKafkaSecurity{
-									Protocol: "PLAINTEXT",
+							},
+							Status: akov2status.AtlasStreamConnectionStatus{
+								Common: akoapi.Common{
+									Conditions: []akoapi.Condition{},
 								},
-								Config: map[string]string{"auto.offset.reset": "earliest"},
 							},
 						},
-						Status: akov2status.AtlasStreamConnectionStatus{
-							Common: akoapi.Common{
-								Conditions: []akoapi.Condition{},
-							},
-						},
-					},
-					connection,
-				)
+						connection,
+					)
+				}
 			}
 
 			if secret, ok := object.(*corev1.Secret); ok && strings.Contains(secret.Name, "userpass") {

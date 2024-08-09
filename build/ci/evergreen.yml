@@ -1177,7 +1177,7 @@ buildvariants:
     tags:
       - packer
     run_on:
-      - archlinux-packer
+      - rhel80-small
     tasks:
       - name: ".packer .windows"
 patch_aliases:

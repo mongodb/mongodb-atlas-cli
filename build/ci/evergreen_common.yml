@@ -58,11 +58,11 @@ functions:
         script: |
           set -Eeou pipefail
           mkdir -p mongodb-database-tools
-          URL=https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-$MONGODB_DATABASE_TOOLS_VERSION.tgz
           if [[ "$(uname -s)" == "Darwin"* ]]; then
-            URL=https://fastdl.mongodb.org/tools/db/mongodb-database-tools-macos-arm64-$MONGODB_DATABASE_TOOLS_VERSION.zip
+            curl -sfL "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-macos-arm64-$MONGODB_DATABASE_TOOLS_VERSION.zip" | tar x -C mongodb-database-tools --strip-components 1
+          else
+            curl -sfL "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-$MONGODB_DATABASE_TOOLS_VERSION.tgz" | tar zx -C mongodb-database-tools --strip-components 1
           fi
-          curl -sfL $URL | tar zx -C mongodb-database-tools --strip-components 1
           mv mongodb-database-tools/bin/* .
           rm -rf mongodb-database-tools
   "e2e test":

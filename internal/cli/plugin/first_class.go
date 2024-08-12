@@ -15,8 +15,6 @@
 package plugin
 
 import (
-	_ "embed"
-	"encoding/json"
 	"fmt"
 
 	"github.com/google/go-github/v61/github"
@@ -28,23 +26,37 @@ const (
 	SourceType = "first-class"
 )
 
-//go:embed first-class-plugins.json
-var firstClassPluginsFile []byte
+// uncomment example plugin to test first class plugin feature.
+var firstClassPlugins = []*FirstClassPlugin{
+	// {
+	// 	Name: "atlas-cli-first-class-plugin-example",
+	// 	Github: &Github{
+	// 		Owner: "stefan4h",
+	// 		Name: "atlas-cli-first-class-plugin-example",
+	// 	},
+	// 	Commands: []*Command{
+	// 		{
+	// 			Name: "first-class",
+	// 			Description: "Root command of the Atlas CLI first class plugin example",
+	// 		},
+	// 	},
+	// },
+}
 
 type Command struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Name        string
+	Description string
 }
 
 type Github struct {
-	Owner string `json:"owner"`
-	Name  string `json:"name"`
+	Owner string
+	Name  string
 }
 
 type FirstClassPlugin struct {
-	Name     string    `json:"name"`
-	Github   Github    `json:"github"`
-	Commands []Command `json:"commands"`
+	Name     string
+	Github   *Github
+	Commands []*Command
 }
 
 func IsFirstClassPluginCmd(cmd *cobra.Command) bool {
@@ -117,15 +129,7 @@ func (fcp *FirstClassPlugin) getCommands() []*cobra.Command {
 	return commands
 }
 
-// there are no first class plugins at the moment which is why we can only test this function with
-// an example plugin. To test this copy content from the file "example.first-class-plugins.json" into "first-class-plugins.json".
 func RegisterFirstClassPluginCommands(rootCmd *cobra.Command) error {
-	// Read the file contents into a byte slice
-	var firstClassPlugins []*FirstClassPlugin
-	if err := json.Unmarshal(firstClassPluginsFile, &firstClassPlugins); err != nil {
-		return fmt.Errorf("failed to unmarshal first class plugin file: %w", err)
-	}
-
 	// create cobra commands to install first class plugins when their commands are run
 	for _, firstClassPlugin := range firstClassPlugins {
 		if firstClassPlugin.isAlreadyInstalled(rootCmd.Commands()) {

@@ -26,6 +26,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const (
+	ExtraPluginDirectoryEnvKey = "ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"
+)
+
 type ManifestGithubValues struct {
 	Owner string `yaml:"owner,omitempty"`
 	Name  string `yaml:"name,omitempty"`
@@ -90,6 +94,29 @@ func (m *Manifest) IsValid() (bool, []error) {
 		return false, errorsList
 	}
 	return true, nil
+}
+
+func loadManifestsFromPluginDirectories() []*Manifest {
+	var manifests []*Manifest
+
+	// Load manifests from plugin directories
+	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err == nil {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory); err != nil {
+			logPluginWarning(`could not load manifests from directory "%s" because of error: %s`, defaultPluginDirectory, err.Error())
+		} else {
+			manifests = append(manifests, loadedManifests...)
+		}
+	}
+
+	if extraPluginDir := os.Getenv(ExtraPluginDirectoryEnvKey); extraPluginDir != "" {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(extraPluginDir); err != nil {
+			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
+		} else {
+			manifests = append(manifests, loadedManifests...)
+		}
+	}
+
+	return manifests
 }
 
 func getManifestsFromPluginsDirectory(pluginsDirectory string) ([]*Manifest, error) {
@@ -216,7 +243,7 @@ func getUniqueManifests(manifests []*Manifest, existingCommandsMap map[string]bo
 	existingCommandsMap["plugin"] = true
 
 	for _, manifest := range manifests {
-		if HasDuplicateCommand(manifest, existingCommandsMap) {
+		if manifest.HasDuplicateCommand(existingCommandsMap) {
 			duplicateManifests = append(duplicateManifests, manifest)
 			continue
 		}
@@ -229,8 +256,8 @@ func getUniqueManifests(manifests []*Manifest, existingCommandsMap map[string]bo
 	return uniqueManifests, duplicateManifests
 }
 
-func HasDuplicateCommand(manifest *Manifest, existingCommandsMap map[string]bool) bool {
-	for cmdName := range manifest.Commands {
+func (m *Manifest) HasDuplicateCommand(existingCommandsMap map[string]bool) bool {
+	for cmdName := range m.Commands {
 		if existingCommandsMap[cmdName] {
 			return true
 		}

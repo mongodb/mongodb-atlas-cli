@@ -333,12 +333,12 @@ func Test_hasDuplicateCommand(t *testing.T) {
 		},
 	}
 
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			result := HasDuplicateCommand(tc.manifest, tc.existingCommandsMap)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.manifest.HasDuplicateCommand(tt.existingCommandsMap)
 
-			if result != tc.expectedResult {
-				t.Errorf("expected result %v, got %v", tc.expectedResult, result)
+			if result != tt.expectedResult {
+				t.Errorf("expected result %v, got %v", tt.expectedResult, result)
 			}
 		})
 	}

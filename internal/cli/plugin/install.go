@@ -63,8 +63,8 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 	}
 
 	// Check for duplicate commands
-	existingCommandsMap := makeExistingCommandsMap(opts.existingCommands)
-	if plugin.HasDuplicateCommand(manifest, existingCommandsMap) {
+	existingCommandsMap := createExistingCommandsMap(opts.existingCommands)
+	if manifest.HasDuplicateCommand(existingCommandsMap) {
 		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, opts.githubAsset.repository())
 	}
 

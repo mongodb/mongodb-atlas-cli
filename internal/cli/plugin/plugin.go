@@ -50,7 +50,7 @@ func (opts *Opts) findPluginWithArg(arg string) (*plugin.Plugin, error) {
 	return pluginToUninstall, nil
 }
 
-func makeExistingCommandsMap(existingCommands []*cobra.Command) map[string]bool {
+func createExistingCommandsMap(existingCommands []*cobra.Command) map[string]bool {
 	existingCommandsMap := make(map[string]bool)
 	for _, cmd := range existingCommands {
 		existingCommandsMap[cmd.Name()] = true
@@ -78,7 +78,7 @@ func (opts *Opts) findPluginWithName(name string) (*plugin.Plugin, error) {
 }
 
 func RegisterCommands(rootCmd *cobra.Command) {
-	plugins := plugin.GetAllValidPlugins(makeExistingCommandsMap(rootCmd.Commands()))
+	plugins := plugin.GetAllValidPlugins(createExistingCommandsMap(rootCmd.Commands()))
 
 	for _, p := range plugins {
 		rootCmd.AddCommand(p.GetCobraCommands()...)

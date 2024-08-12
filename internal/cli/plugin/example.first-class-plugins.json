@@ -1,0 +1,15 @@
+[
+    {
+        "name": "atlas-cli-first-class-plugin-example",
+        "github": {
+            "owner": "stefan4h",
+            "name": "atlas-cli-first-class-plugin-example"
+        },
+        "commands": [
+            {
+                "name": "first-class",
+                "description": "Root command of the Atlas CLI first class plugin example"
+            }
+        ]
+    }
+]

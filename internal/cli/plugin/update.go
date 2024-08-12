@@ -119,7 +119,7 @@ func (opts *UpdateOpts) validatePlugin(pluginDirectoryPath string) error {
 			existingCommandsMap[cmd.Name()] = true
 		}
 	}
-	if plugin.HasDuplicateCommand(manifest, existingCommandsMap) {
+	if manifest.HasDuplicateCommand(existingCommandsMap) {
 		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
 	}
 

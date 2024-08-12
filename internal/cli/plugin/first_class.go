@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	SourceType = "first-class"
+	FirstClassSourceType = "first-class"
 )
 
 // uncomment example plugin to test first class plugin feature.
@@ -60,7 +60,7 @@ type FirstClassPlugin struct {
 }
 
 func IsFirstClassPluginCmd(cmd *cobra.Command) bool {
-	if cmdSourceType, ok := cmd.Annotations["sourceType"]; ok && cmdSourceType == SourceType {
+	if cmdSourceType, ok := cmd.Annotations["sourceType"]; ok && cmdSourceType == FirstClassSourceType {
 		return true
 	}
 	return false
@@ -115,7 +115,7 @@ func (fcp *FirstClassPlugin) getCommands() []*cobra.Command {
 			Use:   firstClassPluginCommand.Name,
 			Short: firstClassPluginCommand.Description,
 			Annotations: map[string]string{
-				"sourceType": SourceType,
+				"sourceType": FirstClassSourceType,
 			},
 			RunE: func(cmd *cobra.Command, args []string) error {
 				return fcp.runFirstClassPluginCommand(cmd, args, ghClient)

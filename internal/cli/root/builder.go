@@ -323,7 +323,7 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 		}
 	}
 
-	if plugin.IsPluginCmd(cmd) || pluginCmd.IsFirstClassPlugin(cmd) {
+	if plugin.IsPluginCmd(cmd) || pluginCmd.IsFirstClassPluginCmd(cmd) {
 		return OptionalAuth
 	}
 

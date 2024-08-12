@@ -23,7 +23,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_IsFirstClassPlugin(t *testing.T) {
+func Test_IsFirstClassPluginCmd(t *testing.T) {
 	tests := []struct {
 		name        string
 		annotations map[string]string
@@ -61,7 +61,7 @@ func Test_IsFirstClassPlugin(t *testing.T) {
 				Annotations: tt.annotations,
 			}
 
-			result := IsFirstClassPlugin(cmd)
+			result := IsFirstClassPluginCmd(cmd)
 			assert.Equal(t, tt.expected, result)
 		})
 	}

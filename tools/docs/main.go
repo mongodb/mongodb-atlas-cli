@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/mongodb-labs/cobra2snooty"
+	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
@@ -44,7 +45,7 @@ func main() {
 	atlasBuilder := root.Builder()
 
 	for _, cmd := range atlasBuilder.Commands() {
-		if plugin.IsPluginCmd(cmd) {
+		if plugin.IsPluginCmd(cmd) || pluginCmd.IsFirstClassPluginCmd(cmd) {
 			atlasBuilder.RemoveCommand(cmd)
 		}
 	}

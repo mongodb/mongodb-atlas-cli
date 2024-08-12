@@ -47,7 +47,7 @@ type FirstClassPlugin struct {
 	Commands []Command `json:"commands"`
 }
 
-func IsFirstClassPlugin(cmd *cobra.Command) bool {
+func IsFirstClassPluginCmd(cmd *cobra.Command) bool {
 	if cmdSourceType, ok := cmd.Annotations["sourceType"]; ok && cmdSourceType == SourceType {
 		return true
 	}

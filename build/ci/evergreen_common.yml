@@ -52,12 +52,22 @@ functions:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
         shell: bash
+        env:
+          <<: *go_env
+          MONGODB_DATABASE_TOOLS_VERSION: 100.10.0
         script: |
           set -Eeou pipefail
-          mkdir -p mongodb-database-tools
-          curl -sfL https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-100.10.0.tgz | tar zx -C mongodb-database-tools --strip-components 1
-          mv mongodb-database-tools/bin/* .
-          rm -rf mongodb-database-tools
+          if [[ "$(uname -s)" == "Darwin"* ]]; then
+            curl -sLo mongodb-database-tools.zip "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-macos-arm64-$MONGODB_DATABASE_TOOLS_VERSION.zip"
+            unzip mongodb-database-tools.zip
+            mv mongodb-database-tools-*/bin/* .
+            rm -rf mongodb-database-tools-* mongodb-database-tools.zip
+          else
+            mkdir -p mongodb-database-tools
+            curl -sfL "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-$MONGODB_DATABASE_TOOLS_VERSION.tgz" | tar zx -C mongodb-database-tools --strip-components 1
+            mv mongodb-database-tools/bin/* .
+            rm -rf mongodb-database-tools
+          fi
   "e2e test":
     - command: subprocess.exec
       type: test
@@ -106,7 +116,12 @@ functions:
         script: |
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
-          curl -sfL https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz | tar zx
+          if [[ "$(uname -s)" == "Darwin"* ]]; then
+            URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_darwin_arm64.tar.gz
+          else
+            URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz
+          fi
+          curl -sfL $URL | tar zx
   "generate evergreen":
     - command: subprocess.exec
       type: test
@@ -132,6 +147,20 @@ functions:
       params:
         files:
           - tasks.json
+  "increase inotify limits":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |
+          set -e
+          if [[ "$(uname -s)" == "Darwin"* ]]; then
+            echo "No need to increase inotify limits on macOS"
+          else
+            cat /proc/sys/fs/inotify/max_user_watches
+            cat /proc/sys/fs/inotify/max_user_instances
+            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
+            cat /proc/sys/fs/inotify/max_user_instances
+          fi
 tasks:
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
@@ -140,16 +169,7 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          script: |
-            set -e
-            cat /proc/sys/fs/inotify/max_user_watches
-            cat /proc/sys/fs/inotify/max_user_instances
-            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
-            cat /proc/sys/fs/inotify/max_user_instances
+      - func: "increase inotify limits"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -168,16 +188,7 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          script: |
-            set -e
-            cat /proc/sys/fs/inotify/max_user_watches
-            cat /proc/sys/fs/inotify/max_user_instances
-            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
-            cat /proc/sys/fs/inotify/max_user_instances
+      - func: "increase inotify limits"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:

@@ -1240,6 +1240,9 @@ patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]
     task_tags: ["local"]
+  - alias: "packer"
+    variant_tags: ["packer"]
+    task: ".*"
 github_pr_aliases:
   - variant: "code_health"
     task_tags: ["code_health"]

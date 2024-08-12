@@ -21,12 +21,78 @@ variables:
       go_root: "/opt/golang/go1.22"
       go_bin: "/opt/golang/go1.22/bin"
       go_base_path: ""
+  - &go_env
+      XDG_CONFIG_HOME: ${go_base_path}${workdir}
+      GO111MODULE: "on"
+      GOROOT: ${go_root}
+      GOPATH: ${go_base_path}${workdir}
+      ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
+      GOPROXY: ${go_proxy}
+  - &go_options
+    add_to_path:
+      - ${go_bin}
+      - ${go_base_path}${workdir}/bin
+      - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
+    include_expansions_in_env:
+      - go_base_path
+      - go_proxy
+      - workdir
+    working_dir: src/github.com/mongodb/mongodb-atlas-cli
+    env:
+      <<: *go_env
 pre:
   - func: "clone"
 post:
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
+functions:
+  "install packer":
+    - command: shell.exec
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        env:
+          <<: *go_env
+          PACKER_VERSION: 1.11.2
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          curl -sLo packer.zip https://releases.hashicorp.com/packer/$PACKER_VERSION/packer_$(echo $PACKER_VERSION)_linux_amd64.zip
+          unzip packer.zip
+          rm packer.zip LICENSE.txt
+          packer -v
+  "run packer":
+    - command: shell.exec
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/packer
+        env:
+          <<: *go_env
+          AZURE_APP_ID: ${azure_app_id}
+          AZURE_DISPLAY_NAME: ${azure_display_name}
+          AZURE_PASSWORD: ${azure_password}
+          AZURE_TENANT: ${azure_tenant}
+          AZURE_SUBSCRIPTION_ID: ${azure_subscription_id}
+        shell: bash
+        script: |
+          packer init ${file}
+          packer build -force ${file}
+tasks:
+  - name: build_win11_image
+    tags: ["packer", "windows", "win11"]
+    commands:
+      - func: "install packer"
+      - func: "run packer"
+        vars:
+          file: "windows-11-azure.pkr.hcl"
+  - name: build_win10_image
+    tags: ["packer", "windows", "win10"]
+    commands:
+      - func: "install packer"
+      - func: "run packer"
+        vars:
+          file: "windows-10-azure.pkr.hcl"
 buildvariants:
   - name: e2e_local_deployments_rhel
     display_name: "E2E Local Deployments Tests (rhel/podman)"
@@ -38,3 +104,23 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_macos
+    display_name: "E2E Local Deployments Tests (macos/docker)"
+    tags:
+      - localdev
+    run_on:
+      - macos-14-arm64-docker
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: build_images
+    display_name: "Build Windows Images"
+    expansions:
+      <<: *go_linux_version
+    tags:
+      - packer
+    run_on:
+      - rhel80-small
+    tasks:
+      - name: ".packer .windows"

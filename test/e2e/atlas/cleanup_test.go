@@ -58,9 +58,18 @@ func TestCleanup(t *testing.T) {
 	for _, project := range projects.GetResults() {
 		projectID := project.GetId()
 		if projectID == os.Getenv("MCLI_PROJECT_ID") {
-			t.Log("skipping project", projectID)
+			// we have to cleanup data federations from default project
+			// as this is the only project configured for data federation
+			// (has a configured awsRoleId)
+			t.Run("delete data federations", func(t *testing.T) {
+				t.Parallel()
+				deleteAllDataFederations(t, cliPath, projectID)
+			})
+
+			t.Log("skip deleting default project", projectID)
 			continue
 		}
+
 		t.Run("trying to delete project "+projectID, func(t *testing.T) {
 			t.Parallel()
 			t.Cleanup(func() {
@@ -85,7 +94,7 @@ func TestCleanup(t *testing.T) {
 				t.Parallel()
 				deleteDatapipelinesForProject(t, cliPath, projectID)
 			})
-			t.Run("delete data deferations", func(t *testing.T) {
+			t.Run("delete data federations", func(t *testing.T) {
 				t.Parallel()
 				deleteAllDataFederations(t, cliPath, projectID)
 			})

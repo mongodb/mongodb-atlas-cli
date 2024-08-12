@@ -31,7 +31,7 @@ variable "tenant_id" {
   default = env("AZURE_TENANT")
 }
 
-source "azure-arm" "windows-11" {
+source "azure-arm" "windows-10" {
   client_id                         = var.client_id
   client_secret                     = var.client_secret
   subscription_id                   = var.subscription_id
@@ -53,7 +53,7 @@ source "azure-arm" "windows-11" {
 }
 
 build {
-  sources = ["source.azure-arm.windows-11"]
+  sources = ["source.azure-arm.windows-10"]
 
   provisioner "windows-update" {}
 

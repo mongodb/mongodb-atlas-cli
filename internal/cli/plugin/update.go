@@ -115,7 +115,7 @@ func (opts *UpdateOpts) validatePlugin(pluginDirectoryPath string) error {
 	existingCommandsMap := make(map[string]bool)
 	for _, cmd := range opts.existingCommands {
 		// only add command to existing commands map if it is not part of the plugin we want to update
-		if sourcePluginName, ok := cmd.Annotations["sourcePluginName"]; !ok || sourcePluginName != manifest.Name {
+		if sourcePluginName, ok := cmd.Annotations[sourcePluginName]; !ok || sourcePluginName != manifest.Name {
 			existingCommandsMap[cmd.Name()] = true
 		}
 	}

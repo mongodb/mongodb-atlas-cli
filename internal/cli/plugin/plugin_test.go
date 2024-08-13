@@ -82,22 +82,22 @@ func getTestCommands(t *testing.T) []*cobra.Command {
 		{
 			Use: "testcommand1",
 			Annotations: map[string]string{
-				"sourceType":       "plugin",
-				"sourcePluginName": "testplugin1",
+				sourceType:       "plugin",
+				sourcePluginName: "testplugin1",
 			},
 		},
 		{
 			Use: "testcommand2",
 			Annotations: map[string]string{
-				"sourceType":       "plugin",
-				"sourcePluginName": "testplugin2",
+				sourceType:       "plugin",
+				sourcePluginName: "testplugin2",
 			},
 		},
 		{
 			Use: "testcommand3",
 			Annotations: map[string]string{
-				"sourceType":       "plugin",
-				"sourcePluginName": "testplugin3",
+				sourceType:       "plugin",
+				sourcePluginName: "testplugin3",
 			},
 		},
 	}

@@ -32,11 +32,13 @@ var (
 )
 
 const (
-	SourceType = "plugin"
+	PluginSourceType = "plugin"
+	sourceType       = "sourceType"
+	sourcePluginName = "sourcePluginName"
 )
 
 func IsPluginCmd(cmd *cobra.Command) bool {
-	if cmdSourceType, ok := cmd.Annotations["sourceType"]; ok && cmdSourceType == SourceType {
+	if cmdSourceType, ok := cmd.Annotations[sourceType]; ok && cmdSourceType == PluginSourceType {
 		return true
 	}
 	return false
@@ -165,8 +167,8 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 			Use:   pluginCmd.Name,
 			Short: pluginCmd.Description,
 			Annotations: map[string]string{
-				"sourceType":       SourceType,
-				"sourcePluginName": p.Name,
+				sourceType:       PluginSourceType,
+				sourcePluginName: p.Name,
 			},
 			RunE: p.Run,
 		}

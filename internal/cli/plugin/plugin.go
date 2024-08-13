@@ -24,6 +24,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	sourcePluginName = "sourcePluginName"
+)
+
 type Opts struct {
 	plugins          []*plugin.Plugin
 	existingCommands []*cobra.Command

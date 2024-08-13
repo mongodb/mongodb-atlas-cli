@@ -32,14 +32,14 @@ func Test_IsFirstClassPluginCmd(t *testing.T) {
 		{
 			name: "Correct sourceType annotation",
 			annotations: map[string]string{
-				"sourceType": FirstClassSourceType,
+				sourceType: FirstClassSourceType,
 			},
 			expected: true,
 		},
 		{
 			name: "Incorrect sourceType annotation",
 			annotations: map[string]string{
-				"sourceType": "anotherType",
+				sourceType: "anotherType",
 			},
 			expected: false,
 		},

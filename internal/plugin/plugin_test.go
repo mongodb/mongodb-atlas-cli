@@ -41,7 +41,7 @@ func getTestManifest() *Manifest {
 func Test_IsPluginCmd(t *testing.T) {
 	pluginCmd := cobra.Command{
 		Annotations: map[string]string{
-			"sourceType": SourceType,
+			sourceType: PluginSourceType,
 		}}
 	cmd := cobra.Command{}
 

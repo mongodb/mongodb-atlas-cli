@@ -24,6 +24,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"github.com/spf13/cobra"
 )
 
@@ -32,36 +33,48 @@ var (
 )
 
 const (
-	ExtraPluginDirectoryEnvKey = "ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"
-	SourceType                 = "plugin"
+	PluginSourceType = "plugin"
+	sourceType       = "sourceType"
+	sourcePluginName = "sourcePluginName"
 )
 
 func IsPluginCmd(cmd *cobra.Command) bool {
-	if cmdSourceType, ok := cmd.Annotations["sourceType"]; ok && cmdSourceType == SourceType {
+	if cmdSourceType, ok := cmd.Annotations[sourceType]; ok && cmdSourceType == PluginSourceType {
 		return true
 	}
 	return false
 }
 
-func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
-	var manifests []*Manifest
+func GetPluginWithName(name string, existingCommandsSet set.Set[string], onlySearchValidPlugins bool) (*Plugin, error) {
+	var plugins []*Plugin
+	if onlySearchValidPlugins {
+		plugins = GetAllValidPlugins(existingCommandsSet)
+	} else {
+		plugins = getAllPlugins()
+	}
 
+	for _, plugin := range plugins {
+		if plugin.Name == name {
+			return plugin, nil
+		}
+	}
+
+	return nil, fmt.Errorf("could not find plugin %s", name)
+}
+
+func getAllPlugins() []*Plugin {
 	// Load manifests from plugin directories
-	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err == nil {
-		if loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory); err != nil {
-			logPluginWarning(`could not load manifests from directory "%s" because of error: %s`, defaultPluginDirectory, err.Error())
-		} else {
-			manifests = append(manifests, loadedManifests...)
-		}
-	}
+	manifests := loadManifestsFromPluginDirectories()
 
-	if extraPluginDir := os.Getenv("ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"); extraPluginDir != "" {
-		if loadedManifests, err := getManifestsFromPluginsDirectory(extraPluginDir); err != nil {
-			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
-		} else {
-			manifests = append(manifests, loadedManifests...)
-		}
-	}
+	// Convert manifests to plugins
+	plugins := convertManifestsToPlugins(manifests)
+
+	return plugins
+}
+
+func GetAllValidPlugins(existingCommandsSet set.Set[string]) []*Plugin {
+	// Load manifests from plugin directories
+	manifests := loadManifestsFromPluginDirectories()
 
 	// Remove manifests with duplicate names
 	manifests, duplicateManifestNames := removeManifestsWithDuplicateNames(manifests)
@@ -70,21 +83,13 @@ func GetAllValidPlugins(existingCommands []*cobra.Command) []*Plugin {
 	}
 
 	// Remove manifests that contain already existing commands
-	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommands)
+	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommandsSet)
 	for _, manifest := range duplicateManifest {
 		logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
 	}
 
 	// Convert manifests to plugins
-	plugins := make([]*Plugin, 0, len(manifests))
-	for _, manifest := range manifests {
-		plugin, err := createPluginFromManifest(manifest)
-		if err != nil {
-			logPluginWarning(err.Error())
-			continue
-		}
-		plugins = append(plugins, plugin)
-	}
+	plugins := convertManifestsToPlugins(manifests)
 
 	return plugins
 }
@@ -163,8 +168,8 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 			Use:   pluginCmd.Name,
 			Short: pluginCmd.Description,
 			Annotations: map[string]string{
-				"sourceType":       SourceType,
-				"sourcePluginName": p.Name,
+				sourceType:       PluginSourceType,
+				sourcePluginName: p.Name,
 			},
 			RunE: p.Run,
 		}
@@ -173,6 +178,20 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 	}
 
 	return commands
+}
+
+func convertManifestsToPlugins(manifests []*Manifest) []*Plugin {
+	plugins := make([]*Plugin, 0, len(manifests))
+	for _, manifest := range manifests {
+		plugin, err := createPluginFromManifest(manifest)
+		if err != nil {
+			logPluginWarning(err.Error())
+			continue
+		}
+		plugins = append(plugins, plugin)
+	}
+
+	return plugins
 }
 
 func createPluginFromManifest(manifest *Manifest) (*Plugin, error) {

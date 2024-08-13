@@ -23,6 +23,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/google/go-github/v61/github"
+	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
@@ -34,16 +35,16 @@ import (
 func TestBuilder(t *testing.T) {
 	rootCmd := Builder()
 
-	pluginCommandCount := 0
+	nonCLIsubcommandCount := 0
 	for _, cmd := range rootCmd.Commands() {
-		if plugin.IsPluginCmd(cmd) {
-			pluginCommandCount++
+		if plugin.IsPluginCmd(cmd) || pluginCmd.IsFirstClassPluginCmd(cmd) {
+			nonCLIsubcommandCount++
 		}
 	}
 	test.CmdValidator(
 		t,
 		rootCmd,
-		41+pluginCommandCount,
+		41+nonCLIsubcommandCount,
 		[]string{},
 	)
 }

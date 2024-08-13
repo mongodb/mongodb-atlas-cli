@@ -22,6 +22,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/require"
 )
 
@@ -70,6 +71,33 @@ func getTestPlugins(t *testing.T) []*plugin.Plugin {
 			Github: &plugin.Github{
 				Owner: "owner3",
 				Name:  "repo3",
+			},
+		},
+	}
+}
+
+func getTestCommands(t *testing.T) []*cobra.Command {
+	t.Helper()
+	return []*cobra.Command{
+		{
+			Use: "testcommand1",
+			Annotations: map[string]string{
+				sourceType:       "plugin",
+				sourcePluginName: "testplugin1",
+			},
+		},
+		{
+			Use: "testcommand2",
+			Annotations: map[string]string{
+				sourceType:       "plugin",
+				sourcePluginName: "testplugin2",
+			},
+		},
+		{
+			Use: "testcommand3",
+			Annotations: map[string]string{
+				sourceType:       "plugin",
+				sourcePluginName: "testplugin3",
 			},
 		},
 	}
@@ -126,6 +154,15 @@ func Test_findPluginWithArg(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_createExistingCommandsSet(t *testing.T) {
+	existingCommandsSet := createExistingCommandsSet(getTestCommands(t))
+
+	require.True(t, existingCommandsSet.Contains("testcommand1"))
+	require.True(t, existingCommandsSet.Contains("testcommand2"))
+	require.True(t, existingCommandsSet.Contains("testcommand3"))
+	require.False(t, existingCommandsSet.Contains("testcommand4"))
 }
 
 func Test_findPluginWithGithubValues(t *testing.T) {

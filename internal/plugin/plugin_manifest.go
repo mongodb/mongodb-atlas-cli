@@ -23,8 +23,12 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"gopkg.in/yaml.v3"
+)
+
+const (
+	ExtraPluginDirectoryEnvKey = "ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY"
 )
 
 type ManifestGithubValues struct {
@@ -91,6 +95,29 @@ func (m *Manifest) IsValid() (bool, []error) {
 		return false, errorsList
 	}
 	return true, nil
+}
+
+func loadManifestsFromPluginDirectories() []*Manifest {
+	var manifests []*Manifest
+
+	// Load manifests from plugin directories
+	if defaultPluginDirectory, err := GetDefaultPluginDirectory(); err == nil {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(defaultPluginDirectory); err != nil {
+			logPluginWarning(`could not load manifests from directory "%s" because of error: %s`, defaultPluginDirectory, err.Error())
+		} else {
+			manifests = append(manifests, loadedManifests...)
+		}
+	}
+
+	if extraPluginDir := os.Getenv(ExtraPluginDirectoryEnvKey); extraPluginDir != "" {
+		if loadedManifests, err := getManifestsFromPluginsDirectory(extraPluginDir); err != nil {
+			logPluginWarning(`could not load plugins from folder "%s" provided in environment variable ATLAS_CLI_EXTRA_PLUGIN_DIRECTORY: %s`, extraPluginDir, err.Error())
+		} else {
+			manifests = append(manifests, loadedManifests...)
+		}
+	}
+
+	return manifests
 }
 
 func getManifestsFromPluginsDirectory(pluginsDirectory string) ([]*Manifest, error) {
@@ -210,23 +237,19 @@ func removeManifestsWithDuplicateNames(manifests []*Manifest) ([]*Manifest, []st
 	return uniqueManifests, duplicateManifestNames
 }
 
-func getUniqueManifests(manifests []*Manifest, existingCommands []*cobra.Command) ([]*Manifest, []*Manifest) {
-	existingCommandsMap := make(map[string]bool)
+func getUniqueManifests(manifests []*Manifest, existingCommandsSet set.Set[string]) ([]*Manifest, []*Manifest) {
 	uniqueManifests := make([]*Manifest, 0, len(manifests))
 	var duplicateManifests []*Manifest
 
-	for _, cmd := range existingCommands {
-		existingCommandsMap[cmd.Name()] = true
-	}
-	existingCommandsMap["plugin"] = true
+	existingCommandsSet.Add("plugin")
 
 	for _, manifest := range manifests {
-		if HasDuplicateCommand(manifest, existingCommandsMap) {
+		if manifest.HasDuplicateCommand(existingCommandsSet) {
 			duplicateManifests = append(duplicateManifests, manifest)
 			continue
 		}
 		for cmdName := range manifest.Commands {
-			existingCommandsMap[cmdName] = true
+			existingCommandsSet.Add(cmdName)
 		}
 		uniqueManifests = append(uniqueManifests, manifest)
 	}
@@ -234,9 +257,9 @@ func getUniqueManifests(manifests []*Manifest, existingCommands []*cobra.Command
 	return uniqueManifests, duplicateManifests
 }
 
-func HasDuplicateCommand(manifest *Manifest, existingCommandsMap map[string]bool) bool {
-	for cmdName := range manifest.Commands {
-		if existingCommandsMap[cmdName] {
+func (m *Manifest) HasDuplicateCommand(existingCommandsSet set.Set[string]) bool {
+	for cmdName := range m.Commands {
+		if existingCommandsSet.Contains(cmdName) {
 			return true
 		}
 	}

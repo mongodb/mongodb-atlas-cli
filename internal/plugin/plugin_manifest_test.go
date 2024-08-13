@@ -19,7 +19,7 @@ package plugin
 import (
 	"testing"
 
-	"github.com/spf13/cobra"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 )
 
 func TestManifest_IsValid(t *testing.T) {
@@ -152,11 +152,15 @@ func TestManifest_IsValid(t *testing.T) {
 	}
 }
 
+func getExistingCommandsSet() set.Set[string] {
+	existingCommandsSet := set.NewSet[string]()
+	existingCommandsSet.Add("existingCmd1")
+	existingCommandsSet.Add("existingCmd2")
+	return existingCommandsSet
+}
+
 func Test_getUniqueManifests(t *testing.T) {
-	existingCommands := []*cobra.Command{
-		{Use: "existingCmd1"},
-		{Use: "existingCmd2"},
-	}
+	existingCommandsSet := getExistingCommandsSet()
 
 	manifests := []*Manifest{
 		{
@@ -191,7 +195,7 @@ func Test_getUniqueManifests(t *testing.T) {
 		},
 	}
 
-	uniqueManifests, duplicateManifests := getUniqueManifests(manifests, existingCommands)
+	uniqueManifests, duplicateManifests := getUniqueManifests(manifests, existingCommandsSet)
 
 	if len(uniqueManifests) != 2 {
 		t.Errorf("expected 2 unique manifests, got %d", len(uniqueManifests))
@@ -291,16 +295,12 @@ func Test_removeManifestsWithDuplicateNames(t *testing.T) {
 }
 
 func Test_hasDuplicateCommand(t *testing.T) {
-	existingCommandsMap := map[string]bool{
-		"existingCmd1": true,
-		"existingCmd2": true,
-	}
+	existingCommandsSet := getExistingCommandsSet()
 
 	tests := []struct {
-		name                string
-		manifest            *Manifest
-		existingCommandsMap map[string]bool
-		expectedResult      bool
+		name           string
+		manifest       *Manifest
+		expectedResult bool
 	}{
 		{
 			name: "Manifest without duplicate commands",
@@ -315,8 +315,7 @@ func Test_hasDuplicateCommand(t *testing.T) {
 					"command":      {Description: "here is another command"},
 				},
 			},
-			existingCommandsMap: existingCommandsMap,
-			expectedResult:      false,
+			expectedResult: false,
 		},
 		{
 			name: "Manifest with duplicate commands",
@@ -330,17 +329,16 @@ func Test_hasDuplicateCommand(t *testing.T) {
 					"existingCmd2": {Description: "this command already exsists"},
 				},
 			},
-			existingCommandsMap: existingCommandsMap,
-			expectedResult:      true,
+			expectedResult: true,
 		},
 	}
 
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			result := HasDuplicateCommand(tc.manifest, tc.existingCommandsMap)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.manifest.HasDuplicateCommand(existingCommandsSet)
 
-			if result != tc.expectedResult {
-				t.Errorf("expected result %v, got %v", tc.expectedResult, result)
+			if result != tt.expectedResult {
+				t.Errorf("expected result %v, got %v", tt.expectedResult, result)
 			}
 		})
 	}

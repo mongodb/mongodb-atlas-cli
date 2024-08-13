@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -112,14 +113,14 @@ func (opts *UpdateOpts) validatePlugin(pluginDirectoryPath string) error {
 	}
 
 	// Check for duplicate commands
-	existingCommandsMap := make(map[string]bool)
+	existingCommandsSet := set.NewSet[string]()
 	for _, cmd := range opts.existingCommands {
 		// only add command to existing commands map if it is not part of the plugin we want to update
-		if sourcePluginName, ok := cmd.Annotations["sourcePluginName"]; !ok || sourcePluginName != manifest.Name {
-			existingCommandsMap[cmd.Name()] = true
+		if sourcePluginName, ok := cmd.Annotations[sourcePluginName]; !ok || sourcePluginName != manifest.Name {
+			existingCommandsSet.Add(cmd.Name())
 		}
 	}
-	if plugin.HasDuplicateCommand(manifest, existingCommandsMap) {
+	if manifest.HasDuplicateCommand(existingCommandsSet) {
 		return fmt.Errorf(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
 	}
 

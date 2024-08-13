@@ -223,7 +223,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 					Namespace: targetNamespace,
 				},
 				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
-					BackupEnabled: cluster.BackupEnabled,
+					MongoDBMajorVersion: "5.0",
+					BackupEnabled:       cluster.BackupEnabled,
 					CustomZoneMapping: []akov2.CustomZoneMapping{
 						{
 							Location: firstLocation,

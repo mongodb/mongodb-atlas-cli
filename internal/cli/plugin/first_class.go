@@ -66,12 +66,9 @@ func IsFirstClassPluginCmd(cmd *cobra.Command) bool {
 	return false
 }
 
-func (fcp *FirstClassPlugin) isAlreadyInstalled(existingCommands []*cobra.Command) bool {
-	for _, cmd := range existingCommands {
-		if !plugin.IsPluginCmd(cmd) {
-			continue
-		}
-		if pluginName, ok := cmd.Annotations["sourcePluginName"]; ok && pluginName == fcp.Name {
+func (fcp *FirstClassPlugin) isAlreadyInstalled(plugins []*plugin.Plugin) bool {
+	for _, p := range plugins {
+		if p.Name == fcp.Name {
 			return true
 		}
 	}
@@ -129,15 +126,16 @@ func (fcp *FirstClassPlugin) getCommands() []*cobra.Command {
 	return commands
 }
 
-func RegisterFirstClassPluginCommands(rootCmd *cobra.Command) error {
+func getFirstClassPluginCommands(plugins []*plugin.Plugin) []*cobra.Command {
+	var commands []*cobra.Command
 	// create cobra commands to install first class plugins when their commands are run
 	for _, firstClassPlugin := range firstClassPlugins {
-		if firstClassPlugin.isAlreadyInstalled(rootCmd.Commands()) {
+		if firstClassPlugin.isAlreadyInstalled(plugins) {
 			continue
 		}
 
-		rootCmd.AddCommand(firstClassPlugin.getCommands()...)
+		commands = append(commands, firstClassPlugin.getCommands()...)
 	}
 
-	return nil
+	return commands
 }

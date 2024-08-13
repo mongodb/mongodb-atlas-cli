@@ -68,7 +68,7 @@ func Test_IsFirstClassPluginCmd(t *testing.T) {
 }
 
 func Test_isAlreadyInstalled(t *testing.T) {
-	existingCommands := getTestCommands(t)
+	plugins := getTestPlugins(t)
 
 	tests := []struct {
 		name             string
@@ -77,12 +77,12 @@ func Test_isAlreadyInstalled(t *testing.T) {
 	}{
 		{
 			name:             "Is already installed",
-			firstClassPlugin: &FirstClassPlugin{Name: "testplugin2"},
+			firstClassPlugin: &FirstClassPlugin{Name: "plugin2"},
 			expected:         true,
 		},
 		{
 			name:             "Is not installed",
-			firstClassPlugin: &FirstClassPlugin{Name: "testplugin4"},
+			firstClassPlugin: &FirstClassPlugin{Name: "plugin4"},
 			expected:         false,
 		},
 	}
@@ -90,7 +90,7 @@ func Test_isAlreadyInstalled(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Call the method and check the result
-			result := tt.firstClassPlugin.isAlreadyInstalled(existingCommands)
+			result := tt.firstClassPlugin.isAlreadyInstalled(plugins)
 			assert.Equal(t, tt.expected, result)
 		})
 	}

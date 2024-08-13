@@ -84,6 +84,8 @@ func RegisterCommands(rootCmd *cobra.Command) {
 		rootCmd.AddCommand(p.GetCobraCommands()...)
 	}
 
+	rootCmd.AddCommand(getFirstClassPluginCommands(plugins)...)
+
 	rootCmd.AddCommand(Builder(plugins, rootCmd.Commands()))
 }
 

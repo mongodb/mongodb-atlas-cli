@@ -43,7 +43,7 @@ require (
 	go.mongodb.org/mongo-driver v1.16.1
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
 	golang.org/x/mod v0.20.0
-	golang.org/x/sys v0.23.0
+	golang.org/x/sys v0.24.0
 	golang.org/x/tools v0.24.0
 	google.golang.org/api v0.191.0
 	google.golang.org/protobuf v1.34.2

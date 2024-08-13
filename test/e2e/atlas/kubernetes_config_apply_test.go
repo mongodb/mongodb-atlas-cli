@@ -228,6 +228,8 @@ func TestKubernetesConfigApply(t *testing.T) {
 				true,
 			),
 		)
+		assert.NotEmpty(t, akoDeployment.Spec.DeploymentSpec.MongoDBMajorVersion)
+		akoDeployment.Spec.DeploymentSpec.MongoDBMajorVersion = ""
 		assert.Equal(t, referenceExportedDeployment(g.projectName, g.clusterName, e2eNamespace.Name).Spec, akoDeployment.Spec)
 	})
 }

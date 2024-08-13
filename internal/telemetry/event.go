@@ -332,9 +332,12 @@ func withUserAgent() EventOpt {
 	}
 }
 
-func WithIndexType(indexType string) EventOpt {
+func WithSearchIndexType(indexType string) EventOpt {
 	return func(event Event) {
-		event.Properties["index_type"] = indexType
+		if indexType == "" {
+			return
+		}
+		event.Properties["search_index_type"] = indexType
 	}
 }
 

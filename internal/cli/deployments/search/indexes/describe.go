@@ -67,7 +67,7 @@ func (opts *DescribeOpts) RunAtlas() error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithIndexType(r.GetType()))
+	telemetry.AppendOption(telemetry.WithSearchIndexType(r.GetType()))
 
 	return opts.Print(r)
 }
@@ -88,7 +88,7 @@ func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithIndexType(r.GetType()))
+	telemetry.AppendOption(telemetry.WithSearchIndexType(r.GetType()))
 
 	return opts.Print(r)
 }

@@ -54,7 +54,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithIndexType(index.GetType()))
+	telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 	r, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
 	if err != nil {
 		return err

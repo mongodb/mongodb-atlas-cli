@@ -54,7 +54,7 @@ func (opts *UpdateOpts) Run() error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithIndexType(index.GetType()))
+	telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 	r, err := opts.store.UpdateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.id, index)
 	if err != nil {
 		return err

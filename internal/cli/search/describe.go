@@ -55,7 +55,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithIndexType(r.GetType()))
+	telemetry.AppendOption(telemetry.WithSearchIndexType(r.GetType()))
 
 	return opts.Print(r)
 }

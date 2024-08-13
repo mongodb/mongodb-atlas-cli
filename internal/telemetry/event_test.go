@@ -368,10 +368,15 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 	assert.NotContains(t, e.Properties, "help_command")
 }
 
-func TestWithIndexType(t *testing.T) {
+func TestWithSearchIndexType(t *testing.T) {
 	val := "search"
-	e := newEvent(WithIndexType(val))
-	assert.Equal(t, val, e.Properties["index_type"])
+	e := newEvent(WithSearchIndexType(val))
+	assert.Equal(t, val, e.Properties["search_index_type"])
+}
+
+func TestWithEmptySearchIndexType(t *testing.T) {
+	e := newEvent(WithSearchIndexType(""))
+	assert.Nil(t, e.Properties["search_index_type"])
 }
 
 type configMock struct {

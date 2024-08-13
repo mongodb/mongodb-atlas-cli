@@ -86,6 +86,8 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
+	telemetry.AppendOption(telemetry.WithIndexType(opts.index.GetType()))
+
 	db := opts.mongodbClient.Database(opts.index.Database)
 	if idx, _ := db.SearchIndexByName(ctx, opts.index.Name, opts.index.CollectionName); idx != nil {
 		return ErrSearchIndexDuplicated
@@ -104,6 +106,8 @@ func (opts *CreateOpts) RunAtlas() error {
 	if err != nil {
 		return err
 	}
+
+	telemetry.AppendOption(telemetry.WithIndexType(opts.index.GetType()))
 
 	opts.index, err = opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
 	return err

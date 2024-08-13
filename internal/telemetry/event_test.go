@@ -368,6 +368,12 @@ func TestWithHelpCommand_NotFound(t *testing.T) {
 	assert.NotContains(t, e.Properties, "help_command")
 }
 
+func TestWithIndexType(t *testing.T) {
+	val := "search"
+	e := newEvent(WithIndexType(val))
+	assert.Equal(t, val, e.Properties["index_type"])
+}
+
 type configMock struct {
 	name        string
 	publicKey   string

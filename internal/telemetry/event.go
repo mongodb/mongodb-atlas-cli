@@ -332,6 +332,12 @@ func withUserAgent() EventOpt {
 	}
 }
 
+func WithIndexType(indexType string) EventOpt {
+	return func(event Event) {
+		event.Properties["index_type"] = indexType
+	}
+}
+
 func newEvent(opts ...EventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),

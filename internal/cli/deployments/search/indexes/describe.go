@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
@@ -66,6 +67,8 @@ func (opts *DescribeOpts) RunAtlas() error {
 		return err
 	}
 
+	telemetry.AppendOption(telemetry.WithIndexType(r.GetType()))
+
 	return opts.Print(r)
 }
 
@@ -84,6 +87,8 @@ func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
+	telemetry.AppendOption(telemetry.WithIndexType(r.GetType()))
 
 	return opts.Print(r)
 }

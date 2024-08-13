@@ -24,6 +24,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"github.com/spf13/cobra"
 )
 
@@ -44,10 +45,10 @@ func IsPluginCmd(cmd *cobra.Command) bool {
 	return false
 }
 
-func GetPluginWithName(name string, existingCommandsMap map[string]bool, onlySearchValidPlugins bool) (*Plugin, error) {
+func GetPluginWithName(name string, existingCommandsSet set.Set[string], onlySearchValidPlugins bool) (*Plugin, error) {
 	var plugins []*Plugin
 	if onlySearchValidPlugins {
-		plugins = GetAllValidPlugins(existingCommandsMap)
+		plugins = GetAllValidPlugins(existingCommandsSet)
 	} else {
 		plugins = getAllPlugins()
 	}
@@ -71,7 +72,7 @@ func getAllPlugins() []*Plugin {
 	return plugins
 }
 
-func GetAllValidPlugins(existingCommandsMap map[string]bool) []*Plugin {
+func GetAllValidPlugins(existingCommandsSet set.Set[string]) []*Plugin {
 	// Load manifests from plugin directories
 	manifests := loadManifestsFromPluginDirectories()
 
@@ -82,7 +83,7 @@ func GetAllValidPlugins(existingCommandsMap map[string]bool) []*Plugin {
 	}
 
 	// Remove manifests that contain already existing commands
-	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommandsMap)
+	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommandsSet)
 	for _, manifest := range duplicateManifest {
 		logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
 	}

@@ -21,6 +21,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"github.com/spf13/cobra"
 )
 
@@ -54,13 +55,13 @@ func (opts *Opts) findPluginWithArg(arg string) (*plugin.Plugin, error) {
 	return pluginToUninstall, nil
 }
 
-func createExistingCommandsMap(existingCommands []*cobra.Command) map[string]bool {
-	existingCommandsMap := make(map[string]bool)
+func createExistingCommandsSet(existingCommands []*cobra.Command) set.Set[string] {
+	existingCommandsSet := set.NewSet[string]()
 	for _, cmd := range existingCommands {
-		existingCommandsMap[cmd.Name()] = true
+		existingCommandsSet.Add(cmd.Name())
 	}
 
-	return existingCommandsMap
+	return existingCommandsSet
 }
 
 func (opts *Opts) findPluginWithGithubValues(owner string, name string) (*plugin.Plugin, error) {
@@ -82,7 +83,7 @@ func (opts *Opts) findPluginWithName(name string) (*plugin.Plugin, error) {
 }
 
 func RegisterCommands(rootCmd *cobra.Command) {
-	plugins := plugin.GetAllValidPlugins(createExistingCommandsMap(rootCmd.Commands()))
+	plugins := plugin.GetAllValidPlugins(createExistingCommandsSet(rootCmd.Commands()))
 
 	for _, p := range plugins {
 		rootCmd.AddCommand(p.GetCobraCommands()...)

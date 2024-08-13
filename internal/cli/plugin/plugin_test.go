@@ -156,13 +156,13 @@ func Test_findPluginWithArg(t *testing.T) {
 	}
 }
 
-func Test_createExistingCommandsMap(t *testing.T) {
-	existingCommandsMap := createExistingCommandsMap(getTestCommands(t))
+func Test_createExistingCommandsSet(t *testing.T) {
+	existingCommandsSet := createExistingCommandsSet(getTestCommands(t))
 
-	require.True(t, existingCommandsMap["testcommand1"])
-	require.True(t, existingCommandsMap["testcommand2"])
-	require.True(t, existingCommandsMap["testcommand3"])
-	require.False(t, existingCommandsMap["testcommand4"])
+	require.True(t, existingCommandsSet.Contains("testcommand1"))
+	require.True(t, existingCommandsSet.Contains("testcommand2"))
+	require.True(t, existingCommandsSet.Contains("testcommand3"))
+	require.False(t, existingCommandsSet.Contains("testcommand4"))
 }
 
 func Test_findPluginWithGithubValues(t *testing.T) {

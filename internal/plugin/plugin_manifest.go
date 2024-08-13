@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
 	"gopkg.in/yaml.v3"
 )
 
@@ -236,19 +237,19 @@ func removeManifestsWithDuplicateNames(manifests []*Manifest) ([]*Manifest, []st
 	return uniqueManifests, duplicateManifestNames
 }
 
-func getUniqueManifests(manifests []*Manifest, existingCommandsMap map[string]bool) ([]*Manifest, []*Manifest) {
+func getUniqueManifests(manifests []*Manifest, existingCommandsSet set.Set[string]) ([]*Manifest, []*Manifest) {
 	uniqueManifests := make([]*Manifest, 0, len(manifests))
 	var duplicateManifests []*Manifest
 
-	existingCommandsMap["plugin"] = true
+	existingCommandsSet.Add("plugin")
 
 	for _, manifest := range manifests {
-		if manifest.HasDuplicateCommand(existingCommandsMap) {
+		if manifest.HasDuplicateCommand(existingCommandsSet) {
 			duplicateManifests = append(duplicateManifests, manifest)
 			continue
 		}
 		for cmdName := range manifest.Commands {
-			existingCommandsMap[cmdName] = true
+			existingCommandsSet.Add(cmdName)
 		}
 		uniqueManifests = append(uniqueManifests, manifest)
 	}
@@ -256,9 +257,9 @@ func getUniqueManifests(manifests []*Manifest, existingCommandsMap map[string]bo
 	return uniqueManifests, duplicateManifests
 }
 
-func (m *Manifest) HasDuplicateCommand(existingCommandsMap map[string]bool) bool {
+func (m *Manifest) HasDuplicateCommand(existingCommandsSet set.Set[string]) bool {
 	for cmdName := range m.Commands {
-		if existingCommandsMap[cmdName] {
+		if existingCommandsSet.Contains(cmdName) {
 			return true
 		}
 	}

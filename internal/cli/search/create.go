@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -52,6 +53,8 @@ func (opts *CreateOpts) Run() error {
 	if err != nil {
 		return err
 	}
+
+	telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 	r, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
 	if err != nil {
 		return err

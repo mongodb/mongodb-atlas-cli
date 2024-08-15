@@ -151,6 +151,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 	_, _ = log.Warningf("Creating your cluster %s [this might take several minutes]\n", opts.DeploymentName)
 
+	// verify that the host meets the minimum requirements, if not, print a warning
+	if err := opts.ValidateMinimumRequirements(); err != nil {
+		return err
+	}
+
 	// containers check
 	if err := opts.startEnvironment(ctx, currentStep, steps); err != nil {
 		return err

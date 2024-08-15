@@ -36,6 +36,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/shirou/gopsutil/v4/mem"
 )
 
 const (
@@ -54,6 +55,8 @@ const (
 	PromptTypeMessage  = "What type of deployment would you like to work with?"
 	MaxItemsPerPage    = 500
 	ContainerFilter    = "mongodb-atlas-local=container"
+	bytesInGb          = 1073741824
+	minimumRAM         = 2 * bytesInGb
 )
 
 var (
@@ -144,6 +147,20 @@ func ValidateDeploymentName(n string) error {
 	if matched, _ := regexp.MatchString(clusterNamePattern, n); !matched {
 		return fmt.Errorf("%w: %s", errInvalidDeploymentName, n)
 	}
+	return nil
+}
+
+func (*DeploymentOpts) ValidateMinimumRequirements() error {
+	v, err := mem.VirtualMemory()
+	if err != nil {
+		return err
+	}
+
+	if v.Available < minimumRAM {
+		gbOfRAMAvailable := v.Available / (bytesInGb)
+		_, _ = log.Warningf("system does not meet the minimum system requirements: required to have 2GB of ram available. %vGb available.\n", gbOfRAMAvailable)
+	}
+
 	return nil
 }
 

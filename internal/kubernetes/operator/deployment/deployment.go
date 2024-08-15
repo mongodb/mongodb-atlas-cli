@@ -108,7 +108,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 		RootCertType:             deployment.GetRootCertType(),
 		VersionReleaseSystem:     deployment.GetVersionReleaseSystem(),
 		Tags:                     convertTags(deployment.GetTags()),
-		MongoDBMajorVersion:      pointer.GetOrZero[string](deployment.MongoDBMajorVersion),
+		MongoDBMajorVersion:      deployment.GetMongoDBMajorVersion(),
 	}
 
 	atlasDeployment := &akov2.AtlasDeployment{

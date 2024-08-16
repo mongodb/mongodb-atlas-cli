@@ -228,9 +228,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 				true,
 			),
 		)
-		assert.NotEmpty(t, akoDeployment.Spec.DeploymentSpec.MongoDBMajorVersion)
-		akoDeployment.Spec.DeploymentSpec.MongoDBMajorVersion = ""
-		assert.Equal(t, referenceExportedDeployment(g.projectName, g.clusterName, e2eNamespace.Name).Spec, akoDeployment.Spec)
+		assert.Equal(t, referenceExportedDeployment(g.projectName, g.clusterName, e2eNamespace.Name, g.mDBVer).Spec, akoDeployment.Spec)
 	})
 }
 
@@ -414,7 +412,7 @@ func referenceExportedBackupPolicy() *akov2.AtlasBackupPolicy {
 	}
 }
 
-func referenceExportedDeployment(projectName, clusterName, namespace string) *akov2.AtlasDeployment {
+func referenceExportedDeployment(projectName, clusterName, namespace, mdbVersion string) *akov2.AtlasDeployment {
 	return &akov2.AtlasDeployment{
 		Spec: akov2.AtlasDeploymentSpec{
 			Project: akov2common.ResourceRefNamespaced{
@@ -432,6 +430,7 @@ func referenceExportedDeployment(projectName, clusterName, namespace string) *ak
 					Enabled:        pointer.Get(false),
 					ReadPreference: "secondary",
 				},
+				MongoDBMajorVersion:      mdbVersion,
 				ClusterType:              "REPLICASET",
 				EncryptionAtRestProvider: "NONE",
 				Paused:                   pointer.Get(false),

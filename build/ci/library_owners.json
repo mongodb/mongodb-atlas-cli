@@ -51,5 +51,6 @@
 	"sigs.k8s.io/controller-runtime": "atlas_kubernetes_team",
 	"sigs.k8s.io/kind": "atlas_kubernetes_team",
 	"golang.org/x/exp": "atlas_kubernetes_team",
-	"github.com/denisbrodbeck/machineid": "mongocli"
+	"github.com/denisbrodbeck/machineid": "mongocli",
+	"github.com/shirou/gopsutil/v4": "mongocli"
 }

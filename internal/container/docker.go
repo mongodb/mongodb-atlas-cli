@@ -32,7 +32,7 @@ var ErrDockerNotFound = fmt.Errorf("%w: docker not found in your system, check r
 var errParseHealthCheck = errors.New("parsing image healthcheck failed")
 var errListContainer = errors.New("container listing failed")
 var errParsingContainer = errors.New("container parsing failed")
-var errDecodingJson = errors.New("container decoding failed")
+var errDecodingJSON = errors.New("container decoding failed")
 var errParsingPorts = errors.New("parsing ports failed")
 var errConvertHostPort = errors.New("converting host port failed")
 var errConvertContainerPort = errors.New("converting container port failed")
@@ -199,14 +199,14 @@ func (e *dockerImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 }
 
 func parseContainers(buf []byte) ([]Container, error) {
-	_, _ = log.Debug("parsing containers: %s", string(buf))
+	_, _ = log.Debugf("parsing containers: %s", string(buf))
 	result := []Container{}
 	decoder := json.NewDecoder(bytes.NewBuffer(buf))
 	for decoder.More() {
 		c := map[string]any{}
 
 		if err := decoder.Decode(&c); err != nil {
-			return nil, fmt.Errorf("%w: %w", errDecodingJson, err)
+			return nil, fmt.Errorf("%w: %w", errDecodingJSON, err)
 		}
 
 		cont := Container{

@@ -240,7 +240,7 @@ func parseContainers(buf []byte) ([]Container, error) {
 }
 
 func (e *dockerImpl) ContainerList(ctx context.Context, labels ...string) ([]Container, error) {
-	args := []string{"container", "ls", "--all", "--format", "json"}
+	args := []string{"container", "ls", "--all", "--format", "{{json .}}"}
 
 	if len(labels) > 0 {
 		for _, label := range labels {
@@ -296,7 +296,7 @@ func (e *dockerImpl) ContainerUnpause(ctx context.Context, names ...string) erro
 }
 
 func (e *dockerImpl) ContainerInspect(ctx context.Context, names ...string) ([]*InspectData, error) {
-	args := []string{"container", "inspect", "--format", "json"}
+	args := []string{"container", "inspect", "--format", "{{json .}}"}
 	args = append(args, names...)
 
 	buf, err := e.run(ctx, args...)
@@ -312,7 +312,7 @@ func (e *dockerImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 }
 
 func (e *dockerImpl) ImageList(ctx context.Context, references ...string) ([]Image, error) {
-	args := []string{"image", "ls", "--format", "json"}
+	args := []string{"image", "ls", "--format", "{{json .}}"}
 
 	if len(references) > 0 {
 		for _, name := range references {
@@ -341,7 +341,7 @@ func (e *dockerImpl) ImagePull(ctx context.Context, name string) error {
 }
 
 func (e *dockerImpl) ImageHealthCheck(ctx context.Context, name string) (*ImageHealthCheck, error) {
-	b, err := e.run(ctx, "image", "inspect", "--format", "json", name)
+	b, err := e.run(ctx, "image", "inspect", "--format", "{{json .}}", name)
 	if err != nil {
 		return nil, err
 	}
@@ -409,7 +409,7 @@ func (e *dockerImpl) ContainerHealthStatus(ctx context.Context, name string) (Do
 }
 
 func (e *dockerImpl) Version(ctx context.Context) (map[string]any, error) {
-	buf, err := e.run(ctx, "version", "--format", "json")
+	buf, err := e.run(ctx, "version", "--format", "{{json .}}")
 	if err != nil {
 		return nil, err
 	}

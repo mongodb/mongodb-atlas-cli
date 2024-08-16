@@ -277,7 +277,7 @@ func (o *client) RemoveContainers(ctx context.Context, names ...string) ([]byte,
 }
 
 func (o *client) ListContainers(ctx context.Context, label string) ([]*Container, error) {
-	args := []string{"ps", "--all", "--format", "json"}
+	args := []string{"ps", "--all", "--format", "{{json .}}"}
 	if label != "" {
 		args = append(args, "--filter", "label="+label)
 	}
@@ -293,7 +293,7 @@ func (o *client) ListContainers(ctx context.Context, label string) ([]*Container
 }
 
 func (o *client) ListImages(ctx context.Context, reference string) ([]*Image, error) {
-	args := []string{"image", "list", "--format", "json"}
+	args := []string{"image", "list", "--format", "{{json .}}"}
 
 	if reference != "" {
 		args = append(args, "--filter", "reference="+reference)
@@ -316,7 +316,7 @@ func (o *client) PullImage(ctx context.Context, name string) ([]byte, error) {
 }
 
 func (o *client) ImageHealthCheck(ctx context.Context, name string) (*Schema2HealthConfig, error) {
-	bytes, err := o.runPodman(ctx, "image", "inspect", "--format", "json", name)
+	bytes, err := o.runPodman(ctx, "image", "inspect", "--format", "{{json .}}", name)
 	if err != nil {
 		return nil, err
 	}
@@ -342,7 +342,7 @@ func (o *client) ImageHealthCheck(ctx context.Context, name string) (*Schema2Hea
 }
 
 func (o *client) Version(ctx context.Context) (map[string]any, error) {
-	output, err := o.runPodman(ctx, "version", "--format", "json")
+	output, err := o.runPodman(ctx, "version", "--format", "{{json .}}")
 	if err != nil {
 		return nil, err
 	}
@@ -357,7 +357,7 @@ func (o *client) Version(ctx context.Context) (map[string]any, error) {
 func (o *client) Logs(ctx context.Context) (map[string]any, []error) {
 	l := map[string]any{}
 	var errs []error
-	output, err := o.runPodman(ctx, "ps", "--all", "--format", "json", "--filter", "name=mongo")
+	output, err := o.runPodman(ctx, "ps", "--all", "--format", "{{json .}}", "--filter", "name=mongo")
 	if err != nil {
 		errs = append(errs, err)
 	} else {
@@ -368,7 +368,7 @@ func (o *client) Logs(ctx context.Context) (map[string]any, []error) {
 		l["Containers"] = podmanLogs
 	}
 
-	output, err = o.runPodman(ctx, "network", "ls", "--format", "json", "--filter", "name=mdb")
+	output, err = o.runPodman(ctx, "network", "ls", "--format", "{{json .}}", "--filter", "name=mdb")
 	if err != nil {
 		errs = append(errs, err)
 	} else {

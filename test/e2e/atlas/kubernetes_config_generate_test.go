@@ -1580,7 +1580,7 @@ func checkClustersData(t *testing.T, deployments []*akov2.AtlasDeployment, clust
 			if ok := slices.Contains(clusterNames, deployment.Spec.DeploymentSpec.Name); ok {
 				name := deployment.Spec.DeploymentSpec.Name
 				expectedDeployment := referenceAdvancedCluster(name, region, namespace, projectName, expectedLabels)
-				assert.NotEmpty(t, akoDeployment.Spec.DeploymentSpec.MongoDBMajorVersion)
+				assert.NotEmpty(t, deployment.Spec.DeploymentSpec.MongoDBMajorVersion)
 				deployment.Spec.DeploymentSpec.MongoDBMajorVersion = ""
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
@@ -1668,7 +1668,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			}
 		}
 		require.True(t, found, "AtlasDeployment is not found in results")
-		assert.NotEmpty(t, akoDeployment.Spec.DeploymentSpec.MongoDBMajorVersion)
+		assert.NotEmpty(t, deployment.Spec.DeploymentSpec.MongoDBMajorVersion)
 		deployment.Spec.DeploymentSpec.MongoDBMajorVersion = ""
 		assert.Equal(t, expectedDeployment, deployment)
 

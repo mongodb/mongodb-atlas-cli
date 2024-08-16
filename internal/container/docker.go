@@ -99,12 +99,20 @@ func splitOnceLast(s, sep string) (string, string) {
 }
 
 func portMappingFlag(pm PortMapping) string {
-	result := fmt.Sprintf("%d:%d", pm.HostPort, pm.ContainerPort)
+	result := ""
+
 	if pm.HostAddress != "" {
-		result = pm.HostAddress + ":" + result
+		result += pm.HostAddress + ":"
 	}
+
+	if pm.HostPort != 0 {
+		result += strconv.Itoa(pm.HostPort)
+	}
+
+	result += ":" + strconv.Itoa(pm.ContainerPort)
+
 	if pm.ContainerProtocol != "" {
-		result = result + "/" + pm.ContainerProtocol
+		result += "/" + pm.ContainerProtocol
 	}
 
 	return result

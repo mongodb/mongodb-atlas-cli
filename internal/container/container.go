@@ -109,10 +109,15 @@ type InspectDataConfig struct {
 }
 
 type InspectData struct {
-	ID         string                 `json:"Id"`
-	Name       string                 `json:"Name"`
-	Config     *InspectDataConfig     `json:"Config"`
-	HostConfig *InspectDataHostConfig `json:"HostConfig"`
+	ID              string                 `json:"Id"`
+	Name            string                 `json:"Name"`
+	Config          *InspectDataConfig     `json:"Config"`
+	HostConfig      *InspectDataHostConfig `json:"HostConfig"`
+	NetworkSettings *NetworkSettings       `json:"NetworkSettings"`
+}
+
+type NetworkSettings struct {
+	Ports map[string][]InspectDataHostPort `json:"Ports"`
 }
 
 type InspectDataHostConfig struct {

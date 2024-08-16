@@ -85,6 +85,8 @@ type InspectNetworkSettings struct {
 	// container has joined.
 	// It is a map of network name to network information.
 	Networks map[string]*InspectAdditionalNetwork `json:"Networks,omitempty"`
+
+	Ports map[string][]InspectHostPort `json:"Ports"`
 }
 
 // InspectContainerData provides a detailed record of a container's configuration

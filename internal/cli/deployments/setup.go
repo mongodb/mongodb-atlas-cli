@@ -298,26 +298,6 @@ func (opts *SetupOpts) promptMdbVersion() error {
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
 }
 
-func availablePort() (int, error) {
-	// prefer mongodb default's port
-	if err := checkPort(internalMongodPort); err == nil {
-		return internalMongodPort, nil
-	}
-
-	server, err := net.Listen("tcp", "localhost:0")
-	if err != nil {
-		return 0, err
-	}
-	defer server.Close()
-
-	_, port, err := net.SplitHostPort(server.Addr().String())
-	if err != nil {
-		return 0, err
-	}
-
-	return strconv.Atoi(port)
-}
-
 func checkPort(p int) error {
 	server, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", p))
 	if err != nil {
@@ -447,11 +427,6 @@ func (opts *SetupOpts) setDefaultSettings() error {
 	}
 
 	if opts.Port == 0 {
-		port, err := availablePort()
-		if err != nil {
-			return err
-		}
-		opts.Port = port
 		defaultValuesSet = true
 	}
 
@@ -460,7 +435,6 @@ func (opts *SetupOpts) setDefaultSettings() error {
 [Default Settings]
 Deployment Name	{{.DeploymentName}}
 MongoDB Version	{{.MdbVersion}}
-Port	{{.Port}}
 
 `, opts); err != nil {
 			return err

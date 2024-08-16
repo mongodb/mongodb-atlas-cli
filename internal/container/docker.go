@@ -30,6 +30,12 @@ import (
 
 var ErrDockerNotFound = fmt.Errorf("%w: docker not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs", ErrContainerEngineNotFound)
 var errParseHealthCheck = errors.New("parsing image healthcheck failed")
+var errListContainer = errors.New("container listing failed")
+var errParsingContainer = errors.New("container parsing failed")
+var errDecodingJSON = errors.New("container decoding failed")
+var errParsingPorts = errors.New("parsing ports failed")
+var errConvertHostPort = errors.New("converting host port failed")
+var errConvertContainerPort = errors.New("converting container port failed")
 
 type dockerImpl struct {
 }
@@ -80,11 +86,11 @@ func parsePortMapping(s string) ([]PortMapping, error) {
 		containerSegments := strings.SplitN(segments[1], "/", 2) //nolint //max 2 fields
 		hostPort, err := strconv.Atoi(hostPortStr)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: %w", errConvertHostPort, err)
 		}
 		containerPort, err := strconv.Atoi(containerSegments[0])
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: %w", errConvertContainerPort, err)
 		}
 		result = append(result, PortMapping{
 			HostAddress:       hostStr,
@@ -193,13 +199,14 @@ func (e *dockerImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 }
 
 func parseContainers(buf []byte) ([]Container, error) {
+	_, _ = log.Debugf("parsing containers: %s", string(buf))
 	result := []Container{}
 	decoder := json.NewDecoder(bytes.NewBuffer(buf))
 	for decoder.More() {
 		c := map[string]any{}
 
 		if err := decoder.Decode(&c); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: %w", errDecodingJSON, err)
 		}
 
 		cont := Container{
@@ -211,7 +218,7 @@ func parseContainers(buf []byte) ([]Container, error) {
 
 		pm, err := parsePortMapping(c["Ports"].(string))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: %w", errParsingPorts, err)
 		}
 		cont.Ports = pm
 
@@ -242,14 +249,18 @@ func (e *dockerImpl) ContainerList(ctx context.Context, labels ...string) ([]Con
 	}
 	buf, err := e.run(ctx, args...)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", errListContainer, err)
 	}
 
 	if len(buf) == 0 {
 		return nil, nil
 	}
 
-	return parseContainers(buf)
+	list, err := parseContainers(buf)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", errParsingContainer, err)
+	}
+	return list, nil
 }
 
 func (e *dockerImpl) ContainerRm(ctx context.Context, names ...string) error {

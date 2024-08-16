@@ -1417,8 +1417,8 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 	}
 }
 
-func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string, mdbVersion string) *akov2.AtlasDeployment {
-	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels, mdbVersion)
+func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
+	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels, "")
 	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &akov2.Specs{
 		DiskIOPS:     nil,
 		InstanceSize: e2eSharedClusterTier,
@@ -1764,7 +1764,7 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 	g.tier = e2eSharedClusterTier
 	g.generateCluster()
 
-	expectedDeployment := referenceSharedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels, g.mDBVer)
+	expectedDeployment := referenceSharedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)

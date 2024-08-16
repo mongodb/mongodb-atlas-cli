@@ -24,9 +24,12 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
 var ErrDockerNotFound = fmt.Errorf("%w: docker not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs", ErrContainerEngineNotFound)
+var errParseHealthCheck = errors.New("parsing image healthcheck failed")
 
 type dockerImpl struct {
 }
@@ -350,7 +353,8 @@ func (e *dockerImpl) ImageHealthCheck(ctx context.Context, name string) (*ImageH
 
 	var inspectOutput []PartialImageInspect
 	if err := json.Unmarshal(b, &inspectOutput); err != nil {
-		return nil, err
+		_, _ = log.Debug("failed json parsing: " + string(b))
+		return nil, fmt.Errorf("%w: %w", errParseHealthCheck, err)
 	}
 
 	if len(inspectOutput) != 1 {

@@ -3,6 +3,8 @@
 Thanks for your interest in contributing to MongoDB Atlas CLI,
 this document describes some guidelines necessary to participate in the community.
 
+If you want to extend the Atlas CLI with custom functionality, take a look at the [Atlas CLI Plugin Example](https://github.com/mongodb/atlas-cli-plugin-example) to learn more about creating plugins.
+
 ## Asking Support Questions
 
 MongoDB support is provided under MongoDB Atlas or Enterprise Advanced [support plans](https://support.mongodb.com/welcome).

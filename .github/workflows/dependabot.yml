@@ -29,7 +29,7 @@
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_URL: ${{ github.event.pull_request.html_url }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ASSIGNEE: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
+          JIRA_ASSIGNEE: ${{ secrets.ASSIGNEE_MONGOCLI_JIRA_TICKET }}
         run: |
           json_response=$(curl --request POST \
             --url 'https://jira.mongodb.org/rest/api/2/issue' \

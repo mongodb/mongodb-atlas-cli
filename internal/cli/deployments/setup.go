@@ -72,9 +72,18 @@ var (
 	errUnsupportedConnectWith     = fmt.Errorf("the --%s flag is unsupported", flag.ConnectWith)
 	errFlagUsernameRequired       = fmt.Errorf("the --%s is required to enable authentication when --%s flag is set",
 		flag.Username, flag.BindIPAll)
-	errFailedToDownloadImage = errors.New("failed to download the MongoDB image")
-	settingOptions           = []string{defaultSettings, customSettings, cancelSettings}
-	settingsDescription      = map[string]string{
+	errFailedToDownloadImage   = errors.New("failed to download the MongoDB image")
+	errDeploymentUnhealthy     = errors.New("the deployment is unhealthy")
+	errDeploymentNoHealthCheck = errors.New("the deployment does not have a healthcheck")
+	errHealthCheckTimeout      = errors.New("timed out waiting for the deployment to be healthy")
+	errDownloadImage           = errors.New("image download failed")
+	errInspectHealthCheck      = errors.New("inspect healthcheck failed")
+	errQueryHealthCheckStatus  = errors.New("query healthcheck status failed")
+	errConfigContainer         = errors.New("container configuration failed")
+	errRunContainer            = errors.New("container run failed")
+	errListContainer           = errors.New("listing containers failed")
+	settingOptions             = []string{defaultSettings, customSettings, cancelSettings}
+	settingsDescription        = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel setup",
@@ -138,9 +147,9 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	opts.logStepStarted("Starting your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	containers, errList := opts.GetLocalContainers(ctx)
-	if errList != nil {
-		return errList
+	containers, err := opts.GetLocalContainers(ctx)
+	if err != nil {
+		return fmt.Errorf("%w: %w", errListContainer, err)
 	}
 
 	return opts.validateLocalDeploymentsSettings(containers)
@@ -151,6 +160,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 	_, _ = log.Warningf("Creating your cluster %s [this might take several minutes]\n", opts.DeploymentName)
 
+	// verify that the host meets the minimum requirements, if not, print a warning
+	if err := opts.ValidateMinimumRequirements(); err != nil {
+		return err
+	}
+
 	// containers check
 	if err := opts.startEnvironment(ctx, currentStep, steps); err != nil {
 		return err
@@ -159,7 +173,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 	// always download the latest image
 	if err := opts.downloadImage(ctx, currentStep, steps); err != nil {
-		return err
+		return fmt.Errorf("%w: %w", errDownloadImage, err)
 	}
 	currentStep++
 
@@ -167,7 +181,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	opts.logStepStarted(fmt.Sprintf("Creating your deployment %s...", opts.DeploymentName), currentStep, steps)
 	defer opts.stop()
 
-	return opts.configureMongod(ctx)
+	if err := opts.configureMongod(ctx); err != nil {
+		return fmt.Errorf("%w: %w", errConfigContainer, err)
+	}
+
+	return nil
 }
 
 func (opts *SetupOpts) configureMongod(ctx context.Context) error {
@@ -190,7 +208,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 
 	healthCheck, err := opts.ContainerEngine.ImageHealthCheck(ctx, opts.MongodDockerImageName())
 	if err != nil {
-		return err
+		return fmt.Errorf("%w: %w", errInspectHealthCheck, err)
 	}
 
 	// Temporary fix until https://github.com/containers/podman/issues/18904 is closed
@@ -209,7 +227,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 
 	_, err = opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
 	if err != nil {
-		return err
+		return fmt.Errorf("%w: %w", errRunContainer, err)
 	}
 
 	// This can be a high number because the container will become unhealthy before the 10 minutes is reached
@@ -223,21 +241,21 @@ func (opts *SetupOpts) WaitForHealthyDeployment(ctx context.Context, duration ti
 
 	for {
 		if time.Since(start) > duration {
-			return errors.New("timed out waiting for the deployment to be healthy")
+			return errHealthCheckTimeout
 		}
 
 		status, err := opts.ContainerEngine.ContainerHealthStatus(ctx, opts.LocalMongodHostname())
 		if err != nil {
-			return err
+			return fmt.Errorf("%w: %w", errQueryHealthCheckStatus, err)
 		}
 
 		switch status {
 		case container.DockerHealthcheckStatusHealthy:
 			return nil
 		case container.DockerHealthcheckStatusUnhealthy:
-			return errors.New("the deployment is unhealthy")
+			return errDeploymentUnhealthy
 		case container.DockerHealthcheckStatusNone:
-			return errors.New("the deployment does not have a healthcheck")
+			return errDeploymentNoHealthCheck
 		case container.DockerHealthcheckStatusStarting:
 			time.Sleep(1 * time.Second)
 		}

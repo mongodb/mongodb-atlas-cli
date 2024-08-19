@@ -68,6 +68,21 @@ functions:
             mv mongodb-database-tools/bin/* .
             rm -rf mongodb-database-tools
           fi
+  "install terraform":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        shell: bash
+        env:
+          <<: *go_env
+          TERRAFORM_VERSION: 1.9.4
+        script: |
+          set -Eeou pipefail
+          curl -sLo terraform.zip https://releases.hashicorp.com/terraform/1.9.4/terraform_1.9.4_linux_amd64.zip
+          unzip terraform.zip
+          rm terraform.zip LICENSE.txt
   "e2e test":
     - command: subprocess.exec
       type: test
@@ -162,6 +177,20 @@ functions:
             cat /proc/sys/fs/inotify/max_user_instances
           fi
 tasks:
+  - name: atlas_deployments_windows
+    tags: ["e2e","deployments","windows"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    commands:
+      - func: "install gotestsum"
+      - func: "install terraform"
+      - command: shell.exec
+        params:
+          <<: *go_options
+          shell: bash
+          script: |
+            set -e
+            ls -la
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
     must_have_test_results: true

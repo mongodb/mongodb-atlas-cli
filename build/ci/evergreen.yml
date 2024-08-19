@@ -1164,6 +1164,18 @@ buildvariants:
         - name: compile
           variant: "code_health"
           patch_optional: true
+  - name: e2e_local_deployments_windows11
+    display_name: "E2E Local Deployments Tests (windows11/docker)"
+    run_on:
+      - ubuntu2204-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: "atlas_deployments_windows"
+        depends_on:
+        - name: compile
+          variant: "code_health"
+          patch_optional: true
   - name: e2e_atlas_streams_with_clusters
     display_name: "E2E Atlas Streams with Clusters Tests"
     run_on:

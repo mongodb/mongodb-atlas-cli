@@ -137,6 +137,7 @@ func getManifestsFromPluginsDirectory(pluginsDirectory string) ([]*Manifest, err
 		pluginDirectoryPath := path.Join(pluginsDirectory, directory.Name())
 		manifest, err := GetManifestFromPluginDirectory(pluginDirectoryPath)
 		if err != nil {
+			logPluginWarning(err.Error())
 			continue
 		}
 
@@ -164,8 +165,7 @@ func GetManifestFromPluginDirectory(pluginDirectoryPath string) (*Manifest, erro
 		for _, err := range errorList {
 			manifestErrorLog.WriteString(fmt.Sprintf("\t- %s\n", err.Error()))
 		}
-		logPluginWarning(manifestErrorLog.String())
-		return nil, err
+		return nil, errors.New(manifestErrorLog.String())
 	}
 
 	manifest.PluginDirectoryPath = pluginDirectoryPath

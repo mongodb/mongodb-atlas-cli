@@ -72,10 +72,10 @@ func TestDescribe_RunLocal(t *testing.T) {
 						"version": "7.0.1",
 					},
 				},
-				HostConfig: &container.InspectDataHostConfig{
-					PortBindings: map[string][]container.InspectDataHostPort{
+				NetworkSettings: &container.NetworkSettings{
+					Ports: map[string][]container.InspectDataHostPort{
 						"27017/tcp": {
-							{
+							container.InspectDataHostPort{
 								HostIP:   "127.0.0.1",
 								HostPort: "27017",
 							},

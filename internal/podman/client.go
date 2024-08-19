@@ -184,7 +184,11 @@ func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byt
 	}
 
 	for hostPort, containerPort := range opts.Ports {
-		portMapping := strconv.Itoa(hostPort) + ":" + strconv.Itoa(containerPort)
+		portMapping := ""
+		if hostPort != 0 {
+			strconv.Itoa(hostPort)
+		}
+		portMapping += ":" + strconv.Itoa(containerPort)
 		if !opts.BindIPAll {
 			portMapping = "127.0.0.1:" + portMapping
 		}

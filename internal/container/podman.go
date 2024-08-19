@@ -226,6 +226,16 @@ func (e *podmanImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 			}
 		}
 
+		publishedPorts := map[string][]InspectDataHostPort{}
+		for key, values := range data.NetworkSettings.Ports {
+			for _, value := range values {
+				publishedPorts[key] = append(publishedPorts[key], InspectDataHostPort{
+					HostIP:   value.HostIP,
+					HostPort: value.HostPort,
+				})
+			}
+		}
+
 		results = append(results, &InspectData{
 			ID:   data.ID,
 			Name: data.Name,
@@ -234,6 +244,9 @@ func (e *podmanImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 			},
 			HostConfig: &InspectDataHostConfig{
 				PortBindings: portBidings,
+			},
+			NetworkSettings: &NetworkSettings{
+				Ports: publishedPorts,
 			},
 		})
 	}

@@ -85,6 +85,25 @@ func TestSetupOpts_LocalDev_HappyPathClean(t *testing.T) {
 	// Container is healthy
 	deploymentTest.MockContainerEngine.EXPECT().ContainerHealthStatus(ctx, deploymentName).Return(container.DockerHealthcheckStatusHealthy, nil).Times(1)
 
+	// Because no port is specified docker inspect will happen
+	deploymentTest.MockContainerEngine.EXPECT().ContainerInspect(ctx, opts.LocalMongodHostname()).Return([]*container.InspectData{{
+		Config: &container.InspectDataConfig{
+			Labels: map[string]string{
+				"version": "7.0.12",
+			},
+		},
+		NetworkSettings: &container.NetworkSettings{
+			Ports: map[string][]container.InspectDataHostPort{
+				"27017/tcp": {
+					container.InspectDataHostPort{
+						HostIP:   "127.0.0.1",
+						HostPort: "12345",
+					},
+				},
+			},
+		},
+	}}, nil).Times(1)
+
 	// Verify
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
@@ -130,6 +149,25 @@ func TestSetupOpts_LocalDev_HappyPathOfflinePull(t *testing.T) {
 
 	// Container is healthy
 	deploymentTest.MockContainerEngine.EXPECT().ContainerHealthStatus(ctx, deploymentName).Return(container.DockerHealthcheckStatusHealthy, nil).Times(1)
+
+	// Because no port is specified docker inspect will happen
+	deploymentTest.MockContainerEngine.EXPECT().ContainerInspect(ctx, opts.LocalMongodHostname()).Return([]*container.InspectData{{
+		Config: &container.InspectDataConfig{
+			Labels: map[string]string{
+				"version": "7.0.12",
+			},
+		},
+		NetworkSettings: &container.NetworkSettings{
+			Ports: map[string][]container.InspectDataHostPort{
+				"27017/tcp": {
+					container.InspectDataHostPort{
+						HostIP:   "127.0.0.1",
+						HostPort: "12345",
+					},
+				},
+			},
+		},
+	}}, nil).Times(1)
 
 	// Verify
 	if err := opts.Run(ctx); err != nil {

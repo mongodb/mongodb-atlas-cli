@@ -29,7 +29,7 @@ func TestPluginUpdate(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 	runPluginUpdateTest(t, cliPath, "Update without specifying version", false, examplePluginRepository, "v1.0.38", "")
-	runPluginUpdateTest(t, cliPath, "Update with specifying version", false, examplePluginName, "v1.0.38", "2.0.0")
+	runPluginUpdateTest(t, cliPath, "Update with specifying version", false, examplePluginName, "v1.0.38", "v2.0.3")
 	runPluginUpdateTest(t, cliPath, "Update with specifying latest version", false, examplePluginName, "v1.0.38", "latest")
 	runPluginUpdateTest(t, cliPath, "Update using --all flag", false, "--all", "v1.0.34", "")
 	runPluginUpdateTest(t, cliPath, "Update with lower version", true, examplePluginName, "v1.0.36", "v1.0.34")

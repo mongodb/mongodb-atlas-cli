@@ -144,7 +144,7 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 	// suppressing lint error flagging potential tainted input or cmd arguments
 	// we are this can happen, it is by design
 	// #nosec G204
-	execCmd := exec.Command(binaryPath, args...)
+	execCmd := exec.Command(binaryPath, append([]string{cmd.Use}, args...)...)
 	execCmd.Stdin = cmd.InOrStdin()
 	execCmd.Stdout = cmd.OutOrStdout()
 	execCmd.Stderr = cmd.OutOrStderr()

@@ -190,7 +190,7 @@ tasks:
           shell: bash
           script: |
             set -e
-            ls -la
+            ls -la ~/.ssh/
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
     must_have_test_results: true

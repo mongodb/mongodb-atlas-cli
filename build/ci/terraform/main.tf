@@ -2,6 +2,11 @@ provider "azurerm" {
   features {}
 }
 
+variable "image_id" {
+  type = string
+  default = "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/atlascli-win11-image"
+}
+
 resource "azurerm_resource_group" "atlascli_vm_rg" {
   name     = "atlascli-resources"
   location = "East US"
@@ -89,7 +94,7 @@ resource "azurerm_windows_virtual_machine" "atlascli_vm" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-  source_image_id = "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/atlascli-win11-image"
+  source_image_id = var.image_id
 }
 
 resource "azurerm_virtual_machine_extension" "atlascli_vm_extension" {

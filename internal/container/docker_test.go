@@ -14,7 +14,10 @@
 
 package container
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestPortMappingFlag(t *testing.T) {
 	tests := []struct {
@@ -90,6 +93,89 @@ func TestPortMappingFlag(t *testing.T) {
 			result := portMappingFlag(tt.input)
 			if result != tt.expected {
 				t.Errorf("portMappingFlag(%+v) = %s; want %s", tt.input, result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestParsePortMapping(t *testing.T) {
+	tests := []struct {
+		name     string
+		input    string
+		expected []PortMapping
+	}{
+		{
+			name:  "All fields populated",
+			input: "127.0.0.1:8080->80/tcp",
+			expected: []PortMapping{
+				{
+					HostAddress:       "127.0.0.1",
+					HostPort:          8080,
+					ContainerPort:     80,
+					ContainerProtocol: "tcp",
+				},
+			},
+		},
+		{
+			name:  "No host address",
+			input: "8080->80/udp",
+			expected: []PortMapping{{
+				HostPort:          8080,
+				ContainerPort:     80,
+				ContainerProtocol: "udp",
+			}},
+		},
+		{
+			name:  "No host port",
+			input: "192.168.1.100->443/tcp",
+			expected: []PortMapping{{
+				HostAddress:       "192.168.1.100",
+				ContainerPort:     443,
+				ContainerProtocol: "tcp",
+			}},
+		},
+		{
+			name:  "No container protocol",
+			input: "10.0.0.1:5000->5000",
+			expected: []PortMapping{{
+				HostAddress:   "10.0.0.1",
+				HostPort:      5000,
+				ContainerPort: 5000,
+			}},
+		},
+		{
+			name:  "Only container port",
+			input: "8080",
+			expected: []PortMapping{{
+				ContainerPort: 8080,
+			}},
+		},
+		{
+			name:  "Host port and container port only",
+			input: "3000->3000",
+			expected: []PortMapping{{
+				HostPort:      3000,
+				ContainerPort: 3000,
+			}},
+		},
+		{
+			name:  "Host address and container port only",
+			input: "localhost->8080",
+			expected: []PortMapping{{
+				HostAddress:   "localhost",
+				ContainerPort: 8080,
+			}},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := parsePortMapping(tt.input)
+			if err != nil {
+				t.Error(err)
+			}
+			if !reflect.DeepEqual(result, tt.expected) {
+				t.Errorf("parsePortMapping(%s) = %+v; want %+v", tt.input, result, tt.expected)
 			}
 		})
 	}

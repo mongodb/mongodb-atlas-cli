@@ -15,8 +15,9 @@
 package container
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/go-test/deep"
 )
 
 func TestPortMappingFlag(t *testing.T) {
@@ -170,12 +171,14 @@ func TestParsePortMapping(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			result, err := parsePortMapping(tt.input)
 			if err != nil {
-				t.Error(err)
+				t.Fatal(err)
 			}
-			if !reflect.DeepEqual(result, tt.expected) {
-				t.Errorf("parsePortMapping(%s) = %+v; want %+v", tt.input, result, tt.expected)
+
+			if diff := deep.Equal(result, tt.expected); diff != nil {
+				t.Errorf("parsePortMapping(%s) diff: %+v", tt.input, diff)
 			}
 		})
 	}

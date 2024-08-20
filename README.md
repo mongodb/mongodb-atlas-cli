@@ -5,6 +5,11 @@ The MongoDB Atlas CLI is a modern command line interface that enables you to man
 ![atlascli-atlas-quickstart](https://user-images.githubusercontent.com/5663078/156184669-57c8ddce-6f0a-4e84-9311-2d996cb27942.gif)
 
 ## Installing
+### Homebrew
+```bash
+brew install mongodb-atlas-cli
+```
+See [Install or Update the Atlas CLI](https://www.mongodb.com/docs/atlas/cli/current/install-atlas-cli/) to see all the installation methods available.
 
 ### Pre-built Binaries
 

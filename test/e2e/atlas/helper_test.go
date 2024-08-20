@@ -28,6 +28,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -151,6 +152,12 @@ const (
 	searchIndexName = "indexTest"
 	vectorSearchDB  = "sample_mflix"
 	vectorSearchCol = "embedded_movies"
+)
+
+// CLI Plugins System constants.
+const (
+	examplePluginRepository = "mongodb/atlas-cli-plugin-example"
+	examplePluginName       = "atlas-cli-plugin-example"
 )
 
 func splitOutput(cmd *exec.Cmd) (string, string, error) {
@@ -1245,4 +1252,25 @@ func deleteStreamsConnection(t *testing.T, projectID, instanceName, name string)
 	}
 
 	return nil
+}
+
+func deleteAllPlugins(t *testing.T) {
+	t.Helper()
+	defaultPluginDir, err := plugin.GetDefaultPluginDirectory()
+	require.NoError(t, err)
+
+	err = os.RemoveAll(defaultPluginDir)
+	require.NoError(t, err)
+}
+
+func installExamplePlugin(t *testing.T, cliPath string, version string) {
+	t.Helper()
+	// this is a test
+	// #nosec G204
+	cmd := exec.Command(cliPath,
+		"plugin",
+		"install",
+		fmt.Sprintf("%s@%s", examplePluginRepository, version))
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
 }

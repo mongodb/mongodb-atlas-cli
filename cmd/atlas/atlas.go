@@ -83,7 +83,6 @@ func main() {
 	}
 
 	rootCmd := root.Builder()
-
 	initTrack(rootCmd)
 	trackInitError(loadConfig(), rootCmd)
 

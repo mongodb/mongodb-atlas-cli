@@ -230,14 +230,39 @@ functions:
             echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
             cat /proc/sys/fs/inotify/max_user_instances
           fi
+  "install azure cli":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        shell: bash
+        script: |
+          sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+          sudo dnf install -y https://packages.microsoft.com/config/rhel/8/packages-microsoft-prod.rpm
+          sudo dnf install azure-cli
+          az --version
+  "login azure cli":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        env:
+          <<: *go_env
+          AZURE_APP_ID: ${azure_app_id}
+          AZURE_PASSWORD: ${azure_password}
+          AZURE_TENANT: ${azure_tenant}
+        shell: bash
+        script: |
+          az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT
 tasks:
   - name: atlas_deployments_windows
     tags: ["e2e","deployments","windows"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
-      - func: "install gotestsum"
       - func: "install terraform"
+      - func: "install azure cli"
+      - func: "login azure cli"
       - func: "terraform init"
       - func: "terraform apply"
       - func: "terraform destroy"

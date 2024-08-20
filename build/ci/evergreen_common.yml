@@ -239,7 +239,7 @@ functions:
         script: |
           sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
           sudo dnf install -y https://packages.microsoft.com/config/rhel/8/packages-microsoft-prod.rpm
-          sudo dnf install azure-cli
+          sudo dnf install -y azure-cli
           az --version
   "login azure cli":
     - command: shell.exec

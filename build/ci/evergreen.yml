@@ -1167,7 +1167,7 @@ buildvariants:
   - name: e2e_local_deployments_windows11
     display_name: "E2E Local Deployments Tests (windows11/docker)"
     run_on:
-      - rhel80-small
+      - rhel94-small
     expansions:
       <<: *go_linux_version
     tasks:

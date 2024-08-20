@@ -80,9 +80,63 @@ functions:
           TERRAFORM_VERSION: 1.9.4
         script: |
           set -Eeou pipefail
-          curl -sLo terraform.zip https://releases.hashicorp.com/terraform/1.9.4/terraform_1.9.4_linux_amd64.zip
+          curl -sLo terraform.zip "https://releases.hashicorp.com/terraform/$TERRAFORM_VERSION/terraform_$(echo $TERRAFORM_VERSION)_linux_amd64.zip"
           unzip terraform.zip
           rm terraform.zip LICENSE.txt
+  "terraform init":
+    - command: subprocess.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
+        binary: terraform
+        args:
+          - init
+  "terraform apply":
+    - command: subprocess.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
+        binary: terraform
+        args:
+          - apply
+          - -auto-approve
+    - command: s3.put
+      type: setup
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/terraform.tfstate
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/octet-stream}
+        display_name: internal-bucket
+  "terraform destroy":
+    - command: subprocess.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
+        binary: terraform
+        args:
+          - apply
+          - -destroy
+          - -auto-approve
+    - command: s3.put
+      type: setup
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/terraform.tfstate
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/octet-stream}
+        display_name: internal-bucket
   "e2e test":
     - command: subprocess.exec
       type: test
@@ -184,13 +238,10 @@ tasks:
     commands:
       - func: "install gotestsum"
       - func: "install terraform"
-      - command: shell.exec
-        params:
-          <<: *go_options
-          shell: bash
-          script: |
-            set -e
-            ls -la ~/.ssh/
+      - func: "terraform init"
+      - func: "terraform apply"
+      - func: "terraform destroy"
+
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
     must_have_test_results: true

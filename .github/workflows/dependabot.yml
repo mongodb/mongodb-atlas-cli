@@ -18,10 +18,6 @@
         uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 2
-      - name: Find JIRA team
-        id: find
-        run: |
-          echo "assigned_team="$(git diff HEAD~1..HEAD -- go.mod | grep -v "// indirect" | grep -i "^\-" | grep -v "^\-\-\-" | awk '{print $2}' | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners.json" | sh | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners_jira.json" | sh | head -1)  >> "${GITHUB_OUTPUT}"
       - name: Create JIRA ticket
         id: create
         shell: bash
@@ -29,7 +25,7 @@
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_URL: ${{ github.event.pull_request.html_url }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ASSIGNEE: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
+          JIRA_ASSIGNEE: ${{ secrets.ASSIGNEE_MONGOCLI_JIRA_TICKET }}
         run: |
           json_response=$(curl --request POST \
             --url 'https://jira.mongodb.org/rest/api/2/issue' \
@@ -46,7 +42,7 @@
                       "id": "12"
                   },
                   "customfield_12751": [{
-                          "id": "${{ steps.find.outputs.assigned_team }}"
+                          "id": 27065"
                   }],
                   "description": "This ticket tracks the following GitHub pull request: '"${PR_URL}"'.",
                   "components": [

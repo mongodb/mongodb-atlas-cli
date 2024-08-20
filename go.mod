@@ -16,7 +16,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.27
 	github.com/aws/aws-sdk-go-v2/service/kms v1.35.3
 	github.com/briandowns/spinner v1.23.1
-	github.com/creack/pty v1.1.21
+	github.com/creack/pty v1.1.23
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/evergreen-ci/shrub v0.0.0-20240215220116-3f233ddeff2a
 	github.com/go-test/deep v1.1.1

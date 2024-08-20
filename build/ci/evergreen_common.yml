@@ -237,23 +237,27 @@ functions:
         <<: *go_options
         shell: bash
         script: |
+          set -e
           sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
           sudo dnf install -y https://packages.microsoft.com/config/rhel/8/packages-microsoft-prod.rpm
+          sudo rpm --rebuilddb
           sudo dnf install -y azure-cli
           az --version
   "login azure cli":
-    - command: shell.exec
+    - command: subprocess.exec
       type: setup
       params:
         <<: *go_options
-        env:
-          <<: *go_env
-          AZURE_APP_ID: ${azure_app_id}
-          AZURE_PASSWORD: ${azure_password}
-          AZURE_TENANT: ${azure_tenant}
-        shell: bash
-        script: |
-          az login --service-principal -u $AZURE_APP_ID -p $AZURE_PASSWORD --tenant $AZURE_TENANT
+        binary: az
+        args:
+          - login
+          - --service-principal
+          - -u
+          - ${azure_app_id}
+          - -p
+          - ${azure_password}
+          - --tenant
+          - ${azure_tenant}
 tasks:
   - name: atlas_deployments_windows
     tags: ["e2e","deployments","windows"]

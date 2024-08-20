@@ -268,13 +268,12 @@ func TestStreams(t *testing.T) {
 
 		connections := response.GetResults()
 		a := assert.New(t)
-		a.Len(connections, 2)
+		a.Len(connections, 1)
 
 		expected := []struct {
 			Name, Type, BootstrapServers string
 		}{
 			{Name: connectionName, Type: "Kafka", BootstrapServers: "example.com:8080,fraud.example.com:8000"},
-			// sample_stream_solar is a sample connection which is added by default to new stream instances
 		}
 		got := []struct {
 			Name, Type, BootstrapServers string

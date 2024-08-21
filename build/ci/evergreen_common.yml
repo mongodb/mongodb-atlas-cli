@@ -331,15 +331,11 @@ functions:
         done
       shell: bash
 tasks:
-  - name: atlas_deployments_windows
+  - name: atlas_deployments_windows_task
     tags: ["e2e","deployments","windows"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
-      - func: "install terraform"
-      - func: "install azure cli"
-      - func: "login azure cli"
-      - func: "terraform init"
       - func: "terraform apply"
       - func: "ssh-ready"
         vars:
@@ -366,7 +362,6 @@ tasks:
           user: atlascli
           host: ${public_ip_address}
           identity_file: ~/.ssh/id_rsa
-      - func: "terraform destroy"
 
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
@@ -406,3 +401,16 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,deployments,local,auth
           E2E_TIMEOUT: 3h
+
+task_groups:
+  - name: atlas_deployments_windows
+    setup_task:
+      - func: clone
+      - func: "install terraform"
+      - func: "install azure cli"
+      - func: "login azure cli"
+      - func: "terraform init"
+    teardown_task:
+      - func: "terraform destroy"
+    tasks:
+      - atlas_deployments_windows_task

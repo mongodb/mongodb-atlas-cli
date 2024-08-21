@@ -85,16 +85,35 @@ functions:
           rm terraform.zip LICENSE.txt
   "terraform init":
     - command: subprocess.exec
-      type: setup
       params:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
         binary: terraform
         args:
           - init
+  "copy to remote":
+    - command: subprocess.exec
+      params:
+        binary: scp
+        args:
+          - -o
+          - StrictHostKeyChecking=no
+          - -i "${identity_file}"
+          - -r
+          - "${local_dir}"
+          - "${user}@${host}:${remote_dir}"
+  "ssh":
+    - command: subprocess.exec
+      params:
+        binary: ssh
+        args:
+          - -o
+          - StrictHostKeyChecking=no
+          - -i "${identity_file}"
+          - "${user}@${host}"
+          - ${cmd}
   "terraform apply":
     - command: subprocess.exec
-      type: setup
       params:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
@@ -103,7 +122,6 @@ functions:
           - apply
           - -auto-approve
     - command: s3.put
-      type: setup
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
@@ -114,9 +132,28 @@ functions:
         permissions: public-read
         content_type: ${content_type|application/octet-stream}
         display_name: internal-bucket
+    - command: shell.exec
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          echo "public_ip_address: $(terraform output -json | jq -r '.public_ip_address.value')" > expansions.yaml
+    - command: expansions.update
+      params:
+        ignore_missing_file: true
+        file: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/expansions.yaml
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
+        binary: rm
+        args:
+          - -f
+          - expansions.yaml
   "terraform destroy":
     - command: subprocess.exec
-      type: setup
       params:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
@@ -126,7 +163,6 @@ functions:
           - -destroy
           - -auto-approve
     - command: s3.put
-      type: setup
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
@@ -258,6 +294,31 @@ functions:
           - ${azure_password}
           - --tenant
           - ${azure_tenant}
+  "ssh-ready":
+    command: shell.exec
+    params:
+      exec_as_string: true
+      script: |
+        attempts=0
+        connection_attempts=${connection_attempts|25}
+
+        ## Check for remote connectivity
+        while ! ssh \
+          -i "${identity_file}" \
+          -o ConnectTimeout=10 \
+          -o ForwardAgent=yes \
+          -o IdentitiesOnly=yes \
+          -o StrictHostKeyChecking=no \
+          "${user}@${host}" \
+          exit
+        do
+          [ "$attempts" -ge "$connection_attempts" ] && exit 1
+          ((attempts++))
+          printf "SSH connection attempt %d/%d failed. Retrying...\n" "$attempts" "$connection_attempts"
+          ## sleep for Permission denied (publickey) errors
+          sleep 10
+        done
+      shell: bash
 tasks:
   - name: atlas_deployments_windows
     tags: ["e2e","deployments","windows"]
@@ -269,6 +330,24 @@ tasks:
       - func: "login azure cli"
       - func: "terraform init"
       - func: "terraform apply"
+      - func: "ssh-ready"
+        vars:
+          host: ${public_ip_address}
+          user: atlascli
+          identity_file: ~/.ssh/id_rsa
+      - func: "copy to remote"
+        vars:
+          local_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
+          remote_dir: C:\\Users\\atlascli\\win_test.ps1
+          user: atlascli
+          host: ${public_ip_address}
+          identity_file: ~/.ssh/id_rsa
+      - func: "ssh"
+        vars:
+          host: ${public_ip_address}
+          user: atlascli
+          identity_file: ~/.ssh/id_rsa
+          cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1"
       - func: "terraform destroy"
 
   - name: atlas_deployments_local_noauth_e2e

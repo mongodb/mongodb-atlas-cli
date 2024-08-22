@@ -18,7 +18,6 @@ package atlas_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -279,28 +278,22 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 	var keys atlasv2.PaginatedApiApiUser
 	err = json.Unmarshal(resp, &keys)
 	require.NoError(t, err)
-
-	t.Log(string(resp))
-	t.Log("Found keys to in project:")
-	t.Log(keys.GetResults())
-	t.Log("Keys to delete:")
-	t.Log(toDelete)
 	for _, key := range keys.GetResults() {
 		keyID := *key.Id
 		desc := *key.Desc
 
 		if _, ok := toDelete[desc]; ok {
-			fmt.Println("deleting key", desc)
-			fmt.Println("keyID", keyID)
-			// cmd = exec.Command(cliPath,
-			// 	orgEntity,
-			// 	"apiKeys",
-			// 	"rm",
-			// 	keyID,
-			// 	"--force")
-			// cmd.Env = os.Environ()
-			// _, err = e2e.RunAndGetStdOut(cmd)
-			// require.NoError(t, err)
+			t.Log("Deleting key with ID:")
+			t.Log(keyID)
+			cmd = exec.Command(cliPath,
+				orgEntity,
+				"apiKeys",
+				"rm",
+				keyID,
+				"--force")
+			cmd.Env = os.Environ()
+			_, err = e2e.RunAndGetStdOut(cmd)
+			require.NoError(t, err)
 		}
 	}
 }

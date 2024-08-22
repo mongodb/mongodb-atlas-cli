@@ -133,7 +133,7 @@ functions:
           - apply
           - -auto-approve
           - -var
-          - "instance_id=/subscriptions/${azure_subscription_id}/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/${image}"
+          - "image_id=/subscriptions/${azure_subscription_id}/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/${image}"
     - command: s3.put
       params:
         aws_key: ${aws_key}

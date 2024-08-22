@@ -132,6 +132,8 @@ functions:
         args:
           - apply
           - -auto-approve
+          - -var
+          - "instance_id=/subscriptions/${azure_subscription_id}/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/${image}"
     - command: s3.put
       params:
         aws_key: ${aws_key}
@@ -306,37 +308,39 @@ functions:
           - --tenant
           - ${azure_tenant}
   "ssh-ready":
-    command: shell.exec
-    params:
-      exec_as_string: true
-      script: |
-        attempts=0
-        connection_attempts=${connection_attempts|25}
+    - command: shell.exec
+      params:
+        exec_as_string: true
+        script: |
+          attempts=0
+          connection_attempts=${connection_attempts|25}
 
-        ## Check for remote connectivity
-        while ! ssh \
-          -i "${identity_file}" \
-          -o ConnectTimeout=10 \
-          -o ForwardAgent=yes \
-          -o IdentitiesOnly=yes \
-          -o StrictHostKeyChecking=no \
-          "${user}@${host}" \
-          exit
-        do
-          [ "$attempts" -ge "$connection_attempts" ] && exit 1
-          ((attempts++))
-          printf "SSH connection attempt %d/%d failed. Retrying...\n" "$attempts" "$connection_attempts"
-          ## sleep for Permission denied (publickey) errors
-          sleep 10
-        done
-      shell: bash
+          ## Check for remote connectivity
+          while ! ssh \
+            -i "${identity_file}" \
+            -o ConnectTimeout=10 \
+            -o ForwardAgent=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=no \
+            "${user}@${host}" \
+            exit
+          do
+            [ "$attempts" -ge "$connection_attempts" ] && exit 1
+            ((attempts++))
+            printf "SSH connection attempt %d/%d failed. Retrying...\n" "$attempts" "$connection_attempts"
+            ## sleep for Permission denied (publickey) errors
+            sleep 10
+          done
+        shell: bash
 tasks:
-  - name: atlas_deployments_windows
-    tags: ["e2e","deployments","windows"]
+  - name: atlas_deployments_windows_11
+    tags: ["e2e","deployments","local","windows"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
       - func: "terraform apply"
+        vars:
+          image: atlascli-win11-image
       - func: "ssh-ready"
         vars:
           host: ${public_ip_address}
@@ -362,7 +366,39 @@ tasks:
           user: atlascli
           host: ${public_ip_address}
           identity_file: ~/.ssh/id_rsa
-
+  - name: atlas_deployments_windows_10
+    tags: ["e2e","deployments","local","windows"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    commands:
+      - func: "terraform apply"
+        vars:
+          image: atlascli-win10-image
+      - func: "ssh-ready"
+        vars:
+          host: ${public_ip_address}
+          user: atlascli
+          identity_file: ~/.ssh/id_rsa
+      - func: "copy to remote"
+        vars:
+          local_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
+          remote_dir: C:\\Users\\atlascli\\win_test.ps1
+          user: atlascli
+          host: ${public_ip_address}
+          identity_file: ~/.ssh/id_rsa
+      - func: "ssh"
+        vars:
+          host: ${public_ip_address}
+          user: atlascli
+          identity_file: ~/.ssh/id_rsa
+          cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1"
+      - func: "copy from remote"
+        vars:
+          local_dir: src/github.com/mongodb/mongodb-atlas-cli/e2e-tests.xml
+          remote_dir: C:\\Users\\atlascli\\mongodb-atlas-cli\\e2e-tests.xml
+          user: atlascli
+          host: ${public_ip_address}
+          identity_file: ~/.ssh/id_rsa
   - name: atlas_deployments_local_noauth_e2e
     tags: ["e2e","deployments","local","noauth"]
     must_have_test_results: true
@@ -413,4 +449,4 @@ task_groups:
     teardown_task:
       - func: "terraform destroy"
     tasks:
-      - atlas_deployments_windows
+      - .e2e .deployments .local .windows

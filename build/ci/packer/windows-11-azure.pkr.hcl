@@ -41,7 +41,7 @@ source "azure-arm" "windows-11" {
   os_type                           = "Windows"
   image_publisher                   = "MicrosoftWindowsDesktop"
   image_offer                       = "windows-11"
-  image_sku                         = "win11-21h2-pro"
+  image_sku                         = "win11-23h2-pro"
   location                          = "East US"
   vm_size                           = "Standard_D2s_v3"
   communicator                      = "winrm"

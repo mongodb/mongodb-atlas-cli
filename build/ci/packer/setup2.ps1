@@ -1,8 +1,3 @@
-Write-Output 'Install gotestsum...'
-$GOPATH = go env GOPATH
-[Environment]::SetEnvironmentVariable("PATH", "$GOPATH\bin;$env:PATH", "User")
-go install gotest.tools/gotestsum@latest
-
 Write-Output 'Sysprep...'
 if( Test-Path $Env:SystemRoot\windows\system32\Sysprep\unattend.xml ){
     rm $Env:SystemRoot\windows\system32\Sysprep\unattend.xml -Force

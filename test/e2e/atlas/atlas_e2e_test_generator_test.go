@@ -18,6 +18,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -250,6 +251,52 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	}
 	if !deleted {
 		t.Errorf("we could not delete the project %q", projectID)
+	}
+}
+
+// list of keys to delete as clean up
+func getKeysToDelete() map[string]struct{} {
+	return map[string]struct{}{
+		"mongodb-atlas-operator-api-key": {},
+		"e2e-test-helper":                {},
+		"e2e-test-atlas-org":             {},
+	}
+}
+
+func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		"apiKeys",
+		"ls",
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
+
+	var keys atlasv2.PaginatedApiApiUser
+	err = json.Unmarshal(resp, &keys)
+	require.NoError(t, err)
+
+	for _, key := range keys.GetResults() {
+		keyID := *key.Id
+		desc := *key.Desc
+
+		if _, ok := toDelete[desc]; ok {
+			fmt.Println("deleting key", desc)
+			fmt.Println("keyID", keyID)
+			// cmd = exec.Command(cliPath,
+			// 	orgEntity,
+			// 	"apiKeys",
+			// 	"rm",
+			// 	keyID,
+			// 	"--force")
+			// cmd.Env = os.Environ()
+			// _, err = e2e.RunAndGetStdOut(cmd)
+			// require.NoError(t, err)
+		}
 	}
 }
 

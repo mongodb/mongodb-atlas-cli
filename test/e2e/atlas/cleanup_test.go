@@ -73,38 +73,39 @@ func TestCleanup(t *testing.T) {
 		t.Run("trying to delete project "+projectID, func(t *testing.T) {
 			t.Parallel()
 			t.Cleanup(func() {
-				deleteProjectWithRetry(t, projectID)
+				deleteKeys(t, cliPath, getKeysToDelete())
+				// deleteProjectWithRetry(t, projectID)
 			})
-			for _, provider := range []string{"aws", "gcp", "azure"} {
-				p := provider
-				t.Run("delete network peers for "+p, func(t *testing.T) {
-					t.Parallel()
-					deleteAllNetworkPeers(t, cliPath, projectID, p)
-				})
-				t.Run("delete private endpoints for "+p, func(t *testing.T) {
-					t.Parallel()
-					deleteAllPrivateEndpoints(t, cliPath, projectID, p)
-				})
-			}
-			t.Run("delete all clusters", func(t *testing.T) {
-				t.Parallel()
-				deleteAllClustersForProject(t, cliPath, projectID)
-			})
-			t.Run("delete datapipelines", func(t *testing.T) {
-				t.Parallel()
-				deleteDatapipelinesForProject(t, cliPath, projectID)
-			})
-			t.Run("delete data federations", func(t *testing.T) {
-				t.Parallel()
-				deleteAllDataFederations(t, cliPath, projectID)
-			})
-			t.Run("delete all serverless instances", func(t *testing.T) {
-				if IsGov() {
-					t.Skip("serverless is not available on gov")
-				}
-				t.Parallel()
-				deleteAllServerlessInstances(t, cliPath, projectID)
-			})
+			// for _, provider := range []string{"aws", "gcp", "azure"} {
+			// 	p := provider
+			// 	t.Run("delete network peers for "+p, func(t *testing.T) {
+			// 		t.Parallel()
+			// 		deleteAllNetworkPeers(t, cliPath, projectID, p)
+			// 	})
+			// 	t.Run("delete private endpoints for "+p, func(t *testing.T) {
+			// 		t.Parallel()
+			// 		deleteAllPrivateEndpoints(t, cliPath, projectID, p)
+			// 	})
+			// }
+			// t.Run("delete all clusters", func(t *testing.T) {
+			// 	t.Parallel()
+			// 	deleteAllClustersForProject(t, cliPath, projectID)
+			// })
+			// t.Run("delete datapipelines", func(t *testing.T) {
+			// 	t.Parallel()
+			// 	deleteDatapipelinesForProject(t, cliPath, projectID)
+			// })
+			// t.Run("delete data federations", func(t *testing.T) {
+			// 	t.Parallel()
+			// 	deleteAllDataFederations(t, cliPath, projectID)
+			// })
+			// t.Run("delete all serverless instances", func(t *testing.T) {
+			// 	if IsGov() {
+			// 		t.Skip("serverless is not available on gov")
+			// 	}
+			// 	t.Parallel()
+			// 	deleteAllServerlessInstances(t, cliPath, projectID)
+			// })
 		})
 	}
 }

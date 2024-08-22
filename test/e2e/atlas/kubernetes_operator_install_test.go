@@ -17,7 +17,6 @@
 package atlas_test
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -29,7 +28,10 @@ import (
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+<<<<<<< Updated upstream
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+=======
+>>>>>>> Stashed changes
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -444,33 +446,5 @@ func cleanUpKeys(t *testing.T, operator *operatorHelper, namespace string, cliPa
 		toDelete[secret.Name] = struct{}{}
 	}
 
-	cmd := exec.Command(cliPath,
-		orgEntity,
-		"apiKeys",
-		"ls",
-		"-o=json")
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	require.NoError(t, err, string(resp))
-
-	var keys atlasv2.PaginatedApiApiUser
-	err = json.Unmarshal(resp, &keys)
-	require.NoError(t, err)
-
-	for _, key := range keys.GetResults() {
-		keyID := *key.Id
-		desc := *key.Desc
-
-		if _, ok := toDelete[desc]; ok {
-			cmd = exec.Command(cliPath,
-				orgEntity,
-				"apiKeys",
-				"rm",
-				keyID,
-				"--force")
-			cmd.Env = os.Environ()
-			_, err = e2e.RunAndGetStdOut(cmd)
-			require.NoError(t, err)
-		}
-	}
+	deleteKeys(t, cliPath, toDelete)
 }

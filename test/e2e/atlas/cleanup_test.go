@@ -65,6 +65,9 @@ func TestCleanup(t *testing.T) {
 			// 	t.Parallel()
 			// 	deleteAllDataFederations(t, cliPath, projectID)
 			// })
+			t.Cleanup(func() {
+				deleteKeys(t, cliPath, getKeysToDelete())
+			})
 
 			t.Log("skip deleting default project", projectID)
 			continue
@@ -73,7 +76,6 @@ func TestCleanup(t *testing.T) {
 		t.Run("trying to delete project "+projectID, func(t *testing.T) {
 			t.Parallel()
 			t.Cleanup(func() {
-				deleteKeys(t, cliPath, getKeysToDelete())
 				// deleteProjectWithRetry(t, projectID)
 			})
 			// for _, provider := range []string{"aws", "gcp", "azure"} {

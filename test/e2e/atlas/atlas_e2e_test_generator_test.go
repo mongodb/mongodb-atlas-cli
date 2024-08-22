@@ -280,8 +280,11 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 	err = json.Unmarshal(resp, &keys)
 	require.NoError(t, err)
 
-	t.Log("Found keys to in project: %s", keys.GetResults())
-	t.Log("Keys to delete: %s", toDelete)
+	t.Log(string(resp))
+	t.Log("Found keys to in project:")
+	t.Log(keys.GetResults())
+	t.Log("Keys to delete:")
+	t.Log(toDelete)
 	for _, key := range keys.GetResults() {
 		keyID := *key.Id
 		desc := *key.Desc

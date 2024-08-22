@@ -1171,7 +1171,7 @@ buildvariants:
     expansions:
       <<: *go_linux_version
     tasks:
-      - name: "atlas_deployments_windows"
+      - name: "atlas_deployments_windows_group"
         depends_on:
         - name: compile
           variant: "code_health"

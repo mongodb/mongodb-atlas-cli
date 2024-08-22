@@ -331,7 +331,7 @@ functions:
         done
       shell: bash
 tasks:
-  - name: atlas_deployments_windows_task
+  - name: atlas_deployments_windows
     tags: ["e2e","deployments","windows"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
@@ -403,7 +403,7 @@ tasks:
           E2E_TIMEOUT: 3h
 
 task_groups:
-  - name: atlas_deployments_windows
+  - name: atlas_deployments_windows_group
     setup_task:
       - func: clone
       - func: "install terraform"
@@ -413,4 +413,4 @@ task_groups:
     teardown_task:
       - func: "terraform destroy"
     tasks:
-      - atlas_deployments_windows_task
+      - atlas_deployments_windows

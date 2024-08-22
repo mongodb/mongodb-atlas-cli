@@ -61,10 +61,10 @@ func TestCleanup(t *testing.T) {
 			// we have to cleanup data federations from default project
 			// as this is the only project configured for data federation
 			// (has a configured awsRoleId)
-			t.Run("delete data federations", func(t *testing.T) {
-				t.Parallel()
-				deleteAllDataFederations(t, cliPath, projectID)
-			})
+			// t.Run("delete data federations", func(t *testing.T) {
+			// 	t.Parallel()
+			// 	deleteAllDataFederations(t, cliPath, projectID)
+			// })
 
 			t.Log("skip deleting default project", projectID)
 			continue

@@ -107,7 +107,7 @@ resource "azurerm_virtual_machine_extension" "atlascli_vm_extension" {
 
   settings = <<SETTINGS
  {
-  "commandToExecute": "powershell.exe -Command \"$keyPath = $env:ProgramData + '\\ssh\\administrators_authorized_keys'; Add-Content -Force -Path $keyPath -Value '${local.ssh_pub_key}'; icacls.exe $keyPath /inheritance:r /grant 'Administrators:F' /grant 'SYSTEM:F'\""
+  "commandToExecute": "powershell.exe -Command \"$keyPath = $env:ProgramData + '\\ssh\\administrators_authorized_keys'; Add-Content -Force -Path $keyPath -Value '${local.ssh_pub_key}'; icacls.exe $keyPath /inheritance:r /grant 'Administrators:F' /grant 'SYSTEM:F'; $newPath = $(go env GOPATH) + '\bin;' + $env:Path; setx PATH $newPath\""
  }
 SETTINGS
 }

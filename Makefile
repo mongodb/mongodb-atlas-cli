@@ -6,11 +6,12 @@ COVERAGE=coverage.out
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
-ATLAS_BINARY_NAME=atlas
 ifeq ($(OS),Windows_NT)
     ATLAS_VERSION?=$(shell powershell -Command "(git describe --match 'atlascli/v*') -replace '.*v(.*)', '$$1'")
+	ATLAS_BINARY_NAME=atlas.exe
 else
     ATLAS_VERSION?=$(shell git describe --match "atlascli/v*" | cut -d "v" -f 2)
+	ATLAS_BINARY_NAME=atlas
 endif
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
@@ -130,7 +131,7 @@ build-debug: ## Generate a binary in ./bin for debugging atlascli
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
-e2e-test: #build ## Run E2E tests
+e2e-test: build ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)

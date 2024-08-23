@@ -28,8 +28,11 @@ E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=
 
-export PATH := $(shell go env GOPATH)/bin:$(PATH)
-export PATH := ./bin:$(PATH)
+ifeq ($(OS),Windows_NT)
+	export PATH := .\bin;$(shell go env GOPATH)\bin;$(PATH)
+else
+	export PATH := ./bin:$(shell go env GOPATH)/bin:$(PATH)
+endif
 export TERM := linux-m
 export GO111MODULE := on
 export GOTOOLCHAIN := local
@@ -127,9 +130,9 @@ build-debug: ## Generate a binary in ./bin for debugging atlascli
 	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
-e2e-test: build ## Run E2E tests
+e2e-test: #build ## Run E2E tests
+# the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
-	# the target assumes the MCLI_* environment variables are exported
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
 
 .PHONY: fuzz-normalizer-test

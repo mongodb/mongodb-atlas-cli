@@ -279,12 +279,12 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 	err = json.Unmarshal(resp, &keys)
 	require.NoError(t, err)
 	for _, key := range keys.GetResults() {
-		keyID := *key.Id
-		desc := *key.Desc
+		keyID := key.GetId()
+		desc := key.GetDesc()
 
+		errors := []error{}
 		if _, ok := toDelete[desc]; ok {
-			t.Log("Deleting key with ID:")
-			t.Log(keyID)
+			t.Logf("Deleting key with ID: %s", keyID)
 			cmd = exec.Command(cliPath,
 				orgEntity,
 				"apiKeys",
@@ -293,7 +293,12 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 				"--force")
 			cmd.Env = os.Environ()
 			_, err = e2e.RunAndGetStdOut(cmd)
-			require.NoError(t, err)
+			if err != nil {
+				errors = append(errors, err)
+			}
+		}
+		if len(errors) > 0 {
+			t.Errorf("unexpected errors while deleting keys: %v", errors)
 		}
 	}
 }

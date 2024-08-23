@@ -52,6 +52,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/networking"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/organizations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/performanceadvisor"
+	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/privateendpoints"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/processes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/projects"
@@ -66,6 +67,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/homebrew"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/latestrelease"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
@@ -146,25 +148,28 @@ Use the --help flag with any command for more info on that command.`,
 			if shouldSetService(cmd) {
 				config.SetService(config.CloudService)
 			}
-			if authReq := shouldCheckCredentials(cmd); authReq != NoAuth {
-				if err := prerun.ExecuteE(
-					opts.InitFlow(config.Default()),
-					func() error {
-						if err := opts.RefreshAccessToken(cmd.Context()); err != nil {
-							if authReq == RequiredAuth {
-								_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
-								return err
-							}
-						}
-						return nil
-					},
-				); err != nil {
-					return err
-				}
 
-				if authReq == RequiredAuth {
-					return validate.Credentials()
-				}
+			authReq := shouldCheckCredentials(cmd)
+			if authReq == NoAuth {
+				return nil
+			}
+
+			if err := prerun.ExecuteE(
+				opts.InitFlow(config.Default()),
+				func() error {
+					err := opts.RefreshAccessToken(cmd.Context())
+					if err != nil && authReq == RequiredAuth {
+						_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
+						return err
+					}
+					return nil
+				},
+			); err != nil {
+				return err
+			}
+
+			if authReq == RequiredAuth {
+				return validate.Credentials()
 			}
 
 			return nil
@@ -247,6 +252,8 @@ Use the --help flag with any command for more info on that command.`,
 		federatedauthentication.Builder(),
 	)
 
+	pluginCmd.RegisterCommands(rootCmd)
+
 	rootCmd.PersistentFlags().StringVarP(&profile, flag.Profile, flag.ProfileShort, "", usage.ProfileAtlasCLI)
 	rootCmd.PersistentFlags().BoolVarP(&debugLevel, flag.Debug, flag.DebugShort, false, usage.Debug)
 	_ = rootCmd.PersistentFlags().MarkHidden(flag.Debug)
@@ -301,6 +308,7 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 		fmt.Sprintf("%s %s", atlas, "whoami"):      NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "setup"):       NoAuth,       // user wants to set credentials
 		fmt.Sprintf("%s %s", atlas, "register"):    NoAuth,       // user wants to set credentials
+		fmt.Sprintf("%s %s", atlas, "plugin"):      NoAuth,       // plugin functionality requires no authentication
 		fmt.Sprintf("%s %s", atlas, "quickstart"):  NoAuth,       // command supports login
 		fmt.Sprintf("%s %s", atlas, "deployments"): OptionalAuth, // command supports local and Atlas
 	}
@@ -309,6 +317,11 @@ func shouldCheckCredentials(cmd *cobra.Command) AuthRequirements {
 			return r
 		}
 	}
+
+	if plugin.IsPluginCmd(cmd) || pluginCmd.IsFirstClassPluginCmd(cmd) {
+		return OptionalAuth
+	}
+
 	return RequiredAuth
 }
 

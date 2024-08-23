@@ -418,6 +418,25 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,deployments,local,noauth
           E2E_TIMEOUT: 3h
+  - name: atlas_deployments_local_nocli_e2e
+    tags: ["e2e","deployments","local","nocli"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    commands:
+      - func: "install gotestsum"
+      - func: "install mongodb database tools"
+      - func: "increase inotify limits"
+      - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,deployments,local,nocli
+          E2E_TIMEOUT: 3h
   - name: atlas_deployments_local_auth_e2e
     tags: ["e2e","deployments","local","auth"]
     must_have_test_results: true

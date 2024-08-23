@@ -81,14 +81,18 @@ func parsePortMapping(s string) ([]PortMapping, error) {
 	mappings := strings.Split(s, ",")
 	result := []PortMapping{}
 	for _, mapping := range mappings {
-		segments := strings.SplitN(mapping, "->", 2) //nolint //max 2 fields
-		hostStr, hostPortStr := splitOnceLast(segments[0], ":")
-		containerSegments := strings.SplitN(segments[1], "/", 2) //nolint //max 2 fields
-		hostPort, err := strconv.Atoi(hostPortStr)
+		hostMapping, containerMapping := "", mapping
+		if strings.Contains(mapping, "->") {
+			segments := strings.SplitN(mapping, "->", 2) //nolint //max 2 fields
+			hostMapping = segments[0]
+			containerMapping = segments[1]
+		}
+
+		hostStr, hostPort, err := splitHostPort(hostMapping)
 		if err != nil {
 			return nil, fmt.Errorf("%w: %w", errConvertHostPort, err)
 		}
-		containerPort, err := strconv.Atoi(containerSegments[0])
+		containerPort, containerProtocol, err := splitPortProtocol(containerMapping)
 		if err != nil {
 			return nil, fmt.Errorf("%w: %w", errConvertContainerPort, err)
 		}
@@ -96,15 +100,42 @@ func parsePortMapping(s string) ([]PortMapping, error) {
 			HostAddress:       hostStr,
 			HostPort:          hostPort,
 			ContainerPort:     containerPort,
-			ContainerProtocol: containerSegments[1],
+			ContainerProtocol: containerProtocol,
 		})
 	}
 	return result, nil
 }
 
-func splitOnceLast(s, sep string) (string, string) {
-	lastIndex := strings.LastIndex(s, sep)
-	return s[:lastIndex], s[lastIndex+1:]
+func splitPortProtocol(s string) (int, string, error) {
+	protocol := ""
+	if strings.ContainsRune(s, '/') {
+		index := strings.LastIndex(s, "/")
+		protocol = s[index+1:]
+		s = s[:index]
+	}
+
+	port, err := strconv.Atoi(s)
+
+	return port, protocol, err
+}
+
+func splitHostPort(s string) (string, int, error) {
+	host, port := "", s
+
+	if strings.ContainsRune(s, ':') {
+		index := strings.LastIndex(s, ":")
+		host = s[:index]
+		port = s[index+1:]
+	}
+
+	iport, err := strconv.Atoi(port)
+	if err != nil {
+		host = port
+		if !strings.ContainsRune(s, ':') { // single value can be either host or port
+			err = nil
+		}
+	}
+	return host, iport, err
 }
 
 func portMappingFlag(pm PortMapping) string {

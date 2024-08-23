@@ -192,6 +192,62 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters,sharded
+  - name: atlas_plugin_install
+    tags: ["e2e","atlas","plugin","install"]
+    must_have_test_results: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,plugin,install
+  - name: atlas_plugin_run
+    tags: ["e2e","atlas","plugin"]
+    must_have_test_results: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,plugin,run
+  - name: atlas_plugin_uninstall
+    tags: ["e2e","atlas","plugin"]
+    must_have_test_results: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,plugin,uninstall
+  - name: atlas_plugin_update
+    tags: ["e2e","atlas","plugin"]
+    must_have_test_results: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,plugin,update
   - name: atlas_clusters_m0_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -1184,6 +1240,14 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .streams"
+  - name: e2e_plugin
+    display_name: "E2E Plugin Tests"
+    run_on:
+      - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas .plugin"
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]

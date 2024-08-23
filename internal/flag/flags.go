@@ -307,6 +307,7 @@ const (
 	BindIPAll                                 = "bindIpAll"                                 // BindIpAll flag
 	FrequencyType                             = "frequencyType"                             // FrequencyType flag
 	FrequencyInterval                         = "frequencyInterval"                         // FrequencyInterval flag
+	All                                       = "all"                                       // All flag
 	RetentionUnit                             = "retentionUnit"                             // RetentionUnit flag
 	RetentionValue                            = "retentionValue"                            // RetentionValue flag
 	FederationSettingsID                      = "federationSettingsId"                      // FederationSettingsId flag

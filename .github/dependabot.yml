@@ -8,7 +8,7 @@ updates:
       day: tuesday
     open-pull-requests-limit: 20
     reviewers:
-      - "mongodb/mongocli"
+      - "mongodb/apix-2"
     ignore:
       - dependency-name: "go.mongodb.org/atlas-sdk/*"
     groups:
@@ -37,7 +37,7 @@ updates:
       interval: weekly
       day: tuesday
     reviewers:
-      - "mongodb/mongocli"
+      - "mongodb/apix-2"
     groups:
       docker:
         patterns:

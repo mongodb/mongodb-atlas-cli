@@ -5,5 +5,5 @@ cd "mongodb-atlas-cli"
 git checkout CLOUDP-265394
 go install gotest.tools/gotestsum@latest
 $env:TEST_CMD="gotestsum --junitfile e2e-tests.xml --format standard-verbose --"
-$env:E2E_TAGS="atlas,deployments,local,auth"
+$env:E2E_TAGS="atlas,deployments,local,auth,noauth,nocli"
 make e2e-test

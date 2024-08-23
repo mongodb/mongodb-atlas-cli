@@ -253,6 +253,56 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	}
 }
 
+// list of keys to delete as clean up.
+func getKeysToDelete() map[string]struct{} {
+	return map[string]struct{}{
+		"mongodb-atlas-operator-api-key": {},
+		"e2e-test-helper":                {},
+		"e2e-test-atlas-org":             {},
+	}
+}
+
+func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		"apiKeys",
+		"ls",
+		"-o=json")
+
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
+
+	var keys atlasv2.PaginatedApiApiUser
+	err = json.Unmarshal(resp, &keys)
+	require.NoError(t, err)
+	for _, key := range keys.GetResults() {
+		keyID := key.GetId()
+		desc := key.GetDesc()
+
+		errors := []error{}
+		if _, ok := toDelete[desc]; ok {
+			t.Logf("Deleting key with ID: %s", keyID)
+			cmd = exec.Command(cliPath,
+				orgEntity,
+				"apiKeys",
+				"rm",
+				keyID,
+				"--force")
+			cmd.Env = os.Environ()
+			_, err = e2e.RunAndGetStdOut(cmd)
+			if err != nil {
+				errors = append(errors, err)
+			}
+		}
+		if len(errors) > 0 {
+			t.Errorf("unexpected errors while deleting keys: %v", errors)
+		}
+	}
+}
+
 func deleteOrgInvitations(t *testing.T, cliPath string) {
 	t.Helper()
 	cmd := exec.Command(cliPath,

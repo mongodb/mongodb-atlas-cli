@@ -253,7 +253,7 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	}
 }
 
-// list of keys to delete as clean up
+// list of keys to delete as clean up.
 func getKeysToDelete() map[string]struct{} {
 	return map[string]struct{}{
 		"mongodb-atlas-operator-api-key": {},

@@ -334,7 +334,7 @@ functions:
         shell: bash
 tasks:
   - name: atlas_deployments_windows_11
-    tags: ["e2e","deployments","local","windows"]
+    tags: ["e2e","deployments","windows"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
@@ -367,7 +367,7 @@ tasks:
           host: ${public_ip_address}
           identity_file: ~/.ssh/id_rsa
   - name: atlas_deployments_windows_10
-    tags: ["e2e","deployments","local","windows"]
+    tags: ["e2e","deployments","windows"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
@@ -449,4 +449,4 @@ task_groups:
     teardown_task:
       - func: "terraform destroy"
     tasks:
-      - .e2e .deployments .local .windows
+      - .e2e .deployments .windows

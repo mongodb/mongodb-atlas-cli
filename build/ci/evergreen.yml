@@ -18,7 +18,6 @@ command_type: system
 pre_error_fails_task: true
 include:
   - filename: build/ci/release.yml
-  - filename: build/ci/evergreen_common.yml
 
 variables:
   - &go_linux_version
@@ -50,6 +49,165 @@ post:
   - command: attach.xunit_results
     params:
       files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
+functions:
+  "clone":
+    - command: git.get_project
+      type: setup
+      params:
+        directory: src/github.com/mongodb/mongodb-atlas-cli
+  "build":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        command: make build
+  "install mongodb database tools":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        shell: bash
+        env:
+          <<: *go_env
+          MONGODB_DATABASE_TOOLS_VERSION: 100.10.0
+        script: |
+          set -Eeou pipefail
+          if [[ "$(uname -s)" == "Darwin"* ]]; then
+            curl -sLo mongodb-database-tools.zip "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-macos-arm64-$MONGODB_DATABASE_TOOLS_VERSION.zip"
+            unzip mongodb-database-tools.zip
+            mv mongodb-database-tools-*/bin/* .
+            rm -rf mongodb-database-tools-* mongodb-database-tools.zip
+          else
+            mkdir -p mongodb-database-tools
+            curl -sfL "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-rhel70-x86_64-$MONGODB_DATABASE_TOOLS_VERSION.tgz" | tar zx -C mongodb-database-tools --strip-components 1
+            mv mongodb-database-tools/bin/* .
+            rm -rf mongodb-database-tools
+          fi
+  "e2e test":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - go_base_path
+          - workdir
+          - MCLI_ORG_ID
+          - MCLI_PROJECT_ID
+          - MCLI_PRIVATE_API_KEY
+          - MCLI_PUBLIC_API_KEY
+          - MCLI_SERVICE
+          - TEST_CMD
+          - E2E_TAGS
+          - E2E_TEST_BUCKET
+          - E2E_CLOUD_ROLE_ID
+          - MCLI_OPS_MANAGER_URL
+          - OM_VERSION
+          - LOCAL_KEY
+          - KMIP_CA
+          - KMIP_CERT
+          - GCP_CREDENTIALS
+          - AWS_ACCESS_KEY
+          - AWS_SECRET_ACCESS_KEY
+          - AZURE_TENANT_ID
+          - AZURE_CLIENT_ID
+          - AZURE_CLIENT_SECRET
+          - E2E_TIMEOUT
+          - E2E_SERVERLESS_INSTANCE_NAME
+          - E2E_PARALLEL
+          - IDENTITY_PROVIDER_ID
+          - revision
+        env:
+          <<: *go_env
+          MCLI_SKIP_UPDATE_CHECK: "yes"
+          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
+        command: make e2e-test
+  "install gotestsum":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          export PATH="$ADD_PATH:$PATH"
+          if [[ "$(uname -s)" == "Darwin"* ]]; then
+            URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_darwin_arm64.tar.gz
+          else
+            URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz
+          fi
+          curl -sfL $URL | tar zx
+  "generate evergreen":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - go_base_path
+          - workdir
+          - task_type
+        binary: build/ci/evergreen-generate-tasks.sh
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongodb-atlas-cli/tasks.json
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
+    - command: generate.tasks
+      params:
+        files:
+          - tasks.json
+  "increase inotify limits":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |
+          set -e
+          if [[ "$(uname -s)" == "Darwin"* ]]; then
+            echo "No need to increase inotify limits on macOS"
+          else
+            cat /proc/sys/fs/inotify/max_user_watches
+            cat /proc/sys/fs/inotify/max_user_instances
+            echo 1024 | sudo tee /proc/sys/fs/inotify/max_user_instances
+            cat /proc/sys/fs/inotify/max_user_instances
+          fi
+  "install packer":
+    - command: shell.exec
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        env:
+          <<: *go_env
+          PACKER_VERSION: 1.11.2
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          curl -sLo packer.zip https://releases.hashicorp.com/packer/$PACKER_VERSION/packer_$(echo $PACKER_VERSION)_linux_amd64.zip
+          unzip packer.zip
+          rm packer.zip LICENSE.txt
+          packer -v
+  "run packer":
+    - command: shell.exec
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/packer
+        env:
+          <<: *go_env
+          AZURE_APP_ID: ${azure_app_id}
+          AZURE_DISPLAY_NAME: ${azure_display_name}
+          AZURE_PASSWORD: ${azure_password}
+          AZURE_TENANT: ${azure_tenant}
+          AZURE_SUBSCRIPTION_ID: ${azure_subscription_id}
+        shell: bash
+        script: |
+          packer init ${file}
+          packer build -force ${file}
 tasks:
   - name: compile
     tags: ["code_health"]
@@ -1086,6 +1244,77 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,deployments,atlasclusters
           E2E_TIMEOUT: 3h
+  - name: atlas_deployments_local_noauth_e2e
+    tags: ["e2e","deployments","local","noauth"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    commands:
+      - func: "install gotestsum"
+      - func: "install mongodb database tools"
+      - func: "increase inotify limits"
+      - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,deployments,local,noauth
+          E2E_TIMEOUT: 3h
+  - name: atlas_deployments_local_nocli_e2e
+    tags: ["e2e","deployments","local","nocli"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    commands:
+      - func: "install gotestsum"
+      - func: "install mongodb database tools"
+      - func: "increase inotify limits"
+      - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,deployments,local,nocli
+          E2E_TIMEOUT: 3h
+  - name: atlas_deployments_local_auth_e2e
+    tags: ["e2e","deployments","local","auth"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    commands:
+      - func: "install gotestsum"
+      - func: "install mongodb database tools"
+      - func: "increase inotify limits"
+      - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,deployments,local,auth
+          E2E_TIMEOUT: 3h
+  - name: build_win11_image
+    tags: ["packer", "windows", "win11"]
+    commands:
+      - func: "install packer"
+      - func: "run packer"
+        vars:
+          file: "windows-11-azure.pkr.hcl"
+  - name: build_win10_image
+    tags: ["packer", "windows", "win10"]
+    commands:
+      - func: "install packer"
+      - func: "run packer"
+        vars:
+          file: "windows-10-azure.pkr.hcl"
 buildvariants:
   - name: code_health
     display_name: "Code Health"
@@ -1236,6 +1465,39 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .plugin"
+  - name: e2e_local_deployments_rhel
+    display_name: "E2E Local Deployments Tests (rhel/podman)"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - localdev
+    run_on:
+      - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_macos
+    display_name: "E2E Local Deployments Tests (macos/docker)"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - localdev
+    run_on:
+      - macos-14-arm64-docker
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: build_images
+    display_name: "Build Windows Images"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - packer
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".packer .windows"
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]

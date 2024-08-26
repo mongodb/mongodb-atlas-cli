@@ -174,6 +174,17 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 			RunE: p.Run,
 		}
 
+		// Disable the default cobra help function.
+		// Instead redirect help to the plugin.
+		// Example: atlas example-plugin --help -> [example-binary] example-plugin --help
+		command.SetHelpFunc(func(cmd *cobra.Command, args []string) {
+			// args contains all arguments + the name of the command
+			// we don't need the name of the subcommand
+			if err := p.Run(cmd, args[1:]); err != nil {
+				_, _ = log.Warningf("failed to generate help for plugin command '%v': %v", args[0], err)
+			}
+		})
+
 		commands = append(commands, command)
 	}
 

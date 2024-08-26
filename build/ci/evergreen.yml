@@ -1510,7 +1510,7 @@ tasks:
           host: ${public_ip_address}
           user: atlascli
           identity_file: ~/.ssh/id_rsa
-          cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1"
+          cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 '${go_proxy}'"
       - func: "copy from remote"
         vars:
           local_dir: src/github.com/mongodb/mongodb-atlas-cli/e2e-tests.xml

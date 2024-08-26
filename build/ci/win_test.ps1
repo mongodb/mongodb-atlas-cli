@@ -1,5 +1,5 @@
 Write-Host "Start Docker"
-$env:GOPROXY="direct"
+$env:GOPROXY=$args[0]
 Start "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 Write-Host "Clone"
 cd $env:HOME

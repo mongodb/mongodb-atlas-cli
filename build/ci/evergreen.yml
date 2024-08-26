@@ -1221,7 +1221,7 @@ buildvariants:
           variant: "code_health"
           patch_optional: true
   - name: e2e_local_deployments_windows11
-    display_name: "E2E Local Deployments Tests (windows11/docker)"
+    display_name: "E2E Local Deployments Tests (windows/docker)"
     run_on:
       - rhel94-small
     expansions:

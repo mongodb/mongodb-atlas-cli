@@ -1,4 +1,5 @@
 Write-Host "Start Docker"
+$env:GOPROXY="direct"
 Start "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 Write-Host "Clone"
 cd $env:HOME
@@ -8,7 +9,6 @@ git checkout CLOUDP-265394
 Write-Host "Install gotestsum"
 go install gotest.tools/gotestsum@latest
 Write-Host "Download dependencies"
-$env:GOPROXY="direct"
 go mod download
 Write-Host "Run tests"
 $env:TEST_CMD="gotestsum --junitfile e2e-tests.xml --format standard-verbose --"

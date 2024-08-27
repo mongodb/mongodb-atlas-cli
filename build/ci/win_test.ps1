@@ -1,16 +1,13 @@
 Write-Output "Start Docker"
 Start "C:\Program Files\Docker\Docker\Docker Desktop.exe"
-Write-Output "Debug"
-go env
 Write-Output "Clone"
 cd $env:HOME
 git clone "http://github.com/mongodb/mongodb-atlas-cli.git"
 cd "mongodb-atlas-cli"
 git checkout CLOUDP-265394
-Write-Output "Install gotestsum"
+Write-Output "Debug"
 $env:GOPROXY=$args[0]
-$env:CGO_ENABLED=0
-go install gotest.tools/gotestsum@latest
+go env
 Write-Output "Download dependencies"
 go mod download
 Write-Output "Run tests"

@@ -1598,6 +1598,9 @@ task_groups:
       - func: "login azure cli"
       - func: "terraform init"
     teardown_task:
+      - command: attach.xunit_results
+        params:
+          files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
       - command: subprocess.exec
         params:
           <<: *go_options

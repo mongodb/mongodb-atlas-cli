@@ -1,4 +1,6 @@
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process -Force
+Write-Output 'Uninstall Windows Defender...'
+Uninstall-WindowsFeature -Name Windows-Defender
 # ssh
 Write-Output 'Install SSH...'
 Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0

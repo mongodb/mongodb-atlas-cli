@@ -1,3 +1,5 @@
+Write-Output 'Disable Windows Defender...'
+Set-MpPreference -DisableRealtimeMonitoring $true -Force
 Write-Output "Start Docker"
 Start "C:\Program Files\Docker\Docker\Docker Desktop.exe"
 Write-Output "Clone"

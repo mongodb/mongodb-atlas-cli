@@ -1,6 +1,7 @@
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process -Force
-Write-Output 'Uninstall Windows Defender...'
-Uninstall-WindowsFeature -Name Windows-Defender
+# defender
+Write-Output 'Disable Windows Defender...'
+Set-MpPreference -DisableRealtimeMonitoring $true
 # ssh
 Write-Output 'Install SSH...'
 Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0

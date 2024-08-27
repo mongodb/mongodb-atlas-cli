@@ -1,16 +1,16 @@
 Write-Output 'Env...'
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v GOROOT /t REG_EXPAND_SZ /d $(go env GOROOT) /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v GOBIN /t REG_EXPAND_SZ /d "%GOROOT%\bin" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v GOPATH /t REG_EXPAND_SZ /d "%USERPROFILE%\go" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v CGO_ENABLED /t REG_EXPAND_SZ /d "0" /f
+reg add "HKCU\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v GOROOT /t REG_EXPAND_SZ /d $(go env GOROOT) /f
+reg add "HKCU\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v GOBIN /t REG_EXPAND_SZ /d "%GOROOT%\bin" /f
+reg add "HKCU\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v GOPATH /t REG_EXPAND_SZ /d "%USERPROFILE%\go" /f
+reg add "HKCU\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v CGO_ENABLED /t REG_EXPAND_SZ /d "0" /f
 
-$reg_value = reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v PATH
+$reg_value = reg query "HKCU\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v PATH
 $reg_value_lines = $reg_value -split "\n"
 $reg_value_lines[2] -match "PATH\s+REG_EXPAND_SZ\s+(.+)"
 $value = $matches[1]
 $value += ";%GOBIN%;%GOPATH%\bin"
 
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v PATH /t REG_EXPAND_SZ /d $value /f
+reg add "HKCU\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v PATH /t REG_EXPAND_SZ /d $value /f
 
 Write-Output 'Install gotestsum...'
 $env:GOROOT = go env GOROOT

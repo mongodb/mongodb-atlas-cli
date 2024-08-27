@@ -5,7 +5,7 @@ variables:
       go_base_path: ""
   - &go_windows_version
       go_root: "c:\\golang\\go1.22"
-      go_bin: "c:\\golang\\go1.22/bin"
+      go_bin: "c:\\golang\\go1.22\\bin"
       go_base_path: "c:"
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}

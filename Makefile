@@ -123,12 +123,12 @@ gen-docs: ## Generate docs for atlascli commands
 .PHONY: build
 build: ## Generate an atlas binary in ./bin
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary"
-	go build -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
+	go build -ldflags "$(ATLAS_LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: build-debug
 build-debug: ## Generate a binary in ./bin for debugging atlascli
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
-	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
+	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests

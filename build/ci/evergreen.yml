@@ -61,6 +61,29 @@ functions:
       params:
         <<: *go_options
         command: make build
+  "vendor deps":
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: go
+        args:
+          - mod
+          - vendor
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: tar
+        args:
+          - czf
+          - vendor.tar.gz
+          - vendor
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: rm
+        args:
+          - -rf
+          - vendor
   "install mongodb database tools":
     - command: shell.exec
       type: setup
@@ -1497,19 +1520,26 @@ tasks:
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ~/.ssh/id_rsa
+          identity_file: ${workdir}/.ssh/id_rsa
       - func: "copy to remote"
         vars:
           local_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
           remote_dir: C:\\Users\\atlascli\\win_test.ps1
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ~/.ssh/id_rsa
+          identity_file: ${workdir}/.ssh/id_rsa
+      - func: "copy to remote"
+        vars:
+          local_dir: src/github.com/mongodb/mongodb-atlas-cli/vendor.tar.gz
+          remote_dir: C:\\Users\\atlascli\\vendor.tar.gz
+          user: atlascli
+          host: ${public_ip_address}
+          identity_file: ${workdir}/.ssh/id_rsa
       - func: "ssh"
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ~/.ssh/id_rsa
+          identity_file: ${workdir}/.ssh/id_rsa
           cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 ${go_proxy}"
       - func: "copy from remote"
         vars:
@@ -1517,7 +1547,7 @@ tasks:
           remote_dir: C:\\Users\\atlascli\\mongodb-atlas-cli\\e2e-tests.xml
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ~/.ssh/id_rsa
+          identity_file: ${workdir}/.ssh/id_rsa
   - name: atlas_deployments_windows_10
     tags: ["e2e","deployments","windows"]
     must_have_test_results: true
@@ -1530,19 +1560,26 @@ tasks:
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ~/.ssh/id_rsa
+          identity_file: ${workdir}/.ssh/id_rsa
       - func: "copy to remote"
         vars:
           local_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
           remote_dir: C:\\Users\\atlascli\\win_test.ps1
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ~/.ssh/id_rsa
+          identity_file: ${workdir}/.ssh/id_rsa
+      - func: "copy to remote"
+        vars:
+          local_dir: src/github.com/mongodb/mongodb-atlas-cli/vendor.tar.gz
+          remote_dir: C:\\Users\\atlascli\\vendor.tar.gz
+          user: atlascli
+          host: ${public_ip_address}
+          identity_file: ${workdir}/.ssh/id_rsa
       - func: "ssh"
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ~/.ssh/id_rsa
+          identity_file: ${workdir}/.ssh/id_rsa
           cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 ${go_proxy}"
       - func: "copy from remote"
         vars:
@@ -1550,16 +1587,24 @@ tasks:
           remote_dir: C:\\Users\\atlascli\\mongodb-atlas-cli\\e2e-tests.xml
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ~/.ssh/id_rsa
+          identity_file: ${workdir}/.ssh/id_rsa
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
       - func: clone
+      - func: "vendor deps"
       - func: "install terraform"
       - func: "install azure cli"
       - func: "login azure cli"
       - func: "terraform init"
     teardown_task:
+      - command: subprocess.exec
+        params:
+          <<: *go_options
+          binary: rm
+          args:
+            - -rf
+            - vendor.tar.gz
       - func: "terraform destroy"
     tasks:
       - .e2e .deployments .windows

@@ -1559,7 +1559,7 @@ tasks:
           host: ${public_ip_address}
           user: atlascli
           identity_file: ${home}/.ssh/id_rsa
-          cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${revision}"
+          cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
   - name: atlas_deployments_windows_10
     tags: ["e2e","deployments","windows"]
     must_have_test_results: true
@@ -1592,7 +1592,7 @@ tasks:
           host: ${public_ip_address}
           user: atlascli
           identity_file: ${home}/.ssh/id_rsa
-          cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${revision}"
+          cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

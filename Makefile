@@ -6,8 +6,13 @@ COVERAGE=coverage.out
 MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
-ATLAS_BINARY_NAME=atlas
-ATLAS_VERSION?=$(shell git describe --match "atlascli/v*" | cut -d "v" -f 2)
+ifeq ($(OS),Windows_NT)
+    ATLAS_VERSION?=$(shell powershell -Command "(git describe --match 'atlascli/v*') -replace '.*v(.*)', '$$1'")
+	ATLAS_BINARY_NAME=atlas.exe
+else
+    ATLAS_VERSION?=$(shell git describe --match "atlascli/v*" | cut -d "v" -f 2)
+	ATLAS_BINARY_NAME=atlas
+endif
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
@@ -24,8 +29,11 @@ E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=
 
-export PATH := $(shell go env GOPATH)/bin:$(PATH)
-export PATH := ./bin:$(PATH)
+ifeq ($(OS),Windows_NT)
+	export PATH := .\bin;$(shell go env GOPATH)\bin;$(PATH)
+else
+	export PATH := ./bin:$(shell go env GOPATH)/bin:$(PATH)
+endif
 export TERM := linux-m
 export GO111MODULE := on
 export GOTOOLCHAIN := local
@@ -115,17 +123,17 @@ gen-docs: ## Generate docs for atlascli commands
 .PHONY: build
 build: ## Generate an atlas binary in ./bin
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary"
-	go build -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
+	go build -ldflags "$(ATLAS_LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: build-debug
 build-debug: ## Generate a binary in ./bin for debugging atlascli
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
-	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
+	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
+# the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
-	# the target assumes the MCLI_* environment variables are exported
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
 
 .PHONY: fuzz-normalizer-test

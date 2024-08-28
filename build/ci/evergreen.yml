@@ -1800,13 +1800,24 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
-  - name: e2e_local_deployments_macos
+  - name: e2e_local_deployments_macos_14
     display_name: "E2E Local Deployments Tests (macos/docker)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
     run_on:
       - macos-14-arm64-docker
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_macos_13
+    display_name: "E2E Local Deployments Tests (macos/docker)"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - localdev
+    run_on:
+      - macos-13-arm64-docker
     expansions:
       <<: *go_linux_version
     tasks:

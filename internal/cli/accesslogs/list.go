@@ -35,7 +35,7 @@ const (
 	listTemplate = `HOSTNAME	AUTH RESULT	LOG LINE {{range valueOrEmptySlice .AccessLogs}}
 {{if .Hostname}}{{.Hostname}} {{else}}N/A{{end}}{{.Hostname}}	{{.AuthResult}}	{{.LogLine}}{{end}}
 `
-	invalidValueAuthResultErrorMessage = `you must set --%s to "%s" or "%s"`
+	invalidValueAuthResultErrorMessage = "you must set --%s to %q or %q"
 )
 
 type ListOpts struct {

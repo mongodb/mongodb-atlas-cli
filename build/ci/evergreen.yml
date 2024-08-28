@@ -1801,7 +1801,7 @@ buildvariants:
     tasks:
       - name: ".e2e .deployments .local"
   - name: e2e_local_deployments_macos_14
-    display_name: "E2E Local Deployments Tests (macos/docker)"
+    display_name: "E2E Local Deployments Tests (macos 14/docker)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
@@ -1812,7 +1812,7 @@ buildvariants:
     tasks:
       - name: ".e2e .deployments .local"
   - name: e2e_local_deployments_macos_13
-    display_name: "E2E Local Deployments Tests (macos/docker)"
+    display_name: "E2E Local Deployments Tests (macos 13/docker)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev

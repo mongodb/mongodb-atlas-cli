@@ -56,7 +56,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas clusters search nodes list [--projectId projectId] [--clusterName name].
+// ListBuilder represents atlas clusters search nodes list [--projectId projectId] [--clusterName name].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

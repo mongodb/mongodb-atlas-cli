@@ -15,7 +15,7 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20240530005/admin"
+	"go.mongodb.org/atlas-sdk/v20240805003/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

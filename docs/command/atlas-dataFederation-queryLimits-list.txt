@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas dataFederation queryLimits list [options]
+   atlas dataFederation queryLimits list --dataFederation dataFederation [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -76,6 +76,6 @@ Examples
 .. code-block::
    :copyable: false
 
-   # list all data federation query limits:
-   atlas dataFederation queryLimits list
+   # list all data federation query limits for the database federated instance "myInstance":
+   atlas dataFederation queryLimits list --dataFederation myInstance
 

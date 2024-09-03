@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas clusters search nodes list [options]
+   atlas clusters search nodes list --clusterName clusterName [options]
 
 .. Code end marker, please don't delete this comment
 

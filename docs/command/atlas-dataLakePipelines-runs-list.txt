@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas dataLakePipelines runs list [options]
+   atlas dataLakePipelines runs list --pipeline pipeline [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -77,5 +77,5 @@ Examples
    :copyable: false
 
    # list all pipeline runs:
-   atlas dataLakePipelines runs list
+   atlas dataLakePipelines runs list --pipeline Pipeline1
 

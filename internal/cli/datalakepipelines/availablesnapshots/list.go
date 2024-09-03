@@ -83,13 +83,13 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
+		Use:     "list --pipeline pipeline",
 		Short:   "Return all available backup snapshots for the specified data lake pipeline.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: `# list available backup schedules for data lake pipeline called 'Pipeline1':
-  atlas dataLakePipelines availableSnapshots list Pipeline1
+  atlas dataLakePipelines availableSnapshots list --pipeline Pipeline1
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

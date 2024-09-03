@@ -59,17 +59,17 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas dataLakePipelines runs list [--projectId projectId].
+// ListBuilder represents atlas dataLakePipelines runs list [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "list",
+		Use:     "list --pipeline pipeline",
 		Short:   "Returns all data lake pipeline runs for your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: `# list all pipeline runs:
-  atlas dataLakePipelines runs list
+  atlas dataLakePipelines runs list --pipeline Pipeline1
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas dataLakePipelines availableSnapshots list [options]
+   atlas dataLakePipelines availableSnapshots list --pipeline pipeline [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -93,5 +93,5 @@ Examples
    :copyable: false
 
    # list available backup schedules for data lake pipeline called 'Pipeline1':
-   atlas dataLakePipelines availableSnapshots list Pipeline1
+   atlas dataLakePipelines availableSnapshots list --pipeline Pipeline1
 

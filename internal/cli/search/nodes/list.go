@@ -60,7 +60,7 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:   "list",
+		Use:   "list --clusterName clusterName",
 		Short: "List all Atlas Search nodes for a cluster.",
 		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Annotations: map[string]string{

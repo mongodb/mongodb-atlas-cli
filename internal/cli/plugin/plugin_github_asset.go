@@ -196,6 +196,7 @@ func extractTarGz(src string, dest string) error {
 
 		switch header.Typeflag {
 		case tar.TypeDir:
+			//nolint:gosec
 			if err := os.MkdirAll(filePath, os.FileMode(header.Mode)); err != nil {
 				return errCreateExtractionDir
 			}

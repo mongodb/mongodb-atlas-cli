@@ -1836,7 +1836,7 @@ buildvariants:
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]
-    task_tags: ["local"]
+    task: ".*"
   - alias: "packer"
     variant_tags: ["packer"]
     task: ".*"

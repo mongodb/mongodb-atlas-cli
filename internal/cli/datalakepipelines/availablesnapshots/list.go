@@ -79,7 +79,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas dataLakePipelines availableSnapshots list [--projectId projectId].
+// ListBuilder represents atlas dataLakePipelines availableSnapshots list [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{

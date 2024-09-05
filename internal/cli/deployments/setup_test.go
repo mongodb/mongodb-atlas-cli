@@ -68,6 +68,9 @@ func TestSetupOpts_LocalDev_HappyPathClean(t *testing.T) {
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
 
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
+
 	// Image gets pulled
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(nil).Times(1)
 
@@ -129,6 +132,9 @@ func TestSetupOpts_LocalDev_HappyPathOfflinePull(t *testing.T) {
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
+
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
 
 	// Image gets pulled
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(errors.New("image pull failed")).Times(1)
@@ -195,6 +201,9 @@ func TestSetupOpts_LocalDev_UnhappyPathOfflinePull(t *testing.T) {
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
 
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
+
 	// Image gets pulled
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(errors.New("image pull failed")).Times(1)
 
@@ -231,6 +240,9 @@ func TestSetupOpts_LocalDev_HappyPathEverythingAlreadyExists(t *testing.T) {
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
 
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
+
 	// No local dev container exists yet
 	deploymentTest.MockContainerEngine.EXPECT().ContainerList(ctx, "mongodb-atlas-local=container").Return([]container.Container{
 		{
@@ -263,6 +275,9 @@ func TestSetupOpts_LocalDev_RemoveUnhealthyDeployment(t *testing.T) {
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
+
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
 
 	// Image gets pulled (updated)
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(nil).Times(1)

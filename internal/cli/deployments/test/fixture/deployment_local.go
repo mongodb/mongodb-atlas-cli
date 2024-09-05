@@ -50,6 +50,11 @@ func (m *MockDeploymentOpts) LocalMockFlowWithMockContainer(ctx context.Context,
 		ContainerList(ctx, options.ContainerFilter).
 		Return(mockContainer, nil).
 		Times(1)
+	m.MockContainerEngine.
+		EXPECT().
+		VerifyVersion(ctx).
+		Return(nil).
+		Times(1)
 
 	m.MockDeploymentTelemetry.
 		EXPECT().

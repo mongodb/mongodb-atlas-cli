@@ -52,6 +52,7 @@ type RunFlags struct {
 type Engine interface {
 	Name() string
 	Ready() error
+	VerifyVersion(context.Context) error
 	ContainerLogs(context.Context, string) ([]string, error)
 	ContainerRun(context.Context, string, *RunFlags) (string, error)
 	ContainerList(context.Context, ...string) ([]Container, error)

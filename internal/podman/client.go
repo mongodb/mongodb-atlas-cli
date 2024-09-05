@@ -24,11 +24,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
 var (
-	ErrPodmanNotFound = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
+	ErrPodmanNotFound           = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
+	ErrDeterminingPodmanVersion = errors.New("could not determine docker version")
+	minPodmanVersion            = semver.New(5, 2, 0, "", "") //nolint:mnd
 )
 
 type RunContainerOpts struct {
@@ -89,6 +92,7 @@ type Image struct {
 
 type Client interface {
 	Ready(ctx context.Context) error
+	VerifyVersion(context.Context) error
 	Version(ctx context.Context) (map[string]any, error)
 	RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error)
 	RunHealthcheck(ctx context.Context, name string) error
@@ -118,6 +122,24 @@ func Installed() error {
 
 func (*client) Ready(_ context.Context) error {
 	return Installed()
+}
+
+func (o *client) VerifyVersion(ctx context.Context) error {
+	versionBytes, err := o.runPodman(ctx, "version", "--format", "v{{.Client.Version}}")
+	if err != nil {
+		return errors.Join(ErrDeterminingPodmanVersion, err)
+	}
+
+	version, err := semver.NewVersion(strings.TrimSpace(string(versionBytes)))
+	if err != nil {
+		return errors.Join(ErrDeterminingPodmanVersion, err)
+	}
+
+	if version.Compare(minPodmanVersion) == -1 {
+		_, _ = log.Warningf("Detected podman version %s, the minimum supported podman version is %s.\n", version.String(), minPodmanVersion.String())
+	}
+
+	return nil
 }
 
 func extractErrorMessage(exitErr *exec.ExitError) error {

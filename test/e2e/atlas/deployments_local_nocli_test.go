@@ -47,7 +47,14 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("Setup", func(t *testing.T) {
-		cmd := exec.Command("docker",
+		var cmd *exec.Cmd
+
+		bin := "docker"
+		if _, err := exec.LookPath("docker"); err != nil {
+			bin = "podman"
+		}
+
+		cmd = exec.Command(bin,
 			"run",
 			"-d",
 			"--name", deploymentName,

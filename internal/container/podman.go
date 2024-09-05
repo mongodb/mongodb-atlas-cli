@@ -50,8 +50,8 @@ func (e *podmanImpl) Ready() error {
 	return err
 }
 
-func (p *podmanImpl) VerifyVersion(ctx context.Context) error {
-	return p.client.VerifyVersion(ctx)
+func (e *podmanImpl) VerifyVersion(ctx context.Context) error {
+	return e.client.VerifyVersion(ctx)
 }
 
 func (e *podmanImpl) ContainerLogs(ctx context.Context, name string) ([]string, error) {

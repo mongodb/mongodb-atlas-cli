@@ -31,7 +31,7 @@ import (
 var (
 	ErrPodmanNotFound           = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
 	ErrDeterminingPodmanVersion = errors.New("could not determine docker version")
-	minPodmanVersion            = semver.New(5, 2, 0, "", "") //nolint:mnd
+	minPodmanVersion            = semver.New(5, 0, 0, "", "") //nolint:mnd
 )
 
 type RunContainerOpts struct {

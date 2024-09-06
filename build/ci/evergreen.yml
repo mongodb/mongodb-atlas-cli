@@ -1863,13 +1863,57 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .plugin"
-  - name: e2e_local_deployments_rhel9
-    display_name: "E2E Local Deployments Tests (rhel9/podman)"
+  - name: e2e_local_deployments_rhel90
+    display_name: "E2E Local Deployments Tests (rhel90/podman)"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - localdev
+    run_on:
+      - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_rhel91
+    display_name: "E2E Local Deployments Tests (rhel91/podman)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
     run_on:
       - rhel91-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_rhel92
+    display_name: "E2E Local Deployments Tests (rhel92/podman)"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - localdev
+    run_on:
+      - rhel92-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_rhel93
+    display_name: "E2E Local Deployments Tests (rhel93/podman)"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - localdev
+    run_on:
+      - rhel93-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_rhel94
+    display_name: "E2E Local Deployments Tests (rhel94/podman)"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - localdev
+    run_on:
+      - rhel94-small
     expansions:
       <<: *go_linux_version
     tasks:

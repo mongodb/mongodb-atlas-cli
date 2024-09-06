@@ -54,7 +54,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 	t.Run("Pull", func(t *testing.T) {
 		cmd := exec.Command(bin,
 			"pull",
-			"mongodb/mongodb-atlas-local",
+			"docker.io/mongodb/mongodb-atlas-local",
 		)
 		r, setupErr := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, setupErr, string(r))
@@ -68,7 +68,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"-P",
 			"-e", "MONGODB_INITDB_ROOT_USERNAME="+dbUsername,
 			"-e", "MONGODB_INITDB_ROOT_PASSWORD="+dbUserPassword,
-			"mongodb/mongodb-atlas-local",
+			"docker.io/mongodb/mongodb-atlas-local",
 		)
 
 		cmd.Env = os.Environ()

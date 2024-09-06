@@ -1869,7 +1869,7 @@ buildvariants:
     tags:
       - localdev
     run_on:
-      - rhel90-small
+      - rhel91-small
     expansions:
       <<: *go_linux_version
     tasks:

@@ -46,22 +46,22 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 	req := require.New(t)
 	req.NoError(err)
 
-	t.Run("Setup", func(t *testing.T) {
-		var cmd *exec.Cmd
+	bin := "docker"
+	if _, err := exec.LookPath("docker"); err != nil {
+		bin = "podman"
+	}
 
-		bin := "docker"
-		if _, err := exec.LookPath("docker"); err != nil {
-			bin = "podman"
-		}
-
-		cmd = exec.Command(bin,
+	t.Run("Pull", func(t *testing.T) {
+		cmd := exec.Command(bin,
 			"pull",
 			"mongodb/mongodb-atlas-local",
 		)
 		r, setupErr := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, setupErr, string(r))
+	})
 
-		cmd = exec.Command(bin,
+	t.Run("Setup", func(t *testing.T) {
+		cmd := exec.Command(bin,
 			"run",
 			"-d",
 			"--name", deploymentName,
@@ -73,7 +73,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, setupErr = e2e.RunAndGetStdOut(cmd)
+		r, setupErr := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, setupErr, string(r))
 	})
 

@@ -655,6 +655,7 @@ func SetupBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "setup [deploymentName]",
 		Short:   "Create a local deployment.",
+		Long:    "To learn more about local atlas deployments, see https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-deploy-local/",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

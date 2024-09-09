@@ -19,6 +19,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -47,7 +48,11 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 	req.NoError(err)
 
 	bin := "docker"
-	if _, err := exec.LookPath("docker"); err != nil {
+	_, err = exec.LookPath("docker")
+	if errors.Is(err, exec.ErrDot) {
+		err = nil
+	}
+	if err != nil {
 		bin = "podman"
 	}
 

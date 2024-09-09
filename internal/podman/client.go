@@ -110,7 +110,11 @@ type Client interface {
 type client struct{}
 
 func Installed() error {
-	if _, err := exec.LookPath("podman"); err != nil {
+	_, err := exec.LookPath("podman")
+	if errors.Is(err, exec.ErrDot) {
+		err = nil
+	}
+	if err != nil {
 		return ErrPodmanNotFound
 	}
 	return nil

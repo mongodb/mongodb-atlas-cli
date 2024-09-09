@@ -49,7 +49,11 @@ func (*dockerImpl) Name() string {
 }
 
 func (*dockerImpl) Ready() error {
-	if _, err := exec.LookPath("docker"); err != nil {
+	_, err := exec.LookPath("docker")
+	if errors.Is(err, exec.ErrDot) {
+		err = nil
+	}
+	if err != nil {
 		return ErrDockerNotFound
 	}
 	return nil

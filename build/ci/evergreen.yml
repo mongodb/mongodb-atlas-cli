@@ -1804,7 +1804,7 @@ buildvariants:
   - name: e2e_local_deployments_al2023 
     display_name: "E2E Local Deployments Tests (amazon linux 2023/docker)"
     run_on:
-      - amazon2023-latest
+      - amazon2023-latest-small
     tags:
       - localdev
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]

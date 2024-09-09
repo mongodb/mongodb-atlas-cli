@@ -122,6 +122,9 @@ func TestList_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
+	// Verify version should always succeed
+	mockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
+
 	mockContainerEngine.
 		EXPECT().
 		ContainerList(ctx, options.ContainerFilter).
@@ -213,6 +216,9 @@ func TestList_Run_NoLocal(t *testing.T) {
 		Return(nil).
 		Times(1)
 
+	// Verify version should always succeed
+	mockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
+
 	mockContainerEngine.
 		EXPECT().
 		ContainerList(ctx, options.ContainerFilter).
@@ -301,6 +307,9 @@ func TestList_Run_NoAtlas(t *testing.T) {
 		Ready().
 		Return(nil).
 		Times(1)
+
+	// Verify version should always succeed
+	mockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
 
 	mockContainerEngine.
 		EXPECT().

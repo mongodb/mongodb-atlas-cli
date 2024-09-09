@@ -273,6 +273,20 @@ func (mr *MockEngineMockRecorder) Ready() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ready", reflect.TypeOf((*MockEngine)(nil).Ready))
 }
 
+// VerifyVersion mocks base method.
+func (m *MockEngine) VerifyVersion(arg0 context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyVersion", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// VerifyVersion indicates an expected call of VerifyVersion.
+func (mr *MockEngineMockRecorder) VerifyVersion(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyVersion", reflect.TypeOf((*MockEngine)(nil).VerifyVersion), arg0)
+}
+
 // Version mocks base method.
 func (m *MockEngine) Version(arg0 context.Context) (map[string]interface{}, error) {
 	m.ctrl.T.Helper()

@@ -1801,22 +1801,21 @@ buildvariants:
         - name: compile
           variant: "code_health"
           patch_optional: true
-# TODO - re-enable when DEVPROD-10467 is done
-  # - name: e2e_local_deployments_al2023 
-  #   display_name: "E2E Local Deployments Tests (amazon linux 2023/docker)"
-  #   run_on:
-  #     - amazon2023.0-small
-  #   tags:
-  #     - localdev
-  #   allowed_requesters: ["patch", "ad_hoc", "github_pr"]
-  #   expansions:
-  #     <<: *go_linux_version
-  #   tasks:
-  #     - name: ".e2e .deployments .local"
-  #       depends_on:
-  #       - name: compile
-  #         variant: "code_health"
-  #         patch_optional: true
+  - name: e2e_local_deployments_al2023 
+    display_name: "E2E Local Deployments Tests (amazon linux 2023/docker)"
+    run_on:
+      - amazon2023-latest-small
+    tags:
+      - localdev
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+        depends_on:
+        - name: compile
+          variant: "code_health"
+          patch_optional: true
   - name: e2e_local_deployments_windows
     display_name: "E2E Local Deployments Tests (windows/docker)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]

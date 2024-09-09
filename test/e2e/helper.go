@@ -15,7 +15,6 @@
 package e2e
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -94,11 +93,8 @@ func DeleteProjectWithRetry(t *testing.T, projectID string) {
 
 func RunAndGetStdOut(cmd *exec.Cmd) ([]byte, error) {
 	cmd.Stderr = os.Stderr
-	var b bytes.Buffer
-	cmd.Stdout = &b
 
-	err := cmd.Run()
-	resp := b.Bytes()
+	resp, err := cmd.Output()
 
 	if err != nil {
 		return nil, fmt.Errorf("%s (%w)", string(resp), err)

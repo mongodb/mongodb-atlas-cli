@@ -15,6 +15,7 @@
 package compass
 
 import (
+	"errors"
 	"fmt"
 	"os/exec"
 	"path"
@@ -30,6 +31,9 @@ func binPath() string {
 	if directory == "" || err != nil {
 		// If the directory is not found in the registry, search in the PATH environment variable
 		p, err := exec.LookPath(compassBin)
+		if errors.Is(err, exec.ErrDot) {
+			err = nil
+		}
 		if err != nil {
 			return ""
 		}

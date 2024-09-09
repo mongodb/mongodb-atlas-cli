@@ -69,23 +69,10 @@ type Engine interface {
 }
 
 type Image struct {
-	ID          string
-	RepoTags    string
-	RepoDigests []string
-	Created     int
-	CreatedAt   string
-	Size        int
-	SharedSize  int
-	VirtualSize int
-	Labels      struct {
-		Architecture string `json:"architecture"`
-		BuildDate    string `json:"build-date"`
-		Description  string `json:"description"`
-		Name         string `json:"name"`
-		Version      string `json:"version"`
-	}
-	Containers int
-	Names      []string
+	ID         string
+	Repository string
+	Tag        string
+	Digest     string
 }
 
 type ImageHealthCheck struct {

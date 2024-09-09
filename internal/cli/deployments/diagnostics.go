@@ -16,12 +16,15 @@ package deployments
 
 import (
 	"context"
+	"errors"
 	"runtime"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
+	"github.com/shirou/gopsutil/v4/cpu"
+	"github.com/shirou/gopsutil/v4/mem"
 	"github.com/spf13/cobra"
 )
 
@@ -37,12 +40,14 @@ type diagnostic struct {
 	Version    map[string]any
 	Images     []string
 	Containers []*containerDiagnostic
-	Errors     []error
+	Err        error
 }
 
 type machineDiagnostic struct {
-	OS   string
-	Arch string
+	OS     string
+	Arch   string
+	Memory uint64
+	CPU    int
 }
 
 type containerDiagnostic struct {
@@ -59,34 +64,51 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 		Engine: opts.ContainerEngine.Name(),
 	}
 
-	images, err := opts.ContainerEngine.ImageList(ctx)
+	cores, err := cpu.Counts(true)
 	if err != nil {
-		d.Errors = append(d.Errors, err)
+		d.Err = errors.Join(d.Err, err)
+		cores = -1
+	}
+	d.Machine.CPU = cores
+
+	v, err := mem.VirtualMemory()
+	if err != nil {
+		d.Err = errors.Join(d.Err, err)
+		d.Machine.Memory = 0
+	} else {
+		d.Machine.Memory = v.Available
+	}
+
+	images, err := opts.ContainerEngine.ImageList(ctx, "mongodb/mongodb-atlas-local")
+	if err != nil {
+		d.Err = errors.Join(d.Err, err)
 	} else {
 		for _, image := range images {
-			d.Images = append(d.Images, image.Names...)
+			d.Images = append(d.Images, image.Repository+":"+image.Tag)
 		}
 	}
 
 	d.Version, err = opts.ContainerEngine.Version(ctx)
 	if err != nil {
-		d.Errors = append(d.Errors, err)
+		d.Err = errors.Join(d.Err, err)
 	}
 
-	inspectData, err := opts.ContainerEngine.ContainerInspect(ctx, opts.LocalMongodHostname())
-	if err != nil {
-		d.Errors = append(d.Errors, err)
-	}
+	if opts.LocalMongodHostname() != "" {
+		inspectData, err := opts.ContainerEngine.ContainerInspect(ctx, opts.LocalMongodHostname())
+		if err != nil {
+			d.Err = errors.Join(d.Err, err)
+		}
 
-	logs, err := opts.ContainerEngine.ContainerLogs(ctx, opts.LocalMongodHostname())
-	if err != nil {
-		d.Errors = append(d.Errors, err)
-	}
+		logs, err := opts.ContainerEngine.ContainerLogs(ctx, opts.LocalMongodHostname())
+		if err != nil {
+			d.Err = errors.Join(d.Err, err)
+		}
 
-	d.Containers = append(d.Containers, &containerDiagnostic{
-		Inspect: firstOrNil(inspectData),
-		Logs:    logs,
-	})
+		d.Containers = append(d.Containers, &containerDiagnostic{
+			Inspect: firstOrNil(inspectData),
+			Logs:    logs,
+		})
+	}
 
 	return opts.Print(d)
 }
@@ -106,11 +128,11 @@ func DiagnosticsBuilder() *cobra.Command {
 		},
 	}
 	cmd := &cobra.Command{
-		Use:     "diagnostics <deploymentName>",
+		Use:     "diagnostics [<deploymentName>]",
 		Short:   "Fetch detailed information about all your deployments and system processes.",
 		Hidden:  true, // always hidden
 		Aliases: []string{"diagnostic", "diag", "diags", "inspect"},
-		Args:    require.ExactArgs(1),
+		Args:    require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"deploymentNameDesc": "Name of the deployment you want to setup.",
 		},

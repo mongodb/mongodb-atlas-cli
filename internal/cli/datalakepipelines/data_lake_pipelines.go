@@ -38,7 +38,7 @@ func Builder() *cobra.Command {
 		Use:        use,
 		Aliases:    cli.GenerateAliases(use),
 		Short:      "Data Lake pipelines.",
-		Deprecated: "Data Lake Pipelines is deprecated. Please see: https://www.mongodb.com/docs/atlas/app-services/data-api/data-api-deprecation.",
+		Deprecated: "Data Lake Pipelines is deprecated. Please see: https://dochub.mongodb.org/core/data-lake-deprecation.",
 	}
 
 	cmd.AddCommand(

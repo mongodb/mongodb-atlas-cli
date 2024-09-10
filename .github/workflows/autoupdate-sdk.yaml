@@ -89,7 +89,7 @@ jobs:
   
           echo "The following JIRA ticket has been created: ${JIRA_TICKET_ID}"
           echo "jira-ticket-id=${JIRA_TICKET_ID}" >> "${GITHUB_OUTPUT}"
-      - uses: peter-evans/create-pull-request@v6
+      - uses: peter-evans/create-pull-request@v7
         id: pr
         if: steps.verify-changed-files.outputs.files_changed == 'true' && steps.find.outputs.FOUND == 'false'
         with:

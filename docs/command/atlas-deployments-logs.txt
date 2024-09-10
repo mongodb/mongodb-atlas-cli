@@ -42,7 +42,7 @@ Options
    * - --end
      - int
      - false
-     - UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the current timestamp.
+     - UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the start date plus 24 hours if the start date is set. It defaults to the current timestamp if start date is not provided.
    * - --force
      - 
      - false

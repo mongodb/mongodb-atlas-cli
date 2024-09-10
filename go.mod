@@ -4,7 +4,7 @@ go 1.22.5
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
-	github.com/Masterminds/semver/v3 v3.2.1
+	github.com/Masterminds/semver/v3 v3.3.0
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/briandowns/spinner v1.23.1

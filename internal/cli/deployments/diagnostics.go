@@ -40,7 +40,7 @@ type diagnostic struct {
 	Version    map[string]any
 	Images     []string
 	Containers []*containerDiagnostic
-	Err        error
+	Err        string
 }
 
 type machineDiagnostic struct {
@@ -64,16 +64,18 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 		Engine: opts.ContainerEngine.Name(),
 	}
 
+	errs := []error{}
+
 	cores, err := cpu.Counts(true)
 	if err != nil {
-		d.Err = errors.Join(d.Err, err)
+		errs = append(errs, err)
 		cores = -1
 	}
 	d.Machine.CPU = cores
 
 	v, err := mem.VirtualMemory()
 	if err != nil {
-		d.Err = errors.Join(d.Err, err)
+		errs = append(errs, err)
 		d.Machine.Memory = 0
 	} else {
 		d.Machine.Memory = v.Available
@@ -81,7 +83,7 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 
 	images, err := opts.ContainerEngine.ImageList(ctx, "mongodb/mongodb-atlas-local")
 	if err != nil {
-		d.Err = errors.Join(d.Err, err)
+		errs = append(errs, err)
 	} else {
 		for _, image := range images {
 			d.Images = append(d.Images, image.Repository+":"+image.Tag)
@@ -90,18 +92,18 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 
 	d.Version, err = opts.ContainerEngine.Version(ctx)
 	if err != nil {
-		d.Err = errors.Join(d.Err, err)
+		errs = append(errs, err)
 	}
 
 	if opts.LocalMongodHostname() != "" {
 		inspectData, err := opts.ContainerEngine.ContainerInspect(ctx, opts.LocalMongodHostname())
 		if err != nil {
-			d.Err = errors.Join(d.Err, err)
+			errs = append(errs, err)
 		}
 
 		logs, err := opts.ContainerEngine.ContainerLogs(ctx, opts.LocalMongodHostname())
 		if err != nil {
-			d.Err = errors.Join(d.Err, err)
+			errs = append(errs, err)
 		}
 
 		d.Containers = append(d.Containers, &containerDiagnostic{
@@ -109,6 +111,8 @@ func (opts *diagnosticsOpts) Run(ctx context.Context) error {
 			Logs:    logs,
 		})
 	}
+
+	d.Err = errors.Join(errs...).Error()
 
 	return opts.Print(d)
 }

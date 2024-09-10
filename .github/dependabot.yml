@@ -6,8 +6,6 @@ updates:
       interval: weekly
       day: tuesday
     open-pull-requests-limit: 20
-    reviewers:
-      - "mongodb/mongocli"
     groups:
       golang:
         patterns:
@@ -32,8 +30,6 @@ updates:
     schedule:
       interval: weekly
       day: tuesday
-    reviewers:
-      - "mongodb/mongocli"
     groups:
       docker:
         patterns:

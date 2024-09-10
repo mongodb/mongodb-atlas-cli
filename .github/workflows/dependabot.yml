@@ -42,7 +42,7 @@
                       "id": "12"
                   },
                   "customfield_12751": [{
-                          "id": 27065"
+                          "id": "27065"
                   }],
                   "description": "This ticket tracks the following GitHub pull request: '"${PR_URL}"'.",
                   "components": [

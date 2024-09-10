@@ -377,7 +377,7 @@ func (e *dockerImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 }
 
 func (e *dockerImpl) ImageList(ctx context.Context, references ...string) ([]Image, error) {
-	args := []string{"image", "ls", "--format", "{{.}}"}
+	args := []string{"image", "ls", "--format", "{{. | json}}"}
 
 	if len(references) > 0 {
 		for _, name := range references {

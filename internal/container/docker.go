@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -376,7 +377,7 @@ func (e *dockerImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 }
 
 func (e *dockerImpl) ImageList(ctx context.Context, references ...string) ([]Image, error) {
-	args := []string{"image", "ls", "--format", "json"}
+	args := []string{"image", "ls", "--format", "{{.}}"}
 
 	if len(references) > 0 {
 		for _, name := range references {
@@ -392,11 +393,30 @@ func (e *dockerImpl) ImageList(ctx context.Context, references ...string) ([]Ima
 		return nil, nil
 	}
 
-	result := []Image{}
-	if err := json.Unmarshal(buf, &result); err != nil {
+	result, err := readJsonl[Image](bytes.NewBuffer(buf))
+	if err != nil {
 		return nil, err
 	}
+
 	return result, nil
+}
+
+func readJsonl[T any](r io.Reader) ([]T, error) {
+	data := []T{}
+	decoder := json.NewDecoder(r)
+	for decoder.More() {
+		var entry T
+		if err := decoder.Decode(&entry); err != nil {
+			return data, err
+		}
+		data = append(data, entry)
+	}
+
+	if len(data) == 0 {
+		return nil, nil
+	}
+
+	return data, nil
 }
 
 func (e *dockerImpl) ImagePull(ctx context.Context, name string) error {

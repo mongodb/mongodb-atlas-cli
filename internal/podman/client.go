@@ -69,23 +69,10 @@ type Container struct {
 }
 
 type Image struct {
-	ID          string   `json:"ID"`
-	RepoTags    string   `json:"RepoTags"`
-	RepoDigests []string `json:"RepoDigests"`
-	Created     int      `json:"Created"`
-	CreatedAt   string   `json:"CreatedAt"`
-	Size        int      `json:"Size"`
-	SharedSize  int      `json:"SharedSize"`
-	VirtualSize int      `json:"VirtualSize"`
-	Labels      struct {
-		Architecture string `json:"architecture"`
-		BuildDate    string `json:"build-date"`
-		Description  string `json:"description"`
-		Name         string `json:"name"`
-		Version      string `json:"version"`
-	} `json:"Labels"`
-	Containers int `json:"Containers"`
-	Names      []string
+	ID         string `json:"ID"`
+	Repository string `json:"repository"`
+	Tag        string `json:"tag"`
+	Digest     string `json:"digest"`
 }
 
 //go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman Client

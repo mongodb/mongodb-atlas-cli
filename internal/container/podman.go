@@ -154,17 +154,10 @@ func (e *podmanImpl) ImageList(ctx context.Context, nameFilter ...string) ([]Ima
 	result := make([]Image, 0, len(images))
 	for _, c := range images {
 		result = append(result, Image{
-			ID:          c.ID,
-			RepoTags:    c.RepoTags,
-			RepoDigests: c.RepoDigests,
-			Created:     c.Created,
-			CreatedAt:   c.CreatedAt,
-			Size:        c.Size,
-			SharedSize:  c.SharedSize,
-			VirtualSize: c.VirtualSize,
-			Labels:      c.Labels,
-			Containers:  c.Containers,
-			Names:       c.Names,
+			ID:         c.ID,
+			Repository: c.Repository,
+			Tag:        c.Tag,
+			Digest:     c.Digest,
 		})
 	}
 	return result, nil

@@ -24,7 +24,14 @@
       - name: Find JIRA team
         id: find
         run: |
-          echo "assigned_team=$(git diff HEAD~1..HEAD -- go.mod | grep -v "// indirect" | grep -i "^\-" | grep -v "^\-\-\-" | awk '{print $2}' | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners.json" | sh | xargs -I $ echo "jq -r \".\\\"$\\\"\" < build/ci/library_owners_jira.json" | sh | head -1)"  >> "${GITHUB_OUTPUT}"
+          GH_TEAM=$(git diff HEAD~1..HEAD -- go.mod | grep -v "// indirect" | grep -i "^\-" | grep -v "^\-\-\-" | awk '{print $2}' | xargs -I $$ jq -r --arg i $$ '.[$i]' build/ci/library_owners.json | head -1)
+          if [[ ("$GH_TEAM" == "") || ("$GH_TEAM" == "null") ]]; then
+            GH_TEAM=apix-2
+          fi
+          echo "GH_TEAM=$GH_TEAM"
+          JIRA_TEAM=$(jq -r --arg i $GH_TEAM '.[$i]' < build/ci/library_owners_jira.json)
+          echo "JIRA_TEAM=$JIRA_TEAM"
+          echo "assigned_team=$JIRA_TEAM" >> "${GITHUB_OUTPUT}"
       - name: Create JIRA ticket
         id: create
         shell: bash

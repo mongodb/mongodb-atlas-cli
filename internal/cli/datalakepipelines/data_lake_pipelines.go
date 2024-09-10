@@ -35,9 +35,10 @@ func autoCompleteSourceType(_ *cobra.Command, _ []string, _ string) ([]string, c
 func Builder() *cobra.Command {
 	const use = "dataLakePipelines"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Data Lake pipelines.",
+		Use:        use,
+		Aliases:    cli.GenerateAliases(use),
+		Short:      "Data Lake pipelines.",
+		Deprecated: "Data Lake Pipelines is deprecated. Please see: https://www.mongodb.com/docs/atlas/app-services/data-api/data-api-deprecation.",
 	}
 
 	cmd.AddCommand(

@@ -68,6 +68,7 @@ func ListBuilder() *cobra.Command {
 		Args:    require.NoArgs,
 		Example: `# list all pipelines:
   atlas dataLakePipelines list`,
+		Deprecated: "Data Lake Pipelines is deprecated. Please see: https://dochub.mongodb.org/core/data-lake-deprecation.",
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

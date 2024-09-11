@@ -76,6 +76,7 @@ func WatchBuilder() *cobra.Command {
 			"pipelineNameDesc": "Label that identifies the pipeline",
 			"output":           watchTemplate,
 		},
+		Deprecated: "Data Lake Pipelines is deprecated. Please see: https://dochub.mongodb.org/core/data-lake-deprecation.",
 		Example: `# watches the pipeline 'Pipeline1':
   atlas dataLakePipelines watch Pipeline1
 `,

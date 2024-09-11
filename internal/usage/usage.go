@@ -92,7 +92,7 @@ dbName and collection are required only for built-in roles.`
 	Email                                     = "Email address for the user."
 	LogOut                                    = "Output file name. This value defaults to the log name."
 	LogStart                                  = "UNIX Epoch-formatted starting date and time for the range of log messages to retrieve. This value defaults to 24 hours prior to the current timestamp."
-	LogEnd                                    = "UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the current timestamp."
+	LogEnd                                    = "Ending date and time for the range of log messages to retrieve, given in UNIX time. Defaults to the start date plus 24 hours, if the start date is set. If start date is not provided, ending time defaults to the current time."
 	MeasurementStart                          = "ISO 8601-formatted date and time that specifies when to start retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementEnd                            = "ISO 8601-formatted date and time that specifies when to stop retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementType                           = "Measurements to return. This option returns all measurements by default. Valid values include DATABASE_AVERAGE_OBJECT_SIZE, DATABASE_COLLECTION_COUNT, DATABASE_DATA_SIZE, DATABASE_STORAGE_SIZE, DATABASE_INDEX_SIZE, DATABASE_INDEX_COUNT, DATABASE_EXTENT_COUNT, DATABASE_OBJECT_COUNT, and DATABASE_VIEW_COUNT"

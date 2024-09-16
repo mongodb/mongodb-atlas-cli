@@ -22,10 +22,11 @@ import (
 func Builder() *cobra.Command {
 	const use = "invitations"
 	cmd := &cobra.Command{
-		Use:     use,
-		Short:   "Invitation operations.",
-		Long:    "Create, list and manage your MongoDB project invites.",
-		Aliases: cli.GenerateAliases(use),
+		Use:        use,
+		Short:      "Invitation operations.",
+		Long:       "Create, list and manage your MongoDB project invites.",
+		Aliases:    cli.GenerateAliases(use),
+		Deprecated: "Project invitations are deprecated",
 	}
 
 	cmd.AddCommand(

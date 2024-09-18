@@ -6,10 +6,10 @@ release_tag = "atlascli/v1.27.1"
 source_url = "ssh://git@github.com/mongodb/mongodb-atlas-cli.git"
 destination_url = "ssh://git@github.com/10gen/cloud-docs.git"
 destination_url_cli_docs = "ssh://git@github.com/mongodb/docs-atlas-cli.git"
-author = "Copybara <copybara@example.com>"
+author = "apix-bot[bot] <168195273+apix-bot[bot]@users.noreply.github.com>"
 
 core.workflow(
-    name = "atlas",
+    name = "cloud-docs",
     origin = git.origin(
         url = source_url,
         ref = release_tag,
@@ -32,7 +32,7 @@ core.workflow(
 )
  
 core.workflow(
-    name = "atlascli",
+    name = "docs-atlas-cli",
     origin = git.origin(
         url = source_url,
         ref = release_tag,

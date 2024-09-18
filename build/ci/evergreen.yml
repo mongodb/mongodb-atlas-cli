@@ -420,6 +420,25 @@ functions:
         args:
           - -f
           - expansions.yaml
+  "build-copybara":
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: git
+        args:
+          - clone
+          - --depth=1
+          - https://github.com/google/copybara
+          - ${workdir}/copybara
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: docker
+        args:
+          - build
+          - -t
+          - google/copybara
+          - ${workdir}/copybara
 tasks:
   - name: compile
     tags: ["code_health"]
@@ -1574,24 +1593,7 @@ tasks:
           cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
   - name: copydocs
     commands:
-      - command: subprocess.exec
-        params:
-          <<: *go_options
-          binary: git
-          args:
-            - clone
-            - --depth=1
-            - https://github.com/google/copybara
-            - ${workdir}/copybara
-      - command: subprocess.exec
-        params:
-          <<: *go_options
-          binary: docker
-          args:
-            - build
-            - -t
-            - google/copybara
-            - ${workdir}/copybara
+      - func: "build-copybara"
       - command: subprocess.exec
         params:
           <<: *go_options
@@ -1601,9 +1603,21 @@ tasks:
             - --rm
             - -v
             - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app
+            - -e
+            - COPYBARA_WORKFLOW=docs-atlas-cli
             - google/copybara
-            - validate
-            - copy.bara.sky
+      - command: subprocess.exec
+        params:
+          <<: *go_options
+          binary: docker
+          args:
+            - run
+            - --rm
+            - -v
+            - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app
+            - -e
+            - COPYBARA_WORKFLOW=cloud-docs
+            - google/copybara
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

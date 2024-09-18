@@ -20,15 +20,18 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
 var ErrDockerNotFound = fmt.Errorf("%w: docker not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs", ErrContainerEngineNotFound)
+var ErrDeterminingDockerVersion = errors.New("could not determine docker version")
 var errParseHealthCheck = errors.New("parsing image healthcheck failed")
 var errListContainer = errors.New("container listing failed")
 var errParsingContainer = errors.New("container parsing failed")
@@ -36,6 +39,7 @@ var errDecodingJSON = errors.New("container decoding failed")
 var errParsingPorts = errors.New("parsing ports failed")
 var errConvertHostPort = errors.New("converting host port failed")
 var errConvertContainerPort = errors.New("converting container port failed")
+var minDockerVersion = semver.New(27, 0, 0, "", "") //nolint:mnd
 
 type dockerImpl struct {
 }
@@ -49,9 +53,31 @@ func (*dockerImpl) Name() string {
 }
 
 func (*dockerImpl) Ready() error {
-	if _, err := exec.LookPath("docker"); err != nil {
+	_, err := exec.LookPath("docker")
+	if errors.Is(err, exec.ErrDot) {
+		err = nil
+	}
+	if err != nil {
 		return ErrDockerNotFound
 	}
+	return nil
+}
+
+func (e *dockerImpl) VerifyVersion(ctx context.Context) error {
+	versionBytes, err := e.run(ctx, "version", "--format", "v{{.Client.Version}}")
+	if err != nil {
+		return errors.Join(ErrDeterminingDockerVersion, err)
+	}
+
+	version, err := semver.NewVersion(strings.TrimSpace(string(versionBytes)))
+	if err != nil {
+		return errors.Join(ErrDeterminingDockerVersion, err)
+	}
+
+	if version.Compare(minDockerVersion) == -1 {
+		_, _ = log.Warningf("Detected docker version %s, the minimum supported docker version is %s.\n", version.String(), minDockerVersion.String())
+	}
+
 	return nil
 }
 
@@ -351,7 +377,7 @@ func (e *dockerImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 }
 
 func (e *dockerImpl) ImageList(ctx context.Context, references ...string) ([]Image, error) {
-	args := []string{"image", "ls", "--format", "json"}
+	args := []string{"image", "ls", "--format", "{{. | json}}"}
 
 	if len(references) > 0 {
 		for _, name := range references {
@@ -367,11 +393,30 @@ func (e *dockerImpl) ImageList(ctx context.Context, references ...string) ([]Ima
 		return nil, nil
 	}
 
-	result := []Image{}
-	if err := json.Unmarshal(buf, &result); err != nil {
+	result, err := readJsonl[Image](bytes.NewBuffer(buf))
+	if err != nil {
 		return nil, err
 	}
+
 	return result, nil
+}
+
+func readJsonl[T any](r io.Reader) ([]T, error) {
+	data := []T{}
+	decoder := json.NewDecoder(r)
+	for decoder.More() {
+		var entry T
+		if err := decoder.Decode(&entry); err != nil {
+			return data, err
+		}
+		data = append(data, entry)
+	}
+
+	if len(data) == 0 {
+		return nil, nil
+	}
+
+	return data, nil
 }
 
 func (e *dockerImpl) ImagePull(ctx context.Context, name string) error {

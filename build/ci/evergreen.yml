@@ -1103,27 +1103,6 @@ tasks:
           E2E_TAGS: atlas,datafederation,querylimits
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-  # datalakepipeline requires cloud provider role authentication and an s3 bucket created
-  - name: atlas_datalakepipeline_e2e
-    tags: ["e2e","datalakepipeline","atlas"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,datalakepipeline
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # IAM commands tests with an Atlas profile
   - name: atlas_iam_e2e
     tags: ["e2e","generic","atlas"]
@@ -1713,14 +1692,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .datafederation .atlas"
-  - name: e2e_atlas_datalakepipeline
-    display_name: "E2E Atlas Datalake Pipeline Tests"
-    run_on:
-      - rhel80-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: ".e2e .datalakepipeline .atlas"
   - name: e2e_atlas_backups
     display_name: "E2E Atlas Backup Tests"
     run_on:
@@ -1746,10 +1717,68 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .atlas"
-  - name: e2e_local_deployments_ubuntu
-    display_name: "E2E Local Deployments Tests (ubuntu/docker)"
+  - name: e2e_local_deployments_ubuntu22
+    display_name: "E2E Local Deployments Tests (ubuntu 22.04/docker)"
     run_on:
       - ubuntu2204-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+        depends_on:
+        - name: compile
+          variant: "code_health"
+          patch_optional: true
+  - name: e2e_local_deployments_ubuntu24
+    display_name: "E2E Local Deployments Tests (ubuntu 24.04/docker)"
+    run_on:
+      - ubuntu2404-small
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+        depends_on:
+        - name: compile
+          variant: "code_health"
+          patch_optional: true
+  - name: e2e_local_deployments_debian11
+    display_name: "E2E Local Deployments Tests (debian 11/docker)"
+    run_on:
+      - debian11-small
+    tags:
+      - localdev
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+        depends_on:
+        - name: compile
+          variant: "code_health"
+          patch_optional: true
+  - name: e2e_local_deployments_debian12
+    display_name: "E2E Local Deployments Tests (debian 12/docker)"
+    run_on:
+      - debian12-small
+    tags:
+      - localdev
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+        depends_on:
+        - name: compile
+          variant: "code_health"
+          patch_optional: true
+  - name: e2e_local_deployments_al2023 
+    display_name: "E2E Local Deployments Tests (amazon linux 2023/docker)"
+    run_on:
+      - amazon2023-latest-small
+    tags:
+      - localdev
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version
     tasks:
@@ -1764,7 +1793,7 @@ buildvariants:
     tags:
       - localdev
     run_on:
-      - rhel94-small
+      - rhel90-small
     expansions:
       <<: *go_linux_version
     tasks:
@@ -1789,8 +1818,8 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .atlas .plugin"
-  - name: e2e_local_deployments_rhel
-    display_name: "E2E Local Deployments Tests (rhel/podman)"
+  - name: e2e_local_deployments_rhel9
+    display_name: "E2E Local Deployments Tests (rhel9/podman)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
@@ -1800,13 +1829,35 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
-  - name: e2e_local_deployments_macos
-    display_name: "E2E Local Deployments Tests (macos/docker)"
+  - name: e2e_local_deployments_rhel8
+    display_name: "E2E Local Deployments Tests (rhel8/podman)"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - localdev
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_macos_14
+    display_name: "E2E Local Deployments Tests (macos 14/docker)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
     run_on:
       - macos-14-arm64-docker
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .deployments .local"
+  - name: e2e_local_deployments_macos_13
+    display_name: "E2E Local Deployments Tests (macos 13/docker)"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - localdev
+    run_on:
+      - macos-13-arm64-docker
     expansions:
       <<: *go_linux_version
     tasks:
@@ -1825,7 +1876,7 @@ buildvariants:
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]
-    task_tags: ["local"]
+    task: ".*"
   - alias: "packer"
     variant_tags: ["packer"]
     task: ".*"

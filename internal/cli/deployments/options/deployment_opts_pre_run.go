@@ -45,7 +45,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 			if opts.IsLocalDeploymentType() {
 				return Deployment{}, localErr
 			}
-			_, _ = log.Warningf("Warning: failed to retrieve Local deployments because %q\n", localErr.Error())
+			_, _ = log.Debugf("Warning: failed to retrieve Local deployments because %q\n", localErr.Error())
 		}
 
 		localDeployments, localErr = opts.GetLocalDeployments(ctx)
@@ -138,12 +138,16 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 	return deployments, nil
 }
 
-func (opts *DeploymentOpts) LocalDeploymentPreRun(_ context.Context) error {
+func (opts *DeploymentOpts) LocalDeploymentPreRun(ctx context.Context) error {
 	if !localDeploymentSupportedByOs() {
 		_, _ = log.Warningln("Local deployments are not supported on this OS, to see local deployments requirements visit https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-deploy-local/.")
 	}
 
-	return opts.ContainerEngine.Ready()
+	if err := opts.ContainerEngine.Ready(); err != nil {
+		return err
+	}
+
+	return opts.ContainerEngine.VerifyVersion(ctx)
 }
 
 func localDeploymentSupportedByOs() bool {

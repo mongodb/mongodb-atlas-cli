@@ -35,8 +35,7 @@ const (
 	listTemplate = `HOSTNAME	AUTH RESULT	LOG LINE {{range valueOrEmptySlice .AccessLogs}}
 {{if .Hostname}}{{.Hostname}} {{else}}N/A{{end}}{{.Hostname}}	{{.AuthResult}}	{{.LogLine}}{{end}}
 `
-	missingClusterNameHostnameErrorMessage = "one between --%s and --%s must be set"
-	invalidValueAuthResultErrorMessage     = `--%s must be set to "%s" or "%s"`
+	invalidValueAuthResultErrorMessage = "you must set --%s to %q or %q"
 )
 
 type ListOpts struct {
@@ -98,11 +97,6 @@ func (opts *ListOpts) ValidateInput() error {
 	if err := opts.ValidateProjectID(); err != nil {
 		return err
 	}
-
-	if opts.clusterName == "" && opts.hostname == "" {
-		return fmt.Errorf(missingClusterNameHostnameErrorMessage, flag.ClusterName, flag.Hostname)
-	}
-
 	if opts.authResult != "" && !strings.EqualFold(opts.authResult, success) && !strings.EqualFold(opts.authResult, fail) {
 		return fmt.Errorf(invalidValueAuthResultErrorMessage, flag.AuthResult, success, fail)
 	}
@@ -142,6 +136,9 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, "", usage.AuthResult)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	cmd.MarkFlagsMutuallyExclusive(flag.ClusterName, flag.Hostname)
+	cmd.MarkFlagsOneRequired(flag.ClusterName, flag.Hostname)
+
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd

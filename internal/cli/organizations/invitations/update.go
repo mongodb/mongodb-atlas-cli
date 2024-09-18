@@ -21,9 +21,11 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
@@ -37,6 +39,8 @@ type UpdateOpts struct {
 	invitationID string
 	username     string
 	roles        []string
+	filename     string
+	fs           afero.Fs
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -48,7 +52,12 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	r, err := opts.store.UpdateOrganizationInvitation(opts.ConfigOrgID(), opts.invitationID, opts.newInvitation())
+	request, err := opts.newInvitation()
+	if err != nil {
+		return err
+	}
+
+	r, err := opts.store.UpdateOrganizationInvitation(opts.ConfigOrgID(), opts.invitationID, request)
 	if err != nil {
 		return err
 	}
@@ -56,11 +65,19 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newInvitation() *atlasv2.OrganizationInvitationRequest {
+func (opts *UpdateOpts) newInvitation() (*atlasv2.OrganizationInvitationRequest, error) {
+	if opts.filename != "" {
+		pipeline := &atlasv2.OrganizationInvitationRequest{}
+		if err := file.Load(opts.fs, opts.filename, pipeline); err != nil {
+			return nil, err
+		}
+		return pipeline, nil
+	}
+
 	return &atlasv2.OrganizationInvitationRequest{
 		Username: &opts.username,
 		Roles:    &opts.roles,
-	}
+	}, nil
 }
 
 func (opts *UpdateOpts) validate() error {

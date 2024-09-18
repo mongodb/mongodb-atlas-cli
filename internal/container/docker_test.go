@@ -15,6 +15,8 @@
 package container
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/go-test/deep"
@@ -179,6 +181,55 @@ func TestParsePortMapping(t *testing.T) {
 
 			if diff := deep.Equal(result, tt.expected); diff != nil {
 				t.Errorf("parsePortMapping(%s) diff: %+v", tt.input, diff)
+			}
+		})
+	}
+}
+
+func TestJsonL(t *testing.T) {
+	testCases := []struct {
+		input   string
+		expect  []map[string]any
+		wantErr bool
+	}{
+		{
+			input: `{"a":1,"b":2}`,
+			expect: []map[string]any{
+				{"a": 1.0, "b": 2.0},
+			},
+			wantErr: false,
+		},
+		{
+			input: `{"a":1,"b":2}
+{"c":3,"d":4}`,
+			expect: []map[string]any{
+				{"a": 1.0, "b": 2.0},
+				{"c": 3.0, "d": 4.0},
+			},
+			wantErr: false,
+		},
+		{
+			input: `{"a":1,"b":2}
+{"c":3,"d":`,
+			expect:  nil,
+			wantErr: true,
+		},
+	}
+
+	for i, testCase := range testCases {
+		t.Run(fmt.Sprintf("Test Case %v", i), func(t *testing.T) {
+			got, err := readJsonl[map[string]any](strings.NewReader(testCase.input))
+			if err != nil {
+				if testCase.wantErr {
+					return
+				}
+				t.Fatal(err)
+			}
+			if testCase.wantErr {
+				t.Fatal("error expected")
+			}
+			if diff := deep.Equal(testCase.expect, got); diff != nil {
+				t.Fatal(diff)
 			}
 		})
 	}

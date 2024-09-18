@@ -55,6 +55,7 @@ const (
 	customSettings     = "custom"
 	cancelSettings     = "cancel"
 	skipConnect        = "skip"
+	autoassignPort     = "autoassign"
 	spinnerSpeed       = 100 * time.Millisecond
 	steps              = 3
 )
@@ -335,7 +336,10 @@ func validatePort(p int) error {
 }
 
 func (opts *SetupOpts) promptPort() error {
-	exportPort := strconv.Itoa(opts.Port)
+	exportPort := autoassignPort
+	if opts.Port != 0 {
+		exportPort = strconv.Itoa(opts.Port)
+	}
 
 	p := &survey.Input{
 		Message: "Specify a port",
@@ -344,6 +348,9 @@ func (opts *SetupOpts) promptPort() error {
 
 	err := telemetry.TrackAskOne(p, &exportPort, survey.WithValidator(func(ans any) error {
 		input, _ := ans.(string)
+		if input == autoassignPort {
+			return nil
+		}
 		value, err := strconv.Atoi(input)
 		if err != nil {
 			return errMustBeInt
@@ -356,8 +363,13 @@ func (opts *SetupOpts) promptPort() error {
 		return err
 	}
 
-	opts.Port, err = strconv.Atoi(exportPort)
-	return err
+	if exportPort != autoassignPort {
+		if opts.Port, err = strconv.Atoi(exportPort); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (opts *SetupOpts) validateDeploymentTypeFlag() error {
@@ -645,6 +657,7 @@ func SetupBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "setup [deploymentName]",
 		Short:   "Create a local deployment.",
+		Long:    "To learn more about local atlas deployments, see https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-deploy-local/",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

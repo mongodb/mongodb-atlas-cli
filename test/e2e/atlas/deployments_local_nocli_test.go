@@ -19,6 +19,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -46,15 +47,33 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 	req := require.New(t)
 	req.NoError(err)
 
+	bin := "docker"
+	_, err = exec.LookPath("docker")
+	if errors.Is(err, exec.ErrDot) {
+		err = nil
+	}
+	if err != nil {
+		bin = "podman"
+	}
+
+	t.Run("Pull", func(t *testing.T) {
+		cmd := exec.Command(bin,
+			"pull",
+			"docker.io/mongodb/mongodb-atlas-local",
+		)
+		r, setupErr := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, setupErr, string(r))
+	})
+
 	t.Run("Setup", func(t *testing.T) {
-		cmd := exec.Command("docker",
+		cmd := exec.Command(bin,
 			"run",
 			"-d",
 			"--name", deploymentName,
 			"-P",
 			"-e", "MONGODB_INITDB_ROOT_USERNAME="+dbUsername,
 			"-e", "MONGODB_INITDB_ROOT_PASSWORD="+dbUserPassword,
-			"mongodb/mongodb-atlas-local",
+			"docker.io/mongodb/mongodb-atlas-local",
 		)
 
 		cmd.Env = os.Environ()

@@ -71,6 +71,9 @@ functions:
         <<: *go_options
         binary: build/package/generate-notices.sh
   "package":
+    - command: github.generate_token
+      params:
+        expansion_name: github_token
     - command: subprocess.exec
       type: test
       params:
@@ -81,6 +84,7 @@ functions:
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
+          GITHUB_TOKEN: ${github_token}
         include_expansions_in_env:
           - go_base_path
           - workdir
@@ -88,8 +92,6 @@ functions:
           - notary_service_secret
           - notary_service_url
           - goreleaser_key
-          - github_app_id
-          - github_app_pem
           - unstable
         binary: build/package/package.sh
   "install go-msi":

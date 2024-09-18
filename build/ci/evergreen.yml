@@ -1598,7 +1598,6 @@ tasks:
           binary: docker
           args:
             - run
-            - -it
             - --rm
             - -v
             - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app

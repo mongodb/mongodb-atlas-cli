@@ -1572,6 +1572,39 @@ tasks:
           user: atlascli
           identity_file: ${home}/.ssh/id_rsa
           cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
+  - name: copydocs
+    commands:
+      - command: subprocess.exec
+        params:
+          <<: *go_options
+          binary: git
+          args:
+            - clone
+            - --depth=1
+            - https://github.com/google/copybara
+            - ${workdir}/copybara
+      - command: subprocess.exec
+        params:
+          <<: *go_options
+          binary: docker
+          args:
+            - build
+            - -t
+            - google/copybara
+            - ${workdir}/copybara
+      - command: subprocess.exec
+        params:
+          <<: *go_options
+          binary: docker
+          args:
+            - run
+            - -it
+            - --rm
+            - -v
+            - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app
+            - google/copybara
+            - validate
+            - copy.bara.sky
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
@@ -1873,6 +1906,14 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".packer .windows"
+  - name: copydocs
+    display_name: "Copy Docs"
+    run_on:
+      - ubuntu2404-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: copydocs
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]

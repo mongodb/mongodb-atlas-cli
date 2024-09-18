@@ -28,7 +28,7 @@ import (
 )
 
 var (
-	ErrPodmanNotFound = errors.New("podman not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
+	ErrPodmanNotFound = errors.New("neither docker or podman were found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs")
 )
 
 type RunContainerOpts struct {

@@ -1610,7 +1610,7 @@ tasks:
             [user]
                 name = apix-bot[bot]
                 email = 168195273+apix-bot[bot]@users.noreply.github.com
-            [credentail]
+            [credential]
                 helper = store
             EOF
 

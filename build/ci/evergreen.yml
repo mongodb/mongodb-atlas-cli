@@ -1633,6 +1633,8 @@ tasks:
             - COPYBARA_WORKFLOW=docs-atlas-cli
             - -e
             - COPYBARA_OPTIONS=--github-api-bearer-auth true
+            - -e
+            - COPYBARA_SOURCEREF=atlascli/v1.28.0
             - google/copybara
       - command: github.generate_token
         params:
@@ -1663,6 +1665,8 @@ tasks:
             - COPYBARA_WORKFLOW=cloud-docs
             - -e
             - COPYBARA_OPTIONS=--github-api-bearer-auth true
+            - -e
+            - COPYBARA_SOURCEREF=atlascli/v1.28.0
             - google/copybara
       - command: shell.exec
         params:

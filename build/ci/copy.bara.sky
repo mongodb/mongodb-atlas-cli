@@ -2,7 +2,6 @@
 Copy definitions
 """
 
-release_tag = "master"
 source_url = "https://github.com/mongodb/mongodb-atlas-cli.git"
 destination_url = "https://github.com/10gen/cloud-docs.git"
 destination_url_cli_docs = "https://github.com/mongodb/docs-atlas-cli.git"
@@ -12,7 +11,6 @@ core.workflow(
     name = "cloud-docs",
     origin = git.origin(
         url = source_url,
-        ref = release_tag,
     ),
     destination = git.github_pr_destination(
         url = destination_url,
@@ -35,7 +33,6 @@ core.workflow(
     name = "docs-atlas-cli",
     origin = git.origin(
         url = source_url,
-        ref = release_tag,
     ),
     destination = git.github_pr_destination(
         url = destination_url_cli_docs,

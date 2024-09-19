@@ -1623,7 +1623,7 @@ tasks:
           shell: bash
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           script: |
-            envsubst \$MONGODB_ATLAS_CLI_TOKEN \$CLOUD_DOCS_TOKEN \$DOCS_ATLAS_CLI_TOKEN \$TAG < copy.bara.sky.template > copy.bara.sky
+            envsubst < copy.bara.sky.template > copy.bara.sky
       - command: subprocess.exec
         params:
           <<: *go_options

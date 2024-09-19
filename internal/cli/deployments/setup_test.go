@@ -63,7 +63,7 @@ func TestSetupOpts_LocalDev_HappyPathClean(t *testing.T) {
 		force: true,
 	}
 
-	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:7.0"
+	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8.0"
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
@@ -128,7 +128,7 @@ func TestSetupOpts_LocalDev_HappyPathOfflinePull(t *testing.T) {
 		force: true,
 	}
 
-	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:7.0"
+	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8.0"
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
@@ -196,7 +196,7 @@ func TestSetupOpts_LocalDev_UnhappyPathOfflinePull(t *testing.T) {
 		force: true,
 	}
 
-	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:7.0"
+	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8.0"
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
@@ -271,7 +271,7 @@ func TestSetupOpts_LocalDev_RemoveUnhealthyDeployment(t *testing.T) {
 		force: true,
 	}
 
-	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:7.0"
+	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8.0"
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)

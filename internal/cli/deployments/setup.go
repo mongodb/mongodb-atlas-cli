@@ -21,6 +21,7 @@ import (
 	"math/rand"
 	"net"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -49,6 +50,7 @@ import (
 const (
 	internalMongodPort = 27017
 	mdb7               = "7.0"
+	mdb8               = "8.0"
 	defaultSettings    = "default"
 	customSettings     = "custom"
 	cancelSettings     = "cancel"
@@ -95,7 +97,7 @@ var (
 		options.CompassConnect: "MongoDB Compass",
 		skipConnect:            "Skip Connection",
 	}
-	mdbVersions = []string{mdb7}
+	mdbVersions = []string{mdb7, mdb8}
 )
 
 type SetupOpts struct {
@@ -413,7 +415,7 @@ func (opts *SetupOpts) validateFlags() error {
 		}
 	}
 
-	if opts.MdbVersion != "" && opts.MdbVersion != mdb7 {
+	if opts.MdbVersion != "" && !slices.Contains(mdbVersions, opts.MdbVersion) {
 		return fmt.Errorf("%w: %s", errInvalidMongoDBVersion, opts.MdbVersion)
 	}
 
@@ -452,7 +454,7 @@ func (opts *SetupOpts) setDefaultSettings() error {
 	}
 
 	if opts.MdbVersion == "" {
-		opts.MdbVersion = mdb7
+		opts.MdbVersion = mdb8
 		defaultValuesSet = true
 	}
 

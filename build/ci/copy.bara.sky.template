@@ -2,10 +2,10 @@
 Copy definitions
 """
 
-release_tag = "atlascli/v1.27.1"
-source_url = "ssh://git@github.com/mongodb/mongodb-atlas-cli.git"
-destination_url = "ssh://git@github.com/10gen/cloud-docs.git"
-destination_url_cli_docs = "ssh://git@github.com/mongodb/docs-atlas-cli.git"
+release_tag = "${TAG}"
+source_url = "https://${MONGODB_ATLAS_CLI_TOKEN}:github.com/mongodb/mongodb-atlas-cli.git"
+destination_url = "https://${CLOUD_DOCS_TOKEN}:github.com/10gen/cloud-docs.git"
+destination_url_cli_docs = "https://${DOCS_ATLAS_CLI_TOKEN}:github.com/mongodb/docs-atlas-cli.git"
 author = "apix-bot[bot] <168195273+apix-bot[bot]@users.noreply.github.com>"
 
 core.workflow(

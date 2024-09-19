@@ -45,6 +45,7 @@ variables:
       <<: *go_env
 pre:
   - func: "clone"
+  - func: "set-expansions"
 post:
   - command: attach.xunit_results
     params:
@@ -401,7 +402,7 @@ functions:
             sleep 10
           done
         shell: bash
-  "set-home":
+  "set-expansions":
     - command: shell.exec
       params:
         <<: *go_options
@@ -409,6 +410,7 @@ functions:
         script: |
           set -Eeou pipefail
           echo "home: $HOME" > expansions.yaml
+          echo "version: $(git describe --match 'atlascli/v*' | cut -d 'v' -f 2)" > expansions.yaml
     - command: expansions.update
       params:
         ignore_missing_file: true
@@ -1594,6 +1596,34 @@ tasks:
   - name: copydocs
     commands:
       - func: "build-copybara"
+      - command: github.generate_token
+        params:
+          expansion_name: mongodb_atlas_cli_token
+          owner: mongodb
+          repo: mongodb-atlas-cli
+      - command: github.generate_token
+        params:
+          expansion_name: docs_atlas_cli_token
+          owner: mongodb
+          repo: docs-atlas-cli
+      - command: github.generate_token
+        params:
+          expansion_name: cloud_docs_token
+          owner: 10gen
+          repo: cloud-docs
+      - command: shell.exec
+        params:
+          <<: *go_options
+          env:
+            <<: *go_env
+            TAG: master
+            MONGODB_ATLAS_CLI_TOKEN: ${mongodb_atlas_cli_token}
+            CLOUD_DOCS_TOKEN: ${cloud_docs_token}
+            DOCS_ATLAS_CLI_TOKEN: ${docs_atlas_cli_token}
+          shell: bash
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
+          script: |
+            envsubst \$MONGODB_ATLAS_CLI_TOKEN \$CLOUD_DOCS_TOKEN \$DOCS_ATLAS_CLI_TOKEN \$TAG < copy.bara.sky.template > copy.bara.sky
       - command: subprocess.exec
         params:
           <<: *go_options
@@ -1603,6 +1633,8 @@ tasks:
             - --rm
             - -v
             - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app
+            - -e
+            - GH_TOKEN=${github_token}
             - -e
             - COPYBARA_WORKFLOW=docs-atlas-cli
             - google/copybara
@@ -1621,8 +1653,8 @@ tasks:
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
-      - func: "set-home"
       - func: clone
+      - func: "set-expansions"
       - func: "vendor deps"
       - func: "install terraform"
       - func: "install azure cli"

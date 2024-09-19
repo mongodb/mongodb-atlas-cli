@@ -1604,6 +1604,9 @@ tasks:
       - command: shell.exec
         params:
           <<: *go_options
+          env:
+            <<: *go_env
+            TAG: atlascli/v1.28.0
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           script: |
             cat <<EOF > .gitconfig
@@ -1613,6 +1616,8 @@ tasks:
             [credential]
                 helper = store
             EOF
+
+            envsubst < copy.bara.sky.template > copy.bara.sky
 
             echo "https://x-access-token:${docs_atlas_cli_token}@github.com" > .git-credentials
             echo "https://x-access-token:${docs_atlas_cli_token}@api.github.com" >> .git-credentials
@@ -1633,8 +1638,6 @@ tasks:
             - COPYBARA_WORKFLOW=docs-atlas-cli
             - -e
             - COPYBARA_OPTIONS=--github-api-bearer-auth true
-            - -e
-            - COPYBARA_SOURCEREF=atlascli/v1.28.0
             - google/copybara
       - command: github.generate_token
         params:
@@ -1665,15 +1668,13 @@ tasks:
             - COPYBARA_WORKFLOW=cloud-docs
             - -e
             - COPYBARA_OPTIONS=--github-api-bearer-auth true
-            - -e
-            - COPYBARA_SOURCEREF=atlascli/v1.28.0
             - google/copybara
       - command: shell.exec
         params:
           <<: *go_options
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           script: |
-            rm -rf .git-credentials .gitconfig
+            rm -rf .git-credentials .gitconfig copy.bara.sky
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

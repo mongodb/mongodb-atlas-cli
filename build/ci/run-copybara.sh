@@ -21,13 +21,13 @@ if [[ "${TAG:?}" == "" ]]; then
     exit 1
 fi
 
-if [[ "${DOCS_ATLAS_CLI_TOKEN:?}" == "" ]]; then
-    echo "missing \$DOCS_ATLAS_CLI_TOKEN"
+if [[ "${GH_TOKEN:?}" == "" ]]; then
+    echo "missing \$GH_TOKEN"
     exit 1
 fi
 
-if [[ "${CLOUD_DOCS_TOKEN:?}" == "" ]]; then
-    echo "missing \$CLOUD_DOCS_TOKEN"
+if [[ "${WORKFLOW:?}" == "" ]]; then
+    echo "missing \$WORKFLOW"
     exit 1
 fi
 
@@ -56,46 +56,25 @@ EOF
 
 envsubst < copy.bara.sky.template > copy.bara.sky
 
-echo "https://x-access-token:${DOCS_ATLAS_CLI_TOKEN:?}@github.com" > .git-credentials
-echo "https://x-access-token:${DOCS_ATLAS_CLI_TOKEN:?}@api.github.com" >> .git-credentials
+echo "https://x-access-token:${GH_TOKEN:?}@github.com" > .git-credentials
+echo "https://x-access-token:${GH_TOKEN:?}@api.github.com" >> .git-credentials
 
 docker run \
-    --name docs-atlas-cli \
+    --name copybara-container \
     -v "${PWD}:/usr/src/app" \
     -v "${PWD}/.gitconfig:/root/.gitconfig" \
     -v "${PWD}/.git-credentials:/root/.git-credentials" \
-    -e COPYBARA_WORKFLOW=docs-atlas-cli \
+    -e "COPYBARA_WORKFLOW=$WORKFLOW" \
     -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
     google/copybara
 
-DOCS_ATLAS_CLI_PR_URL=$(docker logs docs-atlas-cli 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
-
-echo "https://x-access-token:${CLOUD_DOCS_TOKEN:?}@github.com" > .git-credentials
-echo "https://x-access-token:${CLOUD_DOCS_TOKEN:?}@api.github.com" >> .git-credentials
-
-docker run \
-    --name cloud-docs \
-    -v "${PWD}:/usr/src/app" \
-    -v "${PWD}/.gitconfig:/root/.gitconfig" \
-    -v "${PWD}/.git-credentials:/root/.git-credentials" \
-    -e COPYBARA_WORKFLOW=cloud-docs \
-    -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
-    google/copybara
-
-CLOUD_DOCS_PR_URL=$(docker logs cloud-docs 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
+PR_URL=$(docker logs copybara-container 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
 
 rm -rf .git-credentials .gitconfig copy.bara.sky
-docker rm -f cloud-docs docs-atlas-cli
+docker rm -f copybara-container
 
-TARGET="filipe.menezes" #$DOCS_SLACK_CHANNEL
-MSG="[TESTING PLEASE IGNORE] Hey team :wave: ${DOCS_ATLAS_CLI_PR_URL} is ready for review :thankyou:"
-echo "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
-curl --header "Api-User:${EVERGREEN_USER:?}" \
-    --header "Api-Key:${EVERGREEN_API_KEY:?}" \
-    --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
-    --data "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
-
-MSG="[TESTING PLEASE IGNORE] Hey team :wave: ${CLOUD_DOCS_PR_URL} is ready for review :thankyou:"
+TARGET="$DOCS_SLACK_CHANNEL"
+MSG="Hey team :wave: ${PR_URL} is ready for review :thankyou:"
 echo "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
 curl --header "Api-User:${EVERGREEN_USER:?}" \
     --header "Api-Key:${EVERGREEN_API_KEY:?}" \

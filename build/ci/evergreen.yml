@@ -1636,7 +1636,8 @@ tasks:
               -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
               google/copybara
 
-            docker logs docs-atlas-cli 2>&1 | grep "/pull"
+            PR_URL=$(docker logs docs-atlas-cli 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
+            echo "My PR: $PR_URL"
       - command: github.generate_token
         params:
           expansion_name: cloud_docs_token
@@ -1662,7 +1663,8 @@ tasks:
               -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
               google/copybara
 
-            docker logs cloud-docs 2>&1 | grep "/pull"
+            PR_URL=$(docker logs cloud-docs 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
+            echo "My PR: $PR_URL"
       - command: shell.exec
         params:
           <<: *go_options

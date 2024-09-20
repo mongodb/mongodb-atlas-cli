@@ -410,7 +410,8 @@ functions:
         script: |
           set -Eeou pipefail
           echo "home: $HOME" > expansions.yaml
-          echo "version: $(git describe --match 'atlascli/v*' | cut -d 'v' -f 2)" > expansions.yaml
+          echo "tag: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1)" > expansions.yaml
+          echo "version: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)" > expansions.yaml
     - command: expansions.update
       params:
         ignore_missing_file: true
@@ -1606,7 +1607,7 @@ tasks:
           <<: *go_options
           env:
             <<: *go_env
-            TAG: atlascli/v1.28.0
+            TAG: ${tag}
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           script: |
             cat <<EOF > .gitconfig
@@ -1621,24 +1622,17 @@ tasks:
 
             echo "https://x-access-token:${docs_atlas_cli_token}@github.com" > .git-credentials
             echo "https://x-access-token:${docs_atlas_cli_token}@api.github.com" >> .git-credentials
-      - command: subprocess.exec
-        params:
-          <<: *go_options
-          binary: docker
-          args:
-            - run
-            - --rm
-            - -v
-            - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app
-            - -v
-            - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.gitconfig:/root/.gitconfig
-            - -v
-            - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.git-credentials:/root/.git-credentials
-            - -e
-            - COPYBARA_WORKFLOW=docs-atlas-cli
-            - -e
-            - COPYBARA_OPTIONS=--github-api-bearer-auth true
-            - google/copybara
+
+            docker run \
+              --name docs-atlas-cli \
+              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app \
+              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.gitconfig:/root/.gitconfig \
+              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.git-credentials:/root/.git-credentials \
+              -e COPYBARA_WORKFLOW=docs-atlas-cli \
+              -e COPYBARA_OPTIONS=--github-api-bearer-auth true \
+              google/copybara
+
+            docker logs docs-atlas-cli | grep http
       - command: github.generate_token
         params:
           expansion_name: cloud_docs_token
@@ -1651,30 +1645,24 @@ tasks:
           script: |
             echo "https://x-access-token:${cloud_docs_token}@github.com" > .git-credentials
             echo "https://x-access-token:${cloud_docs_token}@api.github.com" >> .git-credentials
-      - command: subprocess.exec
-        params:
-          <<: *go_options
-          binary: docker
-          args:
-            - run
-            - --rm
-            - -v
-            - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app
-            - -v
-            - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.gitconfig:/root/.gitconfig
-            - -v
-            - ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.git-credentials:/root/.git-credentials
-            - -e
-            - COPYBARA_WORKFLOW=cloud-docs
-            - -e
-            - COPYBARA_OPTIONS=--github-api-bearer-auth true
-            - google/copybara
+
+            docker run \
+              --name cloud-docs \
+              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app \
+              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.gitconfig:/root/.gitconfig \
+              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.git-credentials:/root/.git-credentials \
+              -e COPYBARA_WORKFLOW=cloud-docs \
+              -e COPYBARA_OPTIONS=--github-api-bearer-auth true \
+              google/copybara
+
+            docker logs cloud-docs | grep http
       - command: shell.exec
         params:
           <<: *go_options
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           script: |
             rm -rf .git-credentials .gitconfig copy.bara.sky
+            docker rm -f cloud-docs docs-atlas-cli
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

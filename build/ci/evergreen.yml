@@ -1733,6 +1733,8 @@ buildvariants:
     display_name: "E2E Local Deployments Tests (ubuntu 24.04/docker)"
     run_on:
       - ubuntu2404-small
+    tags:
+      - localdev
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version

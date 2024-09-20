@@ -1618,60 +1618,7 @@ tasks:
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           shell: bash
           script: |
-            set -Eeou pipefail
-            cat <<EOF > .gitconfig
-            [user]
-                name = apix-bot[bot]
-                email = 168195273+apix-bot[bot]@users.noreply.github.com
-            [credential]
-                helper = store
-            EOF
-
-            envsubst < copy.bara.sky.template > copy.bara.sky
-
-            echo "https://x-access-token:${docs_atlas_cli_token}@github.com" > .git-credentials
-            echo "https://x-access-token:${docs_atlas_cli_token}@api.github.com" >> .git-credentials
-
-            docker run \
-              --name docs-atlas-cli \
-              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app \
-              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.gitconfig:/root/.gitconfig \
-              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.git-credentials:/root/.git-credentials \
-              -e COPYBARA_WORKFLOW=docs-atlas-cli \
-              -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
-              google/copybara
-
-            DOCS_ATLAS_CLI_PR_URL=$(docker logs docs-atlas-cli 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
-
-            echo "https://x-access-token:${cloud_docs_token}@github.com" > .git-credentials
-            echo "https://x-access-token:${cloud_docs_token}@api.github.com" >> .git-credentials
-
-            docker run \
-              --name cloud-docs \
-              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app \
-              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.gitconfig:/root/.gitconfig \
-              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.git-credentials:/root/.git-credentials \
-              -e COPYBARA_WORKFLOW=cloud-docs \
-              -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
-              google/copybara
-
-            CLOUD_DOCS_PR_URL=$(docker logs cloud-docs 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
-
-            rm -rf .git-credentials .gitconfig copy.bara.sky
-            docker rm -f cloud-docs docs-atlas-cli
-
-            TARGET="filipe.menezes"
-            MSG="[TESTING PLEASE IGNORE] Hey team :wave: ${DOCS_ATLAS_CLI_PR_URL} is ready for review :thankyou:"
-            curl --header "Api-User:${evergreen_user}" \
-              --header "Api-Key:${evergreen_api_key}" \
-              --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
-              --data "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
-
-            MSG="[TESTING PLEASE IGNORE] Hey team :wave: ${CLOUD_DOCS_PR_URL} is ready for review :thankyou:"
-            curl --header "Api-User:${evergreen_user}" \
-              --header "Api-Key:${evergreen_api_key}" \
-              --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
-              --data "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
+            ./run-cop
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

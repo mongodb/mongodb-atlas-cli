@@ -1643,6 +1643,9 @@ tasks:
 
             DOCS_ATLAS_CLI_PR_URL=$(docker logs docs-atlas-cli 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
 
+            echo "https://x-access-token:${cloud_docs_token}@github.com" > .git-credentials
+            echo "https://x-access-token:${cloud_docs_token}@api.github.com" >> .git-credentials
+
             docker run \
               --name cloud-docs \
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci:/usr/src/app \

@@ -1618,7 +1618,7 @@ tasks:
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           shell: bash
           script: |
-            ./run-cop
+            ./run-copybara.sh
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

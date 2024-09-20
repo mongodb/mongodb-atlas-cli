@@ -531,6 +531,7 @@ buildvariants:
           - name: package_msi
             variant: release_atlascli_msi
   - name: test_copybara
+    display_name: "Test Copybara"
     run_on:
       - rhel90-small
     expansions:

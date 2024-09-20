@@ -1637,14 +1637,12 @@ tasks:
               google/copybara
 
             PR_URL=$(docker logs docs-atlas-cli 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
+            TARGET="${docs_slack_channel}"
+            MSG="[TESTING PLEASE IGNORE] <@S05R9DAAFK6> ${PR_URL} is ready for review :thankyou:"
             curl --header "Api-User:${evergreen_user}" \
               --header "Api-Key:${evergreen_api_key}" \
               --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
-              --data '
-                {
-                  "target": "${docs_slack_channel}",
-                  "msg": "[TESTING PLEASE IGNORE] @cloud-docs-on-call ${PR_URL} is ready for review :thankyou:"
-                }'
+              --data "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
       - command: github.generate_token
         params:
           expansion_name: cloud_docs_token
@@ -1671,14 +1669,12 @@ tasks:
               google/copybara
 
             PR_URL=$(docker logs cloud-docs 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
+            TARGET="${docs_slack_channel}"
+            MSG="[TESTING PLEASE IGNORE] <@S05R9DAAFK6> ${PR_URL} is ready for review :thankyou:"
             curl --header "Api-User:${evergreen_user}" \
               --header "Api-Key:${evergreen_api_key}" \
               --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
-              --data '
-                {
-                  "target" : "${docs_slack_channel}",
-                  "msg" : "[TESTING PLEASE IGNORE] @cloud-docs-on-call ${PR_URL} is ready for review :thankyou:"
-                }'
+              --data "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
       - command: shell.exec
         params:
           <<: *go_options

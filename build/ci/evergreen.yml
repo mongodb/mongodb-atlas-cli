@@ -1738,10 +1738,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
-        depends_on:
-        - name: compile
-          variant: "code_health"
-          patch_optional: true
   - name: e2e_local_deployments_debian11
     display_name: "E2E Local Deployments Tests (debian 11/docker)"
     run_on:
@@ -1753,10 +1749,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
-        depends_on:
-        - name: compile
-          variant: "code_health"
-          patch_optional: true
   - name: e2e_local_deployments_debian12
     display_name: "E2E Local Deployments Tests (debian 12/docker)"
     run_on:
@@ -1768,10 +1760,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
-        depends_on:
-        - name: compile
-          variant: "code_health"
-          patch_optional: true
   - name: e2e_local_deployments_al2023 
     display_name: "E2E Local Deployments Tests (amazon linux 2023/docker)"
     run_on:
@@ -1783,10 +1771,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .deployments .local"
-        depends_on:
-        - name: compile
-          variant: "code_health"
-          patch_optional: true
   - name: e2e_local_deployments_windows
     display_name: "E2E Local Deployments Tests (windows/docker)"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
@@ -1798,10 +1782,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: "atlas_deployments_windows_group"
-        depends_on:
-        - name: compile
-          variant: "code_health"
-          patch_optional: true
   - name: e2e_atlas_streams_with_clusters
     display_name: "E2E Atlas Streams with Clusters Tests"
     run_on:

@@ -1615,6 +1615,11 @@ tasks:
           env:
             <<: *go_env
             TAG: ${tag}
+            DOCS_ATLAS_CLI_TOKEN: ${docs_atlas_cli_token}
+            CLOUD_DOCS_TOKEN: ${cloud_docs_token}
+            EVERGREEN_USER: ${evergreen_user}
+            EVERGREEN_API_KEY: ${evergreen_api_key}
+            DOCS_SLACK_CHANNEL: ${docs_slack_channel}
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           shell: bash
           script: |

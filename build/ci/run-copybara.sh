@@ -74,7 +74,7 @@ rm -rf .git-credentials .gitconfig copy.bara.sky
 docker rm -f copybara-container
 
 TARGET="$DOCS_SLACK_CHANNEL"
-MSG="Hey team :wave: ${PR_URL} is ready for review :thankyou:"
+MSG="[TESTING PLEASE IGNORE] Hey team :wave: ${PR_URL} is ready for review :thankyou:"
 echo "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
 curl --header "Api-User:${EVERGREEN_USER:?}" \
     --header "Api-Key:${EVERGREEN_API_KEY:?}" \

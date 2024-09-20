@@ -1631,7 +1631,7 @@ tasks:
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.gitconfig:/root/.gitconfig \
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.git-credentials:/root/.git-credentials \
               -e COPYBARA_WORKFLOW=docs-atlas-cli \
-              -e COPYBARA_OPTIONS=--github-api-bearer-auth true \
+              -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
               google/copybara
 
             docker logs docs-atlas-cli | grep http
@@ -1657,7 +1657,7 @@ tasks:
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.gitconfig:/root/.gitconfig \
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/.git-credentials:/root/.git-credentials \
               -e COPYBARA_WORKFLOW=cloud-docs \
-              -e COPYBARA_OPTIONS=--github-api-bearer-auth true \
+              -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
               google/copybara
 
             docker logs cloud-docs | grep http

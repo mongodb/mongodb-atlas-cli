@@ -457,9 +457,9 @@ tasks:
         vars:
           file: windows_post_package_test
   - name: copybara
-    depends_on:
-      - name: package_goreleaser
-        variant: release_atlascli_github
+    # depends_on:
+    #   - name: package_goreleaser
+    #     variant: release_atlascli_github
     commands:
       - func: "build-copybara"
       - command: github.generate_token
@@ -530,6 +530,12 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: release_atlascli_msi
+  - name: test_copybara
+    run_on:
+      - rhel90-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
       - name: copybara
   - name: release_atlascli_msi
     display_name: "Release AtlasCLI (go-msi)"

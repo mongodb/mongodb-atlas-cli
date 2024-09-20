@@ -409,9 +409,11 @@ functions:
         shell: bash
         script: |
           set -Eeou pipefail
-          echo "home: $HOME" > expansions.yaml
-          echo "tag: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1)" > expansions.yaml
-          echo "version: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)" > expansions.yaml
+          cat <<EOF > expansions.yaml
+          home: $HOME
+          tag: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1)
+          version: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)
+          EOF
     - command: expansions.update
       params:
         ignore_missing_file: true

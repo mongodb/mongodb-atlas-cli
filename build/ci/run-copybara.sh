@@ -89,12 +89,14 @@ docker rm -f cloud-docs docs-atlas-cli
 
 TARGET="filipe.menezes" #$DOCS_SLACK_CHANNEL
 MSG="[TESTING PLEASE IGNORE] Hey team :wave: ${DOCS_ATLAS_CLI_PR_URL} is ready for review :thankyou:"
+echo "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
 curl --header "Api-User:${EVERGREEN_USER:?}" \
     --header "Api-Key:${EVERGREEN_API_KEY:?}" \
     --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
     --data "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
 
 MSG="[TESTING PLEASE IGNORE] Hey team :wave: ${CLOUD_DOCS_PR_URL} is ready for review :thankyou:"
+echo "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
 curl --header "Api-User:${EVERGREEN_USER:?}" \
     --header "Api-Key:${EVERGREEN_API_KEY:?}" \
     --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \

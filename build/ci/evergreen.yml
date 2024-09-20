@@ -1609,6 +1609,7 @@ tasks:
             <<: *go_env
             TAG: ${tag}
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
+          shell: bash
           script: |
             set -Eeou pipefail
             cat <<EOF > .gitconfig
@@ -1643,6 +1644,7 @@ tasks:
         params:
           <<: *go_options
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
+          shell: bash
           script: |
             set -Eeou pipefail
 

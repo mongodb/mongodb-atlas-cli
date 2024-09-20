@@ -271,7 +271,7 @@ functions:
     - command: subprocess.exec
       params:
         <<: *go_options
-        binary: podman
+        binary: docker
         args:
           - build
           - -t
@@ -530,10 +530,10 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: release_atlascli_msi
-  - name: test_copybara
-    display_name: "Test Copybara"
+  - name: copybara
+    display_name: "Copybara"
     run_on:
-      - rhel90-small
+      - ubuntu2404-small
     expansions:
       <<: *go_linux_version
     tasks:

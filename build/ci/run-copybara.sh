@@ -59,7 +59,7 @@ envsubst < copy.bara.sky.template > copy.bara.sky
 echo "https://x-access-token:${GH_TOKEN:?}@github.com" > .git-credentials
 echo "https://x-access-token:${GH_TOKEN:?}@api.github.com" >> .git-credentials
 
-docker run \
+podman run \
     --name copybara-container \
     -v "${PWD}:/usr/src/app" \
     -v "${PWD}/.gitconfig:/root/.gitconfig" \
@@ -68,10 +68,10 @@ docker run \
     -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
     google/copybara
 
-PR_URL=$(docker logs copybara-container 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
+PR_URL=$(podman logs copybara-container 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
 
 rm -rf .git-credentials .gitconfig copy.bara.sky
-docker rm -f copybara-container
+podman rm -f copybara-container
 
 TARGET="$DOCS_SLACK_CHANNEL"
 MSG="[TESTING PLEASE IGNORE] Hey team :wave: ${PR_URL} is ready for review :thankyou:"

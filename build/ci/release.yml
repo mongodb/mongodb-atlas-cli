@@ -271,7 +271,7 @@ functions:
     - command: subprocess.exec
       params:
         <<: *go_options
-        binary: docker
+        binary: podman
         args:
           - build
           - -t

@@ -1610,6 +1610,7 @@ tasks:
             TAG: ${tag}
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           script: |
+            set -Eeou pipefail
             cat <<EOF > .gitconfig
             [user]
                 name = apix-bot[bot]
@@ -1643,6 +1644,8 @@ tasks:
           <<: *go_options
           working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
           script: |
+            set -Eeou pipefail
+
             echo "https://x-access-token:${cloud_docs_token}@github.com" > .git-credentials
             echo "https://x-access-token:${cloud_docs_token}@api.github.com" >> .git-credentials
 

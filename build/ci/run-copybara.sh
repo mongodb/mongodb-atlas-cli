@@ -68,7 +68,7 @@ docker run \
     -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
     google/copybara
 
-PR_URL=$(docker logs copybara-container 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:.*)$/\1/')
+PR_URL=$(docker logs copybara-container 2>&1 | grep "/pull/" | sed -E 's/^.*(https\:[^\ ]+).*$/\1/')
 
 rm -rf .git-credentials .gitconfig copy.bara.sky
 docker rm -f copybara-container

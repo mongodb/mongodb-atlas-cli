@@ -1636,7 +1636,7 @@ tasks:
               -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
               google/copybara
 
-            docker logs docs-atlas-cli | grep http
+            docker logs docs-atlas-cli 2>&1 | grep "/pull"
       - command: github.generate_token
         params:
           expansion_name: cloud_docs_token
@@ -1662,7 +1662,7 @@ tasks:
               -e "COPYBARA_OPTIONS=--github-api-bearer-auth true" \
               google/copybara
 
-            docker logs cloud-docs | grep http
+            docker logs cloud-docs 2>&1 | grep "/pull"
       - command: shell.exec
         params:
           <<: *go_options

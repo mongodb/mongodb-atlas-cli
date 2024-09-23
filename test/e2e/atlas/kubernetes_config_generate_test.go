@@ -1251,7 +1251,7 @@ func referenceProject(name, namespace string, labels map[string]string) *akov2.A
 	}
 }
 
-func referenceAdvancedCluster(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
+func referenceAdvancedCluster(name, region, namespace, projectName string, labels map[string]string, mdbVersion string) *akov2.AtlasDeployment {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &akov2.AtlasDeployment{
 		TypeMeta: metav1.TypeMeta{
@@ -1278,6 +1278,7 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 					Enabled:        pointer.Get(false),
 					ReadPreference: "secondary",
 				},
+				MongoDBMajorVersion:      mdbVersion,
 				ClusterType:              string(akov2.TypeReplicaSet),
 				DiskSizeGB:               nil,
 				EncryptionAtRestProvider: "NONE",
@@ -1376,7 +1377,7 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 }
 
 func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
-	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels)
+	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels, "")
 	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &akov2.Specs{
 		DiskIOPS:     nil,
 		InstanceSize: e2eSharedClusterTier,
@@ -1523,7 +1524,7 @@ func referenceBackupPolicy(namespace, projectName, clusterName string, labels ma
 	}
 }
 
-func checkClustersData(t *testing.T, deployments []*akov2.AtlasDeployment, clusterNames []string, region, namespace, projectName string) {
+func checkClustersData(t *testing.T, deployments []*akov2.AtlasDeployment, clusterNames []string, region, namespace, projectName, mDBVersion string) {
 	t.Helper()
 	assert.Len(t, deployments, len(clusterNames))
 	var entries []string
@@ -1538,7 +1539,7 @@ func checkClustersData(t *testing.T, deployments []*akov2.AtlasDeployment, clust
 		} else if deployment.Spec.DeploymentSpec != nil {
 			if ok := slices.Contains(clusterNames, deployment.Spec.DeploymentSpec.Name); ok {
 				name := deployment.Spec.DeploymentSpec.Name
-				expectedDeployment := referenceAdvancedCluster(name, region, namespace, projectName, expectedLabels)
+				expectedDeployment := referenceAdvancedCluster(name, region, namespace, projectName, expectedLabels, mDBVersion)
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
 			}
@@ -1559,7 +1560,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	g.generateCluster()
 	g.generateServerlessCluster()
 
-	expectedDeployment := referenceAdvancedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels)
+	expectedDeployment := referenceAdvancedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels, g.mDBVer)
 	expectedBackupSchedule := referenceBackupSchedule(targetNamespace, g.projectName, g.clusterName, expectedLabels)
 	expectedBackupPolicy := referenceBackupPolicy(targetNamespace, g.projectName, g.clusterName, expectedLabels)
 
@@ -1668,7 +1669,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 
 		ds := atlasDeployments(objects)
 		require.Len(t, ds, 2)
-		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
+		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName, g.mDBVer)
 		secret, found := findSecret(objects)
 		require.True(t, found, "Secret is not found in results")
 		assert.Equal(t, targetNamespace, secret.Namespace)
@@ -1698,7 +1699,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		require.True(t, found, "AtlasProject is not found in results")
 		assert.Equal(t, targetNamespace, p.Namespace)
 		ds := atlasDeployments(objects)
-		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName)
+		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName, g.mDBVer)
 		secret, found := findSecret(objects)
 		require.True(t, found, "Secret is not found in results")
 		assert.Equal(t, targetNamespace, secret.Namespace)

@@ -66,6 +66,11 @@ func (opts *StartOpts) RunLocal(ctx context.Context, deployment options.Deployme
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
+	// verify that the host meets the minimum requirements, if not, print a warning
+	if err := opts.ValidateMinimumRequirements(); err != nil {
+		return err
+	}
+
 	if err := opts.startContainer(ctx, deployment); err != nil {
 		return err
 	}

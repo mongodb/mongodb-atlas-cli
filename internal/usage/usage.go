@@ -92,7 +92,7 @@ dbName and collection are required only for built-in roles.`
 	Email                                     = "Email address for the user."
 	LogOut                                    = "Output file name. This value defaults to the log name."
 	LogStart                                  = "UNIX Epoch-formatted starting date and time for the range of log messages to retrieve. This value defaults to 24 hours prior to the current timestamp."
-	LogEnd                                    = "UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the current timestamp."
+	LogEnd                                    = "Ending date and time for the range of log messages to retrieve, given in UNIX time. Defaults to the start date plus 24 hours, if the start date is set. If start date is not provided, ending time defaults to the current time."
 	MeasurementStart                          = "ISO 8601-formatted date and time that specifies when to start retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementEnd                            = "ISO 8601-formatted date and time that specifies when to stop retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementType                           = "Measurements to return. This option returns all measurements by default. Valid values include DATABASE_AVERAGE_OBJECT_SIZE, DATABASE_COLLECTION_COUNT, DATABASE_DATA_SIZE, DATABASE_STORAGE_SIZE, DATABASE_INDEX_SIZE, DATABASE_INDEX_COUNT, DATABASE_EXTENT_COUNT, DATABASE_OBJECT_COUNT, and DATABASE_VIEW_COUNT"
@@ -226,6 +226,7 @@ dbName and collection are required only for built-in roles.`
 	SkipSampleDataDeployment                  = "Flag that indicates whether to skip loading sample data into your MongoDB deployment."
 	ContainerRegion                           = "Cloud provider region where the VPC that you peered with the Atlas VPC resides."
 	ContainerRegions                          = "List of Atlas regions where the container resides."
+	UpdateAllPlugins                          = "update all plugins"
 	ProjectOwnerID                            = "Unique 24-digit string that identifies the Atlas user to be granted the Project Owner role on the specified project. If unspecified, this value defaults to the user ID of the oldest Organization Owner."
 	OrgOwnerID                                = "Unique 24-digit string that identifies the Atlas user to be granted the Org Owner role on the specified organization. Required if using API keys."
 	GovCloudRegionsOnly                       = "Flag that designates that the project uses only the AWS GovCloud region. Use this option only for Atlas for Government projects. If unspecified, the project uses only the AWS Standard region for AWS deployments. You can't deploy clusters across AWS GovCloud and AWS Standard regions in the same project."
@@ -407,4 +408,5 @@ dbName and collection are required only for built-in roles.`
 	IdentityProviderID         = "Unique identifier of the identity provider."
 	ConnectedOrgConfigFilename = "Path to a JSON configuration file that defines connected orgs configurations. To learn more about connected org configuration file format, see the request body in https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/updateConnectedOrgConfig."
 	AuditFilter                = "JSON document that specifies which events to record. Escape any characters that may prevent parsing, such as single or double quotes, using a backslash (\\)."
+	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. To learn more about invitation configuration files for the Atlas CLI, see https://XXX."
 )

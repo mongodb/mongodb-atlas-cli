@@ -268,7 +268,7 @@ func TestStreams(t *testing.T) {
 
 		connections := response.GetResults()
 		a := assert.New(t)
-		a.Len(connections, 2)
+		a.Len(connections, 1)
 
 		expected := []struct {
 			Name, Type, BootstrapServers string

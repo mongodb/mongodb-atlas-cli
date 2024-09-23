@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20240805001/admin"
 )
 
@@ -39,9 +40,12 @@ func TestUpdate_Run(t *testing.T) {
 		GlobalOpts: cli.GlobalOpts{OrgID: "1"},
 	}
 
+	request, err := updateOpts.newInvitation()
+	require.NoError(t, err)
+
 	mockStore.
 		EXPECT().
-		UpdateOrganizationInvitation(updateOpts.ConfigOrgID(), updateOpts.invitationID, updateOpts.newInvitation()).
+		UpdateOrganizationInvitation(updateOpts.ConfigOrgID(), updateOpts.invitationID, request).
 		Return(expected, nil).
 		Times(1)
 

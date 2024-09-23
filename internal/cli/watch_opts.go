@@ -29,7 +29,7 @@ type WatchOpts struct {
 	s              *spinner.Spinner
 	EnableWatch    bool
 	DefaultWait    time.Duration
-	Timeout        uint
+	Timeout        int64
 	IsRetryableErr func(err error) bool
 }
 

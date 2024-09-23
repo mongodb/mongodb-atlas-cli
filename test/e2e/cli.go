@@ -35,6 +35,6 @@ func AtlasCLIBin() (string, error) {
 	return cliPath, nil
 }
 
-func RandInt(max int64) (*big.Int, error) {
-	return rand.Int(rand.Reader, big.NewInt(max))
+func RandInt(maximum int64) (*big.Int, error) {
+	return rand.Int(rand.Reader, big.NewInt(maximum))
 }

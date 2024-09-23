@@ -20,13 +20,26 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/Masterminds/semver/v3"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
 var ErrDockerNotFound = fmt.Errorf("%w: docker not found in your system, check requirements at https://dochub.mongodb.org/core/atlas-cli-deploy-local-reqs", ErrContainerEngineNotFound)
+var ErrDeterminingDockerVersion = errors.New("could not determine docker version")
+var errParseHealthCheck = errors.New("parsing image healthcheck failed")
+var errListContainer = errors.New("container listing failed")
+var errParsingContainer = errors.New("container parsing failed")
+var errDecodingJSON = errors.New("container decoding failed")
+var errParsingPorts = errors.New("parsing ports failed")
+var errConvertHostPort = errors.New("converting host port failed")
+var errConvertContainerPort = errors.New("converting container port failed")
+var minDockerVersion = semver.New(27, 0, 0, "", "") //nolint:mnd
 
 type dockerImpl struct {
 }
@@ -40,9 +53,31 @@ func (*dockerImpl) Name() string {
 }
 
 func (*dockerImpl) Ready() error {
-	if _, err := exec.LookPath("docker"); err != nil {
+	_, err := exec.LookPath("docker")
+	if errors.Is(err, exec.ErrDot) {
+		err = nil
+	}
+	if err != nil {
 		return ErrDockerNotFound
 	}
+	return nil
+}
+
+func (e *dockerImpl) VerifyVersion(ctx context.Context) error {
+	versionBytes, err := e.run(ctx, "version", "--format", "v{{.Client.Version}}")
+	if err != nil {
+		return errors.Join(ErrDeterminingDockerVersion, err)
+	}
+
+	version, err := semver.NewVersion(strings.TrimSpace(string(versionBytes)))
+	if err != nil {
+		return errors.Join(ErrDeterminingDockerVersion, err)
+	}
+
+	if version.Compare(minDockerVersion) == -1 {
+		_, _ = log.Warningf("Detected docker version %s, the minimum supported docker version is %s.\n", version.String(), minDockerVersion.String())
+	}
+
 	return nil
 }
 
@@ -72,39 +107,78 @@ func parsePortMapping(s string) ([]PortMapping, error) {
 	mappings := strings.Split(s, ",")
 	result := []PortMapping{}
 	for _, mapping := range mappings {
-		segments := strings.SplitN(mapping, "->", 2) //nolint //max 2 fields
-		hostStr, hostPortStr := splitOnceLast(segments[0], ":")
-		containerSegments := strings.SplitN(segments[1], "/", 2) //nolint //max 2 fields
-		hostPort, err := strconv.Atoi(hostPortStr)
-		if err != nil {
-			return nil, err
+		hostMapping, containerMapping := "", mapping
+		if strings.Contains(mapping, "->") {
+			segments := strings.SplitN(mapping, "->", 2) //nolint //max 2 fields
+			hostMapping = segments[0]
+			containerMapping = segments[1]
 		}
-		containerPort, err := strconv.Atoi(containerSegments[0])
+
+		hostStr, hostPort, err := splitHostPort(hostMapping)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: %w", errConvertHostPort, err)
+		}
+		containerPort, containerProtocol, err := splitPortProtocol(containerMapping)
+		if err != nil {
+			return nil, fmt.Errorf("%w: %w", errConvertContainerPort, err)
 		}
 		result = append(result, PortMapping{
 			HostAddress:       hostStr,
 			HostPort:          hostPort,
 			ContainerPort:     containerPort,
-			ContainerProtocol: containerSegments[1],
+			ContainerProtocol: containerProtocol,
 		})
 	}
 	return result, nil
 }
 
-func splitOnceLast(s, sep string) (string, string) {
-	lastIndex := strings.LastIndex(s, sep)
-	return s[:lastIndex], s[lastIndex+1:]
+func splitPortProtocol(s string) (int, string, error) {
+	protocol := ""
+	if strings.ContainsRune(s, '/') {
+		index := strings.LastIndex(s, "/")
+		protocol = s[index+1:]
+		s = s[:index]
+	}
+
+	port, err := strconv.Atoi(s)
+
+	return port, protocol, err
+}
+
+func splitHostPort(s string) (string, int, error) {
+	host, port := "", s
+
+	if strings.ContainsRune(s, ':') {
+		index := strings.LastIndex(s, ":")
+		host = s[:index]
+		port = s[index+1:]
+	}
+
+	iport, err := strconv.Atoi(port)
+	if err != nil {
+		host = port
+		if !strings.ContainsRune(s, ':') { // single value can be either host or port
+			err = nil
+		}
+	}
+	return host, iport, err
 }
 
 func portMappingFlag(pm PortMapping) string {
-	result := fmt.Sprintf("%d:%d", pm.HostPort, pm.ContainerPort)
+	result := ""
+
 	if pm.HostAddress != "" {
-		result = pm.HostAddress + ":" + result
+		result += pm.HostAddress + ":"
 	}
+
+	if pm.HostPort != 0 {
+		result += strconv.Itoa(pm.HostPort)
+	}
+
+	result += ":" + strconv.Itoa(pm.ContainerPort)
+
 	if pm.ContainerProtocol != "" {
-		result = result + "/" + pm.ContainerProtocol
+		result += "/" + pm.ContainerProtocol
 	}
 
 	return result
@@ -190,13 +264,14 @@ func (e *dockerImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 }
 
 func parseContainers(buf []byte) ([]Container, error) {
+	_, _ = log.Debugf("parsing containers: %s", string(buf))
 	result := []Container{}
 	decoder := json.NewDecoder(bytes.NewBuffer(buf))
 	for decoder.More() {
 		c := map[string]any{}
 
 		if err := decoder.Decode(&c); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: %w", errDecodingJSON, err)
 		}
 
 		cont := Container{
@@ -208,7 +283,7 @@ func parseContainers(buf []byte) ([]Container, error) {
 
 		pm, err := parsePortMapping(c["Ports"].(string))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: %w", errParsingPorts, err)
 		}
 		cont.Ports = pm
 
@@ -239,14 +314,18 @@ func (e *dockerImpl) ContainerList(ctx context.Context, labels ...string) ([]Con
 	}
 	buf, err := e.run(ctx, args...)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %w", errListContainer, err)
 	}
 
 	if len(buf) == 0 {
 		return nil, nil
 	}
 
-	return parseContainers(buf)
+	list, err := parseContainers(buf)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %w", errParsingContainer, err)
+	}
+	return list, nil
 }
 
 func (e *dockerImpl) ContainerRm(ctx context.Context, names ...string) error {
@@ -298,7 +377,7 @@ func (e *dockerImpl) ContainerInspect(ctx context.Context, names ...string) ([]*
 }
 
 func (e *dockerImpl) ImageList(ctx context.Context, references ...string) ([]Image, error) {
-	args := []string{"image", "ls", "--format", "json"}
+	args := []string{"image", "ls", "--format", "{{. | json}}"}
 
 	if len(references) > 0 {
 		for _, name := range references {
@@ -314,11 +393,30 @@ func (e *dockerImpl) ImageList(ctx context.Context, references ...string) ([]Ima
 		return nil, nil
 	}
 
-	result := []Image{}
-	if err := json.Unmarshal(buf, &result); err != nil {
+	result, err := readJsonl[Image](bytes.NewBuffer(buf))
+	if err != nil {
 		return nil, err
 	}
+
 	return result, nil
+}
+
+func readJsonl[T any](r io.Reader) ([]T, error) {
+	data := []T{}
+	decoder := json.NewDecoder(r)
+	for decoder.More() {
+		var entry T
+		if err := decoder.Decode(&entry); err != nil {
+			return data, err
+		}
+		data = append(data, entry)
+	}
+
+	if len(data) == 0 {
+		return nil, nil
+	}
+
+	return data, nil
 }
 
 func (e *dockerImpl) ImagePull(ctx context.Context, name string) error {
@@ -350,7 +448,8 @@ func (e *dockerImpl) ImageHealthCheck(ctx context.Context, name string) (*ImageH
 
 	var inspectOutput []PartialImageInspect
 	if err := json.Unmarshal(b, &inspectOutput); err != nil {
-		return nil, err
+		_, _ = log.Debug("failed json parsing: " + string(b))
+		return nil, fmt.Errorf("%w: %w", errParseHealthCheck, err)
 	}
 
 	if len(inspectOutput) != 1 {

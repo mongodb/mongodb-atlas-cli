@@ -63,10 +63,13 @@ func TestSetupOpts_LocalDev_HappyPathClean(t *testing.T) {
 		force: true,
 	}
 
-	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:7.0"
+	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8.0"
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
+
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
 
 	// Image gets pulled
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(nil).Times(1)
@@ -84,6 +87,25 @@ func TestSetupOpts_LocalDev_HappyPathClean(t *testing.T) {
 
 	// Container is healthy
 	deploymentTest.MockContainerEngine.EXPECT().ContainerHealthStatus(ctx, deploymentName).Return(container.DockerHealthcheckStatusHealthy, nil).Times(1)
+
+	// Because no port is specified docker inspect will happen
+	deploymentTest.MockContainerEngine.EXPECT().ContainerInspect(ctx, opts.LocalMongodHostname()).Return([]*container.InspectData{{
+		Config: &container.InspectDataConfig{
+			Labels: map[string]string{
+				"version": "7.0.12",
+			},
+		},
+		NetworkSettings: &container.NetworkSettings{
+			Ports: map[string][]container.InspectDataHostPort{
+				"27017/tcp": {
+					container.InspectDataHostPort{
+						HostIP:   "127.0.0.1",
+						HostPort: "12345",
+					},
+				},
+			},
+		},
+	}}, nil).Times(1)
 
 	// Verify
 	if err := opts.Run(ctx); err != nil {
@@ -106,10 +128,13 @@ func TestSetupOpts_LocalDev_HappyPathOfflinePull(t *testing.T) {
 		force: true,
 	}
 
-	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:7.0"
+	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8.0"
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
+
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
 
 	// Image gets pulled
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(errors.New("image pull failed")).Times(1)
@@ -130,6 +155,25 @@ func TestSetupOpts_LocalDev_HappyPathOfflinePull(t *testing.T) {
 
 	// Container is healthy
 	deploymentTest.MockContainerEngine.EXPECT().ContainerHealthStatus(ctx, deploymentName).Return(container.DockerHealthcheckStatusHealthy, nil).Times(1)
+
+	// Because no port is specified docker inspect will happen
+	deploymentTest.MockContainerEngine.EXPECT().ContainerInspect(ctx, opts.LocalMongodHostname()).Return([]*container.InspectData{{
+		Config: &container.InspectDataConfig{
+			Labels: map[string]string{
+				"version": "7.0.12",
+			},
+		},
+		NetworkSettings: &container.NetworkSettings{
+			Ports: map[string][]container.InspectDataHostPort{
+				"27017/tcp": {
+					container.InspectDataHostPort{
+						HostIP:   "127.0.0.1",
+						HostPort: "12345",
+					},
+				},
+			},
+		},
+	}}, nil).Times(1)
 
 	// Verify
 	if err := opts.Run(ctx); err != nil {
@@ -152,10 +196,13 @@ func TestSetupOpts_LocalDev_UnhappyPathOfflinePull(t *testing.T) {
 		force: true,
 	}
 
-	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:7.0"
+	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8.0"
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
+
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
 
 	// Image gets pulled
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(errors.New("image pull failed")).Times(1)
@@ -193,6 +240,9 @@ func TestSetupOpts_LocalDev_HappyPathEverythingAlreadyExists(t *testing.T) {
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
 
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
+
 	// No local dev container exists yet
 	deploymentTest.MockContainerEngine.EXPECT().ContainerList(ctx, "mongodb-atlas-local=container").Return([]container.Container{
 		{
@@ -221,10 +271,13 @@ func TestSetupOpts_LocalDev_RemoveUnhealthyDeployment(t *testing.T) {
 		force: true,
 	}
 
-	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:7.0"
+	const dockerImageName = "docker.io/mongodb/mongodb-atlas-local:8.0"
 
 	// Container engine is fine
 	deploymentTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
+
+	// Verify version should always succeed
+	deploymentTest.MockContainerEngine.EXPECT().VerifyVersion(ctx).Return(nil).Times(1)
 
 	// Image gets pulled (updated)
 	deploymentTest.MockContainerEngine.EXPECT().ImagePull(ctx, dockerImageName).Return(nil).Times(1)

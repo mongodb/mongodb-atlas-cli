@@ -20,7 +20,7 @@ jobs:
         run:  echo "VERSION=$(curl -sSfL -X GET  https://api.github.com/repos/mongodb/atlas-sdk-go/releases/latest | jq -r '.tag_name')" >> "$GITHUB_OUTPUT"
       - run:  make update-atlas-sdk
       - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@79f398ac63ab46f7f820470c821d830e5c340ef9
+        uses: tj-actions/verify-changed-files@ba611bcdf2d25b81a336cbf9609488213ac16395
         id: verify-changed-files
         with:
           files: |
@@ -89,7 +89,7 @@ jobs:
   
           echo "The following JIRA ticket has been created: ${JIRA_TICKET_ID}"
           echo "jira-ticket-id=${JIRA_TICKET_ID}" >> "${GITHUB_OUTPUT}"
-      - uses: peter-evans/create-pull-request@v6
+      - uses: peter-evans/create-pull-request@v7
         id: pr
         if: steps.verify-changed-files.outputs.files_changed == 'true' && steps.find.outputs.FOUND == 'false'
         with:

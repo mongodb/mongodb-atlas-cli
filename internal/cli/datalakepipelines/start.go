@@ -66,6 +66,7 @@ func StartBuilder() *cobra.Command {
 		Annotations: map[string]string{
 			"pipelineNameDesc": "Label that identifies the pipeline",
 		},
+		Deprecated: "Data Lake Pipelines is deprecated. Please see: https://dochub.mongodb.org/core/data-lake-deprecation.",
 		Example: `# start pipeline 'Pipeline1':
   atlas dataLakePipelines start Pipeline1
 `,

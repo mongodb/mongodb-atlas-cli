@@ -21,6 +21,7 @@ import (
 	"math/rand"
 	"net"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -49,10 +50,12 @@ import (
 const (
 	internalMongodPort = 27017
 	mdb7               = "7.0"
+	mdb8               = "8.0"
 	defaultSettings    = "default"
 	customSettings     = "custom"
 	cancelSettings     = "cancel"
 	skipConnect        = "skip"
+	autoassignPort     = "autoassign"
 	spinnerSpeed       = 100 * time.Millisecond
 	steps              = 3
 )
@@ -72,9 +75,18 @@ var (
 	errUnsupportedConnectWith     = fmt.Errorf("the --%s flag is unsupported", flag.ConnectWith)
 	errFlagUsernameRequired       = fmt.Errorf("the --%s is required to enable authentication when --%s flag is set",
 		flag.Username, flag.BindIPAll)
-	errFailedToDownloadImage = errors.New("failed to download the MongoDB image")
-	settingOptions           = []string{defaultSettings, customSettings, cancelSettings}
-	settingsDescription      = map[string]string{
+	errFailedToDownloadImage   = errors.New("failed to download the MongoDB image")
+	errDeploymentUnhealthy     = errors.New("the deployment is unhealthy")
+	errDeploymentNoHealthCheck = errors.New("the deployment does not have a healthcheck")
+	errHealthCheckTimeout      = errors.New("timed out waiting for the deployment to be healthy")
+	errDownloadImage           = errors.New("image download failed")
+	errInspectHealthCheck      = errors.New("inspect healthcheck failed")
+	errQueryHealthCheckStatus  = errors.New("query healthcheck status failed")
+	errConfigContainer         = errors.New("container configuration failed")
+	errRunContainer            = errors.New("container run failed")
+	errListContainer           = errors.New("listing containers failed")
+	settingOptions             = []string{defaultSettings, customSettings, cancelSettings}
+	settingsDescription        = map[string]string{
 		defaultSettings: "With default settings",
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel setup",
@@ -85,7 +97,7 @@ var (
 		options.CompassConnect: "MongoDB Compass",
 		skipConnect:            "Skip Connection",
 	}
-	mdbVersions = []string{mdb7}
+	mdbVersions = []string{mdb7, mdb8}
 )
 
 type SetupOpts struct {
@@ -138,9 +150,9 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 	opts.logStepStarted("Starting your local environment...", currentStep, steps)
 	defer opts.stop()
 
-	containers, errList := opts.GetLocalContainers(ctx)
-	if errList != nil {
-		return errList
+	containers, err := opts.GetLocalContainers(ctx)
+	if err != nil {
+		return fmt.Errorf("%w: %w", errListContainer, err)
 	}
 
 	return opts.validateLocalDeploymentsSettings(containers)
@@ -151,6 +163,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 	_, _ = log.Warningf("Creating your cluster %s [this might take several minutes]\n", opts.DeploymentName)
 
+	// verify that the host meets the minimum requirements, if not, print a warning
+	if err := opts.ValidateMinimumRequirements(); err != nil {
+		return err
+	}
+
 	// containers check
 	if err := opts.startEnvironment(ctx, currentStep, steps); err != nil {
 		return err
@@ -159,7 +176,7 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 	// always download the latest image
 	if err := opts.downloadImage(ctx, currentStep, steps); err != nil {
-		return err
+		return fmt.Errorf("%w: %w", errDownloadImage, err)
 	}
 	currentStep++
 
@@ -167,7 +184,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	opts.logStepStarted(fmt.Sprintf("Creating your deployment %s...", opts.DeploymentName), currentStep, steps)
 	defer opts.stop()
 
-	return opts.configureMongod(ctx)
+	if err := opts.configureMongod(ctx); err != nil {
+		return fmt.Errorf("%w: %w", errConfigContainer, err)
+	}
+
+	return nil
 }
 
 func (opts *SetupOpts) configureMongod(ctx context.Context) error {
@@ -190,7 +211,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 
 	healthCheck, err := opts.ContainerEngine.ImageHealthCheck(ctx, opts.MongodDockerImageName())
 	if err != nil {
-		return err
+		return fmt.Errorf("%w: %w", errInspectHealthCheck, err)
 	}
 
 	// Temporary fix until https://github.com/containers/podman/issues/18904 is closed
@@ -209,7 +230,7 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 
 	_, err = opts.ContainerEngine.ContainerRun(ctx, opts.MongodDockerImageName(), &flags)
 	if err != nil {
-		return err
+		return fmt.Errorf("%w: %w", errRunContainer, err)
 	}
 
 	// This can be a high number because the container will become unhealthy before the 10 minutes is reached
@@ -223,21 +244,21 @@ func (opts *SetupOpts) WaitForHealthyDeployment(ctx context.Context, duration ti
 
 	for {
 		if time.Since(start) > duration {
-			return errors.New("timed out waiting for the deployment to be healthy")
+			return errHealthCheckTimeout
 		}
 
 		status, err := opts.ContainerEngine.ContainerHealthStatus(ctx, opts.LocalMongodHostname())
 		if err != nil {
-			return err
+			return fmt.Errorf("%w: %w", errQueryHealthCheckStatus, err)
 		}
 
 		switch status {
 		case container.DockerHealthcheckStatusHealthy:
 			return nil
 		case container.DockerHealthcheckStatusUnhealthy:
-			return errors.New("the deployment is unhealthy")
+			return errDeploymentUnhealthy
 		case container.DockerHealthcheckStatusNone:
-			return errors.New("the deployment does not have a healthcheck")
+			return errDeploymentNoHealthCheck
 		case container.DockerHealthcheckStatusStarting:
 			time.Sleep(1 * time.Second)
 		}
@@ -298,26 +319,6 @@ func (opts *SetupOpts) promptMdbVersion() error {
 	return telemetry.TrackAskOne(p, &opts.MdbVersion, nil)
 }
 
-func availablePort() (int, error) {
-	// prefer mongodb default's port
-	if err := checkPort(internalMongodPort); err == nil {
-		return internalMongodPort, nil
-	}
-
-	server, err := net.Listen("tcp", "localhost:0")
-	if err != nil {
-		return 0, err
-	}
-	defer server.Close()
-
-	_, port, err := net.SplitHostPort(server.Addr().String())
-	if err != nil {
-		return 0, err
-	}
-
-	return strconv.Atoi(port)
-}
-
 func checkPort(p int) error {
 	server, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", p))
 	if err != nil {
@@ -335,7 +336,10 @@ func validatePort(p int) error {
 }
 
 func (opts *SetupOpts) promptPort() error {
-	exportPort := strconv.Itoa(opts.Port)
+	exportPort := autoassignPort
+	if opts.Port != 0 {
+		exportPort = strconv.Itoa(opts.Port)
+	}
 
 	p := &survey.Input{
 		Message: "Specify a port",
@@ -344,6 +348,9 @@ func (opts *SetupOpts) promptPort() error {
 
 	err := telemetry.TrackAskOne(p, &exportPort, survey.WithValidator(func(ans any) error {
 		input, _ := ans.(string)
+		if input == autoassignPort {
+			return nil
+		}
 		value, err := strconv.Atoi(input)
 		if err != nil {
 			return errMustBeInt
@@ -356,8 +363,13 @@ func (opts *SetupOpts) promptPort() error {
 		return err
 	}
 
-	opts.Port, err = strconv.Atoi(exportPort)
-	return err
+	if exportPort != autoassignPort {
+		if opts.Port, err = strconv.Atoi(exportPort); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (opts *SetupOpts) validateDeploymentTypeFlag() error {
@@ -403,7 +415,7 @@ func (opts *SetupOpts) validateFlags() error {
 		}
 	}
 
-	if opts.MdbVersion != "" && opts.MdbVersion != mdb7 {
+	if opts.MdbVersion != "" && !slices.Contains(mdbVersions, opts.MdbVersion) {
 		return fmt.Errorf("%w: %s", errInvalidMongoDBVersion, opts.MdbVersion)
 	}
 
@@ -442,16 +454,11 @@ func (opts *SetupOpts) setDefaultSettings() error {
 	}
 
 	if opts.MdbVersion == "" {
-		opts.MdbVersion = mdb7
+		opts.MdbVersion = mdb8
 		defaultValuesSet = true
 	}
 
 	if opts.Port == 0 {
-		port, err := availablePort()
-		if err != nil {
-			return err
-		}
-		opts.Port = port
 		defaultValuesSet = true
 	}
 
@@ -460,7 +467,6 @@ func (opts *SetupOpts) setDefaultSettings() error {
 [Default Settings]
 Deployment Name	{{.DeploymentName}}
 MongoDB Version	{{.MdbVersion}}
-Port	{{.Port}}
 
 `, opts); err != nil {
 			return err
@@ -651,6 +657,7 @@ func SetupBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "setup [deploymentName]",
 		Short:   "Create a local deployment.",
+		Long:    "To learn more about local atlas deployments, see https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-deploy-local/",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

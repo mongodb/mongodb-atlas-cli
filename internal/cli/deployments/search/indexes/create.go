@@ -86,6 +86,8 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
+	telemetry.AppendOption(telemetry.WithSearchIndexType(opts.index.GetType()))
+
 	db := opts.mongodbClient.Database(opts.index.Database)
 	if idx, _ := db.SearchIndexByName(ctx, opts.index.Name, opts.index.CollectionName); idx != nil {
 		return ErrSearchIndexDuplicated
@@ -104,6 +106,8 @@ func (opts *CreateOpts) RunAtlas() error {
 	if err != nil {
 		return err
 	}
+
+	telemetry.AppendOption(telemetry.WithSearchIndexType(opts.index.GetType()))
 
 	opts.index, err = opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
 	return err
@@ -295,7 +299,7 @@ func CreateBuilder() *cobra.Command {
 
 	// Local only
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
-	cmd.Flags().UintVar(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
+	cmd.Flags().Int64Var(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 	cmd.Flags().StringVar(&opts.DeploymentOpts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DeploymentOpts.DBUserPassword, flag.Password, "", usage.Password)
 

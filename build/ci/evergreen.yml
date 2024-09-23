@@ -45,6 +45,7 @@ variables:
       <<: *go_env
 pre:
   - func: "clone"
+  - func: "set-expansions"
 post:
   - command: attach.xunit_results
     params:
@@ -401,14 +402,18 @@ functions:
             sleep 10
           done
         shell: bash
-  "set-home":
+  "set-expansions":
     - command: shell.exec
       params:
         <<: *go_options
         shell: bash
         script: |
           set -Eeou pipefail
-          echo "home: $HOME" > expansions.yaml
+          cat <<EOF > expansions.yaml
+          home: $HOME
+          tag: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1)
+          version: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)
+          EOF
     - command: expansions.update
       params:
         ignore_missing_file: true
@@ -1575,8 +1580,8 @@ tasks:
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
-      - func: "set-home"
       - func: clone
+      - func: "set-expansions"
       - func: "vendor deps"
       - func: "install terraform"
       - func: "install azure cli"

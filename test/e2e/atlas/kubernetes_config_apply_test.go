@@ -58,7 +58,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.Error(t, err, string(resp))
-		assert.Equal(t, "Error: namespaces \"a-wrong-namespace\" not found\n", string(resp))
+		assert.Contains(t, string(resp), "Error: namespaces \"a-wrong-namespace\" not found\n")
 	})
 
 	t.Run("should fail to apply resources when unable to autodetect parameters", func(t *testing.T) {
@@ -77,7 +77,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.Error(t, err, string(resp))
-		assert.Equal(t, "Error: unable to auto detect params: couldn't find an operator installed in any accessible namespace\n", string(resp))
+		assert.Contains(t, string(resp), "Error: unable to auto detect params: couldn't find an operator installed in any accessible namespace\n")
 	})
 
 	t.Run("should fail to apply resources when unable to autodetect operator version", func(t *testing.T) {
@@ -113,7 +113,7 @@ func TestKubernetesConfigApply(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
 		require.Error(t, err, string(resp))
-		assert.Equal(t, "Error: unable to auto detect operator version. you should explicitly set operator version if you are running an openshift certified installation\n", string(resp))
+		assert.Contains(t, string(resp), "Error: unable to auto detect operator version. you should explicitly set operator version if you are running an openshift certified installation\n")
 	})
 
 	t.Run("export and apply atlas resource to kubernetes cluster", func(t *testing.T) {

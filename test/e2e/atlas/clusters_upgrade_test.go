@@ -25,7 +25,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
 )
 
 func TestSharedClusterUpgrade(t *testing.T) {
@@ -52,7 +51,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		require.NoError(t, watchCluster(g.projectID, g.clusterName))
 		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
 		ensureClusterTier(t, cluster, tierM2)
-		assert.Contains(t, cluster.GetTags(), atlasv2.ResourceTag{Key: "env", Value: "e2e"})
+		assert.Contains(t, cluster.GetTags(), atlasClustersPinned.ResourceTag{Key: "env", Value: "e2e"})
 	})
 
 	t.Run("Upgrade to dedicated tier", func(t *testing.T) {
@@ -72,7 +71,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
 		ensureClusterTier(t, cluster, tierM10)
 		assert.InDelta(t, 40, cluster.GetDiskSizeGB(), 0.01)
-		assert.Contains(t, cluster.GetTags(), atlasv2.ResourceTag{Key: "env", Value: "e2e"})
+		assert.Contains(t, cluster.GetTags(), atlasClustersPinned.ResourceTag{Key: "env", Value: "e2e"})
 	})
 }
 

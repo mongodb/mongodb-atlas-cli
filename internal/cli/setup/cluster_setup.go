@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -97,20 +97,20 @@ func defaultDiskSizeGB(provider, tier string) float64 {
 	return atlas.DefaultDiskSizeGB[strings.ToUpper(provider)][tier]
 }
 
-func (opts *Opts) newCluster() *atlasv2.AdvancedClusterDescription {
-	cluster := &atlasv2.AdvancedClusterDescription{
+func (opts *Opts) newCluster() *atlasClustersPinned.AdvancedClusterDescription {
+	cluster := &atlasClustersPinned.AdvancedClusterDescription{
 		GroupId:                      pointer.Get(opts.ConfigProjectID()),
 		ClusterType:                  pointer.Get(replicaSet),
-		ReplicationSpecs:             &[]atlasv2.ReplicationSpec{opts.newAdvanceReplicationSpec()},
+		ReplicationSpecs:             &[]atlasClustersPinned.ReplicationSpec{opts.newAdvanceReplicationSpec()},
 		Name:                         &opts.ClusterName,
 		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
 	}
 
 	if len(opts.Tag) > 0 {
-		var tags []atlasv2.ResourceTag
+		var tags []atlasClustersPinned.ResourceTag
 		for k, v := range opts.Tag {
 			if k != "" && v != "" {
-				tags = append(tags, atlasv2.ResourceTag{Key: k, Value: v})
+				tags = append(tags, atlasClustersPinned.ResourceTag{Key: k, Value: v})
 			}
 		}
 		cluster.Tags = &tags
@@ -131,11 +131,11 @@ var (
 	zoneName = "Zone 1"
 )
 
-func (opts *Opts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
-	return atlasv2.ReplicationSpec{
+func (opts *Opts) newAdvanceReplicationSpec() atlasClustersPinned.ReplicationSpec {
+	return atlasClustersPinned.ReplicationSpec{
 		NumShards:     &shards,
 		ZoneName:      &zoneName,
-		RegionConfigs: &[]atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
+		RegionConfigs: &[]atlasClustersPinned.CloudRegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
@@ -145,17 +145,17 @@ const (
 	atlasM5 = "M5"
 )
 
-func (opts *Opts) newAdvancedRegionConfig() atlasv2.CloudRegionConfig {
+func (opts *Opts) newAdvancedRegionConfig() atlasClustersPinned.CloudRegionConfig {
 	providerName := opts.providerName()
 
 	priority := 7
-	regionConfig := atlasv2.CloudRegionConfig{
+	regionConfig := atlasClustersPinned.CloudRegionConfig{
 		ProviderName: &providerName,
 		Priority:     &priority,
 		RegionName:   &opts.Region,
 	}
 
-	regionConfig.ElectableSpecs = &atlasv2.HardwareSpec{
+	regionConfig.ElectableSpecs = &atlasClustersPinned.HardwareSpec{
 		InstanceSize: &opts.Tier,
 	}
 	members := 3

@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -50,8 +50,8 @@ func TestList_Run(t *testing.T) {
 		cli.TokenRefreshed = false
 	})
 
-	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
-		Results: &[]admin.AdvancedClusterDescription{
+	expectedAtlasClusters := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
+		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),
@@ -154,8 +154,8 @@ func TestList_Run_NoLocal(t *testing.T) {
 		cli.TokenRefreshed = false
 	})
 
-	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
-		Results: &[]admin.AdvancedClusterDescription{
+	expectedAtlasClusters := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
+		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),
@@ -243,8 +243,8 @@ func TestList_Run_NoAtlas(t *testing.T) {
 		cli.TokenRefreshed = false
 	})
 
-	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
-		Results: &[]admin.AdvancedClusterDescription{
+	expectedAtlasClusters := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
+		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),

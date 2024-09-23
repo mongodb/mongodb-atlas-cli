@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 const (
@@ -94,7 +94,7 @@ func TestPause_RunAtlas(t *testing.T) {
 		EXPECT().
 		PauseCluster(projectID, deploymentName).
 		Return(
-			&admin.AdvancedClusterDescription{
+			&atlasClustersPinned.AdvancedClusterDescription{
 				Name: pointer.Get(deploymentName),
 			}, nil).
 		Times(1)

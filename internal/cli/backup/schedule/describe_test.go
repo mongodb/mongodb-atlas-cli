@@ -23,14 +23,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockScheduleDescriber(ctrl)
 
-	expected := &atlasv2.DiskBackupSnapshotSchedule{}
+	expected := &atlasClustersPinned.DiskBackupSnapshotSchedule{}
 
 	describeOpts := &DescribeOpts{
 		store:       mockStore,

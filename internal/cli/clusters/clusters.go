@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -61,15 +61,15 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
-func addTags(out *atlasv2.AdvancedClusterDescription, tags map[string]string) {
+func addTags(out *atlasClustersPinned.AdvancedClusterDescription, tags map[string]string) {
 	if len(tags) > 0 {
-		var t []atlasv2.ResourceTag
+		var t []atlasClustersPinned.ResourceTag
 		for k, v := range tags {
 			if k == "" || v == "" {
 				continue
 			}
 			key, value := k, v
-			tag := atlasv2.ResourceTag{
+			tag := atlasClustersPinned.ResourceTag{
 				Key:   key,
 				Value: value,
 			}
@@ -79,7 +79,7 @@ func addTags(out *atlasv2.AdvancedClusterDescription, tags map[string]string) {
 	}
 }
 
-func removeReadOnlyAttributes(out *atlasv2.AdvancedClusterDescription) {
+func removeReadOnlyAttributes(out *atlasClustersPinned.AdvancedClusterDescription) {
 	out.Id = nil
 	out.CreateDate = nil
 	out.StateName = nil

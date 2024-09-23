@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestListBuilder(t *testing.T) {
@@ -40,8 +40,8 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockServerlessInstanceLister(ctrl)
 
-	expected := &atlasv2.PaginatedServerlessInstanceDescription{
-		Results: &[]atlasv2.ServerlessInstanceDescription{
+	expected := &atlasClustersPinned.PaginatedServerlessInstanceDescription{
+		Results: &[]atlasClustersPinned.ServerlessInstanceDescription{
 			{
 				Id: pointer.Get("1"),
 			},

@@ -27,14 +27,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterGetterUpdater(ctrl)
 
-	expected := &atlasv2.AdvancedClusterDescription{}
+	expected := &atlasClustersPinned.AdvancedClusterDescription{}
 
 	t.Run("flags run", func(t *testing.T) {
 		updateOpts := &UpdateOpts{

@@ -30,6 +30,7 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
 )
 
@@ -102,9 +103,9 @@ func TestCluster_Run(t *testing.T) {
 	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 
-	expectedCluster := &atlasv2.AdvancedClusterDescription{
+	expectedCluster := &atlasClustersPinned.AdvancedClusterDescription{
 		StateName: pointer.Get("IDLE"),
-		ConnectionStrings: &atlasv2.ClusterConnectionStrings{
+		ConnectionStrings: &atlasClustersPinned.ClusterConnectionStrings{
 			StandardSrv: pointer.Get(""),
 		},
 	}
@@ -161,9 +162,9 @@ func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	defer ctrl.Finish()
 
-	expectedCluster := &atlasv2.AdvancedClusterDescription{
+	expectedCluster := &atlasClustersPinned.AdvancedClusterDescription{
 		StateName: pointer.Get("IDLE"),
-		ConnectionStrings: &atlasv2.ClusterConnectionStrings{
+		ConnectionStrings: &atlasClustersPinned.ClusterConnectionStrings{
 			StandardSrv: pointer.Get(""),
 		},
 	}

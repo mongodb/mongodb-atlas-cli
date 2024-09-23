@@ -32,7 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/watchers"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 const (
@@ -78,7 +78,7 @@ const (
 	createWatchTemplate = "Cluster '{{.Name}}' created successfully.\n"
 )
 
-var clusterObj *atlasv2.AdvancedClusterDescription
+var clusterObj *atlasClustersPinned.AdvancedClusterDescription
 
 func (opts *CreateOpts) Run() error {
 	cluster, err := opts.newCluster()
@@ -87,7 +87,7 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	clusterObj, err = opts.store.CreateCluster(cluster)
-	apiError, ok := atlasv2.AsError(err)
+	apiError, ok := atlasClustersPinned.AsError(err)
 	code := apiError.GetErrorCode()
 	if ok {
 		if apiError.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(apiError.GetDetail(), "regionName") {
@@ -130,8 +130,8 @@ func (opts *CreateOpts) PostRun() error {
 	return opts.Print(clusterObj)
 }
 
-func (opts *CreateOpts) newCluster() (*atlasv2.AdvancedClusterDescription, error) {
-	cluster := new(atlasv2.AdvancedClusterDescription)
+func (opts *CreateOpts) newCluster() (*atlasClustersPinned.AdvancedClusterDescription, error) {
+	cluster := new(atlasClustersPinned.AdvancedClusterDescription)
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
 			return nil, err
@@ -149,14 +149,14 @@ func (opts *CreateOpts) newCluster() (*atlasv2.AdvancedClusterDescription, error
 	return cluster, nil
 }
 
-func (opts *CreateOpts) applyOpts(out *atlasv2.AdvancedClusterDescription) {
+func (opts *CreateOpts) applyOpts(out *atlasClustersPinned.AdvancedClusterDescription) {
 	replicationSpec := opts.newAdvanceReplicationSpec()
 	if opts.backup {
 		out.BackupEnabled = &opts.backup
 		out.PitEnabled = &opts.backup
 	}
 	if opts.biConnector {
-		out.BiConnector = &atlasv2.BiConnector{Enabled: &opts.biConnector}
+		out.BiConnector = &atlasClustersPinned.BiConnector{Enabled: &opts.biConnector}
 	}
 	out.TerminationProtectionEnabled = &opts.enableTerminationProtection
 	out.ClusterType = &opts.clusterType
@@ -166,7 +166,7 @@ func (opts *CreateOpts) applyOpts(out *atlasv2.AdvancedClusterDescription) {
 		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
 
-	out.ReplicationSpecs = &[]atlasv2.ReplicationSpec{replicationSpec}
+	out.ReplicationSpecs = &[]atlasClustersPinned.ReplicationSpec{replicationSpec}
 
 	addTags(out, opts.tag)
 }
@@ -182,26 +182,26 @@ func (opts *CreateOpts) providerName() string {
 	return opts.provider
 }
 
-func (opts *CreateOpts) newAdvanceReplicationSpec() atlasv2.ReplicationSpec {
-	return atlasv2.ReplicationSpec{
+func (opts *CreateOpts) newAdvanceReplicationSpec() atlasClustersPinned.ReplicationSpec {
+	return atlasClustersPinned.ReplicationSpec{
 		NumShards:     &opts.shards,
 		ZoneName:      pointer.Get(zoneName),
-		RegionConfigs: &[]atlasv2.CloudRegionConfig{opts.newAdvancedRegionConfig()},
+		RegionConfigs: &[]atlasClustersPinned.CloudRegionConfig{opts.newAdvancedRegionConfig()},
 	}
 }
 
-func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.CloudRegionConfig {
+func (opts *CreateOpts) newAdvancedRegionConfig() atlasClustersPinned.CloudRegionConfig {
 	priority := 7
 	readOnlyNode := 0
 	providerName := opts.providerName()
 
-	regionConfig := atlasv2.CloudRegionConfig{
+	regionConfig := atlasClustersPinned.CloudRegionConfig{
 		Priority:     &priority,
 		RegionName:   &opts.region,
 		ProviderName: &providerName,
 	}
 
-	regionConfig.ElectableSpecs = &atlasv2.HardwareSpec{
+	regionConfig.ElectableSpecs = &atlasClustersPinned.HardwareSpec{
 		InstanceSize: &opts.tier,
 	}
 
@@ -211,7 +211,7 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasv2.CloudRegionConfig {
 		regionConfig.ElectableSpecs.NodeCount = &opts.members
 	}
 
-	readOnlySpec := &atlasv2.DedicatedHardwareSpec{
+	readOnlySpec := &atlasClustersPinned.DedicatedHardwareSpec{
 		InstanceSize: &opts.tier,
 		NodeCount:    &readOnlyNode,
 	}

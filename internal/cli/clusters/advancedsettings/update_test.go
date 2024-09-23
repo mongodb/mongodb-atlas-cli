@@ -24,14 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterConfigurationOptionsUpdater(ctrl)
 
-	expected := &atlasv2.ClusterDescriptionProcessArgs{
+	expected := &atlasClustersPinned.ClusterDescriptionProcessArgs{
 		DefaultReadConcern:               pointer.Get(""),
 		DefaultWriteConcern:              pointer.Get(""),
 		MinimumEnabledTlsProtocol:        pointer.Get(""),

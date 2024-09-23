@@ -24,13 +24,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockAtlasClusterConfigurationOptionsDescriber(ctrl)
-	expected := &atlasv2.ClusterDescriptionProcessArgs{}
+	expected := &atlasClustersPinned.ClusterDescriptionProcessArgs{}
 	describeOpts := &DescribeOpts{
 		name:  "test",
 		store: mockStore,

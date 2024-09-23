@@ -15,16 +15,16 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_serverless_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ServerlessPrivateEndpointsLister
 
 type ServerlessPrivateEndpointsLister interface {
-	ServerlessPrivateEndpoints(string, string) ([]atlasv2.ServerlessTenantEndpoint, error)
+	ServerlessPrivateEndpoints(string, string) ([]atlasClustersPinned.ServerlessTenantEndpoint, error)
 }
 
-func (s *Store) ServerlessPrivateEndpoints(projectID, instanceName string) ([]atlasv2.ServerlessTenantEndpoint, error) {
-	result, _, err := s.clientv2.ServerlessPrivateEndpointsApi.ListServerlessPrivateEndpoints(s.ctx, projectID, instanceName).Execute()
+func (s *Store) ServerlessPrivateEndpoints(projectID, instanceName string) ([]atlasClustersPinned.ServerlessTenantEndpoint, error) {
+	result, _, err := s.clientClusters.ServerlessPrivateEndpointsApi.ListServerlessPrivateEndpoints(s.ctx, projectID, instanceName).Execute()
 	return result, err
 }

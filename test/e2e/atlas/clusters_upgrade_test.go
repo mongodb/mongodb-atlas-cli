@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
 )
 
@@ -75,7 +76,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	})
 }
 
-func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasv2.AdvancedClusterDescription {
+func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasClustersPinned.AdvancedClusterDescription {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		clustersEntity,
@@ -87,12 +88,12 @@ func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasv2
 	resp, err := e2e.RunAndGetStdOut(cmd)
 	req := require.New(t)
 	req.NoError(err, string(resp))
-	var c *atlasv2.AdvancedClusterDescription
+	var c *atlasClustersPinned.AdvancedClusterDescription
 	req.NoError(json.Unmarshal(resp, &c), string(resp))
 	return c
 }
 
-func ensureClusterTier(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, expected string) {
+func ensureClusterTier(t *testing.T, cluster *atlasClustersPinned.AdvancedClusterDescription, expected string) {
 	t.Helper()
 	req := require.New(t)
 	req.NotEmpty(cluster.GetReplicationSpecs())

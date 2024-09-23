@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 const (
@@ -110,15 +110,15 @@ func TestRun_ConnectAtlas(t *testing.T) {
 		},
 	}
 
-	expectedAtlasClusters := &admin.PaginatedAdvancedClusterDescription{
-		Results: &[]admin.AdvancedClusterDescription{
+	expectedAtlasClusters := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
+		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get(expectedAtlasDeployment),
 				Id:             pointer.Get("123"),
 				MongoDBVersion: pointer.Get("7.0.0"),
 				StateName:      pointer.Get("IDLE"),
 				Paused:         pointer.Get(false),
-				ConnectionStrings: &admin.ClusterConnectionStrings{
+				ConnectionStrings: &atlasClustersPinned.ClusterConnectionStrings{
 					StandardSrv: pointer.Get("mongodb://localhost:27017/?directConnection=true"),
 				},
 			},

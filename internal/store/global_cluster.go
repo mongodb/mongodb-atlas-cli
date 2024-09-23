@@ -15,16 +15,16 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_global_cluster.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store GlobalClusterDescriber
 
 type GlobalClusterDescriber interface {
-	GlobalCluster(string, string) (*atlasv2.GeoSharding, error)
+	GlobalCluster(string, string) (*atlasClustersPinned.GeoSharding, error)
 }
 
-func (s *Store) GlobalCluster(projectID, instanceName string) (*atlasv2.GeoSharding, error) {
-	result, _, err := s.clientv2.GlobalClustersApi.GetManagedNamespace(s.ctx, projectID, instanceName).Execute()
+func (s *Store) GlobalCluster(projectID, instanceName string) (*atlasClustersPinned.GeoSharding, error) {
+	result, _, err := s.clientClusters.GlobalClustersApi.GetManagedNamespace(s.ctx, projectID, instanceName).Execute()
 	return result, err
 }

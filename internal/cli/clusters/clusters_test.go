@@ -22,7 +22,7 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestBuilder(t *testing.T) {
@@ -45,16 +45,16 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 	)
 	tests := []struct {
 		name string
-		args *atlasv2.AdvancedClusterDescription
-		want *atlasv2.AdvancedClusterDescription
+		args *atlasClustersPinned.AdvancedClusterDescription
+		want *atlasClustersPinned.AdvancedClusterDescription
 	}{
 		{
 			name: "One AdvancedReplicationSpec",
-			args: &atlasv2.AdvancedClusterDescription{
+			args: &atlasClustersPinned.AdvancedClusterDescription{
 				Id:             &id,
 				MongoDBVersion: &testVar,
 				StateName:      &testVar,
-				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
+				ReplicationSpecs: &[]atlasClustersPinned.ReplicationSpec{
 					{
 						Id:        &specID,
 						NumShards: &shards,
@@ -63,8 +63,8 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				},
 				CreateDate: &timeStamp,
 			},
-			want: &atlasv2.AdvancedClusterDescription{
-				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
+			want: &atlasClustersPinned.AdvancedClusterDescription{
+				ReplicationSpecs: &[]atlasClustersPinned.ReplicationSpec{
 					{
 						NumShards: &shards,
 						ZoneName:  &zone,
@@ -74,11 +74,11 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		},
 		{
 			name: "More AdvancedReplicationSpecs",
-			args: &atlasv2.AdvancedClusterDescription{
+			args: &atlasClustersPinned.AdvancedClusterDescription{
 				Id:             &id,
 				MongoDBVersion: &testVar,
 				StateName:      &testVar,
-				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
+				ReplicationSpecs: &[]atlasClustersPinned.ReplicationSpec{
 					{
 						Id:        &specID,
 						NumShards: &shards,
@@ -97,8 +97,8 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 				},
 				CreateDate: &timeStamp,
 			},
-			want: &atlasv2.AdvancedClusterDescription{
-				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
+			want: &atlasClustersPinned.AdvancedClusterDescription{
+				ReplicationSpecs: &[]atlasClustersPinned.ReplicationSpec{
 					{
 						NumShards: &shards,
 						ZoneName:  &zone,
@@ -116,8 +116,8 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		},
 		{
 			name: "Nothing to remove",
-			args: &atlasv2.AdvancedClusterDescription{
-				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
+			args: &atlasClustersPinned.AdvancedClusterDescription{
+				ReplicationSpecs: &[]atlasClustersPinned.ReplicationSpec{
 					{
 						NumShards: &shards,
 						ZoneName:  &zone,
@@ -132,8 +132,8 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 					},
 				},
 			},
-			want: &atlasv2.AdvancedClusterDescription{
-				ReplicationSpecs: &[]atlasv2.ReplicationSpec{
+			want: &atlasClustersPinned.AdvancedClusterDescription{
+				ReplicationSpecs: &[]atlasClustersPinned.ReplicationSpec{
 					{
 						NumShards: &shards,
 						ZoneName:  &zone,

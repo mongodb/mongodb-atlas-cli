@@ -25,15 +25,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestDescribe_Run_StandardConnectionString(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterDescriber(ctrl)
 
-	expected := &admin.AdvancedClusterDescription{
-		ConnectionStrings: &admin.ClusterConnectionStrings{
+	expected := &atlasClustersPinned.AdvancedClusterDescription{
+		ConnectionStrings: &atlasClustersPinned.ClusterConnectionStrings{
 			StandardSrv: pointer.Get("test"),
 		},
 	}
@@ -58,8 +58,8 @@ func TestDescribe_Run_PrivateConnectionString(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterDescriber(ctrl)
 
-	expected := &admin.AdvancedClusterDescription{
-		ConnectionStrings: &admin.ClusterConnectionStrings{
+	expected := &atlasClustersPinned.AdvancedClusterDescription{
+		ConnectionStrings: &atlasClustersPinned.ClusterConnectionStrings{
 			StandardSrv: pointer.Get("test"),
 			PrivateSrv:  pointer.Get("test"),
 		},
@@ -86,11 +86,11 @@ func TestDescribe_Run_PrivateEndpointsConnectionString(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterDescriber(ctrl)
 
-	expected := &admin.AdvancedClusterDescription{
-		ConnectionStrings: &admin.ClusterConnectionStrings{
+	expected := &atlasClustersPinned.AdvancedClusterDescription{
+		ConnectionStrings: &atlasClustersPinned.ClusterConnectionStrings{
 			StandardSrv: pointer.Get("test"),
 			PrivateSrv:  pointer.Get("test"),
-			PrivateEndpoint: &[]admin.ClusterDescriptionConnectionStringsPrivateEndpoint{
+			PrivateEndpoint: &[]atlasClustersPinned.ClusterDescriptionConnectionStringsPrivateEndpoint{
 				{
 					SrvShardOptimizedConnectionString: pointer.Get("test"),
 				},

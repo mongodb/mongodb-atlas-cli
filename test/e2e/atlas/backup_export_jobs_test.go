@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
 )
 
@@ -65,7 +66,7 @@ func TestExportJobs(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
-		var cluster *atlasv2.AdvancedClusterDescription
+		var cluster *atlasClustersPinned.AdvancedClusterDescription
 		r.NoError(json.Unmarshal(resp, &cluster))
 		ensureCluster(t, cluster, clusterName, mdbVersion, 10, false)
 	})

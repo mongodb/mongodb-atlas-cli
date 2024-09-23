@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
 )
 
@@ -113,7 +114,7 @@ func TestSetup(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var cluster atlasv2.AdvancedClusterDescription
+		var cluster atlasClustersPinned.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster), string(resp))
 		assert.Equal(t, clusterName, *cluster.Name)
 

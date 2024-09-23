@@ -27,7 +27,7 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -58,7 +58,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 
 	var advancedSpec *akov2.AdvancedDeploymentSpec
 
-	convertBiConnector := func(biConnector *atlasv2.BiConnector) *akov2.BiConnectorSpec {
+	convertBiConnector := func(biConnector *atlasClustersPinned.BiConnector) *akov2.BiConnectorSpec {
 		if biConnector == nil {
 			return nil
 		}
@@ -68,7 +68,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 		}
 	}
 
-	convertLabels := func(labels []atlasv2.ComponentLabel) []akov2common.LabelSpec {
+	convertLabels := func(labels []atlasClustersPinned.ComponentLabel) []akov2common.LabelSpec {
 		result := make([]akov2common.LabelSpec, 0, len(labels))
 
 		for _, atlasLabel := range labels {
@@ -80,7 +80,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 		return result
 	}
 
-	convertTags := func(tags []atlasv2.ResourceTag) []*akov2.TagSpec {
+	convertTags := func(tags []atlasClustersPinned.ResourceTag) []*akov2.TagSpec {
 		result := make([]*akov2.TagSpec, 0, len(tags))
 
 		for _, atlasTag := range tags {
@@ -202,7 +202,7 @@ func hasTenantRegionConfig(out *akov2.AtlasDeployment) bool {
 	return false
 }
 
-func buildGlobalDeployment(atlasRepSpec []atlasv2.ReplicationSpec, globalDeploymentProvider store.GlobalClusterDescriber, projectID, clusterID string) ([]akov2.CustomZoneMapping, []akov2.ManagedNamespace, error) {
+func buildGlobalDeployment(atlasRepSpec []atlasClustersPinned.ReplicationSpec, globalDeploymentProvider store.GlobalClusterDescriber, projectID, clusterID string) ([]akov2.CustomZoneMapping, []akov2.ManagedNamespace, error) {
 	globalCluster, err := globalDeploymentProvider.GlobalCluster(projectID, clusterID)
 	if err != nil {
 		return nil, nil, err
@@ -263,14 +263,14 @@ func buildProcessArgs(configOptsProvider store.AtlasClusterConfigurationOptionsD
 	}, nil
 }
 
-func isAdvancedDeploymentExportable(deployments *atlasv2.AdvancedClusterDescription) bool {
+func isAdvancedDeploymentExportable(deployments *atlasClustersPinned.AdvancedClusterDescription) bool {
 	if deployments.GetStateName() == DeletingState || deployments.GetStateName() == DeletedState {
 		return false
 	}
 	return true
 }
 
-func isServerlessExportable(deployment *atlasv2.ServerlessInstanceDescription) bool {
+func isServerlessExportable(deployment *atlasClustersPinned.ServerlessInstanceDescription) bool {
 	stateName := deployment.GetStateName()
 	if stateName == DeletingState || stateName == DeletedState {
 		return false
@@ -372,7 +372,7 @@ func buildBackups(backupsProvider store.ScheduleDescriber, projectName, projectI
 	return schedule, policies
 }
 
-func buildReplicationSpec(atlasRepSpec []atlasv2.ReplicationSpec) []*akov2.AdvancedReplicationSpec {
+func buildReplicationSpec(atlasRepSpec []atlasClustersPinned.ReplicationSpec) []*akov2.AdvancedReplicationSpec {
 	result := make([]*akov2.AdvancedReplicationSpec, 0, len(atlasRepSpec))
 	for _, rs := range atlasRepSpec {
 		replicationSpec := &akov2.AdvancedReplicationSpec{

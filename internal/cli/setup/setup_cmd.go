@@ -40,7 +40,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"go.mongodb.org/atlas-sdk/v20240805001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 const (
@@ -274,7 +274,7 @@ func (opts *Opts) createResources() error {
 	}
 
 	if err := opts.createCluster(); err != nil {
-		target, _ := admin.AsError(err)
+		target, _ := atlasClustersPinned.AsError(err)
 		if target.GetErrorCode() == "CANNOT_CREATE_FREE_CLUSTER_VIA_PUBLIC_API" && strings.Contains(strings.ToLower(target.GetDetail()), cli.ErrFreeClusterAlreadyExists.Error()) {
 			return cli.ErrFreeClusterAlreadyExists
 		} else if target.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(target.GetDetail(), "regionName") {

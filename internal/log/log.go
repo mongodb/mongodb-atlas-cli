@@ -106,7 +106,7 @@ func (l *Logger) Warningf(format string, a ...any) (int, error) {
 	return fmt.Fprintf(l.w, format, a...)
 }
 
-var std = New(os.Stderr, WarningLevel)
+var std = New(os.Stderr, DebugLevel)
 
 func Writer() io.Writer {
 	return std.Writer()

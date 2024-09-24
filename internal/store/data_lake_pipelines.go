@@ -19,7 +19,7 @@ package store
 import (
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

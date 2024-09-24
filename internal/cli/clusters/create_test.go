@@ -28,14 +28,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterCreator(ctrl)
 
-	expected := &atlasv2.AdvancedClusterDescription{}
+	expected := &atlasClustersPinned.AdvancedClusterDescription{}
 
 	t.Run("flags run", func(t *testing.T) {
 		createOpts := &CreateOpts{
@@ -114,7 +114,7 @@ func TestCreateOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterCreator(ctrl)
 
-	expected := &atlasv2.AdvancedClusterDescription{
+	expected := &atlasClustersPinned.AdvancedClusterDescription{
 		Name: pointer.Get("ProjectBar"),
 	}
 
@@ -161,11 +161,11 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 		mocks.NewMockClusterDescriber(ctrl),
 	}
 
-	expected := &atlasv2.AdvancedClusterDescription{
+	expected := &atlasClustersPinned.AdvancedClusterDescription{
 		Name:      pointer.Get("ProjectBar"),
 		StateName: pointer.Get("CREATING"),
 	}
-	expectedIdle := &atlasv2.AdvancedClusterDescription{
+	expectedIdle := &atlasClustersPinned.AdvancedClusterDescription{
 		Name:      expected.Name,
 		StateName: pointer.Get("IDLE"),
 	}
@@ -233,6 +233,6 @@ func TestCreateBuilder(t *testing.T) {
 }
 
 func TestCreateTemplates(t *testing.T) {
-	test.VerifyOutputTemplate(t, createTemplate, &atlasv2.AdvancedClusterDescription{})
-	test.VerifyOutputTemplate(t, createWatchTemplate, &atlasv2.AdvancedClusterDescription{})
+	test.VerifyOutputTemplate(t, createTemplate, &atlasClustersPinned.AdvancedClusterDescription{})
+	test.VerifyOutputTemplate(t, createWatchTemplate, &atlasClustersPinned.AdvancedClusterDescription{})
 }

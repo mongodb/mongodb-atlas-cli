@@ -26,7 +26,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
 )
 
 const writeConcern = "majority"
@@ -71,7 +72,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var cluster *atlasv2.AdvancedClusterDescription
+		var cluster *atlasClustersPinned.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster))
 
 		ensureCluster(t, cluster, clusterName, previousMdbVersion, 30, true)
@@ -104,7 +105,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var clusters atlasv2.PaginatedAdvancedClusterDescription
+		var clusters atlasClustersPinned.PaginatedAdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &clusters))
 		assert.NotEmpty(t, clusters.Results)
 	})
@@ -120,7 +121,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var cluster atlasv2.AdvancedClusterDescription
+		var cluster atlasClustersPinned.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster))
 		assert.Equal(t, clusterName, cluster.GetName())
 	})
@@ -172,7 +173,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var config atlasv2.ClusterDescriptionProcessArgs
+		var config atlasClustersPinned.ClusterDescriptionProcessArgs
 		require.NoError(t, json.Unmarshal(resp, &config))
 
 		a := assert.New(t)
@@ -223,7 +224,7 @@ func TestClustersFlags(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var cluster atlasv2.AdvancedClusterDescription
+		var cluster atlasClustersPinned.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster))
 
 		ensureCluster(t, &cluster, clusterName, mdbVersion, 40, false)

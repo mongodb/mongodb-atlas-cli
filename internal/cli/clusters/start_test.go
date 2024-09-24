@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestStart_Run(t *testing.T) {
@@ -35,7 +35,7 @@ func TestStart_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	expected := &atlasv2.AdvancedClusterDescription{}
+	expected := &atlasClustersPinned.AdvancedClusterDescription{}
 	mockStore.
 		EXPECT().
 		StartCluster(updateOpts.ConfigProjectID(), updateOpts.name).

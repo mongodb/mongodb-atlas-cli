@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 type WatchOpts struct {
@@ -46,7 +46,7 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 }
 
 func isRetryable(err error) bool {
-	atlasErr, ok := admin.AsError(err)
+	atlasErr, ok := atlasClustersPinned.AsError(err)
 	return ok && atlasErr.GetErrorCode() == "CLUSTER_NOT_FOUND"
 }
 

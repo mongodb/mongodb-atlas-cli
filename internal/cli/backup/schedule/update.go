@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 var updateTemplate = "Snapshot backup policy for cluster '{{.ClusterName}}' updated.\n"
@@ -90,8 +90,8 @@ func (opts *UpdateOpts) Run(cmd *cobra.Command) error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) (*atlasv2.DiskBackupSnapshotSchedule, error) {
-	out := new(atlasv2.DiskBackupSnapshotSchedule)
+func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error) {
+	out := new(atlasClustersPinned.DiskBackupSnapshotSchedule)
 
 	if opts.filename != "" {
 		if err := file.Load(opts.fs, opts.filename, out); err != nil {
@@ -150,7 +150,7 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 				return nil, errors.New("incorrect value for parameter policyID. Policy with such ID does not exist")
 			}
 
-			policyItem := atlasv2.DiskBackupApiPolicyItem{
+			policyItem := atlasClustersPinned.DiskBackupApiPolicyItem{
 				Id:                &policyItems[1],
 				FrequencyType:     policyItems[2],
 				FrequencyInterval: int(frequencyInterval),
@@ -171,7 +171,7 @@ func (opts *UpdateOpts) NewBackupConfig(cmd *cobra.Command, clusterName string) 
 	return out, nil
 }
 
-func findPolicyIndex(policyID string, policies []atlasv2.AdvancedDiskBackupSnapshotSchedulePolicy) int {
+func findPolicyIndex(policyID string, policies []atlasClustersPinned.AdvancedDiskBackupSnapshotSchedulePolicy) int {
 	for index, policy := range policies {
 		if policy.GetId() == policyID {
 			return index
@@ -181,7 +181,7 @@ func findPolicyIndex(policyID string, policies []atlasv2.AdvancedDiskBackupSnaps
 	return -1
 }
 
-func findPolicyItemsIndex(policyItemID string, policyItems []atlasv2.DiskBackupApiPolicyItem) int {
+func findPolicyItemsIndex(policyItemID string, policyItems []atlasClustersPinned.DiskBackupApiPolicyItem) int {
 	for index, policyItem := range policyItems {
 		if policyItemID == policyItem.GetId() {
 			return index
@@ -324,9 +324,9 @@ func (opts *UpdateOpts) verifyRestoreWindowDays(cmd *cobra.Command) func() error
 	}
 }
 
-func checkForExport(out *atlasv2.DiskBackupSnapshotSchedule) {
+func checkForExport(out *atlasClustersPinned.DiskBackupSnapshotSchedule) {
 	if out.Export == nil {
-		out.Export = new(atlasv2.AutoExportPolicy)
+		out.Export = new(atlasClustersPinned.AutoExportPolicy)
 	}
 }
 

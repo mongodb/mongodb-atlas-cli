@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 type StartOpts struct {
@@ -76,7 +76,7 @@ func (opts *StartOpts) RunLocal(ctx context.Context, deployment options.Deployme
 	}
 
 	return opts.Print(
-		admin.AdvancedClusterDescription{
+		atlasClustersPinned.AdvancedClusterDescription{
 			Name: &opts.DeploymentName,
 		})
 }

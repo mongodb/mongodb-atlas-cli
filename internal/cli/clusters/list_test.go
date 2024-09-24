@@ -24,15 +24,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	"go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterLister(ctrl)
 
-	expected := &admin.PaginatedAdvancedClusterDescription{
-		Results: &[]admin.AdvancedClusterDescription{
+	expected := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
+		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
 			{
 				Name: pointer.Get("test"),
 				Id:   pointer.Get("123"),
@@ -56,7 +56,7 @@ func TestList_Run(t *testing.T) {
 }
 
 func TestListTemplate(t *testing.T) {
-	test.VerifyOutputTemplate(t, listTemplate, admin.PaginatedAdvancedClusterDescription{})
+	test.VerifyOutputTemplate(t, listTemplate, atlasClustersPinned.PaginatedAdvancedClusterDescription{})
 }
 
 func TestListBuilder(t *testing.T) {

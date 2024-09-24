@@ -1,7 +1,8 @@
 name: Update SDK
 on:
- schedule:
-   - cron: 30 8 * * TUE
+ # disabled until we support pinning: https://jira.mongodb.org/browse/CLOUDP-275155
+ #schedule:
+ #  - cron: 30 8 * * TUE
  workflow_dispatch:
 jobs:
   update-sdk:

@@ -76,7 +76,7 @@ const (
 The roles format is roleName[@dbName[.collection]].
 roleName can either be a built-in role or a custom role.
 dbName and collection are required only for built-in roles.`
-	Scopes                                    = "Array of clusters and Atlas Data Lakes that this user has access to."
+	Scopes                                    = "Array of clusters that this user has access to."
 	DataLakeRole                              = "Amazon Resource Name (ARN) of the role which Atlas Data Federation uses for accessing the data stores."
 	DataLakeRegion                            = "Name of the region to which Atlas Data Federation routes client connections for data processing."
 	DataLakeTestBucket                        = "Name of an Amazon S3 data bucket that Atlas Data Federation uses to validate the provided role."

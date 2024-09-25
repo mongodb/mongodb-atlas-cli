@@ -17,6 +17,7 @@ package options
 import (
 	"context"
 	"errors"
+	"fmt"
 	"runtime"
 	"slices"
 
@@ -25,6 +26,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240805001/admin"
 )
+
+var errDeploymentUnexpectedState = errors.New("deployment is in unexpected state")
 
 func (opts *DeploymentOpts) listDeployments(ctx context.Context, projectID string) ([]Deployment, error) {
 	var atlasDeployments, localDeployments []Deployment
@@ -72,9 +75,20 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 	}
 
 	deployments = opts.filterDeploymentByName(deployments...)
-	deployments = opts.filterDeploymentByState(deployments, states...)
+	if opts.DeploymentName == "" {
+		deployments = opts.filterDeploymentByState(deployments, states...)
+	}
 
-	return opts.Select(deployments)
+	d, err := opts.Select(deployments)
+	if err != nil {
+		return Deployment{}, err
+	}
+
+	if len(states) > 0 && !slices.Contains(states, d.StateName) {
+		return Deployment{}, fmt.Errorf("%w: %s", errDeploymentUnexpectedState, d.StateName)
+	}
+
+	return d, nil
 }
 
 func isUnauthenticatedErr(err error) bool {

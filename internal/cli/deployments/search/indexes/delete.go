@@ -45,7 +45,7 @@ type DeleteOpts struct {
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
-	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID(), options.IdleState); err != nil {
 		return err
 	}
 

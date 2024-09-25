@@ -107,7 +107,7 @@ type ConnectOpts struct {
 }
 
 func (opts *ConnectOpts) Connect(ctx context.Context) error {
-	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID()); err != nil {
+	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID(), options.IdleState); err != nil {
 		return err
 	}
 

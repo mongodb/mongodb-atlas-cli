@@ -119,7 +119,7 @@ func TestStart_RunAtlas(t *testing.T) {
 		},
 	}
 
-	deploymentsTest.CommonAtlasMocks(projectID)
+	deploymentsTest.CommonAtlasMocksWithState(projectID, "STOPPED")
 
 	mockStore.
 		EXPECT().

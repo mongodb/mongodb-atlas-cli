@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -67,7 +68,12 @@ func (opts *LogOpts) Run() error {
 
 // atlas dataFederation log [--projectId projectId].
 func LogBuilder() *cobra.Command {
-	opts := &LogOpts{}
+	opts := &LogOpts{
+		DownloaderOpts: cli.DownloaderOpts{
+			Fs:  afero.NewOsFs(),
+			Out: "-", // stdout
+		},
+	}
 	cmd := &cobra.Command{
 		Use:   "logs <name>",
 		Short: "Returns logs of the specified data federation database for your project.",

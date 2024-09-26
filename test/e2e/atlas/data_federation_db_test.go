@@ -131,6 +131,19 @@ func TestDataFederation(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
+	t.Run("Download Logs", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datafederationEntity,
+			"logs",
+			dataFederationName,
+			"--out",
+			"testLogFile")
+		cmd.Env = os.Environ()
+
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,

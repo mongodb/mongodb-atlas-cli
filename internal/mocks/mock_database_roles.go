@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20240805001/admin"
+	admin "go.mongodb.org/atlas-sdk/v20240805004/admin"
 )
 
 // MockDatabaseRoleLister is a mock of DatabaseRoleLister interface.

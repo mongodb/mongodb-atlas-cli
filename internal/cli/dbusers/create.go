@@ -95,9 +95,9 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	user := opts.newDatabaseUser()
+	u := opts.newDatabaseUser()
 
-	r, err := opts.store.CreateDatabaseUser(user)
+	r, err := opts.store.CreateDatabaseUser(u)
 	if err != nil {
 		return err
 	}

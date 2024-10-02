@@ -1,6 +1,6 @@
 module github.com/mongodb/mongodb-atlas-cli/atlascli
 
-go 1.22.5
+go 1.23.1
 
 require (
 	cloud.google.com/go/kms v1.20.0

@@ -1038,21 +1038,11 @@ func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar
 func createJSONFile(t *testing.T, data any, path string) {
 	t.Helper()
 	jsonData, err := json.Marshal(data)
-	if err != nil {
-		t.Errorf("Error marshaling to JSON: %v", err)
-		return
-	}
-
-	err = os.WriteFile(path, jsonData, 0600)
-	if err != nil {
-		t.Errorf("Error writing JSON to file: %v", err)
-		return
-	}
+	require.NoError(t, err)
+	require.NoError(t, os.WriteFile(path, jsonData, 0600))
 
 	t.Cleanup(func() {
-		if err := os.Remove(path); err != nil {
-			t.Errorf("Error deleting file: %v", err)
-		}
+		require.NoError(t, os.Remove(path))
 	})
 }
 

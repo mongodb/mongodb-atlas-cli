@@ -22,7 +22,7 @@ import (
 )
 
 func readInstaller() *string {
-	if b, err := os.ReadFile(path.Join(path.Base(os.Args[0]), "installer")); err == nil {
+	if b, err := os.ReadFile(path.Join(path.Base(os.Executable()), "installer")); err == nil {
 		s := string(b)
 		return &s
 	}

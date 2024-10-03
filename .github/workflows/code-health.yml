@@ -237,7 +237,8 @@ jobs:
           dockerfile: Dockerfile
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.7.0
-      - name: Build and push image to dockerhub staging registry
+      - run: docker logout
+      - name: Build image to dockerhub staging registry
         uses: docker/build-push-action@v6.9.0
         with:
           context: .

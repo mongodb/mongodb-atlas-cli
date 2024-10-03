@@ -237,9 +237,18 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
+      - name: Enable containerd image store
+        uses: crazy-max/ghaction-setup-docker@v3.3.0
+        with:
+          version: v24.0.6
+          daemon-config: |
+            {
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.7.0
-      - run: docker logout
       - name: Build image to dockerhub staging registry
         uses: docker/build-push-action@v6.9.0
         with:

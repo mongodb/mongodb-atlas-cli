@@ -222,3 +222,37 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run: make check-templates
+  verify_image:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_CLI_EXPERIMENTAL: enabled
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Linting
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+      - name: Enable containerd image store
+        uses: crazy-max/ghaction-setup-docker@v3.3.0
+        with:
+          version: v24.0.6
+          daemon-config: |
+            {
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.7.0
+      - name: Build image to dockerhub staging registry
+        uses: docker/build-push-action@v6.9.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          tags: mongodb/atlas:test
+          file: Dockerfile

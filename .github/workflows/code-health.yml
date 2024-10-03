@@ -235,5 +235,7 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.7.0
       - name: Build Image
         run: docker buildx build --no-cache -t atlas .

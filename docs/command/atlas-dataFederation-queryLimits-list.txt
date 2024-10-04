@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas dataFederation queryLimits list --dataFederation dataFederation [options]
+   atlas dataFederation queryLimits list [options]
 
 .. Code end marker, please don't delete this comment
 

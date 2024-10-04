@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas dataLakePipelines availableSchedules list --pipeline pipeline [options]
+   atlas dataLakePipelines availableSchedules list [options]
 
 .. Code end marker, please don't delete this comment
 

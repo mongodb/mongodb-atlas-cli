@@ -63,7 +63,7 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "list --pipeline pipeline",
+		Use:     "list",
 		Short:   "Returns all data lake pipeline runs for your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},

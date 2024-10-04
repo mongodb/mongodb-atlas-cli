@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas dataLakePipelines availableSnapshots list --pipeline pipeline [options]
+   atlas dataLakePipelines availableSnapshots list [options]
 
 .. Code end marker, please don't delete this comment
 

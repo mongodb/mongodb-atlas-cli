@@ -62,7 +62,7 @@ func (opts *ListOpts) Run() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "list --dataFederation dataFederation",
+		Use:     "list",
 		Short:   "Returns all data federation query limits for your project.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},

@@ -108,7 +108,7 @@ func (opts *ListOpts) ValidateInput() error {
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
-		Use:     "list {--clusterName clusterName | --hostname hostname}",
+		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "Retrieve the access logs of a cluster identified by the cluster's name or hostname.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Monitoring Admin"),

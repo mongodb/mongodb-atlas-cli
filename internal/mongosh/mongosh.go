@@ -15,6 +15,7 @@
 package mongosh
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 )
@@ -24,7 +25,11 @@ func Detect() bool {
 }
 
 func binPath() string {
-	if p, err := exec.LookPath(mongoshBin); err == nil {
+	p, err := exec.LookPath(mongoshBin)
+	if errors.Is(err, exec.ErrDot) {
+		err = nil
+	}
+	if err == nil {
 		return p
 	}
 

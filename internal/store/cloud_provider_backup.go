@@ -15,7 +15,8 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -78,12 +79,12 @@ type ExportBucketsDescriber interface {
 }
 
 type ScheduleDescriber interface {
-	DescribeSchedule(string, string) (*atlasv2.DiskBackupSnapshotSchedule, error)
+	DescribeSchedule(string, string) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error)
 }
 
 type ScheduleDescriberUpdater interface {
-	DescribeSchedule(string, string) (*atlasv2.DiskBackupSnapshotSchedule, error)
-	UpdateSchedule(string, string, *atlasv2.DiskBackupSnapshotSchedule) (*atlasv2.DiskBackupSnapshotSchedule, error)
+	DescribeSchedule(string, string) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error)
+	UpdateSchedule(string, string, *atlasClustersPinned.DiskBackupSnapshotSchedule) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error)
 }
 
 type ScheduleDeleter interface {
@@ -191,14 +192,14 @@ func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlasv2.DiskB
 }
 
 // DescribeSchedule encapsulates the logic to manage different cloud providers.
-func (s *Store) DescribeSchedule(projectID, clusterName string) (*atlasv2.DiskBackupSnapshotSchedule, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.GetBackupSchedule(s.ctx, projectID, clusterName).Execute()
+func (s *Store) DescribeSchedule(projectID, clusterName string) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error) {
+	result, _, err := s.clientClusters.CloudBackupsApi.GetBackupSchedule(s.ctx, projectID, clusterName).Execute()
 	return result, err
 }
 
 // UpdateSchedule encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateSchedule(projectID, clusterName string, policy *atlasv2.DiskBackupSnapshotSchedule) (*atlasv2.DiskBackupSnapshotSchedule, error) {
-	result, _, err := s.clientv2.CloudBackupsApi.UpdateBackupSchedule(s.ctx, projectID, clusterName, policy).Execute()
+func (s *Store) UpdateSchedule(projectID, clusterName string, policy *atlasClustersPinned.DiskBackupSnapshotSchedule) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error) {
+	result, _, err := s.clientClusters.CloudBackupsApi.UpdateBackupSchedule(s.ctx, projectID, clusterName, policy).Execute()
 	return result, err
 }
 

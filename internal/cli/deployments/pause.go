@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 type PauseOpts struct {
@@ -57,7 +57,7 @@ func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *PauseOpts) Run(ctx context.Context) error {
-	deployment, err := opts.SelectDeployments(ctx, opts.ConfigProjectID())
+	deployment, err := opts.SelectDeployments(ctx, opts.ConfigProjectID(), options.IdleState)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func (opts *PauseOpts) RunLocal(ctx context.Context, deployment options.Deployme
 	}
 
 	return opts.Print(
-		admin.AdvancedClusterDescription{
+		atlasClustersPinned.AdvancedClusterDescription{
 			Name: &opts.DeploymentName,
 		})
 }

@@ -10,6 +10,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 )
 
 // MockServerlessInstanceLister is a mock of ServerlessInstanceLister interface.
@@ -149,10 +150,10 @@ func (m *MockServerlessInstanceCreator) EXPECT() *MockServerlessInstanceCreatorM
 }
 
 // CreateServerlessInstance mocks base method.
-func (m *MockServerlessInstanceCreator) CreateServerlessInstance(arg0 string, arg1 *admin.ServerlessInstanceDescriptionCreate) (*admin.ServerlessInstanceDescription, error) {
+func (m *MockServerlessInstanceCreator) CreateServerlessInstance(arg0 string, arg1 *admin0.ServerlessInstanceDescriptionCreate) (*admin0.ServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateServerlessInstance", arg0, arg1)
-	ret0, _ := ret[0].(*admin.ServerlessInstanceDescription)
+	ret0, _ := ret[0].(*admin0.ServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -187,10 +188,10 @@ func (m *MockServerlessInstanceUpdater) EXPECT() *MockServerlessInstanceUpdaterM
 }
 
 // UpdateServerlessInstance mocks base method.
-func (m *MockServerlessInstanceUpdater) UpdateServerlessInstance(arg0, arg1 string, arg2 *admin.ServerlessInstanceDescriptionUpdate) (*admin.ServerlessInstanceDescription, error) {
+func (m *MockServerlessInstanceUpdater) UpdateServerlessInstance(arg0, arg1 string, arg2 *admin0.ServerlessInstanceDescriptionUpdate) (*admin0.ServerlessInstanceDescription, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateServerlessInstance", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.ServerlessInstanceDescription)
+	ret0, _ := ret[0].(*admin0.ServerlessInstanceDescription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

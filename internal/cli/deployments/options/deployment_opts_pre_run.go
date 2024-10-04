@@ -17,22 +17,26 @@ package options
 import (
 	"context"
 	"errors"
+	"fmt"
 	"runtime"
+	"slices"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 )
 
-func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string) (Deployment, error) {
+var errDeploymentUnexpectedState = errors.New("deployment is in unexpected state")
+
+func (opts *DeploymentOpts) listDeployments(ctx context.Context, projectID string) ([]Deployment, error) {
 	var atlasDeployments, localDeployments []Deployment
 	var atlasErr, localErr error
 
 	if opts.IsAtlasDeploymentType() || opts.NoDeploymentTypeSet() {
 		if atlasDeployments, atlasErr = opts.AtlasDeployments(projectID); atlasErr != nil {
 			if opts.IsAtlasDeploymentType() {
-				return Deployment{}, atlasErr
+				return nil, atlasErr
 			}
 			if !isUnauthenticatedErr(atlasErr) {
 				_, _ = log.Warningf("Warning: failed to retrieve Atlas deployments because %q\n", atlasErr.Error())
@@ -43,29 +47,48 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 	if opts.IsLocalDeploymentType() || opts.NoDeploymentTypeSet() {
 		if localErr = opts.LocalDeploymentPreRun(ctx); localErr != nil {
 			if opts.IsLocalDeploymentType() {
-				return Deployment{}, localErr
+				return nil, localErr
 			}
-			_, _ = log.Warningf("Warning: failed to retrieve Local deployments because %q\n", localErr.Error())
+			_, _ = log.Debugf("Warning: failed to retrieve Local deployments because %q\n", localErr.Error())
 		}
 
 		localDeployments, localErr = opts.GetLocalDeployments(ctx)
 		if localErr != nil {
 			if opts.IsLocalDeploymentType() {
-				return Deployment{}, localErr
+				return nil, localErr
 			}
 			_, _ = log.Warningf("Warning: failed to retrieve Local deployments because %q\n", localErr.Error())
 		}
 	}
 
 	if atlasErr != nil && localErr != nil {
+		return nil, errors.New("failed to retrieve atlas and local deployments")
+	}
+
+	return append(localDeployments, atlasDeployments...), nil
+}
+
+func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID string, states ...string) (Deployment, error) {
+	deployments, err := opts.listDeployments(ctx, projectID)
+	if err != nil {
 		return Deployment{}, errors.New("failed to retrieve atlas and local deployments")
 	}
 
+	deployments = opts.filterDeploymentByName(deployments...)
 	if opts.DeploymentName == "" {
-		return opts.Select(append(localDeployments, atlasDeployments...))
+		deployments = opts.filterDeploymentByState(deployments, states...)
 	}
 
-	return opts.findDeploymentByName(localDeployments, atlasDeployments)
+	d, err := opts.Select(deployments)
+	if err != nil {
+		return Deployment{}, err
+	}
+
+	if len(states) > 0 && !slices.Contains(states, d.StateName) {
+		return Deployment{}, fmt.Errorf("%w: %s", errDeploymentUnexpectedState, d.StateName)
+	}
+
+	return d, nil
 }
 
 func isUnauthenticatedErr(err error) bool {
@@ -77,21 +100,36 @@ func isUnauthenticatedErr(err error) bool {
 	return ok && target.GetReason() == "Unauthorized"
 }
 
-func (opts *DeploymentOpts) findDeploymentByName(localDeployments []Deployment, atlasDeployments []Deployment) (Deployment, error) {
-	deployments := make([]Deployment, 0)
-	for _, d := range localDeployments {
+func (opts *DeploymentOpts) filterDeploymentByName(deployments ...Deployment) []Deployment {
+	if opts.DeploymentName == "" {
+		return deployments
+	}
+
+	filteredDeployments := []Deployment{}
+
+	for _, d := range deployments {
 		if d.Name == opts.DeploymentName {
-			deployments = append(deployments, d)
+			filteredDeployments = append(filteredDeployments, d)
 		}
 	}
 
-	for _, d := range atlasDeployments {
-		if d.Name == opts.DeploymentName {
-			deployments = append(deployments, d)
+	return filteredDeployments
+}
+
+func (*DeploymentOpts) filterDeploymentByState(deployments []Deployment, states ...string) []Deployment {
+	if len(states) == 0 {
+		return deployments
+	}
+
+	filteredDeployments := []Deployment{}
+
+	for _, d := range deployments {
+		if slices.Contains(states, d.StateName) {
+			filteredDeployments = append(filteredDeployments, d)
 		}
 	}
 
-	return opts.Select(deployments)
+	return filteredDeployments
 }
 
 func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, error) {
@@ -138,12 +176,16 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 	return deployments, nil
 }
 
-func (opts *DeploymentOpts) LocalDeploymentPreRun(_ context.Context) error {
+func (opts *DeploymentOpts) LocalDeploymentPreRun(ctx context.Context) error {
 	if !localDeploymentSupportedByOs() {
 		_, _ = log.Warningln("Local deployments are not supported on this OS, to see local deployments requirements visit https://www.mongodb.com/docs/atlas/cli/stable/atlas-cli-deploy-local/.")
 	}
 
-	return opts.ContainerEngine.Ready()
+	if err := opts.ContainerEngine.Ready(); err != nil {
+		return err
+	}
+
+	return opts.ContainerEngine.VerifyVersion(ctx)
 }
 
 func localDeploymentSupportedByOs() bool {

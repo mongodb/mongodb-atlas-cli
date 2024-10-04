@@ -21,23 +21,23 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
+	"github.com/stretchr/testify/require"
 )
 
 const completionEntity = "completion"
 
 func TestAtlasCLIAutocomplete(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 	options := []string{"zsh", "bash", "fish", "powershell"}
 	for _, option := range options {
-		t.Run(option, func(t *testing.T) {
-			cmd := exec.Command(cliPath, completionEntity, option)
+		o := option
+		t.Run(o, func(t *testing.T) {
+			t.Parallel()
+			cmd := exec.Command(cliPath, completionEntity, o)
 			cmd.Env = os.Environ()
-			if resp, err := e2e.RunAndGetStdOut(cmd); err != nil {
-				t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
-			}
+			resp, err := e2e.RunAndGetStdOut(cmd)
+			require.NoError(t, err, string(resp))
 		})
 	}
 }

@@ -15,7 +15,6 @@
 package e2e
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -23,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 )
 
 const (
@@ -94,11 +93,8 @@ func DeleteProjectWithRetry(t *testing.T, projectID string) {
 
 func RunAndGetStdOut(cmd *exec.Cmd) ([]byte, error) {
 	cmd.Stderr = os.Stderr
-	var b bytes.Buffer
-	cmd.Stdout = &b
 
-	err := cmd.Run()
-	resp := b.Bytes()
+	resp, err := cmd.Output()
 
 	if err != nil {
 		return nil, fmt.Errorf("%s (%w)", string(resp), err)

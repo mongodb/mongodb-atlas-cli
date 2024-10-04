@@ -19,7 +19,8 @@ import (
 	"fmt"
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -186,6 +187,7 @@ func (st *StateTransition) IsEndError(err error) bool {
 
 	var atlasErr *atlas.ErrorResponse
 	var atlasv2Err *atlasv2.GenericOpenAPIError
+	var atlasClustersPinnedErr *atlasClustersPinned.GenericOpenAPIError
 	var errCode string
 
 	if st.EndErrorCode == nil {
@@ -197,6 +199,8 @@ func (st *StateTransition) IsEndError(err error) bool {
 		errCode = atlasErr.ErrorCode
 	case errors.As(err, &atlasv2Err):
 		errCode = *atlasv2Err.Model().ErrorCode
+	case errors.As(err, &atlasClustersPinnedErr):
+		errCode = *atlasClustersPinnedErr.Model().ErrorCode
 	default:
 		return false
 	}

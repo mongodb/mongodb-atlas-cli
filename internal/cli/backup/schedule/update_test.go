@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
@@ -55,7 +55,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 		fs:                                  afero.NewMemMapFs(),
 	}
 
-	expected := &atlasv2.DiskBackupSnapshotSchedule{}
+	expected := &atlasClustersPinned.DiskBackupSnapshotSchedule{}
 	cmd := &cobra.Command{}
 
 	mockStore.
@@ -98,7 +98,7 @@ func TestUpdateOpts_RunWithFile(t *testing.T) {
 		fs:          fs,
 	}
 
-	expected := &atlasv2.DiskBackupSnapshotSchedule{}
+	expected := &atlasClustersPinned.DiskBackupSnapshotSchedule{}
 	cmd := &cobra.Command{}
 
 	mockStore.

@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 const (
@@ -78,8 +78,8 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) cluster() (*atlasv2.AdvancedClusterDescription, error) {
-	var cluster *atlasv2.AdvancedClusterDescription
+func (opts *UpdateOpts) cluster() (*atlasClustersPinned.AdvancedClusterDescription, error) {
+	var cluster *atlasClustersPinned.AdvancedClusterDescription
 	if opts.filename != "" {
 		err := file.Load(opts.fs, opts.filename, &cluster)
 		if err != nil {
@@ -99,7 +99,7 @@ func (opts *UpdateOpts) cluster() (*atlasv2.AdvancedClusterDescription, error) {
 	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
 }
 
-func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
+func (opts *UpdateOpts) patchOpts(out *atlasClustersPinned.AdvancedClusterDescription) {
 	if opts.mdbVersion != "" {
 		out.MongoDBMajorVersion = &opts.mdbVersion
 	}
@@ -112,12 +112,12 @@ func (opts *UpdateOpts) patchOpts(out *atlasv2.AdvancedClusterDescription) {
 	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
 	if len(opts.tag) > 0 {
-		out.Tags = &[]atlasv2.ResourceTag{}
+		out.Tags = &[]atlasClustersPinned.ResourceTag{}
 	}
 	addTags(out, opts.tag)
 }
 
-func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasv2.AdvancedClusterDescription) {
+func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasClustersPinned.AdvancedClusterDescription) {
 	for _, replicationSpec := range out.GetReplicationSpecs() {
 		for regionIdx := range replicationSpec.GetRegionConfigs() {
 			regionConf := (*replicationSpec.RegionConfigs)[regionIdx]

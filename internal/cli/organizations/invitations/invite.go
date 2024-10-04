@@ -21,11 +21,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 )
 
 const createTemplate = "User '{{.Username}}' invited.\n"
@@ -37,6 +39,8 @@ type InviteOpts struct {
 	roles    []string
 	teamIDs  []string
 	store    store.OrganizationInviter
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *InviteOpts) initStore(ctx context.Context) func() error {
@@ -48,8 +52,12 @@ func (opts *InviteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *InviteOpts) Run() error {
-	r, err := opts.store.InviteUser(opts.ConfigOrgID(), opts.newInvitation())
+	request, err := opts.newInvitation()
+	if err != nil {
+		return err
+	}
 
+	r, err := opts.store.InviteUser(opts.ConfigOrgID(), request)
 	if err != nil {
 		return err
 	}
@@ -57,12 +65,20 @@ func (opts *InviteOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *InviteOpts) newInvitation() *atlasv2.OrganizationInvitationRequest {
+func (opts *InviteOpts) newInvitation() (*atlasv2.OrganizationInvitationRequest, error) {
+	if opts.filename != "" {
+		pipeline := &atlasv2.OrganizationInvitationRequest{}
+		if err := file.Load(opts.fs, opts.filename, pipeline); err != nil {
+			return nil, err
+		}
+		return pipeline, nil
+	}
+
 	return &atlasv2.OrganizationInvitationRequest{
 		Username: &opts.username,
 		Roles:    &opts.roles,
 		TeamIds:  &opts.teamIDs,
-	}
+	}, nil
 }
 
 // atlas organization(s) invitation(s) invite|create <email> --role role [--teamId teamId] [--orgId orgId].
@@ -74,7 +90,7 @@ func InviteBuilder() *cobra.Command {
 		Short:   "Invite the specified MongoDB user to your organization.",
 		Long:    fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Aliases: []string{"create"},
-		Args:    require.ExactArgs(1),
+		Args:    require.MaximumNArgs(1),
 		Annotations: map[string]string{
 			"emailDesc": "Email address that belongs to the user that you want to invite to the organization.",
 			"output":    createTemplate,
@@ -86,19 +102,23 @@ func InviteBuilder() *cobra.Command {
 			return opts.PreRunE(opts.ValidateOrgID, opts.initStore(cmd.Context()))
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
-			opts.username = args[0]
+			if len(args) == 1 {
+				opts.username = args[0]
+			}
 			return opts.Run()
 		},
 	}
 
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.InvitationFile)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
 	cmd.Flags().StringSliceVar(&opts.teamIDs, flag.TeamID, []string{}, usage.TeamID)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
 	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
-
-	_ = cmd.MarkFlagRequired(flag.Role)
+	_ = cmd.MarkFlagFilename(flag.File)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Role)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.TeamID)
 
 	return cmd
 }

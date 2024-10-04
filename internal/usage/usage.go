@@ -76,7 +76,7 @@ const (
 The roles format is roleName[@dbName[.collection]].
 roleName can either be a built-in role or a custom role.
 dbName and collection are required only for built-in roles.`
-	Scopes                                    = "Array of clusters and Atlas Data Lakes that this user has access to."
+	Scopes                                    = "Array of clusters that this user has access to."
 	DataLakeRole                              = "Amazon Resource Name (ARN) of the role which Atlas Data Federation uses for accessing the data stores."
 	DataLakeRegion                            = "Name of the region to which Atlas Data Federation routes client connections for data processing."
 	DataLakeTestBucket                        = "Name of an Amazon S3 data bucket that Atlas Data Federation uses to validate the provided role."
@@ -92,7 +92,7 @@ dbName and collection are required only for built-in roles.`
 	Email                                     = "Email address for the user."
 	LogOut                                    = "Output file name. This value defaults to the log name."
 	LogStart                                  = "UNIX Epoch-formatted starting date and time for the range of log messages to retrieve. This value defaults to 24 hours prior to the current timestamp."
-	LogEnd                                    = "UNIX Epoch-formatted ending date and time for the range of log messages to retrieve. This value defaults to the current timestamp."
+	LogEnd                                    = "Ending date and time for the range of log messages to retrieve, given in UNIX time. Defaults to the start date plus 24 hours, if the start date is set. If start date is not provided, ending time defaults to the current time."
 	MeasurementStart                          = "ISO 8601-formatted date and time that specifies when to start retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementEnd                            = "ISO 8601-formatted date and time that specifies when to stop retrieving measurements. You can't set this parameter and period in the same request."
 	MeasurementType                           = "Measurements to return. This option returns all measurements by default. Valid values include DATABASE_AVERAGE_OBJECT_SIZE, DATABASE_COLLECTION_COUNT, DATABASE_DATA_SIZE, DATABASE_STORAGE_SIZE, DATABASE_INDEX_SIZE, DATABASE_INDEX_COUNT, DATABASE_EXTENT_COUNT, DATABASE_OBJECT_COUNT, and DATABASE_VIEW_COUNT"
@@ -408,4 +408,5 @@ dbName and collection are required only for built-in roles.`
 	IdentityProviderID         = "Unique identifier of the identity provider."
 	ConnectedOrgConfigFilename = "Path to a JSON configuration file that defines connected orgs configurations. To learn more about connected org configuration file format, see the request body in https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/updateConnectedOrgConfig."
 	AuditFilter                = "JSON document that specifies which events to record. Escape any characters that may prevent parsing, such as single or double quotes, using a backslash (\\)."
+	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. To learn more about invitation configuration files for the Atlas CLI, see https://XXX."
 )

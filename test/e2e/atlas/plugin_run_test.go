@@ -56,7 +56,7 @@ func TestPluginRun(t *testing.T) {
 	})
 
 	t.Run("Echo", func(t *testing.T) {
-		echoString := "this string will be the output of the echo command"
+		echoString := "lorem ipsum dolor sit amet --test=true --debug --profile nunc nunc vel urna"
 		cmd := exec.Command(cliPath,
 			"example",
 			"echo",
@@ -65,8 +65,9 @@ func TestPluginRun(t *testing.T) {
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
-		if !strings.Contains(string(resp), echoString) {
-			t.Errorf("expected %q to contain %q\n", string(resp), echoString)
+		actual := strings.TrimSpace(string(resp))
+		if actual != echoString {
+			t.Errorf("expected \"%q\" to contain %q\n", actual, echoString)
 		}
 	})
 

@@ -10,6 +10,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -355,10 +356,10 @@ func (m *MockAtlasClusterQuickStarter) EXPECT() *MockAtlasClusterQuickStarterMoc
 }
 
 // AddSampleData mocks base method.
-func (m *MockAtlasClusterQuickStarter) AddSampleData(arg0, arg1 string) (*admin.SampleDatasetStatus, error) {
+func (m *MockAtlasClusterQuickStarter) AddSampleData(arg0, arg1 string) (*admin0.SampleDatasetStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddSampleData", arg0, arg1)
-	ret0, _ := ret[0].(*admin.SampleDatasetStatus)
+	ret0, _ := ret[0].(*admin0.SampleDatasetStatus)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -385,10 +386,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) AtlasCluster(arg0, arg1 inte
 }
 
 // CloudProviderRegions mocks base method.
-func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1 string, arg2 []string) (*admin.PaginatedApiAtlasProviderRegions, error) {
+func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1 string, arg2 []string) (*admin0.PaginatedApiAtlasProviderRegions, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderRegions", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.PaginatedApiAtlasProviderRegions)
+	ret0, _ := ret[0].(*admin0.PaginatedApiAtlasProviderRegions)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -415,10 +416,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateCluster(arg0 interface
 }
 
 // CreateDatabaseUser mocks base method.
-func (m *MockAtlasClusterQuickStarter) CreateDatabaseUser(arg0 *admin.CloudDatabaseUser) (*admin.CloudDatabaseUser, error) {
+func (m *MockAtlasClusterQuickStarter) CreateDatabaseUser(arg0 *admin0.CloudDatabaseUser) (*admin0.CloudDatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateDatabaseUser", arg0)
-	ret0, _ := ret[0].(*admin.CloudDatabaseUser)
+	ret0, _ := ret[0].(*admin0.CloudDatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -430,10 +431,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateDatabaseUser(arg0 inte
 }
 
 // CreateProjectIPAccessList mocks base method.
-func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 []*admin.NetworkPermissionEntry) (*admin.PaginatedNetworkAccess, error) {
+func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 []*admin0.NetworkPermissionEntry) (*admin0.PaginatedNetworkAccess, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectIPAccessList", arg0)
-	ret0, _ := ret[0].(*admin.PaginatedNetworkAccess)
+	ret0, _ := ret[0].(*admin0.PaginatedNetworkAccess)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -445,10 +446,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateProjectIPAccessList(ar
 }
 
 // DatabaseUser mocks base method.
-func (m *MockAtlasClusterQuickStarter) DatabaseUser(arg0, arg1, arg2 string) (*admin.CloudDatabaseUser, error) {
+func (m *MockAtlasClusterQuickStarter) DatabaseUser(arg0, arg1, arg2 string) (*admin0.CloudDatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseUser", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin.CloudDatabaseUser)
+	ret0, _ := ret[0].(*admin0.CloudDatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -475,10 +476,10 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) ProjectClusters(arg0, arg1 i
 }
 
 // SampleDataStatus mocks base method.
-func (m *MockAtlasClusterQuickStarter) SampleDataStatus(arg0, arg1 string) (*admin.SampleDatasetStatus, error) {
+func (m *MockAtlasClusterQuickStarter) SampleDataStatus(arg0, arg1 string) (*admin0.SampleDatasetStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SampleDataStatus", arg0, arg1)
-	ret0, _ := ret[0].(*admin.SampleDatasetStatus)
+	ret0, _ := ret[0].(*admin0.SampleDatasetStatus)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -513,10 +514,10 @@ func (m *MockSampleDataAdder) EXPECT() *MockSampleDataAdderMockRecorder {
 }
 
 // AddSampleData mocks base method.
-func (m *MockSampleDataAdder) AddSampleData(arg0, arg1 string) (*admin.SampleDatasetStatus, error) {
+func (m *MockSampleDataAdder) AddSampleData(arg0, arg1 string) (*admin0.SampleDatasetStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddSampleData", arg0, arg1)
-	ret0, _ := ret[0].(*admin.SampleDatasetStatus)
+	ret0, _ := ret[0].(*admin0.SampleDatasetStatus)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -551,10 +552,10 @@ func (m *MockSampleDataStatusDescriber) EXPECT() *MockSampleDataStatusDescriberM
 }
 
 // SampleDataStatus mocks base method.
-func (m *MockSampleDataStatusDescriber) SampleDataStatus(arg0, arg1 string) (*admin.SampleDatasetStatus, error) {
+func (m *MockSampleDataStatusDescriber) SampleDataStatus(arg0, arg1 string) (*admin0.SampleDatasetStatus, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SampleDataStatus", arg0, arg1)
-	ret0, _ := ret[0].(*admin.SampleDatasetStatus)
+	ret0, _ := ret[0].(*admin0.SampleDatasetStatus)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

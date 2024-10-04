@@ -21,6 +21,7 @@ import (
 	"math/rand"
 	"net"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -49,10 +50,12 @@ import (
 const (
 	internalMongodPort = 27017
 	mdb7               = "7.0"
+	mdb8               = "8.0"
 	defaultSettings    = "default"
 	customSettings     = "custom"
 	cancelSettings     = "cancel"
 	skipConnect        = "skip"
+	autoassignPort     = "autoassign"
 	spinnerSpeed       = 100 * time.Millisecond
 	steps              = 3
 )
@@ -94,7 +97,7 @@ var (
 		options.CompassConnect: "MongoDB Compass",
 		skipConnect:            "Skip Connection",
 	}
-	mdbVersions = []string{mdb7}
+	mdbVersions = []string{mdb7, mdb8}
 )
 
 type SetupOpts struct {
@@ -333,7 +336,10 @@ func validatePort(p int) error {
 }
 
 func (opts *SetupOpts) promptPort() error {
-	exportPort := strconv.Itoa(opts.Port)
+	exportPort := autoassignPort
+	if opts.Port != 0 {
+		exportPort = strconv.Itoa(opts.Port)
+	}
 
 	p := &survey.Input{
 		Message: "Specify a port",
@@ -342,6 +348,9 @@ func (opts *SetupOpts) promptPort() error {
 
 	err := telemetry.TrackAskOne(p, &exportPort, survey.WithValidator(func(ans any) error {
 		input, _ := ans.(string)
+		if input == autoassignPort {
+			return nil
+		}
 		value, err := strconv.Atoi(input)
 		if err != nil {
 			return errMustBeInt
@@ -354,8 +363,13 @@ func (opts *SetupOpts) promptPort() error {
 		return err
 	}
 
-	opts.Port, err = strconv.Atoi(exportPort)
-	return err
+	if exportPort != autoassignPort {
+		if opts.Port, err = strconv.Atoi(exportPort); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (opts *SetupOpts) validateDeploymentTypeFlag() error {
@@ -401,7 +415,7 @@ func (opts *SetupOpts) validateFlags() error {
 		}
 	}
 
-	if opts.MdbVersion != "" && opts.MdbVersion != mdb7 {
+	if opts.MdbVersion != "" && !slices.Contains(mdbVersions, opts.MdbVersion) {
 		return fmt.Errorf("%w: %s", errInvalidMongoDBVersion, opts.MdbVersion)
 	}
 
@@ -440,7 +454,7 @@ func (opts *SetupOpts) setDefaultSettings() error {
 	}
 
 	if opts.MdbVersion == "" {
-		opts.MdbVersion = mdb7
+		opts.MdbVersion = mdb8
 		defaultValuesSet = true
 	}
 
@@ -643,6 +657,7 @@ func SetupBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "setup [deploymentName]",
 		Short:   "Create a local deployment.",
+		Long:    "To learn more about local atlas deployments, see https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-deploy-local/",
 		Args:    require.MaximumNArgs(1),
 		GroupID: "all",
 		Annotations: map[string]string{

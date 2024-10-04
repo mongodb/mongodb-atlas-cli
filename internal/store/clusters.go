@@ -15,26 +15,27 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	"go.mongodb.org/atlas-sdk/v20240805004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader,AtlasClusterConfigurationOptionsUpdater,ClusterTester
 
 type ClusterLister interface {
-	ProjectClusters(string, *ListOptions) (*admin.PaginatedAdvancedClusterDescription, error)
+	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
 }
 
 type ClusterDescriber interface {
-	AtlasCluster(string, string) (*admin.AdvancedClusterDescription, error)
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
 type AtlasClusterConfigurationOptionsDescriber interface {
-	AtlasClusterConfigurationOptions(string, string) (*admin.ClusterDescriptionProcessArgs, error)
+	AtlasClusterConfigurationOptions(string, string) (*atlasClustersPinned.ClusterDescriptionProcessArgs, error)
 }
 
 type AtlasClusterConfigurationOptionsUpdater interface {
-	UpdateAtlasClusterConfigurationOptions(string, string, *admin.ClusterDescriptionProcessArgs) (*admin.ClusterDescriptionProcessArgs, error)
+	UpdateAtlasClusterConfigurationOptions(string, string, *atlasClustersPinned.ClusterDescriptionProcessArgs) (*atlasClustersPinned.ClusterDescriptionProcessArgs, error)
 }
 
 type AtlasSharedClusterDescriber interface {
@@ -42,7 +43,7 @@ type AtlasSharedClusterDescriber interface {
 }
 
 type ClusterCreator interface {
-	CreateCluster(v15 *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error)
+	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
 type ClusterDeleter interface {
@@ -50,15 +51,15 @@ type ClusterDeleter interface {
 }
 
 type ClusterUpdater interface {
-	UpdateCluster(string, string, *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error)
+	UpdateCluster(string, string, *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
 type ClusterPauser interface {
-	PauseCluster(string, string) (*admin.AdvancedClusterDescription, error)
+	PauseCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
 type ClusterStarter interface {
-	StartCluster(string, string) (*admin.AdvancedClusterDescription, error)
+	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
 type ClusterUpgrader interface {
@@ -112,30 +113,30 @@ func (s *Store) SampleDataStatus(groupID, id string) (*admin.SampleDatasetStatus
 }
 
 // CreateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateCluster(cluster *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
-	result, _, err := s.clientv2.ClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
+func (s *Store) CreateCluster(cluster *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error) {
+	result, _, err := s.clientClusters.ClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
 	return result, err
 }
 
 // UpdateCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateCluster(projectID, name string, cluster *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
-	result, _, err := s.clientv2.ClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
+func (s *Store) UpdateCluster(projectID, name string, cluster *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error) {
+	result, _, err := s.clientClusters.ClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
 	return result, err
 }
 
 // PauseCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) PauseCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
+func (s *Store) PauseCluster(projectID, name string) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	paused := true
-	cluster := &admin.AdvancedClusterDescription{
+	cluster := &atlasClustersPinned.AdvancedClusterDescription{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
 // StartCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) StartCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
+func (s *Store) StartCluster(projectID, name string) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	paused := false
-	cluster := &admin.AdvancedClusterDescription{
+	cluster := &atlasClustersPinned.AdvancedClusterDescription{
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
@@ -143,7 +144,7 @@ func (s *Store) StartCluster(projectID, name string) (*admin.AdvancedClusterDesc
 
 // DeleteCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteCluster(projectID, name string) error {
-	_, err := s.clientv2.ClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
+	_, err := s.clientClusters.ClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
 	return err
 }
 
@@ -160,8 +161,8 @@ func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas
 }
 
 // ProjectClusters encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (*admin.PaginatedAdvancedClusterDescription, error) {
-	res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
+func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error) {
+	res := s.clientClusters.ClustersApi.ListClusters(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
@@ -170,20 +171,20 @@ func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (*admin.Pag
 }
 
 // AtlasCluster encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasCluster(projectID, name string) (*admin.AdvancedClusterDescription, error) {
-	result, _, err := s.clientv2.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
+func (s *Store) AtlasCluster(projectID, name string) (*atlasClustersPinned.AdvancedClusterDescription, error) {
+	result, _, err := s.clientClusters.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
 	return result, err
 }
 
 // AtlasClusterConfigurationOptions encapsulates the logic to manage different cloud providers.
-func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*admin.ClusterDescriptionProcessArgs, error) {
-	result, _, err := s.clientv2.ClustersApi.GetClusterAdvancedConfiguration(s.ctx, projectID, name).Execute()
+func (s *Store) AtlasClusterConfigurationOptions(projectID, name string) (*atlasClustersPinned.ClusterDescriptionProcessArgs, error) {
+	result, _, err := s.clientClusters.ClustersApi.GetClusterAdvancedConfiguration(s.ctx, projectID, name).Execute()
 	return result, err
 }
 
 // UpdateAtlasClusterConfigurationOptions encapsulates the logic to manage different cloud providers.
-func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName string, args *admin.ClusterDescriptionProcessArgs) (*admin.ClusterDescriptionProcessArgs, error) {
-	result, _, err := s.clientv2.ClustersApi.UpdateClusterAdvancedConfiguration(s.ctx, projectID, clusterName, args).Execute()
+func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName string, args *atlasClustersPinned.ClusterDescriptionProcessArgs) (*atlasClustersPinned.ClusterDescriptionProcessArgs, error) {
+	result, _, err := s.clientClusters.ClustersApi.UpdateClusterAdvancedConfiguration(s.ctx, projectID, clusterName, args).Execute()
 	return result, err
 }
 

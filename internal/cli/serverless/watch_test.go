@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestWatch_Run(t *testing.T) {
@@ -31,7 +31,7 @@ func TestWatch_Run(t *testing.T) {
 	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
 
 	state := "IDLE"
-	expected := &atlasv2.ServerlessInstanceDescription{StateName: &state}
+	expected := &atlasClustersPinned.ServerlessInstanceDescription{StateName: &state}
 
 	opts := &WatchOpts{
 		name:  "test",

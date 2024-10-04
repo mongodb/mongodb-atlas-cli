@@ -10,6 +10,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 )
 
 // MockOperatorGenericStore is a mock of OperatorGenericStore interface.
@@ -36,10 +37,10 @@ func (m *MockOperatorGenericStore) EXPECT() *MockOperatorGenericStoreMockRecorde
 }
 
 // AlertConfigurations mocks base method.
-func (m *MockOperatorGenericStore) AlertConfigurations(arg0 *admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error) {
+func (m *MockOperatorGenericStore) AlertConfigurations(arg0 *admin0.ListAlertConfigurationsApiParams) (*admin0.PaginatedAlertConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AlertConfigurations", arg0)
-	ret0, _ := ret[0].(*admin.PaginatedAlertConfig)
+	ret0, _ := ret[0].(*admin0.PaginatedAlertConfig)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -51,7 +52,7 @@ func (mr *MockOperatorGenericStoreMockRecorder) AlertConfigurations(arg0 interfa
 }
 
 // AssignProjectAPIKey mocks base method.
-func (m *MockOperatorGenericStore) AssignProjectAPIKey(arg0, arg1 string, arg2 *admin.UpdateAtlasProjectApiKey) error {
+func (m *MockOperatorGenericStore) AssignProjectAPIKey(arg0, arg1 string, arg2 *admin0.UpdateAtlasProjectApiKey) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AssignProjectAPIKey", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
@@ -95,10 +96,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) AtlasClusterConfigurationOptions
 }
 
 // Auditing mocks base method.
-func (m *MockOperatorGenericStore) Auditing(arg0 string) (*admin.AuditLog, error) {
+func (m *MockOperatorGenericStore) Auditing(arg0 string) (*admin0.AuditLog, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Auditing", arg0)
-	ret0, _ := ret[0].(*admin.AuditLog)
+	ret0, _ := ret[0].(*admin0.AuditLog)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +111,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) Auditing(arg0 interface{}) *gomo
 }
 
 // CloudProviderAccessRoles mocks base method.
-func (m *MockOperatorGenericStore) CloudProviderAccessRoles(arg0 string) (*admin.CloudProviderAccessRoles, error) {
+func (m *MockOperatorGenericStore) CloudProviderAccessRoles(arg0 string) (*admin0.CloudProviderAccessRoles, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CloudProviderAccessRoles", arg0)
-	ret0, _ := ret[0].(*admin.CloudProviderAccessRoles)
+	ret0, _ := ret[0].(*admin0.CloudProviderAccessRoles)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -125,10 +126,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) CloudProviderAccessRoles(arg0 in
 }
 
 // CreateOrganizationAPIKey mocks base method.
-func (m *MockOperatorGenericStore) CreateOrganizationAPIKey(arg0 string, arg1 *admin.CreateAtlasOrganizationApiKey) (*admin.ApiKeyUserDetails, error) {
+func (m *MockOperatorGenericStore) CreateOrganizationAPIKey(arg0 string, arg1 *admin0.CreateAtlasOrganizationApiKey) (*admin0.ApiKeyUserDetails, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateOrganizationAPIKey", arg0, arg1)
-	ret0, _ := ret[0].(*admin.ApiKeyUserDetails)
+	ret0, _ := ret[0].(*admin0.ApiKeyUserDetails)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -140,10 +141,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) CreateOrganizationAPIKey(arg0, a
 }
 
 // CreateProject mocks base method.
-func (m *MockOperatorGenericStore) CreateProject(arg0 *admin.CreateProjectApiParams) (*admin.Group, error) {
+func (m *MockOperatorGenericStore) CreateProject(arg0 *admin0.CreateProjectApiParams) (*admin0.Group, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProject", arg0)
-	ret0, _ := ret[0].(*admin.Group)
+	ret0, _ := ret[0].(*admin0.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -155,10 +156,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) CreateProject(arg0 interface{}) 
 }
 
 // CreateProjectAPIKey mocks base method.
-func (m *MockOperatorGenericStore) CreateProjectAPIKey(arg0 string, arg1 *admin.CreateAtlasProjectApiKey) (*admin.ApiKeyUserDetails, error) {
+func (m *MockOperatorGenericStore) CreateProjectAPIKey(arg0 string, arg1 *admin0.CreateAtlasProjectApiKey) (*admin0.ApiKeyUserDetails, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateProjectAPIKey", arg0, arg1)
-	ret0, _ := ret[0].(*admin.ApiKeyUserDetails)
+	ret0, _ := ret[0].(*admin0.ApiKeyUserDetails)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -170,10 +171,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) CreateProjectAPIKey(arg0, arg1 i
 }
 
 // DataFederation mocks base method.
-func (m *MockOperatorGenericStore) DataFederation(arg0, arg1 string) (*admin.DataLakeTenant, error) {
+func (m *MockOperatorGenericStore) DataFederation(arg0, arg1 string) (*admin0.DataLakeTenant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DataFederation", arg0, arg1)
-	ret0, _ := ret[0].(*admin.DataLakeTenant)
+	ret0, _ := ret[0].(*admin0.DataLakeTenant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -185,10 +186,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) DataFederation(arg0, arg1 interf
 }
 
 // DataFederationList mocks base method.
-func (m *MockOperatorGenericStore) DataFederationList(arg0 string) ([]admin.DataLakeTenant, error) {
+func (m *MockOperatorGenericStore) DataFederationList(arg0 string) ([]admin0.DataLakeTenant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DataFederationList", arg0)
-	ret0, _ := ret[0].([]admin.DataLakeTenant)
+	ret0, _ := ret[0].([]admin0.DataLakeTenant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -200,10 +201,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) DataFederationList(arg0 interfac
 }
 
 // DatabaseRoles mocks base method.
-func (m *MockOperatorGenericStore) DatabaseRoles(arg0 string) ([]admin.UserCustomDBRole, error) {
+func (m *MockOperatorGenericStore) DatabaseRoles(arg0 string) ([]admin0.UserCustomDBRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseRoles", arg0)
-	ret0, _ := ret[0].([]admin.UserCustomDBRole)
+	ret0, _ := ret[0].([]admin0.UserCustomDBRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -215,10 +216,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) DatabaseRoles(arg0 interface{}) 
 }
 
 // DatabaseUsers mocks base method.
-func (m *MockOperatorGenericStore) DatabaseUsers(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedApiAtlasDatabaseUser, error) {
+func (m *MockOperatorGenericStore) DatabaseUsers(arg0 string, arg1 *store.ListOptions) (*admin0.PaginatedApiAtlasDatabaseUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DatabaseUsers", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedApiAtlasDatabaseUser)
+	ret0, _ := ret[0].(*admin0.PaginatedApiAtlasDatabaseUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -230,10 +231,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) DatabaseUsers(arg0, arg1 interfa
 }
 
 // DescribeCompliancePolicy mocks base method.
-func (m *MockOperatorGenericStore) DescribeCompliancePolicy(arg0 string) (*admin.DataProtectionSettings20231001, error) {
+func (m *MockOperatorGenericStore) DescribeCompliancePolicy(arg0 string) (*admin0.DataProtectionSettings20231001, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeCompliancePolicy", arg0)
-	ret0, _ := ret[0].(*admin.DataProtectionSettings20231001)
+	ret0, _ := ret[0].(*admin0.DataProtectionSettings20231001)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -260,10 +261,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) DescribeSchedule(arg0, arg1 inte
 }
 
 // EncryptionAtRest mocks base method.
-func (m *MockOperatorGenericStore) EncryptionAtRest(arg0 string) (*admin.EncryptionAtRest, error) {
+func (m *MockOperatorGenericStore) EncryptionAtRest(arg0 string) (*admin0.EncryptionAtRest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "EncryptionAtRest", arg0)
-	ret0, _ := ret[0].(*admin.EncryptionAtRest)
+	ret0, _ := ret[0].(*admin0.EncryptionAtRest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -275,10 +276,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) EncryptionAtRest(arg0 interface{
 }
 
 // FederationSetting mocks base method.
-func (m *MockOperatorGenericStore) FederationSetting(arg0 *admin.GetFederationSettingsApiParams) (*admin.OrgFederationSettings, error) {
+func (m *MockOperatorGenericStore) FederationSetting(arg0 *admin0.GetFederationSettingsApiParams) (*admin0.OrgFederationSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FederationSetting", arg0)
-	ret0, _ := ret[0].(*admin.OrgFederationSettings)
+	ret0, _ := ret[0].(*admin0.OrgFederationSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -290,10 +291,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) FederationSetting(arg0 interface
 }
 
 // GetConnectedOrgConfig mocks base method.
-func (m *MockOperatorGenericStore) GetConnectedOrgConfig(arg0 *admin.GetConnectedOrgConfigApiParams) (*admin.ConnectedOrgConfig, error) {
+func (m *MockOperatorGenericStore) GetConnectedOrgConfig(arg0 *admin0.GetConnectedOrgConfigApiParams) (*admin0.ConnectedOrgConfig, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetConnectedOrgConfig", arg0)
-	ret0, _ := ret[0].(*admin.ConnectedOrgConfig)
+	ret0, _ := ret[0].(*admin0.ConnectedOrgConfig)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -305,10 +306,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) GetConnectedOrgConfig(arg0 inter
 }
 
 // GetOrgProjects mocks base method.
-func (m *MockOperatorGenericStore) GetOrgProjects(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedAtlasGroup, error) {
+func (m *MockOperatorGenericStore) GetOrgProjects(arg0 string, arg1 *store.ListOptions) (*admin0.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetOrgProjects", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedAtlasGroup)
+	ret0, _ := ret[0].(*admin0.PaginatedAtlasGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -350,10 +351,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) GlobalCluster(arg0, arg1 interfa
 }
 
 // IdentityProvider mocks base method.
-func (m *MockOperatorGenericStore) IdentityProvider(arg0 *admin.GetIdentityProviderApiParams) (*admin.FederationIdentityProvider, error) {
+func (m *MockOperatorGenericStore) IdentityProvider(arg0 *admin0.GetIdentityProviderApiParams) (*admin0.FederationIdentityProvider, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IdentityProvider", arg0)
-	ret0, _ := ret[0].(*admin.FederationIdentityProvider)
+	ret0, _ := ret[0].(*admin0.FederationIdentityProvider)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -365,10 +366,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) IdentityProvider(arg0 interface{
 }
 
 // IdentityProviders mocks base method.
-func (m *MockOperatorGenericStore) IdentityProviders(arg0 *admin.ListIdentityProvidersApiParams) (*admin.PaginatedFederationIdentityProvider, error) {
+func (m *MockOperatorGenericStore) IdentityProviders(arg0 *admin0.ListIdentityProvidersApiParams) (*admin0.PaginatedFederationIdentityProvider, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IdentityProviders", arg0)
-	ret0, _ := ret[0].(*admin.PaginatedFederationIdentityProvider)
+	ret0, _ := ret[0].(*admin0.PaginatedFederationIdentityProvider)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -380,10 +381,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) IdentityProviders(arg0 interface
 }
 
 // Integrations mocks base method.
-func (m *MockOperatorGenericStore) Integrations(arg0 string) (*admin.PaginatedIntegration, error) {
+func (m *MockOperatorGenericStore) Integrations(arg0 string) (*admin0.PaginatedIntegration, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Integrations", arg0)
-	ret0, _ := ret[0].(*admin.PaginatedIntegration)
+	ret0, _ := ret[0].(*admin0.PaginatedIntegration)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -395,10 +396,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) Integrations(arg0 interface{}) *
 }
 
 // MaintenanceWindow mocks base method.
-func (m *MockOperatorGenericStore) MaintenanceWindow(arg0 string) (*admin.GroupMaintenanceWindow, error) {
+func (m *MockOperatorGenericStore) MaintenanceWindow(arg0 string) (*admin0.GroupMaintenanceWindow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "MaintenanceWindow", arg0)
-	ret0, _ := ret[0].(*admin.GroupMaintenanceWindow)
+	ret0, _ := ret[0].(*admin0.GroupMaintenanceWindow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -410,10 +411,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) MaintenanceWindow(arg0 interface
 }
 
 // PeeringConnections mocks base method.
-func (m *MockOperatorGenericStore) PeeringConnections(arg0 string, arg1 *store.ContainersListOptions) ([]admin.BaseNetworkPeeringConnectionSettings, error) {
+func (m *MockOperatorGenericStore) PeeringConnections(arg0 string, arg1 *store.ContainersListOptions) ([]admin0.BaseNetworkPeeringConnectionSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PeeringConnections", arg0, arg1)
-	ret0, _ := ret[0].([]admin.BaseNetworkPeeringConnectionSettings)
+	ret0, _ := ret[0].([]admin0.BaseNetworkPeeringConnectionSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -425,10 +426,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) PeeringConnections(arg0, arg1 in
 }
 
 // PrivateEndpoints mocks base method.
-func (m *MockOperatorGenericStore) PrivateEndpoints(arg0, arg1 string) ([]admin.EndpointService, error) {
+func (m *MockOperatorGenericStore) PrivateEndpoints(arg0, arg1 string) ([]admin0.EndpointService, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PrivateEndpoints", arg0, arg1)
-	ret0, _ := ret[0].([]admin.EndpointService)
+	ret0, _ := ret[0].([]admin0.EndpointService)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -440,10 +441,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) PrivateEndpoints(arg0, arg1 inte
 }
 
 // Project mocks base method.
-func (m *MockOperatorGenericStore) Project(arg0 string) (*admin.Group, error) {
+func (m *MockOperatorGenericStore) Project(arg0 string) (*admin0.Group, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Project", arg0)
-	ret0, _ := ret[0].(*admin.Group)
+	ret0, _ := ret[0].(*admin0.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -455,10 +456,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) Project(arg0 interface{}) *gomoc
 }
 
 // ProjectByName mocks base method.
-func (m *MockOperatorGenericStore) ProjectByName(arg0 string) (*admin.Group, error) {
+func (m *MockOperatorGenericStore) ProjectByName(arg0 string) (*admin0.Group, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectByName", arg0)
-	ret0, _ := ret[0].(*admin.Group)
+	ret0, _ := ret[0].(*admin0.Group)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -485,10 +486,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) ProjectClusters(arg0, arg1 inter
 }
 
 // ProjectIPAccessLists mocks base method.
-func (m *MockOperatorGenericStore) ProjectIPAccessLists(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedNetworkAccess, error) {
+func (m *MockOperatorGenericStore) ProjectIPAccessLists(arg0 string, arg1 *store.ListOptions) (*admin0.PaginatedNetworkAccess, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectIPAccessLists", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedNetworkAccess)
+	ret0, _ := ret[0].(*admin0.PaginatedNetworkAccess)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -500,10 +501,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) ProjectIPAccessLists(arg0, arg1 
 }
 
 // ProjectSettings mocks base method.
-func (m *MockOperatorGenericStore) ProjectSettings(arg0 string) (*admin.GroupSettings, error) {
+func (m *MockOperatorGenericStore) ProjectSettings(arg0 string) (*admin0.GroupSettings, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectSettings", arg0)
-	ret0, _ := ret[0].(*admin.GroupSettings)
+	ret0, _ := ret[0].(*admin0.GroupSettings)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -515,10 +516,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) ProjectSettings(arg0 interface{}
 }
 
 // ProjectStreams mocks base method.
-func (m *MockOperatorGenericStore) ProjectStreams(arg0 *admin.ListStreamInstancesApiParams) (*admin.PaginatedApiStreamsTenant, error) {
+func (m *MockOperatorGenericStore) ProjectStreams(arg0 *admin0.ListStreamInstancesApiParams) (*admin0.PaginatedApiStreamsTenant, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectStreams", arg0)
-	ret0, _ := ret[0].(*admin.PaginatedApiStreamsTenant)
+	ret0, _ := ret[0].(*admin0.PaginatedApiStreamsTenant)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -530,10 +531,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) ProjectStreams(arg0 interface{})
 }
 
 // ProjectTeams mocks base method.
-func (m *MockOperatorGenericStore) ProjectTeams(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedTeamRole, error) {
+func (m *MockOperatorGenericStore) ProjectTeams(arg0 string, arg1 *store.ListOptions) (*admin0.PaginatedTeamRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectTeams", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedTeamRole)
+	ret0, _ := ret[0].(*admin0.PaginatedTeamRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -545,10 +546,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) ProjectTeams(arg0, arg1 interfac
 }
 
 // Projects mocks base method.
-func (m *MockOperatorGenericStore) Projects(arg0 *store.ListOptions) (*admin.PaginatedAtlasGroup, error) {
+func (m *MockOperatorGenericStore) Projects(arg0 *store.ListOptions) (*admin0.PaginatedAtlasGroup, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Projects", arg0)
-	ret0, _ := ret[0].(*admin.PaginatedAtlasGroup)
+	ret0, _ := ret[0].(*admin0.PaginatedAtlasGroup)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -590,10 +591,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) ServerlessPrivateEndpoints(arg0,
 }
 
 // StreamsConnections mocks base method.
-func (m *MockOperatorGenericStore) StreamsConnections(arg0, arg1 string) (*admin.PaginatedApiStreamsConnection, error) {
+func (m *MockOperatorGenericStore) StreamsConnections(arg0, arg1 string) (*admin0.PaginatedApiStreamsConnection, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StreamsConnections", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedApiStreamsConnection)
+	ret0, _ := ret[0].(*admin0.PaginatedApiStreamsConnection)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -605,10 +606,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) StreamsConnections(arg0, arg1 in
 }
 
 // TeamByID mocks base method.
-func (m *MockOperatorGenericStore) TeamByID(arg0, arg1 string) (*admin.TeamResponse, error) {
+func (m *MockOperatorGenericStore) TeamByID(arg0, arg1 string) (*admin0.TeamResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamByID", arg0, arg1)
-	ret0, _ := ret[0].(*admin.TeamResponse)
+	ret0, _ := ret[0].(*admin0.TeamResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -620,10 +621,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) TeamByID(arg0, arg1 interface{})
 }
 
 // TeamByName mocks base method.
-func (m *MockOperatorGenericStore) TeamByName(arg0, arg1 string) (*admin.TeamResponse, error) {
+func (m *MockOperatorGenericStore) TeamByName(arg0, arg1 string) (*admin0.TeamResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamByName", arg0, arg1)
-	ret0, _ := ret[0].(*admin.TeamResponse)
+	ret0, _ := ret[0].(*admin0.TeamResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -635,10 +636,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) TeamByName(arg0, arg1 interface{
 }
 
 // TeamUsers mocks base method.
-func (m *MockOperatorGenericStore) TeamUsers(arg0, arg1 string) (*admin.PaginatedApiAppUser, error) {
+func (m *MockOperatorGenericStore) TeamUsers(arg0, arg1 string) (*admin0.PaginatedApiAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamUsers", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedApiAppUser)
+	ret0, _ := ret[0].(*admin0.PaginatedApiAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -50,6 +50,10 @@ func (e *podmanImpl) Ready() error {
 	return err
 }
 
+func (e *podmanImpl) VerifyVersion(ctx context.Context) error {
+	return e.client.VerifyVersion(ctx)
+}
+
 func (e *podmanImpl) ContainerLogs(ctx context.Context, name string) ([]string, error) {
 	return e.client.ContainerLogs(ctx, name)
 }
@@ -150,17 +154,10 @@ func (e *podmanImpl) ImageList(ctx context.Context, nameFilter ...string) ([]Ima
 	result := make([]Image, 0, len(images))
 	for _, c := range images {
 		result = append(result, Image{
-			ID:          c.ID,
-			RepoTags:    c.RepoTags,
-			RepoDigests: c.RepoDigests,
-			Created:     c.Created,
-			CreatedAt:   c.CreatedAt,
-			Size:        c.Size,
-			SharedSize:  c.SharedSize,
-			VirtualSize: c.VirtualSize,
-			Labels:      c.Labels,
-			Containers:  c.Containers,
-			Names:       c.Names,
+			ID:         c.ID,
+			Repository: c.Repository,
+			Tag:        c.Tag,
+			Digest:     c.Digest,
 		})
 	}
 	return result, nil

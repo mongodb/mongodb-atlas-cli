@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestStart_RunLocal_PausedContainers(t *testing.T) {
@@ -119,13 +119,13 @@ func TestStart_RunAtlas(t *testing.T) {
 		},
 	}
 
-	deploymentsTest.CommonAtlasMocks(projectID)
+	deploymentsTest.CommonAtlasMocksWithState(projectID, "STOPPED")
 
 	mockStore.
 		EXPECT().
 		StartCluster(projectID, deploymentName).
 		Return(
-			&admin.AdvancedClusterDescription{
+			&atlasClustersPinned.AdvancedClusterDescription{
 				Name: pointer.Get(deploymentName),
 			}, nil).
 		Times(1)

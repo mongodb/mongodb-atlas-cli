@@ -300,6 +300,20 @@ func (mr *MockClientMockRecorder) UnpauseContainers(arg0 interface{}, arg1 ...in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnpauseContainers", reflect.TypeOf((*MockClient)(nil).UnpauseContainers), varargs...)
 }
 
+// VerifyVersion mocks base method.
+func (m *MockClient) VerifyVersion(arg0 context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyVersion", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// VerifyVersion indicates an expected call of VerifyVersion.
+func (mr *MockClientMockRecorder) VerifyVersion(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyVersion", reflect.TypeOf((*MockClient)(nil).VerifyVersion), arg0)
+}
+
 // Version mocks base method.
 func (m *MockClient) Version(arg0 context.Context) (map[string]interface{}, error) {
 	m.ctrl.T.Helper()

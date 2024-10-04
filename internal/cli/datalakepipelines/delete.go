@@ -53,11 +53,12 @@ func DeleteBuilder() *cobra.Command {
 		DeleteOpts: cli.NewDeleteOpts("'%s' deleted\n", "Not deleted"),
 	}
 	cmd := &cobra.Command{
-		Use:     "delete <pipelineName>",
-		Aliases: []string{"rm"},
-		Short:   "Remove the specified data lake pipeline from your project.",
-		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:    require.ExactArgs(1),
+		Use:        "delete <pipelineName>",
+		Aliases:    []string{"rm"},
+		Short:      "Remove the specified data lake pipeline from your project.",
+		Long:       fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args:       require.ExactArgs(1),
+		Deprecated: "Data Lake Pipelines is deprecated. Please see: https://dochub.mongodb.org/core/data-lake-deprecation.",
 		Annotations: map[string]string{
 			"pipelineNameDesc": "Label that identifies the pipeline",
 			"output":           opts.SuccessMessage(),

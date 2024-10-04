@@ -19,7 +19,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func NewMockAtlasDeploymentOpts(ctrl *gomock.Controller, deploymentName string) MockDeploymentOpts {
@@ -42,14 +42,14 @@ func NewMockAtlasDeploymentOpts(ctrl *gomock.Controller, deploymentName string) 
 	}
 }
 
-func (m *MockDeploymentOpts) MockPaginatedAdvancedClusterDescription() *admin.PaginatedAdvancedClusterDescription {
-	return &admin.PaginatedAdvancedClusterDescription{
-		Results: &[]admin.AdvancedClusterDescription{
+func (m *MockDeploymentOpts) MockPaginatedAdvancedClusterDescription(state string) *atlasClustersPinned.PaginatedAdvancedClusterDescription {
+	return &atlasClustersPinned.PaginatedAdvancedClusterDescription{
+		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
 			{
 				Name:           pointer.Get(m.Opts.DeploymentName),
 				Id:             pointer.Get("123"),
 				MongoDBVersion: pointer.Get("7.0.0"),
-				StateName:      pointer.Get("IDLE"),
+				StateName:      &state,
 				Paused:         pointer.Get(false),
 			},
 		},
@@ -57,6 +57,10 @@ func (m *MockDeploymentOpts) MockPaginatedAdvancedClusterDescription() *admin.Pa
 }
 
 func (m *MockDeploymentOpts) CommonAtlasMocks(projectID string) {
+	m.CommonAtlasMocksWithState(projectID, "IDLE")
+}
+
+func (m *MockDeploymentOpts) CommonAtlasMocksWithState(projectID string, state string) {
 	m.MockCredentialsGetter.
 		EXPECT().
 		AuthType().
@@ -66,7 +70,7 @@ func (m *MockDeploymentOpts) CommonAtlasMocks(projectID string) {
 	m.MockAtlasClusterListStore.
 		EXPECT().
 		ProjectClusters(projectID, gomock.Any()).
-		Return(m.MockPaginatedAdvancedClusterDescription(), nil).
+		Return(m.MockPaginatedAdvancedClusterDescription(state), nil).
 		Times(1)
 
 	m.MockDeploymentTelemetry.

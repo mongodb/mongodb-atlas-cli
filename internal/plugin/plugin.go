@@ -185,6 +185,8 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 			}
 		})
 
+		command.DisableFlagParsing = true
+
 		commands = append(commands, command)
 	}
 

@@ -84,7 +84,6 @@ func TestOutputOpts_notifyIfApplicable(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(fmt.Sprintf("%v/%v", tt.currentVersion, tt.release), func(t *testing.T) {
 			prevVersion := version.Version
 			version.Version = tt.currentVersion

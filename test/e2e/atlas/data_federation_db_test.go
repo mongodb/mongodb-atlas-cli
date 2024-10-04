@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 //go:build e2e || (atlas && datafederation && db)
 
 package atlas_test
@@ -27,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 )
 
 func TestDataFederation(t *testing.T) {
@@ -36,9 +37,7 @@ func TestDataFederation(t *testing.T) {
 	r.NoError(err)
 
 	n, err := e2e.RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	require.NoError(t, err)
 
 	dataFederationName := fmt.Sprintf("e2e-data-federation-%v", n)
 	testBucket := os.Getenv("E2E_TEST_BUCKET")
@@ -125,6 +124,19 @@ func TestDataFederation(t *testing.T) {
 			"--end",
 			strconv.FormatInt(time.Now().Unix(), 10),
 			"--force")
+		cmd.Env = os.Environ()
+
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+	})
+
+	t.Run("Download Logs", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			datafederationEntity,
+			"logs",
+			dataFederationName,
+			"--out",
+			"testLogFile")
 		cmd.Env = os.Environ()
 
 		resp, err := e2e.RunAndGetStdOut(cmd)

@@ -32,7 +32,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -695,7 +696,7 @@ func createProjectWithoutAlertSettings(projectName string) (string, error) {
 	return project.GetId(), nil
 }
 
-func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.PaginatedAdvancedClusterDescription {
+func listClustersForProject(t *testing.T, cliPath, projectID string) atlasClustersPinned.PaginatedAdvancedClusterDescription {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		clustersEntity,
@@ -706,7 +707,7 @@ func listClustersForProject(t *testing.T, cliPath, projectID string) atlasv2.Pag
 	resp, err := e2e.RunAndGetStdOut(cmd)
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
-	var clusters atlasv2.PaginatedAdvancedClusterDescription
+	var clusters atlasClustersPinned.PaginatedAdvancedClusterDescription
 	require.NoError(t, json.Unmarshal(resp, &clusters))
 	return clusters
 }
@@ -1011,7 +1012,7 @@ func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedNam
 	require.NoError(t, err, string(resp))
 }
 
-func ensureCluster(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
+func ensureCluster(t *testing.T, cluster *atlasClustersPinned.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.GetName())
@@ -1037,21 +1038,11 @@ func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar
 func createJSONFile(t *testing.T, data any, path string) {
 	t.Helper()
 	jsonData, err := json.Marshal(data)
-	if err != nil {
-		t.Errorf("Error marshaling to JSON: %v", err)
-		return
-	}
-
-	err = os.WriteFile(path, jsonData, 0600)
-	if err != nil {
-		t.Errorf("Error writing JSON to file: %v", err)
-		return
-	}
+	require.NoError(t, err)
+	require.NoError(t, os.WriteFile(path, jsonData, 0600))
 
 	t.Cleanup(func() {
-		if err := os.Remove(path); err != nil {
-			t.Errorf("Error deleting file: %v", err)
-		}
+		require.NoError(t, os.Remove(path))
 	})
 }
 

@@ -1,11 +1,11 @@
 variables:
   - &go_linux_version
-      go_root: "/opt/golang/go1.22"
-      go_bin: "/opt/golang/go1.22/bin"
+      go_root: "/opt/golang/go1.23"
+      go_bin: "/opt/golang/go1.23/bin"
       go_base_path: ""
   - &go_windows_version
-      go_root: "c:\\golang\\go1.22"
-      go_bin: "c:\\golang\\go1.22\\bin"
+      go_root: "c:\\golang\\go1.23"
+      go_bin: "c:\\golang\\go1.23\\bin"
       go_base_path: "c:"
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}
@@ -71,6 +71,9 @@ functions:
         <<: *go_options
         binary: build/package/generate-notices.sh
   "package":
+    - command: github.generate_token
+      params:
+        expansion_name: github_token
     - command: subprocess.exec
       type: test
       params:
@@ -81,6 +84,7 @@ functions:
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
+          GITHUB_TOKEN: ${github_token}
         include_expansions_in_env:
           - go_base_path
           - workdir
@@ -88,8 +92,6 @@ functions:
           - notary_service_secret
           - notary_service_url
           - goreleaser_key
-          - github_app_id
-          - github_app_pem
           - unstable
         binary: build/package/package.sh
   "install go-msi":
@@ -256,6 +258,41 @@ functions:
           - mongo_repo
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/package/docker/repo
         binary: ./docker-build.sh
+  "build-copybara":
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: git
+        args:
+          - clone
+          - --depth=1
+          - https://github.com/google/copybara
+          - ${workdir}/copybara
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: docker
+        args:
+          - build
+          - -t
+          - google/copybara
+          - ${workdir}/copybara
+  "run-copybara":
+    - command: shell.exec
+      params:
+        <<: *go_options
+        env:
+          <<: *go_env
+          TAG: ${tag}
+          GH_TOKEN: ${gh_token}
+          WORKFLOW: ${workflow}
+          EVERGREEN_USER: ${evergreen_user}
+          EVERGREEN_API_KEY: ${evergreen_api_key}
+          DOCS_SLACK_CHANNEL: ${docs_slack_channel}
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci
+        shell: bash
+        script: |
+          ./run-copybara.sh
 tasks:
   - name: package_msi
     tags: ["packaging"]
@@ -419,6 +456,30 @@ tasks:
       - func: "powershell build"
         vars:
           file: windows_post_package_test
+  - name: copybara
+    depends_on:
+      - name: package_goreleaser
+        variant: release_atlascli_github
+    commands:
+      - func: "build-copybara"
+      - command: github.generate_token
+        params:
+          expansion_name: docs_atlas_cli_token
+          owner: mongodb
+          repo: docs-atlas-cli
+      - func: "run-copybara"
+        vars:
+          gh_token: ${docs_atlas_cli_token}
+          workflow: docs-atlas-cli
+      - command: github.generate_token
+        params:
+          expansion_name: cloud_docs_token
+          owner: 10gen
+          repo: cloud-docs
+      - func: "run-copybara"
+        vars:
+          gh_token: ${cloud_docs_token}
+          workflow: cloud-docs
 buildvariants:
   - name: go_atlascli_msi_snapshot
     display_name: "Packaging AtlasCLI (go-msi)"
@@ -469,6 +530,15 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: release_atlascli_msi
+  - name: copybara
+    display_name: "Copybara"
+    git_tag_only: true
+    run_on:
+      - ubuntu2404-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: copybara
   - name: release_atlascli_msi
     display_name: "Release AtlasCLI (go-msi)"
     run_on:

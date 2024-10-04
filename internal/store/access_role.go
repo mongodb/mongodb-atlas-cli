@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -40,7 +40,7 @@ type CloudProviderAccessRoleAuthorizer interface {
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv2.CloudProviderAccessRole, error) {
-	req := atlasv2.CloudProviderAccessRole{
+	req := atlasv2.CloudProviderAccessRoleRequest{
 		ProviderName: provider,
 	}
 	result, _, err := s.clientv2.CloudProviderAccessApi.CreateCloudProviderAccessRole(s.ctx, groupID, &req).Execute()
@@ -61,7 +61,7 @@ func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeau
 
 // AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAccessRoleRequest) (*atlasv2.CloudProviderAccessRole, error) {
-	role := atlasv2.CloudProviderAccessRole{
+	role := atlasv2.CloudProviderAccessRoleRequestUpdate{
 		ProviderName:      req.ProviderName,
 		IamAssumedRoleArn: req.IAMAssumedRoleARN,
 	}

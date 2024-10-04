@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
 )
 
 type CreateOpts struct {
@@ -95,9 +95,9 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *CreateOpts) Run() error {
-	user := opts.newDatabaseUser()
+	u := opts.newDatabaseUser()
 
-	r, err := opts.store.CreateDatabaseUser(user)
+	r, err := opts.store.CreateDatabaseUser(u)
 	if err != nil {
 		return err
 	}

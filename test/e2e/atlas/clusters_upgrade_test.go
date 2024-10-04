@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestSharedClusterUpgrade(t *testing.T) {
@@ -51,7 +51,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		require.NoError(t, watchCluster(g.projectID, g.clusterName))
 		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
 		ensureClusterTier(t, cluster, tierM2)
-		assert.Contains(t, cluster.GetTags(), atlasv2.ResourceTag{Key: "env", Value: "e2e"})
+		assert.Contains(t, cluster.GetTags(), atlasClustersPinned.ResourceTag{Key: "env", Value: "e2e"})
 	})
 
 	t.Run("Upgrade to dedicated tier", func(t *testing.T) {
@@ -71,11 +71,11 @@ func TestSharedClusterUpgrade(t *testing.T) {
 		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
 		ensureClusterTier(t, cluster, tierM10)
 		assert.InDelta(t, 40, cluster.GetDiskSizeGB(), 0.01)
-		assert.Contains(t, cluster.GetTags(), atlasv2.ResourceTag{Key: "env", Value: "e2e"})
+		assert.Contains(t, cluster.GetTags(), atlasClustersPinned.ResourceTag{Key: "env", Value: "e2e"})
 	})
 }
 
-func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasv2.AdvancedClusterDescription {
+func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasClustersPinned.AdvancedClusterDescription {
 	t.Helper()
 	cmd := exec.Command(cliPath,
 		clustersEntity,
@@ -87,12 +87,12 @@ func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasv2
 	resp, err := e2e.RunAndGetStdOut(cmd)
 	req := require.New(t)
 	req.NoError(err, string(resp))
-	var c *atlasv2.AdvancedClusterDescription
+	var c *atlasClustersPinned.AdvancedClusterDescription
 	req.NoError(json.Unmarshal(resp, &c), string(resp))
 	return c
 }
 
-func ensureClusterTier(t *testing.T, cluster *atlasv2.AdvancedClusterDescription, expected string) {
+func ensureClusterTier(t *testing.T, cluster *atlasClustersPinned.AdvancedClusterDescription, expected string) {
 	t.Helper()
 	req := require.New(t)
 	req.NotEmpty(cluster.GetReplicationSpecs())

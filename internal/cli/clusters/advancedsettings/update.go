@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 const updateTmpl = "Updating advanced configuration settings of your cluster'.\n"
@@ -67,8 +67,8 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newProcessArgs() *atlasv2.ClusterDescriptionProcessArgs {
-	args := &atlasv2.ClusterDescriptionProcessArgs{}
+func (opts *UpdateOpts) newProcessArgs() *atlasClustersPinned.ClusterDescriptionProcessArgs {
+	args := &atlasClustersPinned.ClusterDescriptionProcessArgs{}
 
 	if opts.defaultReadConcern != "" {
 		args.DefaultReadConcern = &opts.defaultReadConcern

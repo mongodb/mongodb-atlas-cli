@@ -25,12 +25,13 @@ import (
 )
 
 type whoOpts struct {
-	OutWriter io.Writer
-	account   string
+	OutWriter   io.Writer
+	authSubject string
+	authType    string
 }
 
 func (opts *whoOpts) Run() error {
-	_, _ = fmt.Fprintf(opts.OutWriter, "Logged in as %s\n", opts.account)
+	_, _ = fmt.Fprintf(opts.OutWriter, "Logged in as %s %s\n", opts.authSubject, opts.authType)
 
 	return nil
 }
@@ -38,13 +39,23 @@ func (opts *whoOpts) Run() error {
 var ErrUnauthenticated = errors.New("not logged in with an Atlas account")
 
 func AccountWithAccessToken() (string, error) {
-	if config.PublicAPIKey() != "" {
-		return config.PublicAPIKey(), nil
-	}
 	if config.AccessToken() != "" {
-		return config.AccessTokenSubject()
+		return "", ErrUnauthenticated
 	}
-	return "", ErrUnauthenticated
+
+	return config.AccessTokenSubject()
+}
+
+func AuthTypeAndSubject() (string, string, error) {
+	if config.PublicAPIKey() != "" {
+		return "key", config.PublicAPIKey(), nil
+	}
+
+	if subject, err := AccountWithAccessToken(); err == nil {
+		return "account", subject, nil
+	}
+
+	return "", "", ErrUnauthenticated
 }
 
 func WhoAmIBuilder() *cobra.Command {
@@ -61,7 +72,7 @@ func WhoAmIBuilder() *cobra.Command {
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			var err error
-			if opts.account, err = AccountWithAccessToken(); err != nil {
+			if opts.authType, opts.authSubject, err = AuthTypeAndSubject(); err != nil {
 				return err
 			}
 

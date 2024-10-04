@@ -36,7 +36,7 @@ func (opts *whoOpts) Run() error {
 	return nil
 }
 
-var ErrUnauthenticated = errors.New("not logged in with an Atlas account")
+var ErrUnauthenticated = errors.New("not logged in with an Atlas account or API key")
 
 func AccountWithAccessToken() (string, error) {
 	if config.AccessToken() == "" {

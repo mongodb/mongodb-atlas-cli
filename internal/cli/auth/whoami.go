@@ -44,12 +44,7 @@ func AccountWithAccessToken() (string, error) {
 	if config.AccessToken() != "" {
 		return config.AccessTokenSubject()
 	}
-	return  "", ErrUnauthenticated
-}
-	if config.AccessToken() == "" {
-		return "", ErrUnauthenticated
-	}
-	return config.AccessTokenSubject()
+	return "", ErrUnauthenticated
 }
 
 func WhoAmIBuilder() *cobra.Command {

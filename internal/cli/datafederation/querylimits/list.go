@@ -58,7 +58,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas dataFederation queryLimits list [--projectId projectId].
+// ListBuilder represents atlas dataFederation queryLimits list [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -67,8 +67,8 @@ func ListBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
-		Example: `# list all data federation query limits:
-  atlas dataFederation queryLimits list
+		Example: `# list all data federation query limits for the database federated instance "myInstance":
+  atlas dataFederation queryLimits list --dataFederation myInstance
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

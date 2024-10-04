@@ -57,7 +57,7 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas dataLakePipelines availableSchedules list [--projectId projectId].
+// ListBuilder represents atlas dataLakePipelines availableSchedules list [--projectId projectId].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -67,7 +67,7 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		Example: `# list available schedules for data lake pipeline called 'Pipeline1':
-  atlas dataLakePipelines availableSchedules list Pipeline1
+  atlas dataLakePipelines availableSchedules list --pipeline Pipeline1
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

@@ -104,7 +104,7 @@ func (opts *ListOpts) ValidateInput() error {
 	return nil
 }
 
-// atlas accessLogs(s) list|ls  [--projectId projectId] [--clusterName clusterName] [--start start] [--end end] [--nLogs nLogs] [--ipAddress ipAddress] [--authResult success|fail].
+// ListBuilder represents atlas accessLogs(s) list|ls  [--projectId projectId] [--clusterName clusterName] [--start start] [--end end] [--nLogs nLogs] [--ipAddress ipAddress] [--authResult success|fail].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -114,7 +114,11 @@ func ListBuilder() *cobra.Command {
 		Long:    fmt.Sprintf(usage.RequiredRole, "Project Monitoring Admin"),
 		Args:    require.NoArgs,
 		Example: `  # Return a JSON-formatted list of all authentication requests made against the cluster named Cluster0 for the project with ID 618d48e05277a606ed2496fe:		
-  atlas accesslogs list --output json --projectId 618d48e05277a606ed2496fe --clusterName Cluster0`,
+  atlas accesslogs list --output json --projectId 618d48e05277a606ed2496fe --clusterName Cluster0
+
+  # Return a JSON-formatted list of all authentication requests made against the hostname named atlas-dqrlj4-shard-00-00.g1nxq.mongodb-dev.net for the project stored in the profile atlas-dev:
+  atlas accesslogs list --hostname atlas-dqrlj4-shard-00-00.g1nxq.mongodb-dev.net --profile atlas-dev --output json
+`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateInput,
@@ -136,6 +140,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, "", usage.AuthResult)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+
 	cmd.MarkFlagsMutuallyExclusive(flag.ClusterName, flag.Hostname)
 	cmd.MarkFlagsOneRequired(flag.ClusterName, flag.Hostname)
 

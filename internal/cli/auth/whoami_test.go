@@ -37,9 +37,10 @@ func TestWhoAmIBuilder(t *testing.T) {
 func Test_whoOpts_Run(t *testing.T) {
 	buf := new(bytes.Buffer)
 	opts := &whoOpts{
-		OutWriter: buf,
-		account:   "test",
+		OutWriter:   buf,
+		authSubject: "test@test.com",
+		authType:    "account",
 	}
 	require.NoError(t, opts.Run())
-	assert.Equal(t, "Logged in as test\n", buf.String())
+	assert.Equal(t, "Logged in as test@test.com account\n", buf.String())
 }

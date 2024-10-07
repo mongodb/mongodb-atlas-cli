@@ -186,5 +186,7 @@ func UpgradeBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagFilename(flag.File)
 
+	cmd.MarkFlagsOneRequired(flag.File, flag.Tier, flag.DiskSizeGB, flag.MDBVersion, flag.EnableTerminationProtection, flag.DisableTerminationProtection, flag.Tag)
+
 	return cmd
 }

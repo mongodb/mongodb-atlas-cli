@@ -46,7 +46,7 @@ func AccountWithAccessToken() (string, error) {
 	return config.AccessTokenSubject()
 }
 
-func AuthTypeAndSubject() (string, string, error) {
+func authTypeAndSubject() (string, string, error) {
 	if config.PublicAPIKey() != "" {
 		return "key", config.PublicAPIKey(), nil
 	}
@@ -72,7 +72,7 @@ func WhoAmIBuilder() *cobra.Command {
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
 			var err error
-			if opts.authType, opts.authSubject, err = AuthTypeAndSubject(); err != nil {
+			if opts.authType, opts.authSubject, err = authTypeAndSubject(); err != nil {
 				return err
 			}
 

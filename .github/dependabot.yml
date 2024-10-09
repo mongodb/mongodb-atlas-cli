@@ -50,7 +50,7 @@ updates:
       day: tuesday
     open-pull-requests-limit: 20
     reviewers:
-      - "mongodb/mongocli"
+      - "mongodb/enterprise-advanced"
     groups:
       golang:
         patterns:
@@ -74,7 +74,7 @@ updates:
       interval: weekly
       day: tuesday
     reviewers:
-      - "mongodb/mongocli"
+      - "mongodb/enterprise-advanced"
     groups:
       docker:
         patterns:

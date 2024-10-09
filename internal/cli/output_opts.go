@@ -110,6 +110,9 @@ func (opts *OutputOpts) IsCygwinTerminal() bool {
 }
 
 func isNil(o any) bool {
+	if o == nil {
+		return true
+	}
 	ot := reflect.TypeOf(o)
 	otk := ot.Kind()
 	switch otk { //nolint:exhaustive // clearer code
@@ -122,6 +125,9 @@ func isNil(o any) bool {
 
 func isOrPtrToSliceOrArray(o any) bool {
 	ot := reflect.TypeOf(o)
+	if ot == nil {
+		return false
+	}
 	otk := ot.Kind()
 	switch otk { //nolint:exhaustive // clearer code
 	case reflect.Array, reflect.Slice:

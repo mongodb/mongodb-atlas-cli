@@ -17,6 +17,7 @@
 package clusters
 
 import (
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -44,7 +45,7 @@ func TestWatch_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
+	if err := opts.Run(context.Background()); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

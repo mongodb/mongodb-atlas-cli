@@ -16,7 +16,9 @@ package clusters
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -31,6 +33,7 @@ import (
 type WatchOpts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
+	cli.RefresherOpts
 	name  string
 	store store.ClusterDescriber
 }
@@ -45,24 +48,34 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func isRetryable(err error) bool {
-	atlasErr, ok := atlasClustersPinned.AsError(err)
-	return ok && atlasErr.GetErrorCode() == "CLUSTER_NOT_FOUND"
+func (opts *WatchOpts) watcher(ctx context.Context) func() (any, bool, error) {
+	return func() (any, bool, error) {
+		result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+		if err != nil {
+			var atlasClustersPinnedErr *atlasClustersPinned.GenericOpenAPIError
+
+			if errors.As(err, &atlasClustersPinnedErr) {
+				if *atlasClustersPinnedErr.Model().Error == http.StatusUnauthorized {
+					// Refresh the access token
+					// Note: this only updates the config, so we have to re-initialize the store
+					if err := opts.RefreshAccessToken(ctx); err != nil {
+						return nil, false, err
+					}
+
+					// Re-initialize store, refreshAccessToken only refreshes the config
+					return nil, false, opts.initStore(ctx)()
+				}
+			}
+		}
+		if err != nil {
+			return nil, false, err
+		}
+		return nil, result.GetStateName() == "IDLE", nil
+	}
 }
 
-func (opts *WatchOpts) watcher() (any, bool, error) {
-	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
-	if err != nil {
-		return nil, false, err
-	}
-	if result.GetStateName() == "UPDATING" {
-		opts.IsRetryableErr = isRetryable
-	}
-	return nil, result.GetStateName() == "IDLE", nil
-}
-
-func (opts *WatchOpts) Run() error {
-	if _, err := opts.Watch(opts.watcher); err != nil {
+func (opts *WatchOpts) Run(ctx context.Context) error {
+	if _, err := opts.Watch(opts.watcher(ctx)); err != nil {
 		return err
 	}
 
@@ -93,11 +106,12 @@ You can interrupt the command's polling at any time with CTRL-C.
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), watchTemplate),
+				opts.InitFlow(config.Default()),
 			)
 		},
-		RunE: func(_ *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
-			return opts.Run()
+			return opts.Run(cmd.Context())
 		},
 	}
 

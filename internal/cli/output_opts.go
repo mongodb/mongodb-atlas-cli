@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/PaesslerAG/jsonpath"
@@ -125,6 +126,10 @@ func (opts *OutputOpts) Print(o any) error {
 	}
 
 	if t != "" {
+		k := reflect.TypeOf(o).Kind()
+		if (k == reflect.Slice || k == reflect.Ptr || k == reflect.Map || k == reflect.UnsafePointer) && reflect.ValueOf(o).IsNil() {
+			o = map[string]any{}
+		}
 		return templatewriter.Print(opts.ConfigWriter(), t, o)
 	}
 	_, err = fmt.Fprintln(opts.ConfigWriter(), o)

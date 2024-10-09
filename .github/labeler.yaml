@@ -9,3 +9,7 @@ labels:
     draft: False
     files:
       - "docs/.*.txt"
+  - label: "mongocli"
+    type: "pull_request"
+    draft: False
+    base-branch: mongocli-master

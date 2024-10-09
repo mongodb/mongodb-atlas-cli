@@ -12,4 +12,4 @@ labels:
   - label: "mongocli"
     type: "pull_request"
     draft: False
-    target-branch: mongocli-master
+    base-branch: mongocli-master

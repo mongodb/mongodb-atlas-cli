@@ -1304,8 +1304,6 @@ func deleteIDP(t *testing.T, cliPath string, id string, fedSettingsID string) {
 	cmd.Env = os.Environ()
 	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
-	var idps *atlasv2.PaginatedFederationIdentityProvider
-	require.NoError(t, json.Unmarshal(resp, &idps))
 }
 
 func deleteAllIDPs(t *testing.T, cliPath string) {

@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/PaesslerAG/jsonpath"
@@ -108,6 +109,40 @@ func (opts *OutputOpts) IsCygwinTerminal() bool {
 	return terminal.IsCygwinTerminal(opts.OutWriter)
 }
 
+func isNil(o any) bool {
+	if o == nil {
+		return true
+	}
+	ot := reflect.TypeOf(o)
+	otk := ot.Kind()
+	switch otk { //nolint:exhaustive // clearer code
+	case reflect.Array, reflect.Slice, reflect.Map, reflect.Chan, reflect.Pointer, reflect.UnsafePointer, reflect.Interface:
+		return reflect.ValueOf(o).IsNil()
+	default:
+		return false
+	}
+}
+
+func isOrPtrToSliceOrArray(o any) bool {
+	ot := reflect.TypeOf(o)
+	if ot == nil {
+		return false
+	}
+	otk := ot.Kind()
+	switch otk { //nolint:exhaustive // clearer code
+	case reflect.Array, reflect.Slice:
+		return true
+	case reflect.Pointer:
+		opt := reflect.PointerTo(ot)
+		optk := opt.Kind()
+		switch optk { //nolint:exhaustive // clearer code
+		case reflect.Array, reflect.Slice:
+			return true
+		}
+	}
+	return false
+}
+
 // Print will evaluate the defined format and try to parse it accordingly outputting to the set writer.
 func (opts *OutputOpts) Print(o any) error {
 	if opts.ConfigOutput() == jsonFormat {
@@ -125,6 +160,13 @@ func (opts *OutputOpts) Print(o any) error {
 	}
 
 	if t != "" {
+		if isNil(o) {
+			if isOrPtrToSliceOrArray(o) {
+				o = []map[string]any{}
+			} else {
+				o = map[string]any{}
+			}
+		}
 		return templatewriter.Print(opts.ConfigWriter(), t, o)
 	}
 	_, err = fmt.Fprintln(opts.ConfigWriter(), o)

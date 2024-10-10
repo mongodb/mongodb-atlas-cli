@@ -1707,13 +1707,15 @@ buildvariants:
       - name: ".e2e .backup .atlas"
   - name: e2e_cleanup
     display_name: "E2E Cleanup Resources"
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - cleanup
     run_on:
       - rhel80-small
     expansions:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .cleanup"
-        cron: "0 2 * * *" # 2am daily
   - name: e2e_atlas_deployments
     display_name: "E2E Atlas Deployments Tests"
     run_on:
@@ -1866,6 +1868,9 @@ patch_aliases:
     task: ".*"
   - alias: "packer"
     variant_tags: ["packer"]
+    task: ".*"
+  - alias: "cleanup"
+    variant_tags: ["cleanup"]
     task: ".*"
 github_pr_aliases:
   - variant: "code_health"

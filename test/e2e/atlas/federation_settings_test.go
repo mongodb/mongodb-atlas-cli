@@ -238,51 +238,51 @@ func TestIdentityProviders(t *testing.T) {
 		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
 	})
 
-	// t.Run("Disconnect OIDC IdP WORKLOAD", func(t *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		federatedAuthenticationEntity,
-	// 		federationSettingsEntity,
-	// 		connectedOrgsConfigsEntity,
-	// 		"disconnect",
-	// 		"--identityProviderId",
-	// 		oidcWorkloadIdpID,
-	// 		"--federationSettingsId",
-	// 		federationSettingsID,
-	// 		"-o=json",
-	// 	)
+	t.Run("Disconnect OIDC IdP WORKLOAD", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			connectedOrgsConfigsEntity,
+			"disconnect",
+			"--identityProviderId",
+			oidcWorkloadIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
+			"-o=json",
+		)
 
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := e2e.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
 
-	// 	var config atlasv2.ConnectedOrgConfig
-	// 	req.NoError(json.Unmarshal(resp, &config))
+		var config atlasv2.ConnectedOrgConfig
+		req.NoError(json.Unmarshal(resp, &config))
 
-	// 	assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
-	// })
+		assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
+	})
 
-	// t.Run("Disconnect OIDC IdP WORKFORCE", func(t *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		federatedAuthenticationEntity,
-	// 		federationSettingsEntity,
-	// 		connectedOrgsConfigsEntity,
-	// 		"disconnect",
-	// 		"--identityProviderId",
-	// 		oidcIWorkforceIdpID,
-	// 		"--federationSettingsId",
-	// 		federationSettingsID,
-	// 		"-o=json",
-	// 	)
+	t.Run("Disconnect OIDC IdP WORKFORCE", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			connectedOrgsConfigsEntity,
+			"disconnect",
+			"--identityProviderId",
+			oidcIWorkforceIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
+			"-o=json",
+		)
 
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := e2e.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
 
-	// 	var config atlasv2.ConnectedOrgConfig
-	// 	req.NoError(json.Unmarshal(resp, &config))
+		var config atlasv2.ConnectedOrgConfig
+		req.NoError(json.Unmarshal(resp, &config))
 
-	// 	assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
-	// })
+		assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
+	})
 
 	t.Run("Update connected org config", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -459,23 +459,23 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(err, string(resp))
 	})
 
-	// t.Run("Delete OIDC IdP WORKFORCE", func(_ *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		federatedAuthenticationEntity,
-	// 		federationSettingsEntity,
-	// 		identityProviderEntity,
-	// 		"delete",
-	// 		oidcIWorkforceIdpID,
-	// 		"--federationSettingsId",
-	// 		federationSettingsID,
-	// 		"--force",
-	// 		"-o=json",
-	// 	)
+	t.Run("Delete OIDC IdP WORKFORCE", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			identityProviderEntity,
+			"delete",
+			oidcIWorkforceIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
+			"--force",
+			"-o=json",
+		)
 
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := e2e.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
-	// })
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+	})
 
 	t.Run("Revoke JWK from OIDC IdP WORKLOAD", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -494,21 +494,21 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(err, string(resp))
 	})
 
-	// t.Run("Delete OIDC IdP WORKLOAD", func(_ *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		federatedAuthenticationEntity,
-	// 		federationSettingsEntity,
-	// 		identityProviderEntity,
-	// 		"delete",
-	// 		oidcWorkloadIdpID,
-	// 		"--federationSettingsId",
-	// 		federationSettingsID,
-	// 		"--force",
-	// 		"-o=json",
-	// 	)
+	t.Run("Delete OIDC IdP WORKLOAD", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			federatedAuthenticationEntity,
+			federationSettingsEntity,
+			identityProviderEntity,
+			"delete",
+			oidcWorkloadIdpID,
+			"--federationSettingsId",
+			federationSettingsID,
+			"--force",
+			"-o=json",
+		)
 
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := e2e.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
-	// })
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+	})
 }

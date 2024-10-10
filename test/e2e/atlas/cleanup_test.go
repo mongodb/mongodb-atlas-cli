@@ -110,5 +110,12 @@ func TestCleanup(t *testing.T) {
 				deleteAllServerlessInstances(t, cliPath, projectID)
 			})
 		})
+		t.Run("delete all idps", func(t *testing.T) {
+			if IsGov() {
+				t.Skip("idps are not available on gov")
+			}
+			t.Parallel()
+			deleteAllIDPs(t, cliPath)
+		})
 	}
 }

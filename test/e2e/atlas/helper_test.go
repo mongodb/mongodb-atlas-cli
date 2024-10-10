@@ -1265,3 +1265,54 @@ func installExamplePlugin(t *testing.T, cliPath string, version string) {
 	resp, err := e2e.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }
+
+func getFedSettingsID(t *testing.T, cliPath string) string {
+	t.Helper()
+	args := []string{federatedAuthenticationEntity,
+		federationSettingsEntity,
+		"describe",
+		"-o=json",
+	}
+	if orgID, set := os.LookupEnv("MCLI_ORG_ID"); set {
+		args = append(args, "--orgId", orgID)
+	}
+	cmd := exec.Command(cliPath, args...)
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
+	var settings *atlasv2.OrgFederationSettings
+	require.NoError(t, json.Unmarshal(resp, &settings))
+	require.NotNil(t, settings.Id)
+
+	return *settings.Id
+}
+
+func listIDPs(t *testing.T, cliPath string, fedSettingsID string) *atlasv2.PaginatedFederationIdentityProvider {
+	t.Helper()
+	cmd := exec.Command(cliPath, "federatedAuthentication", "federationSettings", "identityProvider", "list", "--federationSettingsId", fedSettingsID, "-o", "json")
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
+	var idps *atlasv2.PaginatedFederationIdentityProvider
+	require.NoError(t, json.Unmarshal(resp, &idps))
+	return idps
+}
+
+func deleteIDP(t *testing.T, cliPath string, id string, fedSettingsID string) {
+	t.Helper()
+	cmd := exec.Command(cliPath, federatedAuthenticationEntity, federationSettingsEntity, "identityProvider", "delete", id, "--federationSettingsId", fedSettingsID, "--force")
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
+	var idps *atlasv2.PaginatedFederationIdentityProvider
+	require.NoError(t, json.Unmarshal(resp, &idps))
+}
+
+func deleteAllIDPs(t *testing.T, cliPath string) {
+	t.Helper()
+	fedSettingsID := getFedSettingsID(t, cliPath)
+	idps := listIDPs(t, cliPath, fedSettingsID)
+	for _, idp := range *idps.Results {
+		deleteIDP(t, cliPath, idp.Id, fedSettingsID)
+	}
+}

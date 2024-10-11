@@ -40,6 +40,13 @@ func TestCleanup(t *testing.T) {
 		t.Parallel()
 		deleteOrgTeams(t, cliPath)
 	})
+	t.Run("trying to delete all org idps", func(t *testing.T) {
+		if IsGov() {
+			t.Skip("idps are not available on gov")
+		}
+		t.Parallel()
+		deleteAllIDPs(t, cliPath)
+	})
 	args := []string{projectEntity,
 		"list",
 		"--limit=500",

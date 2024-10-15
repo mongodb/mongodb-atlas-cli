@@ -47,6 +47,7 @@ const (
 	PausedState        = "PAUSED"
 	StoppedState       = "STOPPED"
 	IdleState          = "IDLE"
+	UpdatingState      = "UPDATING"
 	DeletingState      = "DELETING"
 	RestartingState    = "RESTARTING"
 	LocalCluster       = "local"

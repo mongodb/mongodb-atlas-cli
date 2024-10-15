@@ -70,9 +70,12 @@ func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, t
 				},
 			},
 			Spec: akov2.AtlasDatabaseUserSpec{
-				Project: akov2common.ResourceRefNamespaced{
+				Project: &akov2common.ResourceRefNamespaced{
 					Name:      resources.NormalizeAtlasName(projectName, dictionary),
 					Namespace: targetNamespace,
+				},
+				ExternalProjectRef: &akov2.ExternalProjectReference{
+					ID: projectID,
 				},
 				DatabaseName:    user.DatabaseName,
 				DeleteAfterDate: getDeleteAfterDate(user),
@@ -176,4 +179,16 @@ func suggestResourceName(
 	}
 
 	return resourceName
+}
+
+func FixReference(dbUser *akov2.AtlasDatabaseUser, independentResource bool, credentials string) *akov2.AtlasDatabaseUser {
+	if independentResource {
+		dbUser.Spec.Project = nil
+		dbUser.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
+			Name: credentials,
+		}
+		return dbUser
+	}
+	dbUser.Spec.ExternalProjectRef = nil
+	return dbUser
 }

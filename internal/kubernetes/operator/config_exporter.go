@@ -29,7 +29,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/streamsprocessing"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"go.mongodb.org/atlas-sdk/v20240805005/admin"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	"go.mongodb.org/atlas-sdk/v20240805004/admin"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -40,6 +41,8 @@ const (
 	maxClusters          = 500
 	DefaultClustersCount = 10
 	InactiveStatus       = "INACTIVE"
+
+	credentialSuffix = "-credentials"
 )
 
 type ConfigExporter struct {
@@ -55,6 +58,7 @@ type ConfigExporter struct {
 	dictionaryForAtlasNames map[string]string
 	dataFederationNames     []string
 	patcher                 Patcher
+	independentResources    bool
 }
 
 type Patcher interface {
@@ -116,6 +120,11 @@ func (e *ConfigExporter) WithPatcher(p Patcher) *ConfigExporter {
 	return e
 }
 
+func (e *ConfigExporter) WithIndependentResources(enabled bool) *ConfigExporter {
+	e.independentResources = enabled
+	return e
+}
+
 func (e *ConfigExporter) Run() (string, error) {
 	// TODO: Add REST to OPERATOR entities matcher
 	output := bytes.NewBufferString(yamlSeparator)
@@ -159,6 +168,7 @@ func (e *ConfigExporter) Run() (string, error) {
 	r = append(r, streamProcessingResources...)
 
 	for _, res := range r {
+		res = filterResource(res, e.independentResources, projectName+credentialSuffix)
 		if e.patcher != nil {
 			err = e.patcher.Patch(res)
 			if err != nil {
@@ -216,9 +226,9 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	}
 
 	// Project secret with credentials
-	r = append(r, project.BuildProjectConnectionSecret(
+	r = append(r, project.BuildProjectNamedConnectionSecret(
 		e.credsProvider,
-		projectData.Project.Name,
+		projectData.Project.Name+credentialSuffix,
 		projectData.Project.Namespace,
 		e.orgID,
 		e.includeSecretsData,
@@ -447,4 +457,15 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 		return nil, fmt.Errorf("failed to export federated authentication: %w", err)
 	}
 	return append(result, federatedAuthentification), nil
+}
+
+func filterResource(obj runtime.Object, independentResource bool, credentials string) runtime.Object {
+	switch r := obj.(type) {
+	case *akov2.AtlasDatabaseUser:
+		return dbusers.FixReference(r, independentResource, credentials)
+	case *akov2.AtlasDeployment:
+		return deployment.FixReference(r, independentResource, credentials)
+	default:
+		return obj
+	}
 }

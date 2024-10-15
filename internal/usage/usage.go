@@ -139,7 +139,7 @@ dbName and collection are required only for built-in roles.`
 	VictorOpsAPIKey                           = "Splunk On-Call API key that allows Atlas to access your Splunk On-Call account."                                                               //nolint:gosec // This is just a message not a credential
 	RoutingKey                                = "Routing key associated with your Splunk On-Call account."
 	OrgNameFilter                             = "Organization name to perform a case-insensitive search for."
-	OrgIncludeDeleted                         = "Flag that indictaes whether to include deleted organizations in the list. This option applies only to Ops Manager organizations. You can't return deleted Atlas or Cloud Manager organizations."
+	OrgIncludeDeleted                         = "Flag that indicates whether to include deleted organizations in the list. This option applies only to Ops Manager organizations. You can't return deleted Atlas or Cloud Manager organizations."
 	APIKeyDescription                         = "Description of the API key."
 	AtlasAPIKeyDescription                    = APIKeyDescription + requiredForAtlas
 	APIKeyRoles                               = "Role or roles that you want to assign to the API key. To assign more than one role, specify each role with a separate role flag or specify all of the roles as a comma-separated list using one role flag. To learn which values the CLI accepts, see the Items Enum for roles in the Atlas API spec: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Programmatic-API-Keys/operation/createApiKey/."        //nolint:gosec // This is just a message not a credential
@@ -409,4 +409,5 @@ dbName and collection are required only for built-in roles.`
 	ConnectedOrgConfigFilename = "Path to a JSON configuration file that defines connected orgs configurations. To learn more about connected org configuration file format, see the request body in https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/updateConnectedOrgConfig."
 	AuditFilter                = "JSON document that specifies which events to record. Escape any characters that may prevent parsing, such as single or double quotes, using a backslash (\\)."
 	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. To learn more about invitation configuration files for the Atlas CLI, see https://XXX."
+	IndependentResources       = "Flag that makes the generated resources that support independent usage, to use external IDs rather than Kubernetes references."
 )

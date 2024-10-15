@@ -48,6 +48,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 
 	t.Run("Can import Advanced deployment", func(t *testing.T) {
 		const (
+			projectID       = "abcdef1234567"
 			projectName     = "testProject-1"
 			clusterName     = "testCluster-1"
 			targetNamespace = "test-namespace-1"
@@ -200,10 +201,10 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 
 		managedNamespace := globalCluster.GetManagedNamespaces()
 
-		clusterStore.EXPECT().AtlasCluster(projectName, clusterName).Return(cluster, nil)
-		clusterStore.EXPECT().AtlasClusterConfigurationOptions(projectName, clusterName).Return(processArgs, nil)
-		clusterStore.EXPECT().GlobalCluster(projectName, clusterName).Return(globalCluster, nil)
-		clusterStore.EXPECT().DescribeSchedule(projectName, clusterName).Return(backupSchedule, nil)
+		clusterStore.EXPECT().AtlasCluster(projectID, clusterName).Return(cluster, nil)
+		clusterStore.EXPECT().AtlasClusterConfigurationOptions(projectID, clusterName).Return(processArgs, nil)
+		clusterStore.EXPECT().GlobalCluster(projectID, clusterName).Return(globalCluster, nil)
+		clusterStore.EXPECT().DescribeSchedule(projectID, clusterName).Return(backupSchedule, nil)
 
 		expectCluster := &akov2.AtlasDeployment{
 			TypeMeta: metav1.TypeMeta{
@@ -218,9 +219,12 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasDeploymentSpec{
-				Project: akov2common.ResourceRefNamespaced{
+				Project: &akov2common.ResourceRefNamespaced{
 					Name:      strings.ToLower(projectName),
 					Namespace: targetNamespace,
+				},
+				ExternalProjectRef: &akov2.ExternalProjectReference{
+					ID: projectID,
 				},
 				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
 					MongoDBMajorVersion: "5.0",
@@ -406,7 +410,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureBackupSchedule).Return(true)
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureGlobalDeployments).Return(true)
 
-		got, err := BuildAtlasAdvancedDeployment(clusterStore, featureValidator, projectName, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
+		got, err := BuildAtlasAdvancedDeployment(clusterStore, featureValidator, projectID, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -421,6 +425,7 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 }
 
 func TestBuildServerlessDeployments(t *testing.T) {
+	const projectID = "abcdef1234567"
 	const projectName = "testProject-2"
 	const clusterName = "testCluster-2"
 	const targetNamespace = "test-namespace-2"
@@ -464,8 +469,8 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			Links:                   nil,
 		}
 
-		clusterStore.EXPECT().GetServerlessInstance(projectName, clusterName).Return(cluster, nil)
-		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil)
+		clusterStore.EXPECT().GetServerlessInstance(projectID, clusterName).Return(cluster, nil)
+		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectID, clusterName).Return(spe, nil)
 
 		expected := &akov2.AtlasDeployment{
 			TypeMeta: metav1.TypeMeta{
@@ -480,7 +485,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasDeploymentSpec{
-				Project: akov2common.ResourceRefNamespaced{
+				Project: &akov2common.ResourceRefNamespaced{
 					Name:      strings.ToLower(projectName),
 					Namespace: targetNamespace,
 				},
@@ -511,7 +516,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints).Return(true)
 
-		got, err := BuildServerlessDeployments(clusterStore, featureValidator, projectName, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
+		got, err := BuildServerlessDeployments(clusterStore, featureValidator, projectID, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

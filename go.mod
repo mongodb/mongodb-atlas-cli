@@ -41,6 +41,7 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.37.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
+	go.mongodb.org/atlas-sdk/v20240805004 v20240805004.7.0
 	go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.0
 	go.mongodb.org/mongo-driver v1.17.1
 	golang.org/x/exp v0.0.0-20241004190924-225e2abe05e6
@@ -176,3 +177,5 @@ require (
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 )
+
+replace github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.4.1 => ../mongodb-atlas-kubernetes

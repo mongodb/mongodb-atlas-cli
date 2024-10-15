@@ -124,9 +124,12 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 			},
 		},
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: akov2common.ResourceRefNamespaced{
+			Project: &akov2common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(projectName, dictionary),
 				Namespace: targetNamespace,
+			},
+			ExternalProjectRef: &akov2.ExternalProjectReference{
+				ID: projectID,
 			},
 			DeploymentSpec: advancedSpec,
 			ServerlessSpec: nil,
@@ -490,7 +493,7 @@ func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, vali
 			},
 		},
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: akov2common.ResourceRefNamespaced{
+			Project: &akov2common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(projectName, dictionary),
 				Namespace: targetNamespace,
 			},
@@ -545,4 +548,16 @@ func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndp
 		}
 	}
 	return result, nil
+}
+
+func FixReference(deployment *akov2.AtlasDeployment, independentResource bool, credentials string) *akov2.AtlasDeployment {
+	if independentResource {
+		deployment.Spec.Project = nil
+		deployment.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
+			Name: credentials,
+		}
+		return deployment
+	}
+	deployment.Spec.ExternalProjectRef = nil
+	return deployment
 }

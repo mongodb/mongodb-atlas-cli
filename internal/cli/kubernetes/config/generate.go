@@ -36,14 +36,15 @@ var ErrUnsupportedOperatorVersionFmt = "version %q is not supported. Supported v
 type GenerateOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts
-	clusterName        []string
-	dataFederationName []string
-	includeSecrets     bool
-	targetNamespace    string
-	operatorVersion    string
-	store              store.OperatorGenericStore
-	credsStore         store.CredentialsGetter
-	crdsProvider       crds.AtlasOperatorCRDProvider
+	clusterName          []string
+	dataFederationName   []string
+	includeSecrets       bool
+	targetNamespace      string
+	operatorVersion      string
+	store                store.OperatorGenericStore
+	credsStore           store.CredentialsGetter
+	crdsProvider         crds.AtlasOperatorCRDProvider
+	independentResources bool
 }
 
 func (opts *GenerateOpts) ValidateTargetNamespace() error {
@@ -93,6 +94,7 @@ func (opts *GenerateOpts) Run() error {
 		WithFeatureValidator(atlasCRDs).
 		WithPatcher(atlasCRDs).
 		WithDataFederationNames(opts.dataFederationName).
+		WithIndependentResources(opts.independentResources).
 		Run()
 	if err != nil {
 		return err
@@ -114,6 +116,9 @@ func GenerateBuilder() *cobra.Command {
 		Long:    `This command exports configurations for Atlas objects including projects, deployments, and users in a Kubernetes-compatible format, allowing you to manage these resources using the Atlas Kubernetes Operator. For more information, see https://www.mongodb.com/docs/atlas/atlas-operator/`,
 		Example: `# Export Project, DatabaseUsers, Deployments resources for a specific project without connection and integration secrets:
   atlas kubernetes config generate --projectId=<projectId>
+
+  # Export Project, DatabaseUsers, Deployments resources for a specific project, but use external IDs where supported:
+  atlas kubernetes config generate --projectId=<projectId> --independentResources
 
   # Export Project, DatabaseUsers, Deployments resources for a specific project including connection and integration secrets:
   atlas kubernetes config generate --projectId=<projectId> --includeSecrets
@@ -149,6 +154,6 @@ func GenerateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.targetNamespace, flag.OperatorTargetNamespace, "", usage.OperatorTargetNamespace)
 	cmd.Flags().StringVar(&opts.operatorVersion, flag.OperatorVersion, features.LatestOperatorMajorVersion, usage.OperatorVersion)
 	cmd.Flags().StringSliceVar(&opts.dataFederationName, flag.DataFederationName, []string{}, usage.ExporterDataFederationName)
-
+	cmd.Flags().BoolVar(&opts.independentResources, flag.IndependentResources, false, usage.IndependentResources)
 	return cmd
 }

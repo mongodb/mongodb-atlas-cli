@@ -99,7 +99,6 @@ func Test_buildUserSecret(t *testing.T) {
 		projectName := "TestProject-1"
 		projectID := "123"
 		atlasUser := &atlasv2.CloudDatabaseUser{
-			Password: pointer.Get("TestPassword"),
 			Username: "TestName",
 		}
 
@@ -194,9 +193,12 @@ func TestBuildDBUsers(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasDatabaseUserSpec{
-				Project: akov2common.ResourceRefNamespaced{
+				Project: &akov2common.ResourceRefNamespaced{
 					Name:      resources.NormalizeAtlasName(projectName, dictionary),
 					Namespace: targetNamespace,
+				},
+				ExternalProjectRef: &akov2.ExternalProjectReference{
+					ID: projectID,
 				},
 				DatabaseName:    user.DatabaseName,
 				DeleteAfterDate: user.DeleteAfterDate.Format(timeFormatISO8601),

@@ -46,11 +46,12 @@ import (
 )
 
 const (
-	orgID           = "TestOrgID"
-	projectID       = "TestProjectID"
-	teamID          = "TestTeamID"
-	resourceVersion = "x.y.z"
-	targetNamespace = "test-namespace"
+	orgID            = "TestOrgID"
+	projectID        = "TestProjectID"
+	teamID           = "TestTeamID"
+	resourceVersion  = "x.y.z"
+	targetNamespace  = "test-namespace"
+	credentialSuffix = "-credentials"
 )
 
 func TestBuildAtlasProject(t *testing.T) {
@@ -659,7 +660,7 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 		credsProvider.EXPECT().PublicAPIKey().Return(publicAPIKey)
 		credsProvider.EXPECT().PrivateAPIKey().Return(privateAPIKey)
 
-		got := BuildProjectConnectionSecret(credsProvider, name, namespace,
+		got := BuildProjectNamedConnectionSecret(credsProvider, name+credentialSuffix, namespace,
 			orgID, true, dictionary)
 
 		expected := &corev1.Secret{
@@ -689,7 +690,7 @@ func TestBuildProjectConnectionSecret(t *testing.T) {
 		name := "TestSecret"
 		namespace := "TestNamespace"
 
-		got := BuildProjectConnectionSecret(credsProvider, name, namespace,
+		got := BuildProjectNamedConnectionSecret(credsProvider, name+credentialSuffix, namespace,
 			orgID, false, dictionary)
 
 		expected := &corev1.Secret{

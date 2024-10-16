@@ -131,6 +131,26 @@ func InitialSetup(t *testing.T) KubernetesConfigGenerateProjectSuite {
 	return s
 }
 
+func TestExportWorksWithoutFedAuth(t *testing.T) {
+	s := InitialSetup(t)
+	cliPath := s.cliPath
+	generator := s.generator
+	cmd := exec.Command(cliPath,
+		"kubernetes",
+		"config",
+		"generate",
+		"--projectId",
+		generator.projectID)
+	cmd.Env = os.Environ()
+	resp, err := cmd.CombinedOutput()
+	t.Log(string(resp))
+	require.NoError(t, err, string(resp))
+	var objects []runtime.Object
+	objects, err = getK8SEntities(resp)
+	require.NoError(t, err, fmt.Sprintf("should not fail on decode but got:\n%s", string(resp)))
+	require.NotEmpty(t, objects)
+}
+
 func TestFederatedAuthTest(t *testing.T) {
 	t.Run("PreRequisite Get the federation setting ID", func(t *testing.T) {
 		s := InitialSetup(t)

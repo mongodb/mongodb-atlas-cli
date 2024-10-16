@@ -147,7 +147,7 @@ func TestExportWorksWithoutFedAuth(t *testing.T) {
 	require.NoError(t, err, string(resp))
 	var objects []runtime.Object
 	objects, err = getK8SEntities(resp)
-	require.NoError(t, err, fmt.Sprintf("should not fail on decode but got:\n%s", string(resp)))
+	require.NoError(t, err, "should not fail on decode but got:\n"+string(resp))
 	require.NotEmpty(t, objects)
 }
 

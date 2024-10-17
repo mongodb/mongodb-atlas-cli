@@ -1,8 +1,7 @@
 name: Issue Labeler
 on:
-  issues:
+  pull_request:
     types: [opened, edited]
-
 jobs:
   triage:
     runs-on: ubuntu-latest

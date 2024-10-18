@@ -5,6 +5,10 @@ on:
 jobs:
   triage:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
     steps:
       - uses: github/issue-labeler@v3.4
         with:
@@ -12,24 +16,3 @@ jobs:
           configuration-path: .github/labeler.yaml
           not-before: 2020-01-15T02:54:32Z
           enable-versioned-regex: 0
-jobs:
-  labeler:
-    name: Add Label to PRs and Issues
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-      issues: write
-    steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
-        with:
-          config: ${{ vars.PERMISSIONS_CONFIG }}
-      - name: Checkout repo
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - name: Add Labels
-        uses: github/issue-labeler@v3.4
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          config_path: .github/labeler.yaml
-          use_local_config: true

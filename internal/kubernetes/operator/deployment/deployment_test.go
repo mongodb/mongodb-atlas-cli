@@ -38,7 +38,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const resourceVersion = "x.y.z"
+const (
+	resourceVersion = "x.y.z"
+
+	credentialSuffix = "-credentials"
+)
 
 func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 	ctl := gomock.NewController(t)
@@ -222,9 +226,6 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				Project: &akov2common.ResourceRefNamespaced{
 					Name:      strings.ToLower(projectName),
 					Namespace: targetNamespace,
-				},
-				ExternalProjectRef: &akov2.ExternalProjectReference{
-					ID: projectID,
 				},
 				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
 					MongoDBMajorVersion: "5.0",
@@ -410,7 +411,8 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureBackupSchedule).Return(true)
 		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureGlobalDeployments).Return(true)
 
-		got, err := BuildAtlasAdvancedDeployment(clusterStore, featureValidator, projectID, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
+		creds := projectName + credentialSuffix
+		got, err := BuildAtlasAdvancedDeployment(clusterStore, featureValidator, projectID, projectName, clusterName, targetNamespace, creds, dictionary, resourceVersion, false)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

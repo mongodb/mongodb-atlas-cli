@@ -522,6 +522,101 @@ func TestBuildServerlessDeployments(t *testing.T) {
 	})
 }
 
+func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
+	const projectName = "testProject-2-1"
+	const clusterName = "testCluster-2-1"
+	const targetNamespace = "test-namespace-2-1"
+
+	ctl := gomock.NewController(t)
+	clusterStore := mocks.NewMockOperatorClusterStore(ctl)
+	dictionary := resources.AtlasNameToKubernetesName()
+
+	featureValidator := mocks.NewMockFeatureValidator(ctl)
+
+	t.Run("Can import Serverless deployment", func(t *testing.T) {
+		speID := "TestPEId-1"
+		speCloudProviderEndpointID := "TestCloudProviderID-1"
+		speComment := "TestPEName-1"
+		spePrivateEndpointIPAddress := ""
+
+		spe := []atlasClustersPinned.ServerlessTenantEndpoint{
+			{
+				Id:                       &speID,
+				CloudProviderEndpointId:  &speCloudProviderEndpointID,
+				Comment:                  &speComment,
+				PrivateEndpointIpAddress: &spePrivateEndpointIPAddress,
+				ProviderName:             pointer.Get("AZURE"),
+			},
+		}
+
+		cluster := &atlasClustersPinned.ServerlessInstanceDescription{
+			Id:             pointer.Get("TestClusterID"),
+			GroupId:        pointer.Get("TestGroupID"),
+			MongoDBVersion: pointer.Get("5.0"),
+			Name:           pointer.Get(clusterName),
+			CreateDate:     pointer.Get(time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)),
+			ProviderSettings: atlasClustersPinned.ServerlessProviderSettings{
+				BackingProviderName: "GCP",
+				ProviderName:        pointer.Get("GCP"),
+				RegionName:          "US_EAST_1",
+			},
+			StateName:               pointer.Get(""),
+			ServerlessBackupOptions: nil,
+			ConnectionStrings:       nil,
+			Links:                   nil,
+		}
+
+		clusterStore.EXPECT().GetServerlessInstance(projectName, clusterName).Return(cluster, nil)
+		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil).Times(0)
+
+		expected := &akov2.AtlasDeployment{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       "AtlasDeployment",
+				APIVersion: "atlas.mongodb.com/v1",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
+				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: resourceVersion,
+				},
+			},
+			Spec: akov2.AtlasDeploymentSpec{
+				Project: akov2common.ResourceRefNamespaced{
+					Name:      strings.ToLower(projectName),
+					Namespace: targetNamespace,
+				},
+				BackupScheduleRef: akov2common.ResourceRefNamespaced{},
+				ServerlessSpec: &akov2.ServerlessSpec{
+					Name: cluster.GetName(),
+					ProviderSettings: &akov2.ServerlessProviderSettingsSpec{
+						BackingProviderName: cluster.ProviderSettings.BackingProviderName,
+						ProviderName:        akov2provider.ProviderName(cluster.ProviderSettings.GetProviderName()),
+						RegionName:          cluster.ProviderSettings.RegionName,
+					},
+				},
+				ProcessArgs: nil,
+			},
+			Status: akov2status.AtlasDeploymentStatus{
+				Common: akoapi.Common{
+					Conditions: []akoapi.Condition{},
+				},
+			},
+		}
+
+		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints).Return(true)
+
+		got, err := BuildServerlessDeployments(clusterStore, featureValidator, projectName, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
+		if err != nil {
+			t.Fatalf("%v", err)
+		}
+
+		if !reflect.DeepEqual(expected, got) {
+			t.Fatalf("Serverless deployment mismatch.\r\nexp: %v\r\ngot: %v\r\n", expected, got)
+		}
+	})
+}
+
 func TestCleanTenantFields(t *testing.T) {
 	for _, tt := range []struct {
 		name   string

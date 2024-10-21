@@ -62,6 +62,7 @@ type Patcher interface {
 }
 
 var (
+	ErrServerless             = errors.New("serverless instance error")
 	ErrClusterNotFound        = errors.New("cluster not found")
 	ErrNoCloudManagerClusters = errors.New("can not get 'advanced clusters' object")
 )
@@ -282,13 +283,14 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 		}
 
 		// Try serverless cluster next
-		if serverlessCluster, err := deployment.BuildServerlessDeployments(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion); err == nil {
+		serverlessCluster, err := deployment.BuildServerlessDeployments(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion)
+		if err == nil {
 			if serverlessCluster != nil {
 				result = append(result, serverlessCluster)
 			}
 			continue
 		}
-		return nil, fmt.Errorf("%w: %s(%s)", ErrClusterNotFound, deploymentName, e.projectID)
+		return nil, fmt.Errorf("%w: %s(%s), e: %w", ErrServerless, deploymentName, e.projectID, err)
 	}
 	return result, nil
 }

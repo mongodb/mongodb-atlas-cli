@@ -17,6 +17,7 @@
 package deployment
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -411,6 +412,9 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 		}
 
 		if !reflect.DeepEqual(expected, got) {
+			expJs, _ := json.MarshalIndent(expected, "", " ")
+			gotJs, _ := json.MarshalIndent(got, "", " ")
+			fmt.Printf("E:%s\r\n; G:%s\r\n", expJs, gotJs)
 			t.Fatalf("Advanced deployment mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, got)
 		}
 	})

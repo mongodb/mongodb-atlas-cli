@@ -290,7 +290,7 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 			}
 			continue
 		}
-		return nil, fmt.Errorf("%w: %s(%s), e: %s", ErrServerless, deploymentName, e.projectID, err)
+		return nil, fmt.Errorf("%w: %s(%s), e: %w", ErrServerless, deploymentName, e.projectID, err)
 	}
 	return result, nil
 }

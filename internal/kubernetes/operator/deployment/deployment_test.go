@@ -17,7 +17,6 @@
 package deployment
 
 import (
-	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -520,9 +519,9 @@ func TestBuildServerlessDeployments(t *testing.T) {
 }
 
 func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
-	const projectName = "testProject-2"
-	const clusterName = "testCluster-2"
-	const targetNamespace = "test-namespace-2"
+	const projectName = "testProject-2-1"
+	const clusterName = "testCluster-2-1"
+	const targetNamespace = "test-namespace-2-1"
 
 	ctl := gomock.NewController(t)
 	clusterStore := mocks.NewMockOperatorClusterStore(ctl)
@@ -531,9 +530,9 @@ func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
 	featureValidator := mocks.NewMockFeatureValidator(ctl)
 
 	t.Run("Can import Serverless deployment", func(t *testing.T) {
-		speID := "TestPEId"
-		speCloudProviderEndpointID := "TestCloudProviderID"
-		speComment := "TestPEName"
+		speID := "TestPEId-1"
+		speCloudProviderEndpointID := "TestCloudProviderID-1"
+		speComment := "TestPEName-1"
 		spePrivateEndpointIPAddress := ""
 
 		spe := []atlasClustersPinned.ServerlessTenantEndpoint{
@@ -609,10 +608,6 @@ func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
 		}
 
 		if !reflect.DeepEqual(expected, got) {
-			je, _ := json.MarshalIndent(expected, "", " ")
-			fmt.Println("Expected", string(je))
-			jg, _ := json.MarshalIndent(expected, "", " ")
-			fmt.Println("Got", string(jg))
 			t.Fatalf("Serverless deployment mismatch.\r\nexp: %v\r\ngot: %v\r\n", expected, got)
 		}
 	})

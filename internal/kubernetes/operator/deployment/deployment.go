@@ -46,7 +46,7 @@ type AtlasDeploymentResult struct {
 	BackupPolicies []*akov2.AtlasBackupPolicy
 }
 
-func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*AtlasDeploymentResult, error) {
+func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, credentials string, dictionary map[string]string, version string, independentResource bool) (*AtlasDeploymentResult, error) {
 	deployment, err := deploymentStore.AtlasCluster(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -124,13 +124,6 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 			},
 		},
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: &akov2common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(projectName, dictionary),
-				Namespace: targetNamespace,
-			},
-			ExternalProjectRef: &akov2.ExternalProjectReference{
-				ID: projectID,
-			},
 			DeploymentSpec: advancedSpec,
 			ServerlessSpec: nil,
 			ProcessArgs:    nil,
@@ -141,6 +134,8 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 			},
 		},
 	}
+	normalizedProjectName := resources.NormalizeAtlasName(projectName, dictionary)
+	atlasDeployment = setReference(atlasDeployment, independentResource, projectID, normalizedProjectName, targetNamespace, credentials)
 
 	deploymentResult := &AtlasDeploymentResult{
 		Deployment:     atlasDeployment,
@@ -187,6 +182,23 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 	}
 
 	return deploymentResult, nil
+}
+
+func setReference(deployment *akov2.AtlasDeployment, independentResource bool, projectID, projectName, namespace string, credentials string) *akov2.AtlasDeployment {
+	if independentResource {
+		deployment.Spec.ExternalProjectRef = &akov2.ExternalProjectReference{
+			ID: projectID,
+		}
+		deployment.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
+			Name: credentials,
+		}
+		return deployment
+	}
+	deployment.Spec.Project = &akov2common.ResourceRefNamespaced{
+		Name:      projectName,
+		Namespace: namespace,
+	}
+	return deployment
 }
 
 func hasTenantRegionConfig(out *akov2.AtlasDeployment) bool {
@@ -548,16 +560,4 @@ func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndp
 		}
 	}
 	return result, nil
-}
-
-func FixReference(deployment *akov2.AtlasDeployment, independentResource bool, credentials string) *akov2.AtlasDeployment {
-	if independentResource {
-		deployment.Spec.Project = nil
-		deployment.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
-			Name: credentials,
-		}
-		return deployment
-	}
-	deployment.Spec.ExternalProjectRef = nil
-	return deployment
 }

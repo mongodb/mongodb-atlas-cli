@@ -29,7 +29,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/streamsprocessing"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
 	"go.mongodb.org/atlas-sdk/v20240805004/admin"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
@@ -168,7 +167,6 @@ func (e *ConfigExporter) Run() (string, error) {
 	r = append(r, streamProcessingResources...)
 
 	for _, res := range r {
-		res = filterResource(res, e.independentResources, projectName+credentialSuffix)
 		if e.patcher != nil {
 			err = e.patcher.Patch(res)
 			if err != nil {
@@ -225,10 +223,11 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		r = append(r, t)
 	}
 
+	credentialsName := credentialsName(projectData.Project.Name)
 	// Project secret with credentials
 	r = append(r, project.BuildProjectNamedConnectionSecret(
 		e.credsProvider,
-		projectData.Project.Name+credentialSuffix,
+		credentialsName,
 		projectData.Project.Namespace,
 		e.orgID,
 		e.includeSecretsData,
@@ -241,8 +240,10 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		e.projectID,
 		projectData.Project.Name,
 		e.targetNamespace,
+		credentialsName,
 		e.dictionaryForAtlasNames,
-		e.operatorVersion)
+		e.operatorVersion,
+		e.independentResources)
 	if err != nil {
 		return nil, "", err
 	}
@@ -272,9 +273,10 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 		e.clusterNames = clusters
 	}
 
+	credentials := credentialsName(projectName)
 	for _, deploymentName := range e.clusterNames {
 		// Try advanced cluster first
-		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion); err == nil {
+		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, credentials, e.dictionaryForAtlasNames, e.operatorVersion, e.independentResources); err == nil {
 			if advancedCluster != nil {
 				// Append deployment to result
 				result = append(result, advancedCluster.Deployment)
@@ -459,13 +461,6 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 	return append(result, federatedAuthentification), nil
 }
 
-func filterResource(obj runtime.Object, independentResource bool, credentials string) runtime.Object {
-	switch r := obj.(type) {
-	case *akov2.AtlasDatabaseUser:
-		return dbusers.FixReference(r, independentResource, credentials)
-	case *akov2.AtlasDeployment:
-		return deployment.FixReference(r, independentResource, credentials)
-	default:
-		return obj
-	}
+func credentialsName(projectName string) string {
+	return projectName + credentialSuffix
 }

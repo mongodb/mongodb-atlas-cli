@@ -506,11 +506,13 @@ func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, vali
 	}
 
 	if validator.FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints) {
-		privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, deployment.GetName())
-		if err != nil {
-			return nil, err
+		if deployment.ProviderSettings.BackingProviderName != "GCP" {
+			privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, deployment.GetName())
+			if err != nil {
+				return nil, err
+			}
+			atlasDeployment.Spec.ServerlessSpec.PrivateEndpoints = privateEndpoints
 		}
-		atlasDeployment.Spec.ServerlessSpec.PrivateEndpoints = privateEndpoints
 	}
 
 	return atlasDeployment, nil

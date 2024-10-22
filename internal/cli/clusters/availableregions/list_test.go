@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	"go.mongodb.org/atlas-sdk/v20240805004/admin"
+	"go.mongodb.org/atlas-sdk/v20240805005/admin"
 )
 
 func TestList_Run_NoFlags(t *testing.T) {

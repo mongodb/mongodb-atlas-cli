@@ -22,7 +22,7 @@ import (
 	"slices"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"go.mongodb.org/atlas-sdk/v20240805004/admin"
+	"go.mongodb.org/atlas-sdk/v20240805005/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

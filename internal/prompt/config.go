@@ -46,7 +46,9 @@ func AccessQuestions() []*survey.Question {
 		{
 			Name: "publicAPIKey",
 			Prompt: &survey.Input{
-				Message: "Public API Key:",
+				// WIP temporary change in questions for PAK.
+				// We need to duplicate them
+				Message: "Service Account Client ID:",
 				Help:    helpLink,
 				Default: config.PublicAPIKey(),
 			},
@@ -54,7 +56,7 @@ func AccessQuestions() []*survey.Question {
 		{
 			Name: "privateAPIKey",
 			Prompt: &survey.Password{
-				Message: "Private API Key:",
+				Message: "Service Account Secret:",
 				Help:    helpLink,
 			},
 		},

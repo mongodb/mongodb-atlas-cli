@@ -27,6 +27,8 @@ type DigestConfigOpts struct {
 func (opts *DigestConfigOpts) SetUpServiceAndKeys() {
 	config.SetService(opts.Service)
 	if opts.PublicAPIKey != "" {
+		// WIP reusing PAK config/profile for simplicity
+		// Those will need to be duplicated for service accounts
 		config.SetPublicAPIKey(opts.PublicAPIKey)
 	}
 	if opts.PrivateAPIKey != "" {

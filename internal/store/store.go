@@ -25,11 +25,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
+	sdkauth "go.mongodb.org/atlas-sdk/v20240805005/auth/credentials"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -88,12 +88,19 @@ var telemetryTransport = &http.Transport{
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
 	if s.username != "" && s.password != "" {
-		t := &digest.Transport{
-			Username: s.username,
-			Password: s.password,
-		}
-		t.Transport = httpTransport
-		return t.Client()
+		authClient := sdkauth.NewServiceAccountOAuthClientWithTokenSource(
+			sdkauth.ServiceAccountOAuthClientWithTokenSource{
+				ClientID:     s.username,
+				ClientSecret: s.password,
+				// TODO Store having file token source
+				TokenSource: &sdkauth.InMemoryTokenSource{},
+				Context:     &s.ctx,
+				BaseURL:     &s.baseURL,
+			})
+		client := sdkauth.NewHTTPClientWithServiceAccountAuth(authClient)
+		// TODO Wrapping transport
+		// t.Transport = httpTransport
+		return client, nil
 	}
 	if s.accessToken != nil {
 		tr := &Transport{

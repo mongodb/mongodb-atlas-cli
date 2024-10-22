@@ -17,7 +17,7 @@ package store
 import (
 	"strconv"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

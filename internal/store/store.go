@@ -92,8 +92,6 @@ var telemetryTransport = &http.Transport{
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
 	if s.username != "" && s.password != "" && s.configTokenCache != nil {
-		// For testing
-		url := "https://cloud-dev.mongodb.com"
 		authTokenSource := sdkauth.NewTokenSourceWithOptions(
 			sdkauth.AtlasTokenSourceOptions{
 				ClientID:     s.username,
@@ -101,7 +99,7 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 				// TODO Store having file token source
 				TokenCache: s.configTokenCache,
 				Context:    &s.ctx,
-				BaseURL:    &url,
+				BaseURL:    &s.baseURL,
 			})
 
 		transport := &sdkauth.OAuthCustomHTTPTransport{

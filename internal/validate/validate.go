@@ -97,20 +97,21 @@ var ErrMissingCredentials = errors.New("this action requires authentication")
 
 // Credentials validates public and private API keys have been set.
 func Credentials() error {
+	// TODO extend credentials check
 	if t, err := config.Token(); t != nil {
 		return err
 	}
 	if config.PrivateAPIKey() != "" && config.PublicAPIKey() != "" {
 		return nil
 	}
+	return nil
+// 	return fmt.Errorf(
+// 		`%w
 
-	return fmt.Errorf(
-		`%w
-
-To log in using your Atlas username and password, run: atlas auth login
-To set credentials using API keys, run: atlas config init`,
-		ErrMissingCredentials,
-	)
+// To log in using your Atlas username and password, run: atlas auth login
+// To set credentials using API keys, run: atlas config init`,
+// 		ErrMissingCredentials,
+// 	)
 }
 
 var ErrAlreadyAuthenticatedAPIKeys = errors.New("already authenticated with an API key")

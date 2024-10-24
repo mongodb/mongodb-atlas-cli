@@ -391,6 +391,7 @@ const (
 // AuthType returns the type of authentication used in the profile.
 func AuthType() AuthMechanism { return Default().AuthType() }
 func (p *Profile) AuthType() AuthMechanism {
+	// TODO add new auth mechanism
 	if p.PublicAPIKey() != "" && p.PrivateAPIKey() != "" {
 		return APIKeys
 	}

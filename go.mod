@@ -27,7 +27,6 @@ require (
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/klauspost/compress v1.17.11
 	github.com/mattn/go-isatty v0.0.20
-	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v0.18.2
 	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.4.1
 	github.com/pelletier/go-toml v1.9.5
@@ -42,6 +41,7 @@ require (
 	go.mongodb.org/atlas v0.37.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
 	go.mongodb.org/atlas-sdk/v20240805004 v20240805004.7.0
+	go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.1-0.20241023133513-df9461943ed0
 	go.mongodb.org/mongo-driver v1.17.1
 	golang.org/x/exp v0.0.0-20241004190924-225e2abe05e6
 	golang.org/x/mod v0.21.0
@@ -128,6 +128,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/mongodb-forks/digest v1.1.0 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect

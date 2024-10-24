@@ -355,6 +355,8 @@ go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.1-0.20241022094526-d200f917
 go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.1-0.20241022094526-d200f917da3f/go.mod h1:UTNpAyiKm/7utu+Nl0FafgjgvS+ONNGEoxBT5g/40WM=
 go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.1-0.20241023133513-df9461943ed0 h1:xZ1xjw3IRiTOi09xrWFiqNvt8FRhCXgonTa05D2I8fI=
 go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.1-0.20241023133513-df9461943ed0/go.mod h1:UTNpAyiKm/7utu+Nl0FafgjgvS+ONNGEoxBT5g/40WM=
+go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.1-0.20241024163233-fcb7a127a90a h1:CDG2jOJZPxcwqs5dnk2uP9szxVeXGsKaLTSN0JFJF5Q=
+go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.1-0.20241024163233-fcb7a127a90a/go.mod h1:UTNpAyiKm/7utu+Nl0FafgjgvS+ONNGEoxBT5g/40WM=
 go.mongodb.org/mongo-driver v1.17.1 h1:Wic5cJIwJgSpBhe3lx3+/RybR5PiYRMpVFgO7cOHyIM=
 go.mongodb.org/mongo-driver v1.17.1/go.mod h1:wwWm/+BuOddhcq3n68LKRmgk2wXzmF6s0SFOa0GINL4=
 go.opencensus.io v0.24.0 h1:y73uSU6J157QMP2kn2r30vwW1A2W2WFwSCGnAVxeaD0=

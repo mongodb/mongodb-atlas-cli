@@ -84,6 +84,7 @@ func TestClustersFile(t *testing.T) {
 	})
 
 	t.Run("Create Partial Index", func(t *testing.T) {
+		t.Skip("Skipping as part of CLOUDP-272716 until fix is made for flaky test in CLOUDP-280777.")
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"indexes",
@@ -98,6 +99,7 @@ func TestClustersFile(t *testing.T) {
 	})
 
 	t.Run("Create Sparse Index", func(t *testing.T) {
+		t.Skip("Skipping as part of CLOUDP-272716 until fix is made for flaky test in CLOUDP-280777.")
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"indexes",
@@ -112,6 +114,7 @@ func TestClustersFile(t *testing.T) {
 	})
 
 	t.Run("Create 2dspere Index", func(t *testing.T) {
+		t.Skip("Skipping as part of CLOUDP-272716 until fix is made for flaky test in CLOUDP-280777.")
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"indexes",

@@ -277,7 +277,6 @@ func (s *Store) createV2Client(client *http.Client) error {
 		atlasv2.UseUserAgent(config.UserAgent),
 		atlasv2.UseDebug(true)}
 
-	s.baseURL = "https://cloud-dev.mongodb.com"
 	if s.baseURL != "" {
 		opts = append(opts, atlasv2.UseBaseURL(s.baseURL))
 	}

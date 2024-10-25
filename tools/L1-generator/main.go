@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"errors"
 	"fmt"
 	"html/template"
@@ -11,6 +12,9 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
+
+//go:embed commands.go.tmpl
+var templateContent string
 
 func main() {
 	var (
@@ -75,7 +79,7 @@ func loadSpec(fs afero.Fs, specPath string) (*openapi3.T, error) {
 }
 
 func writeCommands(fs afero.Fs, outputPath string, data L1.GroupedAndSortedCommands) error {
-	tmpl, err := template.ParseFiles("commands.go.tmpl")
+	tmpl, err := template.New("commands.go.tmpl").Parse(templateContent)
 	if err != nil {
 		return err
 	}

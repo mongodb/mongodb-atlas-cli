@@ -34,12 +34,7 @@ func specToCommands(spec *openapi3.T) (L1.GroupedAndSortedCommands, error) {
 
 			tag := operation.Tags[0] // TODO: verify length
 			if _, ok := groups[tag]; !ok {
-				group, err := groupForTag(spec, tag)
-				if err != nil {
-					return nil, fmt.Errorf("failed to create group from tag: %w", err)
-				}
-
-				groups[tag] = group
+				groups[tag] = groupForTag(spec, tag)
 			}
 
 			groups[tag].Commands = append(groups[tag].Commands, *command)
@@ -174,17 +169,18 @@ func operationToCommand(path, verb string, operation openapi3.Operation) (*L1.Co
 	return &command, nil
 }
 
-func groupForTag(spec *openapi3.T, tag string) (*L1.Group, error) {
-	specTag := spec.Tags.Get(tag)
-	if specTag == nil {
-		return nil, fmt.Errorf("tag '%s' not found", tag)
+func groupForTag(spec *openapi3.T, tag string) *L1.Group {
+	description := ""
+
+	if specTag := spec.Tags.Get(tag); specTag != nil {
+		description = cleanString(specTag.Description)
 	}
 
 	return &L1.Group{
-		Name:        specTag.Name,
-		Description: cleanString(specTag.Description),
+		Name:        tag,
+		Description: description,
 		Commands:    []L1.Command{},
-	}, nil
+	}
 }
 
 func cleanString(input string) string {

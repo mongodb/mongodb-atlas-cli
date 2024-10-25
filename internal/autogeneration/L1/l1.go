@@ -45,14 +45,16 @@ type HTTPVerb string
 const (
 	DELETE HTTPVerb = "DELETE"
 	GET    HTTPVerb = "GET"
+	PATCH  HTTPVerb = "PATCH"
 	POST   HTTPVerb = "POST"
+	PUT    HTTPVerb = "PUT"
 )
 
 func ToHTTPVerb(s string) (HTTPVerb, error) {
 	verb := HTTPVerb(strings.ToUpper(s))
 
 	switch verb {
-	case DELETE, GET, POST:
+	case DELETE, GET, PATCH, POST, PUT:
 		return verb, nil
 	default:
 		return "", fmt.Errorf("invalid HTTP verb: %s", s)

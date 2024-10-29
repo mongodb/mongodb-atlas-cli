@@ -589,7 +589,7 @@ func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasDeploymentSpec{
-				Project: akov2common.ResourceRefNamespaced{
+				Project: &akov2common.ResourceRefNamespaced{
 					Name:      strings.ToLower(projectName),
 					Namespace: targetNamespace,
 				},

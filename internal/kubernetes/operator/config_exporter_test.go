@@ -292,7 +292,7 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 		ce := NewConfigExporter(atlasOperatorGenericStore, nil, projectID, orgID).
 			WithFeatureValidator(featureValidator).
 			WithTargetNamespace("test").
-			WithTargetOperatorVersion("2.4.0")
+			WithTargetOperatorVersion("2.5.0")
 
 		resources, err := ce.exportAtlasStreamProcessing("my-project")
 		require.NoError(t, err)
@@ -308,7 +308,7 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 						Name:      "my-project-instance-0",
 						Namespace: "test",
 						Labels: map[string]string{
-							"mongodb.com/atlas-resource-version": "2.4.0",
+							"mongodb.com/atlas-resource-version": "2.5.0",
 						},
 					},
 					Spec: akov2.AtlasStreamInstanceSpec{
@@ -348,7 +348,7 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 						Name:      "my-project-instance-0-samplelowlinestreamlowlinesolar",
 						Namespace: "test",
 						Labels: map[string]string{
-							"mongodb.com/atlas-resource-version": "2.4.0",
+							"mongodb.com/atlas-resource-version": "2.5.0",
 						},
 					},
 					Spec: akov2.AtlasStreamConnectionSpec{
@@ -370,7 +370,7 @@ func TestExportAtlasStreamProcessing(t *testing.T) {
 						Name:      "my-project-instance-0-kafka-config",
 						Namespace: "test",
 						Labels: map[string]string{
-							"mongodb.com/atlas-resource-version": "2.4.0",
+							"mongodb.com/atlas-resource-version": "2.5.0",
 						},
 					},
 					Spec: akov2.AtlasStreamConnectionSpec{
@@ -625,7 +625,7 @@ func defaultTestConfigExporter(t *testing.T, genStore *mocks.MockOperatorGeneric
 	return NewConfigExporter(genStore, nil, projectID, orgID).
 		WithTargetNamespace("test").
 		WithFeatureValidator(featureValidator).
-		WithTargetOperatorVersion("2.4.0").
+		WithTargetOperatorVersion("2.5.0").
 		WithSecretsData(true)
 }
 

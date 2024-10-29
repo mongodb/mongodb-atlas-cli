@@ -269,6 +269,8 @@ github.com/mongodb-forks/digest v1.1.0 h1:7eUdsR1BtqLv0mdNm4OXs6ddWvR4X2/OsLwdKk
 github.com/mongodb-forks/digest v1.1.0/go.mod h1:rb+EX8zotClD5Dj4NdgxnJXG9nwrlx3NWKJ8xttz1Dg=
 github.com/mongodb-labs/cobra2snooty v0.18.2 h1:qWpLCMWbQb5FSZ5ehiWN2URmieMJhQtQPxT0uhIK62A=
 github.com/mongodb-labs/cobra2snooty v0.18.2/go.mod h1:WnzqCFmx4f72Yj9dL/ulBUqcatfURGdKFf8DLT4h7zQ=
+github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.5.0 h1:2SzjXb9B3mVkYJfkCQXMMVjLULTNU7CXvLVKBpUe3MY=
+github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.5.0/go.mod h1:n4Ii1oia76D+x6Bn14KyfNxysMf6XAR6z8LfE93KHh0=
 github.com/montanaflynn/stats v0.7.1 h1:etflOAAHORrCC44V+aR6Ftzort912ZU+YLiSTuV8eaE=
 github.com/montanaflynn/stats v0.7.1/go.mod h1:etXPPgVO6n31NxCd9KQUMvCM+ve0ruNzt6R8Bnaayow=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
@@ -368,8 +370,6 @@ go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0 h1:OuV1HfIpZUZa4+BKvtrvDl
 go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0/go.mod h1:0707RpWIrNFZ6Msy/dwRDCzC5JVDon61JoOqcbfCujg=
 go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0 h1:d/gbYJ+obR0EM/3DZf7+ZMi2QWISegm3mid7Or708cc=
 go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0/go.mod h1:O47ZrMMfcWb31wznNIq2PQkkdoFoK0ea2GlmRqGJC2s=
-go.mongodb.org/atlas-sdk/v20240805004 v20240805004.7.0 h1:v899BXuHGSWZAPXtckDSG2ih2Xop87JhJxQeG7X4gFw=
-go.mongodb.org/atlas-sdk/v20240805004 v20240805004.7.0/go.mod h1:7KSDRNJm1Dxc+ggk2MOggp2/4zUpM4aRcP12evvsrQ4=
 go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.0 h1:EGTT54tKbDbkhhK+jH5AqINFQbHdvaOSpI0oeI5Tl1s=
 go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.0/go.mod h1:UTNpAyiKm/7utu+Nl0FafgjgvS+ONNGEoxBT5g/40WM=
 go.mongodb.org/mongo-driver v1.17.1 h1:Wic5cJIwJgSpBhe3lx3+/RybR5PiYRMpVFgO7cOHyIM=

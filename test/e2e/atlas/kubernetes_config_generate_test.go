@@ -1310,7 +1310,7 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							),
 							Namespace: targetNamespace,
 							Labels: map[string]string{
-								"mongodb.com/atlas-resource-version": "2.4.0",
+								"mongodb.com/atlas-resource-version": "2.5.0",
 							},
 						},
 						Spec: akov2.AtlasStreamInstanceSpec{
@@ -1359,7 +1359,7 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							),
 							Namespace: targetNamespace,
 							Labels: map[string]string{
-								"mongodb.com/atlas-resource-version": "2.4.0",
+								"mongodb.com/atlas-resource-version": "2.5.0",
 							},
 						},
 						Spec: akov2.AtlasStreamConnectionSpec{

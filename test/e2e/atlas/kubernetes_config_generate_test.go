@@ -160,6 +160,8 @@ func TestExportIndependentOrNot(t *testing.T) {
 	generator.generateDBUser(testPrefix)
 	generator.generateCluster()
 	expectAlertConfigs := true
+	dictionary := resources.AtlasNameToKubernetesName()
+	credentialName := resources.NormalizeAtlasName(generator.projectName+credSuffixTest, dictionary)
 	for _, tc := range []struct {
 		title                string
 		independentResources bool
@@ -170,7 +172,7 @@ func TestExportIndependentOrNot(t *testing.T) {
 			independentResources: false,
 			expected: []runtime.Object{
 				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs),
-				defaultTestAtlasConnSecret(generator.projectName+credSuffixTest, ""),
+				defaultTestAtlasConnSecret(credentialName, ""),
 				defaultTestUser(generator.dbUser, generator.projectName, ""),
 				defaultM0TestCluster(generator.clusterName, generator.clusterRegion, generator.projectName, ""),
 			},
@@ -180,7 +182,7 @@ func TestExportIndependentOrNot(t *testing.T) {
 			independentResources: true,
 			expected: []runtime.Object{
 				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs),
-				defaultTestAtlasConnSecret(generator.projectName+credSuffixTest, ""),
+				defaultTestAtlasConnSecret(credentialName, ""),
 				defaultTestUserWithID(
 					generator.dbUser, generator.projectName, generator.projectID, "",
 					strings.ToLower(generator.projectName)+"-credentials",

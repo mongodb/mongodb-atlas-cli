@@ -92,8 +92,8 @@ func TestLogs_RunAtlas(t *testing.T) {
 		},
 		DeploymentOpts: *deploymentTest.Opts,
 		downloadStore:  mockStore,
-		host:           "test",
-		name:           "mongodb.gz",
+		Host:           "test",
+		Name:           "mongodb.gz",
 	}
 
 	downloadOpts.Fs = afero.NewMemMapFs()

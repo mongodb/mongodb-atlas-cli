@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -42,8 +43,8 @@ type DownloadOpts struct {
 	cli.DownloaderOpts
 	options.DeploymentOpts
 	downloadStore store.LogsDownloader
-	host          string
-	name          string
+	Host          string
+	Name          string
 	start         int64
 	end           int64
 }
@@ -70,6 +71,9 @@ func (opts *DownloadOpts) Run(ctx context.Context) error {
 	}
 
 	if opts.IsAtlasDeploymentType() {
+		if err := opts.promptMissingAtlasFlags(); err != nil {
+			return err
+		}
 		if err := opts.validateAtlasFlags(); err != nil {
 			return err
 		}
@@ -144,10 +148,10 @@ func (opts *DownloadOpts) downloadLogFile() error {
 }
 
 func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
-	fileBaseName := strings.TrimSuffix(opts.name, filepath.Ext(opts.name))
+	fileBaseName := strings.TrimSuffix(opts.Name, filepath.Ext(opts.Name))
 	params := &admin.GetHostLogsApiParams{
 		GroupId:  opts.ConfigProjectID(),
-		HostName: opts.host,
+		HostName: opts.Host,
 		LogName:  fileBaseName,
 	}
 	if opts.start > 0 {
@@ -171,17 +175,54 @@ func (opts *DownloadOpts) RunLocal(ctx context.Context) error {
 	return opts.Print(strings.Join(logs, "\n"))
 }
 
+func (opts *DownloadOpts) promptMissingAtlasFlags() error {
+	questions := make([]*survey.Question, 0)
+
+	if opts.Host == "" {
+		questions = append(questions, &survey.Question{
+			Name: "host",
+			Prompt: &survey.Input{
+				Message: "Hostname:",
+			},
+			Validate: survey.Required,
+		})
+	}
+
+	if opts.Name == "" {
+		questions = append(questions, &survey.Question{
+			Name: "name",
+			Prompt: &survey.Select{
+				Message: "Choose a log:",
+				Options: []string{
+					"mongodb.gz",
+					"mongos.gz",
+					"mongosqld.gz",
+					"mongodb-audit-log.gz",
+					"mongos-audit-log.gz",
+				},
+			},
+			Validate: survey.Required,
+		})
+	}
+
+	if len(questions) > 0 {
+		return survey.Ask(questions, opts)
+	}
+
+	return nil
+}
+
 func (opts *DownloadOpts) validateAtlasFlags() error {
-	if opts.host == "" {
+	if opts.Host == "" {
 		return errors.New("missing --hostname flag")
 	}
-	if opts.name == "" {
+	if opts.Name == "" {
 		return errors.New("missing --name flag")
 	}
 
 	validNameFlags := []string{"mongodb.gz", "mongos.gz", "mongosqld.gz", "mongodb-audit-log.gz", "mongos-audit-log.gz"}
-	if !search.StringInSliceFold(validNameFlags, opts.name) {
-		return fmt.Errorf("invalid --name flag: %s", opts.name)
+	if !search.StringInSliceFold(validNameFlags, opts.Name) {
+		return fmt.Errorf("invalid --name flag: %s", opts.Name)
 	}
 	return nil
 }
@@ -227,8 +268,8 @@ func LogsBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.end, flag.End, 0, usage.LogEnd)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVar(&opts.host, flag.Hostname, "", usage.LogHostName)
-	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.LogName)
+	cmd.Flags().StringVar(&opts.Host, flag.Hostname, "", usage.LogHostName)
+	cmd.Flags().StringVar(&opts.Name, flag.Name, "", usage.LogName)
 
 	return cmd
 }

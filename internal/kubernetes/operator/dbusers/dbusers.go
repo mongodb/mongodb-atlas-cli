@@ -85,7 +85,7 @@ func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, t
 			},
 		}
 		normalizedProjectName := resources.NormalizeAtlasName(projectName, dictionary)
-		dbu = setReference(dbu, independentResource, projectID, normalizedProjectName, targetNamespace, credentials)
+		dbu = setReference(dbu, independentResource, projectID, normalizedProjectName, targetNamespace, credentials, dictionary)
 		mappedUsers[resourceName] = dbu
 
 		if user.GetX509Type() != "MANAGED" {
@@ -106,13 +106,13 @@ func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, t
 	return result, relatedSecrets, nil
 }
 
-func setReference(dbUser *akov2.AtlasDatabaseUser, independentResource bool, projectID, projectName, namespace string, credentials string) *akov2.AtlasDatabaseUser {
+func setReference(dbUser *akov2.AtlasDatabaseUser, independentResource bool, projectID, projectName, namespace string, credentials string, dictionary map[string]string) *akov2.AtlasDatabaseUser {
 	if independentResource {
 		dbUser.Spec.ExternalProjectRef = &akov2.ExternalProjectReference{
 			ID: projectID,
 		}
 		dbUser.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
-			Name: credentials,
+			Name: resources.NormalizeAtlasName(credentials, dictionary),
 		}
 		return dbUser
 	}

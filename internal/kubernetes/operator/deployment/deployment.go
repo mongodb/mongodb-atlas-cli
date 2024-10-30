@@ -135,7 +135,7 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 		},
 	}
 	normalizedProjectName := resources.NormalizeAtlasName(projectName, dictionary)
-	atlasDeployment = setReference(atlasDeployment, independentResource, projectID, normalizedProjectName, targetNamespace, credentials)
+	atlasDeployment = setReference(atlasDeployment, independentResource, projectID, normalizedProjectName, targetNamespace, credentials, dictionary)
 
 	deploymentResult := &AtlasDeploymentResult{
 		Deployment:     atlasDeployment,
@@ -184,13 +184,13 @@ func BuildAtlasAdvancedDeployment(deploymentStore store.OperatorClusterStore, va
 	return deploymentResult, nil
 }
 
-func setReference(deployment *akov2.AtlasDeployment, independentResource bool, projectID, projectName, namespace string, credentials string) *akov2.AtlasDeployment {
+func setReference(deployment *akov2.AtlasDeployment, independentResource bool, projectID, projectName, namespace string, credentials string, dictionary map[string]string) *akov2.AtlasDeployment {
 	if independentResource {
 		deployment.Spec.ExternalProjectRef = &akov2.ExternalProjectReference{
 			ID: projectID,
 		}
 		deployment.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
-			Name: credentials,
+			Name: resources.NormalizeAtlasName(credentials, dictionary),
 		}
 		return deployment
 	}

@@ -42,7 +42,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const resourceVersion = "x.y.z"
+const (
+	resourceVersion = "x.y.z"
+
+	credentialSuffix = "-credentials"
+)
 
 func Test_convertUserLabels(t *testing.T) {
 	t.Run("Can convert user labels from Atlas to the Operator format", func(t *testing.T) {
@@ -99,7 +103,6 @@ func Test_buildUserSecret(t *testing.T) {
 		projectName := "TestProject-1"
 		projectID := "123"
 		atlasUser := &atlasv2.CloudDatabaseUser{
-			Password: pointer.Get("TestPassword"),
 			Username: "TestName",
 		}
 
@@ -176,7 +179,8 @@ func TestBuildDBUsers(t *testing.T) {
 			},
 		}, nil)
 
-		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, dictionary, resourceVersion)
+		creds := projectName + credentialSuffix
+		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, creds, dictionary, resourceVersion, false)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -194,7 +198,7 @@ func TestBuildDBUsers(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasDatabaseUserSpec{
-				Project: akov2common.ResourceRefNamespaced{
+				Project: &akov2common.ResourceRefNamespaced{
 					Name:      resources.NormalizeAtlasName(projectName, dictionary),
 					Namespace: targetNamespace,
 				},
@@ -324,7 +328,8 @@ func TestBuildDBUsers(t *testing.T) {
 		listOptions := &store.ListOptions{}
 		mockUserStore.EXPECT().DatabaseUsers(projectID, listOptions).Return(&atlasUsers, nil)
 
-		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, dictionary, resourceVersion)
+		creds := projectName + credentialSuffix
+		users, relatedSecrets, err := BuildDBUsers(mockUserStore, projectID, projectName, targetNamespace, creds, dictionary, resourceVersion, false)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

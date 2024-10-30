@@ -34,7 +34,7 @@ import (
 
 const timeFormatISO8601 = "2006-01-02T15:04:05.999Z"
 
-func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, targetNamespace string, dictionary map[string]string, version string) ([]*akov2.AtlasDatabaseUser, []*corev1.Secret, error) {
+func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, targetNamespace, credentials string, dictionary map[string]string, version string, independentResource bool) ([]*akov2.AtlasDatabaseUser, []*corev1.Secret, error) {
 	users, err := provider.DatabaseUsers(projectID, &store.ListOptions{})
 	if err != nil {
 		return nil, nil, err
@@ -57,7 +57,7 @@ func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, t
 		}
 		scopes := convertUserScopes(user)
 
-		mappedUsers[resourceName] = &akov2.AtlasDatabaseUser{
+		dbu := &akov2.AtlasDatabaseUser{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasDatabaseUser",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -70,10 +70,6 @@ func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, t
 				},
 			},
 			Spec: akov2.AtlasDatabaseUserSpec{
-				Project: akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(projectName, dictionary),
-					Namespace: targetNamespace,
-				},
 				DatabaseName:    user.DatabaseName,
 				DeleteAfterDate: getDeleteAfterDate(user),
 				Labels:          labels,
@@ -88,6 +84,9 @@ func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, t
 				},
 			},
 		}
+		normalizedProjectName := resources.NormalizeAtlasName(projectName, dictionary)
+		dbu = setReference(dbu, independentResource, projectID, normalizedProjectName, targetNamespace, credentials, dictionary)
+		mappedUsers[resourceName] = dbu
 
 		if user.GetX509Type() != "MANAGED" {
 			secret := buildUserSecret(resourceName, targetNamespace, projectID, projectName, dictionary)
@@ -105,6 +104,23 @@ func BuildDBUsers(provider store.OperatorDBUsersStore, projectID, projectName, t
 	}
 
 	return result, relatedSecrets, nil
+}
+
+func setReference(dbUser *akov2.AtlasDatabaseUser, independentResource bool, projectID, projectName, namespace string, credentials string, dictionary map[string]string) *akov2.AtlasDatabaseUser {
+	if independentResource {
+		dbUser.Spec.ExternalProjectRef = &akov2.ExternalProjectReference{
+			ID: projectID,
+		}
+		dbUser.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
+			Name: resources.NormalizeAtlasName(credentials, dictionary),
+		}
+		return dbUser
+	}
+	dbUser.Spec.Project = &akov2common.ResourceRefNamespaced{
+		Name:      projectName,
+		Namespace: namespace,
+	}
+	return dbUser
 }
 
 func getDeleteAfterDate(user *atlasv2.CloudDatabaseUser) string {

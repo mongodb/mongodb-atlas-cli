@@ -151,6 +151,282 @@ func TestExportWorksWithoutFedAuth(t *testing.T) {
 	require.NotEmpty(t, objects)
 }
 
+func TestExportIndependentOrNot(t *testing.T) {
+	s := InitialSetup(t)
+	cliPath := s.cliPath
+	generator := s.generator
+	generator.tier = "M0"
+	testPrefix := "test-"
+	generator.generateDBUser(testPrefix)
+	generator.generateCluster()
+	expectAlertConfigs := true
+	dictionary := resources.AtlasNameToKubernetesName()
+	credentialName := resources.NormalizeAtlasName(generator.projectName+credSuffixTest, dictionary)
+	for _, tc := range []struct {
+		title                string
+		independentResources bool
+		expected             []runtime.Object
+	}{
+		{
+			title:                "Exported without independentResources uses Kubernetes references",
+			independentResources: false,
+			expected: []runtime.Object{
+				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs),
+				defaultTestAtlasConnSecret(credentialName, ""),
+				defaultTestUser(generator.dbUser, generator.projectName, ""),
+				defaultM0TestCluster(generator.clusterName, generator.clusterRegion, generator.projectName, ""),
+			},
+		},
+		{
+			title:                "Exported with independentResources uses IDs were supported",
+			independentResources: true,
+			expected: []runtime.Object{
+				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs),
+				defaultTestAtlasConnSecret(credentialName, ""),
+				defaultTestUserWithID(generator.dbUser, generator.projectName, generator.projectID, "", credentialName),
+				defaultM0TestClusterWithID(
+					generator.clusterName, generator.clusterRegion, generator.projectName, generator.projectID, "",
+					credentialName,
+				),
+			},
+		},
+	} {
+		t.Run(tc.title, func(t *testing.T) {
+			cmdArgs := []string{
+				"kubernetes",
+				"config",
+				"generate",
+				"--projectId",
+				generator.projectID,
+			}
+			if tc.independentResources {
+				cmdArgs = append(cmdArgs, "--independentResources")
+			}
+			cmd := exec.Command(cliPath, cmdArgs...)
+			cmd.Env = os.Environ()
+			resp, err := cmd.CombinedOutput()
+			t.Log(string(resp))
+			require.NoError(t, err, string(resp))
+			var objects []runtime.Object
+			objects, err = getK8SEntities(resp)
+			require.NoError(t, err, "should not fail on decode but got:\n"+string(resp))
+			require.NotEmpty(t, objects)
+			require.Equal(t, tc.expected, objects)
+		})
+	}
+}
+
+func defaultTestProject(name, namespace string, labels map[string]string, alertConfigs bool) *akov2.AtlasProject {
+	project := &akov2.AtlasProject{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "AtlasProject",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      strings.ToLower(name),
+			Namespace: namespace,
+			Labels:    labels,
+		},
+		Spec: akov2.AtlasProjectSpec{
+			Name:             name,
+			ConnectionSecret: &akov2common.ResourceRefNamespaced{},
+			EncryptionAtRest: &akov2.EncryptionAtRest{
+				AwsKms:         akov2.AwsKms{Enabled: pointer.Get(false), Valid: pointer.Get(false)},
+				AzureKeyVault:  akov2.AzureKeyVault{Enabled: pointer.Get(false)},
+				GoogleCloudKms: akov2.GoogleCloudKms{Enabled: pointer.Get(false)},
+			},
+			Auditing: &akov2.Auditing{},
+			Settings: &akov2.ProjectSettings{
+				IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
+				IsDataExplorerEnabled:                       pointer.Get(true),
+				IsPerformanceAdvisorEnabled:                 pointer.Get(true),
+				IsRealtimePerformancePanelEnabled:           pointer.Get(true),
+				IsSchemaAdvisorEnabled:                      pointer.Get(true),
+			},
+		},
+		Status: akov2status.AtlasProjectStatus{
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
+			},
+		},
+	}
+	if alertConfigs {
+		project.Spec.AlertConfigurations = []akov2.AlertConfiguration{
+			defaultAlertConfig(),
+		}
+	}
+	return project
+}
+
+func defaultAlertConfig() akov2.AlertConfiguration {
+	return akov2.AlertConfiguration{
+		Enabled:       true,
+		EventTypeName: "NDS_X509_USER_AUTHENTICATION_MANAGED_USER_CERTS_EXPIRATION_CHECK",
+		Threshold: &akov2.Threshold{
+			Operator:  "LESS_THAN",
+			Units:     "DAYS",
+			Threshold: "30",
+		},
+		Notifications: []akov2.Notification{
+			{
+				APITokenRef:         akov2common.ResourceRefNamespaced{},
+				DatadogAPIKeyRef:    akov2common.ResourceRefNamespaced{},
+				DelayMin:            pointer.Get(0),
+				EmailEnabled:        pointer.Get(true),
+				FlowdockAPITokenRef: akov2common.ResourceRefNamespaced{},
+				IntervalMin:         1440,
+				SMSEnabled:          pointer.Get(false),
+				OpsGenieAPIKeyRef:   akov2common.ResourceRefNamespaced{},
+				ServiceKeyRef:       akov2common.ResourceRefNamespaced{},
+				TypeName:            "GROUP",
+				VictorOpsSecretRef:  akov2common.ResourceRefNamespaced{},
+				Roles:               []string{"GROUP_OWNER"},
+			},
+		},
+		MetricThreshold: &akov2.MetricThreshold{},
+	}
+}
+
+func defaultTestAtlasConnSecret(name, namespace string) *corev1.Secret {
+	return &corev1.Secret{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Secret",
+			APIVersion: "v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      strings.ToLower(name),
+			Namespace: namespace,
+			Labels:    map[string]string{"atlas.mongodb.com/type": "credentials"},
+		},
+		Data: map[string][]byte{
+			"orgId":         []uint8{},
+			"privateApiKey": []uint8{},
+			"publicApiKey":  []uint8{},
+		},
+		Type: "",
+	}
+}
+
+func defaultTestUser(name, projectName, namespace string) *akov2.AtlasDatabaseUser {
+	dictionary := resources.AtlasNameToKubernetesName()
+	userName := resources.NormalizeAtlasName(strings.ToLower(fmt.Sprintf("%s-%s", projectName, name)), dictionary)
+	return &akov2.AtlasDatabaseUser{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "AtlasDatabaseUser",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      userName,
+			Namespace: namespace,
+			Labels: map[string]string{
+				"mongodb.com/atlas-resource-version": features.LatestOperatorMajorVersion,
+			},
+		},
+		Spec: akov2.AtlasDatabaseUserSpec{
+			Project: &akov2common.ResourceRefNamespaced{
+				Name:      strings.ToLower(projectName),
+				Namespace: namespace,
+			},
+			DatabaseName: "$external",
+			Roles: []akov2.RoleSpec{
+				{
+					RoleName:     "readAnyDatabase",
+					DatabaseName: "admin",
+				},
+			},
+			Username: name,
+			X509Type: "MANAGED",
+		},
+		Status: akov2status.AtlasDatabaseUserStatus{
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
+			},
+		},
+	}
+}
+
+func defaultTestUserWithID(name, projectName, projectID, namespace string, creds string) *akov2.AtlasDatabaseUser {
+	user := defaultTestUser(name, projectName, namespace)
+	user.Spec.Project = nil
+	user.Spec.ExternalProjectRef = &akov2.ExternalProjectReference{
+		ID: projectID,
+	}
+	user.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
+		Name: creds,
+	}
+	return user
+}
+
+func defaultM0TestCluster(name, region, projectName, namespace string) *akov2.AtlasDeployment {
+	dictionary := resources.AtlasNameToKubernetesName()
+	clusterName := resources.NormalizeAtlasName(strings.ToLower(fmt.Sprintf("%s-%s", projectName, name)), dictionary)
+	return &akov2.AtlasDeployment{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "AtlasDeployment",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      clusterName,
+			Namespace: namespace,
+			Labels: map[string]string{
+				"mongodb.com/atlas-resource-version": features.LatestOperatorMajorVersion,
+			},
+		},
+		Spec: akov2.AtlasDeploymentSpec{
+			Project: &akov2common.ResourceRefNamespaced{
+				Name:      strings.ToLower(projectName),
+				Namespace: namespace,
+			},
+			DeploymentSpec: &akov2.AdvancedDeploymentSpec{
+				ClusterType: "REPLICASET",
+				Name:        name,
+				Paused:      pointer.Get(false),
+				ReplicationSpecs: []*akov2.AdvancedReplicationSpec{
+					{
+						NumShards: 1,
+						ZoneName:  "Zone 1",
+						RegionConfigs: []*akov2.AdvancedRegionConfig{
+							{
+								ElectableSpecs: &akov2.Specs{
+									InstanceSize: "M0",
+								},
+								BackingProviderName: "AWS",
+								Priority:            pointer.Get(7),
+								ProviderName:        "TENANT",
+								RegionName:          region,
+							},
+						},
+					},
+				},
+				RootCertType:         "ISRGROOTX1",
+				VersionReleaseSystem: "LTS",
+			},
+			ProcessArgs: &akov2.ProcessArgs{
+				MinimumEnabledTLSProtocol: "TLS1_2",
+				JavascriptEnabled:         pointer.Get(true),
+				NoTableScan:               pointer.Get(false),
+			},
+		},
+		Status: akov2status.AtlasDeploymentStatus{
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
+			},
+		},
+	}
+}
+
+func defaultM0TestClusterWithID(name, region, projectName, projectID, namespace, creds string) *akov2.AtlasDeployment {
+	deployment := defaultM0TestCluster(name, region, projectName, namespace)
+	deployment.Spec.Project = nil
+	deployment.Spec.ExternalProjectRef = &akov2.ExternalProjectReference{
+		ID: projectID,
+	}
+	deployment.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
+		Name: creds,
+	}
+	return deployment
+}
+
 func TestFederatedAuthTest(t *testing.T) {
 	t.Run("PreRequisite Get the federation setting ID", func(t *testing.T) {
 		s := InitialSetup(t)
@@ -1037,7 +1313,7 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							),
 							Namespace: targetNamespace,
 							Labels: map[string]string{
-								"mongodb.com/atlas-resource-version": "2.4.0",
+								"mongodb.com/atlas-resource-version": "2.5.0",
 							},
 						},
 						Spec: akov2.AtlasStreamInstanceSpec{
@@ -1086,7 +1362,7 @@ func TestProjectWithStreamsProcessing(t *testing.T) {
 							),
 							Namespace: targetNamespace,
 							Labels: map[string]string{
-								"mongodb.com/atlas-resource-version": "2.4.0",
+								"mongodb.com/atlas-resource-version": "2.5.0",
 							},
 						},
 						Spec: akov2.AtlasStreamConnectionSpec{
@@ -1284,7 +1560,7 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 			Labels:    labels,
 		},
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: akov2common.ResourceRefNamespaced{
+			Project: &akov2common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(projectName, dictionary),
 				Namespace: namespace,
 			},
@@ -1375,7 +1651,7 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 			Labels:    labels,
 		},
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: akov2common.ResourceRefNamespaced{
+			Project: &akov2common.ResourceRefNamespaced{
 				Name:      resources.NormalizeAtlasName(projectName, dictionary),
 				Namespace: namespace,
 			},

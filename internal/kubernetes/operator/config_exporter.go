@@ -40,6 +40,8 @@ const (
 	maxClusters          = 500
 	DefaultClustersCount = 10
 	InactiveStatus       = "INACTIVE"
+
+	credentialSuffix = "-credentials"
 )
 
 type ConfigExporter struct {
@@ -55,6 +57,7 @@ type ConfigExporter struct {
 	dictionaryForAtlasNames map[string]string
 	dataFederationNames     []string
 	patcher                 Patcher
+	independentResources    bool
 }
 
 type Patcher interface {
@@ -113,6 +116,11 @@ func (e *ConfigExporter) WithDataFederationNames(dataFederations []string) *Conf
 
 func (e *ConfigExporter) WithPatcher(p Patcher) *ConfigExporter {
 	e.patcher = p
+	return e
+}
+
+func (e *ConfigExporter) WithIndependentResources(enabled bool) *ConfigExporter {
+	e.independentResources = enabled
 	return e
 }
 
@@ -215,10 +223,11 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		r = append(r, t)
 	}
 
+	credentialsName := credentialsName(projectData.Project.Name)
 	// Project secret with credentials
-	r = append(r, project.BuildProjectConnectionSecret(
+	r = append(r, project.BuildProjectNamedConnectionSecret(
 		e.credsProvider,
-		projectData.Project.Name,
+		credentialsName,
 		projectData.Project.Namespace,
 		e.orgID,
 		e.includeSecretsData,
@@ -231,8 +240,10 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		e.projectID,
 		projectData.Project.Name,
 		e.targetNamespace,
+		credentialsName,
 		e.dictionaryForAtlasNames,
-		e.operatorVersion)
+		e.operatorVersion,
+		e.independentResources)
 	if err != nil {
 		return nil, "", err
 	}
@@ -262,9 +273,10 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 		e.clusterNames = clusters
 	}
 
+	credentials := credentialsName(projectName)
 	for _, deploymentName := range e.clusterNames {
 		// Try advanced cluster first
-		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion); err == nil {
+		if advancedCluster, err := deployment.BuildAtlasAdvancedDeployment(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, credentials, e.dictionaryForAtlasNames, e.operatorVersion, e.independentResources); err == nil {
 			if advancedCluster != nil {
 				// Append deployment to result
 				result = append(result, advancedCluster.Deployment)
@@ -447,4 +459,8 @@ func (e *ConfigExporter) exportAtlasFederatedAuth(projectName string) ([]runtime
 		return nil, fmt.Errorf("failed to export federated authentication: %w", err)
 	}
 	return append(result, federatedAuthentification), nil
+}
+
+func credentialsName(projectName string) string {
+	return projectName + credentialSuffix
 }

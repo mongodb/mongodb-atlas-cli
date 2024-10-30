@@ -326,4 +326,5 @@ const (
 	IdentityProviderID                        = "identityProviderId"                        // IdentityProviderId flag
 	AuditAuthorizationSuccess                 = "auditAuthorizationSuccess"                 // AuditAuthorizationSuccess flag
 	AuditFilter                               = "auditFilter"                               // AuditFilter flag
+	IndependentResources                      = "independentResources"                      // IndependentResources flag
 )

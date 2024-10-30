@@ -13,3 +13,6 @@ labels:
     type: "pull_request"
     draft: False
     base-branch: mongocli-master
+  - label: "atlascli"
+    type: "pull_request"
+    base-branch: master

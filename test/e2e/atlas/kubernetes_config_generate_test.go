@@ -183,13 +183,10 @@ func TestExportIndependentOrNot(t *testing.T) {
 			expected: []runtime.Object{
 				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs),
 				defaultTestAtlasConnSecret(credentialName, ""),
-				defaultTestUserWithID(
-					generator.dbUser, generator.projectName, generator.projectID, "",
-					strings.ToLower(generator.projectName)+"-credentials",
-				),
+				defaultTestUserWithID(generator.dbUser, generator.projectName, generator.projectID, "", credentialName),
 				defaultM0TestClusterWithID(
 					generator.clusterName, generator.clusterRegion, generator.projectName, generator.projectID, "",
-					strings.ToLower(generator.projectName)+"-credentials",
+					credentialName,
 				),
 			},
 		},
@@ -311,13 +308,15 @@ func defaultTestAtlasConnSecret(name, namespace string) *corev1.Secret {
 }
 
 func defaultTestUser(name, projectName, namespace string) *akov2.AtlasDatabaseUser {
+	dictionary := resources.AtlasNameToKubernetesName()
+	userName := resources.NormalizeAtlasName(strings.ToLower(fmt.Sprintf("%s-%s", projectName, name)), dictionary)
 	return &akov2.AtlasDatabaseUser{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "AtlasDatabaseUser",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, name)),
+			Name:      userName,
 			Namespace: namespace,
 			Labels: map[string]string{
 				"mongodb.com/atlas-resource-version": features.LatestOperatorMajorVersion,
@@ -359,13 +358,15 @@ func defaultTestUserWithID(name, projectName, projectID, namespace string, creds
 }
 
 func defaultM0TestCluster(name, region, projectName, namespace string) *akov2.AtlasDeployment {
+	dictionary := resources.AtlasNameToKubernetesName()
+	clusterName := resources.NormalizeAtlasName(strings.ToLower(fmt.Sprintf("%s-%s", projectName, name)), dictionary)
 	return &akov2.AtlasDeployment{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "AtlasDeployment",
 			APIVersion: "atlas.mongodb.com/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, name)),
+			Name:      clusterName,
 			Namespace: namespace,
 			Labels: map[string]string{
 				"mongodb.com/atlas-resource-version": features.LatestOperatorMajorVersion,

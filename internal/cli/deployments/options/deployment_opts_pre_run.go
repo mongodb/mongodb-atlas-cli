@@ -74,9 +74,10 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 		return Deployment{}, errors.New("failed to retrieve atlas and local deployments")
 	}
 
-	deployments = opts.filterDeploymentByName(deployments...)
-	if opts.DeploymentName == "" {
-		deployments = opts.filterDeploymentByState(deployments, states...)
+	var ok bool
+	deployments, ok = opts.filterDeploymentByName(deployments...)
+	if !ok {
+		deployments, _ = opts.filterDeploymentByStateLocal(deployments, states...)
 	}
 
 	d, err := opts.Select(deployments)
@@ -84,7 +85,7 @@ func (opts *DeploymentOpts) SelectDeployments(ctx context.Context, projectID str
 		return Deployment{}, err
 	}
 
-	if len(states) > 0 && !slices.Contains(states, d.StateName) {
+	if d.Type == "LOCAL" && len(states) > 0 && !slices.Contains(states, d.StateName) {
 		return Deployment{}, fmt.Errorf("%w: %s", errDeploymentUnexpectedState, d.StateName)
 	}
 
@@ -100,9 +101,9 @@ func isUnauthenticatedErr(err error) bool {
 	return ok && target.GetReason() == "Unauthorized"
 }
 
-func (opts *DeploymentOpts) filterDeploymentByName(deployments ...Deployment) []Deployment {
+func (opts *DeploymentOpts) filterDeploymentByName(deployments ...Deployment) ([]Deployment, bool) {
 	if opts.DeploymentName == "" {
-		return deployments
+		return deployments, false
 	}
 
 	filteredDeployments := []Deployment{}
@@ -113,23 +114,23 @@ func (opts *DeploymentOpts) filterDeploymentByName(deployments ...Deployment) []
 		}
 	}
 
-	return filteredDeployments
+	return filteredDeployments, true
 }
 
-func (*DeploymentOpts) filterDeploymentByState(deployments []Deployment, states ...string) []Deployment {
+func (*DeploymentOpts) filterDeploymentByStateLocal(deployments []Deployment, states ...string) ([]Deployment, bool) {
 	if len(states) == 0 {
-		return deployments
+		return deployments, false
 	}
 
 	filteredDeployments := []Deployment{}
 
 	for _, d := range deployments {
-		if slices.Contains(states, d.StateName) {
+		if d.Type == "ATLAS" || slices.Contains(states, d.StateName) {
 			filteredDeployments = append(filteredDeployments, d)
 		}
 	}
 
-	return filteredDeployments
+	return filteredDeployments, true
 }
 
 func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, error) {

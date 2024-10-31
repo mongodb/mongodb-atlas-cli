@@ -65,6 +65,21 @@ func TestDataFederation(t *testing.T) {
 		assert.Equal(t, dataFederationName, dataLake.GetName())
 	})
 
+	t.Cleanup(func() {
+		t.Log("cleaning up created datafederation")
+		cmd := exec.Command(cliPath,
+			datafederationEntity,
+			"delete",
+			dataFederationName,
+			"--force")
+		cmd.Env = os.Environ()
+
+		// this command will only succeed in case one of the tests after this one fails
+		// not printing the output, because it might cause confusion
+		_ = cmd.Run()
+		t.Log("finished cleaning up created datafederation")
+	})
+
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			datafederationEntity,

@@ -588,7 +588,8 @@ func (opts *SetupOpts) runLocal(ctx context.Context) error {
 	}
 
 	_, _ = log.Warningln("Deployment created!")
-	_, _ = fmt.Fprintf(opts.OutWriter, "Connection string: %s\n", cs)
+	_, _ = fmt.Fprintf(opts.OutWriter, `Connection string: "%s"
+`, cs)
 	_, _ = log.Warningln("")
 
 	return opts.runConnectWith(cs)

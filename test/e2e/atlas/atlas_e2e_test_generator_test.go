@@ -300,7 +300,7 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 			"--force")
 		cmd.Env = os.Environ()
 		_, err = e2e.RunAndGetStdOut(cmd)
-		if err != nil {
+		if err != nil && !strings.Contains(err.Error(), "API_KEY_NOT_FOUND") {
 			errors = append(errors, err)
 		}
 		if len(errors) > 0 {

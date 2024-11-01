@@ -100,6 +100,7 @@ type DeploymentOpts struct {
 	AtlasClusterListStore store.ClusterLister
 	Config                setup.ProfileReader
 	DeploymentTelemetry   DeploymentTelemetry
+	DeploymentUUID        string
 }
 
 type Deployment struct {

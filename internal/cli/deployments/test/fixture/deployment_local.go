@@ -34,6 +34,7 @@ func NewMockLocalDeploymentOpts(ctrl *gomock.Controller, deploymentName string) 
 			DeploymentName:      deploymentName,
 			DeploymentType:      "local",
 			DeploymentTelemetry: mockDeploymentTelemetry,
+			DeploymentUUID:      "mockUUID",
 		},
 	}
 	return mockOpts

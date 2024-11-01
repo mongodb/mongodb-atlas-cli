@@ -168,6 +168,12 @@ func WithDeploymentType(t string) EventOpt {
 	}
 }
 
+func WithDeploymentUUID(s string) EventOpt {
+	return func(event Event) {
+		event.Properties["deployment_uuid"] = s
+	}
+}
+
 type CmdFlags interface {
 	Flags() *pflag.FlagSet
 }

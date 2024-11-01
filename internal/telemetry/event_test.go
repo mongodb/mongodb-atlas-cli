@@ -327,6 +327,11 @@ func TestWithDeploymentType(t *testing.T) {
 	assert.Equal(t, "test", e.Properties["deployment_type"])
 }
 
+func TestWithDeploymentUUID(t *testing.T) {
+	e := newEvent(WithDeploymentUUID("test"))
+	assert.Equal(t, "test", e.Properties["deployment_uuid"])
+}
+
 func TestWithSignal(t *testing.T) {
 	q := "interrupt"
 	e := newEvent(withSignal(q))

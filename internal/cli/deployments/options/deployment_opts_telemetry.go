@@ -15,7 +15,24 @@
 package options
 
 import (
+	"context"
+	"errors"
+	"fmt"
+
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+var (
+	errGeneratingConnectionString = errors.New("error generating connection string for deployment")
+	errConnectingDeployment       = errors.New("error connecting to deployment")
+	errDecodingUUID               = errors.New("error decoding uuid")
+	errCastingUUID                = errors.New("error casting uuid")
+	errUUIDNotFound               = errors.New("error uuid is not found")
+	errEmptyUUID                  = errors.New("error uuid is empty")
 )
 
 //go:generate mockgen -destination=../../../mocks/mock_deployment_opts_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options DeploymentTelemetry
@@ -27,10 +44,56 @@ func NewDeploymentTypeTelemetry(opts *DeploymentOpts) DeploymentTelemetry {
 	return opts
 }
 
+func (opts *DeploymentOpts) collectUUID(ctx context.Context) error {
+	if opts.DeploymentUUID == "" {
+		cnnStr, err := opts.ConnectionString(ctx)
+		if err != nil {
+			return fmt.Errorf("%w: %w", errGeneratingConnectionString, err)
+		}
+
+		client, err := mongo.Connect(ctx, options.Client().ApplyURI(cnnStr))
+		if err != nil {
+			return fmt.Errorf("%w: %w", errConnectingDeployment, err)
+		}
+
+		defer func() {
+			_ = client.Disconnect(ctx)
+		}()
+
+		atlascli := map[string]any{}
+
+		if err := client.Database("admin").Collection("atlascli").FindOne(ctx, bson.M{}).Decode(&atlascli); err != nil {
+			return fmt.Errorf("%w: %w", errDecodingUUID, err)
+		}
+
+		if atlascli["uuid"] == nil {
+			return errUUIDNotFound
+		}
+
+		uuid, ok := atlascli["uuid"].(string)
+		if !ok {
+			return errCastingUUID
+		}
+
+		if uuid == "" {
+			return errEmptyUUID
+		}
+
+		opts.DeploymentUUID = uuid
+	}
+
+	telemetry.AppendOption(telemetry.WithDeploymentUUID(opts.DeploymentUUID))
+
+	return nil
+}
+
 func (opts *DeploymentOpts) AppendDeploymentType() {
 	var deploymentType string
 	if opts.IsLocalDeploymentType() {
 		deploymentType = LocalCluster
+		if err := opts.collectUUID(context.TODO()); err != nil {
+			_, _ = log.Debugf("error collecting deployment uuid: %v", err)
+		}
 	} else if opts.IsAtlasDeploymentType() {
 		deploymentType = AtlasCluster
 	}

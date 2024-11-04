@@ -34,6 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/workflows"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/compass"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
@@ -195,6 +196,11 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	envVars := map[string]string{
 		"TOOL": "ATLASCLI",
 	}
+
+	if !config.TelemetryEnabled() {
+		envVars["DO_NOT_TRACK"] = "1"
+	}
+
 	if opts.IsAuthEnabled() {
 		envVars["MONGODB_INITDB_ROOT_USERNAME"] = opts.DBUsername
 		envVars["MONGODB_INITDB_ROOT_PASSWORD"] = opts.DBUserPassword

@@ -92,14 +92,14 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
-	mockAtlasClusterDescriber := mocks.NewMockClusterDescriber(ctrl)
+	mockAtlasClusterDescriberStarter := mocks.NewMockClusterDescriberStarter(ctrl)
 	deploymenTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedAtlasDeployment)
 
 	connectOpts := &ConnectOpts{
 		ConnectWith:    "connectionString",
 		DeploymentOpts: *deploymenTest.Opts,
 		ConnectToAtlasOpts: ConnectToAtlasOpts{
-			Store: mockAtlasClusterDescriber,
+			Store: mockAtlasClusterDescriberStarter,
 			GlobalOpts: cli.GlobalOpts{
 				ProjectID: "projectID",
 			},
@@ -127,7 +127,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 
 	deploymenTest.CommonAtlasMocks(connectOpts.ProjectID)
 
-	mockAtlasClusterDescriber.
+	mockAtlasClusterDescriberStarter.
 		EXPECT().
 		AtlasCluster(connectOpts.ProjectID, expectedAtlasDeployment).
 		Return(&expectedAtlasClusters.GetResults()[0], nil).

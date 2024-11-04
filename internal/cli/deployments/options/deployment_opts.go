@@ -134,6 +134,31 @@ func (opts *DeploymentOpts) MongodDockerImageName() string {
 	return "docker.io/mongodb/mongodb-atlas-local:" + opts.MdbVersion
 }
 
+func (opts *DeploymentOpts) Spin(funcs ...func() error) error {
+	opts.StartSpinner()
+	defer opts.StopSpinner()
+
+	for _, f := range funcs {
+		if err := f(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+func (opts *DeploymentOpts) SpinContext(ctx context.Context, funcs ...func(context.Context) error) error {
+	opts.StartSpinner()
+	defer opts.StopSpinner()
+
+	for _, f := range funcs {
+		if err := f(ctx); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (opts *DeploymentOpts) StartSpinner() {
 	if terminal.IsTerminal(log.Writer()) {
 		opts.s = spinner.New(spinner.CharSets[9], spinnerSpeed)

@@ -106,9 +106,38 @@ type ConnectOpts struct {
 	ConnectToAtlasOpts
 }
 
-func (opts *ConnectOpts) Connect(ctx context.Context) error {
-	if _, err := opts.SelectDeployments(ctx, opts.ConfigProjectID(), options.IdleState); err != nil {
+var errDeploymentNotStarted = errors.New("deployment not started")
+
+func (opts *ConnectOpts) startDeployment(ctx context.Context, deployment options.Deployment) error {
+	ok, err := opts.promptStartDeployment()
+	if err != nil {
 		return err
+	}
+	if !ok {
+		return errDeploymentNotStarted
+	}
+
+	return opts.Spin(func() error {
+		if opts.DeploymentType == options.AtlasCluster {
+			_, err := opts.Store.StartCluster(opts.ProjectID, deployment.Name)
+
+			return err
+		}
+
+		return opts.StartLocal(ctx, deployment)
+	})
+}
+
+func (opts *ConnectOpts) Connect(ctx context.Context) error {
+	d, err := opts.SelectDeployments(ctx, opts.ConfigProjectID(), options.IdleState, options.StoppedState, options.PausedState)
+	if err != nil {
+		return err
+	}
+
+	if d.StateName == options.StoppedState || d.StateName == options.PausedState {
+		if err := opts.startDeployment(ctx, d); err != nil {
+			return err
+		}
 	}
 
 	if err := opts.askConnectWith(); err != nil {
@@ -166,6 +195,17 @@ func (opts *ConnectOpts) promptDBUsername() error {
 	return telemetry.TrackAskOne(p, &opts.DeploymentOpts.DBUsername)
 }
 
+func (*ConnectOpts) promptStartDeployment() (bool, error) {
+	var result bool
+	p := &survey.Confirm{
+		Message: "Deployment seems stopped, would you like to start it?",
+		Default: true,
+	}
+
+	err := telemetry.TrackAskOne(p, &result)
+	return result, err
+}
+
 func (opts *ConnectOpts) promptDBUserPassword() error {
 	if !opts.IsTerminalInput() {
 		_, err := fmt.Fscanln(opts.InReader, &opts.DeploymentOpts.DBUserPassword)
@@ -191,7 +231,7 @@ type ConnectToAtlasOpts struct {
 	cli.GlobalOpts
 	cli.InputOpts
 	ConnectionStringType string
-	Store                store.ClusterDescriber
+	Store                store.ClusterDescriberStarter
 }
 
 func (opts *ConnectToAtlasOpts) InitAtlasStore(ctx context.Context) func() error {

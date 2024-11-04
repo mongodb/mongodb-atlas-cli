@@ -16,7 +16,6 @@ package deployments
 
 import (
 	"context"
-	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
@@ -36,10 +35,7 @@ type StartOpts struct {
 	store store.ClusterStarter
 }
 
-var (
-	ErrDeploymentIsDeleting = errors.New("deployment state is DELETING")
-	startTemplate           = "\nStarting deployment '{{.Name}}'.\n"
-)
+var startTemplate = "\nStarting deployment '{{.Name}}'.\n"
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -63,38 +59,18 @@ func (opts *StartOpts) Run(ctx context.Context) error {
 }
 
 func (opts *StartOpts) RunLocal(ctx context.Context, deployment options.Deployment) error {
-	opts.StartSpinner()
-	defer opts.StopSpinner()
-
-	// verify that the host meets the minimum requirements, if not, print a warning
-	if err := opts.ValidateMinimumRequirements(); err != nil {
-		return err
-	}
-
-	if err := opts.startContainer(ctx, deployment); err != nil {
-		return err
-	}
-
-	return opts.Print(
-		atlasClustersPinned.AdvancedClusterDescription{
-			Name: &opts.DeploymentName,
-		})
-}
-
-func (opts *StartOpts) startContainer(ctx context.Context, deployment options.Deployment) error {
-	if deployment.StateName == options.IdleState || deployment.StateName == options.RestartingState {
-		return nil
-	}
-
-	if deployment.StateName == options.StoppedState {
-		return opts.ContainerEngine.ContainerStart(ctx, opts.LocalMongodHostname())
-	}
-
-	if deployment.StateName == options.PausedState {
-		return opts.ContainerEngine.ContainerUnpause(ctx, opts.LocalMongodHostname())
-	}
-
-	return ErrDeploymentIsDeleting
+	return opts.Spin(
+		opts.ValidateMinimumRequirements,
+		func() error {
+			return opts.StartLocal(ctx, deployment)
+		},
+		func() error {
+			return opts.Print(
+				atlasClustersPinned.AdvancedClusterDescription{
+					Name: &opts.DeploymentName,
+				})
+		},
+	)
 }
 
 func (opts *StartOpts) RunAtlas() error {

@@ -15,9 +15,11 @@
 package main
 
 import (
+	"bytes"
 	_ "embed"
 	"errors"
 	"fmt"
+	"go/format"
 	"html/template"
 	"os"
 
@@ -98,14 +100,27 @@ func writeCommands(fs afero.Fs, outputPath string, data L1.GroupedAndSortedComma
 		return err
 	}
 
+	// Write template output to a buffer first
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
+		return err
+	}
+
+	// Format the generated code
+	formatted, err := format.Source(buf.Bytes())
+	if err != nil {
+		return fmt.Errorf("failed to format generated code: %w", err)
+	}
+
+	// Write the formatted code to file
 	file, err := fs.Create(outputPath)
 	if err != nil {
 		return fmt.Errorf("failed to open output file %s, error: %w", outputPath, err)
 	}
-
 	defer func() {
 		_ = file.Close()
 	}()
 
-	return tmpl.Execute(file, data)
+	_, err = file.Write(formatted)
+	return err
 }

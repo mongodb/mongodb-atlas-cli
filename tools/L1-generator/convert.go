@@ -20,7 +20,7 @@ func specToCommands(spec *openapi3.T) (L1.GroupedAndSortedCommands, error) {
 
 	for path, item := range spec.Paths.Map() {
 		for verb, operation := range item.Operations() {
-			command, err := operationToCommand(path, verb, *operation)
+			command, err := operationToCommand(path, verb, operation)
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert operation to command: %w", err)
 			}
@@ -61,22 +61,59 @@ func specToCommands(spec *openapi3.T) (L1.GroupedAndSortedCommands, error) {
 	return sortedGroups, nil
 }
 
-//nolint:gocyclo
-func operationToCommand(path, verb string, operation openapi3.Operation) (*L1.Command, error) {
+func operationToCommand(path, verb string, operation *openapi3.Operation) (*L1.Command, error) {
 	httpVerb, err := L1.ToHTTPVerb(verb)
 	if err != nil {
 		return nil, err
 	}
 
+	parameters, err := extractParameters(operation.Parameters)
+	if err != nil {
+		return nil, err
+	}
+
+	versions, err := buildVersions(operation)
+	if err != nil {
+		return nil, err
+	}
+
+	description, err := Clean(operation.Description)
+	if err != nil {
+		return nil, fmt.Errorf("failed to clean description: %w", err)
+	}
+
+	command := L1.Command{
+		OperationID: operation.OperationID,
+		Description: description,
+		RequestParameters: L1.RequestParameters{
+			URL:             path,
+			QueryParameters: parameters.query,
+			URLParameters:   parameters.url,
+			Verb:            httpVerb,
+		},
+		Versions: versions,
+	}
+
+	return &command, nil
+}
+
+// Struct to hold both types of parameters.
+type parameterSet struct {
+	query []L1.Parameter
+	url   []L1.Parameter
+}
+
+// Extract and categorize parameters.
+func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 	queryParameters := make([]L1.Parameter, 0)
 	urlParameters := make([]L1.Parameter, 0)
 
-	for _, parameterRef := range operation.Parameters {
+	for _, parameterRef := range parameters {
 		parameter := parameterRef.Value
 
 		description, err := Clean(parameter.Description)
 		if err != nil {
-			return nil, fmt.Errorf("failed to clean description: %w", err)
+			return parameterSet{}, fmt.Errorf("failed to clean description: %w", err)
 		}
 
 		l1Parameter := L1.Parameter{
@@ -91,63 +128,94 @@ func operationToCommand(path, verb string, operation openapi3.Operation) (*L1.Co
 		case "path":
 			urlParameters = append(urlParameters, l1Parameter)
 		default:
-			return nil, fmt.Errorf("invalid parameter 'in' location: %s", parameter.In)
+			return parameterSet{}, fmt.Errorf("invalid parameter 'in' location: %s", parameter.In)
 		}
 	}
 
-	versionsMap := make(map[string]*L1.Version, 0)
+	return parameterSet{
+		query: queryParameters,
+		url:   urlParameters,
+	}, nil
+}
 
-	for statusString, responses := range operation.Responses.Map() {
+// Build versions from responses and request body.
+func buildVersions(operation *openapi3.Operation) ([]L1.Version, error) {
+	versionsMap := make(map[string]*L1.Version)
+
+	if err := processResponses(operation.Responses, versionsMap); err != nil {
+		return nil, err
+	}
+
+	if err := processRequestBody(operation.RequestBody, versionsMap); err != nil {
+		return nil, err
+	}
+
+	return sortVersions(versionsMap), nil
+}
+
+// Process response content types.
+func processResponses(responses *openapi3.Responses, versionsMap map[string]*L1.Version) error {
+	for statusString, responses := range responses.Map() {
 		statusCode, err := strconv.Atoi(statusString)
 		if err != nil {
-			return nil, fmt.Errorf("http status code '%s' is not numeric: %w", statusString, err)
+			return fmt.Errorf("http status code '%s' is not numeric: %w", statusString, err)
 		}
 
 		if statusCode < 200 || statusCode >= 300 {
 			continue
 		}
 
-		// TODO: extract sunset data (x-sunset) from _ parameter
 		for versionedContentType := range responses.Value.Content {
-			version, contentType, err := extractVersionAndContentType(versionedContentType)
-			if err != nil {
-				return nil, fmt.Errorf("unsupported version '%s' error: %w", versionedContentType, err)
+			if err := addContentTypeToVersion(versionedContentType, versionsMap, false); err != nil {
+				return err
 			}
+		}
+	}
+	return nil
+}
 
-			if _, ok := versionsMap[version]; !ok {
-				versionsMap[version] = &L1.Version{
-					Version:              version,
-					RequestContentTypes:  []string{},
-					ResponseContentTypes: []string{},
-				}
-			}
+// Process request body content types.
+func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[string]*L1.Version) error {
+	if requestBody == nil {
+		return nil
+	}
 
-			versionsMap[version].ResponseContentTypes = append(versionsMap[version].ResponseContentTypes, contentType)
+	for versionedContentType := range requestBody.Value.Content {
+		if err := addContentTypeToVersion(versionedContentType, versionsMap, true); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Helper function to add content type to version map.
+func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*L1.Version, isRequest bool) error {
+	version, contentType, err := extractVersionAndContentType(versionedContentType)
+	if err != nil {
+		return fmt.Errorf("unsupported version '%s' error: %w", versionedContentType, err)
+	}
+
+	if _, ok := versionsMap[version]; !ok {
+		versionsMap[version] = &L1.Version{
+			Version:              version,
+			RequestContentTypes:  []string{},
+			ResponseContentTypes: []string{},
 		}
 	}
 
-	// TODO: extract sunset data (x-sunset) from _ parameter
-	if operation.RequestBody != nil {
-		for versionedContentType := range operation.RequestBody.Value.Content {
-			version, contentType, err := extractVersionAndContentType(versionedContentType)
-			if err != nil {
-				return nil, fmt.Errorf("unsupported version '%s' error: %w", versionedContentType, err)
-			}
-
-			if _, ok := versionsMap[version]; !ok {
-				versionsMap[version] = &L1.Version{
-					Version:              version,
-					RequestContentTypes:  []string{},
-					ResponseContentTypes: []string{},
-				}
-			}
-
-			versionsMap[version].RequestContentTypes = append(versionsMap[version].RequestContentTypes, contentType)
-		}
+	if isRequest {
+		versionsMap[version].RequestContentTypes = append(versionsMap[version].RequestContentTypes, contentType)
+	} else {
+		versionsMap[version].ResponseContentTypes = append(versionsMap[version].ResponseContentTypes, contentType)
 	}
 
-	// Sort all request and response content types
+	return nil
+}
+
+// Sort versions and their content types.
+func sortVersions(versionsMap map[string]*L1.Version) []L1.Version {
 	versions := make([]L1.Version, 0)
+
 	for _, version := range versionsMap {
 		sort.Slice(version.RequestContentTypes, func(i, j int) bool {
 			return version.RequestContentTypes[i] < version.RequestContentTypes[j]
@@ -160,29 +228,11 @@ func operationToCommand(path, verb string, operation openapi3.Operation) (*L1.Co
 		versions = append(versions, *version)
 	}
 
-	// Sort all versions
 	sort.Slice(versions, func(i, j int) bool {
 		return versions[i].Version < versions[j].Version
 	})
 
-	description, err := Clean(operation.Description)
-	if err != nil {
-		return nil, fmt.Errorf("failed to clean description: %w", err)
-	}
-
-	command := L1.Command{
-		OperationID: operation.OperationID,
-		Description: description,
-		RequestParameters: L1.RequestParameters{
-			URL:             path,
-			QueryParameters: queryParameters,
-			URLParameters:   urlParameters,
-			Verb:            httpVerb,
-		},
-		Versions: versions,
-	}
-
-	return &command, nil
+	return versions
 }
 
 func groupForTag(spec *openapi3.T, tag string) (*L1.Group, error) {

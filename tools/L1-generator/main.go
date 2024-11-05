@@ -17,7 +17,6 @@ import (
 var templateContent string
 
 func main() {
-	// TODO: sort output so it's reproducible
 	var (
 		specPath   string
 		outputPath string

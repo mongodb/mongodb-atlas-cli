@@ -67,7 +67,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 }
 
 func (opts *DeleteOpts) RunAtlas() error {
-	return opts.Delete(opts.store.DeleteSearchIndex, opts.ConfigProjectID(), opts.DeploymentName)
+	return opts.Delete(opts.store.DeleteSearchIndexDeprecated, opts.ConfigProjectID(), opts.DeploymentName)
 }
 
 func (opts *DeleteOpts) RunLocal(ctx context.Context) error {

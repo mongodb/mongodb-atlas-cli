@@ -37,9 +37,9 @@ func TestUpdateOpts_Run(t *testing.T) {
 		updateOpts.Name = testName
 		updateOpts.id = "1"
 
-		expected := &atlasv2.ClusterSearchIndex{}
+		expected := &atlasv2.SearchIndexResponse{}
 
-		request, err := updateOpts.NewSearchIndex()
+		request, err := updateOpts.UpdateSearchIndex()
 		require.NoError(t, err)
 		mockStore.
 			EXPECT().
@@ -65,11 +65,11 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 		expected := &atlasv2.ClusterSearchIndex{}
 
-		request, err := updateOpts.NewSearchIndex()
+		request, err := updateOpts.UpdateSearchIndex()
 		require.NoError(t, err)
 		mockStore.
 			EXPECT().
-			UpdateSearchIndexes(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.id, request).
+			UpdateSearchIndexesDeprecated(updateOpts.ConfigProjectID(), updateOpts.clusterName, updateOpts.id, request).
 			Return(expected, nil).
 			Times(1)
 

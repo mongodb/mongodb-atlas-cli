@@ -185,7 +185,7 @@ func TestList_RunAtlas(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		SearchIndexes(opts.ProjectID, opts.DeploymentName, opts.DBName, opts.Collection).
+		SearchIndexesDeprecated(opts.ProjectID, opts.DeploymentName, opts.DBName, opts.Collection).
 		Return([]atlasv2.ClusterSearchIndex{
 			{
 				Name:           expectedName,

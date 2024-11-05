@@ -255,7 +255,7 @@ func TestCreate_Duplicated(t *testing.T) {
 
 func TestCreate_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockIndexStore := mocks.NewMockSearchIndexCreator(ctrl)
+	mockIndexStore := mocks.NewMockSearchIndexCreatorDescriber(ctrl)
 	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
@@ -278,19 +278,13 @@ func TestCreate_RunAtlas(t *testing.T) {
 		store: mockIndexStore,
 	}
 
-	index, err := opts.NewSearchIndex()
+	index, err := opts.CreateSearchIndex()
 	require.NoError(t, err)
 
-	indexWithID := &atlasv2.ClusterSearchIndex{
-		CollectionName: opts.Collection,
-		Database:       opts.DBName,
-		Analyzer:       &opts.Analyzer,
-		Mappings: &atlasv2.ApiAtlasFTSMappings{
-			Dynamic: &opts.Dynamic,
-			Fields:  nil,
-		},
-		SearchAnalyzer: &opts.SearchAnalyzer,
-		Name:           opts.Name,
+	indexWithID := &atlasv2.SearchIndexResponse{
+		CollectionName: &opts.Collection,
+		Database:       &opts.DBName,
+		Name:           &opts.Name,
 		IndexID:        &indexID,
 	}
 

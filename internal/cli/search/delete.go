@@ -44,7 +44,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteSearchIndex, opts.ConfigProjectID(), opts.clusterName)
+	return opts.Delete(opts.store.DeleteSearchIndexDeprecated, opts.ConfigProjectID(), opts.clusterName)
 }
 
 // atlas cluster(s) search(s) index(es) delete <id> [--clusterName name][--projectId projectId][--force].

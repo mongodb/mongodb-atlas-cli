@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241023001/admin"
 )
 
 func TestAdd_Run(t *testing.T) {

@@ -6,12 +6,9 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
-	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/autogeneration/L1"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/text"
 )
 
 var (
@@ -32,15 +29,21 @@ func specToCommands(spec *openapi3.T) (L1.GroupedAndSortedCommands, error) {
 				return nil, fmt.Errorf("expect every operation to have exactly 1 tag, got: %v", len(operation.Tags))
 			}
 
-			tag := operation.Tags[0] // TODO: verify length
+			tag := operation.Tags[0]
 			if _, ok := groups[tag]; !ok {
-				groups[tag] = groupForTag(spec, tag)
+				group, err := groupForTag(spec, tag)
+				if err != nil {
+					return nil, err
+				}
+
+				groups[tag] = group
 			}
 
 			groups[tag].Commands = append(groups[tag].Commands, *command)
 		}
 	}
 
+	// Sort commands inside of groups
 	sortedGroups := make([]L1.Group, 0, len(groups))
 	for _, group := range groups {
 		sort.Slice(group.Commands, func(i, j int) bool {
@@ -50,6 +53,7 @@ func specToCommands(spec *openapi3.T) (L1.GroupedAndSortedCommands, error) {
 		sortedGroups = append(sortedGroups, *group)
 	}
 
+	// Sort groups
 	sort.Slice(sortedGroups, func(i, j int) bool {
 		return sortedGroups[i].Name < sortedGroups[j].Name
 	})
@@ -70,9 +74,14 @@ func operationToCommand(path, verb string, operation openapi3.Operation) (*L1.Co
 	for _, parameterRef := range operation.Parameters {
 		parameter := parameterRef.Value
 
+		description, err := Clean(parameter.Description)
+		if err != nil {
+			return nil, fmt.Errorf("failed to clean description: %w", err)
+		}
+
 		l1Parameter := L1.Parameter{
 			Name:        parameter.Name,
-			Description: cleanString(parameter.Description),
+			Description: description,
 			Required:    parameter.Required,
 		}
 
@@ -137,6 +146,7 @@ func operationToCommand(path, verb string, operation openapi3.Operation) (*L1.Co
 		}
 	}
 
+	// Sort all request and response content types
 	versions := make([]L1.Version, 0)
 	for _, version := range versionsMap {
 		sort.Slice(version.RequestContentTypes, func(i, j int) bool {
@@ -150,13 +160,19 @@ func operationToCommand(path, verb string, operation openapi3.Operation) (*L1.Co
 		versions = append(versions, *version)
 	}
 
+	// Sort all versions
 	sort.Slice(versions, func(i, j int) bool {
 		return versions[i].Version < versions[j].Version
 	})
 
+	description, err := Clean(operation.Description)
+	if err != nil {
+		return nil, fmt.Errorf("failed to clean description: %w", err)
+	}
+
 	command := L1.Command{
 		OperationID: operation.OperationID,
-		Description: cleanString(operation.Description),
+		Description: description,
 		RequestParameters: L1.RequestParameters{
 			URL:             path,
 			QueryParameters: queryParameters,
@@ -169,32 +185,22 @@ func operationToCommand(path, verb string, operation openapi3.Operation) (*L1.Co
 	return &command, nil
 }
 
-func groupForTag(spec *openapi3.T, tag string) *L1.Group {
+func groupForTag(spec *openapi3.T, tag string) (*L1.Group, error) {
 	description := ""
 
 	if specTag := spec.Tags.Get(tag); specTag != nil {
-		description = cleanString(specTag.Description)
+		cleanDescription, err := Clean(specTag.Description)
+		if err != nil {
+			return nil, fmt.Errorf("failed to clean description: %w", err)
+		}
+		description = cleanDescription
 	}
 
 	return &L1.Group{
 		Name:        tag,
 		Description: description,
 		Commands:    []L1.Command{},
-	}
-}
-
-func cleanString(input string) string {
-	inputBytes := []byte(input)
-
-	md := goldmark.New()
-	root := md.Parser().Parse(text.NewReader(inputBytes))
-
-	// TODO: use non deprecated method
-
-	plain := string(root.Text(inputBytes))
-	cleaned := strings.TrimSpace(strings.ReplaceAll(plain, "`", "'"))
-
-	return cleaned
+	}, nil
 }
 
 func extractVersionAndContentType(input string) (version string, contentType string, err error) {

@@ -2,14 +2,18 @@ package main
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
 	"github.com/spf13/afero"
+	"github.com/stretchr/testify/require"
 )
 
-func testSpec(t *testing.T, specPath string) {
+func testSpec(t *testing.T, name, specPath string) {
 	t.Helper()
+	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".go"))
+
 	realFs := afero.NewOsFs()
 
 	specBytes, err := afero.ReadFile(realFs, specPath)
@@ -33,13 +37,23 @@ func testSpec(t *testing.T, specPath string) {
 	}
 
 	resultString := string(resultBytes)
-	if err := cupaloy.Snapshot(resultString); err != nil {
+	if err := snapshotter.SnapshotWithName(name, resultString); err != nil {
 		t.Errorf("unexpected result %s", err)
 		t.FailNow()
 	}
 }
 
 // To update snapshots run: UPDATE_SNAPSHOTS=true go test ./...
-func TestSnapshotFixiture00(t *testing.T) {
-	testSpec(t, "./fixtures/00-spec.yaml")
+func TestSnapshots(t *testing.T) {
+	const FixtureDirectory = "./fixtures/"
+	files, err := os.ReadDir(FixtureDirectory)
+	require.NoError(t, err, "failed to load fixtures")
+
+	for _, file := range files {
+		fileName := file.Name()
+		fullPath := filepath.Join(FixtureDirectory, fileName)
+		t.Run(fileName, func(t *testing.T) {
+			testSpec(t, fileName, fullPath)
+		})
+	}
 }

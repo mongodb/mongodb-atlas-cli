@@ -8682,7 +8682,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version: `2025-01-01`,
+						Version: `2024-11-13`,
 						RequestContentTypes: []string{
 							`json`,
 						},
@@ -8728,7 +8728,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version:             `2025-01-01`,
+						Version:             `2024-11-13`,
 						RequestContentTypes: []string{},
 						ResponseContentTypes: []string{
 							`json`,
@@ -8772,7 +8772,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version:             `2025-01-01`,
+						Version:             `2024-11-13`,
 						RequestContentTypes: []string{},
 						ResponseContentTypes: []string{
 							`json`,
@@ -8826,7 +8826,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version:             `2025-01-01`,
+						Version:             `2024-11-13`,
 						RequestContentTypes: []string{},
 						ResponseContentTypes: []string{
 							`json`,
@@ -8870,7 +8870,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version: `2025-01-01`,
+						Version: `2024-11-13`,
 						RequestContentTypes: []string{
 							`json`,
 						},
@@ -8911,7 +8911,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version: `2025-01-01`,
+						Version: `2024-11-13`,
 						RequestContentTypes: []string{
 							`json`,
 						},
@@ -8963,7 +8963,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version: `2025-01-01`,
+						Version: `2024-11-13`,
 						RequestContentTypes: []string{
 							`json`,
 						},
@@ -9014,7 +9014,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version:             `2025-01-01`,
+						Version:             `2024-11-13`,
 						RequestContentTypes: []string{},
 						ResponseContentTypes: []string{
 							`json`,
@@ -9073,7 +9073,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version:             `2025-01-01`,
+						Version:             `2024-11-13`,
 						RequestContentTypes: []string{},
 						ResponseContentTypes: []string{
 							`json`,
@@ -9123,7 +9123,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version: `2025-01-01`,
+						Version: `2024-11-13`,
 						RequestContentTypes: []string{
 							`json`,
 						},
@@ -9169,7 +9169,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version:             `2025-01-01`,
+						Version:             `2024-11-13`,
 						RequestContentTypes: []string{},
 						ResponseContentTypes: []string{
 							`json`,
@@ -9228,7 +9228,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version:             `2025-01-01`,
+						Version:             `2024-11-13`,
 						RequestContentTypes: []string{},
 						ResponseContentTypes: []string{
 							`json`,
@@ -18076,6 +18076,52 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
+				OperationID: `createProjectServiceAccountSecret`,
+				Description: `Create a secret for the specified Service Account in the specified Project. Available as a preview feature.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}/secrets`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+						},
+						{
+							Name:        `clientId`,
+							Description: `The Client ID of the Service Account.`,
+							Required:    true,
+						},
+					},
+					Verb: POST,
+				},
+				Versions: []Version{
+					{
+						Version: `2024-08-05`,
+						RequestContentTypes: []string{
+							`json`,
+						},
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
 				OperationID: `createServiceAccount`,
 				Description: `Creates one Service Account for the specified Organization. Available as a preview feature.`,
 				RequestParameters: RequestParameters{
@@ -18096,6 +18142,64 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
+							Required:    true,
+						},
+					},
+					Verb: POST,
+				},
+				Versions: []Version{
+					{
+						Version: `2024-08-05`,
+						RequestContentTypes: []string{
+							`json`,
+						},
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `createServiceAccountAccessList`,
+				Description: `Add Access List Entries for the specified Service Account for the organization. Resources require all API requests to originate from IP addresses on the API access list. Available as a preview feature.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/accessList`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+						},
+						{
+							Name:        `includeCount`,
+							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Required:    false,
+						},
+						{
+							Name:        `itemsPerPage`,
+							Description: `Number of items that the response returns per page.`,
+							Required:    false,
+						},
+						{
+							Name:        `pageNum`,
+							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
+							Required:    false,
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name:        `orgId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
+							Required:    true,
+						},
+						{
+							Name:        `clientId`,
+							Description: `The Client ID of the Service Account.`,
 							Required:    true,
 						},
 					},
@@ -18250,6 +18354,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
+				OperationID: `deleteProjectServiceAccountSecret`,
+				Description: `Deletes the specified Service Account secret. Available as a preview feature.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}/secrets/{secretId}`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name:        `clientId`,
+							Description: `The Client ID of the Service Account.`,
+							Required:    true,
+						},
+						{
+							Name:        `secretId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the secret.`,
+							Required:    true,
+						},
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+						},
+					},
+					Verb: DELETE,
+				},
+				Versions: []Version{
+					{
+						Version:             `2024-08-05`,
+						RequestContentTypes: []string{},
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
 				OperationID: `deleteServiceAccount`,
 				Description: `Deletes the specified Service Account. Available as a preview feature.`,
 				RequestParameters: RequestParameters{
@@ -18275,6 +18428,52 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
+							Required:    true,
+						},
+					},
+					Verb: DELETE,
+				},
+				Versions: []Version{
+					{
+						Version:             `2024-08-05`,
+						RequestContentTypes: []string{},
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `deleteServiceAccountAccessListEntry`,
+				Description: `Removes the specified access list entry from the specified Service Account for the organization. You can&#39;t remove the requesting IP address from the access list. Available as a preview feature.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/accessList/{ipAddress}`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name:        `orgId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
+							Required:    true,
+						},
+						{
+							Name:        `clientId`,
+							Description: `The Client ID of the Service Account.`,
+							Required:    true,
+						},
+						{
+							Name:        `ipAddress`,
+							Description: `One IP address or multiple IP addresses represented as one CIDR block. When specifying a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`,
 							Required:    true,
 						},
 					},
@@ -18515,6 +18714,62 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+						},
+					},
+					Verb: GET,
+				},
+				Versions: []Version{
+					{
+						Version:             `2024-08-05`,
+						RequestContentTypes: []string{},
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `listServiceAccountAccessList`,
+				Description: `Returns all access list entries that you configured for the specified Service Account for the organization. Available as a preview feature.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/accessList`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+						},
+						{
+							Name:        `includeCount`,
+							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Required:    false,
+						},
+						{
+							Name:        `itemsPerPage`,
+							Description: `Number of items that the response returns per page.`,
+							Required:    false,
+						},
+						{
+							Name:        `pageNum`,
+							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
+							Required:    false,
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name:        `orgId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
+							Required:    true,
+						},
+						{
+							Name:        `clientId`,
+							Description: `The Client ID of the Service Account.`,
+							Required:    true,
 						},
 					},
 					Verb: GET,

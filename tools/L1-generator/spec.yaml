@@ -2731,8 +2731,10 @@ components:
         ApiStreamsAzureRegionView:
             description: Atlas Streams Azure Regions.
             enum:
-                - VIRGINIA_USA
-                - AMSTERDAM_NLD
+                - eastus
+                - westus
+                - eastus2
+                - westeurope
             type: string
         ApiUserEventTypeViewForNdsGroup:
             description: Unique identifier of event type.
@@ -9569,7 +9571,7 @@ components:
                 propertyName: cloudProvider
             properties:
                 cloudProvider:
-                    description: Human-readable label that identifies the Cloud service provider where you wish to store your archived data. **AZURE** may be selected only if **AZURE** is the Cloud service provider for the cluster and no **AWS** online archive has been created for the cluster.
+                    description: Human-readable label that identifies the Cloud service provider where you wish to store your archived data. **AZURE** or **GCP** may be selected only if it is the Cloud service provider for the cluster and no archives for any other cloud provider have been created for the cluster. **GCP** is currently only supported in [private preview](https://www.mongodb.com/community/forums/t/invitation-to-participate-in-the-private-preview-program-of-online-archive-on-gcp).
                     enum:
                         - AWS
                         - AZURE
@@ -13516,7 +13518,6 @@ components:
                 - $ref: '#/components/schemas/DiskBackupSnapshotExportBucketRequest'
                 - properties:
                     bucketName:
-                        deprecated: true
                         description: 'The name of the Azure Storage Container to export to. Deprecated: provide the Container''s URL in serviceUrl instead.'
                         example: export-container
                         maxLength: 63
@@ -14586,6 +14587,8 @@ components:
                     - PLAN_ASAP_REQUESTED
                     - INDEPENDENT_SHARD_SCALING_AVAILABLE
                     - INDEPENDENT_SHARD_AUTO_SCALING_AVAILABLE
+                    - INDEPENDENT_SHARD_SCALING_CLUSTER_MIGRATED
+                    - INDEPENDENT_SHARD_SCALING_CLUSTER_ROLLED_BACK
                     - MOVE_SKIPPED
                     - PROXY_RESTARTED
                     - PROXY_PANICKED
@@ -16177,7 +16180,7 @@ components:
                 - description
                 - field
             type: object
-        FlexBackupRestoreJob20250101:
+        FlexBackupRestoreJob20241113:
             description: Details for one restore job of a flex cluster.
             properties:
                 deliveryType:
@@ -16278,7 +16281,7 @@ components:
                     type: string
             title: Flex Backup Restore Job
             type: object
-        FlexBackupRestoreJobCreate20250101:
+        FlexBackupRestoreJobCreate20241113:
             description: Details to create one restore job of a flex cluster.
             properties:
                 _snapshotId:
@@ -16382,7 +16385,7 @@ components:
                 - _targetDeploymentItemName
             title: Create Flex Backup Restore Job
             type: object
-        FlexBackupSettings20250101:
+        FlexBackupSettings20241113:
             description: Flex backup configuration
             properties:
                 enabled:
@@ -16393,7 +16396,7 @@ components:
             readOnly: true
             title: Flex Backup Configuration
             type: object
-        FlexBackupSnapshot20250101:
+        FlexBackupSnapshot20241113:
             description: Details for one snapshot of a flex cluster.
             properties:
                 expiration:
@@ -16449,7 +16452,7 @@ components:
                     type: string
             title: Flex Backup Snapshot
             type: object
-        FlexBackupSnapshotDownloadCreate20250101:
+        FlexBackupSnapshotDownloadCreate20241113:
             description: Details for one backup snapshot download of a flex cluster.
             properties:
                 _snapshotId:
@@ -16473,11 +16476,11 @@ components:
                 - _snapshotId
             title: Flex Backup Snapshot Download Create
             type: object
-        FlexClusterDescription20250101:
+        FlexClusterDescription20241113:
             description: Group of settings that configure a MongoDB Flex cluster.
             properties:
                 backupSettings:
-                    $ref: '#/components/schemas/FlexBackupSettings20250101'
+                    $ref: '#/components/schemas/FlexBackupSettings20241113'
                 clusterType:
                     description: Flex cluster topology.
                     enum:
@@ -16486,7 +16489,7 @@ components:
                     readOnly: true
                     type: string
                 connectionStrings:
-                    $ref: '#/components/schemas/FlexConnectionStrings20250101'
+                    $ref: '#/components/schemas/FlexConnectionStrings20241113'
                 createDate:
                     description: Date and time when MongoDB Cloud created this instance. This parameter expresses its value in ISO 8601 format in UTC.
                     format: date-time
@@ -16530,7 +16533,7 @@ components:
                     readOnly: true
                     type: string
                 providerSettings:
-                    $ref: '#/components/schemas/FlexProviderSettings20250101'
+                    $ref: '#/components/schemas/FlexProviderSettings20241113'
                 stateName:
                     description: Human-readable label that indicates the current operating condition of this instance.
                     enum:
@@ -16564,7 +16567,7 @@ components:
                 - providerSettings
             title: Flex Cluster Description
             type: object
-        FlexClusterDescriptionCreate20250101:
+        FlexClusterDescriptionCreate20241113:
             description: Settings that you can specify when you create a flex cluster.
             properties:
                 links:
@@ -16584,7 +16587,7 @@ components:
                     type: string
                     writeOnly: true
                 providerSettings:
-                    $ref: '#/components/schemas/FlexProviderSettingsCreate20250101'
+                    $ref: '#/components/schemas/FlexProviderSettingsCreate20241113'
                 tags:
                     description: List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the instance.
                     externalDocs:
@@ -16602,7 +16605,33 @@ components:
                 - providerSettings
             title: Flex Cluster Description Create
             type: object
-        FlexConnectionStrings20250101:
+        FlexClusterDescriptionUpdate20241113:
+            description: Settings that you can specify when you update a flex cluster.
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                tags:
+                    description: List that contains key-value pairs between 1 to 255 characters in length for tagging and categorizing the instance.
+                    externalDocs:
+                        description: Resource Tags
+                        url: https://dochub.mongodb.org/core/add-cluster-tag-atlas
+                    items:
+                        $ref: '#/components/schemas/ResourceTag'
+                    type: array
+                terminationProtectionEnabled:
+                    default: false
+                    description: Flag that indicates whether termination protection is enabled on the cluster. If set to `true`, MongoDB Cloud won't delete the cluster. If set to `false`, MongoDB Cloud will delete the cluster.
+                    type: boolean
+            title: Flex Cluster Description Update
+            type: object
+        FlexConnectionStrings20241113:
             description: Collection of Uniform Resource Locators that point to the MongoDB database.
             externalDocs:
                 description: Connection string URI format.
@@ -16625,7 +16654,7 @@ components:
             readOnly: true
             title: Flex Cluster Connection Strings
             type: object
-        FlexProviderSettings20250101:
+        FlexProviderSettings20241113:
             description: Group of cloud provider settings that configure the provisioned MongoDB flex cluster.
             properties:
                 backingProviderName:
@@ -16655,7 +16684,7 @@ components:
             readOnly: true
             title: Cloud Service Provider Settings for a Flex Cluster
             type: object
-        FlexProviderSettingsCreate20250101:
+        FlexProviderSettingsCreate20241113:
             description: Group of cloud provider settings that configure the provisioned MongoDB flex cluster.
             properties:
                 backingProviderName:
@@ -21982,6 +22011,8 @@ components:
                 - PLAN_ASAP_REQUESTED
                 - INDEPENDENT_SHARD_SCALING_AVAILABLE
                 - INDEPENDENT_SHARD_AUTO_SCALING_AVAILABLE
+                - INDEPENDENT_SHARD_SCALING_CLUSTER_MIGRATED
+                - INDEPENDENT_SHARD_SCALING_CLUSTER_ROLLED_BACK
                 - MOVE_SKIPPED
                 - PROXY_RESTARTED
                 - PROXY_PANICKED
@@ -24166,6 +24197,10 @@ components:
                 apiAccessListRequired:
                     description: Flag that indicates whether to require API operations to originate from an IP Address added to the API access list for the specified organization.
                     type: boolean
+                maxServiceAccountSecretValidityInHours:
+                    description: Number that represents the maximum period before expiry in hours for new Atlas Admin API Service Account secrets within the specified organization.
+                    format: int32
+                    type: integer
                 multiFactorAuthRequired:
                     description: 'Flag that indicates whether to require users to set up Multi-Factor Authentication (MFA) before accessing the specified organization. To learn more, see: https://www.mongodb.com/docs/atlas/security-multi-factor-authentication/.'
                     type: boolean
@@ -24518,7 +24553,7 @@ components:
                     readOnly: true
                     type: integer
             type: object
-        PaginatedApiAtlasFlexBackupRestoreJob20250101View:
+        PaginatedApiAtlasFlexBackupRestoreJob20241113View:
             properties:
                 links:
                     description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
@@ -24532,7 +24567,7 @@ components:
                 results:
                     description: List of returned documents that MongoDB Cloud provides when completing this request.
                     items:
-                        $ref: '#/components/schemas/FlexBackupRestoreJob20250101'
+                        $ref: '#/components/schemas/FlexBackupRestoreJob20241113'
                     readOnly: true
                     type: array
                 totalCount:
@@ -24542,7 +24577,7 @@ components:
                     readOnly: true
                     type: integer
             type: object
-        PaginatedApiAtlasFlexBackupSnapshot20240710View:
+        PaginatedApiAtlasFlexBackupSnapshot20241113View:
             properties:
                 links:
                     description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
@@ -24556,7 +24591,7 @@ components:
                 results:
                     description: List of returned documents that MongoDB Cloud provides when completing this request.
                     items:
-                        $ref: '#/components/schemas/FlexBackupSnapshot20250101'
+                        $ref: '#/components/schemas/FlexBackupSnapshot20241113'
                     readOnly: true
                     type: array
                 totalCount:
@@ -25241,7 +25276,7 @@ components:
                     readOnly: true
                     type: integer
             type: object
-        PaginatedFlexClusters20250101:
+        PaginatedFlexClusters20241113:
             properties:
                 links:
                     description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
@@ -25255,7 +25290,7 @@ components:
                 results:
                     description: List of returned documents that MongoDB Cloud provides when completing this request.
                     items:
-                        type: object
+                        $ref: '#/components/schemas/FlexClusterDescription20241113'
                     readOnly: true
                     type: array
                 totalCount:
@@ -26249,7 +26284,7 @@ components:
                     description: Human-readable string to associate with this private endpoint.
                     type: string
                 customerEndpointDNSName:
-                    description: Human-readable label to identify customer's VPC endpoint DNS name.
+                    description: Human-readable label to identify customer's VPC endpoint DNS name. If defined, you must also specify a value for **region**.
                     type: string
                 customerEndpointIPAddress:
                     description: IP address used to connect to the Azure private endpoint.
@@ -26275,7 +26310,8 @@ components:
                         - AWS
                     type: string
                 region:
-                    description: Human-readable label to identify the region of customer's VPC endpoint.
+                    description: Human-readable label to identify the region of customer's VPC endpoint. If defined, you must also specify a value for **customerEndpointDNSName**.
+                    example: US_EAST_1
                     type: string
                 status:
                     description: Status of the private endpoint connection request.
@@ -33301,6 +33337,13 @@ components:
         DigestAuth:
             scheme: digest
             type: http
+        ServiceAccounts:
+            description: Learn more about the Preview Feature [Service Accounts](https://www.mongodb.com/docs/atlas/api/service-accounts-overview).
+            flows:
+                clientCredentials:
+                    scopes: {}
+                    tokenUrl: https://cloud.mongodb.com/api/oauth/token
+            type: oauth2
 info:
     description: |-
         The MongoDB Atlas Administration API allows developers to manage all components in MongoDB Atlas.
@@ -33323,7 +33366,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: e4e03e44a819d3c9846972a63cc6d6acf236fbd7
+    x-xgen-sha: 717355e4e2b2ff77eca907c9e2c7e28401a2a901
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -41953,10 +41996,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/PaginatedFlexClusters20250101'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/PaginatedFlexClusters20241113'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "409":
                     $ref: '#/components/responses/conflict'
@@ -41977,18 +42020,18 @@ paths:
                 - $ref: '#/components/parameters/pretty'
             requestBody:
                 content:
-                    application/vnd.atlas.2025-01-01+json:
+                    application/vnd.atlas.2024-11-13+json:
                         schema:
-                            $ref: '#/components/schemas/FlexClusterDescriptionCreate20250101'
+                            $ref: '#/components/schemas/FlexClusterDescriptionCreate20241113'
                 description: Create One Flex Cluster in One Project.
                 required: true
             responses:
                 "201":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/FlexClusterDescription20250101'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/FlexClusterDescription20241113'
+                            x-xgen-version: "2024-11-13"
                     description: Created
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42024,10 +42067,10 @@ paths:
             responses:
                 "204":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
                                 $ref: '#/components/schemas/NoBody'
-                            x-xgen-version: "2025-01-01"
+                            x-xgen-version: "2024-11-13"
                     description: This endpoint does not return a response body.
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42062,10 +42105,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/FlexClusterDescription20250101'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/FlexClusterDescription20241113'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42099,18 +42142,18 @@ paths:
                     type: string
             requestBody:
                 content:
-                    application/vnd.atlas.2025-01-01+json:
+                    application/vnd.atlas.2024-11-13+json:
                         schema:
-                            $ref: '#/components/schemas/FlexClusterDescription20250101'
+                            $ref: '#/components/schemas/FlexClusterDescriptionUpdate20241113'
                 description: Update One Flex Cluster in One Project.
                 required: true
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/FlexClusterDescription20250101'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/FlexClusterDescription20241113'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42143,18 +42186,18 @@ paths:
                 - $ref: '#/components/parameters/pretty'
             requestBody:
                 content:
-                    application/vnd.atlas.2025-01-01+json:
+                    application/vnd.atlas.2024-11-13+json:
                         schema:
-                            $ref: '#/components/schemas/FlexBackupSnapshotDownloadCreate20250101'
+                            $ref: '#/components/schemas/FlexBackupSnapshotDownloadCreate20241113'
                 description: Snapshot to be downloaded.
                 required: true
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/FlexBackupRestoreJob20250101'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/FlexBackupRestoreJob20241113'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42172,7 +42215,7 @@ paths:
             tags:
                 - Flex Snapshots
             x-xgen-hidden-env:
-                envs: stage,prod
+                envs: prod
             x-xgen-owner-team: Atlas Serverless II
     /api/atlas/v2/groups/{groupId}/flexClusters/{name}/backup/restoreJobs:
         get:
@@ -42197,10 +42240,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/PaginatedApiAtlasFlexBackupRestoreJob20250101View'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/PaginatedApiAtlasFlexBackupRestoreJob20241113View'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42212,7 +42255,7 @@ paths:
             tags:
                 - Flex Restore Jobs
             x-xgen-hidden-env:
-                envs: stage,prod
+                envs: prod
             x-xgen-owner-team: Atlas Serverless II
         post:
             description: Restores one snapshot of one flex cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -42232,18 +42275,18 @@ paths:
                     type: string
             requestBody:
                 content:
-                    application/vnd.atlas.2025-01-01+json:
+                    application/vnd.atlas.2024-11-13+json:
                         schema:
-                            $ref: '#/components/schemas/FlexBackupRestoreJobCreate20250101'
+                            $ref: '#/components/schemas/FlexBackupRestoreJobCreate20241113'
                 description: Restores one snapshot of one flex cluster from the specified project.
                 required: true
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/FlexBackupRestoreJob20250101'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/FlexBackupRestoreJob20241113'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42259,7 +42302,7 @@ paths:
             tags:
                 - Flex Restore Jobs
             x-xgen-hidden-env:
-                envs: stage,prod
+                envs: prod
             x-xgen-owner-team: Atlas Serverless II
     /api/atlas/v2/groups/{groupId}/flexClusters/{name}/backup/restoreJobs/{restoreJobId}:
         get:
@@ -42290,10 +42333,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/FlexBackupRestoreJob20250101'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/FlexBackupRestoreJob20241113'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42305,7 +42348,7 @@ paths:
             tags:
                 - Flex Restore Jobs
             x-xgen-hidden-env:
-                envs: stage,prod
+                envs: prod
             x-xgen-owner-team: Atlas Serverless II
     /api/atlas/v2/groups/{groupId}/flexClusters/{name}/backup/snapshots:
         get:
@@ -42330,10 +42373,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/PaginatedApiAtlasFlexBackupSnapshot20240710View'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/PaginatedApiAtlasFlexBackupSnapshot20241113View'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42345,7 +42388,7 @@ paths:
             tags:
                 - Flex Snapshots
             x-xgen-hidden-env:
-                envs: stage,prod
+                envs: prod
             x-xgen-owner-team: Atlas Serverless II
     /api/atlas/v2/groups/{groupId}/flexClusters/{name}/backup/snapshots/{snapshotId}:
         get:
@@ -42376,10 +42419,10 @@ paths:
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/FlexBackupSnapshot20250101'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/FlexBackupSnapshot20241113'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -42391,7 +42434,7 @@ paths:
             tags:
                 - Flex Snapshots
             x-xgen-hidden-env:
-                envs: stage,prod
+                envs: prod
             x-xgen-owner-team: Atlas Serverless II
     /api/atlas/v2/groups/{groupId}/flexClusters:tenantUpgrade:
         post:
@@ -42403,18 +42446,18 @@ paths:
                 - $ref: '#/components/parameters/pretty'
             requestBody:
                 content:
-                    application/vnd.atlas.2025-01-01+json:
+                    application/vnd.atlas.2024-11-13+json:
                         schema:
-                            $ref: '#/components/schemas/FlexClusterDescription20250101'
+                            $ref: '#/components/schemas/FlexClusterDescription20241113'
                 description: Details of the flex cluster upgrade in the specified project.
                 required: true
             responses:
                 "200":
                     content:
-                        application/vnd.atlas.2025-01-01+json:
+                        application/vnd.atlas.2024-11-13+json:
                             schema:
-                                $ref: '#/components/schemas/FlexClusterDescription20250101'
-                            x-xgen-version: "2025-01-01"
+                                $ref: '#/components/schemas/FlexClusterDescription20241113'
+                            x-xgen-version: "2024-11-13"
                     description: OK
                 "400":
                     $ref: '#/components/responses/badRequest'
@@ -46915,8 +46958,6 @@ paths:
             summary: List All Project Service Accounts
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
         post:
             description: Creates one Service Account for the specified Project. The Service Account will automatically be added as an Organization Member to the Organization that the specified Project is a part of. Available as a preview feature.
@@ -46950,8 +46991,6 @@ paths:
             summary: Create and Assign one Service Account to one Project
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
     /api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}:
         delete:
@@ -46987,8 +47026,6 @@ paths:
             summary: Unassign One Service Account from One Project
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
         get:
             description: Returns one Service Account in the specified Project. Available as a preview feature.
@@ -47022,8 +47059,6 @@ paths:
             summary: Get one Project Service Account
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
         patch:
             description: Updates one Service Account in the specified Project. Available as a preview feature.
@@ -47066,8 +47101,6 @@ paths:
             summary: Update one Project Service Account
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
     /api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}/accessList:
         get:
@@ -47103,8 +47136,6 @@ paths:
             summary: Return All Access List entries for one Project Service Account
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
         post:
             description: Add Access List Entries for the specified Service Account for the project. Resources require all API requests to originate from IP addresses on the API access list. Available as a preview feature.
@@ -47153,8 +47184,6 @@ paths:
             summary: Add Access List entries for one Project Service Account
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
     /api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}/accessList/{ipAddress}:
         delete:
@@ -47197,8 +47226,85 @@ paths:
             summary: Remove One Access List entry from one Project Service Account
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
+            x-xgen-owner-team: apix
+    /api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}/secrets:
+        post:
+            description: Create a secret for the specified Service Account in the specified Project. Available as a preview feature.
+            operationId: createProjectServiceAccountSecret
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - description: The Client ID of the Service Account.
+                  in: path
+                  name: clientId
+                  required: true
+                  schema:
+                    example: mdb_sa_id_667066535bc75b03c37b3038
+                    pattern: ^mdb_sa_id_[a-fA-F\d]{24}$
+                    type: string
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            requestBody:
+                content:
+                    application/vnd.atlas.2024-08-05+json:
+                        schema:
+                            $ref: '#/components/schemas/ServiceAccountSecretRequest'
+                description: Details for the new secret.
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/vnd.atlas.2024-08-05+json:
+                            schema:
+                                $ref: '#/components/schemas/ServiceAccountSecret'
+                            x-xgen-version: "2024-08-05"
+                    description: Created
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Create one Project Service Account Secret
+            tags:
+                - Service Accounts
+            x-xgen-owner-team: apix
+    /api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}/secrets/{secretId}:
+        delete:
+            description: Deletes the specified Service Account secret. Available as a preview feature.
+            operationId: deleteProjectServiceAccountSecret
+            parameters:
+                - description: The Client ID of the Service Account.
+                  in: path
+                  name: clientId
+                  required: true
+                  schema:
+                    example: mdb_sa_id_667066535bc75b03c37b3038
+                    pattern: ^mdb_sa_id_[a-fA-F\d]{24}$
+                    type: string
+                - description: Unique 24-hexadecimal digit string that identifies the secret.
+                  in: path
+                  name: secretId
+                  required: true
+                  schema:
+                    type: string
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.2024-08-05+json:
+                            x-xgen-version: "2024-08-05"
+                    description: This endpoint does not return a response body.
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Delete one Project Service Account Secret
+            tags:
+                - Service Accounts
             x-xgen-owner-team: apix
     /api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}:invite:
         post:
@@ -47243,8 +47349,6 @@ paths:
             summary: Assign One Service Account to One Project
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
     /api/atlas/v2/groups/{groupId}/settings:
         get:
@@ -50477,8 +50581,6 @@ paths:
             summary: List All Organization Service Accounts
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
         post:
             description: Creates one Service Account for the specified Organization. Available as a preview feature.
@@ -50511,8 +50613,6 @@ paths:
             summary: Create one Organization Service Account
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
     /api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}:
         delete:
@@ -50545,8 +50645,6 @@ paths:
             summary: Delete one Organization Service Account
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
         get:
             description: Returns the specified Service Account. Available as a preview feature.
@@ -50580,8 +50678,6 @@ paths:
             summary: Get one Organization Service Account
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
         patch:
             description: Updates the specified Service Account in the specified Organization. Available as a preview feature.
@@ -50624,8 +50720,131 @@ paths:
             summary: Update one Organization Service Account
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
+            x-xgen-owner-team: apix
+    /api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/accessList:
+        get:
+            description: Returns all access list entries that you configured for the specified Service Account for the organization. Available as a preview feature.
+            operationId: listServiceAccountAccessList
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/includeCount'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/pretty'
+                - description: The Client ID of the Service Account.
+                  in: path
+                  name: clientId
+                  required: true
+                  schema:
+                    example: mdb_sa_id_667066535bc75b03c37b3038
+                    pattern: ^mdb_sa_id_[a-fA-F\d]{24}$
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2024-08-05+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedServiceAccountIPAccessEntryView'
+                            x-xgen-version: "2024-08-05"
+                    description: OK
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return All Access List entries for one Organization Service Account
+            tags:
+                - Service Accounts
+            x-xgen-owner-team: apix
+        post:
+            description: Add Access List Entries for the specified Service Account for the organization. Resources require all API requests to originate from IP addresses on the API access list. Available as a preview feature.
+            operationId: createServiceAccountAccessList
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/includeCount'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/pretty'
+                - description: The Client ID of the Service Account.
+                  in: path
+                  name: clientId
+                  required: true
+                  schema:
+                    example: mdb_sa_id_667066535bc75b03c37b3038
+                    pattern: ^mdb_sa_id_[a-fA-F\d]{24}$
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.2024-08-05+json:
+                        schema:
+                            items:
+                                $ref: '#/components/schemas/ServiceAccountIPAccessListEntry'
+                            type: array
+                        x-xgen-version: "2024-08-05"
+                description: A list of access list entries to add to the access list of the specified Service Account for the organization.
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2024-08-05+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedServiceAccountIPAccessEntryView'
+                            x-xgen-version: "2024-08-05"
+                    description: OK
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "409":
+                    $ref: '#/components/responses/conflict'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Add Access List entries for one Organization Service Account
+            tags:
+                - Service Accounts
+            x-xgen-owner-team: apix
+    /api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/accessList/{ipAddress}:
+        delete:
+            description: Removes the specified access list entry from the specified Service Account for the organization. You can't remove the requesting IP address from the access list. Available as a preview feature.
+            operationId: deleteServiceAccountAccessListEntry
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/orgId'
+                - $ref: '#/components/parameters/pretty'
+                - description: The Client ID of the Service Account.
+                  in: path
+                  name: clientId
+                  required: true
+                  schema:
+                    example: mdb_sa_id_667066535bc75b03c37b3038
+                    pattern: ^mdb_sa_id_[a-fA-F\d]{24}$
+                    type: string
+                - description: One IP address or multiple IP addresses represented as one CIDR block. When specifying a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.
+                  in: path
+                  name: ipAddress
+                  required: true
+                  schema:
+                    example: 192.0.2.0%2F24
+                    pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}(%2[fF][0-9]{1,3})?|([0-9a-f]{1,4}\:){7}[0-9a-f]{1,4}(%2[fF][0-9]{1,3})?|([0-9a-f]{1,4}\:){1,6}\:(%2[fF][0-9]{1,3})?$
+                    type: string
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.2024-08-05+json:
+                            x-xgen-version: "2024-08-05"
+                    description: This endpoint does not return a response body.
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Remove One Access List entry from one Organization Service Account
+            tags:
+                - Service Accounts
             x-xgen-owner-team: apix
     /api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/groups:
         get:
@@ -50662,8 +50881,6 @@ paths:
             summary: Return All Service Account Project assignments
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
     /api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/secrets:
         post:
@@ -50705,8 +50922,6 @@ paths:
             summary: Create one Organization Service Account Secret
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
     /api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/secrets/{secretId}:
         delete:
@@ -50745,8 +50960,6 @@ paths:
             summary: Delete a Organization Service Account Secret
             tags:
                 - Service Accounts
-            x-xgen-hidden-env:
-                envs: stage,prod
             x-xgen-owner-team: apix
     /api/atlas/v2/orgs/{orgId}/settings:
         get:
@@ -51790,6 +52003,7 @@ paths:
             x-xgen-owner-team: IAM
 security:
     - DigestAuth: []
+    - ServiceAccounts: []
 servers:
     - url: https://cloud.mongodb.com
 tags:

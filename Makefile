@@ -170,6 +170,10 @@ check-library-owners: ## Check that all the dependencies in go.mod has a owner i
 update-atlas-sdk: ## Update the atlas-sdk dependency
 	./scripts/update-sdk.sh
 
+.PHONY: update-openapi-spec
+update-openapi-spec: ## Update the openapi spec
+	./scripts/update-openapi-spec.sh
+
 .PHONY: help
 .DEFAULT_GOAL := help
 help:

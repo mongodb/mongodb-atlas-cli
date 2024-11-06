@@ -26,7 +26,7 @@ import (
 
 func testSpec(t *testing.T, name, specPath string) {
 	t.Helper()
-	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".go"))
+	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".snapshot"))
 
 	realFs := afero.NewOsFs()
 

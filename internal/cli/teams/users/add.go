@@ -72,7 +72,7 @@ func AddBuilder() *cobra.Command {
 		Use:   "add <userId>...",
 		Args:  require.MinimumNObjectIDArgs(1),
 		Short: "Add the specified MongoDB user to a team for your organization.",
-		Long: `Users must be current members of your organization before you can add them to a team.
+		Long: `You can add users that are part of the organization or users that have been sent an invitation to join the organization.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Organization User Admin"),
 		Annotations: map[string]string{

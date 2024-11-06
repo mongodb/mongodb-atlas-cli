@@ -39,7 +39,7 @@ func testSpec(t *testing.T, name, specPath string) {
 	fs := afero.NewMemMapFs()
 	_ = afero.WriteFile(fs, "spec.yml", specBytes, os.ModeType)
 
-	if err := convertSpecToL1Commands(fs, "spec.yml", "commands.go"); err != nil {
+	if err := convertSpecToAPICommands(fs, "spec.yml", "commands.go"); err != nil {
 		t.Errorf("failed to convert spec into commmands, error: %s", err)
 		t.FailNow()
 	}

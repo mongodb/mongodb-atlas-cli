@@ -24,7 +24,7 @@ import (
 	"os"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/autogeneration/L1"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
@@ -39,8 +39,8 @@ func main() {
 	)
 
 	var rootCmd = &cobra.Command{
-		Use:   "L1-generator",
-		Short: "CLI which generates L1 command definitions from a OpenAPI spec",
+		Use:   "api-generator",
+		Short: "CLI which generates api command definitions from a OpenAPI spec",
 		PreRunE: func(_ *cobra.Command, _ []string) error {
 			if specPath == "" {
 				return errors.New("--spec is a required flag")
@@ -53,7 +53,7 @@ func main() {
 			return nil
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
-			return convertSpecToL1Commands(afero.NewOsFs(), specPath, outputPath)
+			return convertSpecToAPICommands(afero.NewOsFs(), specPath, outputPath)
 		},
 	}
 
@@ -66,7 +66,7 @@ func main() {
 	}
 }
 
-func convertSpecToL1Commands(fs afero.Fs, specPath, outputPath string) error {
+func convertSpecToAPICommands(fs afero.Fs, specPath, outputPath string) error {
 	spec, err := loadSpec(fs, specPath)
 	if err != nil {
 		return fmt.Errorf("failed to load spec: '%s', error: %w", specPath, err)
@@ -74,7 +74,7 @@ func convertSpecToL1Commands(fs afero.Fs, specPath, outputPath string) error {
 
 	commands, err := specToCommands(spec)
 	if err != nil {
-		return fmt.Errorf("failed convert spec to L1 commands: %w", err)
+		return fmt.Errorf("failed convert spec to api commands: %w", err)
 	}
 
 	return writeCommands(fs, outputPath, commands)
@@ -94,7 +94,7 @@ func loadSpec(fs afero.Fs, specPath string) (*openapi3.T, error) {
 	return loader.LoadFromIoReader(file)
 }
 
-func writeCommands(fs afero.Fs, outputPath string, data L1.GroupedAndSortedCommands) error {
+func writeCommands(fs afero.Fs, outputPath string, data api.GroupedAndSortedCommands) error {
 	tmpl, err := template.New("commands.go.tmpl").Parse(templateContent)
 	if err != nil {
 		return err

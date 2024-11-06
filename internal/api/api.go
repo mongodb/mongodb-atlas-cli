@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//nolint:revive,stylecheck
-package L1
+package api
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 )
 
@@ -39,7 +39,7 @@ type RequestParameters struct {
 	URL             string
 	QueryParameters []Parameter
 	URLParameters   []Parameter
-	Verb            HTTPVerb
+	Verb            string
 }
 
 type Version struct {
@@ -56,20 +56,20 @@ type Parameter struct {
 
 type HTTPVerb string
 
-const (
-	DELETE HTTPVerb = "DELETE"
-	GET    HTTPVerb = "GET"
-	PATCH  HTTPVerb = "PATCH"
-	POST   HTTPVerb = "POST"
-	PUT    HTTPVerb = "PUT"
-)
-
-func ToHTTPVerb(s string) (HTTPVerb, error) {
-	verb := HTTPVerb(strings.ToUpper(s))
+func ToHTTPVerb(s string) (string, error) {
+	verb := strings.ToUpper(s)
 
 	switch verb {
-	case DELETE, GET, PATCH, POST, PUT:
-		return verb, nil
+	case http.MethodDelete:
+		return "http.MethodDelete", nil
+	case http.MethodGet:
+		return "http.MethodGet", nil
+	case http.MethodPatch:
+		return "http.MethodPatch", nil
+	case http.MethodPost:
+		return "http.MethodPost", nil
+	case http.MethodPut:
+		return "http.MethodPut", nil
 	default:
 		return "", fmt.Errorf("invalid HTTP verb: %s", s)
 	}

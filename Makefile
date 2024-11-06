@@ -102,17 +102,17 @@ addcopy:
 	@scripts/add-copy.sh
 
 .PHONY: generate
-generate: gen-docs gen-mocks gen-code gen-l1-commands ## Generate docs, mocks, code, L1 commands, all auto generated assets
+generate: gen-docs gen-mocks gen-code gen-api-commands ## Generate docs, mocks, code, api commands, all auto generated assets
 
 .PHONY: gen-code
 gen-code: ## Generate code
 	@echo "==> Generating code"
 	go run ./tools/cli-generator
 
-.PHONY: gen-l1-commands
-gen-L1-commands: ## Generate L1 commands
-	@echo "==> Generating L1 commands"
-	go run ./tools/L1-generator --spec ./tools/L1-generator/spec.yaml --output ./internal/autogeneration/L1/commands.go
+.PHONY: gen-api-commands
+gen-api-commands: ## Generate api commands
+	@echo "==> Generating api commands"
+	go run ./tools/api-generator --spec ./tools/api-generator/spec.yaml --output ./internal/api/commands.go
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks

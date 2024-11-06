@@ -22,15 +22,15 @@ import (
 	"strconv"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/autogeneration/L1"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 )
 
 var (
 	versionRegex = regexp.MustCompile(`^application/vnd\.atlas\.(?P<version>\d{4}-\d{2}-\d{2})\+(?P<contentType>[\w]+)$`)
 )
 
-func specToCommands(spec *openapi3.T) (L1.GroupedAndSortedCommands, error) {
-	groups := make(map[string]*L1.Group, 0)
+func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
+	groups := make(map[string]*api.Group, 0)
 
 	for path, item := range spec.Paths.Map() {
 		for verb, operation := range item.Operations() {
@@ -58,7 +58,7 @@ func specToCommands(spec *openapi3.T) (L1.GroupedAndSortedCommands, error) {
 	}
 
 	// Sort commands inside of groups
-	sortedGroups := make([]L1.Group, 0, len(groups))
+	sortedGroups := make([]api.Group, 0, len(groups))
 	for _, group := range groups {
 		sort.Slice(group.Commands, func(i, j int) bool {
 			return group.Commands[i].OperationID < group.Commands[j].OperationID
@@ -75,8 +75,8 @@ func specToCommands(spec *openapi3.T) (L1.GroupedAndSortedCommands, error) {
 	return sortedGroups, nil
 }
 
-func operationToCommand(path, verb string, operation *openapi3.Operation) (*L1.Command, error) {
-	httpVerb, err := L1.ToHTTPVerb(verb)
+func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.Command, error) {
+	httpVerb, err := api.ToHTTPVerb(verb)
 	if err != nil {
 		return nil, err
 	}
@@ -96,10 +96,10 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*L1.C
 		return nil, fmt.Errorf("failed to clean description: %w", err)
 	}
 
-	command := L1.Command{
+	command := api.Command{
 		OperationID: operation.OperationID,
 		Description: description,
-		RequestParameters: L1.RequestParameters{
+		RequestParameters: api.RequestParameters{
 			URL:             path,
 			QueryParameters: parameters.query,
 			URLParameters:   parameters.url,
@@ -113,14 +113,14 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*L1.C
 
 // Struct to hold both types of parameters.
 type parameterSet struct {
-	query []L1.Parameter
-	url   []L1.Parameter
+	query []api.Parameter
+	url   []api.Parameter
 }
 
 // Extract and categorize parameters.
 func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
-	queryParameters := make([]L1.Parameter, 0)
-	urlParameters := make([]L1.Parameter, 0)
+	queryParameters := make([]api.Parameter, 0)
+	urlParameters := make([]api.Parameter, 0)
 
 	for _, parameterRef := range parameters {
 		parameter := parameterRef.Value
@@ -130,7 +130,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 			return parameterSet{}, fmt.Errorf("failed to clean description: %w", err)
 		}
 
-		l1Parameter := L1.Parameter{
+		apiParameter := api.Parameter{
 			Name:        parameter.Name,
 			Description: description,
 			Required:    parameter.Required,
@@ -138,9 +138,9 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 
 		switch parameter.In {
 		case "query":
-			queryParameters = append(queryParameters, l1Parameter)
+			queryParameters = append(queryParameters, apiParameter)
 		case "path":
-			urlParameters = append(urlParameters, l1Parameter)
+			urlParameters = append(urlParameters, apiParameter)
 		default:
 			return parameterSet{}, fmt.Errorf("invalid parameter 'in' location: %s", parameter.In)
 		}
@@ -153,8 +153,8 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 }
 
 // Build versions from responses and request body.
-func buildVersions(operation *openapi3.Operation) ([]L1.Version, error) {
-	versionsMap := make(map[string]*L1.Version)
+func buildVersions(operation *openapi3.Operation) ([]api.Version, error) {
+	versionsMap := make(map[string]*api.Version)
 
 	if err := processResponses(operation.Responses, versionsMap); err != nil {
 		return nil, err
@@ -168,7 +168,7 @@ func buildVersions(operation *openapi3.Operation) ([]L1.Version, error) {
 }
 
 // Process response content types.
-func processResponses(responses *openapi3.Responses, versionsMap map[string]*L1.Version) error {
+func processResponses(responses *openapi3.Responses, versionsMap map[string]*api.Version) error {
 	for statusString, responses := range responses.Map() {
 		statusCode, err := strconv.Atoi(statusString)
 		if err != nil {
@@ -189,7 +189,7 @@ func processResponses(responses *openapi3.Responses, versionsMap map[string]*L1.
 }
 
 // Process request body content types.
-func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[string]*L1.Version) error {
+func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[string]*api.Version) error {
 	if requestBody == nil {
 		return nil
 	}
@@ -203,14 +203,14 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 }
 
 // Helper function to add content type to version map.
-func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*L1.Version, isRequest bool) error {
+func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.Version, isRequest bool) error {
 	version, contentType, err := extractVersionAndContentType(versionedContentType)
 	if err != nil {
 		return fmt.Errorf("unsupported version '%s' error: %w", versionedContentType, err)
 	}
 
 	if _, ok := versionsMap[version]; !ok {
-		versionsMap[version] = &L1.Version{
+		versionsMap[version] = &api.Version{
 			Version:              version,
 			RequestContentTypes:  []string{},
 			ResponseContentTypes: []string{},
@@ -227,8 +227,8 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 }
 
 // Sort versions and their content types.
-func sortVersions(versionsMap map[string]*L1.Version) []L1.Version {
-	versions := make([]L1.Version, 0)
+func sortVersions(versionsMap map[string]*api.Version) []api.Version {
+	versions := make([]api.Version, 0)
 
 	for _, version := range versionsMap {
 		sort.Slice(version.RequestContentTypes, func(i, j int) bool {
@@ -249,7 +249,7 @@ func sortVersions(versionsMap map[string]*L1.Version) []L1.Version {
 	return versions
 }
 
-func groupForTag(spec *openapi3.T, tag string) (*L1.Group, error) {
+func groupForTag(spec *openapi3.T, tag string) (*api.Group, error) {
 	description := ""
 
 	if specTag := spec.Tags.Get(tag); specTag != nil {
@@ -260,10 +260,10 @@ func groupForTag(spec *openapi3.T, tag string) (*L1.Group, error) {
 		description = cleanDescription
 	}
 
-	return &L1.Group{
+	return &api.Group{
 		Name:        tag,
 		Description: description,
-		Commands:    []L1.Command{},
+		Commands:    []api.Command{},
 	}, nil
 }
 

@@ -85,9 +85,11 @@ func (opts *ListOpts) RunLocal(ctx context.Context) error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) initMongoDBClient() error {
-	opts.mongodbClient = mongodbclient.NewClient()
-	return nil
+func (opts *ListOpts) initMongoDBClient(ctx context.Context) func() error {
+	return func() error {
+		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
+		return nil
+	}
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -133,7 +135,7 @@ func ListBuilder() *cobra.Command {
 				opts.InitOutput(w, listTemplate),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
-				opts.initMongoDBClient,
+				opts.initMongoDBClient(cmd.Context()),
 			)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {

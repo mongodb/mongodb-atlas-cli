@@ -43,12 +43,6 @@ type mongodbClient struct {
 	ctx    context.Context
 }
 
-func NewClient() MongoDBClient {
-	return &mongodbClient{
-		ctx: context.Background(),
-	}
-}
-
 func NewClientWithContext(ctx context.Context) MongoDBClient {
 	return &mongodbClient{
 		ctx: ctx,

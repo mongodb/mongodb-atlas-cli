@@ -16,7 +16,6 @@ package mongodbclient
 
 import (
 	"context"
-	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -24,10 +23,7 @@ import (
 
 type Database interface {
 	RunCommand(ctx context.Context, runCommand any) (any, error)
-	InsertOne(ctx context.Context, collection string, doc any) (any, error)
-	InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error
 	SearchIndex
-	User
 	Collection(string) Collection
 }
 
@@ -52,25 +48,4 @@ func (d *database) RunCommand(ctx context.Context, runCmd any) (any, error) {
 		return nil, err
 	}
 	return cmdResult, nil
-}
-
-func (d *database) InsertOne(ctx context.Context, col string, doc any) (any, error) {
-	return d.db.Collection(col).InsertOne(ctx, doc)
-}
-
-func (d *database) InitiateReplicaSet(ctx context.Context, rsName string, hostname string, internalPort int, externalPort int) error {
-	return d.db.RunCommand(ctx, bson.D{{Key: "replSetInitiate", Value: bson.M{
-		"_id":       rsName,
-		"version":   1,
-		"configsvr": false,
-		"members": []bson.M{
-			{
-				"_id":  0,
-				"host": fmt.Sprintf("%s:%d", hostname, internalPort),
-				"horizons": bson.M{
-					"external": fmt.Sprintf("localhost:%d", externalPort),
-				},
-			},
-		},
-	}}}).Err()
 }

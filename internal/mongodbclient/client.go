@@ -43,7 +43,7 @@ type mongodbClient struct {
 	ctx    context.Context
 }
 
-func NewClientWithContext(ctx context.Context) MongoDBClient {
+func NewClient(ctx context.Context) MongoDBClient {
 	return &mongodbClient{
 		ctx: ctx,
 	}

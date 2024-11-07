@@ -87,7 +87,7 @@ func (opts *ListOpts) RunLocal(ctx context.Context) error {
 
 func (opts *ListOpts) initMongoDBClient(ctx context.Context) func() error {
 	return func() error {
-		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
+		opts.mongodbClient = mongodbclient.NewClient(ctx)
 		return nil
 	}
 }

@@ -99,12 +99,13 @@ func TestCreate_RunLocal(t *testing.T) {
 
 	mockMongodbClient.
 		EXPECT().
-		Connect("mongodb://localhost:27017/?directConnection=true", int64(10)).
+		Connect(ctx, "mongodb://localhost:27017/?directConnection=true", int64(10)).
 		Return(nil).
 		Times(1)
 	mockMongodbClient.
 		EXPECT().
-		Disconnect().
+		Disconnect(ctx).
+		Return(nil).
 		Times(1)
 	mockMongodbClient.
 		EXPECT().
@@ -221,12 +222,13 @@ func TestCreate_Duplicated(t *testing.T) {
 
 	mockMongodbClient.
 		EXPECT().
-		Connect("mongodb://localhost:27017/?directConnection=true", int64(10)).
+		Connect(ctx, "mongodb://localhost:27017/?directConnection=true", int64(10)).
 		Return(nil).
 		Times(1)
 	mockMongodbClient.
 		EXPECT().
-		Disconnect().
+		Disconnect(ctx).
+		Return(nil).
 		Times(1)
 	mockMongodbClient.
 		EXPECT().

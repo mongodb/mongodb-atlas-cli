@@ -76,10 +76,12 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	if err = opts.mongodbClient.Connect(opts.connectionString, connectWaitSeconds); err != nil {
+	if err = opts.mongodbClient.Connect(ctx, opts.connectionString, connectWaitSeconds); err != nil {
 		return err
 	}
-	defer opts.mongodbClient.Disconnect()
+	defer func() {
+		_ = opts.mongodbClient.Disconnect(ctx)
+	}()
 
 	opts.index, err = opts.DeprecatedNewSearchIndex()
 	if err != nil {
@@ -126,18 +128,18 @@ func (opts *CreateOpts) Run(ctx context.Context) error {
 	return opts.RunAtlas()
 }
 
-func (opts *CreateOpts) initMongoDBClient(ctx context.Context) func() error {
-	return func() error {
-		opts.mongodbClient = mongodbclient.NewClient(ctx)
-		return nil
-	}
+func (opts *CreateOpts) initMongoDBClient() error {
+	opts.mongodbClient = mongodbclient.NewClient()
+	return nil
 }
 
 func (opts *CreateOpts) status(ctx context.Context) (string, error) {
-	if err := opts.mongodbClient.Connect(opts.connectionString, connectWaitSeconds); err != nil {
+	if err := opts.mongodbClient.Connect(ctx, opts.connectionString, connectWaitSeconds); err != nil {
 		return "", err
 	}
-	defer opts.mongodbClient.Disconnect()
+	defer func() {
+		_ = opts.mongodbClient.Disconnect(ctx)
+	}()
 
 	db := opts.mongodbClient.Database(opts.index.Database)
 	col := db.Collection(opts.index.CollectionName)
@@ -275,7 +277,7 @@ func CreateBuilder() *cobra.Command {
 				opts.InitOutput(w, createTemplate),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
-				opts.initMongoDBClient(cmd.Context()),
+				opts.initMongoDBClient,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

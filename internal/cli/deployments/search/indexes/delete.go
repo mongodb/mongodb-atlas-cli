@@ -76,12 +76,16 @@ func (opts *DeleteOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	if err = opts.mongodbClient.Connect(connectionString, connectWaitSeconds); err != nil {
+	if err = opts.mongodbClient.Connect(ctx, connectionString, connectWaitSeconds); err != nil {
 		return err
 	}
-	defer opts.mongodbClient.Disconnect()
+	defer func() {
+		_ = opts.mongodbClient.Disconnect(ctx)
+	}()
 
-	return opts.Delete(opts.mongodbClient.DeleteSearchIndex, opts.Entry)
+	return opts.Delete(func(id string) error {
+		return opts.mongodbClient.DeleteSearchIndex(ctx, id)
+	})
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
@@ -92,11 +96,9 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *DeleteOpts) initMongoDBClient(ctx context.Context) func() error {
-	return func() error {
-		opts.mongodbClient = mongodbclient.NewClient(ctx)
-		return nil
-	}
+func (opts *DeleteOpts) initMongoDBClient() error {
+	opts.mongodbClient = mongodbclient.NewClient()
+	return nil
 }
 
 func (opts *DeleteOpts) PostRun() {
@@ -121,7 +123,7 @@ func DeleteBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
 				opts.initStore(cmd.Context()),
-				opts.initMongoDBClient(cmd.Context()),
+				opts.initMongoDBClient,
 			)
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

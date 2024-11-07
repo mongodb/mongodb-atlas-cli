@@ -38,7 +38,7 @@ const (
 var ErrSearchIndexNotFound = errors.New("search Index not found")
 
 type Collection interface {
-	Aggregate(context.Context, any) (*mongo.Cursor, error)
+	Aggregate(ctx context.Context, pipeline any) (*mongo.Cursor, error)
 	CreateSearchIndex(ctx context.Context, idx *admin.ClusterSearchIndex) (*admin.ClusterSearchIndex, error)
 	SearchIndexes(ctx context.Context) ([]*admin.ClusterSearchIndex, error)
 	SearchIndexByName(ctx context.Context, name string) (*admin.ClusterSearchIndex, error)

@@ -102,12 +102,17 @@ addcopy:
 	@scripts/add-copy.sh
 
 .PHONY: generate
-generate: gen-docs gen-mocks gen-code ## Generate docs, mocks, code, all auto generated assets
+generate: gen-docs gen-mocks gen-code gen-api-commands ## Generate docs, mocks, code, api commands, all auto generated assets
 
 .PHONY: gen-code
 gen-code: ## Generate code
 	@echo "==> Generating code"
 	go run ./tools/cli-generator
+
+.PHONY: gen-api-commands
+gen-api-commands: ## Generate api commands
+	@echo "==> Generating api commands"
+	go run ./tools/api-generator --spec ./tools/api-generator/spec.yaml --output ./internal/api/commands.go
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
@@ -164,6 +169,10 @@ check-library-owners: ## Check that all the dependencies in go.mod has a owner i
 .PHONY: update-atlas-sdk
 update-atlas-sdk: ## Update the atlas-sdk dependency
 	./scripts/update-sdk.sh
+
+.PHONY: update-openapi-spec
+update-openapi-spec: ## Update the openapi spec
+	./scripts/update-openapi-spec.sh
 
 .PHONY: help
 .DEFAULT_GOAL := help

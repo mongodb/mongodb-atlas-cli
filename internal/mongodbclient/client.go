@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/atlas-sdk/v20240805005/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -35,8 +34,7 @@ type MongoDBClient interface {
 	Connect(ctx context.Context, connectionString string, waitSeconds int64) error
 	Disconnect(ctx context.Context) error
 	Database(db string) Database
-	SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error)
-	DeleteSearchIndex(ctx context.Context, id string) error
+	SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error)
 }
 
 type mongodbClient struct {
@@ -66,7 +64,7 @@ func (o *mongodbClient) Connect(ctx context.Context, connectionString string, wa
 	return nil
 }
 
-func (o *mongodbClient) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {
+func (o *mongodbClient) SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error) {
 	dbs, err := o.client.ListDatabaseNames(ctx, bson.D{}, nil)
 	if err != nil {
 		return nil, err
@@ -74,34 +72,12 @@ func (o *mongodbClient) SearchIndex(ctx context.Context, id string) (*admin.Clus
 
 	// We search the index in all the databases
 	for _, db := range dbs {
-		if index, _ := o.Database(db).SearchIndex(ctx, id); index != nil {
+		if index, err := o.Database(db).SearchIndex(ctx, id); err == nil && index != nil {
 			return index, nil
 		}
 	}
 
-	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
-}
-
-func (o *mongodbClient) DeleteSearchIndex(ctx context.Context, id string) error {
-	index, err := o.SearchIndex(ctx, id)
-	if err != nil {
-		return err
-	}
-
-	if index == nil {
-		return fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
-	}
-	_, err = o.Database(index.Database).RunCommand(ctx, bson.D{
-		{
-			Key:   "dropSearchIndex",
-			Value: index.CollectionName,
-		},
-		{
-			Key:   "name",
-			Value: index.Name,
-		},
-	})
-	return err
+	return nil, ErrSearchIndexNotFound
 }
 
 func (o *mongodbClient) Disconnect(ctx context.Context) error {

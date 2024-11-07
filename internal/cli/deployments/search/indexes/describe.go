@@ -90,7 +90,9 @@ func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithSearchIndexType(r.GetType()))
+	if r.Type != nil {
+		telemetry.AppendOption(telemetry.WithSearchIndexType(*r.Type))
+	}
 
 	return opts.Print(r)
 }

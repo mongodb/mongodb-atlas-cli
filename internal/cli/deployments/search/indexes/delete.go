@@ -84,7 +84,12 @@ func (opts *DeleteOpts) RunLocal(ctx context.Context) error {
 	}()
 
 	return opts.Delete(func(id string) error {
-		return opts.mongodbClient.DeleteSearchIndex(ctx, id)
+		index, err := opts.mongodbClient.SearchIndex(ctx, id)
+		if err != nil {
+			return err
+		}
+
+		return opts.mongodbClient.Database(*index.Database).Collection(*index.CollectionName).DropSearchIndex(ctx, *index.Name)
 	})
 }
 

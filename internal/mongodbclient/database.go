@@ -16,16 +16,14 @@ package mongodbclient
 
 import (
 	"context"
-	"fmt"
 
-	"go.mongodb.org/atlas-sdk/v20240805005/admin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Database interface {
 	RunCommand(ctx context.Context, runCommand any) (any, error)
-	SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error)
+	SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error)
 	Collection(string) Collection
 }
 
@@ -52,21 +50,7 @@ func (d *database) RunCommand(ctx context.Context, runCmd any) (any, error) {
 	return cmdResult, nil
 }
 
-func newSearchIndexPipeline(id string) []*bson.D {
-	return []*bson.D{
-		{
-			{
-				Key: listSearchIndexes, Value: []bson.E{
-					{
-						Key: idField, Value: id,
-					},
-				},
-			},
-		},
-	}
-}
-
-func (d *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {
+func (d *database) SearchIndex(ctx context.Context, id string) (*SearchIndexDefinition, error) {
 	collectionNames, err := d.db.ListCollectionNames(ctx, bson.D{}, nil)
 	if err != nil {
 		return nil, err
@@ -74,25 +58,16 @@ func (d *database) SearchIndex(ctx context.Context, id string) (*admin.ClusterSe
 
 	// We search the index in all the collections of the database
 	for _, coll := range collectionNames {
-		cursor, err := d.db.Collection(coll).Aggregate(ctx, newSearchIndexPipeline(id))
-		if err != nil || cursor == nil {
+		indexes, err := d.Collection(coll).SearchIndexes(ctx)
+		if err != nil {
 			return nil, err
 		}
-		var results []SearchIndexDefinition
-		if err = cursor.All(ctx, &results); err != nil {
-			return nil, err
-		}
-		if len(results) >= 1 {
-			searchIndexDef := &SearchIndexDefinition{
-				ID:         results[0].ID,
-				Name:       results[0].Name,
-				Collection: coll,
-				Database:   d.db.Name(),
-				Status:     results[0].Status,
+		for _, index := range indexes {
+			if index.IndexID != nil && *index.IndexID == id {
+				return index, nil
 			}
-			return newClusterSearchIndex(searchIndexDef), nil
 		}
 	}
 
-	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
+	return nil, ErrSearchIndexNotFound
 }

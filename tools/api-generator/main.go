@@ -16,6 +16,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	_ "embed"
 	"errors"
 	"fmt"
@@ -52,8 +53,8 @@ func main() {
 
 			return nil
 		},
-		RunE: func(_ *cobra.Command, _ []string) error {
-			return convertSpecToAPICommands(afero.NewOsFs(), specPath, outputPath)
+		RunE: func(command *cobra.Command, _ []string) error {
+			return convertSpecToAPICommands(command.Context(), afero.NewOsFs(), specPath, outputPath)
 		},
 	}
 
@@ -66,10 +67,14 @@ func main() {
 	}
 }
 
-func convertSpecToAPICommands(fs afero.Fs, specPath, outputPath string) error {
+func convertSpecToAPICommands(ctx context.Context, fs afero.Fs, specPath, outputPath string) error {
 	spec, err := loadSpec(fs, specPath)
 	if err != nil {
 		return fmt.Errorf("failed to load spec: '%s', error: %w", specPath, err)
+	}
+
+	if err := spec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
+		return fmt.Errorf("spec validation failed, error: %w", err)
 	}
 
 	commands, err := specToCommands(spec)

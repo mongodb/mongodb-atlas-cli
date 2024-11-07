@@ -77,7 +77,7 @@ func (opts *ListOpts) RunLocal(ctx context.Context) error {
 	}
 	defer opts.mongodbClient.Disconnect()
 
-	r, err := opts.mongodbClient.Database(opts.DBName).SearchIndexes(ctx, opts.Collection)
+	r, err := opts.mongodbClient.Database(opts.DBName).Collection(opts.Collection).SearchIndexes(ctx)
 	if err != nil {
 		return err
 	}

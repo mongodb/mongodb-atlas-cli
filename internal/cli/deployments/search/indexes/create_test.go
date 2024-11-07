@@ -50,6 +50,7 @@ func TestCreate_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
+	mockColl := mocks.NewMockCollection(ctrl)
 	ctx := context.Background()
 
 	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
@@ -110,6 +111,11 @@ func TestCreate_RunLocal(t *testing.T) {
 		Database(expectedDB).
 		Return(mockDB).
 		Times(1)
+	mockDB.
+		EXPECT().
+		Collection(expectedCollection).
+		Return(mockColl).
+		Times(1)
 
 	index := &atlasv2.ClusterSearchIndex{
 		Analyzer:       &opts.Analyzer,
@@ -138,15 +144,15 @@ func TestCreate_RunLocal(t *testing.T) {
 		Type:           pointer.Get(search.DefaultType),
 	}
 
-	mockDB.
+	mockColl.
 		EXPECT().
-		SearchIndexByName(ctx, index.Name, index.CollectionName).
+		SearchIndexByName(ctx, index.Name).
 		Return(nil, mongodbclient.ErrSearchIndexNotFound).
 		Times(1)
 
-	mockDB.
+	mockColl.
 		EXPECT().
-		CreateSearchIndex(ctx, expectedCollection, gomock.Any()).
+		CreateSearchIndex(ctx, gomock.Any()).
 		Return(indexWithID, nil).
 		Times(1)
 
@@ -166,6 +172,7 @@ func TestCreate_Duplicated(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
+	mockColl := mocks.NewMockCollection(ctrl)
 	ctx := context.Background()
 
 	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
@@ -226,6 +233,11 @@ func TestCreate_Duplicated(t *testing.T) {
 		Database(expectedDB).
 		Return(mockDB).
 		Times(1)
+	mockDB.
+		EXPECT().
+		Collection(expectedCollection).
+		Return(mockColl).
+		Times(1)
 
 	index := &atlasv2.ClusterSearchIndex{
 		Analyzer:       &opts.Analyzer,
@@ -252,9 +264,9 @@ func TestCreate_Duplicated(t *testing.T) {
 		IndexID:        &indexID,
 	}
 
-	mockDB.
+	mockColl.
 		EXPECT().
-		SearchIndexByName(ctx, index.Name, index.CollectionName).
+		SearchIndexByName(ctx, index.Name).
 		Return(indexWithID, nil).
 		Times(1)
 	if err := opts.Run(ctx); err == nil || !errors.Is(err, ErrSearchIndexDuplicated) {

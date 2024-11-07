@@ -88,12 +88,12 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 
 	telemetry.AppendOption(telemetry.WithSearchIndexType(opts.index.GetType()))
 
-	db := opts.mongodbClient.Database(opts.index.Database)
-	if idx, _ := db.SearchIndexByName(ctx, opts.index.Name, opts.index.CollectionName); idx != nil {
+	coll := opts.mongodbClient.Database(opts.index.Database).Collection(opts.index.CollectionName)
+	if idx, _ := coll.SearchIndexByName(ctx, opts.index.Name); idx != nil {
 		return ErrSearchIndexDuplicated
 	}
 
-	opts.index, err = db.CreateSearchIndex(ctx, opts.index.CollectionName, opts.index)
+	opts.index, err = coll.CreateSearchIndex(ctx, opts.index)
 	return err
 }
 

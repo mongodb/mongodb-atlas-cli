@@ -39,6 +39,7 @@ func TestList_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
+	mockColl := mocks.NewMockCollection(ctrl)
 	ctx := context.Background()
 
 	const (
@@ -110,6 +111,12 @@ func TestList_RunLocal(t *testing.T) {
 		Return(mockDB).
 		Times(1)
 
+	mockDB.
+		EXPECT().
+		Collection(expectedCollection).
+		Return(mockColl).
+		Times(1)
+
 	expected := []*atlasv2.ClusterSearchIndex{
 		{
 			Name:           expectedName,
@@ -121,9 +128,9 @@ func TestList_RunLocal(t *testing.T) {
 		},
 	}
 
-	mockDB.
+	mockColl.
 		EXPECT().
-		SearchIndexes(ctx, expectedCollection).
+		SearchIndexes(ctx).
 		Return(expected, nil).
 		Times(1)
 

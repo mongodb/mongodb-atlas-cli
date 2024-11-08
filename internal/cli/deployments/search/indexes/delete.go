@@ -94,7 +94,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 
 func (opts *DeleteOpts) initMongoDBClient(ctx context.Context) func() error {
 	return func() error {
-		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
+		opts.mongodbClient = mongodbclient.NewClient(ctx)
 		return nil
 	}
 }

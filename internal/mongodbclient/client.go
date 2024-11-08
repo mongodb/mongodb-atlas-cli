@@ -28,7 +28,7 @@ import (
 
 var errConnectFailed = errors.New("failed to connect to mongodb server")
 
-//go:generate mockgen -destination=../mocks/mock_mongodb_client.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient MongoDBClient,Database,SearchIndex
+//go:generate mockgen -destination=../mocks/mock_mongodb_client.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient MongoDBClient,Database,Collection
 
 type MongoDBClient interface {
 	Connect(connectionString string, waitSeconds int64) error
@@ -43,13 +43,7 @@ type mongodbClient struct {
 	ctx    context.Context
 }
 
-func NewClient() MongoDBClient {
-	return &mongodbClient{
-		ctx: context.Background(),
-	}
-}
-
-func NewClientWithContext(ctx context.Context) MongoDBClient {
+func NewClient(ctx context.Context) MongoDBClient {
 	return &mongodbClient{
 		ctx: ctx,
 	}

@@ -118,7 +118,7 @@ type SetupOpts struct {
 
 func (opts *SetupOpts) initMongoDBClient(ctx context.Context) func() error {
 	return func() error {
-		opts.mongodbClient = mongodbclient.NewClientWithContext(ctx)
+		opts.mongodbClient = mongodbclient.NewClient(ctx)
 		return nil
 	}
 }

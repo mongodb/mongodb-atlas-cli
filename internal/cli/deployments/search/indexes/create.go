@@ -32,8 +32,6 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20240805005/admin"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -83,7 +81,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		_ = opts.mongodbClient.Disconnect(ctx)
 	}()
 
-	opts.index, err = opts.DeprecatedNewSearchIndex()
+	opts.index, err = opts.NewSearchIndex()
 	if err != nil {
 		return err
 	}
@@ -135,34 +133,21 @@ func (opts *CreateOpts) initMongoDBClient() error {
 
 func (opts *CreateOpts) status(ctx context.Context) (string, error) {
 	if err := opts.mongodbClient.Connect(ctx, opts.connectionString, connectWaitSeconds); err != nil {
-		return "", err
+		return notFoundState, err
 	}
 	defer func() {
 		_ = opts.mongodbClient.Disconnect(ctx)
 	}()
 
-	db := opts.mongodbClient.Database(opts.index.Database)
-	col := db.Collection(opts.index.CollectionName)
-	cursor, err := col.Aggregate(ctx, mongo.Pipeline{
-		{
-			{Key: "$listSearchIndexes", Value: bson.D{}},
-		},
-	})
+	coll := opts.mongodbClient.Database(opts.index.Database).Collection(opts.index.CollectionName)
+	index, err := coll.SearchIndexByName(ctx, opts.index.Name)
 	if err != nil {
-		return "", err
-	}
-	var results []bson.M
-	if err = cursor.All(ctx, &results); err != nil {
-		return "", err
-	}
-	if len(results) == 0 {
 		return notFoundState, nil
 	}
-	status, ok := results[0]["status"].(string)
-	if !ok {
+	if index.Status == nil {
 		return notFoundState, nil
 	}
-	return status, nil
+	return *index.Status, nil
 }
 
 func (opts *CreateOpts) watchLocal(ctx context.Context) (any, bool, error) {

@@ -87,12 +87,13 @@ func TestDescribe_RunLocal(t *testing.T) {
 		Times(1)
 	mockMongodbClient.
 		EXPECT().
-		Disconnect().
+		Disconnect(ctx).
+		Return(nil).
 		Times(1)
 
 	mockMongodbClient.
 		EXPECT().
-		Connect("mongodb://localhost:27017/?directConnection=true", int64(10)).
+		Connect(ctx, "mongodb://localhost:27017/?directConnection=true", int64(10)).
 		Return(nil).
 		Times(1)
 
@@ -107,7 +108,7 @@ func TestDescribe_RunLocal(t *testing.T) {
 
 	mockMongodbClient.
 		EXPECT().
-		SearchIndex("test").
+		SearchIndex(ctx, "test").
 		Return(expected, nil).
 		Times(1)
 

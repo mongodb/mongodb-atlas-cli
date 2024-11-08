@@ -116,11 +116,9 @@ type SetupOpts struct {
 	atlasSetup    *setup.Opts
 }
 
-func (opts *SetupOpts) initMongoDBClient(ctx context.Context) func() error {
-	return func() error {
-		opts.mongodbClient = mongodbclient.NewClient(ctx)
-		return nil
-	}
+func (opts *SetupOpts) initMongoDBClient() error {
+	opts.mongodbClient = mongodbclient.NewClient()
+	return nil
 }
 
 func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps int) {
@@ -683,7 +681,7 @@ func SetupBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitInput(cmd.InOrStdin()),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
-				opts.initMongoDBClient(cmd.Context()),
+				opts.initMongoDBClient,
 			)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {

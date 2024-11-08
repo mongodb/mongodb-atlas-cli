@@ -27,30 +27,28 @@ import (
 )
 
 var errConnectFailed = errors.New("failed to connect to mongodb server")
+var errPingFailed = errors.New("failed to ping mongodb server")
 
 //go:generate mockgen -destination=../mocks/mock_mongodb_client.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient MongoDBClient,Database,Collection
 
 type MongoDBClient interface {
-	Connect(connectionString string, waitSeconds int64) error
-	Disconnect()
+	Connect(ctx context.Context, connectionString string, waitSeconds int64) error
+	Disconnect(ctx context.Context) error
 	Database(db string) Database
-	SearchIndex(id string) (*admin.ClusterSearchIndex, error)
-	DeleteSearchIndex(id string) error
+	SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error)
+	DeleteSearchIndex(ctx context.Context, id string) error
 }
 
 type mongodbClient struct {
 	client *mongo.Client
-	ctx    context.Context
 }
 
-func NewClient(ctx context.Context) MongoDBClient {
-	return &mongodbClient{
-		ctx: ctx,
-	}
+func NewClient() MongoDBClient {
+	return &mongodbClient{}
 }
 
-func (o *mongodbClient) Connect(connectionString string, waitSeconds int64) error {
-	ctxConnect, cancel := context.WithTimeout(o.ctx, time.Duration(waitSeconds)*time.Second)
+func (o *mongodbClient) Connect(ctx context.Context, connectionString string, waitSeconds int64) error {
+	ctxConnect, cancel := context.WithTimeout(ctx, time.Duration(waitSeconds)*time.Second)
 	defer cancel()
 
 	client, errConnect := mongo.Connect(ctxConnect, options.Client().ApplyURI(connectionString))
@@ -59,22 +57,24 @@ func (o *mongodbClient) Connect(connectionString string, waitSeconds int64) erro
 	}
 	o.client = client
 
-	if err := client.Ping(o.ctx, nil); err != nil {
-		return fmt.Errorf("%w: %w", errConnectFailed, err)
+	if err := client.Ping(ctx, nil); err != nil {
+		_ = client.Disconnect(ctx)
+		o.client = nil
+		return fmt.Errorf("%w: %w", errPingFailed, err)
 	}
 
 	return nil
 }
 
-func (o *mongodbClient) SearchIndex(id string) (*admin.ClusterSearchIndex, error) {
-	dbs, err := o.client.ListDatabaseNames(o.ctx, bson.D{}, nil)
+func (o *mongodbClient) SearchIndex(ctx context.Context, id string) (*admin.ClusterSearchIndex, error) {
+	dbs, err := o.client.ListDatabaseNames(ctx, bson.D{}, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	// We search the index in all the databases
 	for _, db := range dbs {
-		if index, _ := o.Database(db).SearchIndex(o.ctx, id); index != nil {
+		if index, _ := o.Database(db).SearchIndex(ctx, id); index != nil {
 			return index, nil
 		}
 	}
@@ -82,8 +82,8 @@ func (o *mongodbClient) SearchIndex(id string) (*admin.ClusterSearchIndex, error
 	return nil, fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
 }
 
-func (o *mongodbClient) DeleteSearchIndex(id string) error {
-	index, err := o.SearchIndex(id)
+func (o *mongodbClient) DeleteSearchIndex(ctx context.Context, id string) error {
+	index, err := o.SearchIndex(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -91,7 +91,7 @@ func (o *mongodbClient) DeleteSearchIndex(id string) error {
 	if index == nil {
 		return fmt.Errorf("index `%s` not found: %w", id, ErrSearchIndexNotFound)
 	}
-	_, err = o.Database(index.Database).RunCommand(o.ctx, bson.D{
+	_, err = o.Database(index.Database).RunCommand(ctx, bson.D{
 		{
 			Key:   "dropSearchIndex",
 			Value: index.CollectionName,
@@ -104,8 +104,8 @@ func (o *mongodbClient) DeleteSearchIndex(id string) error {
 	return err
 }
 
-func (o *mongodbClient) Disconnect() {
-	_ = o.client.Disconnect(o.ctx)
+func (o *mongodbClient) Disconnect(ctx context.Context) error {
+	return o.client.Disconnect(ctx)
 }
 
 func (o *mongodbClient) Database(name string) Database {

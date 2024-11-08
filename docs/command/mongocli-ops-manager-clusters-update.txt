@@ -38,7 +38,7 @@ Options
    * - -f, --file
      - string
      - true
-     - Filename to use to update the cluster
+     - Filename to use to update the cluster. To learn more about configuration files, see https://dochub.mongodb.org/core/mongocli-cluster-config-file.
    * - -h, --help
      - 
      - false

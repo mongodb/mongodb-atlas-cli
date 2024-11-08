@@ -90,7 +90,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", "Filename to use to update the cluster")
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", "Filename to use to update the cluster. To learn more about configuration files, see https://dochub.mongodb.org/core/mongocli-cluster-config-file.")
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
 

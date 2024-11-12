@@ -10,7 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	mongodbclient "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
-	admin "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	admin "go.mongodb.org/atlas-sdk/v20241023002/admin"
 	mongo "go.mongodb.org/mongo-driver/mongo"
 )
 

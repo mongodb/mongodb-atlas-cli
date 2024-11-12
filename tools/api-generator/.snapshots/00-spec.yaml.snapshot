@@ -35,7 +35,7 @@ var Commands = GroupedAndSortedCommands{
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    bool,
+								Type:    `bool`,
 							},
 						},
 						{
@@ -44,7 +44,7 @@ var Commands = GroupedAndSortedCommands{
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    bool,
+								Type:    `bool`,
 							},
 						},
 					},
@@ -58,7 +58,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Required: true,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    string,
+								Type:    `string`,
 							},
 						},
 					},
@@ -115,7 +115,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    bool,
+								Type:    `bool`,
 							},
 						},
 						{
@@ -124,7 +124,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    bool,
+								Type:    `bool`,
 							},
 						},
 						{
@@ -133,7 +133,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    int,
+								Type:    `int`,
 							},
 						},
 						{
@@ -142,7 +142,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    int,
+								Type:    `int`,
 							},
 						},
 						{
@@ -151,7 +151,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    bool,
+								Type:    `bool`,
 							},
 						},
 						{
@@ -160,7 +160,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    bool,
+								Type:    `bool`,
 							},
 						},
 					},
@@ -174,7 +174,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Required: true,
 							Type: ParameterType{
 								IsArray: false,
-								Type:    string,
+								Type:    `string`,
 							},
 						},
 					},

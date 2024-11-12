@@ -115,6 +115,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		definition = index.Definition
 	case *admin.ClusterSearchIndex:
 		_, _ = log.Warningln("you're using an old search index definition")
+		idxType = index.Type
 
 		opts.indexID.Database = index.Database
 		opts.indexID.Collection = index.CollectionName

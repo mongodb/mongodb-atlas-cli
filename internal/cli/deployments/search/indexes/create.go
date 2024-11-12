@@ -16,7 +16,9 @@ package indexes
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"slices"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -32,6 +34,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas-sdk/v20240805005/admin"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 const (
@@ -93,8 +96,55 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		return ErrSearchIndexDuplicated
 	}
 
-	opts.index, err = coll.CreateSearchIndex(ctx, opts.index)
-	return err
+	if opts.index.Type == nil {
+		defaultType := search.DefaultType
+		opts.index.Type = &defaultType
+	}
+
+	definition, err := buildIndexDefinition(opts.index)
+	if err != nil {
+		return err
+	}
+
+	result, err := coll.CreateSearchIndex(ctx, opts.index.Name, *opts.index.Type, definition)
+	if err != nil {
+		return err
+	}
+
+	opts.index.IndexID = result.IndexID
+
+	return nil
+}
+
+func buildIndexDefinition(idx *admin.ClusterSearchIndex) (any, error) {
+	// To maintain formatting of the SDK, marshal object into JSON and then unmarshal into BSON
+	jsonIndex, err := json.Marshal(idx)
+	if err != nil {
+		return nil, err
+	}
+
+	var index bson.D
+	err = bson.UnmarshalExtJSON(jsonIndex, true, &index)
+	if err != nil {
+		return nil, err
+	}
+
+	// Empty these fields so that they are not included into the index definition for the MongoDB command
+	index = removeFields(index, "id", "collectionName", "database", "name", "type", "status")
+	return index, nil
+}
+
+func removeFields(doc bson.D, fields ...string) bson.D {
+	cleanedDoc := bson.D{}
+
+	for _, elem := range doc {
+		if slices.Contains(fields, elem.Key) {
+			continue
+		}
+
+		cleanedDoc = append(cleanedDoc, elem)
+	}
+	return cleanedDoc
 }
 
 func (opts *CreateOpts) RunAtlas() error {

@@ -26,6 +26,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
@@ -33,8 +35,11 @@ func TestDelete_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockStore := mocks.NewMockSearchIndexDeleter(ctrl)
+	mockDB := mocks.NewMockDatabase(ctrl)
+	mockColl := mocks.NewMockCollection(ctrl)
 	ctx := context.Background()
 
+	expectedIndexName := "default"
 	const (
 		expectedLocalDeployment = "localDeployment1"
 		indexID                 = "1"
@@ -92,7 +97,29 @@ func TestDelete_RunLocal(t *testing.T) {
 
 	mockMongodbClient.
 		EXPECT().
-		DeleteSearchIndex(ctx, indexID).
+		SearchIndex(ctx, indexID).
+		Return(&mongodbclient.SearchIndexDefinition{
+			Name:           &expectedIndexName,
+			Database:       pointer.Get("db"),
+			CollectionName: pointer.Get("col"),
+		}, nil).
+		Times(1)
+
+	mockMongodbClient.
+		EXPECT().
+		Database("db").
+		Return(mockDB).
+		Times(1)
+
+	mockDB.
+		EXPECT().
+		Collection("col").
+		Return(mockColl).
+		Times(1)
+
+	mockColl.
+		EXPECT().
+		DropSearchIndex(ctx, expectedIndexName).
 		Return(nil).
 		Times(1)
 

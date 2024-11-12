@@ -167,7 +167,8 @@ func TestSearch(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &index))
 		a := assert.New(t)
 		a.Equal(indexID, index.GetIndexID())
-		a.Equal(analyzer, index.GetLatestDefinition().Analyzer)
+		a.NotNil(index.GetLatestDefinition().Analyzer)
+		a.Equal(analyzer, *index.GetLatestDefinition().Analyzer)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

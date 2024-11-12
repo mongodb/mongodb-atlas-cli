@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && deployments && local && auth && new)
+//go:build e2e || (atlas && deployments && local && auth && deprecated)
 
 package atlas_test
 
@@ -35,7 +35,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func TestDeploymentsLocalWithAuth(t *testing.T) {
+func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 	const (
 		deploymentName = "test-auth"
 		dbUsername     = "admin"
@@ -223,7 +223,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--type",
 			"local",
 			"--file",
-			"data/sample_vector_search.json",
+			"data/sample_vector_search_deprecated.json",
 			"-w",
 		)
 

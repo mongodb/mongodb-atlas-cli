@@ -33,11 +33,19 @@ var Commands = GroupedAndSortedCommands{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -48,6 +56,10 @@ var Commands = GroupedAndSortedCommands{
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -101,31 +113,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
 							Description: `Flag that indicates whether to return Clusters with retain backups.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -136,6 +172,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,

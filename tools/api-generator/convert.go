@@ -119,28 +119,43 @@ type parameterSet struct {
 
 // Extract and categorize parameters.
 func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
+	parameterNames := make(map[string]struct{})
 	queryParameters := make([]api.Parameter, 0)
 	urlParameters := make([]api.Parameter, 0)
 
 	for _, parameterRef := range parameters {
 		parameter := parameterRef.Value
 
+		// Parameters are translated to flags, we don't want duplicates
+		// Duplicates should be resolved by customization, in case they ever appeared
+		if _, exists := parameterNames[parameter.Name]; exists {
+			return parameterSet{}, fmt.Errorf("parameter with the name '%s' already exists", parameter.Name)
+		}
+
 		description, err := Clean(parameter.Description)
 		if err != nil {
 			return parameterSet{}, fmt.Errorf("failed to clean description: %w", err)
+		}
+
+		parameterType, err := getParameterType(parameter)
+		if err != nil {
+			return parameterSet{}, err
 		}
 
 		apiParameter := api.Parameter{
 			Name:        parameter.Name,
 			Description: description,
 			Required:    parameter.Required,
+			Type:        *parameterType,
 		}
 
 		switch parameter.In {
 		case "query":
 			queryParameters = append(queryParameters, apiParameter)
+			parameterNames[parameter.Name] = struct{}{}
 		case "path":
 			urlParameters = append(urlParameters, apiParameter)
+			parameterNames[parameter.Name] = struct{}{}
 		default:
 			return parameterSet{}, fmt.Errorf("invalid parameter 'in' location: %s", parameter.In)
 		}
@@ -278,4 +293,94 @@ func extractVersionAndContentType(input string) (version string, contentType str
 	contentTypeIndex := versionRegex.SubexpIndex("contentType")
 
 	return matches[versionIndex], matches[contentTypeIndex], nil
+}
+
+func getParameterType(parameter *openapi3.Parameter) (*api.ParameterType, error) {
+	if parameter.Schema == nil {
+		return nil, errors.New("parameter schema is nil")
+	}
+
+	// Handle arrays first
+	if parameter.Schema.Value.Type.Is("array") {
+		if parameter.Schema.Value.Items == nil {
+			return nil, errors.New("array items schema is nil")
+		}
+
+		// Get the type of array items
+		itemType, err := resolveSchemaType(parameter.Schema.Value.Items.Value)
+		if err != nil {
+			return nil, fmt.Errorf("failed to resolve array item type: %w", err)
+		}
+
+		return &api.ParameterType{
+			IsArray: true,
+			Type:    itemType,
+		}, nil
+	}
+
+	// Handle non-array types
+	paramType, err := resolveSchemaType(parameter.Schema.Value)
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.ParameterType{
+		IsArray: false,
+		Type:    paramType,
+	}, nil
+}
+
+// resolveSchemaType handles the conversion of OpenAPI types to Go types.
+func resolveSchemaType(schema *openapi3.Schema) (api.ParameterConcreteType, error) {
+	// Handle oneOf
+	if len(schema.OneOf) > 0 {
+		return resolveOneOfAnyOf(schema.OneOf)
+	}
+
+	// Handle anyOf
+	if len(schema.AnyOf) > 0 {
+		return resolveOneOfAnyOf(schema.AnyOf)
+	}
+
+	// Handle basic types
+	switch {
+	case schema.Type.Is("string"):
+		return api.TypeString, nil
+	case schema.Type.Is("integer"):
+		return api.TypeInt, nil
+	case schema.Type.Is("boolean"):
+		return api.TypeBool, nil
+	default:
+		return "", fmt.Errorf("unsupported type: %s", schema.Type)
+	}
+}
+
+// resolveOneOfAnyOf recursively resolves oneOf/anyOf schemas and returns the first matching basic type.
+func resolveOneOfAnyOf(schemas []*openapi3.SchemaRef) (api.ParameterConcreteType, error) {
+	for _, schema := range schemas {
+		if schema == nil || schema.Value == nil {
+			continue
+		}
+
+		// Recursive handling of nested oneOf/anyOf
+		if len(schema.Value.OneOf) > 0 {
+			if t, err := resolveOneOfAnyOf(schema.Value.OneOf); err == nil {
+				return t, nil
+			}
+			continue
+		}
+		if len(schema.Value.AnyOf) > 0 {
+			if t, err := resolveOneOfAnyOf(schema.Value.AnyOf); err == nil {
+				return t, nil
+			}
+			continue
+		}
+
+		// Try to resolve the current schema
+		if t, err := resolveSchemaType(schema.Value); err == nil {
+			return t, nil
+		}
+	}
+
+	return "", errors.New("no valid basic type found in oneOf/anyOff")
 }

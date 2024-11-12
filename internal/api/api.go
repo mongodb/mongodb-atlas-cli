@@ -52,7 +52,21 @@ type Parameter struct {
 	Name        string
 	Description string
 	Required    bool
+	Type        ParameterType
 }
+
+type ParameterType struct {
+	IsArray bool
+	Type    ParameterConcreteType
+}
+
+type ParameterConcreteType string
+
+const (
+	TypeString ParameterConcreteType = "string"
+	TypeInt    ParameterConcreteType = "int"
+	TypeBool   ParameterConcreteType = "bool"
+)
 
 type HTTPVerb string
 

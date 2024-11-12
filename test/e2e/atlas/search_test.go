@@ -163,11 +163,11 @@ func TestSearch(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var index atlasv2.ClusterSearchIndex
+		var index *atlasv2.SearchIndexResponse
 		require.NoError(t, json.Unmarshal(resp, &index))
 		a := assert.New(t)
 		a.Equal(indexID, index.GetIndexID())
-		a.Equal(analyzer, index.GetAnalyzer())
+		a.Equal(analyzer, index.GetLatestDefinition().Analyzer)
 	})
 
 	t.Run("Delete", func(t *testing.T) {

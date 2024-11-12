@@ -281,10 +281,10 @@ func TestCreate_RunAtlas(t *testing.T) {
 	index, err := opts.CreateSearchIndex()
 	require.NoError(t, err)
 
-	indexWithID := &atlasv2.SearchIndexResponse{
-		CollectionName: &opts.Collection,
-		Database:       &opts.DBName,
-		Name:           &opts.Name,
+	indexWithID := &atlasv2.ClusterSearchIndex{
+		CollectionName: opts.Collection,
+		Database:       opts.DBName,
+		Name:           opts.Name,
 		IndexID:        &indexID,
 	}
 
@@ -292,7 +292,7 @@ func TestCreate_RunAtlas(t *testing.T) {
 
 	mockIndexStore.
 		EXPECT().
-		CreateSearchIndexes(opts.ProjectID, opts.DeploymentName, index).
+		CreateSearchIndexesDeprecated(opts.ProjectID, opts.DeploymentName, index).
 		Times(1).
 		Return(indexWithID, nil)
 

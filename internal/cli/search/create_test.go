@@ -45,10 +45,10 @@ func TestCreateOpts_Run(t *testing.T) {
 		if err != nil {
 			t.Fatalf("newSearchIndex() unexpected error: %v", err)
 		}
-		expected := &atlasv2.SearchIndexResponse{}
+		expected := &atlasv2.ClusterSearchIndex{}
 		mockStore.
 			EXPECT().
-			CreateSearchIndexes(opts.ProjectID, opts.clusterName, request).
+			CreateSearchIndexesDeprecated(opts.ProjectID, opts.clusterName, request).
 			Return(expected, nil).
 			Times(1)
 

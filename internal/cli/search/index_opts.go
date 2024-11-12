@@ -123,18 +123,16 @@ func (opts *IndexOpts) CreateSearchIndex() (any, error) {
 		opts.SearchAnalyzer = DefaultAnalyzer
 	}
 
-	i := &atlasv2.SearchIndexCreateRequest{
+	i := &atlasv2.ClusterSearchIndex{
 		CollectionName: opts.Collection,
 		Database:       opts.DBName,
 		Name:           opts.Name,
 		Type:           pointer.Get(SearchIndexType),
-		Definition: &atlasv2.BaseSearchIndexCreateRequestDefinition{
-			Analyzer:       &opts.Analyzer,
-			SearchAnalyzer: &opts.SearchAnalyzer,
-			Mappings: &atlasv2.SearchMappings{
-				Dynamic: &opts.Dynamic,
-				Fields:  f,
-			},
+		Analyzer:       &opts.Analyzer,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  f,
 		},
 	}
 	return i, nil
@@ -178,14 +176,12 @@ func (opts *IndexOpts) UpdateSearchIndex() (any, error) {
 		opts.SearchAnalyzer = DefaultAnalyzer
 	}
 
-	i := &atlasv2.SearchIndexUpdateRequest{
-		Definition: atlasv2.SearchIndexUpdateRequestDefinition{
-			Analyzer:       &opts.Analyzer,
-			SearchAnalyzer: &opts.SearchAnalyzer,
-			Mappings: &atlasv2.SearchMappings{
-				Dynamic: &opts.Dynamic,
-				Fields:  f,
-			},
+	i := &atlasv2.ClusterSearchIndex{
+		Analyzer:       &opts.Analyzer,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  f,
 		},
 	}
 	return i, nil

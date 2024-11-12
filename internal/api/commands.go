@@ -33,11 +33,19 @@ var Commands = GroupedAndSortedCommands{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -48,6 +56,10 @@ var Commands = GroupedAndSortedCommands{
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -72,11 +84,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -87,6 +107,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -119,36 +143,64 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `authResult`,
 							Description: `Flag that indicates whether the response returns the successful authentication attempts only.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when to stop retrieving database history. If you specify end, you must also specify start. This parameter uses UNIX epoch time in milliseconds.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `ipAddress`,
 							Description: `One Internet Protocol address that attempted to authenticate with the database.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `nLogs`,
 							Description: `Maximum number of lines from the log to return.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins retrieving database history. If you specify start, you must also specify end. This parameter uses UNIX epoch time in milliseconds.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -159,11 +211,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -188,36 +248,64 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `authResult`,
 							Description: `Flag that indicates whether the response returns the successful authentication attempts only.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when to stop retrieving database history. If you specify end, you must also specify start. This parameter uses UNIX epoch time in milliseconds.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `ipAddress`,
 							Description: `One Internet Protocol address that attempted to authenticate with the database.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `nLogs`,
 							Description: `Maximum number of lines from the log to return.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins retrieving database history. If you specify start, you must also specify end. This parameter uses UNIX epoch time in milliseconds.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -228,11 +316,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `hostname`,
 							Description: `Fully qualified domain name or IP address of the MongoDB host that stores the log files that you want to download.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -266,11 +362,19 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -281,6 +385,10 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -310,11 +418,19 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -325,11 +441,19 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `alertConfigId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the /alertConfigs endpoint to retrieve all alert configurations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -357,11 +481,19 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -372,11 +504,19 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `alertConfigId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the /alertConfigs endpoint to retrieve all alert configurations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -401,11 +541,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -434,26 +582,46 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -464,6 +632,10 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -491,26 +663,46 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -521,11 +713,19 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `alertId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the alert. Use the /alerts endpoint to retrieve all alerts to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -556,11 +756,19 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -571,11 +779,19 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `alertConfigId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the alert configuration that triggered this alert. Use the /alertConfigs endpoint to retrieve all alert configurations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -608,11 +824,19 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -623,11 +847,19 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `alertConfigId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the /alertConfigs endpoint to retrieve all alert configurations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -663,11 +895,19 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -678,11 +918,19 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `alertId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the alert. Use the /alerts endpoint to retrieve all alerts to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -721,11 +969,19 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -736,11 +992,19 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `alertId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the alert. Use the /alerts endpoint to retrieve all alerts to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -768,31 +1032,55 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `status`,
 							Description: `Status of the alerts to return. Omit to return all alerts in all statuses.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -803,6 +1091,10 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -830,26 +1122,46 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -860,11 +1172,19 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `alertConfigId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the /alertConfigs endpoint to retrieve all alert configurations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -895,11 +1215,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -910,11 +1238,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Label that identifies the cluster to create Search Nodes for.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -950,11 +1286,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -965,11 +1309,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection on which to create an Atlas Search index.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -996,11 +1348,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1011,11 +1371,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection on which to create an Atlas Search index.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -1042,11 +1410,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1057,11 +1433,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Label that identifies the cluster to delete.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1093,11 +1477,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1108,16 +1500,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the database and collection with one or more Application Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the Get All Atlas Search Indexes for a Collection API endpoint to find the IDs of all Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1142,11 +1546,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1157,26 +1569,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the database and collection with one or more Application Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collectionName`,
 							Description: `Name of the collection that contains one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Label that identifies the database that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexName`,
 							Description: `Name of the Atlas Search index to delete.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1201,11 +1633,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1216,16 +1656,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the database and collection with one or more Application Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the Get All Atlas Search Indexes for a Collection API endpoint to find the IDs of all Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1250,11 +1702,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1265,11 +1725,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Label that identifies the cluster to return the Search Nodes for.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1301,11 +1769,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1316,16 +1792,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the Application Search index. Use the Get All Application Search Indexes for a Collection API endpoint to find the IDs of all Application Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1350,11 +1838,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1365,26 +1861,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collectionName`,
 							Description: `Name of the collection that contains one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Label that identifies the database that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexName`,
 							Description: `Name of the Atlas Search index to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1409,11 +1925,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1424,16 +1948,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the Application Search index. Use the Get All Application Search Indexes for a Collection API endpoint to find the IDs of all Application Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1458,11 +1994,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1473,21 +2017,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collectionName`,
 							Description: `Name of the collection that contains one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Label that identifies the database that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1512,11 +2072,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1527,11 +2095,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1556,11 +2132,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1571,21 +2155,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collectionName`,
 							Description: `Name of the collection that contains one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Human-readable label that identifies the database that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1610,11 +2210,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1625,11 +2233,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Label that identifies the cluster to update the Search Nodes for.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -1665,11 +2281,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1680,16 +2304,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection whose Atlas Search index you want to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the Get All Atlas Search Indexes for a Collection API endpoint to find the IDs of all Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -1716,11 +2352,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1731,26 +2375,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection whose Atlas Search index you want to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collectionName`,
 							Description: `Name of the collection that contains one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Label that identifies the database that contains the collection with one or more Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexName`,
 							Description: `Name of the Atlas Search index to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -1777,11 +2441,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1792,16 +2464,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Name of the cluster that contains the collection whose Atlas Search index to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the Get All Atlas Search Indexes for a Collection API endpoint to find the IDs of all Atlas Search indexes.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -1834,11 +2518,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1849,6 +2541,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1873,11 +2569,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1888,6 +2592,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -1920,11 +2628,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1935,16 +2651,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `restoreJobId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the restore job to remove.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1969,6 +2697,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1979,11 +2711,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -2013,11 +2753,19 @@ To use this resource, the requesting API Key must have the Project Owner role.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2028,11 +2776,19 @@ To use this resource, the requesting API Key must have the Project Owner role.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -2059,11 +2815,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2074,6 +2838,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -2109,11 +2877,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2124,11 +2900,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the serverless instance whose snapshot you want to restore.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -2155,6 +2939,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2165,11 +2953,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -2201,6 +2997,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2211,11 +3011,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `exportBucketId`,
 							Description: `Unique 24-hexadecimal character string that identifies the Export Bucket.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -2240,11 +3048,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2255,16 +3071,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -2289,11 +3117,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2304,16 +3140,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -2338,6 +3186,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2348,16 +3200,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `exportId`,
 							Description: `Unique 24-hexadecimal character string that identifies the Export Job.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2382,11 +3246,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2397,16 +3269,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster with the restore jobs you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `restoreJobId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the restore job to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2431,11 +3315,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2446,11 +3338,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2482,11 +3382,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2497,6 +3405,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2528,6 +3440,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2538,11 +3454,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `exportBucketId`,
 							Description: `Unique 24-hexadecimal character string that identifies the Export Bucket.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2574,11 +3498,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2589,16 +3521,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2623,6 +3567,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2633,16 +3581,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the serverless instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2667,11 +3627,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2682,16 +3650,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the serverless instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `restoreJobId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the restore job to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2716,11 +3696,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2731,16 +3719,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2765,26 +3765,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2795,11 +3815,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2824,26 +3852,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2854,11 +3902,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster with the restore jobs you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2883,26 +3939,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2913,6 +3989,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2944,26 +4024,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2974,11 +4074,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3003,26 +4111,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3033,11 +4161,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the serverless instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3062,26 +4198,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3092,11 +4248,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the serverless instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3121,11 +4285,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3136,11 +4308,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3168,11 +4348,19 @@ To use this resource, the requesting API Key must have the Project Owner role.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3183,11 +4371,19 @@ To use this resource, the requesting API Key must have the Project Owner role.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -3214,11 +4410,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3229,11 +4433,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -3269,16 +4481,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `overwriteBackupPolicies`,
 							Description: `Flag that indicates whether to overwrite non complying backup policies with the new data protection settings or not.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3289,6 +4513,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -3324,11 +4552,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3339,16 +4575,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -3381,11 +4629,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3393,6 +4649,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -3428,11 +4688,19 @@ NOTE: Migrating time-series collections is not yet supported on MongoDB 6.0 or h
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3443,6 +4711,10 @@ NOTE: Migrating time-series collections is not yet supported on MongoDB 6.0 or h
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -3478,11 +4750,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3493,11 +4773,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `liveMigrationId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the migration.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -3522,6 +4810,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3529,6 +4821,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3553,11 +4849,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3568,11 +4872,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `liveMigrationId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the migration.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3597,6 +4909,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3607,11 +4923,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `validationId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the validation job.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3636,11 +4960,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3648,6 +4980,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3672,11 +5008,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3687,6 +5031,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -3728,11 +5076,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3743,11 +5099,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `roleId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the role.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -3774,11 +5138,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3789,6 +5161,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -3815,11 +5191,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3830,16 +5214,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Human-readable label that identifies the cloud provider of the role to deauthorize.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `roleId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the role.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3864,11 +5260,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3879,11 +5283,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `roleId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the role.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3908,11 +5320,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3923,6 +5343,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3953,11 +5377,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3968,11 +5400,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that is undergoing outage simulation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3997,11 +5437,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4012,11 +5460,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that is undergoing outage simulation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4041,11 +5497,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4056,11 +5520,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster to undergo an outage simulation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -4093,11 +5565,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4108,6 +5588,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -4161,16 +5645,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `retainBackups`,
 							Description: `Flag that indicates whether to retain backup snapshots for the deleted dedicated cluster.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4181,11 +5677,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -4217,11 +5721,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4232,11 +5744,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4275,11 +5795,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4290,11 +5818,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4326,11 +5862,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4341,11 +5885,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4370,6 +5922,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4380,11 +5936,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `sampleDatasetId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the loaded sample dataset.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4409,11 +5973,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4424,11 +5996,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -4455,36 +6035,64 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `providers`,
 							Description: `Cloud providers whose regions to retrieve. When you specify multiple providers, the response can return only tiers and regions that support multi-cloud clusters.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tier`,
 							Description: `Cluster tier for which to retrieve the regions.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4495,6 +6103,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4519,31 +6131,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
 							Description: `Flag that indicates whether to return Clusters with retain backups.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4554,6 +6190,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4592,26 +6232,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -4637,6 +6297,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4647,11 +6311,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the cluster into which you load the sample dataset.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -4676,11 +6348,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4691,11 +6371,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -4722,11 +6410,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4737,11 +6433,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -4766,11 +6470,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4781,11 +6493,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -4817,11 +6537,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4832,11 +6560,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -4861,11 +6597,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4876,11 +6620,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -4934,11 +6686,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4949,11 +6709,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -4989,11 +6757,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5004,6 +6780,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5030,11 +6810,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5045,6 +6833,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5077,26 +6869,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `metrics`,
 							Description: `List that contains the metrics that you want to retrieve for the associated data series. If you don&#39;t set this parameter, this resource returns data series for all Coll Stats Latency metrics.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5107,26 +6919,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster to retrieve metrics for.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterView`,
 							Description: `Human-readable label that identifies the cluster topology to retrieve metrics for.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Human-readable label that identifies the database.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collectionName`,
 							Description: `Human-readable label that identifies the collection.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5151,26 +6983,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `metrics`,
 							Description: `List that contains the metrics that you want to retrieve for the associated data series. If you don&#39;t set this parameter, this resource returns data series for all Coll Stats Latency metrics.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5181,21 +7033,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Human-readable label that identifies the database.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collectionName`,
 							Description: `Human-readable label that identifies the collection.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5220,6 +7088,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5230,6 +7102,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5254,21 +7130,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5279,16 +7171,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster to pin namespaces to.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterView`,
 							Description: `Human-readable label that identifies the cluster topology to retrieve metrics for.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5313,21 +7217,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5338,11 +7258,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5367,6 +7295,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5377,11 +7309,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster to retrieve pinned namespaces for.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5406,6 +7346,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5416,11 +7360,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster to pin namespaces to.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5448,6 +7400,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5458,11 +7414,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster to pin namespaces to.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -5490,6 +7454,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5500,11 +7468,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster to unpin namespaces from.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5537,11 +7513,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5552,6 +7536,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5578,11 +7566,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5593,11 +7589,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `roleName`,
 							Description: `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -5622,11 +7626,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5637,11 +7649,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `roleName`,
 							Description: `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5666,11 +7686,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5681,6 +7709,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5705,11 +7737,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5720,11 +7760,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `roleName`,
 							Description: `Human-readable label that identifies the role for the request. This name must beunique for this custom role in this project.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5784,11 +7832,19 @@ To use this resource, the requesting API Key must have the Project Owner or Proj
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5799,6 +7855,10 @@ To use this resource, the requesting API Key must have the Project Owner or Proj
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5825,16 +7885,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `skipRoleValidation`,
 							Description: `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5845,6 +7917,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5871,6 +7947,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5881,11 +7961,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the federated database instance to which the query limit applies.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `limitName`,
@@ -5899,6 +7987,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
 | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5925,11 +8017,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5940,11 +8040,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointId`,
 							Description: `Unique 22-character alphanumeric string that identifies the private endpoint to remove. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -5969,11 +8077,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5984,11 +8100,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the federated database instance to remove.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6013,6 +8137,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6023,11 +8151,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the federated database instance to which the query limit applies.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `limitName`,
@@ -6041,6 +8177,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
 | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6065,11 +8205,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `endDate`,
 							Description: `Timestamp that specifies the end point for the range of log messages to download.  MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `startDate`,
 							Description: `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6080,11 +8228,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the federated database instance for which you want to download query logs.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6109,11 +8265,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6124,11 +8288,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointId`,
 							Description: `Unique 22-character alphanumeric string that identifies the private endpoint to return. Atlas Data Federation supports AWS private endpoints using the AWS PrivateLink feature.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6153,6 +8325,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6163,11 +8339,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the Federated Database to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6192,26 +8376,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6222,6 +8426,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6246,16 +8454,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `type`,
 							Description: `Type of Federated Database Instances to return.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6266,6 +8486,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6290,11 +8514,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6305,11 +8537,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the federated database instance to which the query limit applies.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `limitName`,
@@ -6323,6 +8563,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | bytesProcessed.weekly | Limit on the number of bytes processed for the data federation instance for the current week | N/A |
 | bytesProcessed.monthly | Limit on the number of bytes processed for the data federation instance for the current month | N/A |`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6347,11 +8591,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6362,11 +8614,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the federated database instance for which you want to retrieve query limits.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6391,16 +8651,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `skipRoleValidation`,
 							Description: `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6411,11 +8683,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the federated database instance to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -6448,6 +8728,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6458,6 +8742,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -6484,6 +8772,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6494,11 +8786,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6523,11 +8823,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6538,16 +8846,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineRunId`,
 							Description: `Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6572,11 +8892,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6587,11 +8915,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6616,11 +8952,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6631,16 +8975,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineRunId`,
 							Description: `Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6665,31 +9021,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `createdBefore`,
 							Description: `If specified, Atlas returns only Data Lake Pipeline runs initiated before this time and date.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6700,11 +9080,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6729,11 +9117,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6744,11 +9140,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6773,31 +9177,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `completedAfter`,
 							Description: `Date and time after which MongoDB Cloud created the snapshot. If specified, MongoDB Cloud returns available backup snapshots created after this time and date only. This parameter expresses its value in the ISO 8601 timestamp format in UTC.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6808,11 +9236,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6837,6 +9273,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6847,6 +9287,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6871,11 +9315,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6886,11 +9338,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -6915,11 +9375,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6930,11 +9398,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -6959,11 +9435,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6974,11 +9458,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7005,6 +9497,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7015,11 +9511,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `pipelineName`,
 							Description: `Human-readable label that identifies the Data Lake Pipeline.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -7052,11 +9556,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7067,6 +9579,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7093,11 +9609,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7108,11 +9632,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `The database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, LDAP, or OIDC Workload this value should be $external. If the user authenticates with SCRAM-SHA or OIDC Workforce, this value should be admin.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `username`,
@@ -7131,6 +9663,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP user name |
 | SCRAM-SHA | awsIAMType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -7155,11 +9691,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7170,11 +9714,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `The database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, LDAP, or OIDC Workload this value should be $external. If the user authenticates with SCRAM-SHA or OIDC Workforce, this value should be admin.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `username`,
@@ -7193,6 +9745,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP user name |
 | SCRAM-SHA | awsIAMType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7217,26 +9773,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7247,6 +9823,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7271,11 +9851,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7286,11 +9874,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `The database against which the database user authenticates. Database users must provide both a username and authentication database to log into MongoDB. If the user authenticates with AWS IAM, x.509, LDAP, or OIDC Workload this value should be $external. If the user authenticates with SCRAM-SHA or OIDC Workforce, this value should be admin.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `username`,
@@ -7309,6 +9905,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP user name |
 | SCRAM-SHA | awsIAMType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -7341,11 +9941,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7356,11 +9964,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Human-readable label that identifies the cloud provider for the private endpoint to create.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7390,11 +10006,19 @@ LIMITED TO M10 OR GREATER: MongoDB Cloud limits this feature to dedicated cluste
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7405,6 +10029,10 @@ LIMITED TO M10 OR GREATER: MongoDB Cloud limits this feature to dedicated cluste
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7429,11 +10057,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7444,16 +10080,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Human-readable label that identifies the cloud provider of the private endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the private endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7478,26 +10126,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7508,11 +10176,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Human-readable label that identifies the cloud provider for the private endpoints to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7537,11 +10213,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7552,16 +10236,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Human-readable label that identifies the cloud provider of the private endpoint to delete.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the private endpoint to delete.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -7589,11 +10285,19 @@ After you configure at least one Encryption at Rest using a Customer Key Managem
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7604,6 +10308,10 @@ After you configure at least one Encryption at Rest using a Customer Key Managem
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -7639,16 +10347,28 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeRaw`,
 							Description: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7656,11 +10376,19 @@ This resource remains under revision and may change.`,
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `eventId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the /events endpoint to retrieve all events to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7688,16 +10416,28 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeRaw`,
 							Description: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7708,11 +10448,19 @@ This resource remains under revision and may change.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `eventId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the /events endpoint to retrieve all events to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7737,26 +10485,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -7785,26 +10553,46 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name: `eventType`,
@@ -7813,21 +10601,37 @@ This resource remains under revision and may change.`,
 
 IMPORTANT: The complete list of event type values changes frequently.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `includeRaw`,
 							Description: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `maxDate`,
 							Description: `Date and time from when MongoDB Cloud stops returning events. This parameter uses the ISO 8601 timestamp format in UTC.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `minDate`,
 							Description: `Date and time from when MongoDB Cloud starts returning events. This parameter uses the ISO 8601 timestamp format in UTC.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7835,6 +10639,10 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7862,31 +10670,55 @@ This resource remains under revision and may change.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `clusterNames`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `eventType`,
@@ -7895,6 +10727,10 @@ This resource remains under revision and may change.`,
 
 IMPORTANT: The complete list of event type values changes frequently.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `excludedEventType`,
@@ -7903,21 +10739,37 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 
 IMPORTANT: Event type names change frequently. Verify that you specify the event type correctly by checking the complete list of event types.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `includeRaw`,
 							Description: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `maxDate`,
 							Description: `Date and time from when MongoDB Cloud stops returning events. This parameter uses the ISO 8601 timestamp format in UTC.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `minDate`,
 							Description: `Date and time from when MongoDB Cloud starts returning events. This parameter uses the ISO 8601 timestamp format in UTC.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7928,6 +10780,10 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7961,6 +10817,10 @@ Note: This resource only supports the creation of OIDC identity providers.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7968,6 +10828,10 @@ Note: This resource only supports the creation of OIDC identity providers.`,
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7994,6 +10858,10 @@ Note: This resource only supports the creation of OIDC identity providers.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8001,11 +10869,19 @@ Note: This resource only supports the creation of OIDC identity providers.`,
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -8033,6 +10909,10 @@ Note: This resource only supports the creation of OIDC identity providers.`,
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -8060,6 +10940,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8067,11 +10951,19 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `identityProviderId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the identity provider to connect.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -8096,6 +10988,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8103,16 +10999,28 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `id`,
 							Description: `Unique 24-hexadecimal digit string that identifies the role mapping that you want to remove.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -8137,6 +11045,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8144,11 +11056,19 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the connected organization configuration to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8173,11 +11093,19 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8185,6 +11113,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8209,6 +11141,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8216,11 +11152,19 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `identityProviderId`,
 							Description: `Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8253,11 +11197,19 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `identityProviderId`,
 							Description: `Legacy 20-hexadecimal digit string that identifies the identity provider. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8282,6 +11234,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8289,16 +11245,28 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `id`,
 							Description: `Unique 24-hexadecimal digit string that identifies the role mapping that you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8323,16 +11291,28 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8340,6 +11320,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8364,26 +11348,46 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `protocol`,
 							Description: `The protocols of the target identity providers.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `idpType`,
 							Description: `The types of the target identity providers.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8391,6 +11395,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8415,6 +11423,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8422,11 +11434,19 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8451,6 +11471,10 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8458,11 +11482,19 @@ Note: Requests to this resource will fail if the identity provider has any conne
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the connected organization configuration to remove.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -8490,6 +11522,10 @@ Note: Revoking your JWKS tokens immediately refreshes your IdP public keys from 
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8497,11 +11533,19 @@ Note: Revoking your JWKS tokens immediately refreshes your IdP public keys from 
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `identityProviderId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the identity provider to connect.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -8538,6 +11582,10 @@ Note: Currently connected data access identity providers missing from the dataAc
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8545,11 +11593,19 @@ Note: Currently connected data access identity providers missing from the dataAc
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the connected organization configuration to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8579,6 +11635,10 @@ Note: Changing authorization types and/or updating authorization claims can prev
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8586,11 +11646,19 @@ Note: Changing authorization types and/or updating authorization claims can prev
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `identityProviderId`,
 							Description: `Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8626,6 +11694,10 @@ Note: Changing authorization types and/or updating authorization claims can prev
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8633,16 +11705,28 @@ Note: Changing authorization types and/or updating authorization claims can prev
 							Name:        `federationSettingsId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your federation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `id`,
 							Description: `Unique 24-hexadecimal digit string that identifies the role mapping that you want to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -8675,11 +11759,19 @@ Note: Changing authorization types and/or updating authorization claims can prev
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8690,6 +11782,10 @@ Note: Changing authorization types and/or updating authorization claims can prev
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -8716,11 +11812,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8731,11 +11835,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the flex cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -8760,11 +11872,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8775,11 +11895,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the flex cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8804,26 +11932,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8834,6 +11982,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8858,11 +12010,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8873,11 +12033,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the flex cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8904,11 +12072,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8919,6 +12095,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -8951,11 +12131,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8966,11 +12154,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the flex cluster whose snapshot you want to restore.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -8997,11 +12193,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9012,16 +12216,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the flex cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `restoreJobId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the restore job to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9046,26 +12262,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9076,11 +12312,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the flex cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9111,11 +12355,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9123,6 +12375,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `name`,
 							Description: `Human-readable label that identifies the flex cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -9131,6 +12387,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -9157,6 +12417,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9167,16 +12431,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the flex cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9201,26 +12477,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9231,11 +12527,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the flex cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9267,11 +12571,19 @@ MongoDB Cloud shards the empty collection using the required location field and 
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9282,11 +12594,19 @@ MongoDB Cloud shards the empty collection using the required location field and 
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -9331,11 +12651,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9346,11 +12674,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -9395,11 +12731,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9410,11 +12754,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9453,21 +12805,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `db`,
 							Description: `Human-readable label that identifies the database that contains the collection.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collection`,
 							Description: `Human-readable label that identifies the collection associated with the managed namespace.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9475,6 +12843,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -9483,6 +12855,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9521,11 +12897,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9536,11 +12920,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies this cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9585,6 +12977,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9592,6 +12988,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -9618,6 +13018,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9625,11 +13029,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `token`,
 							Description: `Unique 64 digit string that identifies the Cost Explorer query.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9656,11 +13068,19 @@ To compute the total owed amount of the invoice - sum up total owed amount of ea
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9668,11 +13088,19 @@ To compute the total owed amount of the invoice - sum up total owed amount of ea
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `invoiceId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9698,11 +13126,19 @@ To compute the total owed amount of the invoice - sum up total owed amount of ea
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9710,11 +13146,19 @@ To compute the total owed amount of the invoice - sum up total owed amount of ea
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `invoiceId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9741,56 +13185,100 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `viewLinkedInvoices`,
 							Description: `Flag that indicates whether to return linked invoices in the linkedInvoices field.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `statusNames`,
 							Description: `Statuses of the invoice to be retrieved. Omit to return invoices of all statuses.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `fromDate`,
 							Description: `Retrieve the invoices the startDates of which are greater than or equal to the fromDate. If omit, the invoices return will go back to earliest startDate.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `toDate`,
 							Description: `Retrieve the invoices the endDates of which are smaller than or equal to the toDate. If omit, the invoices return will go further to latest endDate.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `sortBy`,
 							Description: `Field used to sort the returned invoices by. Use in combination with orderBy parameter to control the order of the result.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orderBy`,
 							Description: `Field used to order the returned invoices by. Use in combination of sortBy parameter to control the order of the result.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9798,6 +13286,10 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9822,11 +13314,19 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9834,6 +13334,10 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9858,16 +13362,28 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9875,11 +13391,19 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `invoiceId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the invoice submitted to the specified organization. Charges typically post the next day.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9912,11 +13436,19 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9927,6 +13459,10 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9951,11 +13487,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9966,6 +13510,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9990,11 +13538,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10005,11 +13561,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `requestId`,
 							Description: `Unique string that identifies the request to verify an LDAP configuration.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10037,11 +13601,19 @@ Updating this configuration triggers a rolling restart of the database.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10052,6 +13624,10 @@ Updating this configuration triggers a rolling restart of the database.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -10078,11 +13654,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10093,6 +13677,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10125,11 +13713,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10140,11 +13736,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster with the snapshot you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10171,11 +13775,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10186,16 +13798,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -10220,11 +13844,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10235,16 +13867,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `checkpointId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the checkpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that contains the checkpoints that you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10272,11 +13916,19 @@ Effective 23 March 2020, all new clusters can use only Cloud Backups. When you u
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10287,16 +13939,28 @@ Effective 23 March 2020, all new clusters can use only Cloud Backups. When you u
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster with the snapshot you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `jobId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the restore job.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10321,11 +13985,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10336,16 +14008,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10373,11 +14057,19 @@ Effective 23 March 2020, all new clusters can use only Cloud Backups. When you u
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10388,11 +14080,19 @@ Effective 23 March 2020, all new clusters can use only Cloud Backups. When you u
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster with the snapshot you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10417,26 +14117,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10447,11 +14167,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that contains the checkpoints that you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10479,31 +14207,55 @@ Effective 23 March 2020, all new clusters can use only Cloud Backups. When you u
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `batchId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the batch of restore jobs to return. Timestamp in ISO 8601 date and time format in UTC when creating a restore job for a sharded cluster, Application creates a separate job for each shard, plus another for the config host. Each of these jobs comprise one batch. A restore job for a replica set can&#39;t be part of a batch.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10514,11 +14266,19 @@ Effective 23 March 2020, all new clusters can use only Cloud Backups. When you u
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster with the snapshot you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10543,31 +14303,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `completed`,
 							Description: `Human-readable label that specifies whether to return only completed, incomplete, or all snapshots. By default, MongoDB Cloud only returns completed snapshots.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10578,11 +14362,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10607,11 +14399,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10622,16 +14422,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -10661,11 +14473,19 @@ Effective 23 March 2020, all new clusters can use only Cloud Backups. When you u
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10676,11 +14496,19 @@ Effective 23 March 2020, all new clusters can use only Cloud Backups. When you u
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster with the snapshot you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -10713,6 +14541,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10723,6 +14555,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10747,11 +14583,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10762,6 +14606,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10786,6 +14634,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10796,6 +14648,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -10820,6 +14676,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10830,6 +14690,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10854,6 +14718,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10864,6 +14732,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -10902,16 +14774,28 @@ Note: This resource cannot be used to add a role to users invited using the depr
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `role`,
 							Description: `Organization level role to assign to the MongoDB Cloud user.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10919,11 +14803,19 @@ Note: This resource cannot be used to add a role to users invited using the depr
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10951,11 +14843,19 @@ Note: This resource cannot be used to add a user invited via the deprecated Invi
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10963,11 +14863,19 @@ Note: This resource cannot be used to add a user invited via the deprecated Invi
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the team to add the MongoDB Cloud user to.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10997,11 +14905,19 @@ Note: If the user does not have an existing MongoDB Cloud account, they will be 
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11009,6 +14925,10 @@ Note: If the user does not have an existing MongoDB Cloud account, they will be 
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -11041,11 +14961,19 @@ To use this resource, the requesting API Key can have any role.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -11079,11 +15007,19 @@ Note: This resource does not return information about pending users invited via 
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11091,11 +15027,19 @@ Note: This resource does not return information about pending users invited via 
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11120,11 +15064,19 @@ Note: This resource does not return information about pending users invited via 
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11132,6 +15084,10 @@ Note: This resource does not return information about pending users invited via 
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this user.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11156,11 +15112,19 @@ Note: This resource does not return information about pending users invited via 
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11168,6 +15132,10 @@ Note: This resource does not return information about pending users invited via 
 							Name:        `userName`,
 							Description: `Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11198,16 +15166,28 @@ Note: This resource cannot be used to remove a role from users invited using the
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `role`,
 							Description: `Organization level role to remove from the MongoDB Cloud user.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11215,11 +15195,19 @@ Note: This resource cannot be used to remove a role from users invited using the
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -11250,11 +15238,19 @@ Note: This resource cannot be used to update pending users invited via the depre
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11262,11 +15258,19 @@ Note: This resource cannot be used to update pending users invited via the depre
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -11299,11 +15303,19 @@ Note: This resource cannot be used to update pending users invited via the depre
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11314,11 +15326,19 @@ Note: This resource cannot be used to update pending users invited via the depre
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11343,11 +15363,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11358,16 +15386,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Human-readable label that identifies the database that the specified MongoDB process serves.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11392,36 +15432,64 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `m`,
 							Description: `One or more types of measurement to request for this MongoDB process. If omitted, the resource returns all measurements. To specify multiple values for m, repeat the m parameter for each value. Specify measurements that apply to the specified host. MongoDB Cloud returns an error if you specified any invalid measurements.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `granularity`,
 							Description: `Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11432,16 +15500,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Human-readable label that identifies the database that the specified MongoDB process serves.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11483,36 +15563,64 @@ To use this resource, the requesting API Key must have the Project Read Only rol
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `m`,
 							Description: `One or more types of measurement to request for this MongoDB process. If omitted, the resource returns all measurements. To specify multiple values for m, repeat the m parameter for each value. Specify measurements that apply to the specified host. MongoDB Cloud returns an error if you specified any invalid measurements.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `granularity`,
 							Description: `Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11523,16 +15631,28 @@ To use this resource, the requesting API Key must have the Project Read Only rol
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `partitionName`,
 							Description: `Human-readable label of the disk or partition to which the measurements apply.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11557,16 +15677,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `endDate`,
 							Description: `Specifies the date and time for the ending point of the range of log messages to retrieve, in the number of seconds that have elapsed since the UNIX epoch. This value will default to 24 hours after the start date. If the start date is also unspecified, the value will default to the time of the request.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `startDate`,
 							Description: `Specifies the date and time for the starting point of the range of log messages to retrieve, in the number of seconds that have elapsed since the UNIX epoch. This value will default to 24 hours prior to the end date. If the end date is also unspecified, the value will default to 24 hours prior to the time of the request.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11577,16 +15709,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `hostName`,
 							Description: `Human-readable label that identifies the host that stores the log files that you want to download.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `logName`,
 							Description: `Human-readable label that identifies the log file that you want to return. To return audit logs, enable Database Auditing for the specified project.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11638,36 +15782,64 @@ To use this resource, the requesting API Key must have the Project Read Only rol
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `m`,
 							Description: `One or more types of measurement to request for this MongoDB process. If omitted, the resource returns all measurements. To specify multiple values for m, repeat the m parameter for each value. Specify measurements that apply to the specified host. MongoDB Cloud returns an error if you specified any invalid measurements.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `granularity`,
 							Description: `Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11678,11 +15850,19 @@ To use this resource, the requesting API Key must have the Project Read Only rol
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11707,31 +15887,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `granularity`,
 							Description: `Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `metrics`,
 							Description: `List that contains the measurements that MongoDB Atlas reports for the associated data series.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11739,21 +15943,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `processId`,
 							Description: `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `indexName`,
 							Description: `Human-readable label that identifies the index.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Human-readable label that identifies the database.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collectionName`,
 							Description: `Human-readable label that identifies the collection.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -11762,6 +15982,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11786,31 +16010,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `granularity`,
 							Description: `Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `metrics`,
 							Description: `List that contains the metrics that you want MongoDB Atlas to report for the associated data series. If you don&#39;t set this parameter, this resource returns all hardware and status metrics for the associated data series.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11818,6 +16066,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `processId`,
 							Description: `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -11826,6 +16078,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11850,26 +16106,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11880,6 +16156,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11904,26 +16184,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11934,11 +16234,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11963,6 +16271,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11970,6 +16282,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `partitionName`,
 							Description: `Human-readable label of the disk or partition to which the measurements apply.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -11978,11 +16294,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12007,26 +16331,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12037,11 +16381,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12066,31 +16418,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `granularity`,
 							Description: `Duration that specifies the interval at which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `period`,
 							Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `start`,
 							Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `end`,
 							Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `metrics`,
 							Description: `List that contains the measurements that MongoDB Atlas reports for the associated data series.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12098,16 +16474,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `processId`,
 							Description: `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `databaseName`,
 							Description: `Human-readable label that identifies the database.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `collectionName`,
 							Description: `Human-readable label that identifies the collection.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -12116,6 +16504,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12140,6 +16532,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12147,6 +16543,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `processId`,
 							Description: `Combination of hostname and IANA port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -12155,6 +16555,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12186,11 +16590,19 @@ When you deploy an M10&#43; dedicated cluster, Atlas creates a VPC for the selec
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12201,6 +16613,10 @@ When you deploy an M10&#43; dedicated cluster, Atlas creates a VPC for the selec
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -12227,11 +16643,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12242,6 +16666,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -12268,11 +16696,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12283,11 +16719,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `peerId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the network peering connection that you want to delete.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12312,11 +16756,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12327,11 +16779,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `containerId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container that you want to remove.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12356,11 +16816,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12371,6 +16839,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -12397,11 +16869,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12412,11 +16892,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `peerId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the network peering connection that you want to retrieve.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12441,11 +16929,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12456,11 +16952,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `containerId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12485,31 +16989,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `providerName`,
 							Description: `Cloud service provider to use for this VPC peering connection.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12520,6 +17048,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12544,31 +17076,55 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `providerName`,
 							Description: `Cloud service provider that serves the desired network peering containers.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12579,6 +17135,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12603,26 +17163,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12633,6 +17213,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12657,11 +17241,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12672,11 +17264,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `peerId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the network peering connection that you want to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -12703,11 +17303,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12718,11 +17326,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `containerId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud network container that you want to remove.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -12749,11 +17365,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12764,6 +17388,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12794,11 +17422,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12809,11 +17445,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that contains the collection for which you want to create one online archive.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -12840,11 +17484,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12855,16 +17507,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `archiveId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the online archive to delete.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that contains the collection from which you want to remove an online archive.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12889,21 +17553,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `startDate`,
 							Description: `Date and time that specifies the starting point for the range of log messages to return. This resource expresses this value in the number of seconds that have elapsed since the UNIX epoch.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `endDate`,
 							Description: `Date and time that specifies the end point for the range of log messages to return. This resource expresses this value in the number of seconds that have elapsed since the UNIX epoch.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `archiveOnly`,
 							Description: `Flag that indicates whether to download logs for queries against your online archive only or both your online archive and cluster.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12914,11 +17594,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that contains the collection for which you want to return the query logs from one online archive.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12943,11 +17631,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12958,16 +17654,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `archiveId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the online archive to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that contains the specified collection from which Application created the online archive.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12992,26 +17700,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13022,11 +17750,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that contains the collection for which you want to return the online archives.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13051,11 +17787,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13066,16 +17810,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `archiveId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the online archive to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster that contains the specified collection from which Application created the online archive.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13108,26 +17864,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `env`,
 							Description: `The environment to get the versions from. If not provided, it returnsthe versions for the given MongoDB URL. (E.g. prod for cloud.mongodb.com)`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -13154,6 +17930,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -13192,11 +17972,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -13224,11 +18012,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13236,6 +18032,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -13270,6 +18070,10 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13277,6 +18081,10 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13301,11 +18109,19 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13313,11 +18129,19 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `invitationId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13342,11 +18166,19 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13354,6 +18186,10 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13378,6 +18214,10 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13385,11 +18225,19 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `invitationId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13414,11 +18262,19 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13426,6 +18282,10 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13450,16 +18310,28 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `username`,
 							Description: `Email address of the user account invited to this organization. If you exclude this parameter, this resource returns all pending invitations.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13467,6 +18339,10 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13508,31 +18384,55 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label of the project to use to filter the returned list. Performs a case-insensitive search for a project within the organization which is prefixed by the specified name.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13540,6 +18440,10 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13564,26 +18468,46 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13591,6 +18515,10 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13615,31 +18543,55 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label of the organization to use to filter the returned list. Performs a case-insensitive search for an organization that starts with the specified name.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -13665,11 +18617,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13677,11 +18637,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the user to be deleted.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13713,11 +18681,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13725,6 +18701,10 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13751,11 +18731,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13763,6 +18751,10 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13789,11 +18781,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13801,11 +18801,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `invitationId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13832,11 +18840,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13844,11 +18860,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the user to modify.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -13875,11 +18899,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13887,6 +18919,10 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13919,11 +18955,19 @@ To use this resource, the requesting API Key must have the Organization Member r
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13934,6 +18978,10 @@ To use this resource, the requesting API Key must have the Organization Member r
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13958,11 +19006,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13973,6 +19029,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -13997,11 +19057,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14012,6 +19080,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14036,11 +19108,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14051,11 +19131,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14080,11 +19168,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name: `duration`,
@@ -14097,16 +19193,28 @@ If you don&#39;t specify the since parameter, the endpoint returns data covering
 
 If you specify neither the duration nor since parameters, the endpoint returns data from the previous 24 hours.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `namespaces`,
 							Description: `Namespaces from which to retrieve slow queries. A namespace consists of one database and one collection resource written as .: &lt;database&gt;.&lt;collection&gt;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&amp;) between each namespace. Omit this parameter to return results for all namespaces.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `nLogs`,
 							Description: `Maximum number of lines from the log to return.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name: `since`,
@@ -14119,6 +19227,10 @@ If you don&#39;t specify the duration parameter, the endpoint returns data cover
 
 If you specify neither the duration nor the since parameters, the endpoint returns data from the previous 24 hours.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14129,11 +19241,19 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14158,11 +19278,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name: `duration`,
@@ -14175,6 +19303,10 @@ If you don&#39;t specify the since parameter, the endpoint returns data covering
 
 If you specify neither the duration nor since parameters, the endpoint returns data from the previous 24 hours.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name: `since`,
@@ -14187,6 +19319,10 @@ If you don&#39;t specify the duration parameter, the endpoint returns data cover
 
 If you specify neither the duration nor the since parameters, the endpoint returns data from the previous 24 hours.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14197,11 +19333,19 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14226,26 +19370,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name: `duration`,
@@ -14258,21 +19422,37 @@ If you don&#39;t specify the since parameter, the endpoint returns data covering
 
 If you specify neither the duration nor since parameters, the endpoint returns data from the previous 24 hours.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `namespaces`,
 							Description: `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: &lt;database&gt;.&lt;collection&gt;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&amp;) between each namespace. Omit this parameter to return results for all namespaces.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `nExamples`,
 							Description: `Maximum number of example queries that benefit from the suggested index.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `nIndexes`,
 							Description: `Number that indicates the maximum indexes to suggest.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name: `since`,
@@ -14285,6 +19465,10 @@ If you don&#39;t specify the duration parameter, the endpoint returns data cover
 
 If you specify neither the duration nor the since parameters, the endpoint returns data from the previous 24 hours.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14295,11 +19479,19 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processId`,
 							Description: `Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14324,16 +19516,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processIds`,
 							Description: `ProcessIds from which to retrieve suggested indexes. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (&amp;) between each processId.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `namespaces`,
 							Description: `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: &lt;database&gt;.&lt;collection&gt;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&amp;) between each namespace. Omit this parameter to return results for all namespaces.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `since`,
@@ -14346,6 +19550,10 @@ If you don&#39;t specify the until parameter, the endpoint returns data covering
 
 If you specify neither the since nor the until parameters, the endpoint returns data from the previous 24 hours.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name: `until`,
@@ -14358,6 +19566,10 @@ If you specify the until parameter, you must specify the since parameter.
 
 If you specify neither the since nor the until parameters, the endpoint returns data from the previous 24 hours.`,
 							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14368,6 +19580,10 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14392,11 +19608,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `enable`,
 							Description: `Value that we want to set for the Serverless Auto Indexing toggle.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14407,11 +19631,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14442,11 +19674,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14457,16 +19697,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Cloud service provider that manages this private endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointServiceId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to create a private endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14493,11 +19745,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14508,6 +19768,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14534,11 +19798,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14549,21 +19821,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Cloud service provider that manages this private endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointId`,
 							Description: `Unique string that identifies the private endpoint you want to delete. The format of the endpointId parameter differs for AWS and Azure. You must URL encode the endpointId for Azure private endpoints.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointServiceId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the private endpoint service from which you want to delete a private endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14588,11 +19876,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14603,16 +19899,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Cloud service provider that manages this private endpoint service.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointServiceId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to delete.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14637,11 +19945,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14652,21 +19968,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Cloud service provider that manages this private endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointId`,
 							Description: `Unique string that identifies the private endpoint you want to return. The format of the endpointId parameter differs for AWS and Azure. You must URL encode the endpointId for Azure private endpoints.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointServiceId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the private endpoint service for which you want to return a private endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14691,11 +20023,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14706,16 +20046,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Cloud service provider that manages this private endpoint service.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointServiceId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the private endpoint service that you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14740,11 +20092,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14755,6 +20115,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14779,11 +20143,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14794,11 +20166,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Cloud service provider that manages this private endpoint service.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14823,11 +20203,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14838,6 +20226,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -14870,11 +20262,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14885,11 +20285,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key that you want to assign to one project.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14916,11 +20324,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14928,6 +20344,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14954,26 +20374,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14981,11 +20421,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key for which you want to create a new access list entry.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -15012,11 +20460,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15027,6 +20483,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -15053,11 +20513,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15065,11 +20533,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15094,11 +20570,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15106,16 +20590,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key for which you want to remove access list entries.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `ipAddress`,
 							Description: `One IP address or multiple IP addresses represented as one CIDR block to limit requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15140,11 +20636,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15152,11 +20656,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key that  you want to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15181,11 +20693,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15193,16 +20713,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `ipAddress`,
 							Description: `One IP address or multiple IP addresses represented as one CIDR block to limit  requests to API resources in the specified organization. When adding a CIDR block with a subnet mask, such as  192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key for  which you want to return access list entries.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15227,26 +20759,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15254,11 +20806,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key for which you want to return access list entries.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15283,26 +20843,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15310,6 +20890,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15334,26 +20918,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15364,6 +20968,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15388,11 +20996,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15403,11 +21019,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key that you want to unassign from one project.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15432,11 +21056,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15444,11 +21076,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key you  want to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -15475,26 +21115,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15505,11 +21165,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `apiUserId`,
 							Description: `Unique 24-hexadecimal digit string that identifies this organization API key that you want to unassign from one project.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -15542,26 +21210,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15572,6 +21260,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -15598,11 +21290,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15613,6 +21313,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `entryValue`,
@@ -15628,6 +21332,10 @@ how MongoDB Cloud or the driver using the address behaves, and
 
 which protocol (like TCP or UDP) the connection uses.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15652,11 +21360,19 @@ which protocol (like TCP or UDP) the connection uses.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15667,11 +21383,19 @@ which protocol (like TCP or UDP) the connection uses.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `entryValue`,
 							Description: `Network address or cloud provider security construct that identifies which project access list entry to be verified.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15696,11 +21420,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15711,11 +21443,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `entryValue`,
 							Description: `Access list entry that you want to return from the project&#39;s IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (/) with its URL-encoded value (%2F).`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15740,26 +21480,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15770,6 +21530,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15800,11 +21564,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15815,6 +21587,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -15842,16 +21618,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `projectOwnerId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud user to whom to grant the Project Owner role on the specified project. If you set this parameter, it overrides the default value of the oldest Organization Owner.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -15879,11 +21667,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15894,6 +21690,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -15920,11 +21720,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15935,6 +21743,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15959,6 +21771,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15969,11 +21785,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `invitationId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15998,11 +21822,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16027,6 +21859,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
 | atlas.project.deployment.salesSoldM0s | Limit on the number of M0 clusters in this project if the org is sales-sold | 100 | 100 |`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -16035,6 +21871,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -16059,11 +21899,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16074,6 +21922,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16098,11 +21950,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16110,6 +21970,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `groupName`,
 							Description: `Human-readable label that identifies this project.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16134,11 +21998,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16149,11 +22021,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `invitationId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16178,36 +22058,64 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `cloudProvider`,
 							Description: `Filter results to only one cloud provider.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `instanceSize`,
 							Description: `Filter results to only one instance size.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `defaultStatus`,
 							Description: `Filter results to only the default values per tier. This value must be DEFAULT.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16218,6 +22126,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16242,11 +22154,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16271,6 +22191,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
 | atlas.project.deployment.salesSoldM0s | Limit on the number of M0 clusters in this project if the org is sales-sold | 100 | 100 |`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -16279,6 +22203,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16303,11 +22231,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16318,6 +22254,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16342,16 +22282,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `username`,
 							Description: `Email address of the user account invited to this project.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16362,6 +22314,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16386,11 +22342,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16401,6 +22365,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16425,36 +22393,64 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `flattenTeams`,
 							Description: `Flag that indicates whether the returned list should include users who belong to a team with a role in this project. You might not have assigned the individual users a role in this project. If &#34;flattenTeams&#34; : false, this resource returns only users with a role in the project.  If &#34;flattenTeams&#34; : true, this resource returns both users with roles in the project and users who belong to teams with roles in the project.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeOrgUsers`,
 							Description: `Flag that indicates whether the returned list should include users with implicit access to the project, the Organization Owner or Organization Read Only role. You might not have assigned the individual users a role in this project. If &#34;includeOrgUsers&#34;: false, this resource returns only users with a role in the project. If &#34;includeOrgUsers&#34;: true, this resource returns both users with roles in the project and users who have implicit access to the project through their organization role.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16465,6 +22461,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16489,26 +22489,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -16534,6 +22554,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16544,6 +22568,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -16570,11 +22598,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16585,11 +22621,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal string that identifies MongoDB Cloud user you want to remove from the specified project. To return a application user&#39;s ID using their application username, use the Get All application users in One Project endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -16614,11 +22658,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16629,6 +22681,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16656,11 +22712,19 @@ NOTE: Increasing the following configuration limits might lead to slower respons
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16685,6 +22749,10 @@ NOTE: Increasing the following configuration limits might lead to slower respons
 | atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
 | atlas.project.deployment.salesSoldM0s | Limit on the number of M0 clusters in this project if the org is sales-sold | 100 | 100 |`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -16693,6 +22761,10 @@ NOTE: Increasing the following configuration limits might lead to slower respons
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16719,11 +22791,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16734,6 +22814,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16760,11 +22844,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16775,6 +22867,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16801,6 +22897,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16811,11 +22911,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `invitationId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16842,11 +22950,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16857,11 +22973,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the user to modify.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -16888,11 +23012,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16903,6 +23035,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16935,11 +23071,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16950,6 +23094,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -16976,11 +23124,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16991,6 +23147,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -17015,11 +23175,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17030,6 +23198,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17054,11 +23226,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17069,6 +23249,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -17101,11 +23285,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17113,6 +23305,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17139,11 +23335,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17151,11 +23355,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `resourcePolicyId`,
 							Description: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -17180,11 +23392,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17192,6 +23412,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17216,11 +23440,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17228,11 +23460,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `resourcePolicyId`,
 							Description: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17257,11 +23497,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17269,6 +23517,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17293,11 +23545,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17305,11 +23565,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `resourcePolicyId`,
 							Description: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -17336,11 +23604,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17348,6 +23624,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17380,11 +23660,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17395,11 +23683,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster on which MongoDB Cloud creates an index.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17432,11 +23728,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -17462,6 +23766,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -17493,11 +23801,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17508,6 +23824,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17534,11 +23854,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17549,11 +23877,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the serverless instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -17578,11 +23914,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17593,11 +23937,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the serverless instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17622,26 +23974,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17652,6 +24024,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17676,11 +24052,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17691,11 +24075,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `name`,
 							Description: `Human-readable label that identifies the serverless instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -17731,6 +24123,10 @@ A new endpoint won&#39;t be immediately available after creation.  Read the step
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17741,11 +24137,19 @@ A new endpoint won&#39;t be immediately available after creation.  Read the step
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `instanceName`,
 							Description: `Human-readable label that identifies the serverless instance for which the tenant endpoint will be created.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17772,6 +24176,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17782,16 +24190,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `instanceName`,
 							Description: `Human-readable label that identifies the serverless instance from which the tenant endpoint will be removed.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be removed.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -17816,6 +24236,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17826,16 +24250,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `instanceName`,
 							Description: `Human-readable label that identifies the serverless instance associated with the tenant endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the tenant endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17860,6 +24296,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17870,11 +24310,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `instanceName`,
 							Description: `Human-readable label that identifies the serverless instance associated with the tenant endpoint.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17899,6 +24347,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17909,16 +24361,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `instanceName`,
 							Description: `Human-readable label that identifies the serverless instance associated with the tenant endpoint that will be updated.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `endpointId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the tenant endpoint which will be updated.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -17951,11 +24415,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17963,6 +24435,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -17971,6 +24447,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17997,11 +24477,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18012,6 +24500,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -18038,26 +24530,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18068,11 +24580,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -18099,11 +24619,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18114,11 +24642,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -18145,11 +24681,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18157,6 +24701,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -18183,26 +24731,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18210,11 +24778,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -18241,11 +24817,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18253,11 +24837,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -18284,11 +24876,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18296,6 +24896,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -18304,6 +24908,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -18328,11 +24936,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18343,16 +24959,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `ipAddress`,
 							Description: `One IP address or multiple IP addresses represented as one CIDR block. When specifying a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -18377,11 +25005,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18389,11 +25025,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `secretId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the secret.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -18402,6 +25046,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -18426,11 +25074,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18438,11 +25094,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -18467,11 +25131,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18479,16 +25151,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `ipAddress`,
 							Description: `One IP address or multiple IP addresses represented as one CIDR block. When specifying a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -18513,11 +25197,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18525,16 +25217,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `secretId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the secret.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -18559,11 +25263,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18574,11 +25286,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18603,11 +25323,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18615,11 +25343,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18644,26 +25380,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18674,11 +25430,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18703,21 +25467,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18728,6 +25508,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18752,26 +25536,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18779,11 +25583,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18808,21 +25620,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18830,11 +25658,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18859,21 +25695,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18881,6 +25733,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18905,11 +25761,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18917,6 +25781,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -18925,6 +25793,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -18951,11 +25823,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18963,11 +25843,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clientId`,
 							Description: `The Client ID of the Service Account.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -19000,11 +25888,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19012,6 +25908,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -19020,6 +25920,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19046,11 +25950,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19058,6 +25970,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -19066,11 +25982,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `restoreId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the restore job to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19095,11 +26019,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19107,6 +26039,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -19115,6 +26051,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19145,11 +26085,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19157,6 +26105,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -19165,6 +26117,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19191,11 +26147,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19206,16 +26170,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `snapshotId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19240,11 +26216,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19255,11 +26239,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `clusterName`,
 							Description: `Human-readable label that identifies the cluster.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19290,6 +26282,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19300,11 +26296,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `id`,
 							Description: `The VPC Peering Connection id.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19331,11 +26335,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19346,6 +26358,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19372,11 +26388,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19387,11 +26411,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19418,11 +26450,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19433,6 +26473,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19459,11 +26503,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19474,6 +26526,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19500,11 +26556,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19515,11 +26579,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19546,11 +26618,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19561,11 +26641,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `connectionId`,
 							Description: `Unique ID that identifies the Private Link connection.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -19590,11 +26678,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19605,16 +26701,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `connectionName`,
 							Description: `Human-readable label that identifies the stream connection.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -19639,11 +26747,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19654,11 +26770,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance to delete.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -19683,11 +26807,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19698,16 +26830,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processorName`,
 							Description: `Human-readable label that identifies the stream processor.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -19732,6 +26876,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19742,11 +26890,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `id`,
 							Description: `The VPC Peering Connection id.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -19771,16 +26927,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `endDate`,
 							Description: `Timestamp that specifies the end point for the range of log messages to download.  MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `startDate`,
 							Description: `Timestamp that specifies the starting point for the range of log messages to download. MongoDB Cloud expresses this timestamp in the number of seconds that have elapsed since the UNIX epoch.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19791,11 +26959,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19820,6 +26996,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19830,11 +27010,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `connectionId`,
 							Description: `Unique ID that identifies the Private Link connection.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19859,6 +27047,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19869,16 +27061,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `connectionName`,
 							Description: `Human-readable label that identifies the stream connection to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19903,11 +27107,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeConnections`,
 							Description: `Flag to indicate whether connections information should be included in the stream instance.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19918,11 +27130,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19947,11 +27167,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19962,16 +27190,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processorName`,
 							Description: `Human-readable label that identifies the stream processor.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19996,21 +27236,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20021,6 +27277,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20045,21 +27305,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20070,6 +27346,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20094,21 +27374,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20119,11 +27415,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20148,21 +27452,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20173,6 +27493,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20197,26 +27521,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20227,11 +27571,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20256,6 +27608,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20266,11 +27622,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `id`,
 							Description: `The VPC Peering Connection id.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -20295,11 +27659,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20310,16 +27682,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processorName`,
 							Description: `Human-readable label that identifies the stream processor.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -20344,11 +27728,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20359,16 +27751,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `processorName`,
 							Description: `Human-readable label that identifies the stream processor.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -20393,11 +27797,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20408,16 +27820,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `connectionName`,
 							Description: `Human-readable label that identifies the stream connection.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -20444,11 +27868,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20459,11 +27891,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `tenantName`,
 							Description: `Human-readable label that identifies the stream instance to update.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -20496,11 +27936,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20511,6 +27959,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -20537,11 +27989,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20549,11 +28009,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamId`,
 							Description: `Unique 24-hexadecimal character string that identifies the team to which you want to add MongoDB Cloud users.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -20580,11 +28048,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20592,6 +28068,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -20618,11 +28098,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20630,11 +28118,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the team that you want to delete.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -20659,11 +28155,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20671,11 +28175,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the team whose information you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20700,11 +28212,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20712,11 +28232,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamName`,
 							Description: `Name of the team whose information you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20741,26 +28269,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20768,6 +28316,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20792,26 +28344,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20822,6 +28394,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20846,21 +28422,37 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20868,11 +28460,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the team whose application users you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20897,6 +28497,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20907,11 +28511,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the team that you want to remove from the specified project.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -20936,11 +28548,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20948,16 +28568,28 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the team from which you want to remove one database application user.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `userId`,
 							Description: `Unique 24-hexadecimal digit string that identifies MongoDB Cloud user that you want to remove from the specified team.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -20982,11 +28614,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20994,11 +28634,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `orgId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the team that you want to rename.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21025,11 +28673,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21040,11 +28696,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `teamId`,
 							Description: `Unique 24-hexadecimal digit string that identifies the team for which you want to update roles.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21077,11 +28741,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `additionalInfo`,
 							Description: `Show more info.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -21123,26 +28795,46 @@ IMPORTANT: Each project can only have one configuration per integrationType.`,
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21150,6 +28842,10 @@ IMPORTANT: Each project can only have one configuration per integrationType.`,
 							Name:        `integrationType`,
 							Description: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -21158,6 +28854,10 @@ IMPORTANT: Each project can only have one configuration per integrationType.`,
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -21184,11 +28884,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21196,6 +28904,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `integrationType`,
 							Description: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -21204,6 +28916,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -21228,11 +28944,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21243,11 +28967,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `integrationType`,
 							Description: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -21272,26 +29004,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21302,6 +29054,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -21326,26 +29082,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21353,6 +29129,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `integrationType`,
 							Description: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name: `groupId`,
@@ -21361,6 +29141,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -21399,11 +29183,19 @@ If you are managing your own Certificate Authority (CA) in Self-Managed X.509 mo
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21414,11 +29206,19 @@ If you are managing your own Certificate Authority (CA) in Self-Managed X.509 mo
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `username`,
 							Description: `Human-readable label that represents the MongoDB database user account for whom to create a certificate.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -21448,6 +29248,10 @@ Updating this configuration triggers a rolling restart of the database. You must
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21458,6 +29262,10 @@ Updating this configuration triggers a rolling restart of the database. You must
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -21482,26 +29290,46 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
 						},
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21512,11 +29340,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 						{
 							Name:        `username`,
 							Description: `Human-readable label that represents the MongoDB database user account whose certificates you want to return.`,
 							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
 						},
 					},
 					Verb: http.MethodGet,

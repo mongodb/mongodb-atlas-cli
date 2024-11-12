@@ -28,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/accesslists"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/accesslogs"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/alerts"
+	apiCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auditing"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/backup"
@@ -250,6 +251,7 @@ Use the --help flag with any command for more info on that command.`,
 		auditing.Builder(),
 		deployments.Builder(),
 		federatedauthentication.Builder(),
+		apiCmd.Builder(),
 	)
 
 	pluginCmd.RegisterCommands(rootCmd)

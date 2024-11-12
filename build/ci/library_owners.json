@@ -20,6 +20,7 @@
 	"github.com/google/go-github/v61": "apix-2",
 	"github.com/google/uuid": "atlas_kubernetes_team",
 	"github.com/hinshun/vt10x": "apix-2",
+	"github.com/iancoleman/strcase": "apix-2",
 	"github.com/klauspost/compress": "apix-2",
 	"github.com/Masterminds/semver/v3": "apix-2",
 	"github.com/mattn/go-isatty": "apix-2",

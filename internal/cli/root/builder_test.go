@@ -44,7 +44,7 @@ func TestBuilder(t *testing.T) {
 	test.CmdValidator(
 		t,
 		rootCmd,
-		41+nonCLIsubcommandCount,
+		42+nonCLIsubcommandCount,
 		[]string{},
 	)
 }

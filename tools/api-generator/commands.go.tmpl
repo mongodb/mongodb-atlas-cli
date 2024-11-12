@@ -37,6 +37,10 @@ var Commands = GroupedAndSortedCommands{
 							Name:        `{{ .Name }}`,
 							Description: `{{ .Description }}`,
 							Required:    {{ .Required }},
+							Type:        ParameterType{
+								IsArray:	{{ .Type.IsArray }},
+								Type:		`{{ .Type.Type }}`,
+							},
 						},
 					{{- end }}
 					},
@@ -46,6 +50,10 @@ var Commands = GroupedAndSortedCommands{
 							Name:        `{{ .Name }}`,
 							Description: `{{ .Description }}`,
 							Required:    {{ .Required }},
+							Type:        ParameterType{
+								IsArray:	{{ .Type.IsArray }},
+								Type:		`{{ .Type.Type }}`,
+							},
 						},
 					{{- end }}
 					},

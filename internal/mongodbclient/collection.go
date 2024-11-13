@@ -90,7 +90,14 @@ func (c *collection) SearchIndexByName(ctx context.Context, name string) (*Searc
 		return nil, ErrSearchIndexNotFound
 	}
 
-	return results[0], nil
+	result := results[0]
+
+	coll := c.collection.Name()
+	db := c.collection.Database().Name()
+	result.CollectionName = &coll
+	result.Database = &db
+
+	return result, nil
 }
 
 func (c *collection) SearchIndexes(ctx context.Context) ([]*SearchIndexDefinition, error) {
@@ -102,6 +109,13 @@ func (c *collection) SearchIndexes(ctx context.Context) ([]*SearchIndexDefinitio
 	var results []*SearchIndexDefinition
 	if err = cursor.All(ctx, &results); err != nil {
 		return nil, err
+	}
+
+	for _, result := range results {
+		coll := c.collection.Name()
+		db := c.collection.Database().Name()
+		result.CollectionName = &coll
+		result.Database = &db
 	}
 
 	return results, nil

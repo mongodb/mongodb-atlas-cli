@@ -50,7 +50,7 @@ var describeTemplate = `ID	NAME	DATABASE	COLLECTION	TYPE
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.SearchIndex(opts.ConfigProjectID(), opts.clusterName, opts.indexID)
+	r, err := opts.store.SearchIndexDeprecated(opts.ConfigProjectID(), opts.clusterName, opts.indexID)
 	if err != nil {
 		return err
 	}

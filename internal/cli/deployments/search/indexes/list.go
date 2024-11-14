@@ -59,7 +59,7 @@ func (opts *ListOpts) Run(ctx context.Context) error {
 }
 
 func (opts *ListOpts) RunAtlas() error {
-	r, err := opts.store.SearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, opts.DBName, opts.Collection)
+	r, err := opts.store.SearchIndexesDeprecated(opts.ConfigProjectID(), opts.DeploymentName, opts.DBName, opts.Collection)
 	if err != nil {
 		return err
 	}

@@ -425,6 +425,12 @@ functions:
         args:
           - -f
           - expansions.yaml
+  "docker_login":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |
+          echo "${dockerhub_password}" | docker login -u ${dockerhub_username} --password-stdin
 tasks:
   - name: compile
     tags: ["code_health"]
@@ -1448,6 +1454,7 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
+      - func: "docker_login"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1467,6 +1474,7 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
+      - func: "docker_login"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1479,13 +1487,14 @@ tasks:
           E2E_TAGS: atlas,deployments,local,nocli
           E2E_TIMEOUT: 3h
   - name: atlas_deployments_local_auth_e2e
-    tags: ["e2e","deployments","local","auth"]
+    tags: ["e2e","deployments","local","auth","new"]
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
+      - func: "docker_login"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1495,7 +1504,27 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,deployments,local,auth
+          E2E_TAGS: atlas,deployments,local,auth,new
+          E2E_TIMEOUT: 3h
+  - name: atlas_deployments_local_auth_deprecated_e2e
+    tags: ["e2e","deployments","local","auth","deprecated"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    commands:
+      - func: "install gotestsum"
+      - func: "install mongodb database tools"
+      - func: "increase inotify limits"
+      - func: "docker_login"
+      - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,deployments,local,auth,deprecated
           E2E_TIMEOUT: 3h
   - name: build_win11_image
     tags: ["packer", "windows", "win11"]

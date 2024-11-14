@@ -140,6 +140,7 @@ functions:
           - E2E_SERVERLESS_INSTANCE_NAME
           - E2E_PARALLEL
           - IDENTITY_PROVIDER_ID
+          - LOCALDEV_IMAGE
           - revision
         env:
           <<: *go_env
@@ -425,12 +426,6 @@ functions:
         args:
           - -f
           - expansions.yaml
-  "docker_login":
-    - command: shell.exec
-      params:
-        shell: bash
-        script: |
-          echo "${dockerhub_password}" | docker login -u ${dockerhub_username} --password-stdin
 tasks:
   - name: compile
     tags: ["code_health"]
@@ -1454,7 +1449,6 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
-      - func: "docker_login"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1466,6 +1460,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,deployments,local,noauth
           E2E_TIMEOUT: 3h
+          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_nocli_e2e
     tags: ["e2e","deployments","local","nocli"]
     must_have_test_results: true
@@ -1474,7 +1469,6 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
-      - func: "docker_login"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1486,6 +1480,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,deployments,local,nocli
           E2E_TIMEOUT: 3h
+          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_auth_e2e
     tags: ["e2e","deployments","local","auth","new"]
     must_have_test_results: true
@@ -1494,7 +1489,6 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
-      - func: "docker_login"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1506,6 +1500,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,deployments,local,auth,new
           E2E_TIMEOUT: 3h
+          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_auth_deprecated_e2e
     tags: ["e2e","deployments","local","auth","deprecated"]
     must_have_test_results: true
@@ -1514,7 +1509,6 @@ tasks:
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
-      - func: "docker_login"
       - func: "e2e test"
         timeout_secs: 11400 # 3 hours 10 minutes
         vars:
@@ -1526,6 +1520,7 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,deployments,local,auth,deprecated
           E2E_TIMEOUT: 3h
+          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: build_win11_image
     tags: ["packer", "windows", "win11"]
     commands:

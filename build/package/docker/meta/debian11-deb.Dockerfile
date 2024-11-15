@@ -1,4 +1,4 @@
-FROM debian:11-slim
+FROM artifactory.corp.mongodb.com/dockerhub/debian:11-slim
 
 ARG url
 ARG entrypoint

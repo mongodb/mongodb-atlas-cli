@@ -1,4 +1,4 @@
-FROM centos:8
+FROM artifactory.corp.mongodb.com/dockerhub/centos:8
 
 ARG package
 ARG entrypoint

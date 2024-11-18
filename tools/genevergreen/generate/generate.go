@@ -52,6 +52,7 @@ var (
 	}
 	repos      = []string{"org", "enterprise"}
 	postPkgImg = map[string]string{
+		"suse15":      "suse15-rpm",
 		"centos8":     "centos8-rpm",
 		"rhel9":       "rhel9-rpm",
 		"ubuntu20.04": "ubuntu20.04-deb",
@@ -61,6 +62,7 @@ var (
 		"debian12":    "debian12-deb",
 	}
 	newOs = map[string]string{
+		"suse15":          "suse15",
 		"centos8":         "rhel80",
 		"rhel9":           "rhel90",
 		"ubuntu20.04":     "ubuntu2004",

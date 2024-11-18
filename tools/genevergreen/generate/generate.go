@@ -42,6 +42,7 @@ var (
 	}
 
 	oses = []string{
+		"suse15",
 		"centos8",
 		"rhel9",
 		"debian11",

@@ -59,8 +59,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newExportBucket() *atlasv2.DiskBackupSnapshotExportBucket {
-	createRequest := &atlasv2.DiskBackupSnapshotExportBucket{
+func (opts *CreateOpts) newExportBucket() *atlasv2.DiskBackupSnapshotExportBucketRequest {
+	createRequest := &atlasv2.DiskBackupSnapshotExportBucketRequest{
 		BucketName:    opts.bucketName,
 		CloudProvider: opts.cloudProvider,
 		IamRoleId:     &opts.iamRoleID,

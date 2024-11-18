@@ -20,7 +20,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"go.mongodb.org/atlas-sdk/v20241023002/admin"
 )
 
@@ -28,7 +27,7 @@ func TestCheck(t *testing.T) {
 	dummyErr := errors.New("dummy error")
 
 	skderr := &admin.GenericOpenAPIError{}
-	skderr.SetModel(admin.ApiError{ErrorCode: pointer.Get("TENANT_CLUSTER_UPDATE_UNSUPPORTED")})
+	skderr.SetModel(admin.ApiError{ErrorCode: "TENANT_CLUSTER_UPDATE_UNSUPPORTED"})
 	testCases := []struct {
 		name string
 		err  error

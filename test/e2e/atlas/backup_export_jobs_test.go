@@ -90,7 +90,7 @@ func TestExportJobs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
-		var exportBucket atlasv2.DiskBackupSnapshotExportBucket
+		var exportBucket atlasv2.DiskBackupSnapshotExportBucketResponse
 		r.NoError(json.Unmarshal(resp, &exportBucket))
 		assert.Equal(t, bucketName, exportBucket.GetBucketName())
 		bucketID = exportBucket.GetId()

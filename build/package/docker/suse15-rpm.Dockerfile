@@ -7,7 +7,7 @@ RUN set -eux; \
     curl --silent --show-error --fail --location --retry 3 \
     --output ${entrypoint}.rpm \
     ${url}; \
-    sudo zypper -n install ./${entrypoint}.rpm; \
+    zypper in -y --allow-unsigned-rpm ./${entrypoint}.rpm; \
     rm ./${entrypoint}.rpm
 
 RUN ${entrypoint} --version

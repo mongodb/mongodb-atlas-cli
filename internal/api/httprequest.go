@@ -48,10 +48,7 @@ func ConvertToHTTPRequest(baseURL string, request CommandRequest) (*http.Request
 	requestURL.RawQuery = query
 
 	// Get the content type
-	contentType, err := contentType(version)
-	if err != nil {
-		return nil, err
-	}
+	contentType := contentType(version)
 
 	// Only Set the HTTP body when we have a content type
 	// GET/DELETE/certain POSTs don't have a content type => no body
@@ -158,16 +155,13 @@ func acceptHeader(version *Version, requestedContentType string) (string, error)
 	return fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, contentType), nil
 }
 
-func contentType(version *Version) (*string, error) {
-	switch len(version.RequestContentTypes) {
-	case 0:
-		return nil, nil
-	case 1:
-		contentType := fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, version.RequestContentTypes[0])
-		return &contentType, nil
-	default:
-		return nil, errors.New("TODO: update gen api commands tool")
+func contentType(version *Version) *string {
+	if version.RequestContentType != "" {
+		contentType := fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, version.RequestContentType)
+		return &contentType
 	}
+
+	return nil
 }
 
 type DefaultCommandConverter struct {

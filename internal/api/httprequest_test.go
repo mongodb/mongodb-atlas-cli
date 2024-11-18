@@ -392,8 +392,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 	Versions: []Version{
 		{
-			Version:             `2023-11-15`,
-			RequestContentTypes: []string{},
+			Version:            `2023-11-15`,
+			RequestContentType: ``,
 			ResponseContentTypes: []string{
 				`json`,
 			},
@@ -444,37 +444,29 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 	Versions: []Version{
 		{
-			Version: `2023-01-01`,
-			RequestContentTypes: []string{
-				`json`,
-			},
+			Version:            `2023-01-01`,
+			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,
 			},
 		},
 		{
-			Version: `2023-02-01`,
-			RequestContentTypes: []string{
-				`json`,
-			},
+			Version:            `2023-02-01`,
+			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,
 			},
 		},
 		{
-			Version: `2024-08-05`,
-			RequestContentTypes: []string{
-				`json`,
-			},
+			Version:            `2024-08-05`,
+			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,
 			},
 		},
 		{
-			Version: `2024-10-23`,
-			RequestContentTypes: []string{
-				`json`,
-			},
+			Version:            `2024-10-23`,
+			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,
 			},

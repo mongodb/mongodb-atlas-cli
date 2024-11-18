@@ -63,11 +63,7 @@ var Commands = GroupedAndSortedCommands{
 				{{- range .Versions }}
 					{
 						Version: `{{ .Version }}`,
-						RequestContentTypes: []string{
-						{{- range .RequestContentTypes }}
-							`{{ . }}`,
-						{{- end }}
-						},
+						RequestContentType: `{{ .RequestContentType }}`,
 						ResponseContentTypes: []string{
 						{{- range .ResponseContentTypes }}
 							`{{ . }}`,

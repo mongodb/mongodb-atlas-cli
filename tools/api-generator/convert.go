@@ -227,13 +227,16 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 	if _, ok := versionsMap[version]; !ok {
 		versionsMap[version] = &api.Version{
 			Version:              version,
-			RequestContentTypes:  []string{},
 			ResponseContentTypes: []string{},
 		}
 	}
 
 	if isRequest {
-		versionsMap[version].RequestContentTypes = append(versionsMap[version].RequestContentTypes, contentType)
+		if versionsMap[version].RequestContentType != "" {
+			return errors.New("multiple request content types is not supported")
+		}
+
+		versionsMap[version].RequestContentType = contentType
 	} else {
 		versionsMap[version].ResponseContentTypes = append(versionsMap[version].ResponseContentTypes, contentType)
 	}
@@ -246,10 +249,6 @@ func sortVersions(versionsMap map[string]*api.Version) []api.Version {
 	versions := make([]api.Version, 0)
 
 	for _, version := range versionsMap {
-		sort.Slice(version.RequestContentTypes, func(i, j int) bool {
-			return version.RequestContentTypes[i] < version.RequestContentTypes[j]
-		})
-
 		sort.Slice(version.ResponseContentTypes, func(i, j int) bool {
 			return version.ResponseContentTypes[i] < version.ResponseContentTypes[j]
 		})

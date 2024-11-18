@@ -6,7 +6,7 @@ ARG server_version
 ARG mongo_package
 ARG mongo_repo
 
-RUN sudo rpm --import https://pgp.mongodb.com/server-${server_version}.asc
+RUN rpm --import https://pgp.mongodb.com/server-${server_version}.asc
 
 RUN sudo zypper addrepo --gpgcheck "${mongo_repo}/zypper/suse/15/${mongo_package}/${server_version}/x86_64/" mongodb
 

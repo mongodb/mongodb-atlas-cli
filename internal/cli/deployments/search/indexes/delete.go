@@ -67,7 +67,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 }
 
 func (opts *DeleteOpts) RunAtlas() error {
-	return opts.Delete(opts.store.DeleteSearchIndex, opts.ConfigProjectID(), opts.DeploymentName)
+	return opts.Delete(opts.store.DeleteSearchIndexDeprecated, opts.ConfigProjectID(), opts.DeploymentName)
 }
 
 func (opts *DeleteOpts) RunLocal(ctx context.Context) error {
@@ -84,7 +84,12 @@ func (opts *DeleteOpts) RunLocal(ctx context.Context) error {
 	}()
 
 	return opts.Delete(func(id string) error {
-		return opts.mongodbClient.DeleteSearchIndex(ctx, id)
+		index, err := opts.mongodbClient.SearchIndex(ctx, id)
+		if err != nil {
+			return err
+		}
+
+		return opts.mongodbClient.Database(*index.Database).Collection(*index.CollectionName).DropSearchIndex(ctx, *index.Name)
 	})
 }
 

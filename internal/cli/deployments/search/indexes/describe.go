@@ -62,7 +62,7 @@ func (opts *DescribeOpts) Run(ctx context.Context) error {
 }
 
 func (opts *DescribeOpts) RunAtlas() error {
-	r, err := opts.store.SearchIndex(opts.ConfigProjectID(), opts.DeploymentName, opts.indexID)
+	r, err := opts.store.SearchIndexDeprecated(opts.ConfigProjectID(), opts.DeploymentName, opts.indexID)
 	if err != nil {
 		return err
 	}
@@ -90,7 +90,9 @@ func (opts *DescribeOpts) RunLocal(ctx context.Context) error {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithSearchIndexType(r.GetType()))
+	if r.Type != nil {
+		telemetry.AppendOption(telemetry.WithSearchIndexType(*r.Type))
+	}
 
 	return opts.Print(r)
 }

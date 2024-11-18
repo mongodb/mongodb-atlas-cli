@@ -1,4 +1,4 @@
-FROM debian:12-slim
+FROM artifactory.corp.mongodb.com/dockerhub/debian:12-slim
 
 ARG package
 ARG entrypoint

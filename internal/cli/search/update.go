@@ -22,11 +22,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20240805005/admin"
 )
 
 type UpdateOpts struct {
@@ -49,18 +51,31 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 var updateTemplate = "Index {{.Name}} updated.\n"
 
 func (opts *UpdateOpts) Run() error {
-	index, err := opts.NewSearchIndex()
+	i, err := opts.UpdateSearchIndex()
 	if err != nil {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
-	r, err := opts.store.UpdateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.id, index)
-	if err != nil {
-		return err
-	}
+	switch index := i.(type) {
+	case *admin.SearchIndexUpdateRequest:
+		r, err := opts.store.UpdateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.id, index)
+		if err != nil {
+			return err
+		}
 
-	return opts.Print(r)
+		return opts.Print(r)
+	case *admin.ClusterSearchIndex:
+		_, _ = log.Warningln("you're using an old search index definition")
+		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
+		r, err := opts.store.UpdateSearchIndexesDeprecated(opts.ConfigProjectID(), opts.clusterName, opts.id, index)
+		if err != nil {
+			return err
+		}
+
+		return opts.Print(r)
+	default:
+		return errInvalidIndex
+	}
 }
 
 // UpdateBuilder

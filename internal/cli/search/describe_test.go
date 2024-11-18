@@ -40,7 +40,7 @@ func TestDescribe_Run(t *testing.T) {
 	}
 	mockStore.
 		EXPECT().
-		SearchIndex(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.indexID).
+		SearchIndexDeprecated(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.indexID).
 		Return(expected, nil).
 		Times(1)
 

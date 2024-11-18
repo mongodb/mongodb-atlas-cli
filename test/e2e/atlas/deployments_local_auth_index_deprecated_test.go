@@ -1,4 +1,4 @@
-// Copyright 2024 MongoDB Inc
+// Copyright 2023 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && deployments && local && nocli)
+//go:build e2e || (atlas && deployments && local && auth && deprecated)
 
 package atlas_test
 
@@ -19,7 +19,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -28,7 +27,6 @@ import (
 	"strings"
 	"testing"
 
-	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options" //nolint:importas //unique of this test
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -37,9 +35,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func TestDeploymentsLocalWithNoCLI(t *testing.T) {
+func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 	const (
-		deploymentName = "test-nocli"
+		deploymentName = "test-auth-deprecated"
 		dbUsername     = "admin"
 		dbUserPassword = "testpwd"
 	)
@@ -48,38 +46,33 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 	req := require.New(t)
 	req.NoError(err)
 
-	bin := "docker"
-	_, err = exec.LookPath("docker")
-	if errors.Is(err, exec.ErrDot) {
-		err = nil
-	}
-	if err != nil {
-		bin = "podman"
-	}
-
-	image := os.Getenv("LOCALDEV_IMAGE")
-	if image == "" {
-		image = opt.LocalDevImage
-	}
-
-	t.Run("Pull", func(t *testing.T) {
-		cmd := exec.Command(bin,
-			"pull",
-			image,
-		)
-		r, setupErr := e2e.RunAndGetStdOut(cmd)
-		require.NoError(t, setupErr, string(r))
-	})
-
 	t.Run("Setup", func(t *testing.T) {
-		cmd := exec.Command(bin,
-			"run",
-			"-d",
-			"--name", deploymentName,
-			"-P",
-			"-e", "MONGODB_INITDB_ROOT_USERNAME="+dbUsername,
-			"-e", "MONGODB_INITDB_ROOT_PASSWORD="+dbUserPassword,
-			image,
+		t.Cleanup(func() {
+			cmd := exec.Command(cliPath,
+				deploymentEntity,
+				"diagnostics",
+				deploymentName,
+			)
+
+			cmd.Env = os.Environ()
+
+			r, errDiag := e2e.RunAndGetStdOut(cmd)
+			t.Log("Diagnostics")
+			t.Log(errDiag, string(r))
+		})
+
+		cmd := exec.Command(cliPath,
+			deploymentEntity,
+			"setup",
+			deploymentName,
+			"--type",
+			"local",
+			"--username",
+			dbUsername,
+			"--password",
+			dbUserPassword,
+			"--bindIpAll",
+			"--force",
 		)
 
 		cmd.Env = os.Environ()
@@ -230,7 +223,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"--type",
 			"local",
 			"--file",
-			"data/sample_vector_search.json",
+			"data/sample_vector_search_deprecated.json",
 			"-w",
 		)
 

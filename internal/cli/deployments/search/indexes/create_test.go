@@ -131,20 +131,6 @@ func TestCreate_RunLocal(t *testing.T) {
 		Type:           pointer.Get(search.DefaultType),
 	}
 
-	indexWithID := &atlasv2.ClusterSearchIndex{
-		Analyzer:       &opts.Analyzer,
-		CollectionName: opts.Collection,
-		Database:       opts.DBName,
-		Mappings: &atlasv2.ApiAtlasFTSMappings{
-			Dynamic: &opts.Dynamic,
-			Fields:  nil,
-		},
-		Name:           opts.Name,
-		SearchAnalyzer: &opts.SearchAnalyzer,
-		IndexID:        &indexID,
-		Type:           pointer.Get(search.DefaultType),
-	}
-
 	mockColl.
 		EXPECT().
 		SearchIndexByName(ctx, index.Name).
@@ -153,8 +139,10 @@ func TestCreate_RunLocal(t *testing.T) {
 
 	mockColl.
 		EXPECT().
-		CreateSearchIndex(ctx, gomock.Any()).
-		Return(indexWithID, nil).
+		CreateSearchIndex(ctx, opts.Name, search.DefaultType, gomock.Any()).
+		Return(&mongodbclient.SearchIndexDefinition{
+			IndexID: &indexID,
+		}, nil).
 		Times(1)
 
 	if err := opts.Run(ctx); err != nil {
@@ -253,23 +241,12 @@ func TestCreate_Duplicated(t *testing.T) {
 		SearchAnalyzer: &opts.SearchAnalyzer,
 	}
 
-	indexWithID := &atlasv2.ClusterSearchIndex{
-		Analyzer:       &opts.Analyzer,
-		CollectionName: opts.Collection,
-		Database:       opts.DBName,
-		Mappings: &atlasv2.ApiAtlasFTSMappings{
-			Dynamic: &opts.Dynamic,
-			Fields:  nil,
-		},
-		Name:           opts.Name,
-		SearchAnalyzer: &opts.SearchAnalyzer,
-		IndexID:        &indexID,
-	}
-
 	mockColl.
 		EXPECT().
 		SearchIndexByName(ctx, index.Name).
-		Return(indexWithID, nil).
+		Return(&mongodbclient.SearchIndexDefinition{
+			IndexID: &indexID,
+		}, nil).
 		Times(1)
 	if err := opts.Run(ctx); err == nil || !errors.Is(err, ErrSearchIndexDuplicated) {
 		t.Fatalf("Run() unexpected error: %v", err)
@@ -278,7 +255,7 @@ func TestCreate_Duplicated(t *testing.T) {
 
 func TestCreate_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockIndexStore := mocks.NewMockSearchIndexCreator(ctrl)
+	mockIndexStore := mocks.NewMockSearchIndexCreatorDescriber(ctrl)
 	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
@@ -301,18 +278,12 @@ func TestCreate_RunAtlas(t *testing.T) {
 		store: mockIndexStore,
 	}
 
-	index, err := opts.NewSearchIndex()
+	index, err := opts.CreateSearchIndex()
 	require.NoError(t, err)
 
 	indexWithID := &atlasv2.ClusterSearchIndex{
 		CollectionName: opts.Collection,
 		Database:       opts.DBName,
-		Analyzer:       &opts.Analyzer,
-		Mappings: &atlasv2.ApiAtlasFTSMappings{
-			Dynamic: &opts.Dynamic,
-			Fields:  nil,
-		},
-		SearchAnalyzer: &opts.SearchAnalyzer,
 		Name:           opts.Name,
 		IndexID:        &indexID,
 	}
@@ -321,7 +292,7 @@ func TestCreate_RunAtlas(t *testing.T) {
 
 	mockIndexStore.
 		EXPECT().
-		CreateSearchIndexes(opts.ProjectID, opts.DeploymentName, index).
+		CreateSearchIndexesDeprecated(opts.ProjectID, opts.DeploymentName, index).
 		Times(1).
 		Return(indexWithID, nil)
 

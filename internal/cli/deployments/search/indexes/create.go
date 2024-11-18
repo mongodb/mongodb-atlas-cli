@@ -16,7 +16,9 @@ package indexes
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"slices"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -25,13 +27,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20241023002/admin"
+	"go.mongodb.org/atlas-sdk/v20240805005/admin"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 const (
@@ -40,7 +44,18 @@ const (
 	notFoundState      = "NOT_FOUND"
 )
 
-var ErrSearchIndexDuplicated = errors.New("search index is duplicated")
+var (
+	ErrSearchIndexDuplicated = errors.New("search index is duplicated")
+	errInvalidIndex          = errors.New("invalid index")
+)
+
+type IndexID struct {
+	ID         string
+	Name       string
+	Collection string
+	Database   string
+	Index      any
+}
 
 type CreateOpts struct {
 	cli.WatchOpts
@@ -50,8 +65,8 @@ type CreateOpts struct {
 	search.IndexOpts
 	mongodbClient    mongodbclient.MongoDBClient
 	connectionString string
-	index            *admin.ClusterSearchIndex
-	store            store.SearchIndexCreator
+	store            store.SearchIndexCreatorDescriber
+	indexID          IndexID
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -81,20 +96,94 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		_ = opts.mongodbClient.Disconnect(ctx)
 	}()
 
-	opts.index, err = opts.NewSearchIndex()
+	idx, err := opts.CreateSearchIndex()
 	if err != nil {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithSearchIndexType(opts.index.GetType()))
+	var definition any
+	var idxType *string
 
-	coll := opts.mongodbClient.Database(opts.index.Database).Collection(opts.index.CollectionName)
-	if idx, _ := coll.SearchIndexByName(ctx, opts.index.Name); idx != nil {
+	switch index := idx.(type) {
+	case *admin.SearchIndexCreateRequest:
+		idxType = index.Type
+
+		opts.indexID.Database = index.Database
+		opts.indexID.Collection = index.CollectionName
+		opts.indexID.Name = index.Name
+
+		definition = index.Definition
+	case *admin.ClusterSearchIndex:
+		_, _ = log.Warningln("you're using an old search index definition")
+		idxType = index.Type
+
+		opts.indexID.Database = index.Database
+		opts.indexID.Collection = index.CollectionName
+		opts.indexID.Name = index.Name
+
+		definition, err = buildIndexDefinition(index)
+		if err != nil {
+			return err
+		}
+	default:
+		return errInvalidIndex
+	}
+
+	if idxType == nil {
+		defaultType := search.DefaultType
+		idxType = &defaultType
+	}
+
+	telemetry.AppendOption(telemetry.WithSearchIndexType(*idxType))
+
+	coll := opts.mongodbClient.Database(opts.indexID.Database).Collection(opts.indexID.Collection)
+	if idx, _ := coll.SearchIndexByName(ctx, opts.indexID.Name); idx != nil {
 		return ErrSearchIndexDuplicated
 	}
 
-	opts.index, err = coll.CreateSearchIndex(ctx, opts.index)
-	return err
+	result, err := coll.CreateSearchIndex(ctx, opts.indexID.Name, *idxType, definition)
+	if err != nil {
+		return err
+	}
+
+	opts.indexID.Index = result
+
+	if result.IndexID != nil {
+		opts.indexID.ID = *result.IndexID
+	}
+
+	return nil
+}
+
+func buildIndexDefinition(idx *admin.ClusterSearchIndex) (any, error) {
+	// To maintain formatting of the SDK, marshal object into JSON and then unmarshal into BSON
+	jsonIndex, err := json.Marshal(idx)
+	if err != nil {
+		return nil, err
+	}
+
+	var index bson.D
+	err = bson.UnmarshalExtJSON(jsonIndex, true, &index)
+	if err != nil {
+		return nil, err
+	}
+
+	// Empty these fields so that they are not included into the index definition for the MongoDB command
+	index = removeFields(index, "id", "collectionName", "database", "name", "type", "status")
+	return index, nil
+}
+
+func removeFields(doc bson.D, fields ...string) bson.D {
+	cleanedDoc := bson.D{}
+
+	for _, elem := range doc {
+		if slices.Contains(fields, elem.Key) {
+			continue
+		}
+
+		cleanedDoc = append(cleanedDoc, elem)
+	}
+	return cleanedDoc
 }
 
 func (opts *CreateOpts) RunAtlas() error {
@@ -102,15 +191,56 @@ func (opts *CreateOpts) RunAtlas() error {
 		return err
 	}
 
-	index, err := opts.NewSearchIndex()
+	idx, err := opts.CreateSearchIndex()
 	if err != nil {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithSearchIndexType(opts.index.GetType()))
+	switch index := idx.(type) {
+	case *admin.SearchIndexCreateRequest:
+		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
+		r, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
+		if err != nil {
+			return err
+		}
 
-	opts.index, err = opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
-	return err
+		if r.Database != nil {
+			opts.indexID.Database = *r.Database
+		}
+		if r.CollectionName != nil {
+			opts.indexID.Collection = *r.CollectionName
+		}
+		if r.Name != nil {
+			opts.indexID.Name = *r.Name
+		}
+		if r.IndexID != nil {
+			opts.indexID.ID = *r.IndexID
+		}
+
+		opts.indexID.Index = r
+
+		return nil
+	case *admin.ClusterSearchIndex:
+		_, _ = log.Warningln("you're using an old search index definition")
+		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
+		r, err := opts.store.CreateSearchIndexesDeprecated(opts.ConfigProjectID(), opts.DeploymentName, index)
+		if err != nil {
+			return err
+		}
+
+		opts.indexID.Database = r.Database
+		opts.indexID.Collection = r.CollectionName
+		opts.indexID.Name = r.Name
+		if r.IndexID != nil {
+			opts.indexID.ID = *r.IndexID
+		}
+
+		opts.indexID.Index = r
+
+		return nil
+	default:
+		return errInvalidIndex
+	}
 }
 
 func (opts *CreateOpts) Run(ctx context.Context) error {
@@ -131,39 +261,39 @@ func (opts *CreateOpts) initMongoDBClient() error {
 	return nil
 }
 
-func (opts *CreateOpts) status(ctx context.Context) (string, error) {
+func (opts *CreateOpts) status(ctx context.Context) (*mongodbclient.SearchIndexDefinition, string, error) {
 	if err := opts.mongodbClient.Connect(ctx, opts.connectionString, connectWaitSeconds); err != nil {
-		return notFoundState, err
+		return nil, notFoundState, err
 	}
 	defer func() {
 		_ = opts.mongodbClient.Disconnect(ctx)
 	}()
 
-	coll := opts.mongodbClient.Database(opts.index.Database).Collection(opts.index.CollectionName)
-	index, err := coll.SearchIndexByName(ctx, opts.index.Name)
+	coll := opts.mongodbClient.Database(opts.indexID.Database).Collection(opts.indexID.Collection)
+	index, err := coll.SearchIndexByName(ctx, opts.indexID.Name)
 	if err != nil {
-		return notFoundState, nil
+		return index, notFoundState, nil
 	}
 	if index.Status == nil {
-		return notFoundState, nil
+		return index, notFoundState, nil
 	}
-	return *index.Status, nil
+	return index, *index.Status, nil
 }
 
 func (opts *CreateOpts) watchLocal(ctx context.Context) (any, bool, error) {
-	state, err := opts.status(ctx)
+	index, state, err := opts.status(ctx)
 	if err != nil {
 		return nil, false, err
 	}
 	if state == "READY" {
-		opts.index.Status = &state
-		return opts.index, true, nil
+		index.Status = &state
+		return index, true, nil
 	}
 	return nil, false, nil
 }
 
 func (opts *CreateOpts) watchAtlas(_ context.Context) (any, bool, error) {
-	index, err := opts.store.SearchIndex(opts.ConfigProjectID(), opts.DeploymentName, *opts.index.IndexID)
+	index, err := opts.store.SearchIndexDeprecated(opts.ConfigProjectID(), opts.DeploymentName, opts.indexID.ID)
 	if err != nil {
 		return nil, false, err
 	}
@@ -176,7 +306,7 @@ func (opts *CreateOpts) watchAtlas(_ context.Context) (any, bool, error) {
 func (opts *CreateOpts) PostRun(ctx context.Context) error {
 	opts.AppendDeploymentType()
 	if !opts.EnableWatch {
-		return opts.Print(opts.index)
+		return opts.Print(opts.indexID.Index)
 	}
 
 	watch := opts.watchLocal
@@ -191,9 +321,7 @@ func (opts *CreateOpts) PostRun(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	opts.index = watchResult.(*admin.ClusterSearchIndex)
-
-	if err := opts.Print(opts.index); err != nil {
+	if err := opts.Print(watchResult); err != nil {
 		return err
 	}
 	return opts.PostRunMessages()

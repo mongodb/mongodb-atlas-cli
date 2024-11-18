@@ -29,6 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -118,14 +119,14 @@ func TestList_RunLocal(t *testing.T) {
 		Return(mockColl).
 		Times(1)
 
-	expected := []*atlasv2.ClusterSearchIndex{
+	expected := []*mongodbclient.SearchIndexDefinition{
 		{
-			Name:           expectedName,
+			Name:           pointer.Get(expectedName),
 			IndexID:        pointer.Get(expectedID),
-			CollectionName: expectedCollection,
-			Database:       expectedDB,
 			Status:         pointer.Get(expectedStatus),
 			Type:           pointer.Get(expectedType),
+			CollectionName: pointer.Get(expectedCollection),
+			Database:       pointer.Get(expectedDB),
 		},
 	}
 
@@ -184,7 +185,7 @@ func TestList_RunAtlas(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		SearchIndexes(opts.ProjectID, opts.DeploymentName, opts.DBName, opts.Collection).
+		SearchIndexesDeprecated(opts.ProjectID, opts.DeploymentName, opts.DBName, opts.Collection).
 		Return([]atlasv2.ClusterSearchIndex{
 			{
 				Name:           expectedName,

@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -97,19 +98,17 @@ func TestDescribe_RunLocal(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	expected := &atlasv2.ClusterSearchIndex{
-		Name:           "name",
-		IndexID:        pointer.Get("test"),
-		CollectionName: "coll",
-		Database:       "db",
-		Status:         pointer.Get(expectedStatus),
-		Type:           pointer.Get(expectedType),
-	}
-
 	mockMongodbClient.
 		EXPECT().
 		SearchIndex(ctx, "test").
-		Return(expected, nil).
+		Return(&mongodbclient.SearchIndexDefinition{
+			Name:           pointer.Get("name"),
+			IndexID:        pointer.Get("test"),
+			Database:       pointer.Get("db"),
+			CollectionName: pointer.Get("coll"),
+			Type:           pointer.Get(expectedType),
+			Status:         pointer.Get(expectedStatus),
+		}, nil).
 		Times(1)
 
 	if err := opts.Run(ctx); err != nil {
@@ -156,7 +155,7 @@ func TestDescribe_RunAtlas(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		SearchIndex(opts.ProjectID, opts.DeploymentName, opts.indexID).
+		SearchIndexDeprecated(opts.ProjectID, opts.DeploymentName, opts.indexID).
 		Return(&atlasv2.ClusterSearchIndex{
 			Name:           name,
 			Database:       database,

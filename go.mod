@@ -41,7 +41,7 @@ require (
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.37.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20240805005 v20240805005.0.0
+	go.mongodb.org/atlas-sdk/v20241023002 v20241023002.1.0
 	go.mongodb.org/mongo-driver v1.17.1
 	golang.org/x/exp v0.0.0-20241004190924-225e2abe05e6
 	golang.org/x/mod v0.22.0

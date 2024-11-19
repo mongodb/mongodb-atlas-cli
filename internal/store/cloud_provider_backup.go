@@ -16,7 +16,7 @@ package store
 
 import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -67,7 +67,7 @@ type ExportJobsDescriber interface {
 }
 
 type ExportBucketsCreator interface {
-	CreateExportBucket(string, *atlasv2.DiskBackupSnapshotExportBucket) (*atlasv2.DiskBackupSnapshotExportBucket, error)
+	CreateExportBucket(string, *atlasv2.DiskBackupSnapshotExportBucketRequest) (*atlasv2.DiskBackupSnapshotExportBucketResponse, error)
 }
 
 type ExportBucketsDeleter interface {
@@ -75,7 +75,7 @@ type ExportBucketsDeleter interface {
 }
 
 type ExportBucketsDescriber interface {
-	DescribeExportBucket(string, string) (*atlasv2.DiskBackupSnapshotExportBucket, error)
+	DescribeExportBucket(string, string) (*atlasv2.DiskBackupSnapshotExportBucketResponse, error)
 }
 
 type ScheduleDescriber interface {
@@ -174,7 +174,7 @@ func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlas
 }
 
 // CreateExportBucket encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateExportBucket(projectID string, bucket *atlasv2.DiskBackupSnapshotExportBucket) (*atlasv2.DiskBackupSnapshotExportBucket, error) {
+func (s *Store) CreateExportBucket(projectID string, bucket *atlasv2.DiskBackupSnapshotExportBucketRequest) (*atlasv2.DiskBackupSnapshotExportBucketResponse, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.CreateExportBucket(s.ctx, projectID, bucket).Execute()
 	return result, err
 }
@@ -186,7 +186,7 @@ func (s *Store) DeleteExportBucket(projectID, bucketID string) error {
 }
 
 // DescribeExportBucket encapsulates the logic to manage different cloud providers.
-func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlasv2.DiskBackupSnapshotExportBucket, error) {
+func (s *Store) DescribeExportBucket(projectID, bucketID string) (*atlasv2.DiskBackupSnapshotExportBucketResponse, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.GetExportBucket(s.ctx, projectID, bucketID).Execute()
 	return result, err
 }

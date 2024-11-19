@@ -31,7 +31,7 @@ jobs:
       - name: Find JIRA ticket
         id: find
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: mongodb/apix-action/find-jira@v2
+        uses: mongodb/apix-action/find-jira@v3
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           jql: project = CLOUDP and summary ~ "Bump Atlas GO SDK to '${{ steps.version.outputs.VERSION }}'"
@@ -40,7 +40,7 @@ jobs:
         run: |
           echo "JIRA_KEY=${{steps.find.outputs.issue-key}}" >> "$GITHUB_ENV"
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@v2
+        uses: mongodb/apix-action/create-jira@v3
         id: create
         if: (steps.verify-changed-files.outputs.files_changed == 'true') && (steps.find.outputs.found == 'false')
         with:
@@ -70,7 +70,7 @@ jobs:
       - name: set Apix Bot token
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         id: app-token
-        uses: mongodb/apix-action/token@v2
+        uses: mongodb/apix-action/token@v3
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}

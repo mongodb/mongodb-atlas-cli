@@ -16,7 +16,7 @@ package store
 
 import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	"go.mongodb.org/atlas-sdk/v20240805005/admin"
+	"go.mongodb.org/atlas-sdk/v20241113001/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

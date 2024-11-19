@@ -106,7 +106,9 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 				return err
 			}
 
+			// All this code is todo, will find a better way to get a non-zero error code as part of CLOUDP-280745
 			if !result.IsSuccess {
+				// Return an empty error so cobra doesn't print anything, temporary, will be part of CLOUDP-280745
 				return errors.New("")
 			}
 

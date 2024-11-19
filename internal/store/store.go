@@ -42,7 +42,7 @@ const (
 	maxIdleConnsPerHost   = 4
 	idleConnTimeout       = 30 * time.Second
 	expectContinueTimeout = 1 * time.Second
-	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
+	CloudGovServiceURL    = "https://cloud.mongodbgov.com/"
 )
 
 var errUnsupportedService = errors.New("unsupported service")
@@ -62,7 +62,7 @@ type Store struct {
 	ctx            context.Context
 }
 
-var defaultTransport = &http.Transport{
+var DefaultTransport = &http.Transport{
 	DialContext: (&net.Dialer{
 		Timeout:   timeout,
 		KeepAlive: keepAlive,
@@ -122,7 +122,7 @@ func (s *Store) transport() *http.Transport {
 	case s.telemetry:
 		return telemetryTransport
 	default:
-		return defaultTransport
+		return DefaultTransport
 	}
 }
 
@@ -306,7 +306,7 @@ func baseURLOption(c ServiceGetter) Option {
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		return WithBaseURL(configURL)
 	} else if c.Service() == config.CloudGovService {
-		return WithBaseURL(cloudGovServiceURL)
+		return WithBaseURL(CloudGovServiceURL)
 	}
 	return nil
 }

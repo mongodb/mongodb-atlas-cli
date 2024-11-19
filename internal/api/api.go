@@ -44,7 +44,7 @@ type RequestParameters struct {
 
 type Version struct {
 	Version              string
-	RequestContentTypes  []string
+	RequestContentType   string
 	ResponseContentTypes []string
 }
 

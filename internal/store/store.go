@@ -20,31 +20,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net"
 	"net/http"
-	"net/url"
 	"strings"
-	"time"
 
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/rapid7/go-get-proxied/proxy"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
-)
-
-const (
-	telemetryTimeout      = 1 * time.Second
-	timeout               = 5 * time.Second
-	keepAlive             = 30 * time.Second
-	maxIdleConns          = 5
-	maxIdleConnsPerHost   = 4
-	idleConnTimeout       = 30 * time.Second
-	expectContinueTimeout = 1 * time.Second
-	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
 )
 
 var errUnsupportedService = errors.New("unsupported service")
@@ -62,46 +48,6 @@ type Store struct {
 	// Pinnned version to the most recent version that's working for clusters
 	clientClusters *atlasClustersPinned.APIClient
 	ctx            context.Context
-}
-
-func proxyFromSettingsAndEnv(req *http.Request) (*url.URL, error) {
-	switch req.URL.Scheme {
-	case "http":
-		p := proxy.NewProvider("").GetHTTPProxy(req.URL.String())
-		if p != nil {
-			return p.URL(), nil
-		}
-	case "https":
-		p := proxy.NewProvider("").GetHTTPSProxy(req.URL.String())
-		if p != nil {
-			return p.URL(), nil
-		}
-	}
-	return nil, nil
-}
-
-var defaultTransport = &http.Transport{
-	DialContext: (&net.Dialer{
-		Timeout:   timeout,
-		KeepAlive: keepAlive,
-	}).DialContext,
-	MaxIdleConns:          maxIdleConns,
-	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-	Proxy:                 proxyFromSettingsAndEnv,
-	IdleConnTimeout:       idleConnTimeout,
-	ExpectContinueTimeout: expectContinueTimeout,
-}
-
-var telemetryTransport = &http.Transport{
-	DialContext: (&net.Dialer{
-		Timeout:   telemetryTimeout,
-		KeepAlive: keepAlive,
-	}).DialContext,
-	MaxIdleConns:          maxIdleConns,
-	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-	Proxy:                 proxyFromSettingsAndEnv,
-	IdleConnTimeout:       idleConnTimeout,
-	ExpectContinueTimeout: expectContinueTimeout,
 }
 
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
@@ -138,9 +84,9 @@ func (tr *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 func (s *Store) transport() *http.Transport {
 	switch {
 	case s.telemetry:
-		return telemetryTransport
+		return transport.TelemetryTransport
 	default:
-		return defaultTransport
+		return transport.DefaultTransport
 	}
 }
 
@@ -324,7 +270,7 @@ func baseURLOption(c ServiceGetter) Option {
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		return WithBaseURL(configURL)
 	} else if c.Service() == config.CloudGovService {
-		return WithBaseURL(cloudGovServiceURL)
+		return WithBaseURL(transport.CloudGovServiceURL)
 	}
 	return nil
 }

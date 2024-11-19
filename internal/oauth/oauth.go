@@ -15,35 +15,12 @@
 package oauth
 
 import (
-	"net"
 	"net/http"
-	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 	"go.mongodb.org/atlas/auth"
 )
-
-const (
-	timeout               = 5 * time.Second
-	keepAlive             = 30 * time.Second
-	maxIdleConns          = 5
-	maxIdleConnsPerHost   = 4
-	idleConnTimeout       = 30 * time.Second
-	expectContinueTimeout = 1 * time.Second
-	cloudGovServiceURL    = "https://cloud.mongodbgov.com/"
-)
-
-var defaultTransport = &http.Transport{
-	DialContext: (&net.Dialer{
-		Timeout:   timeout,
-		KeepAlive: keepAlive,
-	}).DialContext,
-	MaxIdleConns:          maxIdleConns,
-	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-	Proxy:                 http.ProxyFromEnvironment,
-	IdleConnTimeout:       idleConnTimeout,
-	ExpectContinueTimeout: expectContinueTimeout,
-}
 
 type ServiceGetter interface {
 	Service() string
@@ -58,7 +35,7 @@ const (
 
 func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	client := http.DefaultClient
-	client.Transport = defaultTransport
+	client.Transport = transport.DefaultTransport
 	id := ClientID
 	if c.Service() == config.CloudGovService {
 		id = GovClientID
@@ -75,7 +52,7 @@ func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		authOpts = append(authOpts, auth.SetAuthURL(c.OpsManagerURL()))
 	} else if c.Service() == config.CloudGovService {
-		authOpts = append(authOpts, auth.SetAuthURL(cloudGovServiceURL))
+		authOpts = append(authOpts, auth.SetAuthURL(transport.CloudGovServiceURL))
 	}
 	return auth.NewConfigWithOptions(client, authOpts...)
 }

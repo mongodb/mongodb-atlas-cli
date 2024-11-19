@@ -22,12 +22,14 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
 	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/rapid7/go-get-proxied/proxy"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 	atlasauth "go.mongodb.org/atlas/auth"
@@ -62,6 +64,22 @@ type Store struct {
 	ctx            context.Context
 }
 
+func proxyFromSettingsAndEnv(req *http.Request) (*url.URL, error) {
+	switch req.URL.Scheme {
+	case "http":
+		p := proxy.NewProvider("").GetHTTPProxy(req.URL.String())
+		if p != nil {
+			return p.URL(), nil
+		}
+	case "https":
+		p := proxy.NewProvider("").GetHTTPSProxy(req.URL.String())
+		if p != nil {
+			return p.URL(), nil
+		}
+	}
+	return nil, nil
+}
+
 var defaultTransport = &http.Transport{
 	DialContext: (&net.Dialer{
 		Timeout:   timeout,
@@ -69,7 +87,7 @@ var defaultTransport = &http.Transport{
 	}).DialContext,
 	MaxIdleConns:          maxIdleConns,
 	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-	Proxy:                 http.ProxyFromEnvironment,
+	Proxy:                 proxyFromSettingsAndEnv,
 	IdleConnTimeout:       idleConnTimeout,
 	ExpectContinueTimeout: expectContinueTimeout,
 }
@@ -81,7 +99,7 @@ var telemetryTransport = &http.Transport{
 	}).DialContext,
 	MaxIdleConns:          maxIdleConns,
 	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-	Proxy:                 http.ProxyFromEnvironment,
+	Proxy:                 proxyFromSettingsAndEnv,
 	IdleConnTimeout:       idleConnTimeout,
 	ExpectContinueTimeout: expectContinueTimeout,
 }

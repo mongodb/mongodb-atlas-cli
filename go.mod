@@ -32,6 +32,7 @@ require (
 	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.5.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
+	github.com/rapid7/go-get-proxied v0.0.0-20240311092404-798791728c56
 	github.com/shirou/gopsutil/v4 v4.24.10
 	github.com/spf13/afero v1.11.0
 	github.com/spf13/cobra v1.8.1

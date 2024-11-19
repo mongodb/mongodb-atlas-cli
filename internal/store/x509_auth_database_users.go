@@ -40,7 +40,7 @@ type X509CertificateStore interface {
 
 // X509Configuration retrieves the current user managed certificates for a database user.
 func (s *Store) X509Configuration(projectID string) (*atlasv2.UserSecurity, error) {
-	result, _, err := s.clientv2.LDAPConfigurationApi.GetLDAPConfiguration(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.LDAPConfigurationApi.GetLdapConfiguration(s.ctx, projectID).Execute()
 	return result, err
 }
 
@@ -51,7 +51,7 @@ func (s *Store) SaveX509Configuration(projectID, certificate string) (*atlasv2.U
 			Cas: &certificate,
 		},
 	}
-	result, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID, &userCertificate).Execute()
+	result, _, err := s.clientv2.LDAPConfigurationApi.SaveLdapConfiguration(s.ctx, projectID, &userCertificate).Execute()
 	return result, err
 }
 

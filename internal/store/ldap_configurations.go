@@ -42,32 +42,32 @@ type LDAPConfigurationGetter interface {
 
 // VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlasv2.LDAPVerifyConnectivityJobRequestParams) (*atlasv2.LDAPVerifyConnectivityJobRequest, error) {
-	resp, _, err := s.clientv2.LDAPConfigurationApi.VerifyLDAPConfiguration(s.ctx, projectID, ldap).
+	resp, _, err := s.clientv2.LDAPConfigurationApi.VerifyLdapConfiguration(s.ctx, projectID, ldap).
 		Execute()
 	return resp, err
 }
 
 // GetStatusLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) GetStatusLDAPConfiguration(projectID, requestID string) (*atlasv2.LDAPVerifyConnectivityJobRequest, error) {
-	resp, _, err := s.clientv2.LDAPConfigurationApi.GetLDAPConfigurationStatus(s.ctx, projectID, requestID).Execute()
+	resp, _, err := s.clientv2.LDAPConfigurationApi.GetLdapConfigurationStatus(s.ctx, projectID, requestID).Execute()
 	return resp, err
 }
 
 // SaveLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) SaveLDAPConfiguration(projectID string, ldap *atlasv2.UserSecurity) (*atlasv2.UserSecurity, error) {
-	resp, _, err := s.clientv2.LDAPConfigurationApi.SaveLDAPConfiguration(s.ctx, projectID, ldap).
+	resp, _, err := s.clientv2.LDAPConfigurationApi.SaveLdapConfiguration(s.ctx, projectID, ldap).
 		Execute()
 	return resp, err
 }
 
 // DeleteLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteLDAPConfiguration(projectID string) error {
-	_, _, err := s.clientv2.LDAPConfigurationApi.DeleteLDAPConfiguration(s.ctx, projectID).Execute()
+	_, _, err := s.clientv2.LDAPConfigurationApi.DeleteLdapConfiguration(s.ctx, projectID).Execute()
 	return err
 }
 
 // GetLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) GetLDAPConfiguration(projectID string) (*atlasv2.UserSecurity, error) {
-	resp, _, err := s.clientv2.LDAPConfigurationApi.GetLDAPConfiguration(s.ctx, projectID).Execute()
+	resp, _, err := s.clientv2.LDAPConfigurationApi.GetLdapConfiguration(s.ctx, projectID).Execute()
 	return resp, err
 }

@@ -30,7 +30,7 @@ type UserLister interface {
 }
 
 type TeamUserLister interface {
-	TeamUsers(string, string) (*atlasv2.PaginatedApiAppUser, error)
+	TeamUsers(string, string) (*atlasv2.PaginatedAppUser, error)
 }
 
 type UserDescriber interface {
@@ -67,7 +67,7 @@ func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions
 }
 
 // TeamUsers encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamUsers(orgID, teamID string) (*atlasv2.PaginatedApiAppUser, error) {
+func (s *Store) TeamUsers(orgID, teamID string) (*atlasv2.PaginatedAppUser, error) {
 	result, _, err := s.clientv2.TeamsApi.ListTeamUsers(s.ctx, orgID, teamID).Execute()
 	return result, err
 }

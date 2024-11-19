@@ -636,10 +636,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) TeamByName(arg0, arg1 interface{
 }
 
 // TeamUsers mocks base method.
-func (m *MockOperatorGenericStore) TeamUsers(arg0, arg1 string) (*admin0.PaginatedApiAppUser, error) {
+func (m *MockOperatorGenericStore) TeamUsers(arg0, arg1 string) (*admin0.PaginatedAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamUsers", arg0, arg1)
-	ret0, _ := ret[0].(*admin0.PaginatedApiAppUser)
+	ret0, _ := ret[0].(*admin0.PaginatedAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

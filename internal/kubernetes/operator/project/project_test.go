@@ -262,7 +262,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			Name: pointer.Get("TestTeamName"),
 		}
 
-		teamUsers := &atlasv2.PaginatedApiAppUser{
+		teamUsers := &atlasv2.PaginatedAppUser{
 			Results: &[]atlasv2.CloudAppUser{
 				{
 					EmailAddress: "testuser@mooooongodb.com",

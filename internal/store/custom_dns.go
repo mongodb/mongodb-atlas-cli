@@ -17,7 +17,7 @@ package store
 //go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store CustomDNSEnabler,CustomDNSDisabler,CustomDNSDescriber
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 type CustomDNSEnabler interface {
@@ -37,7 +37,7 @@ func (s *Store) EnableCustomDNS(projectID string) (*atlasv2.AWSCustomDNSEnabled,
 	customDNSSetting := &atlasv2.AWSCustomDNSEnabled{
 		Enabled: true,
 	}
-	result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAWSCustomDNS(s.ctx, projectID, customDNSSetting).Execute()
+	result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAwsCustomDns(s.ctx, projectID, customDNSSetting).Execute()
 	return result, err
 }
 
@@ -46,12 +46,12 @@ func (s *Store) DisableCustomDNS(projectID string) (*atlasv2.AWSCustomDNSEnabled
 	customDNSSetting := &atlasv2.AWSCustomDNSEnabled{
 		Enabled: false,
 	}
-	result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAWSCustomDNS(s.ctx, projectID, customDNSSetting).Execute()
+	result, _, err := s.clientv2.AWSClustersDNSApi.ToggleAwsCustomDns(s.ctx, projectID, customDNSSetting).Execute()
 	return result, err
 }
 
 // DescribeCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) DescribeCustomDNS(projectID string) (*atlasv2.AWSCustomDNSEnabled, error) {
-	result, _, err := s.clientv2.AWSClustersDNSApi.GetAWSCustomDNS(s.ctx, projectID).Execute()
+	result, _, err := s.clientv2.AWSClustersDNSApi.GetAwsCustomDns(s.ctx, projectID).Execute()
 	return result, err
 }

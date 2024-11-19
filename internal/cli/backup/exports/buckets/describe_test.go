@@ -22,14 +22,14 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockExportBucketsDescriber(ctrl)
 
-	var expected atlasv2.DiskBackupSnapshotExportBucket
+	var expected atlasv2.DiskBackupSnapshotExportBucketResponse
 
 	describeOpts := &DescribeOpts{
 		store: mockStore,

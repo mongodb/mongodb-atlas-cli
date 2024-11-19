@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM artifactory.corp.mongodb.com/dockerhub/ubuntu:24.04
 
 ARG package
 ARG entrypoint

@@ -160,7 +160,6 @@ Use the --help flag with any command for more info on that command.`,
 				func() error {
 					err := opts.RefreshAccessToken(cmd.Context())
 					if err != nil && authReq == RequiredAuth {
-						_, _ = log.Warningf("Could not refresh access token: %s\n", err.Error())
 						return err
 					}
 					return nil

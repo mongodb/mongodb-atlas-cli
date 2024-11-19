@@ -1,4 +1,4 @@
-FROM amazonlinux:2023
+FROM artifactory.corp.mongodb.com/dockerhub/amazonlinux:2023
 
 ARG url
 ARG entrypoint

@@ -23,12 +23,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"go.mongodb.org/atlas-sdk/v20241023002/admin"
 )
+
+var errInvalidIndex = errors.New("invalid index")
 
 type CreateOpts struct {
 	cli.GlobalOpts
@@ -49,18 +53,32 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 var createTemplate = "Index {{.Name}} created.\n"
 
 func (opts *CreateOpts) Run() error {
-	index, err := opts.NewSearchIndex()
+	i, err := opts.CreateSearchIndex()
 	if err != nil {
 		return err
 	}
 
-	telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
-	r, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
-	if err != nil {
-		return err
-	}
+	switch index := i.(type) {
+	case *admin.SearchIndexCreateRequest:
+		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
+		r, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
+		if err != nil {
+			return err
+		}
 
-	return opts.Print(r)
+		return opts.Print(r)
+	case *admin.ClusterSearchIndex:
+		_, _ = log.Warningln("you're using an old search index definition")
+		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
+		r, err := opts.store.CreateSearchIndexesDeprecated(opts.ConfigProjectID(), opts.clusterName, index)
+		if err != nil {
+			return err
+		}
+
+		return opts.Print(r)
+	default:
+		return errInvalidIndex
+	}
 }
 
 // CreateBuilder

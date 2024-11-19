@@ -20,7 +20,7 @@ import (
 	"time"
 
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -198,7 +198,7 @@ func (st *StateTransition) IsEndError(err error) bool {
 	case errors.As(err, &atlasErr):
 		errCode = atlasErr.ErrorCode
 	case errors.As(err, &atlasv2Err):
-		errCode = *atlasv2Err.Model().ErrorCode
+		errCode = atlasv2Err.Model().ErrorCode
 	case errors.As(err, &atlasClustersPinnedErr):
 		errCode = *atlasClustersPinnedErr.Model().ErrorCode
 	default:
@@ -221,7 +221,7 @@ func (st *StateTransition) IsRetryableError(err error) bool {
 	case errors.As(err, &atlasErr):
 		errCode = atlasErr.ErrorCode
 	case errors.As(err, &atlasv2Err):
-		errCode = *atlasv2Err.Model().ErrorCode
+		errCode = atlasv2Err.Model().ErrorCode
 	default:
 		return false
 	}

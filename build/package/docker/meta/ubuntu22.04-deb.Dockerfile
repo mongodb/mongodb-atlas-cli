@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM artifactory.corp.mongodb.com/dockerhub/ubuntu:22.04
 
 ARG url
 ARG entrypoint

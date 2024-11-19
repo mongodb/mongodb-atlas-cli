@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -42,7 +42,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		SearchIndexes(listOpts.ProjectID, listOpts.clusterName, listOpts.dbName, listOpts.collName).
+		SearchIndexesDeprecated(listOpts.ProjectID, listOpts.clusterName, listOpts.dbName, listOpts.collName).
 		Return(expected, nil).
 		Times(1)
 

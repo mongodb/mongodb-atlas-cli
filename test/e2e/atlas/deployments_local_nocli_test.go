@@ -28,6 +28,7 @@ import (
 	"strings"
 	"testing"
 
+	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options" //nolint:importas //unique of this test
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -56,10 +57,15 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 		bin = "podman"
 	}
 
+	image := os.Getenv("LOCALDEV_IMAGE")
+	if image == "" {
+		image = opt.LocalDevImage
+	}
+
 	t.Run("Pull", func(t *testing.T) {
 		cmd := exec.Command(bin,
 			"pull",
-			"docker.io/mongodb/mongodb-atlas-local",
+			image,
 		)
 		r, setupErr := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, setupErr, string(r))
@@ -73,7 +79,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"-P",
 			"-e", "MONGODB_INITDB_ROOT_USERNAME="+dbUsername,
 			"-e", "MONGODB_INITDB_ROOT_PASSWORD="+dbUserPassword,
-			"docker.io/mongodb/mongodb-atlas-local",
+			image,
 		)
 
 		cmd.Env = os.Environ()

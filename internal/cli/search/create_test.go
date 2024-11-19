@@ -17,13 +17,13 @@
 package search
 
 import (
-	"strings"
+	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 )
 
 const testName = "default"
@@ -41,14 +41,14 @@ func TestCreateOpts_Run(t *testing.T) {
 		}
 		opts.Name = testName
 
-		request, err := opts.NewSearchIndex()
+		request, err := opts.CreateSearchIndex()
 		if err != nil {
 			t.Fatalf("newSearchIndex() unexpected error: %v", err)
 		}
 		expected := &atlasv2.ClusterSearchIndex{}
 		mockStore.
 			EXPECT().
-			CreateSearchIndexes(opts.ProjectID, opts.clusterName, request).
+			CreateSearchIndexesDeprecated(opts.ProjectID, opts.clusterName, request).
 			Return(expected, nil).
 			Times(1)
 
@@ -69,13 +69,13 @@ func TestCreateOpts_Run(t *testing.T) {
 		opts.Fs = appFS
 
 		expected := &atlasv2.ClusterSearchIndex{}
-		request, err := opts.NewSearchIndex()
+		request, err := opts.CreateSearchIndex()
 		if err != nil {
-			t.Fatalf("newSearchIndex() unexpected error: %v", err)
+			t.Fatalf("CreateSearchIndex() unexpected error: %v", err)
 		}
 		mockStore.
 			EXPECT().
-			CreateSearchIndexes(opts.ProjectID, opts.clusterName, request).Return(expected, nil).
+			CreateSearchIndexesDeprecated(opts.ProjectID, opts.clusterName, request).Return(expected, nil).
 			Times(1)
 		if err := opts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
@@ -93,14 +93,13 @@ func TestCreateOpts_Run(t *testing.T) {
 		opts.Filename = fileName
 		opts.Fs = appFS
 
-		_, err := opts.NewSearchIndex()
+		_, err := opts.CreateSearchIndex()
 		if err == nil {
-			t.Fatalf("newSearchIndex() expected error")
+			t.Fatalf("CreateSearchIndex() expected error")
 		}
 
-		expectedError := "failed to parse JSON file due to"
-		if !strings.Contains(err.Error(), expectedError) {
-			t.Fatalf("newSearchIndex() unexpected error: %v expected: %s", err, expectedError)
+		if !errors.Is(err, errFailedToLoadIndexMessage) {
+			t.Fatalf("CreateSearchIndex() unexpected error: %v expected: %s", err, errFailedToLoadIndexMessage)
 		}
 	})
 }

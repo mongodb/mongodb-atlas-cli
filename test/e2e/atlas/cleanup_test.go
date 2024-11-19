@@ -24,7 +24,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20240805005/admin"
+	"go.mongodb.org/atlas-sdk/v20241023002/admin"
 )
 
 func TestCleanup(t *testing.T) {

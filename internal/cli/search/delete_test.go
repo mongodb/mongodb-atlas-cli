@@ -38,7 +38,7 @@ func TestDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteSearchIndex(deleteOpts.ProjectID, deleteOpts.clusterName, deleteOpts.Entry).
+		DeleteSearchIndexDeprecated(deleteOpts.ProjectID, deleteOpts.clusterName, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 

@@ -130,8 +130,10 @@ func (opts *DeploymentOpts) LocalMongodHostname() string {
 	return opts.DeploymentName
 }
 
+var LocalDevImage = "docker.io/mongodb/mongodb-atlas-local"
+
 func (opts *DeploymentOpts) MongodDockerImageName() string {
-	return "docker.io/mongodb/mongodb-atlas-local:" + opts.MdbVersion
+	return LocalDevImage + ":" + opts.MdbVersion
 }
 
 func (opts *DeploymentOpts) Spin(funcs ...func() error) error {

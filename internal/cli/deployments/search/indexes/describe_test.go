@@ -31,7 +31,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 )
 
 func TestDescribe_RunLocal(t *testing.T) {
@@ -155,7 +155,7 @@ func TestDescribe_RunAtlas(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		SearchIndex(opts.ProjectID, opts.DeploymentName, opts.indexID).
+		SearchIndexDeprecated(opts.ProjectID, opts.DeploymentName, opts.indexID).
 		Return(&atlasv2.ClusterSearchIndex{
 			Name:           name,
 			Database:       database,

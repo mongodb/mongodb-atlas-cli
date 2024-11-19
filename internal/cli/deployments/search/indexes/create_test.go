@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 )
 
 var indexID = "6509bc5080b2f007e6a2a0ce"
@@ -255,7 +255,7 @@ func TestCreate_Duplicated(t *testing.T) {
 
 func TestCreate_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockIndexStore := mocks.NewMockSearchIndexCreator(ctrl)
+	mockIndexStore := mocks.NewMockSearchIndexCreatorDescriber(ctrl)
 	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
@@ -278,18 +278,12 @@ func TestCreate_RunAtlas(t *testing.T) {
 		store: mockIndexStore,
 	}
 
-	index, err := opts.NewSearchIndex()
+	index, err := opts.CreateSearchIndex()
 	require.NoError(t, err)
 
 	indexWithID := &atlasv2.ClusterSearchIndex{
 		CollectionName: opts.Collection,
 		Database:       opts.DBName,
-		Analyzer:       &opts.Analyzer,
-		Mappings: &atlasv2.ApiAtlasFTSMappings{
-			Dynamic: &opts.Dynamic,
-			Fields:  nil,
-		},
-		SearchAnalyzer: &opts.SearchAnalyzer,
 		Name:           opts.Name,
 		IndexID:        &indexID,
 	}
@@ -298,7 +292,7 @@ func TestCreate_RunAtlas(t *testing.T) {
 
 	mockIndexStore.
 		EXPECT().
-		CreateSearchIndexes(opts.ProjectID, opts.DeploymentName, index).
+		CreateSearchIndexesDeprecated(opts.ProjectID, opts.DeploymentName, index).
 		Times(1).
 		Return(indexWithID, nil)
 

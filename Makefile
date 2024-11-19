@@ -3,7 +3,7 @@
 GOLANGCI_VERSION=v1.61.0
 COVERAGE=coverage.out
 
-MCLI_GIT_SHA?=$(shell git rev-parse HEAD)
+GIT_SHA?=$(shell git rev-parse HEAD)
 
 ATLAS_SOURCE_FILES?=./cmd/atlas
 ifeq ($(OS),Windows_NT)
@@ -16,8 +16,8 @@ endif
 ATLAS_DESTINATION=./bin/$(ATLAS_BINARY_NAME)
 ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
-LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit=${MCLI_GIT_SHA}
-ATLAS_LINKER_FLAGS=${LINKER_FLAGS} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.Version=${ATLAS_VERSION}
+LOCALDEV_IMAGE?=docker.io/mongodb/mongodb-atlas-local
+LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit=${GIT_SHA} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.Version=${ATLAS_VERSION} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options.LocalDevImage=${LOCALDEV_IMAGE}
 ATLAS_E2E_BINARY?=../../../bin/${ATLAS_BINARY_NAME}
 
 DEBUG_FLAGS=all=-N -l
@@ -123,17 +123,17 @@ gen-mocks: ## Generate mocks
 .PHONY: gen-docs
 gen-docs: ## Generate docs for atlascli commands
 	@echo "==> Generating docs"
-	go run -ldflags "$(ATLAS_LINKER_FLAGS)" ./tools/docs/main.go
+	go run -ldflags "$(LINKER_FLAGS)" ./tools/docs/main.go
 
 .PHONY: build
 build: ## Generate an atlas binary in ./bin
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary"
-	go build -ldflags "$(ATLAS_LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
+	go build -ldflags "$(LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: build-debug
 build-debug: ## Generate a binary in ./bin for debugging atlascli
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
-	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(ATLAS_LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
+	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
 e2e-test: build ## Run E2E tests
@@ -154,7 +154,7 @@ unit-test: ## Run unit-tests
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin
 	@echo "==> Installing $(ATLAS_BINARY_NAME) to $(ATLAS_INSTALL_PATH)"
-	go install -ldflags "$(ATLAS_LINKER_FLAGS)" $(ATLAS_SOURCE_FILES)
+	go install -ldflags "$(LINKER_FLAGS)" $(ATLAS_SOURCE_FILES)
 	@echo "==> Done..."
 
 .PHONY: list

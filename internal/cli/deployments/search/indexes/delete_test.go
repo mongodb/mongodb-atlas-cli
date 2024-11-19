@@ -159,7 +159,7 @@ func TestDelete_RunAtlas(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteSearchIndex(opts.ProjectID, opts.DeploymentName, opts.Entry).
+		DeleteSearchIndexDeprecated(opts.ProjectID, opts.DeploymentName, opts.Entry).
 		Return(nil).
 		Times(1)
 

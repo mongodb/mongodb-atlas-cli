@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -454,10 +454,10 @@ func (m *MockExportBucketsCreator) EXPECT() *MockExportBucketsCreatorMockRecorde
 }
 
 // CreateExportBucket mocks base method.
-func (m *MockExportBucketsCreator) CreateExportBucket(arg0 string, arg1 *admin0.DiskBackupSnapshotExportBucket) (*admin0.DiskBackupSnapshotExportBucket, error) {
+func (m *MockExportBucketsCreator) CreateExportBucket(arg0 string, arg1 *admin0.DiskBackupSnapshotExportBucketRequest) (*admin0.DiskBackupSnapshotExportBucketResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateExportBucket", arg0, arg1)
-	ret0, _ := ret[0].(*admin0.DiskBackupSnapshotExportBucket)
+	ret0, _ := ret[0].(*admin0.DiskBackupSnapshotExportBucketResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -529,10 +529,10 @@ func (m *MockExportBucketsDescriber) EXPECT() *MockExportBucketsDescriberMockRec
 }
 
 // DescribeExportBucket mocks base method.
-func (m *MockExportBucketsDescriber) DescribeExportBucket(arg0, arg1 string) (*admin0.DiskBackupSnapshotExportBucket, error) {
+func (m *MockExportBucketsDescriber) DescribeExportBucket(arg0, arg1 string) (*admin0.DiskBackupSnapshotExportBucketResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DescribeExportBucket", arg0, arg1)
-	ret0, _ := ret[0].(*admin0.DiskBackupSnapshotExportBucket)
+	ret0, _ := ret[0].(*admin0.DiskBackupSnapshotExportBucketResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

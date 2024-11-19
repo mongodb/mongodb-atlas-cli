@@ -22,15 +22,18 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20240805005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
 )
 
-const DefaultAnalyzer = "lucene.standard"
-const deprecatedFlagMessage = "please use --file instead"
-const failedToLoadIndexMessage = "failed to parse JSON file due to %s"
-const SearchIndexType = "search"
-const VectorSearchIndexType = "vectorSearch"
-const DefaultType = SearchIndexType
+const (
+	DefaultAnalyzer       = "lucene.standard"
+	deprecatedFlagMessage = "please use --file instead"
+	SearchIndexType       = "search"
+	VectorSearchIndexType = "vectorSearch"
+	DefaultType           = SearchIndexType
+)
+
+var errFailedToLoadIndexMessage = errors.New("failed to parse JSON file")
 
 type IndexOpts struct {
 	Name           string
@@ -78,11 +81,30 @@ func (opts *IndexOpts) validateOpts() error {
 	return nil
 }
 
-func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
+func (opts *IndexOpts) CreateSearchIndex() (any, error) {
 	if len(opts.Filename) > 0 {
+		var m map[string]any
+		if err := file.Load(opts.Fs, opts.Filename, &m); err != nil {
+			return nil, fmt.Errorf("%w: %w", errFailedToLoadIndexMessage, err)
+		}
+
+		_, ok := m["definition"]
+		if ok {
+			index := &atlasv2.SearchIndexCreateRequest{}
+			if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
+				return nil, fmt.Errorf("%w: %w", errFailedToLoadIndexMessage, err)
+			}
+
+			if index.Type == nil {
+				index.Type = pointer.Get(DefaultType)
+			}
+
+			return index, nil
+		}
+
 		index := &atlasv2.ClusterSearchIndex{}
 		if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
-			return nil, fmt.Errorf(failedToLoadIndexMessage, err.Error())
+			return nil, fmt.Errorf("%w: %w", errFailedToLoadIndexMessage, err)
 		}
 
 		if index.Type == nil {
@@ -105,8 +127,56 @@ func (opts *IndexOpts) NewSearchIndex() (*atlasv2.ClusterSearchIndex, error) {
 		CollectionName: opts.Collection,
 		Database:       opts.DBName,
 		Name:           opts.Name,
-		// only search indexes can be created using flags
 		Type:           pointer.Get(SearchIndexType),
+		Analyzer:       &opts.Analyzer,
+		SearchAnalyzer: &opts.SearchAnalyzer,
+		Mappings: &atlasv2.ApiAtlasFTSMappings{
+			Dynamic: &opts.Dynamic,
+			Fields:  f,
+		},
+	}
+	return i, nil
+}
+
+func (opts *IndexOpts) UpdateSearchIndex() (any, error) {
+	if len(opts.Filename) > 0 {
+		var m map[string]any
+		if err := file.Load(opts.Fs, opts.Filename, &m); err != nil {
+			return nil, fmt.Errorf("%w: %w", errFailedToLoadIndexMessage, err)
+		}
+
+		_, ok := m["definition"]
+		if ok {
+			index := &atlasv2.SearchIndexUpdateRequest{}
+			if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
+				return nil, fmt.Errorf("%w: %w", errFailedToLoadIndexMessage, err)
+			}
+
+			return index, nil
+		}
+
+		index := &atlasv2.ClusterSearchIndex{}
+		if err := file.Load(opts.Fs, opts.Filename, index); err != nil {
+			return nil, fmt.Errorf("%w: %w", errFailedToLoadIndexMessage, err)
+		}
+
+		if index.Type == nil {
+			index.Type = pointer.Get(DefaultType)
+		}
+
+		return index, nil
+	}
+
+	f, err := opts.indexFields()
+	if err != nil {
+		return nil, err
+	}
+
+	if opts.SearchAnalyzer == "" {
+		opts.SearchAnalyzer = DefaultAnalyzer
+	}
+
+	i := &atlasv2.ClusterSearchIndex{
 		Analyzer:       &opts.Analyzer,
 		SearchAnalyzer: &opts.SearchAnalyzer,
 		Mappings: &atlasv2.ApiAtlasFTSMappings{

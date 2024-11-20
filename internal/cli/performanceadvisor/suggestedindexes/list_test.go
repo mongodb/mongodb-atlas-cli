@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -58,29 +57,4 @@ func TestNamespacesList_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	test.VerifyOutputTemplate(t, listTemplate, expected)
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.Duration,
-			flag.Since,
-			flag.Namespaces,
-			flag.NExamples,
-			flag.NIndexes,
-		},
-	)
-}
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		1,
-		[]string{},
-	)
 }

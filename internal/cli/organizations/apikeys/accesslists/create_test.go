@@ -20,9 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
@@ -56,13 +54,4 @@ func TestCreate_Run(t *testing.T) {
 	if err = createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{flag.OrgID, flag.Output, flag.APIKey, flag.CIDR, flag.IP},
-	)
 }

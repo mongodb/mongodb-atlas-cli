@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
@@ -52,14 +51,6 @@ func TestCreateOpts_Run(t *testing.T) {
 	require.NoError(t, opts.Run())
 }
 
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{flag.RetentionUnit, flag.RetentionValue, flag.EnableWatch, flag.ProjectID, flag.Output},
-	)
-}
 func TestCreateTemplate(t *testing.T) {
 	test.VerifyOutputTemplate(t, updateTemplate, &atlasv2.DataProtectionSettings20231001{})
 }

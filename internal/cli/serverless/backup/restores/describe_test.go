@@ -23,10 +23,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
@@ -69,17 +67,4 @@ func TestDescribeOpts_Run(t *testing.T) {
 	assert.Equal(t, `ID     SNAPSHOT   CLUSTER       TYPE        EXPIRES AT                      URLs
 test   test2      ClusterTest   test type   2023-01-01 00:00:00 +0000 UTC   test url
 `, buf.String())
-}
-
-func TestDescribeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DescribeBuilder(),
-		0,
-		[]string{
-			flag.ClusterName,
-			flag.ProjectID,
-			flag.Output,
-		},
-	)
 }

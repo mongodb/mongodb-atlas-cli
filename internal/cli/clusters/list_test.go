@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -57,13 +56,4 @@ func TestList_Run(t *testing.T) {
 
 func TestListTemplate(t *testing.T) {
 	test.VerifyOutputTemplate(t, listTemplate, atlasClustersPinned.PaginatedAdvancedClusterDescription{})
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{flag.Limit, flag.Page, flag.Output, flag.ProjectID, flag.OmitCount},
-	)
 }

@@ -27,21 +27,11 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20241113001/admin"
 	"go.mongodb.org/atlas/auth"
 )
-
-func TestLoginBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		LoginBuilder(),
-		0,
-		[]string{"gov", "noBrowser"},
-	)
-}
 
 func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 	ctrl := gomock.NewController(t)

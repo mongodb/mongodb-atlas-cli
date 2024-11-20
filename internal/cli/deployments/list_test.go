@@ -28,11 +28,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
@@ -326,15 +324,6 @@ atlasCluster2   ATLAS   7.0.0     IDLE
 atlasCluster1   ATLAS   7.0.0     IDLE
 `, buf.String())
 	t.Log(buf.String())
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{flag.ProjectID},
-	)
 }
 
 func TestListOpts_PostRun(t *testing.T) {

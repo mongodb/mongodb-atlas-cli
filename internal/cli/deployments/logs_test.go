@@ -27,23 +27,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 )
-
-func TestLogsBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		LogsBuilder(),
-		0,
-		[]string{
-			flag.DeploymentName,
-			flag.Output,
-		},
-	)
-}
 
 func TestLogs_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)

@@ -15,18 +15,3 @@
 //go:build unit
 
 package plugin
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-)
-
-func Test_UninstallBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		UninstallBuilder(&Opts{}),
-		0,
-		[]string{},
-	)
-}

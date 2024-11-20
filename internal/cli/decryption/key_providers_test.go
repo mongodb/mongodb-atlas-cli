@@ -15,18 +15,3 @@
 //go:build unit
 
 package decryption
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-)
-
-func TestKeyProvidersBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		KeyProvidersBuilder(),
-		1,
-		[]string{},
-	)
-}

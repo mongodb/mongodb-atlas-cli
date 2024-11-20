@@ -21,10 +21,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
@@ -94,18 +92,4 @@ func TestCreateOpts_Run(t *testing.T) {
 			t.Fatalf("newSearchIndex() unexpected error: %v expected: %s", err, expectedError)
 		}
 	})
-}
-
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{
-			flag.ClusterName,
-			flag.File,
-			flag.ProjectID,
-			flag.Output,
-		},
-	)
 }

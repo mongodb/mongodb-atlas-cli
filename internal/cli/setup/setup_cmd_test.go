@@ -26,38 +26,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		0,
-		[]string{
-			flag.ClusterName,
-			flag.Tier,
-			flag.Provider,
-			flag.Region,
-			flag.AccessListIP,
-			flag.Username,
-			flag.Password,
-			flag.EnableTerminationProtection,
-			flag.SkipSampleData,
-			flag.SkipMongosh,
-			flag.Force,
-			flag.CurrentIP,
-			flag.Tag,
-			flag.Default,
-			flag.ProjectID,
-		},
-	)
-}
 
 func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)

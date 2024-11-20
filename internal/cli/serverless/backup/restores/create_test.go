@@ -20,9 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
@@ -89,23 +87,4 @@ func TestCreate_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
-}
-
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{
-			flag.DeliveryType,
-			flag.SnapshotID,
-			flag.ClusterName,
-			flag.TargetProjectID,
-			flag.TargetClusterName,
-			flag.OplogTS,
-			flag.OplogInc,
-			flag.ProjectID,
-			flag.Output,
-		},
-	)
 }

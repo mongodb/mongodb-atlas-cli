@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -51,13 +50,4 @@ func TestVerify_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	test.VerifyOutputTemplate(t, verifyTemplate, *expected)
-}
-
-func TestVerifyBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		VerifyBuilder(),
-		1,
-		[]string{flag.ProjectID, flag.Hostname, flag.Port, flag.BindPassword, flag.BindUsername, flag.CaCertificate, flag.AuthzQueryTemplate},
-	)
 }

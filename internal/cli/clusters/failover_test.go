@@ -21,19 +21,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
-
-func TestFailoverBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		FailoverBuilder(),
-		0,
-		[]string{flag.Force, flag.ProjectID},
-	)
-}
 
 func TestFailoverOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)

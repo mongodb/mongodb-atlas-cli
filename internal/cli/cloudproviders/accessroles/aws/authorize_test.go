@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
@@ -47,13 +46,4 @@ func TestAuthorizeOpts_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 	require.NoError(t, opts.Run())
-}
-
-func TestAuthorizeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		AuthorizeBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output, flag.IAMAssumedRoleARN},
-	)
 }

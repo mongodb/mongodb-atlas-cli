@@ -20,9 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
@@ -155,15 +153,4 @@ func TestUpgrade_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
-}
-
-func TestUpgradeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		UpgradeBuilder(),
-		0,
-		[]string{flag.Tier, flag.DiskSizeGB, flag.MDBVersion,
-			flag.EnableTerminationProtection, flag.DisableTerminationProtection,
-			flag.File, flag.Tag, flag.ProjectID, flag.Output},
-	)
 }

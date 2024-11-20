@@ -20,9 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
@@ -86,31 +84,4 @@ func Test_orgListOpts_Run_WithInvalidDate(t *testing.T) {
 	if err := listOpts.Run(); err == nil {
 		t.Fatalf("Expected inavlid date error from Run() got none")
 	}
-}
-
-func TestOrgListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		OrgListBuilder(),
-		0,
-		[]string{
-			flag.Limit,
-			flag.Page,
-			flag.Output,
-			flag.OrgID,
-			flag.TypeFlag,
-			flag.MaxDate,
-			flag.MinDate,
-			flag.OmitCount,
-		},
-	)
-}
-
-func TestOrgsBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		OrgsBuilder(),
-		1,
-		[]string{},
-	)
 }

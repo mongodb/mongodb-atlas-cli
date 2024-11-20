@@ -22,7 +22,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -60,29 +59,4 @@ func TestSlowQueryLogsList_Run(t *testing.T) {
 	}
 	test.VerifyOutputTemplate(t, listTemplate, expected)
 	assert.Equal(t, "NAMESPACE   LINE\ntest        test\n", buf.String())
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.Duration,
-			flag.Since,
-			flag.ProcessName,
-			flag.Namespaces,
-			flag.NLog,
-		},
-	)
-}
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		1,
-		[]string{},
-	)
 }

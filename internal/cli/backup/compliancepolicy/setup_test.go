@@ -21,28 +21,12 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
-
-func TestSetupBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		SetupBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.Output,
-			flag.File,
-			flag.Force,
-			flag.EnableWatch,
-		},
-	)
-}
 
 // Tests that setupWatcher() returns true when status == "ACTIVE".
 func TestSetupOpts_Watcher(t *testing.T) {

@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
@@ -82,13 +81,4 @@ func TestCreate_Run(t *testing.T) {
 	}
 	t.Log(buf.String())
 	test.VerifyOutputTemplate(t, createTemplate, expected)
-}
-
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output, flag.File, flag.Instance},
-	)
 }

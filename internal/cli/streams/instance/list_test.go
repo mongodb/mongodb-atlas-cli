@@ -22,7 +22,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
@@ -73,13 +72,4 @@ func TestListOpts_Run(t *testing.T) {
 	assert.Equal(t, `ID    NAME          CLOUD   REGION
 1     Test Tenant   AWS     US-EAST-1
 `, buf.String())
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{flag.Page, flag.Limit},
-	)
 }

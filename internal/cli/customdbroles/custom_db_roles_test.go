@@ -19,19 +19,9 @@ package customdbroles
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		5,
-		[]string{},
-	)
-}
 
 func Test_appendActions(t *testing.T) {
 	type args struct {

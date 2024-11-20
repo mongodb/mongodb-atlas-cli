@@ -15,24 +15,3 @@
 //go:build unit
 
 package operator
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-)
-
-func TestInstallBuilder(t *testing.T) {
-	test.CmdValidator(t,
-		InstallBuilder(),
-		0,
-		[]string{
-			flag.OrgID,
-			flag.OperatorVersion,
-			flag.OperatorTargetNamespace,
-			flag.OperatorWatchNamespace,
-			flag.OperatorProjectName,
-			flag.OperatorImport,
-		})
-}

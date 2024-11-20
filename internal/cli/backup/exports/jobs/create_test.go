@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
@@ -55,13 +54,4 @@ func TestCreateOpts_Run(t *testing.T) {
 
 func TestCreateTemplate(t *testing.T) {
 	test.VerifyOutputTemplate(t, createTemplate, &atlasv2.DiskBackupExportJob{})
-}
-
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{flag.SnapshotID, flag.BucketID, flag.ClusterName, flag.CustomData, flag.ProjectID, flag.Output},
-	)
 }

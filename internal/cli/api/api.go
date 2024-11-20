@@ -78,6 +78,13 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 		Use:   commandName,
 		Short: shortDescription,
 		Long:  longDescription,
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
+			flag := cmd.Flag("groupId")
+			if flag != nil {
+				println("flag: %#v\n", flag)
+			}
+			return nil
+		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			// TODO: wire up CLI and execution framework
 			// These lines are just here for testing purposes (only works for commands which don't need flags like `atlas api cluster listClusters`)

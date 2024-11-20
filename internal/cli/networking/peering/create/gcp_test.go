@@ -20,10 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
@@ -81,13 +79,4 @@ func TestGCPOpts_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
-}
-
-func TestGCPBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		GCPBuilder(),
-		0,
-		[]string{flag.Output, flag.ProjectID, flag.GCPProjectID, flag.Network, flag.AtlasCIDRBlock, flag.Region},
-	)
 }

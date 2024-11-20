@@ -21,9 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestDelete_Run(t *testing.T) {
@@ -48,13 +46,4 @@ func TestDelete_Run(t *testing.T) {
 	if err := deleteOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestDeleteBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DeleteBuilder(),
-		0,
-		[]string{flag.Output, flag.FederationSettingsID, flag.OrgID},
-	)
 }

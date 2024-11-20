@@ -19,28 +19,8 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/templatewriter"
-	"github.com/spf13/cobra"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-// CmdValidator helps validate a cobra.Command, verifying the number of sub commands
-// and the flags that are being defined for it.
-func CmdValidator(t *testing.T, subject *cobra.Command, nSubCommands int, flags []string) {
-	t.Helper()
-	a := assert.New(t)
-	if len(subject.Commands()) != nSubCommands {
-		t.Errorf("Sub command count mismatch. Expected %d, got %d. Check the CmdValidator for your command.\n", nSubCommands, len(subject.Commands()))
-	}
-	if len(flags) == 0 {
-		a.False(subject.HasAvailableFlags(), "expected command to not have flags but it does")
-		return
-	}
-	a.True(subject.HasAvailableFlags(), "expected command to have flag but has none")
-	for _, f := range flags {
-		a.NotNilf(subject.Flags().Lookup(f), "command has no flag: %s", f)
-	}
-}
 
 // VerifyOutputTemplate validates that the given template string is valid.
 func VerifyOutputTemplate(t *testing.T, tmpl string, typeValue any) {

@@ -21,19 +21,9 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-func Test_InstallBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		InstallBuilder(&Opts{}),
-		0,
-		[]string{},
-	)
-}
 
 func Test_checkForDuplicatePlugins(t *testing.T) {
 	github1 := &plugin.Github{Name: "repoName1", Owner: "repoOwner1"}

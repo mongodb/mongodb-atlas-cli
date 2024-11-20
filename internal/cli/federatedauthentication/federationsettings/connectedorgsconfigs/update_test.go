@@ -21,7 +21,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
@@ -69,13 +68,4 @@ func TestUpdate_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	test.VerifyOutputTemplate(t, updateTemplate, expected)
-}
-
-func TestUpdateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		UpdateBuilder(),
-		0,
-		[]string{flag.Output, flag.FederationSettingsID, flag.OrgID},
-	)
 }

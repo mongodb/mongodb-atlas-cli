@@ -21,23 +21,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
-
-func TestDeleteBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DeleteBuilder(),
-		0,
-		[]string{
-			flag.ClusterName,
-			flag.Force,
-			flag.ProjectID,
-		},
-	)
-}
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)

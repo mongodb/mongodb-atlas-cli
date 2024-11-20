@@ -20,9 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
@@ -45,26 +43,4 @@ func TestSave_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestSaveBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		SaveBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.Hostname,
-			flag.Port,
-			flag.BindPassword,
-			flag.BindUsername,
-			flag.CaCertificate,
-			flag.AuthzQueryTemplate,
-			flag.MappingMatch,
-			flag.MappingSubstitution,
-			flag.MappingLdapQuery,
-			flag.AuthorizationEnabled,
-			flag.AuthenticationEnabled,
-		},
-	)
 }

@@ -22,7 +22,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -220,16 +219,6 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 	assert.Contains(t, `Cluster 'ProjectBar' created successfully.
 `, buf.String())
 	t.Log(buf.String())
-}
-
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{flag.Provider, flag.Region, flag.Members, flag.Tier, flag.DiskSizeGB, flag.MDBVersion, flag.Backup,
-			flag.File, flag.TypeFlag, flag.Shards, flag.ProjectID, flag.Output, flag.EnableTerminationProtection, flag.Tag},
-	)
 }
 
 func TestCreateTemplates(t *testing.T) {

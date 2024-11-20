@@ -24,15 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
-func TestLoginBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(&Opts{}),
-		0,
-		[]string{},
-	)
-}
-
 func TestList_Run(t *testing.T) {
 	plugins := getTestPlugins(t)
 

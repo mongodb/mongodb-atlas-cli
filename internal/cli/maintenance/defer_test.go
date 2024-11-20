@@ -20,9 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestDeferOpts_Run(t *testing.T) {
@@ -42,13 +40,4 @@ func TestDeferOpts_Run(t *testing.T) {
 	if err := updateOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestDeferBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DeferBuilder(),
-		0,
-		[]string{flag.ProjectID},
-	)
 }

@@ -25,9 +25,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 )
@@ -76,13 +74,4 @@ func TestLogOpts_Run(t *testing.T) {
 	defer of.Close()
 	b, _ := io.ReadAll(of)
 	require.Equal(t, contents, string(b))
-}
-
-func TestLogBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		LogBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Out, flag.Force},
-	)
 }

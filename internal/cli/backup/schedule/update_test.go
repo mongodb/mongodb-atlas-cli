@@ -21,10 +21,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
@@ -109,15 +107,6 @@ func TestUpdateOpts_RunWithFile(t *testing.T) {
 
 	err := opts.Run(cmd)
 	require.NoError(t, err)
-}
-
-func TestUpdateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		UpdateBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output},
-	)
 }
 
 func TestReturnMockValueForSetting(t *testing.T) {

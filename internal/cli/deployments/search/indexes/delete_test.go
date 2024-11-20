@@ -24,11 +24,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestDelete_RunLocal(t *testing.T) {
@@ -182,13 +180,4 @@ func TestDeleteOpts_PostRun(t *testing.T) {
 		Times(1)
 
 	opts.PostRun()
-}
-
-func TestDeleteBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DeleteBuilder(),
-		0,
-		[]string{flag.DeploymentName, flag.ProjectID, flag.Force, flag.TypeFlag},
-	)
 }

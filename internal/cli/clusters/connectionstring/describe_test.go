@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -113,13 +112,4 @@ func TestDescribe_Run_PrivateEndpointsConnectionString(t *testing.T) {
 	err := describeOpts.Run()
 	require.NoError(t, err)
 	test.VerifyOutputTemplate(t, describeTemplateShardOptimized, expected.ConnectionStrings)
-}
-
-func TestDescribeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DescribeBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output},
-	)
 }

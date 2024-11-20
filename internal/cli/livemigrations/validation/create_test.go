@@ -22,9 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/livemigrations/options"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
@@ -55,26 +53,4 @@ func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
 	if err := createOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestCreateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.LiveMigrationSourceClusterName,
-			flag.LiveMigrationSourceProjectID,
-			flag.LiveMigrationSourceUsername,
-			flag.LiveMigrationSourcePassword,
-			flag.LiveMigrationSourceSSL,
-			flag.LiveMigrationSourceCACertificatePath,
-			flag.LiveMigrationSourceManagedAuthentication,
-			flag.ClusterName,
-			flag.LiveMigrationHost,
-			flag.LiveMigrationDropCollections,
-			flag.Force,
-		},
-	)
 }

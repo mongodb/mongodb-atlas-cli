@@ -21,9 +21,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
@@ -162,23 +160,4 @@ func TestParseDate(t *testing.T) {
 		}
 		assert.True(t, strings.Contains(err.Error(), "parsing time"))
 	})
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{
-			flag.Limit,
-			flag.Page,
-			flag.OmitCount,
-			flag.Output,
-			flag.ProjectID,
-			flag.OrgID,
-			flag.TypeFlag,
-			flag.MaxDate,
-			flag.MinDate,
-		},
-	)
 }

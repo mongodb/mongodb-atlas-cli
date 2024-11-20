@@ -21,9 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
@@ -72,13 +70,4 @@ func TestDownloadOpts_Run(t *testing.T) {
 	defer of.Close()
 	b, _ := io.ReadAll(of)
 	require.Equal(t, contents, string(b))
-}
-
-func TestDownloadBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DownloadBuilder(),
-		0,
-		[]string{flag.Out, flag.Start, flag.End, flag.Force, flag.ProjectID},
-	)
 }

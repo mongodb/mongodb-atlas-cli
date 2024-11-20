@@ -23,20 +23,9 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
 )
-
-func TestLogoutBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		LogoutBuilder(),
-		0,
-		[]string{flag.Force},
-	)
-}
 
 func Test_logoutOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)

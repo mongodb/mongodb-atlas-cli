@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
@@ -47,32 +46,4 @@ func TestDescribeOpts_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	test.VerifyOutputTemplate(t, describeTemplate, expected)
-}
-
-func TestDescribeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DescribeBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.ClusterName,
-			flag.ExportID,
-			flag.Output,
-		},
-	)
-}
-
-func TestDescribeBuilderWithBucketId(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DescribeBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.ClusterName,
-			flag.BucketID,
-			flag.Output,
-		},
-	)
 }

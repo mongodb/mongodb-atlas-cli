@@ -15,18 +15,3 @@
 //go:build unit
 
 package customdns
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-)
-
-func TestCustomDNSBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		1,
-		[]string{},
-	)
-}

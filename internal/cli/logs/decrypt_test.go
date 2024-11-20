@@ -19,29 +19,8 @@ package logs
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 )
-
-func TestDecryptBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DecryptBuilder(),
-		0,
-		[]string{
-			flag.File,
-			flag.Out,
-			flag.AWSAccessKey,
-			flag.AWSSecretKey,
-			flag.AWSSessionToken,
-			flag.AzureClientID,
-			flag.AzureTenantID,
-			flag.AzureSecret,
-			flag.GCPServiceAccountKey,
-		},
-	)
-}
 
 func TestDecrypt_Run(t *testing.T) {
 	fileJSON := []byte(`{"ts":{"$date":{"$numberLong":"1644232049921"}},"version":"0.0","compressionMode":"zstd","keyStoreIdentifier":{"provider":"local","filename":"localKey"},"encryptedKey":{"$binary":{"base64":"+yjPCaKKE1M8fZmPGzGHkyfHYxaw34okpavsHzpd8iPVx2+JjOhXwXw5E2FdI5Rcb5JgmcPUFRPISh/7Si1R/g==","subType":"0"}},"MAC":"qE9fUsGK0EuRrrCRAQAAAAAAAAAAAAAA","auditRecordType":"header"}

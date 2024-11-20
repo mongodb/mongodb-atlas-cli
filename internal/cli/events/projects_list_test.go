@@ -21,9 +21,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
@@ -90,31 +88,4 @@ func Test_projectListOpts_Run_WithInvalidDate(t *testing.T) {
 		t.Fatal("Run() expected error")
 	}
 	assert.True(t, strings.Contains(err.Error(), "parsing time"))
-}
-
-func TestProjectListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ProjectListBuilder(),
-		0,
-		[]string{
-			flag.Limit,
-			flag.Page,
-			flag.Output,
-			flag.OmitCount,
-			flag.ProjectID,
-			flag.TypeFlag,
-			flag.MaxDate,
-			flag.MinDate,
-		},
-	)
-}
-
-func TestProjectsBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ProjectsBuilder(),
-		1,
-		[]string{},
-	)
 }

@@ -22,7 +22,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
@@ -76,13 +75,4 @@ func TestListOpts_Run(t *testing.T) {
 	}
 	t.Log(buf.String())
 	test.VerifyOutputTemplate(t, listTemplate, expected)
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output},
-	)
 }

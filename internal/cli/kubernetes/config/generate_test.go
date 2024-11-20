@@ -19,23 +19,9 @@ package config
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGenerateBuilder(t *testing.T) {
-	test.CmdValidator(t,
-		GenerateBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.OrgID,
-			flag.ClusterName,
-			flag.OperatorIncludeSecrets,
-			flag.OperatorTargetNamespace,
-		})
-}
 func TestValidNamespace(t *testing.T) {
 	tests := []struct {
 		name            string

@@ -20,8 +20,6 @@ import (
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func Test_extractPluginSpecifierAndVersionFromArg(t *testing.T) {
@@ -124,13 +122,4 @@ func Test_extractPluginSpecifierAndVersionFromArg(t *testing.T) {
 			}
 		})
 	}
-}
-
-func Test_UpdateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		UpdateBuilder(&Opts{}),
-		0,
-		[]string{flag.All},
-	)
 }

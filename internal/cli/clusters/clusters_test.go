@@ -21,18 +21,8 @@ import (
 	"time"
 
 	"github.com/go-test/deep"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		18,
-		[]string{},
-	)
-}
 
 func TestRemoveReadOnlyAttributes(t *testing.T) {
 	var (

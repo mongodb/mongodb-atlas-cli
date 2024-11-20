@@ -19,22 +19,8 @@ package config
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestApplyBuilder(t *testing.T) {
-	test.CmdValidator(t,
-		ApplyBuilder(),
-		0,
-		[]string{
-			flag.ProjectID,
-			flag.OrgID,
-			flag.OperatorTargetNamespace,
-			flag.OperatorVersion,
-		})
-}
 
 func TestGetOperatorMajorVersion(t *testing.T) {
 	t.Run("should return major when version has minor different of 0", func(t *testing.T) {

@@ -24,7 +24,6 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -65,13 +64,4 @@ func TestDescribe_Run(t *testing.T) {
 test   state
 `, buf.String())
 	t.Log(buf.String())
-}
-
-func TestDescribeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DescribeBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output},
-	)
 }

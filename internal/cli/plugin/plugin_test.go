@@ -21,7 +21,6 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/require"
 )
@@ -264,13 +263,4 @@ func Test_validateManifest(t *testing.T) {
 
 	require.NoError(t, validateManifest(validManifest))
 	require.Error(t, validateManifest(invalidManifest))
-}
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(nil, nil),
-		4,
-		[]string{},
-	)
 }

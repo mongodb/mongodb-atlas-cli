@@ -33,12 +33,16 @@ const (
 	expectContinueTimeout = 1 * time.Second
 )
 
+var defaultTransport = newTransport(timeout)
+
 func Default() *http.Transport {
-	return newTransport(timeout)
+	return defaultTransport
 }
 
+var telemetryTransport = newTransport(telemetryTimeout)
+
 func Telemetry() *http.Transport {
-	return newTransport(telemetryTimeout)
+	return telemetryTransport
 }
 
 func newTransport(timeout time.Duration) *http.Transport {

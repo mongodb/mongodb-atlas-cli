@@ -92,7 +92,7 @@ func validateOpsGenie(opts *ConfigOpts) error {
 
 func validatePagerDuty(opts *ConfigOpts) error {
 	if opts.notificationServiceKey == "" || opts.notificationRegion == "" {
-  	return fmt.Errorf("--%s and --%s are required when --%s is PAGER_DUTY", flag.NotificationServiceKey, flag.NotificationRegion, flag.NotificationType)
+		return fmt.Errorf("--%s and --%s are required when --%s is PAGER_DUTY", flag.NotificationServiceKey, flag.NotificationRegion, flag.NotificationType)
 	}
 	return nil
 }

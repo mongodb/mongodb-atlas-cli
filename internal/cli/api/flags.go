@@ -80,3 +80,7 @@ func flagDescription(description string) string {
 	shortDescription = strings.TrimSuffix(shortDescription, ".")
 	return shortDescription
 }
+
+type FlagValueProvider interface {
+	ValueForFlag(flagName string) (*string, error)
+}

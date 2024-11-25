@@ -53,6 +53,18 @@ const (
 	defaultRegionGCP    = "US_EAST_4"
 	defaultRegionAzure  = "US_EAST_2"
 	defaultRegionGov    = "US_GOV_EAST_1"
+	defaultSettings     = "default"
+	customSettings      = "custom"
+	cancelSettings      = "cancel"
+)
+
+var (
+	settingOptions      = []string{defaultSettings, customSettings, cancelSettings}
+	settingsDescription = map[string]string{
+		defaultSettings: "With default settings",
+		customSettings:  "With custom settings",
+		cancelSettings:  "Cancel setup",
+	}
 )
 
 var errNeedsProject = errors.New("ensure you select or add a project to the profile")
@@ -127,6 +139,7 @@ type Opts struct {
 	EnableTerminationProtection bool
 	flags                       *pflag.FlagSet
 	flagSet                     map[string]struct{}
+	settings                    string
 
 	// control
 	skipRegister bool
@@ -439,11 +452,18 @@ func (opts *Opts) setupCluster() error {
 		return dErr
 	}
 
-	if err := opts.askConfirmDefaultQuestion(values); err != nil || !opts.Confirm {
+	if err := opts.askConfirmDefaultQuestion(values); err != nil {
+		if errors.Is(err, errCancel) {
+			_, _ = fmt.Println(err.Error())
+			return nil
+		}
+		return err
+	}
+
+	if !opts.Confirm {
 		fmt.Print(setupTemplateIntro)
 
-		err = opts.interactiveSetup()
-		if err != nil {
+		if err := opts.interactiveSetup(); err != nil {
 			return err
 		}
 	} else {

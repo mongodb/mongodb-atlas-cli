@@ -601,7 +601,6 @@ func (opts *Opts) SetupAtlasFlags(cmd *cobra.Command) {
 func (opts *Opts) SetupFlowFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
-	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWithAtlasSetup)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.ForceQuickstart)
 	_ = cmd.Flags().MarkDeprecated(flag.SkipMongosh, "Use --connectWith instead")
 	cmd.MarkFlagsMutuallyExclusive(flag.SkipMongosh, flag.ConnectWith)
@@ -669,6 +668,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.register.IsGov, "gov", false, "Register with Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.register.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	// Setup related
+	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWithAtlasSetup)
 	opts.SetupAtlasFlags(cmd)
 	opts.SetupFlowFlags(cmd)
 

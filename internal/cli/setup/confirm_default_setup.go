@@ -19,8 +19,26 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
+
+var errCancel = errors.New("user-aborted. Not creating cluster")
+
+func (opts *Opts) promptSettings() error {
+	opts.settings = defaultSettings
+
+	p := &survey.Select{
+		Message: "How do you want to set up your Atlas cluster?",
+		Options: settingOptions,
+		Default: opts.settings,
+		Description: func(value string, _ int) string {
+			return settingsDescription[value]
+		},
+	}
+
+	return telemetry.TrackAskOne(p, &opts.settings, nil)
+}
 
 func (opts *Opts) askConfirmDefaultQuestion(values *clusterSettings) error {
 	if opts.Confirm {
@@ -47,6 +65,7 @@ Cluster Name:				%s%s
 Cloud Provider and Region:		%s - %s
 Database User Username:			%s%s
 Allow connections from (IP Address):	%s
+
 `,
 		values.ClusterName,
 		clusterTier,
@@ -57,13 +76,15 @@ Allow connections from (IP Address):	%s
 		strings.Join(values.IPAddresses, ", "),
 	)
 
-	q := newClusterDefaultConfirm(opts.Tier)
-	if err := telemetry.TrackAskOne(q, &opts.Confirm); err != nil {
+	if err := opts.promptSettings(); err != nil {
 		return err
 	}
 
-	if !opts.Confirm {
-		return errors.New("user-aborted. Not creating cluster")
+	if opts.settings == cancelSettings {
+		return errCancel
 	}
+
+	opts.Confirm = opts.settings == defaultSettings // acts same as --force
+
 	return nil
 }

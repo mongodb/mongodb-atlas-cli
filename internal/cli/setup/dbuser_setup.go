@@ -15,24 +15,20 @@
 package setup
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/randgen"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
-func (opts *Opts) createDatabaseUser() error {
-	if _, err := opts.store.CreateDatabaseUser(opts.newDatabaseUser()); err != nil {
-		return err
-	}
-
-	return nil
+func (opts *Opts) createDatabaseUser(ctx context.Context) error {
+	return opts.RunCommand(ctx, "dbuser", "create", "--role", atlasAdmin, "--username", opts.DBUsername, "--password", opts.DBUserPassword, "--projectId", opts.ConfigProjectID())
 }
 
 func (opts *Opts) askDBUserOptions() error {
@@ -89,20 +85,6 @@ func (opts *Opts) validateUniqueUsername(val any) error {
 		return err
 	}
 	return fmt.Errorf("a user with this username %s already exists", username)
-}
-
-func (opts *Opts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
-	var none = "NONE"
-	return &atlasv2.CloudDatabaseUser{
-		Roles:        pointer.Get(convert.BuildAtlasRoles([]string{atlasAdmin})),
-		GroupId:      opts.ConfigProjectID(),
-		Password:     &opts.DBUserPassword,
-		X509Type:     &none,
-		AwsIAMType:   &none,
-		LdapAuthType: &none,
-		DatabaseName: convert.AdminDB,
-		Username:     opts.DBUsername,
-	}
 }
 
 func generatePassword() (string, error) {

@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -26,18 +25,15 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongosh"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/sighandle"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -105,9 +101,10 @@ type ProfileReader interface {
 type Opts struct {
 	cli.GlobalOpts
 	cli.WatchOpts
-	register                    auth.RegisterOpts
-	config                      ProfileReader
+	cli.CompositeOpts
 	store                       store.AtlasClusterQuickStarter
+	gov                         bool
+	noBrowser                   bool
 	defaultName                 string
 	ClusterName                 string
 	Provider                    string
@@ -264,12 +261,12 @@ Loading sample data into your cluster... [It's safe to 'Ctrl + C']
 	return err
 }
 
-func (opts *Opts) createResources() error {
-	if err := opts.createDatabaseUser(); err != nil {
+func (opts *Opts) createResources(ctx context.Context) error {
+	if err := opts.createDatabaseUser(ctx); err != nil {
 		return err
 	}
 
-	if err := opts.createAccessList(); err != nil {
+	if err := opts.createAccessList(ctx); err != nil {
 		return err
 	}
 
@@ -384,7 +381,11 @@ This command will help you:
 1. Create and verify your MongoDB Atlas account in your browser.
 2. Return to the terminal to create your first free MongoDB database in Atlas.
 `)
-		if err := opts.register.RegisterRun(ctx); err != nil {
+		args := []string{"auth", "register"}
+		if opts.noBrowser {
+			args = append(args, "--nobrowser")
+		}
+		if err := opts.RunCommand(ctx, args...); err != nil {
 			return err
 		}
 	} else if !opts.skipLogin {
@@ -392,35 +393,27 @@ This command will help you:
 1. Log in and verify your MongoDB Atlas account in your browser.
 2. Return to the terminal to create your first free MongoDB database in Atlas.
 `)
-
-		if err := opts.register.LoginRun(ctx); err != nil {
+		args := []string{"auth", "login"}
+		if opts.noBrowser {
+			args = append(args, "--nobrowser")
+		}
+		if opts.gov {
+			args = append(args, "--gov")
+		}
+		if err := opts.RunCommand(ctx, args...); err != nil {
 			return err
 		}
 	}
 
-	if err := opts.clusterPreRun(ctx, opts.OutWriter); err != nil {
-		return err
-	}
+	opts.setTier()
 
-	if opts.config.ProjectID() == "" {
+	if opts.ConfigProjectID() == "" {
 		return fmt.Errorf("%w: %s", errNeedsProject, config.Default().Name())
 	}
-	return opts.setupCluster()
+	return opts.setupCluster(ctx)
 }
 
-func (opts *Opts) clusterPreRun(ctx context.Context, outWriter io.Writer) error {
-	opts.setTier()
-	defaultProfile := config.Default()
-
-	return opts.PreRunE(
-		opts.initStore(ctx),
-		opts.register.SyncWithOAuthAccessProfile(defaultProfile),
-		opts.register.InitFlow(defaultProfile),
-		opts.InitOutput(outWriter, ""),
-	)
-}
-
-func (opts *Opts) setupCluster() error {
+func (opts *Opts) setupCluster(ctx context.Context) error {
 	const base10 = 10
 	opts.defaultName = "Cluster" + strconv.FormatInt(time.Now().Unix(), base10)[5:]
 	opts.providerAndRegionToConstant()
@@ -451,7 +444,7 @@ func (opts *Opts) setupCluster() error {
 	}
 
 	// Create db user, access list and cluster
-	if err := opts.createResources(); err != nil {
+	if err := opts.createResources(ctx); err != nil {
 		return err
 	}
 
@@ -497,60 +490,31 @@ func (opts *Opts) setupCluster() error {
 }
 
 func (opts *Opts) PreRun(ctx context.Context) error {
-	opts.skipRegister = true
-	opts.skipLogin = true
+	if config.PrivateAPIKey() != "" && config.PublicAPIKey() != "" { // logged in with keys
+		opts.skipRegister = true
+		opts.skipLogin = true
+		return nil
+	}
 
-	if err := validate.NoAPIKeys(); err != nil {
-		// Why are we ignoring the error?
-		// Because if the user has API keys, we just want to proceed with the flow
-		// Then why not remove the error?
-		// The error is useful in other components that call `validate.NoAPIKeys()`
-		return nil
+	if config.AccessToken() != "" { // logged in with access token
+		opts.skipRegister = true
+		opts.skipLogin = true
+
+		if err := opts.RunCommand(ctx, "auth", "whoami"); err != nil { // error refreshing token
+			opts.skipLogin = false
+		}
 	}
-	if err := opts.register.RefreshAccessToken(ctx); err != nil && errors.Is(err, cli.ErrInvalidRefreshToken) {
-		opts.skipLogin = false
-		return nil
-	}
-	if _, err := auth.AccountWithAccessToken(); err == nil {
-		return nil
-	}
+
+	// no login found should register
 	opts.skipRegister = false
+	opts.skipLogin = true
 	return nil
-}
-
-func (opts *Opts) initStore(ctx context.Context) func() error {
-	return func() error {
-		var err error
-		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
-		return err
-	}
 }
 
 func (opts *Opts) setTier() {
 	if config.CloudGovService == config.Service() && opts.Tier == DefaultAtlasTier {
 		opts.Tier = defaultAtlasGovTier
 	}
-}
-
-func (opts *Opts) SetupAtlasFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVar(&opts.Tier, flag.Tier, DefaultAtlasTier, usage.Tier)
-	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
-	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
-	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)
-	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
-	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
-	cmd.Flags().BoolVar(&opts.EnableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
-	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
-	cmd.Flags().StringToStringVar(&opts.Tag, flag.Tag, nil, usage.Tag)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.MarkFlagsMutuallyExclusive(flag.CurrentIP, flag.AccessListIP)
-}
-
-func (opts *Opts) SetupFlowFlags(cmd *cobra.Command) {
-	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
-	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
-	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.ForceQuickstart)
 }
 
 // Builder
@@ -575,48 +539,38 @@ func Builder() *cobra.Command {
 		Hidden: false,
 		Args:   require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			defaultProfile := config.Default()
-			opts.config = defaultProfile
-			opts.OutWriter = cmd.OutOrStdout()
-			opts.register.OutWriter = opts.OutWriter
+			opts.InitComposite(cmd)
 
-			if err := opts.register.SyncWithOAuthAccessProfile(defaultProfile)(); err != nil {
-				return err
-			}
-			if err := opts.register.InitFlow(defaultProfile)(); err != nil {
-				return err
-			}
 			if err := opts.PreRun(cmd.Context()); err != nil {
 				return nil
 			}
-			var preRun []prerun.CmdOpt
-			// registration pre run if applicable
-			if !opts.skipRegister {
-				preRun = append(preRun,
-					opts.register.LoginPreRun(cmd.Context()),
-					validate.NoAPIKeys,
-					validate.NoAccessToken,
-				)
-			}
-
-			if !opts.skipLogin && opts.skipRegister {
-				preRun = append(preRun, opts.register.LoginPreRun(cmd.Context()))
-			}
-
-			return opts.PreRunE(preRun...)
+			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
-			opts.flags = cmd.Flags()
 			return opts.Run(cmd.Context())
 		},
 	}
 
 	// Register and login related
-	cmd.Flags().BoolVar(&opts.register.IsGov, "gov", false, "Register with Atlas for Government.")
-	cmd.Flags().BoolVar(&opts.register.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
+	cmd.Flags().BoolVar(&opts.gov, "gov", false, "Register with Atlas for Government.")
+	cmd.Flags().BoolVar(&opts.noBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	// Setup related
-	opts.SetupAtlasFlags(cmd)
-	opts.SetupFlowFlags(cmd)
+	cmd.Flags().StringVar(&opts.Tier, flag.Tier, DefaultAtlasTier, usage.Tier)
+	cmd.Flags().StringVar(&opts.Provider, flag.Provider, "", usage.Provider)
+	cmd.Flags().StringVarP(&opts.Region, flag.Region, flag.RegionShort, "", usage.Region)
+	cmd.Flags().StringSliceVar(&opts.IPAddresses, flag.AccessListIP, []string{}, usage.NetworkAccessListIPEntry)
+	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().BoolVar(&opts.EnableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
+	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
+	cmd.Flags().StringToStringVar(&opts.Tag, flag.Tag, nil, usage.Tag)
+	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+
+	cmd.MarkFlagsMutuallyExclusive(flag.CurrentIP, flag.AccessListIP)
+
+	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
+	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
+	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.ForceQuickstart)
 
 	cmd.Flags().StringVar(&opts.ClusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().BoolVarP(&opts.DefaultValue, flag.Default, "Y", false, usage.QuickstartDefault)

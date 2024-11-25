@@ -15,23 +15,22 @@
 package setup
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
-func (opts *Opts) createAccessList() error {
-	entries := opts.newProjectIPAccessList()
-	if _, err := opts.store.CreateProjectIPAccessList(entries); err != nil {
-		return err
+func (opts *Opts) createAccessList(ctx context.Context) error {
+	for _, ipAddr := range opts.IPAddresses {
+		if err := opts.RunCommand(ctx, "accessList", "create", ipAddr, "--type", "ipAddress", "--comment", "IP added with atlas quickstart", "--projectId", opts.ConfigProjectID()); err != nil {
+			return err
+		}
 	}
-
 	return nil
 }
 
@@ -62,20 +61,4 @@ func (opts *Opts) askAccessListOptions() error {
 		opts.IPAddresses = ips
 	}
 	return err
-}
-
-func (opts *Opts) newProjectIPAccessList() []*atlasv2.NetworkPermissionEntry {
-	var accessListComment = "IP added with atlas quickstart"
-
-	accessListArray := make([]*atlasv2.NetworkPermissionEntry, len(opts.IPAddresses))
-	for i, addr := range opts.IPAddresses {
-		accessList := &atlasv2.NetworkPermissionEntry{
-			GroupId:   pointer.Get(opts.ConfigProjectID()),
-			Comment:   &accessListComment,
-			IpAddress: pointer.Get(addr),
-		}
-
-		accessListArray[i] = accessList
-	}
-	return accessListArray
 }

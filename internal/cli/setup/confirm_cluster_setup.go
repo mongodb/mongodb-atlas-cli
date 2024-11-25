@@ -16,62 +16,9 @@ package setup
 
 import (
 	"errors"
-	"fmt"
-	"strings"
-
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
 
 const loadSampleDataMsg = `
 Load sample data:			Yes`
 
 var ErrUserAborted = errors.New("user-aborted. Not creating cluster")
-
-func (opts *Opts) askConfirmConfigQuestion() error {
-	if opts.Confirm {
-		return nil
-	}
-
-	loadSampleData := ""
-	if !opts.SkipSampleData {
-		loadSampleData = loadSampleDataMsg
-	}
-
-	clusterTier := ""
-	if opts.Tier != DefaultAtlasTier {
-		diskSize := 0.5
-
-		if opts.newCluster().DiskSizeGB != nil {
-			diskSize = *opts.newCluster().DiskSizeGB
-		}
-
-		clusterTier = fmt.Sprintf(`
-Cluster Tier:				%s
-Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
-	}
-	fmt.Printf(`
-[Confirm cluster settings]
-Cluster Name:				%s%s
-Cloud Provider and Region:		%s - %s
-Database User Username:			%s%s
-Allow connections from (IP Address):	%s
-`,
-		opts.ClusterName,
-		clusterTier,
-		opts.Provider,
-		opts.Region,
-		opts.DBUsername,
-		loadSampleData,
-		strings.Join(opts.IPAddresses, ", "),
-	)
-
-	q := newClusterCreateConfirm()
-	if err := telemetry.TrackAskOne(q, &opts.Confirm); err != nil {
-		return err
-	}
-
-	if !opts.Confirm {
-		return ErrUserAborted
-	}
-	return nil
-}

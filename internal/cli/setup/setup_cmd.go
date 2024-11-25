@@ -406,11 +406,7 @@ This command will help you:
 		return fmt.Errorf("%w: %s", errNeedsProject, config.Default().Name())
 	}
 
-	if err := opts.setupCluster(); err != nil {
-		return err
-	}
-
-	return opts.runConnectWith()
+	return opts.setupCluster()
 }
 
 func (opts *Opts) clusterPreRun(ctx context.Context, outWriter io.Writer) error {
@@ -496,7 +492,11 @@ func (opts *Opts) setupCluster() error {
 
 	fmt.Printf("Your connection string: %v\n", opts.connectionString)
 
-	return opts.loadSampleData()
+	if err := opts.loadSampleData(); err != nil {
+		return err
+	}
+
+	return opts.runConnectWith()
 }
 
 func (opts *Opts) runConnectWith() error {

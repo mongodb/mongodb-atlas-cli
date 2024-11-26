@@ -79,7 +79,7 @@ jobs:
           echo "Coverage Report $trend" > comment.md
           echo "| Branch | Coverage |" >> comment.md
           echo "|--------|----------|" >> comment.md
-          echo "| ${{ github.event.pull_request.base.sha }} | ${target_coverage}% |" >> comment.md
+          echo "| ${{ github.event.pull_request.base.ref }} | ${target_coverage}% |" >> comment.md
           echo "| PR | ${pr_coverage}% |" >> comment.md
           echo "| Difference | ${diff}% |" >> comment.md      
       - name: Comment PR

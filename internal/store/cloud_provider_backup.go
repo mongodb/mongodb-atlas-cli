@@ -15,35 +15,47 @@
 package store
 
 import (
+	"fmt"
+
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportJobsDescriber,ExportJobsCreator,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber,ScheduleDescriber,ScheduleDescriberUpdater,ScheduleDeleter
+//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportJobsDescriber,ExportJobsCreator,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber,ScheduleDescriber,ScheduleDescriberUpdater,ScheduleDeleter,SnapshotsDownloader
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error)
+	RestoreFlexClusterJobs(args *atlasv2.ListFlexBackupRestoreJobsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)
 }
 
 type RestoreJobsDescriber interface {
 	RestoreJob(string, string, string) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
+	RestoreFlexClusterJob(string, string, string) (*atlasv2.FlexBackupRestoreJob20241113, error)
 }
 
 type RestoreJobsCreator interface {
 	CreateRestoreJobs(string, string, *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
+	CreateRestoreFlexClusterJobs(string, string, *atlasv2.FlexBackupRestoreJobCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error)
 }
 
 type SnapshotsLister interface {
 	Snapshots(string, string, *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error)
+	FlexClusterSnapshots(*atlasv2.ListFlexBackupsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113, error)
 }
 
 type SnapshotsDescriber interface {
 	Snapshot(string, string, string) (*atlasv2.DiskBackupReplicaSet, error)
+	FlexClusterSnapshot(string, string, string) (*atlasv2.FlexBackupSnapshot20241113, error)
 }
 
 type SnapshotsCreator interface {
 	CreateSnapshot(string, string, *atlasv2.DiskBackupOnDemandSnapshotRequest) (*atlasv2.DiskBackupSnapshot, error)
+}
+
+type SnapshotsDownloader interface {
+	DownloadFlexClusterSnapshot(string, string, *atlasv2.FlexBackupSnapshotDownloadCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error)
 }
 
 type SnapshotsDeleter interface {
@@ -101,6 +113,26 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 	return result, err
 }
 
+// RestoreFlexClusterJob encapsulates the logic to manage different cloud providers.
+func (s *Store) RestoreFlexClusterJob(projectID, clusterName, restoreJobID string) (*atlasv2.FlexBackupRestoreJob20241113, error) {
+	if s.service == config.CloudGovService {
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+
+	result, _, err := s.clientv2.FlexRestoreJobsApi.GetFlexBackupRestoreJob(s.ctx, projectID, clusterName, restoreJobID).Execute()
+	return result, err
+}
+
+// RestoreFlexClusterJobs encapsulates the logic to manage different cloud providers.
+func (s *Store) RestoreFlexClusterJobs(args *atlasv2.ListFlexBackupRestoreJobsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113, error) {
+	if s.service == config.CloudGovService {
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+
+	result, _, err := s.clientv2.FlexRestoreJobsApi.ListFlexBackupRestoreJobsWithParams(s.ctx, args).Execute()
+	return result, err
+}
+
 // RestoreJob encapsulates the logic to manage different cloud providers.
 func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskBackupSnapshotRestoreJob, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.GetBackupRestoreJob(s.ctx, projectID, clusterName, jobID).Execute()
@@ -110,6 +142,12 @@ func (s *Store) RestoreJob(projectID, clusterName, jobID string) (*atlasv2.DiskB
 // CreateRestoreJobs encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateRestoreJobs(projectID, clusterName string, request *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.CreateBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()
+	return result, err
+}
+
+// CreateRestoreFlexClusterJobs encapsulates the logic to manage different cloud providers.
+func (s *Store) CreateRestoreFlexClusterJobs(projectID, clusterName string, request *atlasv2.FlexBackupRestoreJobCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error) {
+	result, _, err := s.clientv2.FlexRestoreJobsApi.CreateFlexBackupRestoreJob(s.ctx, projectID, clusterName, request).Execute()
 	return result, err
 }
 
@@ -126,6 +164,36 @@ func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}
 	result, _, err := res.Execute()
+	return result, err
+}
+
+// FlexClusterSnapshots encapsulates the logic to manage different cloud providers.
+func (s *Store) FlexClusterSnapshots(opts *atlasv2.ListFlexBackupsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113, error) {
+	if s.service == config.CloudGovService {
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+
+	result, _, err := s.clientv2.FlexSnapshotsApi.ListFlexBackupsWithParams(s.ctx, opts).Execute()
+	return result, err
+}
+
+// DownloadFlexClusterSnapshots encapsulates the logic to manage different cloud providers.
+func (s *Store) DownloadFlexClusterSnapshots(groupID, name string, flexBackupSnapshotDownloadCreate20241113 *atlasv2.FlexBackupSnapshotDownloadCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error) {
+	if s.service == config.CloudGovService {
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+
+	result, _, err := s.clientv2.FlexSnapshotsApi.DownloadFlexBackup(s.ctx, name, groupID, flexBackupSnapshotDownloadCreate20241113).Execute()
+	return result, err
+}
+
+// FlexClusterSnapshot encapsulates the logic to manage different cloud providers.
+func (s *Store) FlexClusterSnapshot(groupID, name, snapshotID string) (*atlasv2.FlexBackupSnapshot20241113, error) {
+	if s.service == config.CloudGovService {
+		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+
+	result, _, err := s.clientv2.FlexSnapshotsApi.GetFlexBackup(s.ctx, groupID, name, snapshotID).Execute()
 	return result, err
 }
 

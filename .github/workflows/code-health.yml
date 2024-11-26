@@ -58,8 +58,12 @@ jobs:
       - name: Compare coverage with merge target
         if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest'
         run: |
+          # Get the merge-base
+          MERGE_BASE=$(git merge-base ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }})
+          echo "Checking coverage against: $MERGE_BASE"
+
           # Get coverage from target branch
-          git checkout ${{ github.event.pull_request.base.sha }}
+          git checkout $MERGE_BASE
           COVERAGE=coverage.target.out make unit-test
 
           # use go tool cover to calculate coverage percentage
@@ -79,7 +83,7 @@ jobs:
           echo "Coverage Report $trend" > comment.md
           echo "| Branch | Coverage |" >> comment.md
           echo "|--------|----------|" >> comment.md
-          echo "| ${{ github.event.pull_request.base.ref }} | ${target_coverage}% |" >> comment.md
+          echo "| $MERGE_BASE | ${target_coverage}% |" >> comment.md
           echo "| PR | ${pr_coverage}% |" >> comment.md
           echo "| Difference | ${diff}% |" >> comment.md      
       - name: Comment PR

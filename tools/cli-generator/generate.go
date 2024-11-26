@@ -198,7 +198,7 @@ func (cli *CLI) generateFile(file string, templateFile string, data any) (bool, 
 	err = cli.templates.ExecuteTemplate(f, templateFile, data)
 	if err != nil {
 		return false, err
-	}
+
 
 	err = cleanupFile(file)
 	if err != nil {

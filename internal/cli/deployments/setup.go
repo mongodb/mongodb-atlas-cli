@@ -513,7 +513,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		_, _ = fmt.Fprintln(os.Stderr, "connection skipped")
 	case options.CompassConnect:
 		if !compass.Detect() {
-			return options.ErrCompassNotInstalled
+			return compass.ErrCompassNotInstalled
 		}
 		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
 			return err
@@ -521,7 +521,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		return compass.Run("", "", cs)
 	case options.MongoshConnect:
 		if !mongosh.Detect() {
-			return options.ErrMongoshNotInstalled
+			return mongosh.ErrMongoshNotInstalled
 		}
 		return mongosh.Run("", "", cs)
 	}

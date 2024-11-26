@@ -15,15 +15,12 @@
 package setup
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
-
-var errCancel = errors.New("user-aborted. Not creating cluster")
 
 func (opts *Opts) promptSettings() error {
 	opts.settings = defaultSettings
@@ -76,15 +73,5 @@ Allow connections from (IP Address):	%s
 		strings.Join(values.IPAddresses, ", "),
 	)
 
-	if err := opts.promptSettings(); err != nil {
-		return err
-	}
-
-	if opts.settings == cancelSettings {
-		return errCancel
-	}
-
-	opts.Confirm = opts.settings == defaultSettings // acts same as --force
-
-	return nil
+	return opts.promptSettings()
 }

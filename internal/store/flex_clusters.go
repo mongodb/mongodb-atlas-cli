@@ -21,28 +21,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_flex_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store FlexClusterLister,FlexClusterDescriber,FlexClusterCreator,FlexClusterUpdater,FlexClusterUpgrader
-
-type FlexClusterLister interface {
-	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
-}
-
-type FlexClusterDescriber interface {
-	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
-}
-
-type FlexClusterCreator interface {
-	CreateCluster(string, *atlasv2.FlexClusterDescriptionCreate20241113) (*atlasv2.FlexClusterDescription20241113, error)
-}
-
-type FlexClusterUpdater interface {
-	CreateCluster(string, string, *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error)
-}
-
-type FlexClusterUpgrader interface {
-	UpgradeFlexCluster(string, *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error)
-}
-
 // ListFlexClusters encapsulate the logic to manage different cloud providers.
 func (s *Store) ListFlexClusters(opts *atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error) {
 	if s.service == config.CloudGovService {
@@ -91,4 +69,14 @@ func (s *Store) UpgradeFlexCluster(groupID string, flexClusterDescriptionUpdate2
 
 	result, _, err := s.clientv2.FlexClustersApi.UpgradeFlexCluster(s.ctx, groupID, flexClusterDescriptionUpdate20241113).Execute()
 	return result, err
+}
+
+// DeleteFlexCluster encapsulate the logic to manage different cloud providers.
+func (s *Store) DeleteFlexCluster(groupID, name string) error {
+	if s.service == config.CloudGovService {
+		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
+	}
+
+	_, _, err := s.clientv2.FlexClustersApi.DeleteFlexCluster(s.ctx, groupID, name).Execute()
+	return err
 }

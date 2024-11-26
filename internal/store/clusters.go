@@ -16,7 +16,7 @@ package store
 
 import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	"go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -24,10 +24,12 @@ import (
 
 type ClusterLister interface {
 	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
+	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
 }
 
 type ClusterDescriber interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type ClusterDescriberStarter interface {
@@ -49,14 +51,17 @@ type AtlasSharedClusterDescriber interface {
 
 type ClusterCreator interface {
 	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	CreateFlexCluster(string, *atlasv2.FlexClusterDescriptionCreate20241113) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type ClusterDeleter interface {
 	DeleteCluster(string, string) error
+	DeleteFlexCluster(string, string) error
 }
 
 type ClusterUpdater interface {
 	UpdateCluster(string, string, *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	UpdateFlexCluster(string, string, *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type ClusterPauser interface {
@@ -69,14 +74,15 @@ type ClusterStarter interface {
 
 type ClusterUpgrader interface {
 	UpgradeCluster(string, *atlas.Cluster) (*atlas.Cluster, error)
+	UpgradeFlexCluster(string, *atlasv2.FlexClusterDescription20241113) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type SampleDataAdder interface {
-	AddSampleData(string, string) (*admin.SampleDatasetStatus, error)
+	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)
 }
 
 type SampleDataStatusDescriber interface {
-	SampleDataStatus(string, string) (*admin.SampleDatasetStatus, error)
+	SampleDataStatus(string, string) (*atlasv2.SampleDatasetStatus, error)
 }
 
 type ClusterTester interface {
@@ -106,13 +112,13 @@ type AtlasClusterQuickStarter interface {
 }
 
 // AddSampleData encapsulate the logic to manage different cloud providers.
-func (s *Store) AddSampleData(groupID, clusterName string) (*admin.SampleDatasetStatus, error) {
+func (s *Store) AddSampleData(groupID, clusterName string) (*atlasv2.SampleDatasetStatus, error) {
 	result, _, err := s.clientv2.ClustersApi.LoadSampleDataset(s.ctx, groupID, clusterName).Execute()
 	return result, err
 }
 
 // SampleDataStatus encapsulate the logic to manage different cloud providers.
-func (s *Store) SampleDataStatus(groupID, id string) (*admin.SampleDatasetStatus, error) {
+func (s *Store) SampleDataStatus(groupID, id string) (*atlasv2.SampleDatasetStatus, error) {
 	result, _, err := s.clientv2.ClustersApi.GetSampleDatasetLoadStatus(s.ctx, groupID, id).Execute()
 	return result, err
 }

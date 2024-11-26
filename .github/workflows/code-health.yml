@@ -76,7 +76,6 @@ jobs:
             trend="📉"
           fi
           
-          # shellcheck disable=SC2129 # Next 6 lines
           echo "Coverage Report $trend" > comment.md
           echo "| Branch | Coverage |" >> comment.md
           echo "|--------|----------|" >> comment.md
@@ -168,6 +167,8 @@ jobs:
         run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
         shell: bash
       - name: Check workflow files
+        env:
+          SHELLCHECK_OPTS: --exclude=SC2129
         run: |
           echo "::add-matcher::.github/actionlint-matcher.json"
           ${{ steps.get_actionlint.outputs.executable }} -color

@@ -18,67 +18,10 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/require"
 )
-
-func TestSplitShortAndLongDescription(t *testing.T) {
-	tests := []struct {
-		name        string
-		description string
-		wantShort   string
-		wantLong    string
-	}{
-		{
-			name:        "empty string",
-			description: "",
-			wantShort:   "",
-			wantLong:    "",
-		},
-		{
-			name:        "single sentence",
-			description: "This is a single sentence.",
-			wantShort:   "This is a single sentence.",
-			wantLong:    "",
-		},
-		{
-			name:        "two sentences",
-			description: "First sentence. Second sentence.",
-			wantShort:   "First sentence.",
-			wantLong:    "Second sentence.",
-		},
-		{
-			name:        "multiple sentences with spaces",
-			description: "First sentence.   Second sentence.    Third sentence.",
-			wantShort:   "First sentence.",
-			wantLong:    "Second sentence. Third sentence.",
-		},
-		{
-			name:        "sentence without period",
-			description: "This is a sentence without period",
-			wantShort:   "This is a sentence without period.",
-			wantLong:    "",
-		},
-		{
-			name:        "multiple sentences with extra periods",
-			description: "This is version 1.2.3. Second sentence. Third sentence.",
-			wantShort:   "This is version 1.2.3.",
-			wantLong:    "Second sentence. Third sentence.",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			gotShort, gotLong := splitShortAndLongDescription(tt.description)
-			if gotShort != tt.wantShort {
-				t.Errorf("splitShortAndLongDescription() gotShort = %v, want %v", gotShort, tt.wantShort)
-			}
-			if gotLong != tt.wantLong {
-				t.Errorf("splitShortAndLongDescription() gotLong = %v, want %v", gotLong, tt.wantLong)
-			}
-		})
-	}
-}
 
 func TestAddParameters(t *testing.T) {
 	testCmd := &cobra.Command{}
@@ -113,4 +56,56 @@ func TestAddParametersDuplicates(t *testing.T) {
 		{Name: "test1", Description: "description2", Required: true, Type: api.ParameterType{IsArray: true, Type: api.TypeBool}},
 	})
 	require.Error(t, err)
+}
+
+type fixedValueProvider struct{}
+
+func (*fixedValueProvider) ValueForFlag(flagName string) (*string, error) {
+	if flagName == "b" {
+		return nil, nil
+	}
+
+	return pointer.Get("default-for-" + flagName), nil
+}
+
+func TestSetUnTouchedFlags(t *testing.T) {
+	// Create cobra command with flags
+	testCmd := &cobra.Command{}
+	testCmd.Flags().String("a", "a", "will remain unchanged by test")
+	testCmd.Flags().String("b", "b", "will remain unchanged by test, it also won't be changed by the fixedValueProvider")
+	testCmd.Flags().String("c", "c", "will be changed by test")
+	testCmd.Flags().String("d", "d", "will remain unchanged by test")
+	testCmd.Flags().String("e", "e", "will be changed by test")
+
+	// Parse flags, this will also set `Changed`
+	// Adding test here in case cobra behavior changes
+	require.NoError(t, testCmd.ParseFlags([]string{"--c", "user-changed-c", "--e", "user-changed-e"}))
+
+	// This is the state before PreRunE
+	require.Equal(t, "a", testCmd.Flag("a").Value.String())
+	require.Equal(t, "b", testCmd.Flag("b").Value.String())
+	require.Equal(t, "user-changed-c", testCmd.Flag("c").Value.String())
+	require.Equal(t, "d", testCmd.Flag("d").Value.String())
+	require.Equal(t, "user-changed-e", testCmd.Flag("e").Value.String())
+
+	require.False(t, testCmd.Flag("a").Changed)
+	require.False(t, testCmd.Flag("b").Changed)
+	require.True(t, testCmd.Flag("c").Changed)
+	require.False(t, testCmd.Flag("d").Changed)
+	require.True(t, testCmd.Flag("e").Changed)
+
+	// The actual method we're testing
+	require.NoError(t, setUnTouchedFlags(&fixedValueProvider{}, testCmd))
+
+	// Verify that untouched values have been updated with their respective new values
+	require.Equal(t, "default-for-a", testCmd.Flag("a").Value.String())
+	require.Equal(t, "b", testCmd.Flag("b").Value.String())
+	require.Equal(t, "user-changed-c", testCmd.Flag("c").Value.String())
+	require.Equal(t, "default-for-d", testCmd.Flag("d").Value.String())
+	require.Equal(t, "user-changed-e", testCmd.Flag("e").Value.String())
+	require.True(t, testCmd.Flag("a").Changed)
+	require.False(t, testCmd.Flag("b").Changed)
+	require.True(t, testCmd.Flag("c").Changed)
+	require.True(t, testCmd.Flag("d").Changed)
+	require.True(t, testCmd.Flag("e").Changed)
 }

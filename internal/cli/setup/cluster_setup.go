@@ -17,6 +17,7 @@ package setup
 import (
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -29,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"golang.org/x/mod/semver"
 )
 
 var ErrNoRegions = errors.New("no regions found for the cloud provider")
@@ -297,6 +299,10 @@ func (opts *Opts) mdbVersions(instanceSize string, cloudProvider string) ([]stri
 	for k := range results {
 		keys = append(keys, k)
 	}
+
+	slices.SortFunc(keys, func(a string, b string) int {
+		return semver.Compare("v"+a, "v"+b)
+	})
 
 	return keys, defaultResult, nil
 }

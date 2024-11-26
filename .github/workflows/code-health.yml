@@ -41,6 +41,8 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install Go
         uses: actions/setup-go@v5
         with:
@@ -53,6 +55,46 @@ jobs:
         with:
           paths: unit-tests.xml
         if: always() && matrix.os == 'ubuntu-latest'
+      - name: Compare coverage with master
+        if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest'
+        run: |
+          # Get coverage from master
+          git checkout origin/master
+          COVERAGE=coverage.master.out make unit-test
+
+          # use go tool cover to calculate coverage percentage
+          master_coverage=$(go tool cover -func=coverage.master.out | grep total: | awk '{print $3}' | sed 's/%//')
+          pr_coverage=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
+          
+          # Calculate difference
+          diff=$(echo "$pr_coverage - $master_coverage" | bc)
+          
+          # Create comment content
+          if (( $(echo "$diff >= 0" | bc -l) )); then
+            trend="📈"
+          else
+            trend="📉"
+          fi
+          
+          echo "Coverage Report $trend" > comment.md
+          echo "| Branch | Coverage |" >> comment.md
+          echo "|--------|----------|" >> comment.md
+          echo "| master | ${master_coverage}% |" >> comment.md
+          echo "| PR | ${pr_coverage}% |" >> comment.md
+          echo "| Difference | ${diff}% |" >> comment.md      
+      - name: Comment PR
+        if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const comment = fs.readFileSync('comment.md', 'utf8');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
   fuzz-tests:
     env:
       COVERAGE: coverage.out

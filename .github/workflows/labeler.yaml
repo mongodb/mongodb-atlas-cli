@@ -23,7 +23,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - name: Add Labels
-        uses: srvaroa/labeler@29471ee1118fa4e10b011964e6e8fe2fd243e700
+        uses: srvaroa/labeler@fe4b1c73bb8abf2f14a44a6912a8b4fee835d631
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:

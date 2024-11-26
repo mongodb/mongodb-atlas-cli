@@ -114,12 +114,12 @@ func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptio
 }
 
 // RestoreFlexClusterJob encapsulates the logic to manage different cloud providers.
-func (s *Store) RestoreFlexClusterJob(projectID, clusterName, restoreJobId string) (*atlasv2.FlexBackupRestoreJob20241113, error) {
+func (s *Store) RestoreFlexClusterJob(projectID, clusterName, restoreJobID string) (*atlasv2.FlexBackupRestoreJob20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexRestoreJobsApi.GetFlexBackupRestoreJob(s.ctx, projectID, clusterName, restoreJobId).Execute()
+	result, _, err := s.clientv2.FlexRestoreJobsApi.GetFlexBackupRestoreJob(s.ctx, projectID, clusterName, restoreJobID).Execute()
 	return result, err
 }
 
@@ -178,22 +178,22 @@ func (s *Store) FlexClusterSnapshots(opts *atlasv2.ListFlexBackupsApiParams) (*a
 }
 
 // DownloadFlexClusterSnapshots encapsulates the logic to manage different cloud providers.
-func (s *Store) DownloadFlexClusterSnapshots(groupId, name string, flexBackupSnapshotDownloadCreate20241113 *atlasv2.FlexBackupSnapshotDownloadCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error) {
+func (s *Store) DownloadFlexClusterSnapshots(groupID, name string, flexBackupSnapshotDownloadCreate20241113 *atlasv2.FlexBackupSnapshotDownloadCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexSnapshotsApi.DownloadFlexBackup(s.ctx, name, groupId, flexBackupSnapshotDownloadCreate20241113).Execute()
+	result, _, err := s.clientv2.FlexSnapshotsApi.DownloadFlexBackup(s.ctx, name, groupID, flexBackupSnapshotDownloadCreate20241113).Execute()
 	return result, err
 }
 
 // FlexClusterSnapshot encapsulates the logic to manage different cloud providers.
-func (s *Store) FlexClusterSnapshot(groupId, name, snapshotId string) (*atlasv2.FlexBackupSnapshot20241113, error) {
+func (s *Store) FlexClusterSnapshot(groupID, name, snapshotID string) (*atlasv2.FlexBackupSnapshot20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexSnapshotsApi.GetFlexBackup(s.ctx, groupId, name, snapshotId).Execute()
+	result, _, err := s.clientv2.FlexSnapshotsApi.GetFlexBackup(s.ctx, groupID, name, snapshotID).Execute()
 	return result, err
 }
 

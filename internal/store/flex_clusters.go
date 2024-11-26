@@ -18,33 +18,33 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	atlas "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_flex_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store FlexClusterLister,FlexClusterDescriber,FlexClusterCreator,FlexClusterUpdater,FlexClusterUpgrader
 
 type FlexClusterLister interface {
-	ListFlexClusters(*atlas.ListFlexClustersApiParams) (*atlas.PaginatedFlexClusters20241113, error)
+	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
 }
 
 type FlexClusterDescriber interface {
-	FlexCluster(string, string) (*atlas.FlexClusterDescription20241113, error)
+	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type FlexClusterCreator interface {
-	CreateCluster(string, *atlas.FlexClusterDescriptionCreate20241113) (*atlas.FlexClusterDescription20241113, error)
+	CreateCluster(string, *atlasv2.FlexClusterDescriptionCreate20241113) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type FlexClusterUpdater interface {
-	CreateCluster(string, string, *atlas.FlexClusterDescriptionUpdate20241113) (*atlas.FlexClusterDescription20241113, error)
+	CreateCluster(string, string, *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type FlexClusterUpgrader interface {
-	UpgradeFlexCluster(string, *atlas.FlexClusterDescriptionUpdate20241113) (*atlas.FlexClusterDescription20241113, error)
+	UpgradeFlexCluster(string, *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 // ListFlexClusters encapsulate the logic to manage different cloud providers.
-func (s *Store) ListFlexClusters(opts *atlas.ListFlexClustersApiParams) (*atlas.PaginatedFlexClusters20241113, error) {
+func (s *Store) ListFlexClusters(opts *atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
@@ -54,41 +54,41 @@ func (s *Store) ListFlexClusters(opts *atlas.ListFlexClustersApiParams) (*atlas.
 }
 
 // FlexCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) FlexCluster(groupId, name string) (*atlas.FlexClusterDescription20241113, error) {
+func (s *Store) FlexCluster(groupID, name string) (*atlasv2.FlexClusterDescription20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.GetFlexCluster(s.ctx, groupId, name).Execute()
+	result, _, err := s.clientv2.FlexClustersApi.GetFlexCluster(s.ctx, groupID, name).Execute()
 	return result, err
 }
 
 // CreateFlexCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) CreateFlexCluster(groupId string, flexClusterDescriptionCreate20241113 *atlas.FlexClusterDescriptionCreate20241113) (*atlas.FlexClusterDescription20241113, error) {
+func (s *Store) CreateFlexCluster(groupID string, flexClusterDescriptionCreate20241113 *atlasv2.FlexClusterDescriptionCreate20241113) (*atlasv2.FlexClusterDescription20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.CreateFlexCluster(s.ctx, groupId, flexClusterDescriptionCreate20241113).Execute()
+	result, _, err := s.clientv2.FlexClustersApi.CreateFlexCluster(s.ctx, groupID, flexClusterDescriptionCreate20241113).Execute()
 	return result, err
 }
 
 // UpdateFlexCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) UpdateFlexCluster(groupId, name string, flexClusterDescriptionUpdate20241113 *atlas.FlexClusterDescriptionUpdate20241113) (*atlas.FlexClusterDescription20241113, error) {
+func (s *Store) UpdateFlexCluster(groupID, name string, flexClusterDescriptionUpdate20241113 *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.UpdateFlexCluster(s.ctx, groupId, name, flexClusterDescriptionUpdate20241113).Execute()
+	result, _, err := s.clientv2.FlexClustersApi.UpdateFlexCluster(s.ctx, groupID, name, flexClusterDescriptionUpdate20241113).Execute()
 	return result, err
 }
 
 // UpgradeFlexCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) UpgradeFlexCluster(groupId string, flexClusterDescriptionUpdate20241113 *atlas.FlexClusterDescription20241113) (*atlas.FlexClusterDescription20241113, error) {
+func (s *Store) UpgradeFlexCluster(groupID string, flexClusterDescriptionUpdate20241113 *atlasv2.FlexClusterDescription20241113) (*atlasv2.FlexClusterDescription20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	result, _, err := s.clientv2.FlexClustersApi.UpgradeFlexCluster(s.ctx, groupId, flexClusterDescriptionUpdate20241113).Execute()
+	result, _, err := s.clientv2.FlexClustersApi.UpgradeFlexCluster(s.ctx, groupID, flexClusterDescriptionUpdate20241113).Execute()
 	return result, err
 }

@@ -78,7 +78,7 @@ jobs:
         id: merge_base
         run: |
           MERGE_BASE=$(git merge-base "${{ github.event.pull_request.head.sha }}" "${{ github.event.pull_request.base.sha }}")
-          echo "merge_base=$MERGE_BASE" >> $GITHUB_OUTPUT
+          echo "merge_base=$MERGE_BASE" >> "$GITHUB_OUTPUT"
           echo "Checking coverage against: $MERGE_BASE"
       - name: Install Go
         uses: actions/setup-go@v5
@@ -115,7 +115,7 @@ jobs:
           
           # Calculate difference
           diff=$(echo "$pr_coverage - $base_coverage" | bc)
-          echo "diff=$diff" >> $GITHUB_OUTPUT
+          echo "diff=$diff" >> "$GITHUB_OUTPUT"
           
           # Create comment content
           if (( $(echo "$diff >= 0" | bc -l) )); then

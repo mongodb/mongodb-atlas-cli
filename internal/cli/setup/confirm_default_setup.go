@@ -15,15 +15,12 @@
 package setup
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 )
-
-var errCancel = errors.New("user-aborted. Not creating cluster")
 
 func (opts *Opts) promptSettings() error {
 	opts.settings = defaultSettings
@@ -59,10 +56,20 @@ Cluster Tier:				%s
 Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 	}
 
+	clusterVersion := ""
+	if values.providerName() != tenant {
+		version := opts.MDBVersion
+		if version == "" {
+			version = values.MdbVersion
+		}
+		clusterVersion = `
+MongoDB Version:			` + version
+	}
+
 	fmt.Printf(`
 [Default Settings]
 Cluster Name:				%s%s
-Cloud Provider and Region:		%s - %s
+Cloud Provider and Region:		%s - %s%s
 Database User Username:			%s%s
 Allow connections from (IP Address):	%s
 
@@ -71,20 +78,11 @@ Allow connections from (IP Address):	%s
 		clusterTier,
 		values.Provider,
 		values.Region,
+		clusterVersion,
 		values.DBUsername,
 		loadSampleData,
 		strings.Join(values.IPAddresses, ", "),
 	)
 
-	if err := opts.promptSettings(); err != nil {
-		return err
-	}
-
-	if opts.settings == cancelSettings {
-		return errCancel
-	}
-
-	opts.Confirm = opts.settings == defaultSettings // acts same as --force
-
-	return nil
+	return opts.promptSettings()
 }

@@ -85,10 +85,3 @@ func newSampleDataQuestion() survey.Prompt {
 		Default: true,
 	}
 }
-
-func newClusterCreateConfirm() survey.Prompt {
-	return &survey.Confirm{
-		Message: "Are you ready to create your Atlas cluster with the above settings?",
-		Default: true,
-	}
-}

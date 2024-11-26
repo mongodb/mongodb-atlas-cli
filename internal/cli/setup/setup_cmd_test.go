@@ -99,6 +99,7 @@ func TestCluster_Run(t *testing.T) {
 		SkipMongosh:    true,
 		SkipSampleData: true,
 		Confirm:        true,
+		MDBVersion:     "7.0",
 		Tag:            map[string]string{"env": "test"},
 	}
 	opts.register.WithFlow(mockFlow)
@@ -159,6 +160,7 @@ func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 		SkipMongosh:                 true,
 		SkipSampleData:              true,
 		Confirm:                     true,
+		MDBVersion:                  "7.0",
 	}
 	opts.register.WithFlow(mockFlow)
 

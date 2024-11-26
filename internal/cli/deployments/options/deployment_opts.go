@@ -66,8 +66,6 @@ var (
 	errInvalidDeploymentName        = errors.New("invalid cluster name")
 	errDeploymentTypeNotImplemented = errors.New("deployment type not implemented")
 	ErrNotAuthenticated             = errors.New("you are not authenticated. Please, run atlas auth login")
-	ErrCompassNotInstalled          = errors.New("did not find MongoDB Compass, install: https://dochub.mongodb.org/core/install-compass")
-	ErrMongoshNotInstalled          = errors.New("did not find mongosh, install: https://dochub.mongodb.org/core/install-mongosh")
 	DeploymentTypeOptions           = []string{LocalCluster, AtlasCluster}
 	deploymentTypeDescription       = map[string]string{
 		LocalCluster: "Local Database",

@@ -20,6 +20,8 @@ import (
 	"os/exec"
 )
 
+var ErrMongoshNotInstalled = errors.New("did not find mongosh, install: https://dochub.mongodb.org/core/install-mongosh")
+
 func Detect() bool {
 	return binPath() != ""
 }

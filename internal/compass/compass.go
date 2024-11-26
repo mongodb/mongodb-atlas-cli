@@ -23,7 +23,10 @@ import (
 
 const waitForRunningStateDuration = 10 * time.Second
 
-var errCompassExited = errors.New("MongoDB Compass process has exited")
+var (
+	errCompassExited       = errors.New("MongoDB Compass process has exited")
+	ErrCompassNotInstalled = errors.New("did not find MongoDB Compass, install: https://dochub.mongodb.org/core/install-compass")
+)
 
 func Detect() bool {
 	return binPath() != ""

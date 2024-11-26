@@ -609,6 +609,21 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) ListFlexClusters(arg0 interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFlexClusters", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).ListFlexClusters), arg0)
 }
 
+// MDBVersions mocks base method.
+func (m *MockAtlasClusterQuickStarter) MDBVersions(arg0 string, arg1 *store.MDBVersionListOptions) (*admin0.PaginatedAvailableVersion, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MDBVersions", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.PaginatedAvailableVersion)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// MDBVersions indicates an expected call of MDBVersions.
+func (mr *MockAtlasClusterQuickStarterMockRecorder) MDBVersions(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MDBVersions", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).MDBVersions), arg0, arg1)
+}
+
 // ProjectClusters mocks base method.
 func (m *MockAtlasClusterQuickStarter) ProjectClusters(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedAdvancedClusterDescription, error) {
 	m.ctrl.T.Helper()

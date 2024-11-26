@@ -56,10 +56,20 @@ Cluster Tier:				%s
 Cluster Disk Size (GiB):		%.1f`, opts.Tier, diskSize)
 	}
 
+	clusterVersion := ""
+	if values.providerName() != tenant {
+		version := opts.MDBVersion
+		if version == "" {
+			version = values.MdbVersion
+		}
+		clusterVersion = `
+MongoDB Version:			` + version
+	}
+
 	fmt.Printf(`
 [Default Settings]
 Cluster Name:				%s%s
-Cloud Provider and Region:		%s - %s
+Cloud Provider and Region:		%s - %s%s
 Database User Username:			%s%s
 Allow connections from (IP Address):	%s
 
@@ -68,6 +78,7 @@ Allow connections from (IP Address):	%s
 		clusterTier,
 		values.Provider,
 		values.Region,
+		clusterVersion,
 		values.DBUsername,
 		loadSampleData,
 		strings.Join(values.IPAddresses, ", "),

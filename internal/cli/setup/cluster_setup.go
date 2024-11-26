@@ -17,6 +17,7 @@ package setup
 import (
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -24,13 +25,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+	"golang.org/x/mod/semver"
 )
 
 var ErrNoRegions = errors.New("no regions found for the cloud provider")
+var ErrNoVersions = errors.New("no mongodb versions found for the cloud provider")
 
 func (opts *Opts) createCluster() error {
 	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
@@ -54,7 +58,7 @@ func (opts *Opts) askClusterOptions() error {
 		qs = append(qs, newClusterProviderQuestion())
 	}
 
-	if opts.shouldAskForValue(flag.ClusterName) || opts.shouldAskForValue(flag.Provider) || opts.shouldAskForValue(flag.Region) {
+	if opts.shouldAskForValue(flag.ClusterName) || opts.shouldAskForValue(flag.Provider) || opts.shouldAskForValue(flag.Region) || opts.shouldAskForValue(flag.MDBVersion) {
 		fmt.Print(`
 [Set up your Atlas cluster]
 `)
@@ -66,8 +70,15 @@ func (opts *Opts) askClusterOptions() error {
 
 	// We need the provider to ask for the region
 	if opts.shouldAskForValue(flag.Region) {
-		return opts.askClusterRegion()
+		if err := opts.askClusterRegion(); err != nil {
+			return err
+		}
 	}
+
+	if opts.shouldAskForValue(flag.MDBVersion) {
+		return opts.askClusterMDBVersion()
+	}
+
 	return nil
 }
 
@@ -85,11 +96,37 @@ func (opts *Opts) askClusterRegion() error {
 	return telemetry.TrackAskOne(regionQ, &opts.Region, survey.WithValidator(survey.Required))
 }
 
+func (opts *Opts) askClusterMDBVersion() error {
+	if opts.providerName() == tenant {
+		return nil
+	}
+
+	versions, defaultVersion, err := opts.mdbVersions(opts.Tier, opts.Provider)
+	if err != nil {
+		return err
+	}
+
+	if len(versions) == 0 {
+		return nil
+	}
+
+	return telemetry.TrackAskOne(newMDBVersionQuestion(versions, defaultVersion), &opts.MDBVersion, survey.WithValidator(survey.Required))
+}
+
 func newRegionQuestions(defaultRegions []string) survey.Prompt {
 	return &survey.Select{
 		Message: "Cloud Provider Region",
 		Help:    usage.Region,
 		Options: defaultRegions,
+	}
+}
+
+func newMDBVersionQuestion(versions []string, defaultVersion string) survey.Prompt {
+	return &survey.Select{
+		Message: "Mongodb Version",
+		Help:    usage.MDBVersion,
+		Options: versions,
+		Default: defaultVersion,
 	}
 }
 
@@ -118,9 +155,14 @@ func (opts *Opts) newCluster() *atlasClustersPinned.AdvancedClusterDescription {
 
 	if opts.providerName() != tenant {
 		diskSizeGB := defaultDiskSizeGB(opts.providerName(), opts.Tier)
-		mdbVersion, _ := cli.DefaultMongoDBMajorVersion()
 		cluster.DiskSizeGB = &diskSizeGB
-		cluster.MongoDBMajorVersion = &mdbVersion
+		if opts.MDBVersion != "" {
+			cluster.MongoDBMajorVersion = &opts.MDBVersion
+		} else {
+			if mdbVersion, err := cli.DefaultMongoDBMajorVersion(); err == nil && mdbVersion != "" {
+				cluster.MongoDBMajorVersion = &mdbVersion
+			}
+		}
 	}
 
 	return cluster
@@ -218,4 +260,49 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	}
 
 	return defaultRegions, nil
+}
+
+func (opts *Opts) mdbVersions(instanceSize string, cloudProvider string) ([]string, string, error) {
+	const maxItems = 500
+	versions, err := opts.store.MDBVersions(
+		opts.ConfigProjectID(),
+		&store.MDBVersionListOptions{
+			ListOptions: store.ListOptions{
+				ItemsPerPage: maxItems,
+			},
+			CloudProvider: &cloudProvider,
+			InstanceSize:  &instanceSize,
+		},
+	)
+
+	if err != nil {
+		return nil, "", err
+	}
+
+	if len(versions.GetResults()) == 0 {
+		return nil, "", errors.New("no versions available")
+	}
+
+	results := map[string]bool{}
+	defaultResult := ""
+	for _, v := range versions.GetResults() {
+		if v.GetVersion() == "" {
+			continue
+		}
+		results[v.GetVersion()] = true
+		if v.GetDefaultStatus() == "DEFAULT" {
+			defaultResult = v.GetVersion()
+		}
+	}
+
+	keys := make([]string, 0, len(results))
+	for k := range results {
+		keys = append(keys, k)
+	}
+
+	slices.SortFunc(keys, func(a string, b string) int {
+		return semver.Compare("v"+a, "v"+b)
+	})
+
+	return keys, defaultResult, nil
 }

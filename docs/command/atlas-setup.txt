@@ -75,6 +75,10 @@ Options
      - 
      - false
      - help for setup
+   * - --mdbVersion
+     - string
+     - false
+     - Major MongoDB version of the deployment.
    * - --noBrowser
      - 
      - false

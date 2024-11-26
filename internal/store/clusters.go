@@ -103,6 +103,7 @@ type AtlasClusterQuickStarter interface {
 	ProjectIPAccessListCreator
 	ClusterDescriber
 	ClusterCreator
+	ProjectMDBVersionLister
 }
 
 // AddSampleData encapsulate the logic to manage different cloud providers.

@@ -126,6 +126,7 @@ type Opts struct {
 	DBUsername                  string
 	DBUserPassword              string
 	SampleDataJobID             string
+	MDBVersion                  string
 	Tier                        string
 	Tag                         map[string]string
 	SkipSampleData              bool
@@ -155,8 +156,8 @@ type clusterSettings struct {
 	IPAddresses                 []string
 	EnableTerminationProtection bool
 	SkipSampleData              bool
-	SkipMongosh                 bool
 	Tag                         map[string]string
+	MdbVersion                  string
 }
 
 func (opts *Opts) providerAndRegionToConstant() {
@@ -178,7 +179,6 @@ func (opts *Opts) trackFlags() {
 
 func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 	values := &clusterSettings{}
-	values.SkipMongosh = opts.SkipMongosh
 	values.SkipSampleData = opts.SkipSampleData
 
 	values.ClusterName = opts.ClusterName
@@ -206,6 +206,8 @@ func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 			}
 		}
 	}
+
+	values.MdbVersion = opts.MDBVersion
 
 	values.DBUsername = opts.DBUsername
 	if opts.DBUsername == "" {
@@ -346,6 +348,10 @@ func (opts *Opts) replaceWithDefaultSettings(values *clusterSettings) {
 		opts.Region = values.Region
 	}
 
+	if values.MdbVersion != "" {
+		opts.MDBVersion = values.MdbVersion
+	}
+
 	if values.DBUsername != "" {
 		opts.DBUsername = values.DBUsername
 	}
@@ -360,7 +366,6 @@ func (opts *Opts) replaceWithDefaultSettings(values *clusterSettings) {
 
 	opts.EnableTerminationProtection = values.EnableTerminationProtection
 	opts.SkipSampleData = values.SkipSampleData
-	opts.SkipMongosh = values.SkipMongosh
 	opts.Tag = values.Tag
 }
 
@@ -668,6 +673,7 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.register.IsGov, "gov", false, "Register with Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.register.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	// Setup related
+	cmd.Flags().StringVar(&opts.MDBVersion, flag.MDBVersion, "", usage.DeploymentMDBVersion)
 	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWithAtlasSetup)
 	opts.SetupAtlasFlags(cmd)
 	opts.SetupFlowFlags(cmd)

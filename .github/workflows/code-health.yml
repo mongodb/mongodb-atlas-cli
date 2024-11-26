@@ -59,7 +59,7 @@ jobs:
         if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest'
         run: |
           # Get the merge-base
-          MERGE_BASE=$(git merge-base ${{ github.event.pull_request.head.sha }} ${{ github.event.pull_request.base.sha }})
+          MERGE_BASE=$(git merge-base "${{ github.event.pull_request.head.sha }}" "${{ github.event.pull_request.base.sha }}")
           echo "Checking coverage against: $MERGE_BASE"
 
           # Get coverage from target branch

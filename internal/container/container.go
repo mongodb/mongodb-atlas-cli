@@ -27,12 +27,18 @@ type PortMapping struct {
 	ContainerProtocol string
 }
 
+type VolumeMapping struct {
+	HostPath      string
+	ContainerPath string
+}
+
 type RunFlags struct {
 	Name              *string
 	Detach            *bool
 	Remove            *bool
 	Hostname          *string
 	Ports             []PortMapping
+	Volumes           []VolumeMapping
 	Env               map[string]string
 	Cmd               *string
 	Args              []string

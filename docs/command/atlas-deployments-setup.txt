@@ -87,6 +87,10 @@ Options
      - 
      - false
      - help for setup
+   * - --initdb
+     - string
+     - false
+     - Flag that uses a folder to be mapped into LOCAL deployment for initialization
    * - --mdbVersion
      - string
      - false

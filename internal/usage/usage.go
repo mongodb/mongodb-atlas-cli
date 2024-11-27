@@ -411,4 +411,5 @@ dbName and collection are required only for built-in roles.`
 	AuditFilter                = "JSON document that specifies which events to record. Escape any characters that may prevent parsing, such as single or double quotes, using a backslash (\\)."
 	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. To learn more about invitation configuration files for the Atlas CLI, see https://XXX."
 	IndependentResources       = "Flag that makes the generated resources that support independent usage, to use external IDs rather than Kubernetes references."
+	InitDB                     = "Flag that uses a folder to be mapped into LOCAL deployment for initialization"
 )

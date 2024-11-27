@@ -241,6 +241,12 @@ func runFlags(flags *RunFlags) []string {
 		args = append(args, "--entrypoint", *flags.Entrypoint)
 	}
 
+	if flags.Volumes != nil {
+		for _, value := range flags.Volumes {
+			args = append(args, "-v", fmt.Sprintf("%s:%s", value.HostPath, value.ContainerPath))
+		}
+	}
+
 	return args
 }
 

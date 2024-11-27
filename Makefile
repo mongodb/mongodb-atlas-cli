@@ -128,10 +128,10 @@ build: ## Generate an atlas binary in ./bin
 .PHONY: build-debug
 build-debug: ## Generate a binary in ./bin for debugging atlascli
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
-	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
+	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(LINKER_FLAGS)" $(BUILD_FLAGS) -cover -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
-e2e-test: build ## Run E2E tests
+e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)

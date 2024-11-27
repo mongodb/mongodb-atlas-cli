@@ -149,7 +149,6 @@ functions:
         env:
           <<: *go_env
           MCLI_SKIP_UPDATE_CHECK: "yes"
-          BUILD_FLAGS: -cover
           GOCOVERDIR: src/github.com/mongodb/mongodb-atlas-cli/cov
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test

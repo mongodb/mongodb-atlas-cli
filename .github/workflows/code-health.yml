@@ -132,7 +132,7 @@ jobs:
           echo "| Branch | Commit | Coverage |" >> comment.md
           echo "|--------|--------|----------|" >> comment.md
           echo "| ${BASE_REF} | ${{ steps.merge_base.outputs.merge_base }} | ${base_coverage}% |" >> comment.md
-          echo "| %{HEAD_REF} | ${{ github.event.pull_request.head.sha }} | ${pr_coverage}% |" >> comment.md
+          echo "| ${HEAD_REF} | ${{ github.event.pull_request.head.sha }} | ${pr_coverage}% |" >> comment.md
           echo "|        | Difference | | ${diff}% |" >> comment.md      
           cat "comment.md" >> "$GITHUB_STEP_SUMMARY"
       - name: Comment PR

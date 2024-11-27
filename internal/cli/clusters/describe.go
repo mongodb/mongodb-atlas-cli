@@ -25,7 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
+
+const NonFoundCode = 404
 
 type DescribeOpts struct {
 	cli.GlobalOpts
@@ -49,12 +52,31 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return err
+		return opts.RunFlexCluster(err)
 	}
+
 	return opts.Print(r)
 }
 
-// atlas cluster(s) describe <clusterName> --projectId projectId.
+func (opts *DescribeOpts) RunFlexCluster(err error) error {
+	apiError, ok := atlasv2.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if apiError.Error != NonFoundCode {
+		return err
+	}
+
+	r, err := opts.store.FlexCluster(opts.ConfigProjectID(), opts.name)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
+}
+
+// DescribeBuilder atlas cluster(s) describe <clusterName> --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

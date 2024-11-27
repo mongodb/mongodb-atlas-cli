@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestDescribe_Run(t *testing.T) {
@@ -39,6 +40,37 @@ func TestDescribe_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		AtlasCluster(describeOpts.ProjectID, describeOpts.name).
+		Return(expected, nil).
+		Times(1)
+
+	if err := describeOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
+}
+
+func TestDescribe_RunFlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterDescriber(ctrl)
+
+	expected := &atlasv2.FlexClusterDescription20241113{}
+	expectedError := &atlasv2.GenericOpenAPIError{}
+	expectedError.SetModel(atlasv2.ApiError{Error: NonFoundCode})
+
+	describeOpts := &DescribeOpts{
+		name:  "test",
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		AtlasCluster(describeOpts.ProjectID, describeOpts.name).
+		Return(nil, expectedError).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		FlexCluster(describeOpts.ProjectID, describeOpts.name).
 		Return(expected, nil).
 		Times(1)
 

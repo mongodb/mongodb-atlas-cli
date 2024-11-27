@@ -56,7 +56,7 @@ func TestDescribe_RunFlexCluster(t *testing.T) {
 
 	expected := &atlasv2.FlexClusterDescription20241113{}
 	expectedError := &atlasClustersPinned.GenericOpenAPIError{}
-	expectedError.SetModel(atlasClustersPinned.ApiError{Error: pointer.Get(cannotUseFlexWithClusterApisHTTPCode), ErrorCode: pointer.Get(cannotUseFlexWithClusterApisErrorCode)})
+	expectedError.SetModel(atlasClustersPinned.ApiError{ErrorCode: pointer.Get(cannotUseFlexWithClusterApisErrorCode)})
 
 	describeOpts := &DescribeOpts{
 		name:  "test",

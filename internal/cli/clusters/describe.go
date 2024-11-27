@@ -29,7 +29,6 @@ import (
 )
 
 const (
-	cannotUseFlexWithClusterApisHTTPCode  = 400
 	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
 )
 
@@ -67,7 +66,7 @@ func (opts *DescribeOpts) RunFlexCluster(err error) error {
 		return err
 	}
 
-	if *apiError.Error != cannotUseFlexWithClusterApisHTTPCode && *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
 		return err
 	}
 

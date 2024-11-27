@@ -110,10 +110,6 @@ functions:
           fi
   "e2e test":
     - command: subprocess.exec
-      params:
-        <<: *go_options
-        command: mkdir -p src/github.com/mongodb/mongodb-atlas-cli/cov
-    - command: subprocess.exec
       type: test
       params:
         <<: *go_options
@@ -149,7 +145,6 @@ functions:
         env:
           <<: *go_env
           MCLI_SKIP_UPDATE_CHECK: "yes"
-          GOCOVERDIR: src/github.com/mongodb/mongodb-atlas-cli/cov
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
     - command: subprocess.exec
@@ -161,7 +156,7 @@ functions:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
         local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/cov/*
+          - src/github.com/mongodb/mongodb-atlas-cli/coverage.out
         remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
         bucket: mongodb-mongocli-build
         permissions: public-read

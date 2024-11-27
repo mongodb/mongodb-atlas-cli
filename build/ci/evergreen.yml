@@ -145,8 +145,25 @@ functions:
         env:
           <<: *go_env
           MCLI_SKIP_UPDATE_CHECK: "yes"
+          BUILD_FLAGS: --cover
+          GOCOVERDIR: .
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        command: ls -la .
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongodb-atlas-cli/coverage.out
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
   "unit test":
     - command: subprocess.exec
       type: test
@@ -159,6 +176,17 @@ functions:
           <<: *go_env
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make unit-test
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_files_include_filter:
+          - src/github.com/mongodb/mongodb-atlas-cli/coverage.out
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
   "install gotestsum":
     - command: shell.exec
       type: setup

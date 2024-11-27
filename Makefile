@@ -144,7 +144,7 @@ fuzz-normalizer-test: ## Run fuzz test
 .PHONY: unit-test
 unit-test: ## Run unit-tests
 	@echo "==> Running unit tests..."
-	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
+	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -coverprofile $(COVERAGE) -count=1 ./...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

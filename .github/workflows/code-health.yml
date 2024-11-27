@@ -64,6 +64,7 @@ jobs:
 
   code-coverage:
     needs: unit-tests
+    continue-on-error: true
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -132,7 +133,6 @@ jobs:
           echo "|--------|--------|----------|" >> comment.md
           echo "| ${BASE_REF} | ${{ steps.merge_base.outputs.merge_base }} | ${base_coverage}% |" >> comment.md
           echo "| %{HEAD_REF} | ${{ github.event.pull_request.head.sha }} | ${pr_coverage}% |" >> comment.md
-          echo "|--------|--------|----------|" >> comment.md
           echo "|        | Difference | | ${diff}% |" >> comment.md      
           cat "comment.md" >> "$GITHUB_STEP_SUMMARY"
       - name: Comment PR

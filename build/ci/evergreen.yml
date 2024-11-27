@@ -147,6 +147,18 @@ functions:
           MCLI_SKIP_UPDATE_CHECK: "yes"
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
+  "unit test":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - go_base_path
+          - workdir
+        env:
+          <<: *go_env
+          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
+        command: make unit-test
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -431,6 +443,15 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "build"
+  - name: unit_test
+    tags: ["code_health"]
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "unit test"
   - name: config_e2e
     tags: ["e2e","required"]
     must_have_test_results: true

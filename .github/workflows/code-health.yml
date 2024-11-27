@@ -108,6 +108,9 @@ jobs:
           key: coverage-${{ steps.merge_base.outputs.merge_base }}
       - name: Compare coverage
         id: compare
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           # use go tool cover to calculate coverage percentage
           base_coverage=$(go tool cover -func=coverage.base.out | grep total: | awk '{print $3}' | sed 's/%//')
@@ -127,8 +130,8 @@ jobs:
           echo "Coverage Report $trend" > comment.md
           echo "| Branch | Commit | Coverage |" >> comment.md
           echo "|--------|--------|----------|" >> comment.md
-          echo "| ${{ github.base_ref }} | ${{ steps.merge_base.outputs.merge_base }} | ${base_coverage}% |" >> comment.md
-          echo "| ${{ github.head_ref }} | ${{ github.event.pull_request.head.sha }} | ${pr_coverage}% |" >> comment.md
+          echo "| ${BASE_REF} | ${{ steps.merge_base.outputs.merge_base }} | ${base_coverage}% |" >> comment.md
+          echo "| %{HEAD_REF} | ${{ github.event.pull_request.head.sha }} | ${pr_coverage}% |" >> comment.md
           echo "|--------|--------|----------|" >> comment.md
           echo "|        | Difference | | ${diff}% |" >> comment.md      
           cat "comment.md" >> "$GITHUB_STEP_SUMMARY"

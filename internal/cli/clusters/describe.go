@@ -25,10 +25,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
-const NonFoundCode = 404
+const (
+	cannotUseFlexWithClusterApisHTTPCode  = 400
+	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
+)
 
 type DescribeOpts struct {
 	cli.GlobalOpts
@@ -59,12 +62,12 @@ func (opts *DescribeOpts) Run() error {
 }
 
 func (opts *DescribeOpts) RunFlexCluster(err error) error {
-	apiError, ok := atlasv2.AsError(err)
+	apiError, ok := atlasClustersPinned.AsError(err)
 	if !ok {
 		return err
 	}
 
-	if apiError.Error != NonFoundCode {
+	if *apiError.Error != cannotUseFlexWithClusterApisHTTPCode && *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
 		return err
 	}
 

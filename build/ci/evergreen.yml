@@ -147,13 +147,18 @@ functions:
           MCLI_SKIP_UPDATE_CHECK: "yes"
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
+    - command: archive.targz_pack
+      params:
+        target: cov/coverage.tgz
+        source_dir: cov
+        exclude_files:
+          - .gitkeep
     - command: s3.put
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/coverage.out
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/${task_id}.coverage.out
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/cov/coverage.tgz
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/${task_id}.coverage.tgz
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}
@@ -170,13 +175,18 @@ functions:
           <<: *go_env
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make unit-test
+    - command: archive.targz_pack
+      params:
+        target: cov/coverage.tgz
+        source_dir: cov
+        exclude_files:
+          - .gitkeep
     - command: s3.put
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/coverage.out
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/unit-test.coverage.out
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/cov/coverage.tgz
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/unit-test.coverage.tgz
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}
@@ -1666,17 +1676,8 @@ tasks:
             AWS_SECRET_ACCESS_KEY: ${aws_secret}
           script: |
             echo "hello world"
-            aws s3 ls s3://mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/atlascli/cov/
-      - command: s3.get
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|application/json}
-          display_name: internal-bucket
-          local_file: src/github.com/mongodb/mongodb-atlas-cli/cov/
+            aws s3 sync s3://mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/atlascli/cov/ ./cov/
+            ls -la ./cov/
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

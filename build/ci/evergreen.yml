@@ -1660,8 +1660,13 @@ tasks:
       - command: shell.exec
         params:
           <<: *go_options
+          env:
+            <<: *go_env
+            AWS_ACCESS_KEY_ID: ${aws_key}
+            AWS_SECRET_ACCESS_KEY: ${aws_secret}
           script: |
             echo "hello world"
+            aws s3 ls s3://mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/atlascli/cov/
       - command: s3.get
         params:
           aws_key: ${aws_key}

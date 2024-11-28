@@ -2,7 +2,7 @@
 
 GOLANGCI_VERSION=v1.61.0
 COVERAGE?=coverage.out
-GOCOVERDIR?=./cov
+GOCOVERDIR?=$(abspath cov)
 
 GIT_SHA?=$(shell git rev-parse HEAD)
 
@@ -135,8 +135,13 @@ build-debug: ## Generate a binary in ./bin for debugging atlascli
 e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
-	$(TEST_CMD) GOCOVERDIR=$(GOCOVERDIR) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
-	go tool covdata textfmt -i=$(GOCOVERDIR) -o $(COVERAGE)
+	rm -rf $(GOCOVERDIR);\
+	mkdir -p $(GOCOVERDIR);\
+	touch $(GOCOVERDIR)/.gitkeep;\
+	GOCOVERDIR=$(GOCOVERDIR) $(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS);\
+	EXIT_CODE=$$?;\
+	go tool covdata textfmt -i $(GOCOVERDIR) -o $(COVERAGE);\
+	exit $$EXIT_CODE
 
 .PHONY: fuzz-normalizer-test
 fuzz-normalizer-test: ## Run fuzz test

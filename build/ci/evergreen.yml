@@ -1647,7 +1647,8 @@ tasks:
   - name: coverage
     tags: ["coverage"]
     depends_on:
-      - ".e2e"
+      - name: ".e2e"
+        variant: '*'
       - name: unit_test
         variant: code_health
     commands:

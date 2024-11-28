@@ -153,7 +153,7 @@ functions:
         aws_secret: ${aws_secret}
         local_files_include_filter:
           - src/github.com/mongodb/mongodb-atlas-cli/coverage.out
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/${task_id}.coverage.out
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}
@@ -176,7 +176,7 @@ functions:
         aws_secret: ${aws_secret}
         local_files_include_filter:
           - src/github.com/mongodb/mongodb-atlas-cli/coverage.out
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/unit-test.coverage.out
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}

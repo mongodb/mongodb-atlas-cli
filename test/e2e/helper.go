@@ -102,3 +102,13 @@ func RunAndGetStdOut(cmd *exec.Cmd) ([]byte, error) {
 
 	return resp, nil
 }
+
+func RunAndGetStdOutAndErr(cmd *exec.Cmd) ([]byte, error) {
+	resp, err := cmd.CombinedOutput()
+
+	if err != nil {
+		return nil, fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return resp, nil
+}

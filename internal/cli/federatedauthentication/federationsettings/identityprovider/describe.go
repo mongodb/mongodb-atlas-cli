@@ -90,7 +90,7 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.FederationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.FederationSettingsID)
 

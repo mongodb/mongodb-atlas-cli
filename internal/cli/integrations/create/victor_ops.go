@@ -98,8 +98,7 @@ The requesting API key must have the Organization Owner or Project Owner role to
 	cmd.Flags().StringVar(&opts.routingKey, flag.RoutingKey, "", usage.RoutingKey)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 	_ = cmd.MarkFlagRequired(flag.RoutingKey)

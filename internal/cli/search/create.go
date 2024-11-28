@@ -153,8 +153,7 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	// deprecated flags
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)

@@ -260,7 +260,7 @@ func LogsBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	opts.AddOutputOptFlags(cmd)
 	cmd.Flags().StringVar(&opts.DeploymentName, flag.DeploymentName, "", usage.DeploymentName)
 
 	// Atlas flags

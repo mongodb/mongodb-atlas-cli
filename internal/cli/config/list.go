@@ -17,8 +17,6 @@ package config
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -51,7 +49,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&o.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	o.AddOutputOptFlags(cmd)
 
 	return cmd
 }

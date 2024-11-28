@@ -94,8 +94,7 @@ You can interrupt the command's polling at any time with CTRL-C.
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 

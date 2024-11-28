@@ -83,8 +83,7 @@ func CreateBuilder() *cobra.Command {
 	}
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	cmd.Flags().StringSliceVar(&opts.accessListIP, flag.AccessListIP, []string{}, usage.LinkTokenAccessListCIDREntries)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	return cmd
 }

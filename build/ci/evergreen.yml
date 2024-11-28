@@ -151,6 +151,8 @@ functions:
       params:
         target: cov/coverage.tgz
         source_dir: cov
+        include:
+          - '*'
         exclude_files:
           - .gitkeep
     - command: s3.put
@@ -179,6 +181,8 @@ functions:
       params:
         target: cov/coverage.tgz
         source_dir: cov
+        include:
+          - '*'
         exclude_files:
           - .gitkeep
     - command: s3.put

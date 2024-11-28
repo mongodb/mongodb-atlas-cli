@@ -149,7 +149,7 @@ functions:
         command: make e2e-test
     - command: archive.targz_pack
       params:
-        target: cov/coverage.tgz
+        target: coverage.tgz
         source_dir: cov
         include:
           - '*'
@@ -159,7 +159,7 @@ functions:
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/cov/coverage.tgz
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
         remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/${task_id}.coverage.tgz
         bucket: mongodb-mongocli-build
         permissions: public-read
@@ -179,7 +179,7 @@ functions:
         command: make unit-test
     - command: archive.targz_pack
       params:
-        target: cov/coverage.tgz
+        target: coverage.tgz
         source_dir: cov
         include:
           - '*'
@@ -189,7 +189,7 @@ functions:
       params:
         aws_key: ${aws_key}
         aws_secret: ${aws_secret}
-        local_file: src/github.com/mongodb/mongodb-atlas-cli/cov/coverage.tgz
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
         remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/unit-test.coverage.tgz
         bucket: mongodb-mongocli-build
         permissions: public-read

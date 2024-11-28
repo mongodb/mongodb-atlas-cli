@@ -163,9 +163,44 @@ func TestExportIndependentOrNot(t *testing.T) {
 	testPrefix := "test-"
 	generator.generateDBUser(testPrefix)
 	generator.generateCluster()
+	generator.generateAWSPrivateEndpoint("eu-central-1")
 	expectAlertConfigs := true
 	dictionary := resources.AtlasNameToKubernetesName()
 	credentialName := resources.NormalizeAtlasName(generator.projectName+credSuffixTest, dictionary)
+
+	expectedPESubresource := []akov2.PrivateEndpoint{
+		{
+			Provider: "AWS",
+			Region:   "EU_CENTRAL_1",
+		},
+	}
+	expectedPrivateEndpoint := &akov2.AtlasPrivateEndpoint{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "AtlasPrivateEndpoint",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: generator.projectName + "-pe-aws-eucentral1",
+		},
+		Spec: akov2.AtlasPrivateEndpointSpec{
+			Provider: "AWS",
+			Region:   "EU_CENTRAL_1",
+			ExternalProject: &akov2.ExternalProjectReference{
+				ID: generator.projectID,
+			},
+			LocalCredentialHolder: akoapi.LocalCredentialHolder{
+				ConnectionSecret: &akoapi.LocalObjectReference{
+					Name: generator.projectName + "credentials",
+				},
+			},
+		},
+		Status: akov2status.AtlasPrivateEndpointStatus{
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
+			},
+		},
+	}
+
 	for _, tc := range []struct {
 		title                string
 		independentResources bool
@@ -175,7 +210,7 @@ func TestExportIndependentOrNot(t *testing.T) {
 			title:                "Exported without independentResources uses Kubernetes references",
 			independentResources: false,
 			expected: []runtime.Object{
-				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs),
+				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs, expectedPESubresource),
 				defaultTestAtlasConnSecret(credentialName, ""),
 				defaultTestUser(generator.dbUser, generator.projectName, ""),
 				defaultM0TestCluster(generator.clusterName, generator.clusterRegion, generator.projectName, ""),
@@ -185,8 +220,9 @@ func TestExportIndependentOrNot(t *testing.T) {
 			title:                "Exported with independentResources uses IDs were supported",
 			independentResources: true,
 			expected: []runtime.Object{
-				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs),
+				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs, nil),
 				defaultTestAtlasConnSecret(credentialName, ""),
+				expectedPrivateEndpoint,
 				defaultTestUserWithID(generator.dbUser, generator.projectName, generator.projectID, "", credentialName),
 				defaultM0TestClusterWithID(
 					generator.clusterName, generator.clusterRegion, generator.projectName, generator.projectID, "",
@@ -237,7 +273,7 @@ func (f filtered) byKind(kinds ...string) []runtime.Object {
 	return result
 }
 
-func defaultTestProject(name, namespace string, labels map[string]string, alertConfigs bool) *akov2.AtlasProject {
+func defaultTestProject(name, namespace string, labels map[string]string, alertConfigs bool, privateEndpoints []akov2.PrivateEndpoint) *akov2.AtlasProject {
 	project := &akov2.AtlasProject{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "AtlasProject",
@@ -276,6 +312,11 @@ func defaultTestProject(name, namespace string, labels map[string]string, alertC
 			defaultAlertConfig(),
 		}
 	}
+
+	if len(privateEndpoints) > 0 {
+		project.Spec.PrivateEndpoints = privateEndpoints
+	}
+
 	return project
 }
 

@@ -410,6 +410,21 @@ func (mr *MockOperatorGenericStoreMockRecorder) Integrations(arg0 interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Integrations", reflect.TypeOf((*MockOperatorGenericStore)(nil).Integrations), arg0)
 }
 
+// InterfaceEndpoint mocks base method.
+func (m *MockOperatorGenericStore) InterfaceEndpoint(arg0, arg1, arg2, arg3 string) (*admin0.PrivateLinkEndpoint, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InterfaceEndpoint", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*admin0.PrivateLinkEndpoint)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// InterfaceEndpoint indicates an expected call of InterfaceEndpoint.
+func (mr *MockOperatorGenericStoreMockRecorder) InterfaceEndpoint(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InterfaceEndpoint", reflect.TypeOf((*MockOperatorGenericStore)(nil).InterfaceEndpoint), arg0, arg1, arg2, arg3)
+}
+
 // ListFlexClusters mocks base method.
 func (m *MockOperatorGenericStore) ListFlexClusters(arg0 *admin0.ListFlexClustersApiParams) (*admin0.PaginatedFlexClusters20241113, error) {
 	m.ctrl.T.Helper()

@@ -1649,10 +1649,13 @@ tasks:
     depends_on:
       - name: ".e2e"
         variant: e2e_required
+        status: '*'
       - name: ".e2e"
         variant: e2e_generic
+        status: '*'
       - name: unit_test
         variant: code_health
+        status: '*'
     commands:
       - command: shell.exec
         params:

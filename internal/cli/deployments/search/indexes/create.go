@@ -410,7 +410,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DBName, flag.Database, "", usage.Database)
 	cmd.Flags().StringVar(&opts.Collection, flag.Collection, "", usage.Collection)
 	cmd.Flags().StringVarP(&opts.Filename, flag.File, flag.FileShort, "", usage.SearchFilename)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	opts.AddOutputOptFlags(cmd)
 
 	// Local only
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)

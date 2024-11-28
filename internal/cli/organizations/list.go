@@ -104,8 +104,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.OrgNameFilter)
 	cmd.Flags().BoolVar(&opts.includeDeletedOrgs, flag.IncludeDeleted, false, usage.OrgIncludeDeleted)
 
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	return cmd
 }

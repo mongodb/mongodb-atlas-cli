@@ -86,9 +86,8 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.teamID, flag.TeamID, "", usage.TeamID)
 
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	opts.AddOutputOptFlags(cmd)
 	cmd.Flags().BoolVarP(&opts.CompactResponse, flag.CompactResponse, flag.CompactResponseShort, false, usage.CompactResponse)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	_ = cmd.MarkFlagRequired(flag.TeamID)
 

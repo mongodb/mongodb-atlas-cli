@@ -110,8 +110,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole+usage.UpdateWarning)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Role)
 

@@ -114,8 +114,8 @@ func InviteBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.teamIDs, flag.TeamID, []string{}, usage.TeamID)
 	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
+
 	_ = cmd.MarkFlagFilename(flag.File)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Role)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.TeamID)

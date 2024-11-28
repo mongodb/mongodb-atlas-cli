@@ -96,8 +96,7 @@ To view possible values for the ID argument, run atlas organizations apiKeys lis
 
 	_ = cmd.MarkFlagRequired(flag.Role)
 
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	return cmd
 }

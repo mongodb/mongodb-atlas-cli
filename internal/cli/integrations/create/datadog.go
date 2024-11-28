@@ -100,8 +100,7 @@ Datadog integration is available only for M10+ clusters.
 	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.DatadogAPIRegion)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)
 

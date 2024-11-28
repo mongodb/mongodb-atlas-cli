@@ -109,8 +109,7 @@ func UpdateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.File)
 	_ = cmd.MarkFlagFilename(flag.File)
 
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	return cmd
 }

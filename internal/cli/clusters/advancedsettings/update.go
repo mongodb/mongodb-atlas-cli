@@ -177,8 +177,7 @@ Atlas supports this command only for M10+ clusters.
 	cmd.Flags().IntVar(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, -1, usage.SampleSizeBIConnector)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	return cmd
 }

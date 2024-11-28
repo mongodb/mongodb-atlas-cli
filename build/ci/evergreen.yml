@@ -165,6 +165,40 @@ functions:
         permissions: public-read
         content_type: ${content_type|application/json}
         display_name: internal-bucket
+  "merge cov":
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        command: src/github.com/mongodb/mongodb-atlas-cli/scripts/merge-cov.sh
+    - command: archive.targz_pack
+      params:
+        target: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
+        source_dir: src/github.com/mongodb/mongodb-atlas-cli/
+        include:
+          - 'coverage.out'
+          - 'cov/merged/*'
+        exclude_files:
+          - .gitkeep
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/e2e.coverage.tgz
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.out
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/e2e.coverage.out
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -1623,10 +1657,7 @@ tasks:
     tags: ["coverage"]
     depends_on:
       - name: ".e2e"
-        variant: e2e_required
-        status: '*'
-      - name: ".e2e"
-        variant: e2e_generic
+        variant: "*"
         status: '*'
     commands:
       - command: shell.exec
@@ -1637,9 +1668,8 @@ tasks:
             AWS_ACCESS_KEY_ID: ${aws_key}
             AWS_SECRET_ACCESS_KEY: ${aws_secret}
           script: |
-            echo "hello world"
             aws s3 sync s3://mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/atlascli/cov/ ./cov/
-            ls -la ./cov/
+      - func: "merge cov"
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

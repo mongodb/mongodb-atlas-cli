@@ -133,7 +133,7 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 		projectResult.Spec.NetworkPeers = networkPeering
 	}
 
-	if br.Validator.FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints) {
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints) && !br.Validator.IsResourceSupported(features.ResourceAtlasPrivateEndpoint) {
 		privateEndpoints, ferr := buildPrivateEndpoints(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
@@ -642,7 +642,7 @@ func buildEncryptionAtRest(encProvider store.EncryptionAtRestDescriber, projectI
 			Build())
 
 	case data.GoogleCloudKms.Enabled != nil && *data.GoogleCloudKms.Enabled:
-		ref.AzureKeyVault.SecretRef = akov2common.ResourceRefNamespaced{
+		ref.GoogleCloudKms.SecretRef = akov2common.ResourceRefNamespaced{
 			Name:      resources.NormalizeAtlasName(generateName("gcp-credentials-"), dictionary),
 			Namespace: targetNamespace,
 		}

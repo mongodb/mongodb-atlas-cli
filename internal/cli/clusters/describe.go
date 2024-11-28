@@ -25,6 +25,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+)
+
+const (
+	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
 )
 
 type DescribeOpts struct {
@@ -49,12 +54,31 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return err
+		return opts.RunFlexCluster(err)
 	}
+
 	return opts.Print(r)
 }
 
-// atlas cluster(s) describe <clusterName> --projectId projectId.
+func (opts *DescribeOpts) RunFlexCluster(err error) error {
+	apiError, ok := atlasClustersPinned.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+		return err
+	}
+
+	r, err := opts.store.FlexCluster(opts.ConfigProjectID(), opts.name)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
+}
+
+// DescribeBuilder atlas cluster(s) describe <clusterName> --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

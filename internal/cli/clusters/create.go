@@ -40,6 +40,7 @@ const (
 	tenant     = "TENANT"
 	atlasM0    = "M0"
 	atlasM2    = "M2"
+	atlasFlex  = "FLEX"
 	atlasM5    = "M5"
 	zoneName   = "Zone 1"
 )

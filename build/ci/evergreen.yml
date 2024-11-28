@@ -169,7 +169,7 @@ functions:
     - command: subprocess.exec
       params:
         <<: *go_options
-        command: src/github.com/mongodb/mongodb-atlas-cli/scripts/merge-cov.sh
+        command: build/ci/merge-cov.sh
     - command: archive.targz_pack
       params:
         target: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz

@@ -1644,6 +1644,28 @@ tasks:
           user: atlascli
           identity_file: ${home}/.ssh/id_rsa
           cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
+  - name: coverage
+    tags: ["coverage"]
+    depends_on:
+      - ".e2e"
+      - name: unit_test
+        variant: code_health
+    commands:
+      - command: shell.exec
+        params:
+          <<: *go_options
+          script: |
+            echo "hello world"
+      - command: s3.get
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/
+          bucket: mongodb-mongocli-build
+          permissions: public-read
+          content_type: ${content_type|application/json}
+          display_name: internal-bucket
+          local_file: src/github.com/mongodb/mongodb-atlas-cli/cov/
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
@@ -1929,6 +1951,14 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".packer .windows"
+  - name: coverage
+    display_name: "Coverage"
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".coverage"
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev"]

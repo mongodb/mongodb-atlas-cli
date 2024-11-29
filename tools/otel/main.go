@@ -56,22 +56,22 @@ func execute() error {
 
 func run(ctx context.Context, spanName string, attrs map[string]string) error {
 	traceID := os.Getenv("otel_trace_id")
-	if traceID != "" {
+	if traceID == "" {
 		return fmt.Errorf("%w: %s", errMissingEnvVar, "otel_trace_id")
 	}
 
 	parentID := os.Getenv("otel_parent_id")
-	if parentID != "" {
+	if parentID == "" {
 		return fmt.Errorf("%w: %s", errMissingEnvVar, "otel_parent_id")
 	}
 
 	collectorEndpoint := os.Getenv("otel_collector_endpoint")
-	if collectorEndpoint != "" {
+	if collectorEndpoint == "" {
 		return fmt.Errorf("%w: %s", errMissingEnvVar, "otel_collector_endpoint")
 	}
 
 	projectID := os.Getenv("project_id")
-	if collectorEndpoint != "" {
+	if collectorEndpoint == "" {
 		return fmt.Errorf("%w: %s", errMissingEnvVar, "project_id")
 	}
 

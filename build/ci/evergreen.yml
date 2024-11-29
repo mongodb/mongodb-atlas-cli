@@ -1657,7 +1657,7 @@ tasks:
     tags: ["coverage"]
     depends_on:
       - name: ".e2e"
-        variant: "* !cron"
+        variant: "* !.cron"
         status: '*'
     commands:
       - command: shell.exec

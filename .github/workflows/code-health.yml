@@ -54,13 +54,14 @@ jobs:
         uses: test-summary/action@v2.4
         with:
           paths: unit-tests.xml
-        if: always()
+        if: always() && matrix.os == 'ubuntu-latest'
       - name: Upload coverage file
-        if: github.event_name == 'pull_request'
+        if: matrix.os == 'ubuntu-latest' && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-file-${{ matrix.os }}
+          name: coverage-file
           path: coverage.out
+
   code-coverage:
     needs: unit-tests
     if: github.event_name == 'pull_request'
@@ -86,7 +87,7 @@ jobs:
       - name: Download coverage file
         uses: actions/download-artifact@v4
         with:
-          name: coverage-file-ubuntu-latest
+          name: coverage-file
       - name: Check coverage cache
         id: cache-coverage
         uses: actions/cache@v4

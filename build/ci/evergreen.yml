@@ -180,6 +180,29 @@ functions:
           - 'cov/merged/*'
         exclude_files:
           - .gitkeep
+    - command: shell.exec
+      params:
+        <<: *go_options
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          PERCENTAGE=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
+          COUNT=$(ls -1 cov/*.tgz)
+          cat <<EOF > expansions.yaml
+          percentage: $PERCENTAGE
+          count: $COUNT
+          EOF
+    - command: expansions.update
+      params:
+        ignore_missing_file: true
+        file: src/github.com/mongodb/mongodb-atlas-cli/expansions.yaml
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: rm
+        args:
+          - -f
+          - expansions.yaml
     - command: s3.put
       params:
         aws_key: ${aws_key}
@@ -504,10 +527,6 @@ tasks:
     tags: ["code_health"]
     commands:
       - func: "build"
-      - func: "otel"
-        vars:
-          span: "compile"
-          attr: "hello=world"
   - name: config_e2e
     tags: ["e2e","required"]
     must_have_test_results: true
@@ -1695,12 +1714,10 @@ tasks:
           script: |
             aws s3 sync s3://mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/atlascli/cov/ ./cov/
       - func: "merge cov"
-      - command: shell.exec
-        params:
-          <<: *go_options
-          script: |
-            percentage=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
-            echo "$percentage %"
+      - func: "otel"
+        vars:
+          span: "coverage"
+          attr: "total=${percentage},count=${count}"
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

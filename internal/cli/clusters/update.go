@@ -17,6 +17,7 @@ package clusters
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
@@ -24,11 +25,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 const (
@@ -44,6 +47,7 @@ type UpdateOpts struct {
 	mdbVersion                   string
 	enableTerminationProtection  bool
 	disableTerminationProtection bool
+	isFlexCluster                bool
 	filename                     string
 	tag                          map[string]string
 	fs                           afero.Fs
@@ -59,6 +63,67 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
+	if opts.isFlexCluster {
+		return opts.RunFlexCluster()
+	}
+
+	return opts.RunDedicatedCluster()
+}
+
+func (opts *UpdateOpts) RunFlexCluster() error {
+	flexClusterReq, err := opts.newFlexCluster()
+	if err != nil {
+		return err
+	}
+
+	flexCluster, err = opts.store.UpdateFlexCluster(opts.ConfigProjectID(), opts.name, flexClusterReq)
+
+	apiError, ok := atlasv2.AsError(err)
+	code := apiError.GetErrorCode()
+	if ok {
+		if apiError.GetErrorCode() == invalidAttributeErrorCode && strings.Contains(apiError.GetDetail(), regionName) {
+			return cli.ErrNoRegionExistsTryCommand
+		}
+		if ok && code == duplicateClusterNameErrorCode {
+			return cli.ErrNameExists
+		}
+	}
+
+	return opts.Print(flexCluster)
+}
+
+func (opts *UpdateOpts) newFlexCluster() (*atlasv2.FlexClusterDescriptionUpdate20241113, error) {
+	cluster := new(atlasv2.FlexClusterDescriptionUpdate20241113)
+	if opts.filename != "" {
+		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
+			return nil, err
+		}
+	} else {
+		cluster = opts.newFlexClusterDescriptionUpdate20241113()
+	}
+
+	return cluster, nil
+}
+
+func (opts *UpdateOpts) newFlexClusterDescriptionUpdate20241113() *atlasv2.FlexClusterDescriptionUpdate20241113 {
+	out := &atlasv2.FlexClusterDescriptionUpdate20241113{}
+
+	if opts.disableTerminationProtection {
+		out.TerminationProtectionEnabled = pointer.Get(false)
+	}
+
+	if opts.enableTerminationProtection {
+		out.TerminationProtectionEnabled = pointer.Get(true)
+	}
+
+	if len(opts.tag) > 0 {
+		out.Tags = newResourceTags(opts.tag)
+	}
+
+	return out
+}
+
+func (opts *UpdateOpts) RunDedicatedCluster() error {
 	cluster, err := opts.cluster()
 	if err != nil {
 		return err
@@ -134,7 +199,29 @@ func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasClustersPinned.Advanc
 	}
 }
 
-// UpdateBuilder atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
+// newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is
+// a FlexCluster. When opts.filename is not provided, a FlexCluster has the opts.tier==FLEX.
+// When opts.filename is provided, the function loads the file and check that the field replicationSpecs
+// (available only for Dedicated Cluster) is present.
+func (opts *UpdateOpts) newIsFlexCluster() error {
+	if opts.filename == "" {
+		opts.isFlexCluster = opts.tier == atlasFlex
+		return nil
+	}
+
+	var m map[string]any
+	if err := file.Load(opts.fs, opts.filename, &m); err != nil {
+		opts.isFlexCluster = false
+		return fmt.Errorf("%w: %w", errFailedToLoadClusterFileMessage, err)
+	}
+
+	_, ok := m["replicationSpecs"]
+	opts.isFlexCluster = !ok
+	return nil
+}
+
+// UpdateBuilder builds a cobra.Command that can run as:
+// atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{
 		fs: afero.NewOsFs(),
@@ -172,6 +259,7 @@ You can only update a replica set to a single-shard cluster; you cannot update a
 				opts.name = args[0]
 			}
 			return opts.PreRunE(
+				opts.newIsFlexCluster,
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTmpl),

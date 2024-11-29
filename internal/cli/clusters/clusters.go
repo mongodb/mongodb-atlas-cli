@@ -15,6 +15,8 @@
 package clusters
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/advancedsettings"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/availableregions"
@@ -28,6 +30,8 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+var errFailedToLoadClusterFileMessage = errors.New("failed to parse JSON file")
 
 func Builder() *cobra.Command {
 	const use = "clusters"

@@ -319,8 +319,8 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasClustersPinned.CloudRegio
 
 // newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is
 // a FlexCluster. When opts.filename is not provided, a FlexCluster has the opts.tier==FLEX.
-// When opts.filename is provided, the function loads the file and check that the field providerSettings
-// (available only for FlexCluster) is present.
+// When opts.filename is provided, the function loads the file and check that the field replicationSpecs
+// (available only for Dedicated Cluster) is present.
 func (opts *CreateOpts) newIsFlexCluster() error {
 	if opts.filename == "" {
 		opts.isFlexCluster = opts.tier == atlasFlex
@@ -333,8 +333,8 @@ func (opts *CreateOpts) newIsFlexCluster() error {
 		return fmt.Errorf("%w: %w", errFailedToLoadClusterFileMessage, err)
 	}
 
-	_, ok := m["providerSettings"]
-	opts.isFlexCluster = ok
+	_, ok := m["replicationSpecs"]
+	opts.isFlexCluster = !ok
 	return nil
 }
 

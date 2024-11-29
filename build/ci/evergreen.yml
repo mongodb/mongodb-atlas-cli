@@ -188,7 +188,7 @@ functions:
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}
-        display_name: internal-bucket
+        display_name: internal-bucket e2e.coverage.tgz
     - command: s3.put
       params:
         aws_key: ${aws_key}
@@ -198,7 +198,7 @@ functions:
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}
-        display_name: internal-bucket
+        display_name: internal-bucket e2e.coverage.out
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -361,7 +361,7 @@ functions:
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/octet-stream}
-        display_name: internal-bucket
+        display_name: internal-bucket terraform.tfstate
     - command: shell.exec
       params:
         <<: *go_options
@@ -1657,7 +1657,7 @@ tasks:
     tags: ["coverage"]
     depends_on:
       - name: ".e2e"
-        variant: "*"
+        variant: "* !cron"
         status: '*'
     commands:
       - command: shell.exec
@@ -1670,6 +1670,12 @@ tasks:
           script: |
             aws s3 sync s3://mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/atlascli/cov/ ./cov/
       - func: "merge cov"
+      - command: shell.exec
+        params:
+          <<: *go_options
+          script: |
+            percentage=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
+            echo "$percentage %"
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
@@ -1803,6 +1809,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - cleanup
+      - cron
     run_on:
       - rhel80-small
     expansions:
@@ -1835,6 +1842,7 @@ buildvariants:
       - ubuntu2404-small
     tags:
       - localdev
+      - cron
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version
@@ -1846,6 +1854,7 @@ buildvariants:
       - debian11-small
     tags:
       - localdev
+      - cron
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version
@@ -1857,6 +1866,7 @@ buildvariants:
       - debian12-small
     tags:
       - localdev
+      - cron
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version
@@ -1868,6 +1878,7 @@ buildvariants:
       - amazon2023-latest-small
     tags:
       - localdev
+      - cron
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version
@@ -1878,6 +1889,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - rhel90-small
     expansions:
@@ -1905,6 +1917,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - rhel90-small
     expansions:
@@ -1916,6 +1929,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - rhel80-small
     expansions:
@@ -1927,6 +1941,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - macos-14-arm64-docker
     expansions:
@@ -1938,6 +1953,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - macos-13-arm64-docker
     expansions:
@@ -1949,6 +1965,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - packer
+      - cron
     run_on:
       - rhel80-small
     expansions:

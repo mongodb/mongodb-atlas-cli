@@ -128,8 +128,7 @@ func UpdateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagFilename(flag.File)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.ArchiveAfter)

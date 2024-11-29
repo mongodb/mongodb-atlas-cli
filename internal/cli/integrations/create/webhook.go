@@ -96,8 +96,7 @@ func WebhookBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.secret, flag.Secret, "", usage.Secret)
 
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.URL)
 	_ = cmd.MarkFlagRequired(flag.Secret)

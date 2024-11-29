@@ -68,8 +68,7 @@ func KeyProvidersListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.file, flag.File, flag.FileShort, "", usage.EncryptedLogFile)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.File)
 	_ = cmd.MarkFlagFilename(flag.File)

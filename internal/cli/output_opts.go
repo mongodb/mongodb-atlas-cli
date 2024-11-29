@@ -25,10 +25,12 @@ import (
 
 	"github.com/PaesslerAG/jsonpath"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/jsonpathwriter"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/jsonwriter"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
@@ -247,4 +249,10 @@ func template(outputType, value string) (string, error) {
 		value = string(data)
 	}
 	return value, nil
+}
+
+// AddOutputOptFlags adds the output flag to the command and registers its auto-completion function.
+func (opts *OutputOpts) AddOutputOptFlags(cmd *cobra.Command) {
+	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 }

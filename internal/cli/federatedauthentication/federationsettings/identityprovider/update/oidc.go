@@ -218,8 +218,8 @@ func OIDCBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.associatedDomains, flag.AssociatedDomain, []string{}, usage.AssociatedDomains)
 	cmd.Flags().StringSliceVar(&opts.requestedScopes, flag.RequestedScope, []string{}, usage.RequestedScopes)
 
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
+
 	_ = cmd.MarkFlagRequired(flag.FederationSettingsID)
 	_ = cmd.MarkFlagRequired(flag.IdpType)
 

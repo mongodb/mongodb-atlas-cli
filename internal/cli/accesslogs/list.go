@@ -139,12 +139,10 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ipAddresses, flag.IP, "", usage.AccessLogIP)
 	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, "", usage.AuthResult)
 	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
+	opts.AddOutputOptFlags(cmd)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.ClusterName, flag.Hostname)
 	cmd.MarkFlagsOneRequired(flag.ClusterName, flag.Hostname)
-
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
 
 	return cmd
 }

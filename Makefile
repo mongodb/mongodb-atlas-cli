@@ -95,11 +95,11 @@ fix-lint: ## Fix linting errors
 check: test fix-lint ## Run tests and linters
 
 .PHONY: check-templates
-check-templates:
+check-templates: ## Verify templates
 	go run ./tools/templates-checker
 
 .PHONY: addcopy
-addcopy:
+addcopy: ## Add missing license to files
 	@scripts/add-copy.sh
 
 .PHONY: generate
@@ -109,6 +109,10 @@ generate: gen-docs gen-mocks gen-code ## Generate docs, mocks, code, all auto ge
 gen-code: ## Generate code
 	@echo "==> Generating code"
 	go run ./tools/cli-generator
+
+.PHONY: otel
+otel: ## Generate code
+	go run ./tools/otel $(SPAN) --attr $(ATTRS)
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks

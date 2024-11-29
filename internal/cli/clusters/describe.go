@@ -78,7 +78,8 @@ func (opts *DescribeOpts) RunFlexCluster(err error) error {
 	return opts.Print(r)
 }
 
-// DescribeBuilder atlas cluster(s) describe <clusterName> --projectId projectId.
+// DescribeBuilder builds a cobra.Command that can run as:
+// atlas cluster(s) describe <clusterName> --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{

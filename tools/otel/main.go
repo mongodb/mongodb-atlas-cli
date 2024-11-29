@@ -82,12 +82,12 @@ func run(ctx context.Context, spanName string, attrs map[string]string) error {
 
 	parsedTraceID, err := trace.TraceIDFromHex(traceID)
 	if err != nil {
-		log.Fatalln("failed to parce traceID")
+		return err
 	}
 
 	parsedSpanID, err := trace.SpanIDFromHex(parentID)
 	if err != nil {
-		log.Fatalln("failed to parce traceID")
+		return err
 	}
 
 	spanContext := trace.NewSpanContext(trace.SpanContextConfig{

@@ -192,6 +192,16 @@ functions:
           percentage: $PERCENTAGE
           count: $COUNT
           EOF
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/expansions.yaml
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/expansions.yaml
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/yaml}
+        display_name: internal-bucket expansions.yaml
     - command: expansions.update
       params:
         ignore_missing_file: true

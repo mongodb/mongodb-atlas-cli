@@ -187,7 +187,7 @@ functions:
         script: |
           set -Eeou pipefail
           PERCENTAGE=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
-          COUNT=$(ls -1 cov/*.tgz)
+          COUNT=$(ls -1 cov/*.tgz | wc -l)
           cat <<EOF > expansions.yaml
           percentage: $PERCENTAGE
           count: $COUNT

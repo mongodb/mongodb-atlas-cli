@@ -25,7 +25,7 @@ require (
 	github.com/spf13/afero v1.11.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/tangzero/inflector v1.0.0
 	go.mongodb.org/atlas v0.37.0
 	go.mongodb.org/mongo-driver v1.17.1

@@ -204,19 +204,21 @@ func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasClustersPinned.Advanc
 // When opts.filename is provided, the function loads the file and check that the field replicationSpecs
 // (available only for Dedicated Cluster) is present.
 func (opts *UpdateOpts) newIsFlexCluster() error {
-	if opts.filename == "" {
-		opts.isFlexCluster = opts.tier == atlasFlex
+	_, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+	if err == nil {
+		opts.isFlexCluster = false
 		return nil
 	}
 
-	var m map[string]any
-	if err := file.Load(opts.fs, opts.filename, &m); err != nil {
-		opts.isFlexCluster = false
-		return fmt.Errorf("%w: %w", errFailedToLoadClusterFileMessage, err)
+	apiError, ok := atlasClustersPinned.AsError(err)
+	if !ok {
+		return err
+	}
+	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+		return err
 	}
 
-	_, ok := m["replicationSpecs"]
-	opts.isFlexCluster = !ok
+	opts.isFlexCluster = true
 	return nil
 }
 
@@ -259,10 +261,10 @@ You can only update a replica set to a single-shard cluster; you cannot update a
 				opts.name = args[0]
 			}
 			return opts.PreRunE(
-				opts.newIsFlexCluster,
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTmpl),
+				opts.newIsFlexCluster,
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {

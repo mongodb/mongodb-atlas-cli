@@ -28,10 +28,6 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
-const (
-	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
-)
-
 type DescribeOpts struct {
 	cli.GlobalOpts
 	cli.OutputOpts

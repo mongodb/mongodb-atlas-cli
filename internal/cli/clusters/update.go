@@ -200,9 +200,8 @@ func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasClustersPinned.Advanc
 }
 
 // newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is
-// a FlexCluster. When opts.filename is not provided, a FlexCluster has the opts.tier==FLEX.
-// When opts.filename is provided, the function loads the file and check that the field replicationSpecs
-// (available only for Dedicated Cluster) is present.
+// a FlexCluster. The function uses the AtlasCluster to get the cluster description and in the event of the error
+// cannotUseFlexWithClusterApisErrorCode sets the opts.isFlexCluster to true.
 func (opts *UpdateOpts) newIsFlexCluster() error {
 	_, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err == nil {

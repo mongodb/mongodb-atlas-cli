@@ -5,6 +5,9 @@ on:
     branches:
       - master
   pull_request:
+permissions:
+  pull-requests: write  # For PR-specific operations
+  issues: write        # For commenting functionality
 jobs:
   golangci:
     name: lint

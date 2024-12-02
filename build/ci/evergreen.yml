@@ -145,8 +145,94 @@ functions:
         env:
           <<: *go_env
           MCLI_SKIP_UPDATE_CHECK: "yes"
+          DO_NOT_TRACK: "1"
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
+    - command: archive.targz_pack
+      params:
+        target: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
+        source_dir: src/github.com/mongodb/mongodb-atlas-cli/cov
+        include:
+          - '*'
+        exclude_files:
+          - .gitkeep
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/${build_variant}_${task_name}.coverage.tgz
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket
+  "merge cov":
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: build/ci/merge-cov.sh
+    - command: archive.targz_pack
+      params:
+        target: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
+        source_dir: src/github.com/mongodb/mongodb-atlas-cli/
+        include:
+          - 'coverage.out'
+          - 'cov/merged/*'
+        exclude_files:
+          - .gitkeep
+    - command: shell.exec
+      params:
+        <<: *go_options
+        shell: bash
+        script: |
+          set -Eeou pipefail
+          PERCENTAGE=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
+          COUNT=$(ls -1 cov/*.tgz | wc -l)
+          cat <<EOF > expansions.yaml
+          percentage: $PERCENTAGE
+          count: $COUNT
+          EOF
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/expansions.yaml
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/expansions.yaml
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/yaml}
+        display_name: internal-bucket expansions.yaml
+    - command: expansions.update
+      params:
+        ignore_missing_file: true
+        file: src/github.com/mongodb/mongodb-atlas-cli/expansions.yaml
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        binary: rm
+        args:
+          - -f
+          - expansions.yaml
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/e2e.coverage.tgz
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket e2e.coverage.tgz
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/coverage.out
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/e2e.coverage.out
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket e2e.coverage.out
   "install gotestsum":
     - command: shell.exec
       type: setup
@@ -309,7 +395,7 @@ functions:
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/octet-stream}
-        display_name: internal-bucket
+        display_name: internal-bucket terraform.tfstate
     - command: shell.exec
       params:
         <<: *go_options
@@ -426,6 +512,26 @@ functions:
         args:
           - -f
           - expansions.yaml
+  "otel":
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - go_base_path
+          - go_proxy
+          - workdir
+          - project_id
+          - project_identifier
+          - otel_trace_id
+          - otel_parent_id
+          - otel_collector_endpoint
+        env:
+          <<: *go_env
+          SPAN: ${span}
+          ATTRS: ${attr}
+        binary: make
+        args:
+          - otel
 tasks:
   - name: compile
     tags: ["code_health"]
@@ -1601,6 +1707,27 @@ tasks:
           user: atlascli
           identity_file: ${home}/.ssh/id_rsa
           cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
+  - name: coverage
+    tags: ["coverage"]
+    depends_on:
+      - name: ".e2e"
+        variant: "* !.cron"
+        status: '*'
+    commands:
+      - command: shell.exec
+        params:
+          <<: *go_options
+          env:
+            <<: *go_env
+            AWS_ACCESS_KEY_ID: ${aws_key}
+            AWS_SECRET_ACCESS_KEY: ${aws_secret}
+          script: |
+            aws s3 sync s3://mongodb-mongocli-build/${project}/dist/${revision}_${created_at}/atlascli/cov/ ./cov/
+      - func: "merge cov"
+      - func: "otel"
+        vars:
+          span: "coverage"
+          attr: "total=${percentage},count=${count}"
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
@@ -1734,6 +1861,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - cleanup
+      - cron
     run_on:
       - rhel80-small
     expansions:
@@ -1766,6 +1894,7 @@ buildvariants:
       - ubuntu2404-small
     tags:
       - localdev
+      - cron
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version
@@ -1777,6 +1906,7 @@ buildvariants:
       - debian11-small
     tags:
       - localdev
+      - cron
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version
@@ -1788,6 +1918,7 @@ buildvariants:
       - debian12-small
     tags:
       - localdev
+      - cron
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version
@@ -1799,6 +1930,7 @@ buildvariants:
       - amazon2023-latest-small
     tags:
       - localdev
+      - cron
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     expansions:
       <<: *go_linux_version
@@ -1809,6 +1941,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - rhel90-small
     expansions:
@@ -1836,6 +1969,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - rhel90-small
     expansions:
@@ -1847,6 +1981,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - rhel80-small
     expansions:
@@ -1858,6 +1993,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - macos-14-arm64-docker
     expansions:
@@ -1869,6 +2005,7 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - localdev
+      - cron
     run_on:
       - macos-13-arm64-docker
     expansions:
@@ -1880,21 +2017,30 @@ buildvariants:
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
       - packer
+      - cron
     run_on:
       - rhel80-small
     expansions:
       <<: *go_linux_version
     tasks:
       - name: ".packer .windows"
+  - name: coverage
+    display_name: "Coverage"
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".coverage"
 patch_aliases:
   - alias: "localdev"
-    variant_tags: ["localdev"]
+    variant_tags: ["localdev cron"]
     task: ".*"
   - alias: "packer"
-    variant_tags: ["packer"]
+    variant_tags: ["packer cron"]
     task: ".*"
   - alias: "cleanup"
-    variant_tags: ["cleanup"]
+    variant_tags: ["cleanup cron"]
     task: ".*"
 github_pr_aliases:
   - variant: "code_health"
@@ -1907,3 +2053,6 @@ git_tag_aliases:
   - git_tag: "atlascli/v*"
     variant: "^release_atlascli"
     task: ".*"
+github_checks_aliases:
+ - variant: ".*"
+   task: ".*"

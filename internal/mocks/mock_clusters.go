@@ -10,7 +10,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,6 +35,21 @@ func NewMockClusterLister(ctrl *gomock.Controller) *MockClusterLister {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockClusterLister) EXPECT() *MockClusterListerMockRecorder {
 	return m.recorder
+}
+
+// ListFlexClusters mocks base method.
+func (m *MockClusterLister) ListFlexClusters(arg0 *admin0.ListFlexClustersApiParams) (*admin0.PaginatedFlexClusters20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFlexClusters", arg0)
+	ret0, _ := ret[0].(*admin0.PaginatedFlexClusters20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFlexClusters indicates an expected call of ListFlexClusters.
+func (mr *MockClusterListerMockRecorder) ListFlexClusters(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFlexClusters", reflect.TypeOf((*MockClusterLister)(nil).ListFlexClusters), arg0)
 }
 
 // ProjectClusters mocks base method.
@@ -90,6 +105,21 @@ func (mr *MockClusterDescriberMockRecorder) AtlasCluster(arg0, arg1 interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasCluster", reflect.TypeOf((*MockClusterDescriber)(nil).AtlasCluster), arg0, arg1)
 }
 
+// FlexCluster mocks base method.
+func (m *MockClusterDescriber) FlexCluster(arg0, arg1 string) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FlexCluster indicates an expected call of FlexCluster.
+func (mr *MockClusterDescriberMockRecorder) FlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlexCluster", reflect.TypeOf((*MockClusterDescriber)(nil).FlexCluster), arg0, arg1)
+}
+
 // MockClusterCreator is a mock of ClusterCreator interface.
 type MockClusterCreator struct {
 	ctrl     *gomock.Controller
@@ -128,6 +158,21 @@ func (mr *MockClusterCreatorMockRecorder) CreateCluster(arg0 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCluster", reflect.TypeOf((*MockClusterCreator)(nil).CreateCluster), arg0)
 }
 
+// CreateFlexCluster mocks base method.
+func (m *MockClusterCreator) CreateFlexCluster(arg0 string, arg1 *admin0.FlexClusterDescriptionCreate20241113) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateFlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateFlexCluster indicates an expected call of CreateFlexCluster.
+func (mr *MockClusterCreatorMockRecorder) CreateFlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFlexCluster", reflect.TypeOf((*MockClusterCreator)(nil).CreateFlexCluster), arg0, arg1)
+}
+
 // MockClusterDeleter is a mock of ClusterDeleter interface.
 type MockClusterDeleter struct {
 	ctrl     *gomock.Controller
@@ -163,6 +208,20 @@ func (m *MockClusterDeleter) DeleteCluster(arg0, arg1 string) error {
 func (mr *MockClusterDeleterMockRecorder) DeleteCluster(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCluster", reflect.TypeOf((*MockClusterDeleter)(nil).DeleteCluster), arg0, arg1)
+}
+
+// DeleteFlexCluster mocks base method.
+func (m *MockClusterDeleter) DeleteFlexCluster(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteFlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteFlexCluster indicates an expected call of DeleteFlexCluster.
+func (mr *MockClusterDeleterMockRecorder) DeleteFlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteFlexCluster", reflect.TypeOf((*MockClusterDeleter)(nil).DeleteFlexCluster), arg0, arg1)
 }
 
 // MockClusterUpdater is a mock of ClusterUpdater interface.
@@ -203,6 +262,21 @@ func (mr *MockClusterUpdaterMockRecorder) UpdateCluster(arg0, arg1, arg2 interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCluster", reflect.TypeOf((*MockClusterUpdater)(nil).UpdateCluster), arg0, arg1, arg2)
 }
 
+// UpdateFlexCluster mocks base method.
+func (m *MockClusterUpdater) UpdateFlexCluster(arg0, arg1 string, arg2 *admin0.FlexClusterDescriptionUpdate20241113) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateFlexCluster", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateFlexCluster indicates an expected call of UpdateFlexCluster.
+func (mr *MockClusterUpdaterMockRecorder) UpdateFlexCluster(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateFlexCluster", reflect.TypeOf((*MockClusterUpdater)(nil).UpdateFlexCluster), arg0, arg1, arg2)
+}
+
 // MockAtlasClusterGetterUpdater is a mock of AtlasClusterGetterUpdater interface.
 type MockAtlasClusterGetterUpdater struct {
 	ctrl     *gomock.Controller
@@ -241,6 +315,21 @@ func (mr *MockAtlasClusterGetterUpdaterMockRecorder) AtlasCluster(arg0, arg1 int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasCluster", reflect.TypeOf((*MockAtlasClusterGetterUpdater)(nil).AtlasCluster), arg0, arg1)
 }
 
+// FlexCluster mocks base method.
+func (m *MockAtlasClusterGetterUpdater) FlexCluster(arg0, arg1 string) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FlexCluster indicates an expected call of FlexCluster.
+func (mr *MockAtlasClusterGetterUpdaterMockRecorder) FlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlexCluster", reflect.TypeOf((*MockAtlasClusterGetterUpdater)(nil).FlexCluster), arg0, arg1)
+}
+
 // UpdateCluster mocks base method.
 func (m *MockAtlasClusterGetterUpdater) UpdateCluster(arg0, arg1 string, arg2 *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
 	m.ctrl.T.Helper()
@@ -254,6 +343,21 @@ func (m *MockAtlasClusterGetterUpdater) UpdateCluster(arg0, arg1 string, arg2 *a
 func (mr *MockAtlasClusterGetterUpdaterMockRecorder) UpdateCluster(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCluster", reflect.TypeOf((*MockAtlasClusterGetterUpdater)(nil).UpdateCluster), arg0, arg1, arg2)
+}
+
+// UpdateFlexCluster mocks base method.
+func (m *MockAtlasClusterGetterUpdater) UpdateFlexCluster(arg0, arg1 string, arg2 *admin0.FlexClusterDescriptionUpdate20241113) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateFlexCluster", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateFlexCluster indicates an expected call of UpdateFlexCluster.
+func (mr *MockAtlasClusterGetterUpdaterMockRecorder) UpdateFlexCluster(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateFlexCluster", reflect.TypeOf((*MockAtlasClusterGetterUpdater)(nil).UpdateFlexCluster), arg0, arg1, arg2)
 }
 
 // MockClusterPauser is a mock of ClusterPauser interface.
@@ -430,6 +534,21 @@ func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateDatabaseUser(arg0 inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDatabaseUser", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).CreateDatabaseUser), arg0)
 }
 
+// CreateFlexCluster mocks base method.
+func (m *MockAtlasClusterQuickStarter) CreateFlexCluster(arg0 string, arg1 *admin0.FlexClusterDescriptionCreate20241113) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateFlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateFlexCluster indicates an expected call of CreateFlexCluster.
+func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateFlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFlexCluster", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).CreateFlexCluster), arg0, arg1)
+}
+
 // CreateProjectIPAccessList mocks base method.
 func (m *MockAtlasClusterQuickStarter) CreateProjectIPAccessList(arg0 []*admin0.NetworkPermissionEntry) (*admin0.PaginatedNetworkAccess, error) {
 	m.ctrl.T.Helper()
@@ -458,6 +577,51 @@ func (m *MockAtlasClusterQuickStarter) DatabaseUser(arg0, arg1, arg2 string) (*a
 func (mr *MockAtlasClusterQuickStarterMockRecorder) DatabaseUser(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DatabaseUser", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).DatabaseUser), arg0, arg1, arg2)
+}
+
+// FlexCluster mocks base method.
+func (m *MockAtlasClusterQuickStarter) FlexCluster(arg0, arg1 string) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FlexCluster indicates an expected call of FlexCluster.
+func (mr *MockAtlasClusterQuickStarterMockRecorder) FlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlexCluster", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).FlexCluster), arg0, arg1)
+}
+
+// ListFlexClusters mocks base method.
+func (m *MockAtlasClusterQuickStarter) ListFlexClusters(arg0 *admin0.ListFlexClustersApiParams) (*admin0.PaginatedFlexClusters20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFlexClusters", arg0)
+	ret0, _ := ret[0].(*admin0.PaginatedFlexClusters20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFlexClusters indicates an expected call of ListFlexClusters.
+func (mr *MockAtlasClusterQuickStarterMockRecorder) ListFlexClusters(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFlexClusters", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).ListFlexClusters), arg0)
+}
+
+// MDBVersions mocks base method.
+func (m *MockAtlasClusterQuickStarter) MDBVersions(arg0 string, arg1 *store.MDBVersionListOptions) (*admin0.PaginatedAvailableVersion, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MDBVersions", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.PaginatedAvailableVersion)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// MDBVersions indicates an expected call of MDBVersions.
+func (mr *MockAtlasClusterQuickStarterMockRecorder) MDBVersions(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MDBVersions", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).MDBVersions), arg0, arg1)
 }
 
 // ProjectClusters mocks base method.
@@ -680,6 +844,21 @@ func (mr *MockClusterUpgraderMockRecorder) UpgradeCluster(arg0, arg1 interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpgradeCluster", reflect.TypeOf((*MockClusterUpgrader)(nil).UpgradeCluster), arg0, arg1)
 }
 
+// UpgradeFlexCluster mocks base method.
+func (m *MockClusterUpgrader) UpgradeFlexCluster(arg0 string, arg1 *admin0.FlexClusterDescription20241113) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpgradeFlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpgradeFlexCluster indicates an expected call of UpgradeFlexCluster.
+func (mr *MockClusterUpgraderMockRecorder) UpgradeFlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpgradeFlexCluster", reflect.TypeOf((*MockClusterUpgrader)(nil).UpgradeFlexCluster), arg0, arg1)
+}
+
 // MockAtlasSharedClusterGetterUpgrader is a mock of AtlasSharedClusterGetterUpgrader interface.
 type MockAtlasSharedClusterGetterUpgrader struct {
 	ctrl     *gomock.Controller
@@ -731,6 +910,21 @@ func (m *MockAtlasSharedClusterGetterUpgrader) UpgradeCluster(arg0 string, arg1 
 func (mr *MockAtlasSharedClusterGetterUpgraderMockRecorder) UpgradeCluster(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpgradeCluster", reflect.TypeOf((*MockAtlasSharedClusterGetterUpgrader)(nil).UpgradeCluster), arg0, arg1)
+}
+
+// UpgradeFlexCluster mocks base method.
+func (m *MockAtlasSharedClusterGetterUpgrader) UpgradeFlexCluster(arg0 string, arg1 *admin0.FlexClusterDescription20241113) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpgradeFlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpgradeFlexCluster indicates an expected call of UpgradeFlexCluster.
+func (mr *MockAtlasSharedClusterGetterUpgraderMockRecorder) UpgradeFlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpgradeFlexCluster", reflect.TypeOf((*MockAtlasSharedClusterGetterUpgrader)(nil).UpgradeFlexCluster), arg0, arg1)
 }
 
 // MockAtlasClusterConfigurationOptionsUpdater is a mock of AtlasClusterConfigurationOptionsUpdater interface.
@@ -844,6 +1038,21 @@ func (m *MockClusterDescriberStarter) AtlasCluster(arg0, arg1 string) (*admin.Ad
 func (mr *MockClusterDescriberStarterMockRecorder) AtlasCluster(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasCluster", reflect.TypeOf((*MockClusterDescriberStarter)(nil).AtlasCluster), arg0, arg1)
+}
+
+// FlexCluster mocks base method.
+func (m *MockClusterDescriberStarter) FlexCluster(arg0, arg1 string) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FlexCluster indicates an expected call of FlexCluster.
+func (mr *MockClusterDescriberStarterMockRecorder) FlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlexCluster", reflect.TypeOf((*MockClusterDescriberStarter)(nil).FlexCluster), arg0, arg1)
 }
 
 // StartCluster mocks base method.

@@ -20,11 +20,10 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
@@ -68,13 +67,4 @@ func TestUpdate_Run(t *testing.T) {
 
 func TestUpdateTemplate(t *testing.T) {
 	test.VerifyOutputTemplate(t, updateTemplate, atlasv2.Group{})
-}
-
-func TestUpdateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		UpdateBuilder(),
-		0,
-		[]string{flag.File},
-	)
 }

@@ -17,6 +17,7 @@ macos-notary.zip
 # Output of the go coverage tool
 *.out
 coverage.html
+cov/
 
 # We don't want to commit the 3rd party notices
 third_party_notices/

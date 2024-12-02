@@ -10,7 +10,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 // MockOperatorGenericStore is a mock of OperatorGenericStore interface.
@@ -290,6 +290,21 @@ func (mr *MockOperatorGenericStoreMockRecorder) FederationSetting(arg0 interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FederationSetting", reflect.TypeOf((*MockOperatorGenericStore)(nil).FederationSetting), arg0)
 }
 
+// FlexCluster mocks base method.
+func (m *MockOperatorGenericStore) FlexCluster(arg0, arg1 string) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FlexCluster indicates an expected call of FlexCluster.
+func (mr *MockOperatorGenericStoreMockRecorder) FlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlexCluster", reflect.TypeOf((*MockOperatorGenericStore)(nil).FlexCluster), arg0, arg1)
+}
+
 // GetConnectedOrgConfig mocks base method.
 func (m *MockOperatorGenericStore) GetConnectedOrgConfig(arg0 *admin0.GetConnectedOrgConfigApiParams) (*admin0.ConnectedOrgConfig, error) {
 	m.ctrl.T.Helper()
@@ -393,6 +408,21 @@ func (m *MockOperatorGenericStore) Integrations(arg0 string) (*admin0.PaginatedI
 func (mr *MockOperatorGenericStoreMockRecorder) Integrations(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Integrations", reflect.TypeOf((*MockOperatorGenericStore)(nil).Integrations), arg0)
+}
+
+// ListFlexClusters mocks base method.
+func (m *MockOperatorGenericStore) ListFlexClusters(arg0 *admin0.ListFlexClustersApiParams) (*admin0.PaginatedFlexClusters20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListFlexClusters", arg0)
+	ret0, _ := ret[0].(*admin0.PaginatedFlexClusters20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListFlexClusters indicates an expected call of ListFlexClusters.
+func (mr *MockOperatorGenericStoreMockRecorder) ListFlexClusters(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListFlexClusters", reflect.TypeOf((*MockOperatorGenericStore)(nil).ListFlexClusters), arg0)
 }
 
 // MaintenanceWindow mocks base method.
@@ -636,10 +666,10 @@ func (mr *MockOperatorGenericStoreMockRecorder) TeamByName(arg0, arg1 interface{
 }
 
 // TeamUsers mocks base method.
-func (m *MockOperatorGenericStore) TeamUsers(arg0, arg1 string) (*admin0.PaginatedApiAppUser, error) {
+func (m *MockOperatorGenericStore) TeamUsers(arg0, arg1 string) (*admin0.PaginatedAppUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamUsers", arg0, arg1)
-	ret0, _ := ret[0].(*admin0.PaginatedApiAppUser)
+	ret0, _ := ret[0].(*admin0.PaginatedAppUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

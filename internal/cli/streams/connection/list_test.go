@@ -22,11 +22,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20241023002/admin"
+	"go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -72,13 +71,4 @@ func TestListOpts_Run(t *testing.T) {
 ExampleConn    Kafka     example.com:8080
 ExampleConn2   Cluster   MyCluster
 `, buf.String())
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output, flag.Instance},
-	)
 }

@@ -22,9 +22,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -125,15 +123,4 @@ func TestUpdate_Run(t *testing.T) {
 
 		assert.Contains(t, buf.String(), "Updating cluster")
 	})
-}
-
-func TestUpdateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		UpdateBuilder(),
-		0,
-		[]string{flag.Tier, flag.DiskSizeGB, flag.MDBVersion,
-			flag.File, flag.EnableTerminationProtection, flag.DisableTerminationProtection,
-			flag.Tag, flag.ProjectID, flag.Output},
-	)
 }

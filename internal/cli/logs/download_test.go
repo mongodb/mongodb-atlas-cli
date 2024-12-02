@@ -22,9 +22,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -57,15 +55,6 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 			Times(1)
 		require.NoError(t, opts.Run())
 	}
-}
-
-func TestDownloadBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DownloadBuilder(),
-		0,
-		[]string{flag.Out, flag.ProjectID, flag.Force, flag.Start, flag.End},
-	)
 }
 
 func TestDownloadOpts_initDefaultOut(t *testing.T) {

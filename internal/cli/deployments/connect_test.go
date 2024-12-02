@@ -25,10 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
@@ -160,14 +158,4 @@ func TestPostRun(t *testing.T) {
 		Times(1)
 
 	PostRun(opts)
-}
-
-func TestConnectBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ConnectBuilder(),
-		0,
-		// List flags that this command uses
-		[]string{flag.ConnectWith, flag.ProjectID, flag.TypeFlag, flag.Username, flag.Password, flag.ConnectionStringType},
-	)
 }

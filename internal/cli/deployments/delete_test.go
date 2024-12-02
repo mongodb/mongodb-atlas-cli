@@ -24,9 +24,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestDelete_Run_Atlas(t *testing.T) {
@@ -98,14 +96,6 @@ func TestDelete_Run_Local(t *testing.T) {
 	}
 
 	t.Log(buf.String())
-}
-func TestDeleteBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DeleteBuilder(),
-		0,
-		[]string{flag.TypeFlag, flag.Force, flag.EnableWatch, flag.WatchTimeout, flag.ProjectID},
-	)
 }
 
 func TestDeleteOpts_PostRun(t *testing.T) {

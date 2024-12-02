@@ -20,12 +20,10 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestAwsOpts_Run(t *testing.T) {
@@ -105,13 +103,4 @@ func TestNormalizeAtlasRegion(t *testing.T) {
 			assert.Equal(t, c.want, got)
 		})
 	}
-}
-
-func TestAwsBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		AwsBuilder(),
-		0,
-		[]string{flag.Output, flag.ProjectID, flag.AccountID, flag.RouteTableCidrBlock, flag.AtlasCIDRBlock, flag.Region, flag.VpcID},
-	)
 }

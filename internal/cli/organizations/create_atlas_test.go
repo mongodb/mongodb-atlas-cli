@@ -20,25 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
-
-func TestCreateAtlasBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CreateAtlasBuilder(),
-		0,
-		[]string{
-			flag.OwnerID,
-			flag.APIKeyDescription,
-			flag.APIKeyRole,
-			flag.Output,
-		},
-	)
-}
 
 func TestCreateAtlasOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)

@@ -21,6 +21,7 @@ import (
 	"math/rand"
 	"net"
 	"os"
+	"path/filepath"
 	"slices"
 	"strconv"
 	"strings"
@@ -62,6 +63,8 @@ const (
 )
 
 var (
+	errInvalidInit              = errors.New("invalid --initdb flag")
+	errInitMustBeDir            = fmt.Errorf("%w: must be a directory", errInvalidInit)
 	errCancel                   = errors.New("the setup was cancelled")
 	ErrDeploymentExists         = errors.New("deployment already exists")
 	errMustBeInt                = errors.New("you must specify an integer")
@@ -112,6 +115,7 @@ type SetupOpts struct {
 	force         bool
 	bindIPAll     bool
 	mongodIP      string
+	initdb        string
 	s             *spinner.Spinner
 	atlasSetup    *setup.Opts
 }
@@ -183,14 +187,14 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	opts.logStepStarted(fmt.Sprintf("Creating your deployment %s...", opts.DeploymentName), currentStep, steps)
 	defer opts.stop()
 
-	if err := opts.configureMongod(ctx); err != nil {
+	if err := opts.configureContainer(ctx); err != nil {
 		return fmt.Errorf("%w: %w", errConfigContainer, err)
 	}
 
 	return nil
 }
 
-func (opts *SetupOpts) configureMongod(ctx context.Context) error {
+func (opts *SetupOpts) configureContainer(ctx context.Context) error {
 	envVars := map[string]string{
 		"TOOL": "ATLASCLI",
 	}
@@ -212,7 +216,14 @@ func (opts *SetupOpts) configureMongod(ctx context.Context) error {
 	flags.BindIPAll = &opts.bindIPAll
 	flags.IP = &opts.mongodIP
 	flags.Ports = []container.PortMapping{{HostPort: opts.Port, ContainerPort: internalMongodPort}}
-
+	if opts.initdb != "" {
+		flags.Volumes = []container.VolumeMapping{
+			{
+				HostPath:      opts.initdb,
+				ContainerPath: "/docker-entrypoint-initdb.d",
+			},
+		}
+	}
 	healthCheck, err := opts.ContainerEngine.ImageHealthCheck(ctx, opts.MongodDockerImageName())
 	if err != nil {
 		return fmt.Errorf("%w: %w", errInspectHealthCheck, err)
@@ -433,6 +444,20 @@ func (opts *SetupOpts) validateFlags() error {
 		return fmt.Errorf("%w: %s", errUnsupportedConnectWith, opts.connectWith)
 	}
 
+	if opts.initdb != "" {
+		info, err := os.Stat(opts.initdb)
+		if err != nil {
+			return fmt.Errorf("%w: %w", errInvalidInit, err)
+		}
+		if !info.IsDir() {
+			return errInitMustBeDir
+		}
+		opts.initdb, err = filepath.Abs(opts.initdb)
+		if err != nil {
+			return fmt.Errorf("%w: %w", errInvalidInit, err)
+		}
+	}
+
 	return opts.validateBindIPAllFlag()
 }
 
@@ -513,7 +538,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		_, _ = fmt.Fprintln(os.Stderr, "connection skipped")
 	case options.CompassConnect:
 		if !compass.Detect() {
-			return options.ErrCompassNotInstalled
+			return compass.ErrCompassNotInstalled
 		}
 		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
 			return err
@@ -521,7 +546,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		return compass.Run("", "", cs)
 	case options.MongoshConnect:
 		if !mongosh.Detect() {
-			return options.ErrMongoshNotInstalled
+			return mongosh.ErrMongoshNotInstalled
 		}
 		return mongosh.Run("", "", cs)
 	}
@@ -700,6 +725,7 @@ func SetupBuilder() *cobra.Command {
 	// Local only
 	cmd.Flags().IntVar(&opts.Port, flag.Port, 0, usage.MongodPort)
 	cmd.Flags().BoolVar(&opts.bindIPAll, flag.BindIPAll, false, usage.BindIPAll)
+	cmd.Flags().StringVar(&opts.initdb, flag.InitDB, "", usage.InitDB)
 
 	// Atlas only
 	opts.atlasSetup.SetupAtlasFlags(cmd)

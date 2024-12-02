@@ -20,7 +20,7 @@ import (
 	"net/http"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	storeTransport "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 )
 
 var (
@@ -57,7 +57,7 @@ func NewDefaultExecutor() (*Executor, error) {
 	profile := config.Default()
 
 	client := &http.Client{
-		Transport: authenticatedTransport(profile, store.DefaultTransport),
+		Transport: authenticatedTransport(profile, storeTransport.Default()),
 	}
 
 	configWrapper := NewAuthenticatedConfigWrapper(profile)

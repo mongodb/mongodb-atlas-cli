@@ -85,22 +85,3 @@ func newSampleDataQuestion() survey.Prompt {
 		Default: true,
 	}
 }
-
-func newClusterCreateConfirm() survey.Prompt {
-	return &survey.Confirm{
-		Message: "Are you ready to create your Atlas cluster with the above settings?",
-		Default: true,
-	}
-}
-
-func newClusterDefaultConfirm(tier string) survey.Prompt {
-	message := "Do you want to set up your Atlas database with default settings?"
-	if tier != DefaultAtlasTier {
-		message = "Are you ready to create your Atlas cluster with the above settings?"
-	}
-
-	return &survey.Confirm{
-		Message: message,
-		Default: true,
-	}
-}

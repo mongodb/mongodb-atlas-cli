@@ -1,7 +1,8 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
 GOLANGCI_VERSION=v1.61.0
-COVERAGE=coverage.out
+COVERAGE?=coverage.out
+GOCOVERDIR?=$(abspath cov)
 
 GIT_SHA?=$(shell git rev-parse HEAD)
 
@@ -94,11 +95,11 @@ fix-lint: ## Fix linting errors
 check: test fix-lint ## Run tests and linters
 
 .PHONY: check-templates
-check-templates:
+check-templates: ## Verify templates
 	go run ./tools/templates-checker
 
 .PHONY: addcopy
-addcopy:
+addcopy: ## Add missing license to files
 	@scripts/add-copy.sh
 
 .PHONY: generate
@@ -113,6 +114,10 @@ gen-code: ## Generate code
 gen-api-commands: ## Generate api commands
 	@echo "==> Generating api commands"
 	go run ./tools/api-generator --spec ./tools/api-generator/spec.yaml --output ./internal/api/commands.go
+
+.PHONY: otel
+otel: ## Generate code
+	go run ./tools/otel $(SPAN) --attr $(ATTRS)
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
@@ -133,13 +138,13 @@ build: ## Generate an atlas binary in ./bin
 .PHONY: build-debug
 build-debug: ## Generate a binary in ./bin for debugging atlascli
 	@echo "==> Building $(ATLAS_BINARY_NAME) binary for debugging"
-	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(LINKER_FLAGS)" $(BUILD_FLAGS) -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
+	go build -gcflags="$(DEBUG_FLAGS)" -ldflags "$(LINKER_FLAGS)" $(BUILD_FLAGS) -cover -o $(ATLAS_DESTINATION) $(ATLAS_SOURCE_FILES)
 
 .PHONY: e2e-test
-e2e-test: build ## Run E2E tests
+e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
-	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
+	GOCOVERDIR=$(GOCOVERDIR) $(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
 
 .PHONY: fuzz-normalizer-test
 fuzz-normalizer-test: ## Run fuzz test
@@ -149,7 +154,7 @@ fuzz-normalizer-test: ## Run fuzz test
 .PHONY: unit-test
 unit-test: ## Run unit-tests
 	@echo "==> Running unit tests..."
-	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -count=1 -coverprofile $(COVERAGE) ./...
+	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -coverprofile $(COVERAGE) -count=1 ./...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

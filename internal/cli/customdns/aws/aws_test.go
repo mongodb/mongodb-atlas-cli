@@ -15,18 +15,3 @@
 //go:build unit
 
 package aws
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-)
-
-func TestAWSBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		3,
-		[]string{},
-	)
-}

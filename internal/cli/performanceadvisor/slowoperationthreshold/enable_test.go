@@ -20,9 +20,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestEnable_Run(t *testing.T) {
@@ -41,13 +39,4 @@ func TestEnable_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestEnableBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		EnableBuilder(),
-		0,
-		[]string{flag.ProjectID},
-	)
 }

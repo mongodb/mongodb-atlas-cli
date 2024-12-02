@@ -15,10 +15,10 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectLister,ProjectCreator,ProjectUpdater,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter,OrgProjectLister
+//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectLister,ProjectCreator,ProjectUpdater,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter,OrgProjectLister,ProjectMDBVersionLister
 
 type ProjectLister interface {
 	Projects(*ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
@@ -64,6 +64,10 @@ type ProjectTeamAdder interface {
 
 type ProjectTeamDeleter interface {
 	DeleteTeamFromProject(string, string) error
+}
+
+type ProjectMDBVersionLister interface {
+	MDBVersions(projectID string, opt *MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error)
 }
 
 // Projects encapsulates the logic to manage different cloud providers.
@@ -157,4 +161,35 @@ func (s *Store) AddTeamsToProject(projectID string, teams []atlasv2.TeamRole) (*
 func (s *Store) DeleteTeamFromProject(projectID, teamID string) error {
 	_, err := s.clientv2.TeamsApi.RemoveProjectTeam(s.ctx, projectID, teamID).Execute()
 	return err
+}
+
+type MDBVersionListOptions struct {
+	ListOptions
+	CloudProvider *string
+	InstanceSize  *string
+	DefaultStatus *string
+}
+
+// MDBVersions encapsulates the logic to manage different cloud providers.
+func (s *Store) MDBVersions(projectID string, opt *MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error) {
+	req := s.clientv2.ProjectsApi.GetProjectLtsVersions(s.ctx, projectID)
+
+	if opt != nil {
+		req = req.
+			PageNum(opt.PageNum).
+			ItemsPerPage(int64(opt.ItemsPerPage))
+		if opt.CloudProvider != nil {
+			req = req.CloudProvider(*opt.CloudProvider)
+		}
+		if opt.DefaultStatus != nil {
+			req = req.DefaultStatus(*opt.DefaultStatus)
+		}
+		if opt.InstanceSize != nil {
+			req = req.InstanceSize(*opt.InstanceSize)
+		}
+	}
+
+	res, _, err := req.Execute()
+
+	return res, err
 }

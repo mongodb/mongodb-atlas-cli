@@ -112,6 +112,11 @@ func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 		if flags.HealthRetries != nil {
 			podmanOpts.HealthRetries = flags.HealthRetries
 		}
+		if flags.Volumes != nil {
+			for _, volume := range flags.Volumes {
+				podmanOpts.Volumes[volume.HostPath] = volume.ContainerPath
+			}
+		}
 		podmanOpts.Args = flags.Args
 		podmanOpts.EnvVars = flags.Env
 	}

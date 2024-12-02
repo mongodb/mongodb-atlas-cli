@@ -20,11 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20241023002/admin"
+	"go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -48,13 +46,4 @@ func TestCreate_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestInviteBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		InviteBuilder(),
-		0,
-		[]string{flag.Role, flag.TeamID, flag.OrgID},
-	)
 }

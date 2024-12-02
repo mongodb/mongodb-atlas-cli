@@ -20,10 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestConnect_Run(t *testing.T) {
@@ -63,13 +62,4 @@ func TestConnect_Run(t *testing.T) {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	test.VerifyOutputTemplate(t, connectTemplate, expected)
-}
-
-func TestConnectBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ConnectBuilder(),
-		0,
-		[]string{flag.Output, flag.FederationSettingsID, flag.IdentityProviderID, flag.Protocol, flag.OrgID},
-	)
 }

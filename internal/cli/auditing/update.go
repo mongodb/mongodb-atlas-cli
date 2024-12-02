@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 type UpdateOpts struct {
@@ -115,8 +115,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.enabled, flag.Enabled, false, usage.EnabledAuditing)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.AuditingFilename)
 	cmd.Flags().BoolVar(&opts.auditAuthorizationSuccess, flag.AuditAuthorizationSuccess, false, usage.AuditAuthorizationSuccess)
-	cmd.Flags().StringVarP(&opts.Output, flag.Output, flag.OutputShort, "", usage.FormatOut)
-	_ = cmd.RegisterFlagCompletionFunc(flag.Output, opts.AutoCompleteOutputFlag())
+	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagFilename(flag.File)
 

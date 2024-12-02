@@ -25,10 +25,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -156,13 +154,4 @@ func TestStartOpts_PostRun(t *testing.T) {
 	deploymentsTest.MockContainerEngine.EXPECT().Ready().Return(nil).Times(1)
 
 	require.NoError(t, opts.PostRun())
-}
-
-func TestStartBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		StartBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.TypeFlag},
-	)
 }

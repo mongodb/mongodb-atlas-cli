@@ -15,19 +15,3 @@
 //go:build unit
 
 package config
-
-import (
-	"testing"
-
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-)
-
-func TestInitBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		InitBuilder(),
-		0,
-		[]string{flag.Gov},
-	)
-}

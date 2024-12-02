@@ -172,7 +172,7 @@ func (opts *ConnectOpts) connectToDeployment(connectionString string) error {
 		return opts.Print(connectionString)
 	case options.CompassConnect:
 		if !compass.Detect() {
-			return options.ErrCompassNotInstalled
+			return compass.ErrCompassNotInstalled
 		}
 		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
 			return err
@@ -180,7 +180,7 @@ func (opts *ConnectOpts) connectToDeployment(connectionString string) error {
 		return compass.Run(opts.DeploymentOpts.DBUsername, opts.DeploymentOpts.DBUserPassword, connectionString)
 	case options.MongoshConnect:
 		if !mongosh.Detect() {
-			return options.ErrMongoshNotInstalled
+			return mongosh.ErrMongoshNotInstalled
 		}
 		return mongosh.Run(opts.DeploymentOpts.DBUsername, opts.DeploymentOpts.DBUserPassword, connectionString)
 	}

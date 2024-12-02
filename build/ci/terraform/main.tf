@@ -2,6 +2,15 @@ provider "azurerm" {
   features {}
 }
 
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "atlascli-image-resources"
+    storage_account_name = "atlascliterraform"
+    container_name       = "tfstate"
+    key                  = "terraform.tfstate"
+  }
+}
+
 variable "image_id" {
   type = string
   default = "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/atlascli-win11-image"

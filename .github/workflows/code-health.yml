@@ -41,6 +41,8 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install Go
         uses: actions/setup-go@v5
         with:
@@ -53,6 +55,105 @@ jobs:
         with:
           paths: unit-tests.xml
         if: always() && matrix.os == 'ubuntu-latest'
+      - name: Upload coverage file
+        if: matrix.os == 'ubuntu-latest' && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-file
+          path: coverage.out
+
+  code-coverage:
+    needs: unit-tests
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get merge base
+        id: merge_base
+        run: |
+          MERGE_BASE=$(git merge-base "${{ github.event.pull_request.head.sha }}" "${{ github.event.pull_request.base.sha }}")
+          echo "merge_base=$MERGE_BASE" >> "$GITHUB_OUTPUT"
+          echo "Checking coverage against: $MERGE_BASE"
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: Download coverage file
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-file
+      - name: Check coverage cache
+        id: cache-coverage
+        uses: actions/cache@v4
+        with:
+          path: coverage.base.out
+          key: coverage-${{ steps.merge_base.outputs.merge_base }}
+      - name: Generate base coverage
+        if: steps.cache-coverage.outputs.cache-hit != 'true'
+        run: |
+          # Get coverage from base branch
+          git checkout ${{ steps.merge_base.outputs.merge_base }}
+          COVERAGE=coverage.base.out make unit-test
+      - name: Save coverage to cache
+        if: steps.cache-coverage.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: coverage.base.out
+          key: coverage-${{ steps.merge_base.outputs.merge_base }}
+      - name: Compare coverage
+        id: compare
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          # use go tool cover to calculate coverage percentage
+          base_coverage=$(go tool cover -func=coverage.base.out | grep total: | awk '{print $3}' | sed 's/%//')
+          pr_coverage=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
+          
+          # Calculate difference
+          diff=$(echo "$pr_coverage - $base_coverage" | bc)
+          echo "diff=$diff" >> "$GITHUB_OUTPUT"
+          
+          # Create comment content
+          if (( $(echo "$diff >= 0" | bc -l) )); then
+            trend="📈"
+          else
+            trend="📉"
+          fi
+          
+          {
+            echo "Coverage Report $trend"
+            echo "| Branch | Commit | Coverage |"
+            echo "|--------|--------|----------|"
+            echo "| ${BASE_REF} | ${{ steps.merge_base.outputs.merge_base }} | ${base_coverage}% |"
+            echo "| ${HEAD_REF} | ${{ github.event.pull_request.head.sha }} | ${pr_coverage}% |"
+            echo "|        | Difference | ${diff}% |"
+          } > comment.md
+          cat "comment.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const comment = fs.readFileSync('comment.md', 'utf8');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+      - name: Check coverage threshold
+        run: |
+          if (( $(echo "${{ steps.compare.outputs.diff }} < 0" | bc -l) )); then
+            echo "Error: Coverage difference (${{ steps.compare.outputs.diff }}%) is negative"
+          fi
+
   fuzz-tests:
     env:
       COVERAGE: coverage.out

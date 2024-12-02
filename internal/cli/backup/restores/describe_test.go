@@ -20,11 +20,10 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
@@ -52,17 +51,4 @@ func TestDescribeOpts_Run(t *testing.T) {
 	}
 
 	test.VerifyOutputTemplate(t, restoreDescribeTemplate, expected)
-}
-
-func TestDescribeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DescribeBuilder(),
-		0,
-		[]string{
-			flag.ClusterName,
-			flag.ProjectID,
-			flag.Output,
-		},
-	)
 }

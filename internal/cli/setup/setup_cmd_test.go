@@ -26,38 +26,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
-
-func TestBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		Builder(),
-		0,
-		[]string{
-			flag.ClusterName,
-			flag.Tier,
-			flag.Provider,
-			flag.Region,
-			flag.AccessListIP,
-			flag.Username,
-			flag.Password,
-			flag.EnableTerminationProtection,
-			flag.SkipSampleData,
-			flag.SkipMongosh,
-			flag.Force,
-			flag.CurrentIP,
-			flag.Tag,
-			flag.Default,
-			flag.ProjectID,
-		},
-	)
-}
 
 func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
@@ -125,6 +99,7 @@ func TestCluster_Run(t *testing.T) {
 		SkipMongosh:    true,
 		SkipSampleData: true,
 		Confirm:        true,
+		MDBVersion:     "7.0",
 		Tag:            map[string]string{"env": "test"},
 	}
 	opts.register.WithFlow(mockFlow)
@@ -185,6 +160,7 @@ func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 		SkipMongosh:                 true,
 		SkipSampleData:              true,
 		Confirm:                     true,
+		MDBVersion:                  "7.0",
 	}
 	opts.register.WithFlow(mockFlow)
 

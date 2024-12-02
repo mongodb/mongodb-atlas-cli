@@ -21,11 +21,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestDeauthorizeTemplate(t *testing.T) {
@@ -56,13 +55,4 @@ func TestDeauthorizeOpts_Run(t *testing.T) {
 		Times(1)
 
 	require.NoError(t, opts.Run())
-}
-
-func TestDeauthorizeBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DeauthorizeBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Force},
-	)
 }

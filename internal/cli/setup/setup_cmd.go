@@ -25,9 +25,11 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/compass"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
@@ -53,23 +55,30 @@ const (
 	defaultRegionGCP    = "US_EAST_4"
 	defaultRegionAzure  = "US_EAST_2"
 	defaultRegionGov    = "US_GOV_EAST_1"
+	defaultSettings     = "default"
+	customSettings      = "custom"
+	cancelSettings      = "cancel"
+	skipConnect         = "skip"
+	compassConnect      = "compass"
+	mongoshConnect      = "mongosh"
+)
+
+var (
+	settingOptions      = []string{defaultSettings, customSettings, cancelSettings}
+	settingsDescription = map[string]string{
+		defaultSettings: "With default settings",
+		customSettings:  "With custom settings",
+		cancelSettings:  "Cancel setup",
+	}
+	connectWithOptions     = []string{mongoshConnect, compassConnect, skipConnect}
+	connectWithDescription = map[string]string{
+		mongoshConnect: "MongoDB Shell",
+		compassConnect: "MongoDB Compass",
+		skipConnect:    "Skip Connection",
+	}
 )
 
 var errNeedsProject = errors.New("ensure you select or add a project to the profile")
-
-const setupTemplateMongoshDetected = `
-MongoDB Shell detected. Connecting to your Atlas cluster:
-$ mongosh -u %s -p %s %s
-`
-
-const setupTemplateMongoshNotDetected = `
-MongoDB Shell not detected. To install, open www.mongodb.com/try/download/shell.
-
-MongoDB Shell (mongosh) is an interactive command line interface to query, update, and manage data in your MongoDB database.
-
-Once you install the MongoDB Shell, connect to your database with:
-$ mongosh -u %s -p %s %s
-`
 
 const setupTemplateCloseHandler = `
 Enter 'atlas cluster watch %s' to learn when your cluster is available.
@@ -117,16 +126,20 @@ type Opts struct {
 	DBUsername                  string
 	DBUserPassword              string
 	SampleDataJobID             string
+	MDBVersion                  string
 	Tier                        string
 	Tag                         map[string]string
 	SkipSampleData              bool
 	SkipMongosh                 bool
+	connectWith                 string
 	DefaultValue                bool
 	Confirm                     bool
 	CurrentIP                   bool
 	EnableTerminationProtection bool
 	flags                       *pflag.FlagSet
 	flagSet                     map[string]struct{}
+	settings                    string
+	connectionString            string
 
 	// control
 	skipRegister bool
@@ -143,8 +156,8 @@ type clusterSettings struct {
 	IPAddresses                 []string
 	EnableTerminationProtection bool
 	SkipSampleData              bool
-	SkipMongosh                 bool
 	Tag                         map[string]string
+	MdbVersion                  string
 }
 
 func (opts *Opts) providerAndRegionToConstant() {
@@ -166,7 +179,6 @@ func (opts *Opts) trackFlags() {
 
 func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 	values := &clusterSettings{}
-	values.SkipMongosh = opts.SkipMongosh
 	values.SkipSampleData = opts.SkipSampleData
 
 	values.ClusterName = opts.ClusterName
@@ -193,6 +205,15 @@ func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 				values.Region = defaultRegion
 			}
 		}
+	}
+
+	values.MdbVersion = opts.MDBVersion
+	if opts.MDBVersion == "" {
+		_, defaultVersion, err := opts.mdbVersions(opts.Tier, opts.Provider)
+		if err != nil {
+			return nil, err
+		}
+		values.MdbVersion = defaultVersion
 	}
 
 	values.DBUsername = opts.DBUsername
@@ -301,31 +322,19 @@ func (opts *Opts) askSampleDataQuestion() error {
 }
 
 func (opts *Opts) interactiveSetup() error {
-	for {
-		if err := opts.askClusterOptions(); err != nil {
-			return err
-		}
-
-		if err := opts.askSampleDataQuestion(); err != nil {
-			return err
-		}
-
-		if err := opts.askDBUserOptions(); err != nil {
-			return err
-		}
-
-		if err := opts.askAccessListOptions(); err != nil {
-			return err
-		}
-
-		if err := opts.askConfirmConfigQuestion(); err != nil && !errors.Is(err, ErrUserAborted) {
-			return err
-		}
-
-		if opts.Confirm {
-			return nil
-		}
+	if err := opts.askClusterOptions(); err != nil {
+		return err
 	}
+
+	if err := opts.askSampleDataQuestion(); err != nil {
+		return err
+	}
+
+	if err := opts.askDBUserOptions(); err != nil {
+		return err
+	}
+
+	return opts.askAccessListOptions()
 }
 
 func (opts *Opts) shouldAskForValue(f string) bool {
@@ -346,6 +355,10 @@ func (opts *Opts) replaceWithDefaultSettings(values *clusterSettings) {
 		opts.Region = values.Region
 	}
 
+	if values.MdbVersion != "" {
+		opts.MDBVersion = values.MdbVersion
+	}
+
 	if values.DBUsername != "" {
 		opts.DBUsername = values.DBUsername
 	}
@@ -360,7 +373,6 @@ func (opts *Opts) replaceWithDefaultSettings(values *clusterSettings) {
 
 	opts.EnableTerminationProtection = values.EnableTerminationProtection
 	opts.SkipSampleData = values.SkipSampleData
-	opts.SkipMongosh = values.SkipMongosh
 	opts.Tag = values.Tag
 }
 
@@ -405,6 +417,7 @@ This command will help you:
 	if opts.config.ProjectID() == "" {
 		return fmt.Errorf("%w: %s", errNeedsProject, config.Default().Name())
 	}
+
 	return opts.setupCluster()
 }
 
@@ -439,15 +452,26 @@ func (opts *Opts) setupCluster() error {
 		return dErr
 	}
 
-	if err := opts.askConfirmDefaultQuestion(values); err != nil || !opts.Confirm {
-		fmt.Print(setupTemplateIntro)
-
-		err = opts.interactiveSetup()
-		if err != nil {
+	if opts.Confirm {
+		opts.settings = defaultSettings
+	} else {
+		if err := opts.askConfirmDefaultQuestion(values); err != nil {
 			return err
 		}
-	} else {
+	}
+
+	switch opts.settings {
+	case customSettings:
+		fmt.Print(setupTemplateIntro)
+
+		if err := opts.interactiveSetup(); err != nil {
+			return err
+		}
+	case defaultSettings:
 		opts.replaceWithDefaultSettings(values)
+	case cancelSettings:
+		_, _ = fmt.Println("user-aborted. Not creating cluster")
+		return nil
 	}
 
 	// Create db user, access list and cluster
@@ -476,24 +500,63 @@ func (opts *Opts) setupCluster() error {
 		return err
 	}
 
-	fmt.Printf("Your connection string: %v\n", cluster.ConnectionStrings.GetStandardSrv())
+	opts.connectionString = cluster.ConnectionStrings.GetStandardSrv()
+
+	fmt.Printf("Your connection string: %v\n", opts.connectionString)
 
 	if err := opts.loadSampleData(); err != nil {
 		return err
 	}
 
-	if opts.SkipMongosh {
-		return nil
+	return opts.runConnectWith()
+}
+
+func (opts *Opts) runConnectWith() error {
+	if opts.connectWith == "" {
+		if opts.SkipMongosh { // deprecated flag --skipMongosh
+			return nil
+		}
+
+		if opts.Confirm { // --force
+			opts.connectWith = skipConnect
+		} else {
+			if err := opts.promptConnect(); err != nil {
+				return err
+			}
+		}
 	}
 
-	if !mongosh.Detect() {
-		fmt.Printf(setupTemplateMongoshNotDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
-
-		return nil
+	switch opts.connectWith {
+	case skipConnect:
+		_, _ = fmt.Fprintln(os.Stderr, "connection skipped")
+	case compassConnect:
+		if !compass.Detect() {
+			return compass.ErrCompassNotInstalled
+		}
+		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
+			return err
+		}
+		return compass.Run(opts.DBUsername, opts.DBUserPassword, opts.connectionString)
+	case mongoshConnect:
+		if !mongosh.Detect() {
+			return mongosh.ErrMongoshNotInstalled
+		}
+		return mongosh.Run(opts.DBUsername, opts.DBUserPassword, opts.connectionString)
 	}
 
-	fmt.Printf(setupTemplateMongoshDetected, opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
-	return mongosh.Run(opts.DBUsername, opts.DBUserPassword, cluster.ConnectionStrings.GetStandardSrv())
+	return nil
+}
+
+func (opts *Opts) promptConnect() error {
+	p := &survey.Select{
+		Message: "How would you like to connect to your cluster?",
+		Options: connectWithOptions,
+		Description: func(value string, _ int) string {
+			return connectWithDescription[value]
+		},
+	}
+
+	return telemetry.TrackAskOne(p, &opts.connectWith, nil)
 }
 
 func (opts *Opts) PreRun(ctx context.Context) error {
@@ -551,6 +614,8 @@ func (opts *Opts) SetupFlowFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&opts.SkipSampleData, flag.SkipSampleData, false, usage.SkipSampleData)
 	cmd.Flags().BoolVar(&opts.SkipMongosh, flag.SkipMongosh, false, usage.SkipMongosh)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.ForceQuickstart)
+	_ = cmd.Flags().MarkDeprecated(flag.SkipMongosh, "Use --connectWith instead")
+	cmd.MarkFlagsMutuallyExclusive(flag.SkipMongosh, flag.ConnectWith)
 }
 
 // Builder
@@ -615,6 +680,8 @@ func Builder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.register.IsGov, "gov", false, "Register with Atlas for Government.")
 	cmd.Flags().BoolVar(&opts.register.NoBrowser, "noBrowser", false, "Don't try to open a browser session.")
 	// Setup related
+	cmd.Flags().StringVar(&opts.MDBVersion, flag.MDBVersion, "", usage.DeploymentMDBVersion)
+	cmd.Flags().StringVar(&opts.connectWith, flag.ConnectWith, "", usage.ConnectWithAtlasSetup)
 	opts.SetupAtlasFlags(cmd)
 	opts.SetupFlowFlags(cmd)
 

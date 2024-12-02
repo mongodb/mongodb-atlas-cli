@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 const (
@@ -299,7 +299,7 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 			keyID,
 			"--force")
 		cmd.Env = os.Environ()
-		_, err = e2e.RunAndGetStdOut(cmd)
+		_, err = e2e.RunAndGetStdOutAndErr(cmd)
 		if err != nil && !strings.Contains(err.Error(), "API_KEY_NOT_FOUND") {
 			errors = append(errors, err)
 		}

@@ -19,9 +19,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 )
 
 func TestCutoverOpts_Run(t *testing.T) {
@@ -39,13 +37,4 @@ func TestCutoverOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestCutoverBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		CutoverBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output, flag.LiveMigrationID},
-	)
 }

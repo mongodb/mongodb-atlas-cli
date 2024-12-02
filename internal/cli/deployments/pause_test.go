@@ -25,10 +25,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
@@ -129,13 +127,4 @@ func TestPauseOpts_PostRun(t *testing.T) {
 	if err := opts.PostRun(); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)
 	}
-}
-
-func TestPauseBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		PauseBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.TypeFlag},
-	)
 }

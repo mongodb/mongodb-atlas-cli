@@ -20,10 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestDatadogOpts_Run(t *testing.T) {
@@ -44,13 +42,4 @@ func TestDatadogOpts_Run(t *testing.T) {
 	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
-}
-
-func TestDatadogBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		DatadogBuilder(),
-		0,
-		[]string{flag.APIKey, flag.Region, flag.ProjectID},
-	)
 }

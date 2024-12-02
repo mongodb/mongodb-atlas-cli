@@ -20,29 +20,20 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net"
 	"net/http"
 	"strings"
-	"time"
 
-	"github.com/mongodb-forks/digest"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
-	telemetryTimeout      = 1 * time.Second
-	timeout               = 5 * time.Second
-	keepAlive             = 30 * time.Second
-	maxIdleConns          = 5
-	maxIdleConnsPerHost   = 4
-	idleConnTimeout       = 30 * time.Second
-	expectContinueTimeout = 1 * time.Second
-	CloudGovServiceURL    = "https://cloud.mongodbgov.com/"
+	CloudGovServiceURL = "https://cloud.mongodbgov.com/"
 )
 
 var errUnsupportedService = errors.New("unsupported service")
@@ -62,44 +53,13 @@ type Store struct {
 	ctx            context.Context
 }
 
-var DefaultTransport = &http.Transport{
-	DialContext: (&net.Dialer{
-		Timeout:   timeout,
-		KeepAlive: keepAlive,
-	}).DialContext,
-	MaxIdleConns:          maxIdleConns,
-	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-	Proxy:                 http.ProxyFromEnvironment,
-	IdleConnTimeout:       idleConnTimeout,
-	ExpectContinueTimeout: expectContinueTimeout,
-}
-
-var telemetryTransport = &http.Transport{
-	DialContext: (&net.Dialer{
-		Timeout:   telemetryTimeout,
-		KeepAlive: keepAlive,
-	}).DialContext,
-	MaxIdleConns:          maxIdleConns,
-	MaxIdleConnsPerHost:   maxIdleConnsPerHost,
-	Proxy:                 http.ProxyFromEnvironment,
-	IdleConnTimeout:       idleConnTimeout,
-	ExpectContinueTimeout: expectContinueTimeout,
-}
-
 func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error) {
 	if s.username != "" && s.password != "" {
-		t := &digest.Transport{
-			Username: s.username,
-			Password: s.password,
-		}
-		t.Transport = httpTransport
+		t := transport.NewDigestTransport(s.username, s.password, httpTransport)
 		return t.Client()
 	}
 	if s.accessToken != nil {
-		tr := &Transport{
-			token: s.accessToken,
-			base:  httpTransport,
-		}
+		tr := transport.NewAccessTokenTransport(s.accessToken, httpTransport)
 
 		return &http.Client{Transport: tr}, nil
 	}
@@ -107,22 +67,12 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 	return &http.Client{Transport: httpTransport}, nil
 }
 
-type Transport struct {
-	token *atlasauth.Token
-	base  http.RoundTripper
-}
-
-func (tr *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
-	tr.token.SetAuthHeader(req)
-	return tr.base.RoundTrip(req)
-}
-
 func (s *Store) transport() *http.Transport {
 	switch {
 	case s.telemetry:
-		return telemetryTransport
+		return transport.Telemetry()
 	default:
-		return DefaultTransport
+		return transport.Default()
 	}
 }
 

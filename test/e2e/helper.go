@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 const (
@@ -95,6 +95,16 @@ func RunAndGetStdOut(cmd *exec.Cmd) ([]byte, error) {
 	cmd.Stderr = os.Stderr
 
 	resp, err := cmd.Output()
+
+	if err != nil {
+		return nil, fmt.Errorf("%s (%w)", string(resp), err)
+	}
+
+	return resp, nil
+}
+
+func RunAndGetStdOutAndErr(cmd *exec.Cmd) ([]byte, error) {
+	resp, err := cmd.CombinedOutput()
 
 	if err != nil {
 		return nil, fmt.Errorf("%s (%w)", string(resp), err)

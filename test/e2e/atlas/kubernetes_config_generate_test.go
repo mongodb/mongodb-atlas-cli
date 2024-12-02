@@ -42,7 +42,7 @@ import (
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -53,6 +53,10 @@ import (
 const targetNamespace = "importer-namespace"
 const credSuffixTest = "-credentials"
 const activeStatus = "ACTIVE"
+
+// These kinds represent global types in AKO which are independent of any Atlas Project.
+// They can be filtered in concurrent e2e tests if they are not relevant for assertion.
+var globalKinds = []string{"AtlasFederatedAuth"}
 
 var federationSettingsID string
 var identityProviderStatus string
@@ -209,11 +213,28 @@ func TestExportIndependentOrNot(t *testing.T) {
 			require.NoError(t, err, string(resp))
 			var objects []runtime.Object
 			objects, err = getK8SEntities(resp)
+			// We want to filter spurious federated auth resources from other tests
+			// as these are global resources across all projects.
+			objects = filtered(objects).byKind(globalKinds...)
 			require.NoError(t, err, "should not fail on decode but got:\n"+string(resp))
 			require.NotEmpty(t, objects)
 			require.Equal(t, tc.expected, objects)
 		})
 	}
+}
+
+type filtered []runtime.Object
+
+func (f filtered) byKind(kinds ...string) []runtime.Object {
+	result := f[:0]
+	for _, obj := range f {
+		for _, kind := range kinds {
+			if obj.GetObjectKind().GroupVersionKind().Kind != kind {
+				result = append(result, obj)
+			}
+		}
+	}
+	return result
 }
 
 func defaultTestProject(name, namespace string, labels map[string]string, alertConfigs bool) *akov2.AtlasProject {

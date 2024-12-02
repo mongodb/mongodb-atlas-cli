@@ -20,10 +20,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
@@ -56,17 +54,4 @@ func TestUpdate_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
-}
-
-func TestUpdateBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		UpdateBuilder(),
-		0,
-		[]string{
-			flag.ReadConcern, flag.WriteConcern, flag.TLSProtocol, flag.DisableFailIndexKeyTooLong, flag.EnableFailIndexKeyTooLong,
-			flag.OplogMinRetentionHours, flag.EnableJavascript, flag.EnableTableScan,
-			flag.DisableJavascript, flag.OplogMinRetentionHours, flag.OplogSizeMB, flag.SampleRefreshIntervalBIConnector,
-			flag.SampleSizeBIConnector, flag.DisableTableScan, flag.ProjectID, flag.Output},
-	)
 }

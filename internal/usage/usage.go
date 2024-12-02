@@ -372,6 +372,7 @@ dbName and collection are required only for built-in roles.`
 	DeploymentType                            = "Type of deployment. Valid values are ATLAS or LOCAL."
 	DeploymentTypeSetup                       = "Type of deployment that you want to create. Valid values are ATLAS or LOCAL."
 	MongodPort                                = "Port that the MongoDB server listens to for client connections."
+	ConnectWithAtlasSetup                     = "Method for connecting to the cluster. Valid values are compass, mongosh and skip."
 	ConnectWithSetup                          = "Method for connecting to the deployment. Valid values are compass, mongosh and skip."
 	ConnectWithConnect                        = "Method for connecting to the deployment. Valid values are compass, connectionString and mongosh."
 	AlertConfigFilename                       = "Path to the JSON configuration file that defines alert configuration settings. To learn more about alert configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/alert-config-atlas-cli."
@@ -410,4 +411,5 @@ dbName and collection are required only for built-in roles.`
 	AuditFilter                = "JSON document that specifies which events to record. Escape any characters that may prevent parsing, such as single or double quotes, using a backslash (\\)."
 	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. To learn more about invitation configuration files for the Atlas CLI, see https://XXX."
 	IndependentResources       = "Flag that makes the generated resources that support independent usage, to use external IDs rather than Kubernetes references."
+	InitDB                     = "Flag that uses a folder to be mapped into LOCAL deployment for initialization"
 )

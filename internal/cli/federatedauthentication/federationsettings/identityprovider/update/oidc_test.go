@@ -22,20 +22,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
-func TestOidcBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		OIDCBuilder(),
-		0,
-		[]string{flag.FederationSettingsID, flag.IdpType, flag.Audience, flag.AuthorizationType, flag.ClientID, flag.Description, flag.GroupsClaim, flag.UserClaim, flag.IssuerURI, flag.AssociatedDomain, flag.RequestedScope, flag.Output},
-	)
-}
 func TestOidcUpdate(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockIdentityProviderUpdater(ctrl)

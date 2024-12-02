@@ -20,11 +20,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestAzureOpts_Run(t *testing.T) {
@@ -81,13 +79,4 @@ func TestAzureOpts_Run(t *testing.T) {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
 	})
-}
-
-func TestAzureBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		AzureBuilder(),
-		0,
-		[]string{flag.Output, flag.ProjectID, flag.ResourceGroup, flag.VNet, flag.AtlasCIDRBlock, flag.Region, flag.DirectoryID, flag.SubscriptionID},
-	)
 }

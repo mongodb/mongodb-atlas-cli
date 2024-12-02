@@ -24,12 +24,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241023002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestListOpts_Run(t *testing.T) {
@@ -69,13 +67,4 @@ func TestListOpts_Run(t *testing.T) {
 	assert.Equal(t, `ID                         FREQUENCY INTERVAL   FREQUENCY TYPE   RETENTION UNIT   RETENTION VALUE
 5e4e593f70dfbf1010295836   1                    daily            months           1`, buf.String())
 	t.Log(buf.String())
-}
-
-func TestListBuilder(t *testing.T) {
-	test.CmdValidator(
-		t,
-		ListBuilder(),
-		0,
-		[]string{flag.ProjectID, flag.Output},
-	)
 }

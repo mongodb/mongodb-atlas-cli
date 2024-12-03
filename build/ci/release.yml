@@ -349,6 +349,7 @@ tasks:
             ARTIFACTORY_PASSWORD: ${artifactory_password}
             GRS_USERNAME: ${garasign_username}
             GRS_PASSWORD: ${garasign_password}
+            AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
           working_dir: src/github.com/mongodb/mongodb-atlas-cli
           binary: build/package/windows_notarize.sh
       - func: "package"

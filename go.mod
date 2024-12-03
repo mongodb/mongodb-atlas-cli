@@ -52,7 +52,7 @@ require (
 	golang.org/x/sys v0.27.0
 	golang.org/x/tools v0.27.0
 	google.golang.org/api v0.209.0
-	google.golang.org/grpc v1.67.1
+	google.golang.org/grpc v1.68.0
 	google.golang.org/protobuf v1.35.2
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.31.3

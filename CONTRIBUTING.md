@@ -56,9 +56,9 @@ To make the contribution process as seamless as possible, we ask for the followi
 
 - Fork the repository.
 - Clone your fork locally.
-- Set up development environment:
+- Set up your development environment:
   - We use Go Modules to manage dependencies, so you can develop outside your `$GOPATH`.
-  - Run `make setup` to install required dependencies and developer tools. This includes [golangci-lint](https://github.com/golangci/golangci-lint), which we use to lint our code.
+  - Run `make setup` to install required dependencies and developer tools including [golangci-lint](https://github.com/golangci/golangci-lint), which we use to lint our code.
 
 ### Building and Testing
 
@@ -92,14 +92,14 @@ This will enable compilation for unit and end-to-end tests.
 
 #### Debugging in VSCode
 
-To debug in VSCode, you need to create a debug configuration for the command with required arguments.
+To debug in VSCode, you must create a debug configuration for the command with the required arguments.
 Run the following commands to create a new launch.json file for the debugger:
 
 ```
 touch .vscode/launch.json
 ```
 Then put the following example configuration into the file.
-Review and replace the command name and arguments depending on the command you wish to debug.
+Review and replace the command name and arguments depending on the command you want to debug.
 
 ```json
 {

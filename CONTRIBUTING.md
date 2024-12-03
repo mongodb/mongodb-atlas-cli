@@ -55,15 +55,16 @@ To make the contribution process as seamless as possible, we ask for the followi
 #### Environment
 
 - Fork the repository.
-- Clone your forked repository locally.
-- We use Go Modules to manage dependencies, so you can develop outside your `$GOPATH`.
-- We use [golangci-lint](https://github.com/golangci/golangci-lint) to lint our code, you can install it locally via `make setup`.
+- Clone your fork locally.
+- Set up your development environment:
+  - We use Go Modules to manage dependencies, so you can develop outside your `$GOPATH`.
+  - Run `make setup` to install required dependencies and developer tools including [golangci-lint](https://github.com/golangci/golangci-lint), which we use to lint our code.
 
 ### Building and Testing
 
 The following is a short list of commands that can be run in the root of the project directory
 
-- Run `make` see a list of available targets.
+- Run `make` to see a list of available targets.
 - Run `make test` to run all unit tests.
 - Run `make lint` to validate against our linting rules.
 - Run `E2E_TAGS=e2e,atlas make e2e-test` will run end-to-end tests against an Atlas instance,
@@ -87,36 +88,41 @@ Please add the following line to your settings.json file :
     "go.testTags": "unit,e2e"
 ```
 
-This will enable compilation for unit test and end-to-end tests.
+This will enable compilation for unit and end-to-end tests.
 
 #### Debugging in VSCode
 
-To debut in VSCode you need to create a debug configuration for the command with required arguments.
-Run the following commands to 
+To debug in VSCode, you must create a debug configuration for the command with the required arguments.
+Run the following commands to create a new launch.json file for the debugger:
 
 ```
 touch .vscode/launch.json
 ```
-Then put the following configuration into the file.
-Review and replace command name and arguments depending on the command you are using.
+Then put the following example configuration into the file.
+Review and replace the command name and arguments depending on the command you want to debug.
 
 ```json
 {
     "configurations": [
         {
-            "name": "Login Command",
+            "name": "DBuser Create Command",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/atlas",
             "env": {},
             "args": [
-              "login"
+              "dbuser",
+              "create",
+              "atlasAdmin", 
+              "--username",
+              "myUser",
+              "--password",
+              "123abc"
             ]
       }
     ]
 } 
-
 ```
 
 ### Contributing New Command Group
@@ -145,7 +151,7 @@ For example please edit `./root/atlas/builder.go` to add your command builder me
 ### Adding a New Command
 
 `atlas` has defined a basic structure for individual commands that should be followed.
-For a `atlas scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
+For an `atlas scope newCommand` command, a file `internal/cli/scope/new_command.go` should implement:
 
 - A `ScopeNewCommandOpts` struct which handles the different options for the command.
 - At least a `func (opts *ScopeNewCommandOpts) Run() error` function with the main command logic.

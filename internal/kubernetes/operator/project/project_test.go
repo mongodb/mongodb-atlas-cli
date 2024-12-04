@@ -577,7 +577,7 @@ func TestBuildAtlasProject(t *testing.T) {
 				},
 			},
 		},
-		"Can convert Project entity with secrets data wit support for independent resource": {
+		"Can convert Project entity with secrets data with support for independent resource": {
 			independentResource: true,
 			privateEndpointMock: func(_ *mocks.MockOperatorProjectStore) {},
 			expectedProject: &akov2.AtlasProject{
@@ -682,29 +682,7 @@ func TestBuildAtlasProject(t *testing.T) {
 						IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
 						IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
 					},
-					CustomRoles: []akov2.CustomRole{
-						{
-							Name: customRoles[0].RoleName,
-							InheritedRoles: []akov2.Role{
-								{
-									Name:     customRoles[0].GetInheritedRoles()[0].Role,
-									Database: customRoles[0].GetInheritedRoles()[0].Db,
-								},
-							},
-							Actions: []akov2.Action{
-								{
-									Name: customRoles[0].GetActions()[0].Action,
-									Resources: []akov2.Resource{
-										{
-											Cluster:    &customRoles[0].GetActions()[0].GetResources()[0].Cluster,
-											Database:   &customRoles[0].GetActions()[0].GetResources()[0].Db,
-											Collection: &customRoles[0].GetActions()[0].GetResources()[0].Collection,
-										},
-									},
-								},
-							},
-						},
-					},
+					CustomRoles: nil,
 					Teams: []akov2.Team{
 						{
 							TeamRef: akov2common.ResourceRefNamespaced{
@@ -744,12 +722,14 @@ func TestBuildAtlasProject(t *testing.T) {
 			projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
 			projectStore.EXPECT().Auditing(projectID).Return(auditing, nil)
 			projectStore.EXPECT().AlertConfigurations(listAlterOpt).Return(alertConfigResult, nil)
-			projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
 			projectStore.EXPECT().ProjectTeams(projectID, nil).Return(projectTeams, nil)
 			projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
 			projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
 			projectStore.EXPECT().DescribeCompliancePolicy(projectID).Return(bcp, nil)
 			tt.privateEndpointMock(projectStore)
+			if !tt.independentResource {
+				projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
+			}
 
 			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAccessLists).Return(true)
 			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureMaintenanceWindows).Return(true)
@@ -765,6 +745,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureTeams).Return(true)
 			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureBCP).Return(true)
 			featureValidator.EXPECT().IsResourceSupported(features.ResourceAtlasPrivateEndpoint).Return(tt.independentResource)
+			featureValidator.EXPECT().IsResourceSupported(features.ResourceAtlasCustomRole).Return(tt.independentResource)
 
 			projectResult, err := BuildAtlasProject(&AtlasProjectBuildRequest{
 				ProjectStore:    projectStore,

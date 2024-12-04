@@ -18,5 +18,5 @@ package features
 
 type FeatureValidator interface {
 	IsResourceSupported(resourceName string) bool
-	FeatureExist(resourceName, version string) bool
+	FeatureExist(resourceName, path string) bool
 }

@@ -256,6 +256,26 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		}
 	}
 
+	// Independent custom roles (AtlasCustomRole CR)
+	if e.featureValidator.IsResourceSupported(features.ResourceAtlasCustomRole) {
+		roles, err := project.BuildCustomRoles(e.dataProvider, project.CustomRolesRequest{
+			ProjectID:       e.projectID,
+			ProjectName:     projectData.Project.Name,
+			TargetNamespace: e.targetNamespace,
+			Version:         e.operatorVersion,
+			Credentials:     credentialsName,
+			IsIndependent:   e.independentResources,
+			Dict:            e.dictionaryForAtlasNames,
+		})
+		if err != nil {
+			return nil, "", err
+		}
+
+		for i := range len(roles) {
+			r = append(r, &roles[i])
+		}
+	}
+
 	// DB users
 	usersData, relatedSecrets, err := dbusers.BuildDBUsers(
 		e.dataProvider,

@@ -183,7 +183,7 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 		result.Secrets = append(result.Secrets, s...)
 	}
 
-	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) {
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) && !br.Validator.IsResourceSupported(features.ResourceAtlasCustomRole) {
 		customRoles, ferr := buildCustomRoles(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr

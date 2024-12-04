@@ -139,18 +139,18 @@ jobs:
             echo "|        | Difference | ${diff}% |"
           } > comment.md
           cat "comment.md" >> "$GITHUB_STEP_SUMMARY"
-      - name: Comment PR
-        uses: actions/github-script@v7
+      - name: set Apix Bot token
+        id: app-token
+        uses: mongodb/apix-action/token@v4
         with:
-          script: |
-            const fs = require('fs');
-            const comment = fs.readFileSync('comment.md', 'utf8');
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: comment
-            });
+          app-id: ${{ secrets.APIXBOT_APP_ID }}
+          private-key: ${{ secrets.APIXBOT_APP_PEM }}
+      - name: Comment PR
+        uses: marocchino/sticky-pull-request-comment@v2.9.0
+        with:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          recreate: true
+          path: comment.md
       - name: Check coverage threshold
         run: |
           if (( $(echo "${{ steps.compare.outputs.diff }} < 0" | bc -l) )); then

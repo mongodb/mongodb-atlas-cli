@@ -99,13 +99,17 @@ func (opts *UpdateOpts) newFlexCluster() (*atlasv2.FlexClusterDescriptionUpdate2
 			return nil, err
 		}
 	} else {
-		cluster = opts.newFlexClusterDescriptionUpdate20241113()
+		flexClusterFromGet, err := opts.store.FlexCluster(opts.ConfigProjectID(), opts.name)
+		if err != nil {
+			return nil, err
+		}
+		cluster = opts.newFlexClusterDescriptionUpdate20241113(flexClusterFromGet)
 	}
 
 	return cluster, nil
 }
 
-func (opts *UpdateOpts) newFlexClusterDescriptionUpdate20241113() *atlasv2.FlexClusterDescriptionUpdate20241113 {
+func (opts *UpdateOpts) newFlexClusterDescriptionUpdate20241113(cluster *atlasv2.FlexClusterDescription20241113) *atlasv2.FlexClusterDescriptionUpdate20241113 {
 	out := &atlasv2.FlexClusterDescriptionUpdate20241113{}
 
 	if opts.disableTerminationProtection {
@@ -117,7 +121,17 @@ func (opts *UpdateOpts) newFlexClusterDescriptionUpdate20241113() *atlasv2.FlexC
 	}
 
 	if len(opts.tag) > 0 {
+		out.Tags = &[]atlasv2.ResourceTag{}
+	}
+
+	if len(opts.tag) > 0 {
 		out.Tags = newResourceTags(opts.tag)
+	}
+
+	tags =
+
+	if len(*cluster.Tags) > 0{
+		out.SetTags(*cluster.Tags)
 	}
 
 	return out

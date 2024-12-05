@@ -87,6 +87,8 @@ func (opts *UpdateOpts) RunFlexCluster() error {
 		if ok && code == duplicateClusterNameErrorCode {
 			return cli.ErrNameExists
 		}
+
+		return err
 	}
 
 	return opts.Print(flexCluster)

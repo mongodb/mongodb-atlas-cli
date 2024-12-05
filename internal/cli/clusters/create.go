@@ -36,8 +36,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
-var errFailedToLoadClusterFileMessage = errors.New("failed to parse JSON file")
-
 const (
 	replicaSet                    = "REPLICASET"
 	tenant                        = "TENANT"

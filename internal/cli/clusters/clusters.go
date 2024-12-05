@@ -15,6 +15,8 @@
 package clusters
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/advancedsettings"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/availableregions"
@@ -27,6 +29,12 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+)
+
+var errFailedToLoadClusterFileMessage = errors.New("failed to parse JSON file")
+
+const (
+	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
 )
 
 func Builder() *cobra.Command {

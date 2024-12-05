@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build unit
-
 package clusters
 
 import (
@@ -25,7 +23,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
@@ -117,10 +117,141 @@ func TestUpdate_Run(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
-		if err := updateOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
+		require.NoError(t, updateOpts.Run())
+		assert.Contains(t, buf.String(), "Updating cluster")
+	})
+}
+
+func TestUpdate_FlexClusterRun(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockAtlasClusterGetterUpdater(ctrl)
+
+	expected := &atlasv2.FlexClusterDescription20241113{}
+
+	t.Run("flags run", func(t *testing.T) {
+		updateOpts := &UpdateOpts{
+			name:          "ProjectBar",
+			store:         mockStore,
+			isFlexCluster: true,
+			GlobalOpts:    cli.GlobalOpts{ProjectID: "test"},
 		}
 
+		mockStore.
+			EXPECT().
+			FlexCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(expected, nil).
+			Times(1)
+
+		cluster, _ := updateOpts.newFlexCluster()
+
+		mockStore.
+			EXPECT().
+			UpdateFlexCluster(updateOpts.ConfigProjectID(), updateOpts.name,
+				cluster).
+			Return(expected, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			FlexCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(expected, nil).
+			Times(1)
+
+		require.NoError(t, updateOpts.Run())
+	})
+
+	t.Run("flags run with existing tags", func(t *testing.T) {
+		updateOpts := &UpdateOpts{
+			name:          "ProjectBar",
+			store:         mockStore,
+			isFlexCluster: true,
+			GlobalOpts:    cli.GlobalOpts{ProjectID: "test"},
+			tag: map[string]string{
+				"key1": "value22",
+			},
+		}
+
+		expectedGet := &atlasv2.FlexClusterDescription20241113{
+			Tags: newResourceTags(map[string]string{
+				"test1": "value1",
+			}),
+		}
+
+		expectedPost := &atlasv2.FlexClusterDescription20241113{
+			Tags: newResourceTags(map[string]string{
+				"test1": "value1",
+				"key1":  "value22",
+			}),
+		}
+
+		mockStore.
+			EXPECT().
+			FlexCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(expectedGet, nil).
+			Times(1)
+
+		cluster, _ := updateOpts.newFlexCluster()
+
+		mockStore.
+			EXPECT().
+			FlexCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(expectedGet, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			UpdateFlexCluster(updateOpts.ConfigProjectID(), updateOpts.name,
+				cluster).
+			Return(expectedPost, nil).
+			Times(1)
+
+		require.NoError(t, updateOpts.Run())
+	})
+
+	t.Run("file run", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		// create test file
+		fileYML := `{
+		  "tags": [
+			{
+			  "key": "test",
+			  "value": "test222"
+			}
+		  ],
+		  "terminationProtectionEnabled": false
+}`
+		fileName := "atlas_flex_cluster_update_test.json"
+
+		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
+
+		buf := new(bytes.Buffer)
+		updateOpts := &UpdateOpts{
+			filename: fileName,
+			fs:       appFS,
+			store:    mockStore,
+			name:     "ProjectBar",
+			OutputOpts: cli.OutputOpts{
+				Template:  updateTmpl,
+				OutWriter: buf,
+			},
+			isFlexCluster:               true,
+			enableTerminationProtection: true,
+			GlobalOpts:                  cli.GlobalOpts{ProjectID: "test"},
+			tag: map[string]string{
+				"test": "test222",
+			},
+		}
+
+		cluster, _ := updateOpts.newFlexCluster()
+		mockStore.
+			EXPECT().
+			UpdateFlexCluster(
+				updateOpts.ConfigProjectID(),
+				updateOpts.name, cluster).
+			Return(expected, nil).
+			Times(1)
+
+		require.NoError(t, updateOpts.Run())
 		assert.Contains(t, buf.String(), "Updating cluster")
 	})
 }

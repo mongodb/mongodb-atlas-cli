@@ -120,18 +120,19 @@ func (opts *UpdateOpts) newFlexClusterDescriptionUpdate20241113(cluster *atlasv2
 		out.TerminationProtectionEnabled = pointer.Get(true)
 	}
 
-	if len(opts.tag) > 0 {
-		out.Tags = &[]atlasv2.ResourceTag{}
+	// add existing tags
+	if cluster.Tags != nil && len(*cluster.Tags) > 0 {
+		out.SetTags(cluster.GetTags())
 	}
 
 	if len(opts.tag) > 0 {
-		out.Tags = newResourceTags(opts.tag)
-	}
-
-	tags =
-
-	if len(*cluster.Tags) > 0{
-		out.SetTags(*cluster.Tags)
+		tags := newResourceTags(opts.tag)
+		if out.HasTags() {
+			newTags := append(out.GetTags(), *tags...)
+			out.SetTags(newTags)
+		} else {
+			out.SetTags(*tags)
+		}
 	}
 
 	return out

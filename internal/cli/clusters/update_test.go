@@ -136,12 +136,73 @@ func TestUpdate_FlexClusterRun(t *testing.T) {
 			GlobalOpts:    cli.GlobalOpts{ProjectID: "test"},
 		}
 
+		mockStore.
+			EXPECT().
+			FlexCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(expected, nil).
+			Times(1)
+
 		cluster, _ := updateOpts.newFlexCluster()
+
 		mockStore.
 			EXPECT().
 			UpdateFlexCluster(updateOpts.ConfigProjectID(), updateOpts.name,
 				cluster).
 			Return(expected, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			FlexCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(expected, nil).
+			Times(1)
+
+		require.NoError(t, updateOpts.Run())
+	})
+
+	t.Run("flags run with existing tags", func(t *testing.T) {
+		updateOpts := &UpdateOpts{
+			name:          "ProjectBar",
+			store:         mockStore,
+			isFlexCluster: true,
+			GlobalOpts:    cli.GlobalOpts{ProjectID: "test"},
+			tag: map[string]string{
+				"key1": "value22",
+			},
+		}
+
+		expectedGet := &atlasv2.FlexClusterDescription20241113{
+			Tags: newResourceTags(map[string]string{
+				"test1": "value1",
+			}),
+		}
+
+		expectedPost := &atlasv2.FlexClusterDescription20241113{
+			Tags: newResourceTags(map[string]string{
+				"test1": "value1",
+				"key1":  "value22",
+			}),
+		}
+
+		mockStore.
+			EXPECT().
+			FlexCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(expectedGet, nil).
+			Times(1)
+
+		cluster, _ := updateOpts.newFlexCluster()
+
+		mockStore.
+			EXPECT().
+			FlexCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(expectedGet, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			UpdateFlexCluster(updateOpts.ConfigProjectID(), updateOpts.name,
+				cluster).
+			Return(expectedPost, nil).
 			Times(1)
 
 		require.NoError(t, updateOpts.Run())

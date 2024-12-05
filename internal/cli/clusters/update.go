@@ -84,7 +84,7 @@ func (opts *UpdateOpts) RunFlexCluster() error {
 		if apiError.GetErrorCode() == invalidAttributeErrorCode && strings.Contains(apiError.GetDetail(), regionName) {
 			return cli.ErrNoRegionExistsTryCommand
 		}
-		if ok && code == duplicateClusterNameErrorCode {
+		if code == duplicateClusterNameErrorCode {
 			return cli.ErrNameExists
 		}
 

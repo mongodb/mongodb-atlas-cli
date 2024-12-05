@@ -65,6 +65,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"M10",
 			"--mdbVersion",
 			"8.0",
+			"--skipMongosh",
 			"--force",
 			"--debug",
 			"--projectId", g.projectID,

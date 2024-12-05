@@ -234,6 +234,48 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		e.dictionaryForAtlasNames,
 	))
 
+	if e.featureValidator.IsResourceSupported(features.ResourceAtlasPrivateEndpoint) {
+		privateEndpoints, err := project.BuildPrivateEndpointCustomResources(
+			e.dataProvider,
+			project.PrivateEndpointRequest{
+				ProjectName:         projectData.Project.Name,
+				ProjectID:           e.projectID,
+				TargetNamespace:     e.targetNamespace,
+				Version:             e.operatorVersion,
+				Credentials:         credentialsName,
+				IndependentResource: e.independentResources,
+				Dictionary:          e.dictionaryForAtlasNames,
+			},
+		)
+		if err != nil {
+			return nil, "", err
+		}
+
+		for _, privateEndpoint := range privateEndpoints {
+			r = append(r, &privateEndpoint)
+		}
+	}
+
+	// Independent custom roles (AtlasCustomRole CR)
+	if e.featureValidator.IsResourceSupported(features.ResourceAtlasCustomRole) {
+		roles, err := project.BuildCustomRoles(e.dataProvider, project.CustomRolesRequest{
+			ProjectID:       e.projectID,
+			ProjectName:     projectData.Project.Name,
+			TargetNamespace: e.targetNamespace,
+			Version:         e.operatorVersion,
+			Credentials:     credentialsName,
+			IsIndependent:   e.independentResources,
+			Dict:            e.dictionaryForAtlasNames,
+		})
+		if err != nil {
+			return nil, "", err
+		}
+
+		for i := range len(roles) {
+			r = append(r, &roles[i])
+		}
+	}
+
 	// DB users
 	usersData, relatedSecrets, err := dbusers.BuildDBUsers(
 		e.dataProvider,

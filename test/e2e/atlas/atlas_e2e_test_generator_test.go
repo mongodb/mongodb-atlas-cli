@@ -183,6 +183,30 @@ func (g *atlasE2ETestGenerator) generateEmptyProject(prefix string) {
 	})
 }
 
+func (g *atlasE2ETestGenerator) generateAWSPrivateEndpoint(region string) {
+	g.t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		g.t.Fatalf("%v: invalid bin", err)
+	}
+
+	cmd := exec.Command(cliPath,
+		privateEndpointsEntity,
+		awsEntity,
+		"create",
+		"--region",
+		region,
+		"--projectId",
+		g.projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(g.t, err, string(resp))
+	var r atlasv2.EndpointService
+	require.NoError(g.t, json.Unmarshal(resp, &r))
+}
+
 func (g *atlasE2ETestGenerator) generateDBUser(prefix string) {
 	g.t.Helper()
 

@@ -81,7 +81,7 @@ func (opts *UpdateOpts) RunFlexCluster() error {
 	apiError, ok := atlasv2.AsError(err)
 	code := apiError.GetErrorCode()
 	if ok {
-		if apiError.GetErrorCode() == invalidAttributeErrorCode && strings.Contains(apiError.GetDetail(), regionName) {
+		if code == invalidAttributeErrorCode && strings.Contains(apiError.GetDetail(), regionName) {
 			return cli.ErrNoRegionExistsTryCommand
 		}
 		if code == duplicateClusterNameErrorCode {

@@ -24,20 +24,22 @@ import (
 )
 
 var (
-	ErrMissingDependency            = errors.New("missing executor dependency")
-	ErrFailedToGetBaseURL           = errors.New("failed to get base url")
-	ErrFailedToConvertToHTTPRequest = errors.New("failed to convert to HTTP request")
 	ErrFailedToAccessToken          = errors.New("failed to get access token")
+	ErrFailedToConvertToHTTPRequest = errors.New("failed to convert to HTTP request")
 	ErrFailedToExecuteHTTPRequest   = errors.New("failed to execute HTTP request")
+	ErrFailedToGetBaseURL           = errors.New("failed to get base url")
+	ErrFailedToHandleFormat         = errors.New("failed to handle format")
+	ErrMissingDependency            = errors.New("missing executor dependency")
 )
 
 type Executor struct {
 	commandConverter CommandConverter
 	httpClient       *http.Client
+	formatter        ResponseFormatter
 }
 
 // We're expecting a http client that's authenticated.
-func NewExecutor(commandConverter CommandConverter, httpClient *http.Client) (*Executor, error) {
+func NewExecutor(commandConverter CommandConverter, httpClient *http.Client, formatter ResponseFormatter) (*Executor, error) {
 	if commandConverter == nil {
 		return nil, errors.Join(ErrMissingDependency, errors.New("commandConverter is nil"))
 	}
@@ -46,9 +48,14 @@ func NewExecutor(commandConverter CommandConverter, httpClient *http.Client) (*E
 		return nil, errors.Join(ErrMissingDependency, errors.New("httpClient is nil"))
 	}
 
+	if formatter == nil {
+		return nil, errors.Join(ErrMissingDependency, errors.New("formatter is nil"))
+	}
+
 	return &Executor{
 		commandConverter: commandConverter,
 		httpClient:       httpClient,
+		formatter:        formatter,
 	}, nil
 }
 
@@ -66,9 +73,12 @@ func NewDefaultExecutor() (*Executor, error) {
 		return nil, err
 	}
 
+	formatter := NewFormatter()
+
 	return NewExecutor(
 		commandConverter,
 		client,
+		formatter,
 	)
 }
 
@@ -82,6 +92,11 @@ func (e *Executor) ensureInitialized() {
 
 func (e *Executor) ExecuteCommand(ctx context.Context, commandRequest CommandRequest) (*CommandResponse, error) {
 	e.ensureInitialized()
+
+	// Set the content type
+	if err := e.SetContentType(&commandRequest); err != nil {
+		return nil, err
+	}
 
 	// Convert the request (api command definition + execution context) into a http request
 	httpRequest, err := e.commandConverter.ConvertToHTTPRequest(commandRequest)
@@ -100,12 +115,35 @@ func (e *Executor) ExecuteCommand(ctx context.Context, commandRequest CommandReq
 
 	//nolint: mnd // httpResponse.StatusCode >= StatusOK && httpResponse.StatusCode < StatusMultipleChoices makes this code harder to read
 	isSuccess := httpResponse.StatusCode >= 200 && httpResponse.StatusCode < 300
+	output := httpResponse.Body
 
-	// TODO: CLOUDP-280747, formatting if isSuccess == true
+	if isSuccess {
+		formattedOutput, err := e.formatter.Format(commandRequest.Format, output)
+		if err != nil {
+			return nil, err
+		}
+
+		output = formattedOutput
+	}
+
 	response := CommandResponse{
 		IsSuccess: isSuccess,
-		Output:    httpResponse.Body,
+		Output:    output,
 	}
 
 	return &response, nil
+}
+
+func (e *Executor) SetContentType(commandRequest *CommandRequest) error {
+	e.ensureInitialized()
+
+	// Update the format if needed
+	// For example if the requested format is a go template, change the request format to json
+	contentType, err := e.formatter.ContentType(commandRequest.Format)
+	if err != nil {
+		return errors.Join(ErrFailedToHandleFormat, err)
+	}
+	commandRequest.ContentType = contentType
+
+	return nil
 }

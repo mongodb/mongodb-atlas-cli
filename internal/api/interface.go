@@ -37,14 +37,20 @@ type CommandConverter interface {
 }
 
 type CommandRequest struct {
-	Command    Command
-	Content    io.Reader
-	Format     string
-	Parameters map[string][]string
-	Version    string
+	Command     Command
+	Content     io.Reader
+	ContentType string
+	Format      string
+	Parameters  map[string][]string
+	Version     string
 }
 
 type CommandResponse struct {
 	IsSuccess bool
 	Output    io.ReadCloser
+}
+
+type ResponseFormatter interface {
+	ContentType(format string) (string, error)
+	Format(format string, readerCloser io.ReadCloser) (io.ReadCloser, error)
 }

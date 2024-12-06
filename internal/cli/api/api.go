@@ -19,6 +19,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"slices"
+	"strings"
 
 	"github.com/iancoleman/strcase"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
@@ -31,6 +33,7 @@ var (
 	ErrFailedToSetUntouchedFlags         = errors.New("failed to set untouched flags")
 	ErrServerReturnedAnErrorResponseCode = errors.New("server returned an error response code")
 	ErrAPICommandsHasNoVersions          = errors.New("api command has no versions")
+	BinaryOutputTypes                    = []string{"gzip"}
 )
 
 func Builder() *cobra.Command {
@@ -75,6 +78,7 @@ func createAPICommandGroupToCobraCommand(group api.Group) *cobra.Command {
 	}
 }
 
+//nolint:gocyclo
 func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	// command properties
 	commandName := strcase.ToLowerCamel(command.OperationID)
@@ -82,6 +86,8 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 
 	// flag values
 	file := ""
+	format := ""
+	outputFile := ""
 	version, err := defaultAPIVersion(command)
 	if err != nil {
 		return nil, err
@@ -92,14 +98,33 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 		Short: shortDescription,
 		Long:  longDescription,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
+			// Go through all commands that have not been touched/modified by the user and try to populate them from the users profile
+			// Common usecases:
+			// - set orgId
+			// - set projectId
 			if err := setUnTouchedFlags(NewProfileFlagValueProviderForDefaultProfile(), cmd); err != nil {
 				return errors.Join(ErrFailedToSetUntouchedFlags, err)
+			}
+
+			// Detect if stdout is being piped (atlas api myTag myOperationId > output.json)
+			isPiped, err := IsStdOutPiped()
+			if err != nil {
+				return err
+			}
+
+			// If the selected output format is binary and stdout is not being piped, mark output as required
+			// This ensures that the console isn't flooded with binary contents (for example gzip contents)
+			if slices.Contains(BinaryOutputTypes, format) && !isPiped {
+				if err := cmd.MarkFlagRequired("output"); err != nil {
+					return err
+				}
 			}
 
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			// Get the request input if needed
+			// This is needed for most PATCH/POST/PUT requests
 			var content io.ReadCloser
 			if needsFileFlag(command) {
 				content, err = handleInput(cmd)
@@ -110,30 +135,45 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 			}
 
 			// Create a new executor
+			// This is the piece of code which knows how to execute api.Commands
 			executor, err := api.NewDefaultExecutor()
 			if err != nil {
 				return err
 			}
 
 			// Convert the api command + cobra command into a api command request
-			commandRequest, err := NewCommandRequestFromCobraCommand(cmd, command, content, version)
+			commandRequest, err := NewCommandRequestFromCobraCommand(cmd, command, content, format, version)
 			if err != nil {
 				return err
 			}
 
 			// Execute the api command request
+			// This function will return an error if the http request failed
+			// When the http request returns a non-success code error will still be nil
 			result, err := executor.ExecuteCommand(cmd.Context(), *commandRequest)
 			if err != nil {
 				return err
 			}
 
-			// TODO: handle output + custom output format, separate ticket: CLOUDP-280747
+			// Properly free up result output
 			defer result.Output.Close()
-			_, err = io.Copy(os.Stdout, result.Output)
+
+			// Determine where to write the
+			output, err := getOutputWriteCloser(outputFile)
+			if err != nil {
+				return err
+			}
+			// Properly free up output
+			defer output.Close()
+
+			// Write the output
+			_, err = io.Copy(output, result.Output)
 			if err != nil {
 				return err
 			}
 
+			// In case the http status code was non-success
+			// Return an error, this causes the CLI to exit with a non-zero exit code while still running all telemetry code
 			if !result.IsSuccess {
 				return ErrServerReturnedAnErrorResponseCode
 			}
@@ -142,13 +182,21 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 		},
 	}
 
-	// common flags
+	// Common flags
 	// TODO: proper flag description and constants, CLOUDP-280742
 	cmd.Flags().StringVar(&version, "version", version, "api version")
 	if needsFileFlag(command) {
 		cmd.Flags().StringVar(&file, "file", "", "api request file content")
 	}
 
+	// Add format flags:
+	// - `--format`: desired output format, translates to ContentType. Can also be a go template
+	// - `--output`: file where we want to write the output to
+	if err := addFormatFlags(cmd, command, &format, &outputFile); err != nil {
+		return nil, err
+	}
+
+	//
 	if err := addParameters(cmd, command.RequestParameters.URLParameters); err != nil {
 		return nil, err
 	}
@@ -213,18 +261,14 @@ func setUnTouchedFlags(flagValueProvider FlagValueProvider, cmd *cobra.Command) 
 }
 
 func handleInput(cmd *cobra.Command) (io.ReadCloser, error) {
-	// Check if data is being piped to stdin
-	info, err := os.Stdin.Stat()
+	isPiped, err := IsStdInPiped()
 	if err != nil {
-		return nil, fmt.Errorf("error checking stdin: %w", err)
+		return nil, err
 	}
-
-	// Check if there's data in stdin (piped input)
-	isPiped := (info.Mode() & os.ModeCharDevice) == 0
 
 	if isPiped {
 		// Use stdin as the input
-		return os.Stdin, nil
+		return nil, nil
 	}
 
 	// If not piped, get the file flag
@@ -247,6 +291,27 @@ func handleInput(cmd *cobra.Command) (io.ReadCloser, error) {
 	return file, nil
 }
 
+func IsStdInPiped() (bool, error) {
+	return isPiped(os.Stdin)
+}
+
+func IsStdOutPiped() (bool, error) {
+	return isPiped(os.Stdout)
+}
+
+func isPiped(file *os.File) (bool, error) {
+	// Check if data is being piped to stdin
+	info, err := file.Stat()
+	if err != nil {
+		return false, fmt.Errorf("isPiped, error checking: %w", err)
+	}
+
+	// Check if there's data in stdin (piped input)
+	isPiped := (info.Mode() & os.ModeCharDevice) == 0
+
+	return isPiped, nil
+}
+
 func defaultAPIVersion(command api.Command) (string, error) {
 	// Command versions are sorted by the generation tool
 	nVersions := len(command.Versions)
@@ -266,4 +331,74 @@ func needsFileFlag(apiCommand api.Command) bool {
 	}
 
 	return false
+}
+
+func addFormatFlags(cmd *cobra.Command, apiCommand api.Command, format *string, outputFile *string) error {
+	// Get the list of supported content types for the apiCommand
+	supportedContentTypesList := getContentTypes(&apiCommand)
+
+	// If there's only one content type, set the format to that
+	numSupportedContentTypes := len(supportedContentTypesList)
+	if numSupportedContentTypes == 1 {
+		*format = supportedContentTypesList[0]
+	}
+
+	// If the content type has json, also add {{go template}} as an option to the --format help
+	if slices.Contains(supportedContentTypesList, "json") {
+		supportedContentTypesList = append(supportedContentTypesList, "{{go template}}")
+	}
+
+	// Generate a list of supported content types and add it to --help for --format
+	// Example [csv, json, {{go template}}]
+	supportedContentTypesString := strings.Join(supportedContentTypesList, ", ")
+
+	// Set the flags
+	cmd.Flags().StringVar(format, "format", *format, fmt.Sprintf("preferred api format, can be [%s]", supportedContentTypesString))
+	cmd.Flags().StringVar(outputFile, "output", "", "file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip).")
+
+	// If there's multiple content types, mark --format as required
+	if numSupportedContentTypes > 1 {
+		if err := cmd.MarkFlagRequired("format"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func getContentTypes(apiCommand *api.Command) []string {
+	// Create a unique list of all supported content types
+	// First create a map to convert 2 nested lists into a map
+	supportedContentTypes := make(map[string]struct{}, 0)
+	for _, version := range apiCommand.Versions {
+		for _, contentType := range version.ResponseContentTypes {
+			supportedContentTypes[contentType] = struct{}{}
+		}
+	}
+
+	// Convert the keys of the map into a list
+	supportedContentTypesList := make([]string, 0, len(supportedContentTypes))
+	for contentType := range supportedContentTypes {
+		supportedContentTypesList = append(supportedContentTypesList, contentType)
+	}
+
+	// Sort the list
+	slices.Sort(supportedContentTypesList)
+
+	return supportedContentTypesList
+}
+
+func getOutputWriteCloser(outputFile string) (io.WriteCloser, error) {
+	// If an output file is specified, create/open the file and return the writer
+	if outputFile != "" {
+		//nolint: mnd
+		file, err := os.OpenFile(outputFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+		if err != nil {
+			return nil, err
+		}
+		return file, nil
+	}
+
+	// Return stdout by default
+	return os.Stdout, nil
 }

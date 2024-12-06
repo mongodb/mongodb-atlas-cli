@@ -22,11 +22,11 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func NewCommandRequestFromCobraCommand(cobraCommand *cobra.Command, apiCommand api.Command, content io.Reader, version string) (*api.CommandRequest, error) {
+func NewCommandRequestFromCobraCommand(cobraCommand *cobra.Command, apiCommand api.Command, content io.Reader, format string, version string) (*api.CommandRequest, error) {
 	return &api.CommandRequest{
 		Command:    apiCommand,
-		Content:    content, // content has to be set by caller
-		Format:     "json",  // part of CLOUDP-280747
+		Content:    content,
+		Format:     format,
 		Parameters: cobraFlagsToRequestParameters(cobraCommand),
 		Version:    version,
 	}, nil
@@ -41,6 +41,12 @@ func cobraFlagsToRequestParameters(cobraCommand *cobra.Command) map[string][]str
 
 	cobraCommand.LocalFlags().VisitAll(func(flag *pflag.Flag) {
 		if _, ignoreFlag := flagsToIgnore[flag.Name]; ignoreFlag {
+			return
+		}
+
+		// If the flag has not been set, don't set the value
+		// Doing this would cause the request to contain all default values and might set not required values to not desired values
+		if !flag.Changed {
 			return
 		}
 

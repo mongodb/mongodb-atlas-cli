@@ -183,9 +183,9 @@ func TestConvertToHttpRequest(t *testing.T) {
 			name:    "valid get request (getCollStatsLatencyNamespaceClusterMeasurementsCommand)",
 			baseURL: "https://base_url",
 			request: CommandRequest{
-				Command: getCollStatsLatencyNamespaceClusterMeasurementsCommand,
-				Content: strings.NewReader(""),
-				Format:  "json",
+				Command:     getCollStatsLatencyNamespaceClusterMeasurementsCommand,
+				Content:     strings.NewReader(""),
+				ContentType: "json",
 				Parameters: map[string][]string{
 					"groupId":        {"abcdef1234"},
 					"clusterName":    {"cluster-01"},
@@ -208,9 +208,9 @@ func TestConvertToHttpRequest(t *testing.T) {
 			name:    "valid post request (createClusterCommand)",
 			baseURL: "http://another_base",
 			request: CommandRequest{
-				Command: createClusterCommand,
-				Content: strings.NewReader(`{"very_pretty_json":true}`),
-				Format:  "json",
+				Command:     createClusterCommand,
+				Content:     strings.NewReader(`{"very_pretty_json":true}`),
+				ContentType: "json",
 				Parameters: map[string][]string{
 					"groupId": {"0ff00ff00ff0"},
 					"pretty":  {"true"},
@@ -225,19 +225,19 @@ func TestConvertToHttpRequest(t *testing.T) {
 			expectedHTTPBody:              `{"very_pretty_json":true}`,
 		},
 		{
-			name:    "valid post request, custom format (createClusterCommand), should work after CLOUDP-280747 is implemented",
+			name:    "invalid post request",
 			baseURL: "http://another_base",
 			request: CommandRequest{
-				Command: createClusterCommand,
-				Content: strings.NewReader(`{"very_pretty_json":true}`),
-				Format:  `{{ .Id }}`,
+				Command:     createClusterCommand,
+				Content:     strings.NewReader(`{"very_pretty_json":true}`),
+				ContentType: `{{ .Id }}`,
 				Parameters: map[string][]string{
 					"groupId": {"0ff00ff00ff0"},
 					"pretty":  {"true"},
 				},
 				Version: "2024-08-05",
 			},
-			shouldFail:                    true, // TODO: should fail until CLOUDP-280747 is implemented
+			shouldFail:                    true,
 			expectedURL:                   "http://another_base/api/atlas/v2/groups/0ff00ff00ff0/clusters?pretty=true",
 			expectedHTTPVerb:              http.MethodPost,
 			expectedHTTPAcceptHeader:      "application/vnd.atlas.2024-08-05+json",
@@ -248,9 +248,9 @@ func TestConvertToHttpRequest(t *testing.T) {
 			name:    "invalid post request, missing groupId (createClusterCommand)",
 			baseURL: "http://another_base",
 			request: CommandRequest{
-				Command: createClusterCommand,
-				Content: strings.NewReader(`{"very_pretty_json":true}`),
-				Format:  "json",
+				Command:     createClusterCommand,
+				Content:     strings.NewReader(`{"very_pretty_json":true}`),
+				ContentType: "json",
 				Parameters: map[string][]string{
 					"pretty": {"true"},
 				},
@@ -262,9 +262,9 @@ func TestConvertToHttpRequest(t *testing.T) {
 			name:    "invalid post request, invalid version (createClusterCommand)",
 			baseURL: "http://another_base",
 			request: CommandRequest{
-				Command: createClusterCommand,
-				Content: strings.NewReader(`{"very_pretty_json":true}`),
-				Format:  "json",
+				Command:     createClusterCommand,
+				Content:     strings.NewReader(`{"very_pretty_json":true}`),
+				ContentType: "json",
 				Parameters: map[string][]string{
 					"groupId": {"0ff00ff00ff0"},
 					"pretty":  {"true"},

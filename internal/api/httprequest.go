@@ -79,7 +79,7 @@ func ConvertToHTTPRequest(baseURL string, request CommandRequest) (*http.Request
 	}
 
 	// Set accept header
-	accept, err := acceptHeader(version, request.Format)
+	accept, err := acceptHeader(version, request.ContentType)
 	if err != nil {
 		return nil, errors.Join(ErrUnsupportedContentType, err)
 	}
@@ -163,7 +163,7 @@ func acceptHeader(version *Version, requestedContentType string) (string, error)
 	}
 
 	if contentType == "" {
-		return "", fmt.Errorf("expected one of the following values: [%s]", strings.Join(supportedTypes, ","))
+		return "", fmt.Errorf("expected one of the following values: [%s], but got '%s' instead", strings.Join(supportedTypes, ","), requestedContentType)
 	}
 
 	return fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, contentType), nil

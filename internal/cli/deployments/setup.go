@@ -632,9 +632,7 @@ func (opts *SetupOpts) runAtlas(ctx context.Context) error {
 	_, _ = log.Debugf("Removing flags and args from original args %s\n", os.Args)
 
 	flagstoRemove := map[string]string{
-		flag.TypeFlag:    "1",
-		flag.MDBVersion:  "1", // TODO: CLOUDP-200331
-		flag.ConnectWith: "1", // TODO: CLOUDP-199422
+		flag.TypeFlag: "1",
 	}
 
 	newArgs, err := workflows.RemoveFlagsAndArgs(flagstoRemove, map[string]bool{opts.DeploymentName: true}, os.Args)

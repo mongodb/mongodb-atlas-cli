@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/watchers"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 type DeleteOpts struct {
@@ -45,7 +46,24 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
+	err := opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
+	if err != nil {
+		return opts.RunFlexCluster(err)
+	}
+
+	return nil
+}
+
+func (opts *DeleteOpts) RunFlexCluster(err error) error {
+	apiError, ok := atlasClustersPinned.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+		return err
+	}
+	return opts.Delete(opts.store.DeleteFlexCluster, opts.ConfigProjectID())
 }
 
 func (opts *DeleteOpts) PostRun() error {

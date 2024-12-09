@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	admin "go.mongodb.org/atlas-sdk/v20241113002/admin"
 )
 
 // MockDataFederationQueryLimitLister is a mock of DataFederationQueryLimitLister interface.

@@ -22,6 +22,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/stretchr/testify/require"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestDelete_Run(t *testing.T) {
@@ -42,7 +45,35 @@ func TestDelete_Run(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	if err := deleteOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+	require.NoError(t, deleteOpts.Run())
+}
+
+func TestDelete_RunFlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterDeleter(ctrl)
+
+	expectedError := &atlasClustersPinned.GenericOpenAPIError{}
+	expectedError.SetModel(atlasClustersPinned.ApiError{ErrorCode: pointer.Get(cannotUseFlexWithClusterApisErrorCode)})
+
+	deleteOpts := &DeleteOpts{
+		DeleteOpts: &cli.DeleteOpts{
+			Confirm: true,
+			Entry:   "test",
+		},
+		store: mockStore,
 	}
+
+	mockStore.
+		EXPECT().
+		DeleteCluster(deleteOpts.ProjectID, deleteOpts.Entry).
+		Return(expectedError).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		DeleteFlexCluster(deleteOpts.ProjectID, deleteOpts.Entry).
+		Return(nil).
+		Times(1)
+
+	require.NoError(t, deleteOpts.Run())
 }

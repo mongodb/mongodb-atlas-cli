@@ -38,7 +38,7 @@ if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
 		-v "$(pwd):$(pwd)" \
 		-w "$(pwd)" \
 		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
-		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a mongo-authenticode-2021 \"$EXE_FILE\""
+		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a ${AUTHENTICODE_KEY_NAME} \"$EXE_FILE\""
 	
 	echo "signing $MSI_FILE"
 	podman run \
@@ -47,7 +47,7 @@ if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
 		-v "$(pwd):$(pwd)" \
 		-w "$(pwd)" \
 		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
-		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a mongo-authenticode-2021 \"$MSI_FILE\""
+		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a ${AUTHENTICODE_KEY_NAME} \"$MSI_FILE\""
 	
 	rm .env
 fi

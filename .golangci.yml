@@ -11,7 +11,7 @@ linters-settings:
     alias:
       - pkg: go.mongodb.org/atlas-sdk/v20240530005/admin
         alias: atlasClustersPinned
-      - pkg: go.mongodb.org/atlas-sdk/v20241113001/admin
+      - pkg: go.mongodb.org/atlas-sdk/v20241113002/admin
         alias: atlasv2
       - pkg: go.mongodb.org/atlas/mongodbatlas
         alias: atlas

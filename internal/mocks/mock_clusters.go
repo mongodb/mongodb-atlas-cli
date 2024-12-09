@@ -10,7 +10,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20241113002/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -845,7 +845,7 @@ func (mr *MockClusterUpgraderMockRecorder) UpgradeCluster(arg0, arg1 interface{}
 }
 
 // UpgradeFlexCluster mocks base method.
-func (m *MockClusterUpgrader) UpgradeFlexCluster(arg0 string, arg1 *admin0.FlexClusterDescription20241113) (*admin0.FlexClusterDescription20241113, error) {
+func (m *MockClusterUpgrader) UpgradeFlexCluster(arg0 string, arg1 *admin0.AtlasTenantClusterUpgradeRequest20240805) (*admin0.FlexClusterDescription20241113, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpgradeFlexCluster", arg0, arg1)
 	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
@@ -913,7 +913,7 @@ func (mr *MockAtlasSharedClusterGetterUpgraderMockRecorder) UpgradeCluster(arg0,
 }
 
 // UpgradeFlexCluster mocks base method.
-func (m *MockAtlasSharedClusterGetterUpgrader) UpgradeFlexCluster(arg0 string, arg1 *admin0.FlexClusterDescription20241113) (*admin0.FlexClusterDescription20241113, error) {
+func (m *MockAtlasSharedClusterGetterUpgrader) UpgradeFlexCluster(arg0 string, arg1 *admin0.AtlasTenantClusterUpgradeRequest20240805) (*admin0.FlexClusterDescription20241113, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpgradeFlexCluster", arg0, arg1)
 	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)

@@ -20,7 +20,7 @@ import (
 	"time"
 
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

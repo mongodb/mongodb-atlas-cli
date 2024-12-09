@@ -62,7 +62,7 @@ func (s *Store) UpdateFlexCluster(groupID, name string, flexClusterDescriptionUp
 }
 
 // UpgradeFlexCluster encapsulate the logic to manage different cloud providers.
-func (s *Store) UpgradeFlexCluster(groupID string, flexClusterDescriptionUpdate20241113 *atlasv2.FlexClusterDescription20241113) (*atlasv2.FlexClusterDescription20241113, error) {
+func (s *Store) UpgradeFlexCluster(groupID string, flexClusterDescriptionUpdate20241113 *atlasv2.AtlasTenantClusterUpgradeRequest20240805) (*atlasv2.FlexClusterDescription20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

@@ -74,7 +74,7 @@ type ClusterStarter interface {
 
 type ClusterUpgrader interface {
 	UpgradeCluster(string, *atlas.Cluster) (*atlas.Cluster, error)
-	UpgradeFlexCluster(string, *atlasv2.FlexClusterDescription20241113) (*atlasv2.FlexClusterDescription20241113, error)
+	UpgradeFlexCluster(string, *atlasv2.AtlasTenantClusterUpgradeRequest20240805) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type SampleDataAdder interface {

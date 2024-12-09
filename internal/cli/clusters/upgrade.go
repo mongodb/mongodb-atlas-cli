@@ -129,7 +129,8 @@ func isTenant(instanceSizeName string) bool {
 		instanceSizeName == atlasM5
 }
 
-// UpgradeBuilder atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
+// UpgradeBuilder builds a cobra.Command that can run as:
+// atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpgradeBuilder() *cobra.Command {
 	opts := UpgradeOpts{
 		fs: afero.NewOsFs(),

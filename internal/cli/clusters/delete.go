@@ -46,8 +46,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	err := opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
-	if err != nil {
+	if err := opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID()); err != nil {
 		return opts.RunFlexCluster(err)
 	}
 

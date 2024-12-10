@@ -27,6 +27,7 @@ require (
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02
 	github.com/klauspost/compress v1.17.11
 	github.com/mattn/go-isatty v0.0.20
+	github.com/mholt/archives v0.0.0-20241207175349-5e373c52f8aa
 	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v0.18.2
 	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.5.0
@@ -142,7 +143,6 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
-	github.com/mholt/archives v0.0.0-20241207175349-5e373c52f8aa // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect

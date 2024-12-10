@@ -15,8 +15,6 @@
 package plugin
 
 import (
-	"archive/tar"
-	"compress/gzip"
 	"context"
 	"errors"
 	"fmt"
@@ -26,20 +24,18 @@ import (
 	"path/filepath"
 	"regexp"
 	"runtime"
+	"slices"
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v61/github"
+	"github.com/mholt/archives"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 )
 
 var (
 	errGithubParametersInvalid      = errors.New(`github parameter is invalid. It needs to have the format "<github-owner>/<github-repository-name>"`)
-	errCreateExtractionDir          = errors.New("failed to create directory while extracting plugin asset")
-	errCreateFileForExtracting      = errors.New("failed to create file while extracting plugin asset")
-	errCopyFileContentExtraction    = errors.New("failed to copy file content while extracting plugin asset")
-	errReadTar                      = errors.New("failed to read tar archive")
-	errCreatePluginZipFile          = errors.New("could not create plugin zip file")
+	errCreatePluginArchiveFile      = errors.New("could not create plugin archive file")
 	errSaveAssetToPluginDir         = errors.New("failed to save asset to plugin directory")
 	errCreateDirToExtractAssetFiles = errors.New("failed to create to plugin directory to extract assets in")
 	errCreatePluginAssetFromPlugin  = errors.New("failed to create plugin asset from plugin")
@@ -105,18 +101,35 @@ func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 
 func (g *GithubAsset) getID(assets []*github.ReleaseAsset) (int64, error) {
 	operatingSystem, architecture := runtime.GOOS, runtime.GOARCH
+	archiveContentTypesAndPriority := map[string]int{
+		"application/gzip": 0,
+		"application/zip":  1,
+	}
+
+	archiveAssets := make([]*github.ReleaseAsset, 0)
+
 	for _, asset := range assets {
-		if *asset.ContentType != "application/gzip" {
+		if _, ok := archiveContentTypesAndPriority[*asset.ContentType]; !ok {
 			continue
 		}
 		name := *asset.Name
 
 		if strings.Contains(name, operatingSystem) && strings.Contains(name, architecture) {
-			return *asset.ID, nil
+			archiveAssets = append(archiveAssets, asset)
 		}
 	}
 
-	return 0, fmt.Errorf("could not find an asset to download from %s for %s %s", g.repository(), operatingSystem, architecture)
+	if len(archiveAssets) == 0 {
+		return 0, fmt.Errorf("could not find an asset to download from %s for %s %s", g.repository(), operatingSystem, architecture)
+	}
+
+	slices.SortFunc(archiveAssets, func(a, b *github.ReleaseAsset) int {
+		priortyA := archiveContentTypesAndPriority[*a.ContentType]
+		priortyB := archiveContentTypesAndPriority[*b.ContentType]
+		return priortyA - priortyB
+	})
+
+	return *archiveAssets[0].ID, nil
 }
 
 func (g *GithubAsset) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser, error) {
@@ -163,68 +176,7 @@ func parseGithubReleaseValues(arg string) (*GithubAsset, error) {
 	return githubRelease, nil
 }
 
-func extractTarGz(src string, dest string) error {
-	file, err := os.Open(src)
-	if err != nil {
-		return fmt.Errorf("failed to open .tar.gz file: %w", err)
-	}
-	defer file.Close()
-
-	gzipReader, err := gzip.NewReader(file)
-	if err != nil {
-		return fmt.Errorf("failed to create gzip reader: %w", err)
-	}
-	defer gzipReader.Close()
-
-	tarReader := tar.NewReader(gzipReader)
-
-	for {
-		header, err := tarReader.Next()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			return errReadTar
-		}
-
-		fileName := filepath.Clean(header.Name)
-		if strings.HasPrefix(fileName, "..") {
-			return fmt.Errorf("illegal file path for extracted plugin asset file: %s", fileName)
-		}
-
-		filePath := filepath.Join(dest, fileName)
-
-		switch header.Typeflag {
-		case tar.TypeDir:
-			//nolint:gosec
-			if err := os.MkdirAll(filePath, os.FileMode(header.Mode)); err != nil {
-				return errCreateExtractionDir
-			}
-		case tar.TypeReg:
-			outFile, err := os.Create(filePath)
-			if err != nil {
-				return errCreateFileForExtracting
-			}
-			for {
-				_, err := io.CopyN(outFile, tarReader, 1024) //nolint:mnd // 1k each write to avoid compression bomb
-				if err != nil {
-					if err == io.EOF {
-						break
-					}
-					outFile.Close()
-					return errCopyFileContentExtraction
-				}
-			}
-			outFile.Close()
-		default:
-			return errReadTar
-		}
-	}
-
-	return nil
-}
-
-func saveReadCloserToPluginAssetZipFile(rc io.ReadCloser) (string, error) {
+func saveReadCloserToPluginAssetArchiveFile(rc io.ReadCloser) (string, error) {
 	defer rc.Close()
 
 	pluginsDefaultDirectory, err := plugin.GetDefaultPluginDirectory()
@@ -232,23 +184,23 @@ func saveReadCloserToPluginAssetZipFile(rc io.ReadCloser) (string, error) {
 		return "", err
 	}
 
-	pluginZipFilePath := filepath.Join(pluginsDefaultDirectory, "zippedPluginFiles.tar.gz")
-	pluginTarGzFile, err := os.Create(pluginZipFilePath)
+	pluginArchiveFilePath := filepath.Join(pluginsDefaultDirectory, "plugin.partial")
+	pluginTarGzFile, err := os.Create(pluginArchiveFilePath)
 	if err != nil {
-		return "", errCreatePluginZipFile
+		return "", errCreatePluginArchiveFile
 	}
 	defer pluginTarGzFile.Close()
 
 	_, err = io.Copy(pluginTarGzFile, rc)
 	if err != nil {
-		os.Remove(pluginZipFilePath)
+		os.Remove(pluginArchiveFilePath)
 		return "", errSaveAssetToPluginDir
 	}
 
-	return pluginZipFilePath, nil
+	return pluginArchiveFilePath, nil
 }
 
-func extractPluginAssetZipFile(pluginZipFilePath string, pluginDirectoryName string) (string, error) {
+func extractPluginAssetArchiveFile(ctx context.Context, pluginArchivePath string, pluginDirectoryName string) (string, error) {
 	pluginsDefaultDirectory, err := plugin.GetDefaultPluginDirectory()
 	if err != nil {
 		return "", err
@@ -260,10 +212,77 @@ func extractPluginAssetZipFile(pluginZipFilePath string, pluginDirectoryName str
 		return "", errCreateDirToExtractAssetFiles
 	}
 
-	if err = extractTarGz(pluginZipFilePath, pluginDirectoryPath); err != nil {
+	if err = extractArchive(ctx, pluginArchivePath, pluginDirectoryPath); err != nil {
 		os.RemoveAll(pluginDirectoryPath)
 		return pluginDirectoryPath, err
 	}
 
 	return pluginDirectoryPath, nil
+}
+
+func extractArchive(ctx context.Context, pluginArchivePath string, pluginDirectoryName string) error {
+	archiveFile, err := os.Open(pluginArchivePath)
+	if err != nil {
+		return fmt.Errorf("failed to open source file: %w", err)
+	}
+	defer archiveFile.Close()
+
+	// Identify the archive format
+	// The library we're using supports: zip, .tar, .tar.gz, .rar, .7z
+	format, _, err := archives.Identify(ctx, pluginArchivePath, archiveFile)
+	if err != nil {
+		return fmt.Errorf("failed to identify archive format: %w", err)
+	}
+
+	// Try to get an extractor for the format
+	ex, ok := format.(archives.Extractor)
+	if !ok {
+		return fmt.Errorf("%s is not supported", format.MediaType())
+	}
+
+	// Extract the archive
+	if err := ex.Extract(ctx, archiveFile, func(_ context.Context, fileInfo archives.FileInfo) error {
+		// Get the destination path
+		destPath := filepath.Join(pluginDirectoryName, fileInfo.NameInArchive)
+
+		// Handle directories
+		if fileInfo.IsDir() {
+			return os.MkdirAll(destPath, fileInfo.Mode())
+		}
+
+		// Only handle regular files
+		if !fileInfo.Mode().IsRegular() {
+			return fmt.Errorf("plugin archive should only contain directoreis and regular files, encountered: %s", fileInfo.Mode())
+		}
+
+		// Create parent directories if they don't exist
+		if err := os.MkdirAll(filepath.Dir(destPath), os.ModePerm); err != nil {
+			return fmt.Errorf("failed to create parent directory: %w", err)
+		}
+
+		// Open file in archive
+		file, err := fileInfo.Open()
+		if err != nil {
+			return fmt.Errorf("failed to open file: %w", err)
+		}
+		defer file.Close()
+
+		// Create the file
+		destFile, err := os.OpenFile(destPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, fileInfo.Mode())
+		if err != nil {
+			return fmt.Errorf("failed to create destination file: %w", err)
+		}
+		defer destFile.Close()
+
+		// Copy file contents
+		if _, err := io.Copy(destFile, file); err != nil {
+			return fmt.Errorf("failed to copy contents to destination file: %w", err)
+		}
+
+		return nil
+	}); err != nil {
+		return fmt.Errorf("failed to extract archive: %w", err)
+	}
+
+	return nil
 }

@@ -58,5 +58,6 @@
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc": "apix-2",
 	"go.opentelemetry.io/otel/sdk": "apix-2",
 	"go.opentelemetry.io/otel/trace": "apix-2",
-	"google.golang.org/grpc": "apix-2"
+	"google.golang.org/grpc": "apix-2",
+	"github.com/mholt/archives": "apix-2"
 }

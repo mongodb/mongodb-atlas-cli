@@ -73,12 +73,24 @@ func Test_getID(t *testing.T) {
 			pluginAssets: []*github.ReleaseAsset{
 				{
 					ID:          github.Int64(3),
-					Name:        github.String(validAssetName + ".zip"),
-					ContentType: github.String("application/zip"),
+					Name:        github.String(validAssetName + ".json"),
+					ContentType: github.String("application/json"),
 				},
 			},
 			expectedAssetID: 0,
 			expectError:     true,
+		},
+		{
+			name: "Zip asset",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(3),
+					Name:        github.String(validAssetName + ".zip"),
+					ContentType: github.String("application/zip"),
+				},
+			},
+			expectedAssetID: 3,
+			expectError:     false,
 		},
 	}
 

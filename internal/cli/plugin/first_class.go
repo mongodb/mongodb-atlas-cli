@@ -90,7 +90,7 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 	if err := installOpts.checkForDuplicatePlugins(); err != nil {
 		return fmt.Errorf("first class plugin %s is already installed, should not install again", fcp.Name)
 	}
-	if err := installOpts.Run(); err != nil {
+	if err := installOpts.Run(cmd.Context()); err != nil {
 		return fmt.Errorf("failed to install first class plugin %s: %w", fcp.Name, err)
 	}
 

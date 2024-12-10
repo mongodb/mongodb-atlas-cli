@@ -15,6 +15,7 @@
 package plugin
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -127,7 +128,7 @@ func (opts *UpdateOpts) validatePlugin(pluginDirectoryPath string) error {
 	return nil
 }
 
-func (opts *UpdateOpts) updatePlugin(githubAssetRelease *GithubAsset, existingPlugin *plugin.Plugin) error {
+func (opts *UpdateOpts) updatePlugin(ctx context.Context, githubAssetRelease *GithubAsset, existingPlugin *plugin.Plugin) error {
 	// get all plugin assets info from github repository
 	assets, err := githubAssetRelease.getReleaseAssets()
 	if err != nil {
@@ -140,23 +141,23 @@ func (opts *UpdateOpts) updatePlugin(githubAssetRelease *GithubAsset, existingPl
 		return err
 	}
 
-	// download plugin asset zip file and save it as ReadCloser
+	// download plugin asset archive file and save it as ReadCloser
 	rc, err := githubAssetRelease.getPluginAssetAsReadCloser(assetID)
 	if err != nil {
 		return err
 	}
 	defer rc.Close()
 
-	// use the ReadCloser to save the asset zip file in the default plugin directory
-	pluginZipFilePath, err := saveReadCloserToPluginAssetZipFile(rc)
+	// use the ReadCloser to save the asset archive file in the default plugin directory
+	pluginArchiveFilePath, err := saveReadCloserToPluginAssetArchiveFile(rc)
 	if err != nil {
 		return err
 	}
-	defer os.Remove(pluginZipFilePath) // delete zip file after update command finishes
+	defer os.Remove(pluginArchiveFilePath) // delete archive file after update command finishes
 
-	// try to extract content of plugin zip file and save it in default plugin directory
+	// try to extract content of plugin archive file and save it in default plugin directory
 	tempPluginDirectoryName := githubAssetRelease.getPluginDirectoryName() + "_temp"
-	tempPluginDirectoryPath, err := extractPluginAssetZipFile(pluginZipFilePath, tempPluginDirectoryName)
+	tempPluginDirectoryPath, err := extractPluginAssetArchiveFile(ctx, pluginArchiveFilePath, tempPluginDirectoryName)
 	if err != nil {
 		return err
 	}
@@ -194,7 +195,7 @@ func (opts *UpdateOpts) updatePlugin(githubAssetRelease *GithubAsset, existingPl
 	return nil
 }
 
-func (opts *UpdateOpts) Run() error {
+func (opts *UpdateOpts) Run(ctx context.Context) error {
 	ghClient := github.NewClient(nil)
 
 	// if update flag is set, update all plugin, if not update only specified plugin
@@ -216,7 +217,7 @@ func (opts *UpdateOpts) Run() error {
 
 			// update using GithubAsset
 			githubAsset.ghClient = ghClient
-			err = opts.updatePlugin(githubAsset, p)
+			err = opts.updatePlugin(ctx, githubAsset, p)
 			if err != nil {
 				printPluginUpdateWarning(p, err)
 			}
@@ -247,7 +248,7 @@ func (opts *UpdateOpts) Run() error {
 		// update using GithubAsset
 		opts.Print(fmt.Sprintf(`Updating plugin "%s"`, existingPlugin.Name))
 		githubAsset.ghClient = ghClient
-		err = opts.updatePlugin(githubAsset, existingPlugin)
+		err = opts.updatePlugin(ctx, githubAsset, existingPlugin)
 		if err != nil {
 			return err
 		}
@@ -301,8 +302,8 @@ Additionally, you can use the "--all" flag to update all plugins.
 
 			return nil
 		},
-		RunE: func(_ *cobra.Command, _ []string) error {
-			return opts.Run()
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return opts.Run(cmd.Context())
 		},
 	}
 

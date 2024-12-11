@@ -15,6 +15,7 @@
 package plugin
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -71,7 +72,7 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 	return nil
 }
 
-func (opts *InstallOpts) Run() error {
+func (opts *InstallOpts) Run(ctx context.Context) error {
 	// get all plugin assets info from github repository
 	assets, err := opts.githubAsset.getReleaseAssets()
 	if err != nil {
@@ -84,22 +85,22 @@ func (opts *InstallOpts) Run() error {
 		return err
 	}
 
-	// download plugin asset zip file and save it as ReadCloser
+	// download plugin asset archive file and save it as ReadCloser
 	rc, err := opts.githubAsset.getPluginAssetAsReadCloser(assetID)
 	if err != nil {
 		return err
 	}
 	defer rc.Close()
 
-	// use the ReadCloser to save the asset zip file in the default plugin directory
-	pluginZipFilePath, err := saveReadCloserToPluginAssetZipFile(rc)
+	// use the ReadCloser to save the asset archive file in the default plugin directory
+	pluginArchiveFilePath, err := saveReadCloserToPluginAssetArchiveFile(rc)
 	if err != nil {
 		return err
 	}
-	defer os.Remove(pluginZipFilePath) // delete zip file after install command finishes
+	defer os.Remove(pluginArchiveFilePath) // delete archive file after install command finishes
 
-	// try to extract content of plugin zip file and save it in default plugin directory
-	pluginDirectoryPath, err := extractPluginAssetZipFile(pluginZipFilePath, opts.githubAsset.getPluginDirectoryName())
+	// try to extract content of plugin archive file and save it in default plugin directory
+	pluginDirectoryPath, err := extractPluginAssetArchiveFile(ctx, pluginArchiveFilePath, opts.githubAsset.getPluginDirectoryName())
 	if err != nil {
 		return err
 	}
@@ -152,8 +153,8 @@ MongoDB provides an example plugin: https://github.com/mongodb/atlas-cli-plugin-
 
 			return opts.PreRunE(opts.checkForDuplicatePlugins)
 		},
-		RunE: func(_ *cobra.Command, _ []string) error {
-			return opts.Run()
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return opts.Run(cmd.Context())
 		},
 	}
 

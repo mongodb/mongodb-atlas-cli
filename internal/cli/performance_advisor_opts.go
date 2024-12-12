@@ -17,6 +17,10 @@ package cli
 import (
 	"fmt"
 	"strings"
+
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/spf13/cobra"
 )
 
 type PerformanceAdvisorOpts struct {
@@ -44,4 +48,11 @@ func (opts *PerformanceAdvisorOpts) Host() (string, error) {
 		return "", err
 	}
 	return opts.ProcessName, nil
+}
+
+func (opts *PerformanceAdvisorOpts) AddPerformanceAdvisorOptsFlags(cmd *cobra.Command) {
+	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
+	_ = cmd.Flags().MarkDeprecated(flag.HostID, "Flag is invalid for MongoDB Atlas")
+	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessNameAtlasCLI)
+	_ = cmd.MarkFlagRequired(flag.ProcessName)
 }

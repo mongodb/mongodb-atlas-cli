@@ -31,7 +31,7 @@ import (
 var victorOpsIntegrationType = "VICTOR_OPS"
 
 type VictorOpsOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	apiKey     string
 	routingKey string
@@ -97,7 +97,7 @@ The requesting API key must have the Organization Owner or Project Owner role to
 	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.VictorOpsAPIKey)
 	cmd.Flags().StringVar(&opts.routingKey, flag.RoutingKey, "", usage.RoutingKey)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)

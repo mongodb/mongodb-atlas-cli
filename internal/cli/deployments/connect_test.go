@@ -98,7 +98,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 		DeploymentOpts: *deploymenTest.Opts,
 		ConnectToAtlasOpts: ConnectToAtlasOpts{
 			Store: mockAtlasClusterDescriberStarter,
-			GlobalOpts: cli.GlobalOpts{
+			ProjectOpts: cli.ProjectOpts{
 				ProjectID: "projectID",
 			},
 			ConnectionStringType: "standard",

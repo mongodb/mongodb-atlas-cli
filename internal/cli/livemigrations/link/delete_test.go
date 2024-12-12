@@ -29,8 +29,8 @@ func TestLinkTokenDeleteOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockLinkTokenDeleter(ctrl)
 
 	deleteOpts := &DeleteOpts{
-		GlobalOpts: cli.GlobalOpts{OrgID: "1"},
-		store:      mockStore,
+		OrgOpts: cli.OrgOpts{OrgID: "1"},
+		store:   mockStore,
 		DeleteOpts: &cli.DeleteOpts{
 			Confirm: true,
 			Entry:   "1",

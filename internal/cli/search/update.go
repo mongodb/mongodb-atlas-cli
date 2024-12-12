@@ -32,7 +32,7 @@ import (
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	IndexOpts
 	id          string
@@ -149,7 +149,7 @@ func UpdateBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagFilename(flag.File)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)

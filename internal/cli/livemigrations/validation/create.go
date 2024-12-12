@@ -65,7 +65,7 @@ func CreateBuilder() *cobra.Command {
 			"output": createTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			return opts.PreRunE(
+			return opts.OrgOpts.PreRunE(
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
 				opts.InitInput(cmd.InOrStdin()),

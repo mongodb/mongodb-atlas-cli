@@ -33,7 +33,7 @@ const longDesc = `To learn more about maintenance windows, see https://www.mongo
 `
 
 type ClearOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	Confirm bool
 	store   store.MaintenanceWindowClearer
@@ -96,7 +96,7 @@ func ClearBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

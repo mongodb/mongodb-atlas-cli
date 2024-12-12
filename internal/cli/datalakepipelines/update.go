@@ -34,7 +34,7 @@ import (
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store        store.PipelinesUpdater
 	pipelineName string
@@ -196,7 +196,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.SourcePolicyItemID, flag.File)
 	cmd.MarkFlagsMutuallyExclusive(flag.Transform, flag.File)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

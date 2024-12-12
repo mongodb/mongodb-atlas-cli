@@ -31,7 +31,7 @@ import (
 
 type ListOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	options.DeploymentOpts
 }
 
@@ -132,7 +132,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.TypeFlag, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {

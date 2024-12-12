@@ -30,7 +30,7 @@ import (
 
 type projectListOpts struct {
 	EventListOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store store.ProjectEventLister
 }
@@ -129,7 +129,7 @@ func ProjectListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)
 	cmd.Flags().StringVar(&opts.MinDate, flag.MinDate, "", usage.MinDate)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

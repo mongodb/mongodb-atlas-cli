@@ -270,7 +270,7 @@ func TestCreate_RunAtlas(t *testing.T) {
 			OutWriter: buf,
 			Template:  createTemplate,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "projectID",
 		},
 		store: mockIndexStore,

@@ -30,7 +30,7 @@ import (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	ConfigOpts
 	store    store.AlertConfigurationCreator
@@ -150,7 +150,7 @@ func CreateBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagFilename(flag.File)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

@@ -37,7 +37,7 @@ func TestUpdate_Run(t *testing.T) {
 		federationSettingsID: "federationSettingsID",
 		file:                 "config.json",
 		fs:                   afero.NewMemMapFs(),
-		GlobalOpts: cli.GlobalOpts{
+		OrgOpts: cli.OrgOpts{
 			OrgID: "6627f3ee0c9eba75f37240b3",
 		},
 	}

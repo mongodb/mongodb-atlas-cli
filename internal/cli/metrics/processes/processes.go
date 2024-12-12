@@ -29,7 +29,7 @@ import (
 )
 
 type Opts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.MetricsOpts
 	host  string
@@ -106,7 +106,7 @@ atlas processes list
 	cmd.Flags().StringVar(&opts.End, flag.End, "", usage.MeasurementEnd)
 	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.TypeFlag, nil, usage.MetricsMeasurementType)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Granularity)

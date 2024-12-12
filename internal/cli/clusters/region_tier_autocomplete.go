@@ -31,7 +31,7 @@ import (
 const storeErrMsg = "store error: "
 
 type autoCompleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	providers []string
 	tier      string
 	store     store.CloudProviderRegionsLister

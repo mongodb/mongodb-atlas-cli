@@ -34,7 +34,7 @@ const describeTemplate = `USERNAME	DATABASE
 `
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store    store.DatabaseUserDescriber
 	authDB   string
@@ -100,7 +100,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, convert.AdminDB, usage.AtlasAuthDB)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

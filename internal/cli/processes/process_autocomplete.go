@@ -30,7 +30,7 @@ import (
 )
 
 type AutoCompleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	store store.ProcessLister
 }
 

@@ -33,7 +33,7 @@ import (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store         store.DataFederationCreator
 	fs            afero.Fs
@@ -139,7 +139,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.AWSRoleID)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.AWSTestS3Bucket)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

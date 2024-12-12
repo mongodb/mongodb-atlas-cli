@@ -27,7 +27,7 @@ import (
 )
 
 type WatchOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.WatchOpts
 	id       string
 	provider string
@@ -90,7 +90,7 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 	}
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	return cmd
 }

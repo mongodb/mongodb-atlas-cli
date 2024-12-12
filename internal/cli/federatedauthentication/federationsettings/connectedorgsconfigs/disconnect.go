@@ -27,7 +27,7 @@ import (
 )
 
 type DisconnectOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	cli.InputOpts
 	*DescribeOrgConfigsOpts
@@ -133,7 +133,7 @@ func DisconnectBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
 	cmd.Flags().StringVar(&opts.identityProviderID, flag.IdentityProviderID, "", usage.IdentityProviderID)
 	cmd.Flags().StringVar(&opts.protocol, flag.Protocol, oidc, usage.Protocol)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 
 	opts.AddOutputOptFlags(cmd)
 

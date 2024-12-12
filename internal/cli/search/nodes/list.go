@@ -28,7 +28,7 @@ import (
 )
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	clusterName string
@@ -87,7 +87,7 @@ func ListBuilder() *cobra.Command {
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
 	// Global flags
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

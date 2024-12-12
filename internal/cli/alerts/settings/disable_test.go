@@ -32,7 +32,7 @@ func TestDisableOpts_Run(t *testing.T) {
 
 	opts := &DisableOpts{
 		alertID: "alertID",
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "projectID",
 		},
 		store: mockStore,

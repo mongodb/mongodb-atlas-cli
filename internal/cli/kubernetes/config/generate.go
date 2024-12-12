@@ -34,7 +34,8 @@ import (
 var ErrUnsupportedOperatorVersionFmt = "version %q is not supported. Supported versions: %v"
 
 type GenerateOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	clusterName          []string
 	dataFederationName   []string
@@ -135,7 +136,7 @@ func GenerateBuilder() *cobra.Command {
   # Export Project, DatabaseUsers, Clusters and specific DataFederation resources for a specific project to a specific namespace:
   atlas kubernetes config generate --projectId=<projectId> --dataFederationName=<data-federation-name-1, data-federation-name-2> --targetNamespace=<namespace>`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			return opts.PreRunE(
+			return opts.OrgOpts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidateTargetNamespace,
 				opts.ValidateOperatorVersion,
@@ -147,8 +148,8 @@ func GenerateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddProjectOptsFlags(cmd)
+	opts.AddOrgOptFlags(cmd)
 	cmd.Flags().StringSliceVar(&opts.clusterName, flag.ClusterName, []string{}, usage.ExporterClusterName)
 	cmd.Flags().BoolVar(&opts.includeSecrets, flag.OperatorIncludeSecrets, false, usage.OperatorIncludeSecrets)
 	cmd.Flags().StringVar(&opts.targetNamespace, flag.OperatorTargetNamespace, "", usage.OperatorTargetNamespace)

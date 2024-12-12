@@ -28,7 +28,7 @@ import (
 )
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	clusterName string
@@ -93,7 +93,7 @@ func ListBuilder() *cobra.Command {
 	_ = cmd.Flags().MarkDeprecated(flag.Page, deprecatedFlagMessage)
 	_ = cmd.Flags().MarkDeprecated(flag.Limit, deprecatedFlagMessage)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)

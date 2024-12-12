@@ -29,7 +29,7 @@ import (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.InputOpts
 	name     string
@@ -108,7 +108,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.StreamsProvider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.StreamsRegion)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, "SP30", usage.StreamsInstanceTier)

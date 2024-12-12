@@ -31,7 +31,7 @@ import (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store         store.DataFederationQueryLimitCreator
 	limitName     string
@@ -104,7 +104,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.value, flag.Value, 0, usage.DataFederationQueryLimitValue)
 	cmd.Flags().StringVar(&opts.overrunPolicy, flag.OverrunPolicy, "", usage.OverrunPolicy)
 	cmd.Flags().StringVar(&opts.tenantName, flag.DataFederation, "", usage.DataFederation)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.DataFederation)

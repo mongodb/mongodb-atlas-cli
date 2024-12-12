@@ -32,7 +32,7 @@ import (
 )
 
 type LogOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.DownloaderOpts
 	store store.DataFederationLogDownloader
 	id    string
@@ -102,7 +102,7 @@ func LogBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.LogOut)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 
 	_ = cmd.MarkFlagRequired(flag.Out)

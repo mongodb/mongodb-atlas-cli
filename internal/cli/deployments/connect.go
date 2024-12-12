@@ -83,7 +83,7 @@ func ConnectBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.ConnectWith, flag.ConnectWith, "", usage.ConnectWithConnect)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 	cmd.Flags().StringVar(&opts.DeploymentOpts.DBUsername, flag.Username, "", usage.DBUsername)
 	cmd.Flags().StringVar(&opts.DeploymentOpts.DBUserPassword, flag.Password, "", usage.Password)
@@ -228,7 +228,7 @@ func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
 }
 
 type ConnectToAtlasOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.InputOpts
 	ConnectionStringType string
 	Store                store.ClusterDescriberStarter

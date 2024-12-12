@@ -172,7 +172,7 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	createOpts := &CreateOpts{
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "aaaa1e7e0f2912c554080abc",
 		},
 		WatchOpts: cli.WatchOpts{

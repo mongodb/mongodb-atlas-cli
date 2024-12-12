@@ -34,7 +34,8 @@ const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQueries}}
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
+	cli.PreRunOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
 	store      store.PerformanceAdvisorSlowQueriesLister
@@ -123,7 +124,7 @@ If you don't set the duration option or the since option, this command returns d
 	cmd.Flags().Int64Var(&opts.nLog, flag.NLog, defaultLogLines, usage.NLog)
 	cmd.Flags().StringSliceVar(&opts.namespaces, flag.Namespaces, []string{}, usage.SlowQueryNamespaces)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	autocomplete := &processes.AutoCompleteOpts{}

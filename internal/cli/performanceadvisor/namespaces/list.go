@@ -33,7 +33,7 @@ const listTemplate = `NAMESPACE	TYPE{{range valueOrEmptySlice .Namespaces}}
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
 	store    store.PerformanceAdvisorNamespacesLister
@@ -107,7 +107,7 @@ If you don't set the duration option or the since option, this command returns d
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

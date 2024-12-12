@@ -29,7 +29,7 @@ import (
 )
 
 type OidcOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.InputOpts
 	identityProviderID   string

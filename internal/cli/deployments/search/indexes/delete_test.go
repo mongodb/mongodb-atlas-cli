@@ -146,7 +146,7 @@ func TestDelete_RunAtlas(t *testing.T) {
 			Entry:   indexID,
 			Confirm: true,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: projectID,
 		},
 		mongodbClient: mockMongodbClient,

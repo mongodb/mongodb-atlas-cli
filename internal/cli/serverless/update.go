@@ -29,7 +29,7 @@ import (
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	instanceName                      string
 	enableServerlessContinuousBackup  bool
@@ -118,7 +118,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.ServerlessTag+usage.UpdateWarning)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

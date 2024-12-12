@@ -27,7 +27,7 @@ import (
 
 type DescribeOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	liveMigrationID string
 	store           store.LiveMigrationDescriber
 }

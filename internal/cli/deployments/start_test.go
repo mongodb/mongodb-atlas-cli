@@ -41,7 +41,7 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
 		DeploymentOpts: *deploymentsTest.Opts,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: projectID,
 		},
 		OutputOpts: cli.OutputOpts{
@@ -73,7 +73,7 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	buf := new(bytes.Buffer)
 	startOpts := &StartOpts{
 		DeploymentOpts: *deploymentsTest.Opts,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: projectID,
 		},
 		OutputOpts: cli.OutputOpts{
@@ -108,7 +108,7 @@ func TestStart_RunAtlas(t *testing.T) {
 	opts := &StartOpts{
 		store:          mockStore,
 		DeploymentOpts: *deploymentsTest.Opts,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: projectID,
 		},
 		OutputOpts: cli.OutputOpts{

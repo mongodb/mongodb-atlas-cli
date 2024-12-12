@@ -38,7 +38,7 @@ func TestDelete_Run_Atlas(t *testing.T) {
 	opts := &DeleteOpts{
 		atlasStore:     mockAtlasStore,
 		DeploymentOpts: *deploymentsTest.Opts,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
 		OutputOpts: cli.OutputOpts{
@@ -72,7 +72,7 @@ func TestDelete_Run_Local(t *testing.T) {
 
 	opts := &DeleteOpts{
 		DeploymentOpts: *deploymentsTest.Opts,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
 		OutputOpts: cli.OutputOpts{
@@ -105,7 +105,7 @@ func TestDeleteOpts_PostRun(t *testing.T) {
 
 	opts := &DeleteOpts{
 		DeploymentOpts: *deploymentsTest.Opts,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
 		OutputOpts: cli.OutputOpts{

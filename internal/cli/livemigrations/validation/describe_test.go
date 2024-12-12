@@ -33,7 +33,7 @@ func TestValidationDescribeOpts_Run(t *testing.T) {
 	expected := atlasv2.LiveImportValidation{}
 
 	describeOpts := &DescribeOpts{
-		GlobalOpts:   cli.GlobalOpts{ProjectID: "2"},
+		ProjectOpts:  cli.ProjectOpts{ProjectID: "2"},
 		validationID: "3",
 		store:        mockStore,
 	}

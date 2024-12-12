@@ -33,9 +33,9 @@ func TestUpdate_Run(t *testing.T) {
 	expected := &admin.OrganizationInvitation{}
 
 	updateOpts := &UpdateOpts{
-		roles:      []string{"test"},
-		store:      mockStore,
-		GlobalOpts: cli.GlobalOpts{OrgID: "1"},
+		roles:   []string{"test"},
+		store:   mockStore,
+		OrgOpts: cli.OrgOpts{OrgID: "1"},
 	}
 
 	request, err := updateOpts.newInvitation()

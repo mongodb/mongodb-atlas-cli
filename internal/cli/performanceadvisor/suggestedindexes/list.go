@@ -34,7 +34,8 @@ const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range valueOrEmptySlice .Sug
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
+	cli.PreRunOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
 	store      store.PerformanceAdvisorIndexesLister
@@ -121,7 +122,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.nExamples, flag.NExamples, 0, usage.NExamples)
 	cmd.Flags().Int64Var(&opts.nIndexes, flag.NIndexes, 0, usage.NIndexes)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	autocomplete := &processes.AutoCompleteOpts{}

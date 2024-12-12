@@ -112,7 +112,7 @@ type ProfileReader interface {
 }
 
 type Opts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.WatchOpts
 	register                    auth.RegisterOpts
 	config                      ProfileReader
@@ -605,7 +605,7 @@ func (opts *Opts) SetupAtlasFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&opts.EnableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
 	cmd.Flags().StringToStringVar(&opts.Tag, flag.Tag, nil, usage.Tag)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.CurrentIP, flag.AccessListIP)
 }

@@ -28,7 +28,7 @@ import (
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	*cli.DeleteOpts
 	privateEndpointServiceID string
 	store                    store.InterfaceEndpointDeleter
@@ -76,7 +76,7 @@ func DeleteBuilder() *cobra.Command {
 	}
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 	cmd.Flags().StringVar(&opts.privateEndpointServiceID, flag.EndpointServiceID, "", usage.EndpointServiceID)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	_ = cmd.MarkFlagRequired(flag.EndpointServiceID)
 	return cmd
 }

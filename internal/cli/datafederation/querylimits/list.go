@@ -35,7 +35,7 @@ var listTemplate = `TENANT NAME	NAME	VALUE{{range valueOrEmptySlice .}}
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store      store.DataFederationQueryLimitLister
 	tenantName string
@@ -83,7 +83,7 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.tenantName, flag.DataFederation, "", usage.DataFederation)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.DataFederation)

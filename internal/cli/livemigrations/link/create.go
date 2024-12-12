@@ -29,7 +29,7 @@ import (
 var createTemplate = "Link-token '{{.LinkToken}}' successfully created.\n"
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	store        store.LinkTokenCreator
 	accessListIP []string
@@ -81,7 +81,7 @@ func CreateBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	cmd.Flags().StringSliceVar(&opts.accessListIP, flag.AccessListIP, []string{}, usage.LinkTokenAccessListCIDREntries)
 	opts.AddOutputOptFlags(cmd)
 

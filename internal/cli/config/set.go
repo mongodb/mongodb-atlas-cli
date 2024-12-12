@@ -28,7 +28,7 @@ import (
 )
 
 type SetOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	prop  string
 	val   string
 	store config.SetSaver

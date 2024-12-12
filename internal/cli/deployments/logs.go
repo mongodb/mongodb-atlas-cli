@@ -39,7 +39,7 @@ import (
 
 type DownloadOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.DownloaderOpts
 	options.DeploymentOpts
 	downloadStore store.LogsDownloader
@@ -267,7 +267,7 @@ func LogsBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.start, flag.Start, 0, usage.LogStart)
 	cmd.Flags().Int64Var(&opts.end, flag.End, 0, usage.LogEnd)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.Host, flag.Hostname, "", usage.LogHostName)
 	cmd.Flags().StringVar(&opts.Name, flag.Name, "", usage.LogName)
 

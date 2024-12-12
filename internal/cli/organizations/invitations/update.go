@@ -33,7 +33,8 @@ import (
 const updateTemplate = "Invitation {{.Id}} updated.\n"
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store        store.OrganizationInvitationUpdater
 	invitationID string
@@ -112,7 +113,7 @@ func UpdateBuilder() *cobra.Command {
 				opts.invitationID = args[0]
 			}
 
-			return opts.PreRunE(
+			return opts.OrgOpts.PreRunE(
 				opts.ValidateOrgID,
 				opts.ValidateProjectID,
 				opts.validate,
@@ -127,7 +128,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole+usage.UpdateWarning)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Role)

@@ -32,7 +32,7 @@ const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME{{range valueOrEmptySlice 
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.ListOpts
 	cli.OutputOpts
 	store store.UserLister
@@ -91,7 +91,7 @@ func ListBuilder() *cobra.Command {
 
 	opts.AddOutputOptFlags(cmd)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 
 	return cmd
 }

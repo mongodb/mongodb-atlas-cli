@@ -34,7 +34,7 @@ const createTemplate = "User '{{.Username}}' invited.\n"
 
 type InviteOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.OrgOpts
 	username string
 	roles    []string
 	teamIDs  []string
@@ -112,7 +112,7 @@ func InviteBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.InvitationFile)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole)
 	cmd.Flags().StringSliceVar(&opts.teamIDs, flag.TeamID, []string{}, usage.TeamID)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 
 	opts.AddOutputOptFlags(cmd)
 

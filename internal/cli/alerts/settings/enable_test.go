@@ -32,7 +32,7 @@ func TestEnableOpts_Run(t *testing.T) {
 
 	opts := &EnableOpts{
 		alertID: "alertID",
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "projectID",
 		},
 		store: mockStore,

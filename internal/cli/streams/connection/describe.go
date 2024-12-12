@@ -30,7 +30,7 @@ import (
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	id              string
 	streamsInstance string
@@ -86,7 +86,7 @@ atlas streams connection describe ExampleConnection --instance ExampleInstance
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVarP(&opts.streamsInstance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
 	opts.AddOutputOptFlags(cmd)
 

@@ -31,7 +31,7 @@ import (
 var datadogType = "DATADOG"
 
 type DatadogOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	apiKey string
 	region string
@@ -99,7 +99,7 @@ Datadog integration is available only for M10+ clusters.
 	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.DatadogAPIKey)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.DatadogAPIRegion)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)

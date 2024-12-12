@@ -29,7 +29,7 @@ import (
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store                store.IdentityProviderDescriber
 	FederationSettingsID string

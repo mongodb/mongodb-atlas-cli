@@ -29,7 +29,7 @@ import (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store                    store.InterfaceEndpointCreator
 	privateEndpointID        string
@@ -97,7 +97,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.privateEndpointID, flag.PrivateEndpointID, "", usage.PrivateEndpointIDAzure)
 	cmd.Flags().StringVar(&opts.privateEndpointIPAddress, flag.PrivateEndpointIPAddress, "", usage.PrivateEndpointIPAddressAzure)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.PrivateEndpointID)

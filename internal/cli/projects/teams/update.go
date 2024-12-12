@@ -31,7 +31,7 @@ import (
 const updateTemplate = "Team's roles updated.\n"
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store  store.TeamRolesUpdater
 	teamID string
@@ -91,7 +91,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.TeamRole+usage.UpdateWarning)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Role)

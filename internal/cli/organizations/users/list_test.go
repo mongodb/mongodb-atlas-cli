@@ -40,7 +40,7 @@ func TestList_Run(t *testing.T) {
 	}
 
 	listOpts := &ListOpts{
-		GlobalOpts: cli.GlobalOpts{
+		OrgOpts: cli.OrgOpts{
 			OrgID: "1",
 		},
 		store: mockStore,

@@ -30,7 +30,7 @@ import (
 )
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	*cli.ListOpts
 	store                store.IdentityProviderLister

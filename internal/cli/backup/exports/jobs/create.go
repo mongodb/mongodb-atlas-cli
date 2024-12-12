@@ -29,7 +29,7 @@ import (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	exportBucketID string
 	snapshotID     string
@@ -108,7 +108,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
 	cmd.Flags().StringToStringVar(&opts.customData, flag.CustomData, nil, usage.CustomData)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)

@@ -38,7 +38,7 @@ import (
 var errEmptyLog = errors.New("log is empty")
 
 type DownloadOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.DownloaderOpts
 	host       string
 	name       string
@@ -189,7 +189,7 @@ To find the hostnames for an Atlas project, use the process list command.
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 	cmd.Flags().BoolVarP(&opts.decompress, flag.Decompress, flag.DecompressShort, false, usage.Decompress)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	_ = cmd.MarkFlagFilename(flag.Out)
 

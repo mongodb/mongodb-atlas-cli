@@ -77,7 +77,7 @@ func TestPause_RunAtlas(t *testing.T) {
 	listOpts := &PauseOpts{
 		store:          mockStore,
 		DeploymentOpts: *deploymentTest.Opts,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: projectID,
 		},
 		OutputOpts: cli.OutputOpts{

@@ -35,7 +35,7 @@ func TestDelete_Run(t *testing.T) {
 			Confirm: true,
 		},
 		teamID: "213123",
-		GlobalOpts: cli.GlobalOpts{
+		OrgOpts: cli.OrgOpts{
 			OrgID: "2a0a1e7e0f2912c554080adc",
 		},
 	}

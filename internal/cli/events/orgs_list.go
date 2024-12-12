@@ -31,7 +31,7 @@ import (
 type orgListOpts struct {
 	cli.OutputOpts
 	EventListOpts
-	cli.GlobalOpts
+	cli.OrgOpts
 	store store.OrganizationEventLister
 }
 
@@ -129,7 +129,7 @@ func OrgListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.MinDate, flag.MinDate, "", usage.MinDate)
 	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

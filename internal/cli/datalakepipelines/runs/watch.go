@@ -30,7 +30,7 @@ import (
 )
 
 type WatchOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.WatchOpts
 	id           string
@@ -97,7 +97,7 @@ func WatchBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.pipelineName, flag.Pipeline, "", usage.Pipeline)
 	_ = cmd.MarkFlagRequired(flag.Pipeline)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

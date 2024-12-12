@@ -30,7 +30,7 @@ import (
 const authorizeTemplate = "AWS IAM role '{{.RoleId}} successfully authorized.\n"
 
 type AuthorizeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store             store.CloudProviderAccessRoleAuthorizer
 	roleID            string
@@ -87,7 +87,7 @@ func AuthorizeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.IAMAssumedRoleARN, flag.IAMAssumedRoleARN, "", usage.IAMAssumedRoleARN)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagFilename(flag.IAMAssumedRoleARN)

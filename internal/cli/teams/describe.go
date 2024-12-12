@@ -33,7 +33,7 @@ const describeTemplate = `ID	NAME
 `
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	store store.TeamDescriber
 	name  string
@@ -112,7 +112,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.TeamName)
 	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.TeamID)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

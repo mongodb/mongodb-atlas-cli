@@ -35,7 +35,7 @@ import (
 var errInvalidIndex = errors.New("invalid index")
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	IndexOpts
 	clusterName string
@@ -152,7 +152,7 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	// deprecated flags

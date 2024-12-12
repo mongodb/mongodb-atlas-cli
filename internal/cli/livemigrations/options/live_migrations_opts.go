@@ -31,7 +31,8 @@ import (
 type LiveMigrationsOpts struct {
 	cli.OutputOpts
 	cli.InputOpts
-	cli.GlobalOpts
+	cli.OrgOpts
+	cli.ProjectOpts
 	MigrationHosts              []string
 	SourceCACertificatePath     string
 	SourceClusterName           string
@@ -135,7 +136,7 @@ func (opts *LiveMigrationsOpts) Validate() error {
 }
 
 func (opts *LiveMigrationsOpts) GenerateFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.SourceClusterName, flag.LiveMigrationSourceClusterName, "", usage.LiveMigrationSourceClusterName)
 	cmd.Flags().StringVar(&opts.SourceProjectID, flag.LiveMigrationSourceProjectID, "", usage.LiveMigrationSourceProjectID)
 	cmd.Flags().StringVarP(&opts.SourceUsername, flag.LiveMigrationSourceUsername, flag.UsernameShort, "", usage.LiveMigrationSourceUsername)

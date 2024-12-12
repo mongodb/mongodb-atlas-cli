@@ -30,7 +30,7 @@ import (
 )
 
 type DisableOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.WatchOpts
 	policy *atlasv2.DataProtectionSettings20231001
 	store  store.CompliancePolicyEncryptionAtRestDisabler
@@ -96,7 +96,7 @@ func DisableBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
 

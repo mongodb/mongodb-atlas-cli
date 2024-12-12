@@ -32,9 +32,9 @@ func TestUpdate_Run(t *testing.T) {
 	expected := &atlasv2.GroupInvitation{}
 
 	updateOpts := &UpdateOpts{
-		roles:      []string{"test"},
-		store:      mockStore,
-		GlobalOpts: cli.GlobalOpts{OrgID: "1"},
+		roles:       []string{"test"},
+		store:       mockStore,
+		ProjectOpts: cli.ProjectOpts{ProjectID: "1"},
 	}
 
 	mockStore.

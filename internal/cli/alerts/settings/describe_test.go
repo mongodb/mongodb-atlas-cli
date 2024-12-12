@@ -37,7 +37,7 @@ func Test_describeOpts_Run(t *testing.T) {
 
 	opts := &describeOpts{
 		alertID: "alertID",
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "projectID",
 		},
 		store: mockStore,

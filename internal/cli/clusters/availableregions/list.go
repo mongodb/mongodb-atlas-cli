@@ -28,7 +28,7 @@ import (
 )
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store    store.CloudProviderRegionsLister
 	provider string
@@ -94,7 +94,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, "", usage.Tier)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

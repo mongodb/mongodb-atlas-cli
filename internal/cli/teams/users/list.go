@@ -32,7 +32,7 @@ const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL{{range valueOrEmpty
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	CompactResponse bool
 	store           store.TeamUserLister
@@ -85,7 +85,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.teamID, flag.TeamID, "", usage.TeamID)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 	cmd.Flags().BoolVarP(&opts.CompactResponse, flag.CompactResponse, flag.CompactResponseShort, false, usage.CompactResponse)
 

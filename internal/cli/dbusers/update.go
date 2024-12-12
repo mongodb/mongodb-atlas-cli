@@ -34,7 +34,7 @@ const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	username        string
 	currentUsername string
 	password        string
@@ -141,7 +141,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes+usage.UpdateWarning)
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

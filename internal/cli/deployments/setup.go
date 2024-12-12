@@ -107,7 +107,7 @@ var (
 type SetupOpts struct {
 	options.DeploymentOpts
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.InputOpts
 	mongodbClient mongodbclient.MongoDBClient
 	settings      string

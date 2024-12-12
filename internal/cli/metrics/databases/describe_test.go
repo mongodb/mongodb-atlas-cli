@@ -34,7 +34,7 @@ func TestDatabasesDescribeOpts_Run(t *testing.T) {
 		port:  27017,
 		name:  "test",
 		store: mockStore,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "groupID",
 		},
 	}

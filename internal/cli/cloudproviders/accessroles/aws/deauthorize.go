@@ -35,7 +35,7 @@ const (
 )
 
 type DeauthorizeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	*cli.DeleteOpts
 	store store.CloudProviderAccessRoleDeauthorizer
@@ -98,7 +98,7 @@ func DeauthorizeBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	return cmd
 }

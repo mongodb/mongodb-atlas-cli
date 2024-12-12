@@ -33,7 +33,7 @@ const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.ListOpts
 	cli.OutputOpts
 	store              store.OrganizationLister

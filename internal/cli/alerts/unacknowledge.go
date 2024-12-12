@@ -29,7 +29,7 @@ import (
 )
 
 type UnacknowledgeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	alertID string
 	comment string
@@ -100,7 +100,7 @@ func UnacknowledgeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

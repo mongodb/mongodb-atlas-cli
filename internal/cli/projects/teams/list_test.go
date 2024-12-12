@@ -40,8 +40,8 @@ func TestList_Run(t *testing.T) {
 	}
 
 	listOpts := &ListOpts{
-		store:      mockStore,
-		GlobalOpts: cli.GlobalOpts{ProjectID: "1"},
+		store:       mockStore,
+		ProjectOpts: cli.ProjectOpts{ProjectID: "1"},
 	}
 
 	mockStore.

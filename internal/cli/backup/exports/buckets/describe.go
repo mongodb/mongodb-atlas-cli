@@ -32,7 +32,7 @@ var describeTemplate = `ID	BUCKET NAME	CLOUD PROVIDER	IAM ROLE ID
 `
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	bucketID string
 	store    store.ExportBucketsDescriber
@@ -82,7 +82,7 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.bucketID, flag.BucketID, "", usage.BucketID)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.BucketID)

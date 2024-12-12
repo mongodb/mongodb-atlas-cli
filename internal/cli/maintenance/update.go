@@ -28,7 +28,7 @@ import (
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	dayOfWeek int
 	hourOfDay int
@@ -94,7 +94,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.hourOfDay, flag.HourOfDay, 0, usage.HourOfDay)
 	cmd.Flags().BoolVar(&opts.startASAP, flag.StartASAP, false, usage.StartASAP)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

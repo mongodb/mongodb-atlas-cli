@@ -27,7 +27,8 @@ import (
 )
 
 type InstallOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
+	cli.PreRunOpts
 	cli.OutputOpts
 	Opts
 	githubAsset *GithubAsset

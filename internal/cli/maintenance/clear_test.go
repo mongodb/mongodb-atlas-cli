@@ -30,7 +30,7 @@ func TestClearOpts_Run(t *testing.T) {
 
 	updateOpts := &ClearOpts{
 		store: mockStore,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "21321323343243243",
 		},
 	}

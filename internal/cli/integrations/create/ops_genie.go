@@ -31,7 +31,7 @@ import (
 var opsGenieType = "OPS_GENIE"
 
 type OpsGenieOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	apiKey string
 	region string
@@ -95,7 +95,7 @@ func OpsGenieBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.region, flag.Region, "US", usage.APIRegion)
 	cmd.Flags().StringVar(&opts.apiKey, flag.APIKey, "", usage.OpsgenieAPIKey)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.APIKey)

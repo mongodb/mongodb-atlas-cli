@@ -33,7 +33,7 @@ var listTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION UNIT	RETENTIO
 {{ .Id }}	{{ .FrequencyInterval }}	{{ .FrequencyType }}	{{ .RetentionUnit }}	{{ .RetentionValue }}{{end}}`
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store store.PipelineAvailableSchedulesLister
 
@@ -84,7 +84,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.pipelineName, flag.Pipeline, "", usage.Pipeline)
 	_ = cmd.MarkFlagRequired(flag.Pipeline)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

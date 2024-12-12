@@ -27,7 +27,7 @@ import (
 )
 
 type FailoverOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	*cli.DeleteOpts
 	store store.ClusterTester
 }
@@ -76,7 +76,7 @@ func FailoverBuilder() *cobra.Command {
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	return cmd
 }

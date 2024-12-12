@@ -27,7 +27,7 @@ import (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store             store.DBUserCertificateCreator
 	username          string
@@ -83,7 +83,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.monthsUntilExpiry, flag.MonthsUntilExpiration, defaultExpiration, usage.MonthsUntilExpiration)
 	cmd.Flags().StringVar(&opts.username, flag.Username, "", usage.DatabaseUser)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Username)

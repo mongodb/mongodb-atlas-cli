@@ -34,7 +34,7 @@ func TestDelete_Run(t *testing.T) {
 			Entry:   "5a0a1e7e0f2912c554080adc",
 			Confirm: true,
 		},
-		GlobalOpts: cli.GlobalOpts{OrgID: "1"},
+		OrgOpts: cli.OrgOpts{OrgID: "1"},
 	}
 
 	mockStore.

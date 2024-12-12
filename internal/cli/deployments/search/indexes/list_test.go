@@ -174,7 +174,7 @@ func TestList_RunAtlas(t *testing.T) {
 			DBName:     expectedDB,
 			Collection: expectedCollection,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: expectedProjectID,
 		},
 		store: mockStore,

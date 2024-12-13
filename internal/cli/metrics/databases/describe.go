@@ -98,8 +98,7 @@ atlas process list`,
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	opts.AddListOptsFlagsWithoutOmitCount(cmd)
 
 	cmd.Flags().StringVar(&opts.Granularity, flag.Granularity, "", usage.Granularity)
 	cmd.Flags().StringVar(&opts.Period, flag.Period, "", usage.Period)

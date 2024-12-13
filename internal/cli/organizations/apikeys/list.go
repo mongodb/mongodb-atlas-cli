@@ -84,9 +84,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
-	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
+	opts.AddListOptsFlags(cmd)
 
 	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)

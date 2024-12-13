@@ -15,7 +15,10 @@
 package cli
 
 import (
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/spf13/cobra"
 	"go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -44,4 +47,14 @@ func (opts *ListOpts) NewAtlasListOptions() *store.ListOptions {
 		ItemsPerPage: opts.ItemsPerPage,
 		IncludeCount: !opts.OmitCount,
 	}
+}
+
+func (opts *ListOpts) AddListOptsFlags(cmd *cobra.Command) {
+	opts.AddListOptsFlagsWithoutOmitCount(cmd)
+	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
+}
+
+func (opts *ListOpts) AddListOptsFlagsWithoutOmitCount(cmd *cobra.Command) {
+	cmd.Flags().IntVar(&opts.PageNum, flag.Page, DefaultPage, usage.Page)
+	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, DefaultPageLimit, usage.Limit)
 }

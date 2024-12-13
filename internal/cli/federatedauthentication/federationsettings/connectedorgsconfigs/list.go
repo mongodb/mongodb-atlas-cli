@@ -90,8 +90,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
 	opts.AddOrgOptFlags(cmd)
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	opts.AddListOptsFlagsWithoutOmitCount(cmd)
 
 	opts.AddOutputOptFlags(cmd)
 

@@ -29,7 +29,6 @@ import (
 type ListsOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	cli.MetricsOpts
 	cli.ListOpts
 	host  string
 	port  int

@@ -31,7 +31,6 @@ type ListsOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	cli.MetricsOpts
 	host  string
 	port  int
 	store store.ProcessDisksLister

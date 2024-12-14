@@ -35,6 +35,7 @@ func TestDBUserUpdate_Run(t *testing.T) {
 		currentUsername: "test4",
 		password:        "US",
 		roles:           []string{"admin@admin"},
+		description:     "test",
 		store:           mockStore,
 	}
 

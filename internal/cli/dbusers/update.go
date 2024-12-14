@@ -39,9 +39,10 @@ type UpdateOpts struct {
 	currentUsername string
 	password        string
 	authDB          string
+	x509Type        string
+	description     string
 	roles           []string
 	scopes          []string
-	x509Type        string
 	store           store.DatabaseUserUpdater
 }
 
@@ -80,6 +81,10 @@ func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 	}
 	if opts.password != "" {
 		out.Password = &opts.password
+	}
+
+	if opts.description != "" {
+		out.Description = &opts.description
 	}
 
 	roles := convert.BuildAtlasRoles(opts.roles)
@@ -136,6 +141,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.DBUsername)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.DBUserPassword)
+	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.DBUserDescription)
 	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, "", usage.AtlasAuthDB)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles+usage.UpdateWarning)
 	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes+usage.UpdateWarning)

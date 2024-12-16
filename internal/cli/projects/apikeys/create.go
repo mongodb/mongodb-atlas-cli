@@ -34,7 +34,7 @@ Private API Key {{.PrivateKey}}
 `
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store       store.ProjectAPIKeyCreator
 	description string
@@ -93,7 +93,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.ProjectAPIKeyRoles)
 	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.APIKeyDescription)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Description)

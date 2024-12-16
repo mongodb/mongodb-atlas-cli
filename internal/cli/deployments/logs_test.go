@@ -72,7 +72,7 @@ func TestLogs_RunAtlas(t *testing.T) {
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, atlasDeployment)
 
 	downloadOpts := &DownloadOpts{
-		GlobalOpts: cli.GlobalOpts{ProjectID: "ProjectID"},
+		ProjectOpts: cli.ProjectOpts{ProjectID: "ProjectID"},
 		DownloaderOpts: cli.DownloaderOpts{
 			Out: "out",
 		},

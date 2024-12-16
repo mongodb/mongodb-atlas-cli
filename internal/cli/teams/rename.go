@@ -31,7 +31,7 @@ import (
 var renameTemplate = "Team '{{.Name}}' updated.\n"
 
 type renameOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	name   string
 	teamID string
@@ -90,7 +90,7 @@ func RenameBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.teamID, flag.TeamID, "", usage.TeamID)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.TeamID)

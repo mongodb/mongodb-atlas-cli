@@ -28,7 +28,7 @@ import (
 )
 
 type TriggerOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	id         string
 	snapshotID string
@@ -88,7 +88,7 @@ func TriggerBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)
 	_ = cmd.MarkFlagRequired(flag.SnapshotID)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

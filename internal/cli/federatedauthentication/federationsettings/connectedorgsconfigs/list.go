@@ -27,7 +27,7 @@ import (
 )
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	cli.InputOpts
 	cli.ListOpts
@@ -89,9 +89,8 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	opts.AddOrgOptFlags(cmd)
+	opts.AddListOptsFlagsWithoutOmitCount(cmd)
 
 	opts.AddOutputOptFlags(cmd)
 

@@ -32,7 +32,7 @@ import (
 const providerName = "SERVERLESS"
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	instanceName string
 	provider     string
@@ -116,7 +116,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.ServerlessRegion)
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.ServerlessTag)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Provider)

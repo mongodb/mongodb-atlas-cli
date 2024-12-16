@@ -28,7 +28,7 @@ import (
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	*cli.DeleteOpts
 	store  store.TeamUserRemover
 	teamID string
@@ -79,7 +79,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.teamID, flag.TeamID, "", usage.TeamID)
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.TeamID)
 

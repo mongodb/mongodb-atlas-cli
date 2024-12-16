@@ -30,7 +30,7 @@ func TestDelete_Run(t *testing.T) {
 
 	opts := &DeleteOpts{
 		store: mockStore,
-		GlobalOpts: cli.GlobalOpts{
+		OrgOpts: cli.OrgOpts{
 			OrgID: "6a0a1e7e0f2912c554080adc",
 		},
 		DeleteOpts: &cli.DeleteOpts{

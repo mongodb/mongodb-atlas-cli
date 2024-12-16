@@ -48,7 +48,7 @@ const (
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	clusterName                         string
 	exportBucketID                      string
@@ -389,7 +389,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringArrayVar(&opts.backupPolicy, flag.BackupPolicy, nil, usage.BackupPolicy)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.BackupFilename)

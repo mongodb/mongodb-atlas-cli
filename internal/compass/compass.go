@@ -15,16 +15,10 @@
 package compass
 
 import (
-	"context"
 	"errors"
-	"fmt"
-	"time"
 )
 
-const waitForRunningStateDuration = 10 * time.Second
-
 var (
-	errCompassExited       = errors.New("MongoDB Compass process has exited")
 	ErrCompassNotInstalled = errors.New("did not find MongoDB Compass, install: https://dochub.mongodb.org/core/install-compass")
 )
 
@@ -36,29 +30,5 @@ func Run(username, password, mongoURI string) error {
 	path := binPath()
 
 	cmd := compassCmd(path, username, password, mongoURI)
-	if err := cmd.Start(); err != nil {
-		return err
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), waitForRunningStateDuration)
-	defer cancel()
-
-	processExited := make(chan error)
-
-	// Check if the process is still running
-	go func() {
-		if err := cmd.Wait(); err != nil {
-			processExited <- fmt.Errorf("MongoDB Compass failed to start: %w", err)
-		} else {
-			processExited <- errCompassExited
-		}
-	}()
-
-	select {
-	case <-ctx.Done():
-		// compass still running
-		return nil
-	case err := <-processExited:
-		return err
-	}
+	return cmd.Start()
 }

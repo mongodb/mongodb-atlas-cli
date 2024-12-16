@@ -29,7 +29,7 @@ import (
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.WatchOpts
 	*cli.DeleteOpts
 	store store.SearchNodesDeleter
@@ -116,7 +116,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
 	// Global flags
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

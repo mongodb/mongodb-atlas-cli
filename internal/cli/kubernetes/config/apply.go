@@ -33,7 +33,8 @@ import (
 const containerImage = "mongodb/mongodb-atlas-kubernetes-operator"
 
 type ApplyOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	GenerateOpts
 
@@ -147,7 +148,7 @@ func ApplyBuilder() *cobra.Command {
   # Export and apply all supported resources of a specific project to a specific namespace restricting the version of the Atlas Kubernetes Operator:
   atlas kubernetes config apply --projectId=<projectId> --targetNamespace=<namespace> --operatorVersion=1.5.1`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			return opts.PreRunE(
+			return opts.OrgOpts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidateTargetNamespace,
 				opts.ValidateOperatorVersion,

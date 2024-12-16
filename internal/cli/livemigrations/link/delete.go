@@ -26,7 +26,7 @@ import (
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	*cli.DeleteOpts
 	store store.LinkTokenDeleter
 }
@@ -68,6 +68,6 @@ func DeleteBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	return cmd
 }

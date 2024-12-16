@@ -22,7 +22,7 @@ import (
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	cli.InputOpts
 	*DescribeOrgConfigsOpts
@@ -68,7 +68,7 @@ func DescribeBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 
 	opts.AddOutputOptFlags(cmd)
 

@@ -33,7 +33,7 @@ import (
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store           store.ConnectionUpdater
 	name            string
@@ -106,7 +106,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 	cmd.Flags().StringVarP(&opts.streamsInstance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
 

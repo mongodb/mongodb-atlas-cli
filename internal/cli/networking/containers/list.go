@@ -30,7 +30,7 @@ import (
 )
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	provider string
@@ -95,11 +95,9 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.Provider)
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
-	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
+	opts.AddListOptsFlags(cmd)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

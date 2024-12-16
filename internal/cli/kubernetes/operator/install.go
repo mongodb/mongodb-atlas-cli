@@ -37,7 +37,7 @@ import (
 const defaultInstallNamespace = "default"
 
 type InstallOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 
 	versionProvider version.AtlasOperatorVersionProvider

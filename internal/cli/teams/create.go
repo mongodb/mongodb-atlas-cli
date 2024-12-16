@@ -31,7 +31,7 @@ import (
 var createTemplate = "Team '{{.Name}}' created.\n"
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	name      string
 	userNames []string
@@ -90,7 +90,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringSliceVar(&opts.userNames, flag.Username, []string{}, usage.TeamUsername)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Username)

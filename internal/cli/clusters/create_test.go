@@ -165,7 +165,7 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	createOpts := &CreateOpts{
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "aaaa1e7e0f2912c554080abc",
 		},
 		WatchOpts: cli.WatchOpts{
@@ -222,12 +222,12 @@ func TestCreateOpts_RunFlexCluster(t *testing.T) {
 
 	t.Run("flags run", func(t *testing.T) {
 		createOpts := &CreateOpts{
-			name:       "ProjectBar",
-			region:     "US",
-			tier:       atlasFlex,
-			provider:   "AWS",
-			store:      mockStore,
-			GlobalOpts: cli.GlobalOpts{ProjectID: "test"},
+			name:        "ProjectBar",
+			region:      "US",
+			tier:        atlasFlex,
+			provider:    "AWS",
+			store:       mockStore,
+			ProjectOpts: cli.ProjectOpts{ProjectID: "test"},
 		}
 
 		require.NoError(t, createOpts.newIsFlexCluster())
@@ -262,10 +262,10 @@ func TestCreateOpts_RunFlexCluster(t *testing.T) {
 		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
 
 		createOpts := &CreateOpts{
-			filename:   fileName,
-			fs:         appFS,
-			store:      mockStore,
-			GlobalOpts: cli.GlobalOpts{ProjectID: "test"},
+			filename:    fileName,
+			fs:          appFS,
+			store:       mockStore,
+			ProjectOpts: cli.ProjectOpts{ProjectID: "test"},
 		}
 
 		require.NoError(t, createOpts.newIsFlexCluster())
@@ -301,7 +301,7 @@ func TestCreateOpts_PostRunFlexCluster_EnableWatch(t *testing.T) {
 	buf := new(bytes.Buffer)
 
 	createOpts := &CreateOpts{
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "aaaa1e7e0f2912c554080abc",
 		},
 		WatchOpts: cli.WatchOpts{

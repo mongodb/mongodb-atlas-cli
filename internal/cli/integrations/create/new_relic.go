@@ -31,7 +31,7 @@ import (
 var newRelicIntegrationType = "NEW_RELIC"
 
 type NewRelicOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	licenseKey string
 	accountID  string
@@ -98,7 +98,7 @@ func NewRelicBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.writeToken, flag.WriteToken, "", usage.WriteToken)
 	cmd.Flags().StringVar(&opts.readToken, flag.ReadToken, "", usage.ReadToken)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.LicenceKey)

@@ -39,7 +39,7 @@ const (
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	name                         string
 	tier                         string
@@ -302,7 +302,7 @@ You can only update a replica set to a single-shard cluster; you cannot update a
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableTerminationProtection, flag.DisableTerminationProtection)
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag+usage.UpdateWarning)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagFilename(flag.File)

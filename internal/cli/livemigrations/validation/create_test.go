@@ -34,7 +34,7 @@ func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {
 
 	createOpts := &CreateOpts{
 		LiveMigrationsOpts: options.LiveMigrationsOpts{
-			GlobalOpts:                  cli.GlobalOpts{ProjectID: "1"},
+			ProjectOpts:                 cli.ProjectOpts{ProjectID: "1"},
 			SourceProjectID:             "2",
 			SourceClusterName:           "testSrc",
 			SourceManagedAuthentication: true,

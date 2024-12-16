@@ -32,7 +32,7 @@ import (
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	id              string
 	clusterName     string
@@ -127,7 +127,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.filename, flag.File, "", usage.OnlineArchiveFilename)
 	_ = cmd.MarkFlagFilename(flag.File)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)

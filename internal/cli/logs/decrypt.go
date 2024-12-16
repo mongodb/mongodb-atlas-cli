@@ -26,7 +26,7 @@ import (
 )
 
 type DecryptOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.DownloaderOpts
 	inFileName string

@@ -34,7 +34,8 @@ const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range valueOrEmptySlice .Sug
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
+	cli.PreRunOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
 	store      store.PerformanceAdvisorIndexesLister
@@ -114,17 +115,14 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
-	_ = cmd.Flags().MarkDeprecated(flag.HostID, "Flag is invalid for MongoDB Atlas")
-	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessNameAtlasCLI)
-	_ = cmd.MarkFlagRequired(flag.ProcessName)
+	opts.AddPerformanceAdvisorOptsFlags(cmd)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 	cmd.Flags().StringSliceVar(&opts.namespaces, flag.Namespaces, []string{}, usage.SuggestedIndexNamespaces)
 	cmd.Flags().Int64Var(&opts.nExamples, flag.NExamples, 0, usage.NExamples)
 	cmd.Flags().Int64Var(&opts.nIndexes, flag.NIndexes, 0, usage.NIndexes)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	autocomplete := &processes.AutoCompleteOpts{}

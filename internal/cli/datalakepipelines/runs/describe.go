@@ -30,7 +30,7 @@ import (
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	id           string
 	pipelineName string
@@ -89,7 +89,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.pipelineName, flag.Pipeline, "", usage.Pipeline)
 	_ = cmd.MarkFlagRequired(flag.Pipeline)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

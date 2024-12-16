@@ -24,7 +24,7 @@ import (
 )
 
 type KeyProviderListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	file string
 	fs   afero.Fs

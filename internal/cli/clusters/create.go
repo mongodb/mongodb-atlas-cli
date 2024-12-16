@@ -50,7 +50,7 @@ const (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.WatchOpts
 	name                        string
 	provider                    string
@@ -425,7 +425,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
 	cmd.Flags().Int64Var(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagFilename(flag.File)

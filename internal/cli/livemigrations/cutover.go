@@ -28,7 +28,7 @@ import (
 var cutoverTemplate = "Cutover process successfully started.\n"
 
 type CutoverOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store           store.LiveMigrationCutoverCreator
 	liveMigrationID string
@@ -72,7 +72,7 @@ func CutoverBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.liveMigrationID, flag.LiveMigrationID, "", usage.LiveMigrationID)
 	opts.AddOutputOptFlags(cmd)
 

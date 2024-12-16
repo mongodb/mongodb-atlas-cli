@@ -31,7 +31,7 @@ import (
 const updateTmpl = "Updating advanced configuration settings of your cluster'.\n"
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	name                             string
 	defaultReadConcern               string
@@ -176,7 +176,7 @@ Atlas supports this command only for M10+ clusters.
 	cmd.Flags().IntVar(&opts.sampleRefreshIntervalBIConnector, flag.SampleRefreshIntervalBIConnector, -1, usage.SampleRefreshIntervalBIConnector)
 	cmd.Flags().IntVar(&opts.sampleSizeBIConnector, flag.SampleSizeBIConnector, -1, usage.SampleSizeBIConnector)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

@@ -29,7 +29,7 @@ import (
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	name   string
 	store  store.ClusterDescriber
@@ -100,7 +100,7 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.csType, flag.TypeFlag, "standard", usage.ConnectionStringType)
 	opts.AddOutputOptFlags(cmd)
 

@@ -32,7 +32,7 @@ import (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	clusterName     string
 	dbName          string
@@ -153,7 +153,7 @@ To learn more about online archives, see https://www.mongodb.com/docs/atlas/onli
 	cmd.Flags().StringVar(&opts.filename, flag.File, "", usage.OnlineArchiveFilename)
 	_ = cmd.MarkFlagFilename(flag.File)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)

@@ -34,7 +34,7 @@ var listTemplate = `NAME	TYPE	SERVERS{{range valueOrEmptySlice .Results}}
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	streamsInstance string
 	store           store.StreamsConnectionLister
@@ -81,7 +81,7 @@ atlas streams connection list --instance ExampleInstance
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 	cmd.Flags().StringVarP(&opts.streamsInstance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
 

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,59 +17,11 @@ package cli
 import (
 	"strings"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/prerun"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	"github.com/tangzero/inflector"
 )
 
 type AutoFunc func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective)
-
-type GlobalOpts struct {
-	OrgID     string
-	ProjectID string
-}
-
-// ConfigProjectID returns the project id.
-// If the id is empty, it caches it after querying config.
-func (opts *GlobalOpts) ConfigProjectID() string {
-	if opts.ProjectID != "" {
-		return opts.ProjectID
-	}
-	opts.ProjectID = config.ProjectID()
-	return opts.ProjectID
-}
-
-// ConfigOrgID returns the organization id.
-// If the id is empty, it caches it after querying config.
-func (opts *GlobalOpts) ConfigOrgID() string {
-	if opts.OrgID != "" {
-		return opts.OrgID
-	}
-	opts.OrgID = config.OrgID()
-	return opts.OrgID
-}
-
-func (*GlobalOpts) PreRunE(cbs ...prerun.CmdOpt) error {
-	return prerun.ExecuteE(cbs...)
-}
-
-// ValidateProjectID validates projectID.
-func (opts *GlobalOpts) ValidateProjectID() error {
-	if opts.ConfigProjectID() == "" {
-		return errMissingProjectID
-	}
-	return validate.ObjectID(opts.ConfigProjectID())
-}
-
-// ValidateOrgID validates orgID.
-func (opts *GlobalOpts) ValidateOrgID() error {
-	if opts.ConfigOrgID() == "" {
-		return ErrMissingOrgID
-	}
-	return validate.ObjectID(opts.ConfigOrgID())
-}
 
 // GenerateAliases return aliases for use such that they are:
 // a version all lower case, a version with dashes, a singular versions with the same rules.

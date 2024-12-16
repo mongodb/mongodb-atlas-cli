@@ -34,7 +34,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	opts := &DescribeOpts{
 		store: mockStore,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "projectID",
 		},
 		host: "host",

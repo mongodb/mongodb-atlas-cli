@@ -34,7 +34,8 @@ const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQueries}}
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
+	cli.PreRunOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
 	store      store.PerformanceAdvisorSlowQueriesLister
@@ -116,17 +117,14 @@ If you don't set the duration option or the since option, this command returns d
 
 	const defaultLogLines = 20000
 
-	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
-	_ = cmd.Flags().MarkDeprecated(flag.HostID, "Flag is invalid for MongoDB Atlas")
-	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessNameAtlasCLI)
-	_ = cmd.MarkFlagRequired(flag.ProcessName)
+	opts.AddPerformanceAdvisorOptsFlags(cmd)
 
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 	cmd.Flags().Int64Var(&opts.nLog, flag.NLog, defaultLogLines, usage.NLog)
 	cmd.Flags().StringSliceVar(&opts.namespaces, flag.Namespaces, []string{}, usage.SlowQueryNamespaces)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	autocomplete := &processes.AutoCompleteOpts{}

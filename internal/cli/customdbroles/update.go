@@ -33,7 +33,7 @@ import (
 const updateTemplate = "Custom database role '{{.RoleName}}' successfully updated.\n"
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	roleName       string
 	action         []string
@@ -119,7 +119,7 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.action, flag.Privilege, []string{}, usage.PrivilegeAction+usage.UpdateWarning)
 	cmd.Flags().BoolVar(&opts.append, flag.Append, false, usage.Append)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

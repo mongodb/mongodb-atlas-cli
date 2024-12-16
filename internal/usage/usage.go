@@ -51,6 +51,7 @@ const (
 	Username                                 = "Name that identifies the user. You must specify a valid email address."
 	TeamUsername                             = "Comma-separated list that contains the valid usernames of the MongoDB users to add to the new team. A team must have at least one user. New users must accept the invitation to join an organization before you can add them to a team."
 	DBUsername                               = "Username for authenticating to MongoDB."
+	DBUserDescription                        = "Description of this database user."
 	TeamName                                 = "Label that identifies the team."
 	UserID                                   = "Unique 24-digit identifier of the user."
 	LDAPHostname                             = "Hostname or IP address of the LDAP server."

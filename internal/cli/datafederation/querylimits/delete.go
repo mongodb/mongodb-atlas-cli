@@ -30,7 +30,7 @@ import (
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	*cli.DeleteOpts
 	store      store.DataFederationQueryLimitDeleter
 	tenantName string
@@ -82,7 +82,7 @@ func DeleteBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.tenantName, flag.DataFederation, "", usage.DataFederation)
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.DataFederation)
 

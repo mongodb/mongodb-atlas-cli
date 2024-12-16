@@ -30,7 +30,7 @@ import (
 
 type StartOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	options.DeploymentOpts
 	store store.ClusterStarter
 }
@@ -119,7 +119,7 @@ func StartBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
 
 	return cmd

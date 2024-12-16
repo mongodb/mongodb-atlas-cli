@@ -31,7 +31,7 @@ import (
 type orgListOpts struct {
 	cli.OutputOpts
 	EventListOpts
-	cli.GlobalOpts
+	cli.OrgOpts
 	store store.OrganizationEventLister
 }
 
@@ -121,15 +121,14 @@ func OrgListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	opts.AddListOptsFlagsWithoutOmitCount(cmd)
 
 	cmd.Flags().StringSliceVar(&opts.EventType, flag.TypeFlag, nil, usage.Event)
 	cmd.Flags().StringVar(&opts.MaxDate, flag.MaxDate, "", usage.MaxDate)
 	cmd.Flags().StringVar(&opts.MinDate, flag.MinDate, "", usage.MinDate)
 	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

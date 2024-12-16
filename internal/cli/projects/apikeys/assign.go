@@ -28,7 +28,7 @@ import (
 )
 
 type AssignOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	id    string
 	roles []string
@@ -92,7 +92,7 @@ To view possible values for the ID argument, run atlas organizations apiKeys lis
 
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.ProjectAPIKeyRoles)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Role)
 

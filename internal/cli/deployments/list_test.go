@@ -88,7 +88,7 @@ func TestList_Run(t *testing.T) {
 			AtlasClusterListStore: mockStore,
 			Config:                mockProfileReader,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
 		OutputOpts: cli.OutputOpts{
@@ -182,7 +182,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 			AtlasClusterListStore: mockStore,
 			Config:                mockProfileReader,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
 		OutputOpts: cli.OutputOpts{
@@ -274,7 +274,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 			AtlasClusterListStore: mockStore,
 			Config:                mockProfileReader,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
 		OutputOpts: cli.OutputOpts{
@@ -341,7 +341,7 @@ func TestListOpts_PostRun(t *testing.T) {
 
 	listOpts := &ListOpts{
 		DeploymentOpts: *deploymentsTest.Opts,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
 		},
 		OutputOpts: cli.OutputOpts{

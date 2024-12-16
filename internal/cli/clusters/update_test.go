@@ -133,7 +133,7 @@ func TestUpdate_FlexClusterRun(t *testing.T) {
 			name:          "ProjectBar",
 			store:         mockStore,
 			isFlexCluster: true,
-			GlobalOpts:    cli.GlobalOpts{ProjectID: "test"},
+			ProjectOpts:   cli.ProjectOpts{ProjectID: "test"},
 		}
 
 		mockStore.
@@ -165,7 +165,7 @@ func TestUpdate_FlexClusterRun(t *testing.T) {
 			name:          "ProjectBar",
 			store:         mockStore,
 			isFlexCluster: true,
-			GlobalOpts:    cli.GlobalOpts{ProjectID: "test"},
+			ProjectOpts:   cli.ProjectOpts{ProjectID: "test"},
 			tag: map[string]string{
 				"key1": "value22",
 			},
@@ -236,7 +236,7 @@ func TestUpdate_FlexClusterRun(t *testing.T) {
 			},
 			isFlexCluster:               true,
 			enableTerminationProtection: true,
-			GlobalOpts:                  cli.GlobalOpts{ProjectID: "test"},
+			ProjectOpts:                 cli.ProjectOpts{ProjectID: "test"},
 			tag: map[string]string{
 				"test": "test222",
 			},

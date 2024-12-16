@@ -35,7 +35,7 @@ var listTemplate = `NAME	STATE{{range valueOrEmptySlice .}}
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store    store.DataFederationLister
 	typeFlag string
@@ -84,7 +84,7 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.typeFlag, flag.TypeFlag, "", usage.DataFederationType)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

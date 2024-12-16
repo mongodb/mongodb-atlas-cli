@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
@@ -33,7 +32,7 @@ const describeTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT
 
 type DescribeOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.OrgOpts
 	id    string
 	store store.OrganizationInvitationDescriber
 }
@@ -82,7 +81,7 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 
 	opts.AddOutputOptFlags(cmd)
 

@@ -34,7 +34,7 @@ Private API Key {{.PrivateKey}}
 `
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	desc  string
 	roles []string
@@ -96,7 +96,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles)
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
 
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Description)

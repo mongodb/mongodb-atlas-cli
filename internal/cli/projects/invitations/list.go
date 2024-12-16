@@ -33,7 +33,7 @@ const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range valueOrEmptySlice
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store    store.ProjectInvitationLister
 	username string
@@ -84,7 +84,7 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	opts.AddOutputOptFlags(cmd)
 

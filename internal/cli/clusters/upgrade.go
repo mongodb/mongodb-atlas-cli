@@ -33,7 +33,7 @@ import (
 const upgradeTemplate = "Upgrading cluster '{{.Name}}'.\n"
 
 type UpgradeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	name                         string
 	mdbVersion                   string
@@ -181,7 +181,7 @@ func UpgradeBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DisableTerminationProtection)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagFilename(flag.File)

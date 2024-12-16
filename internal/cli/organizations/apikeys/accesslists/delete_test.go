@@ -35,7 +35,7 @@ func TestDelete_Run(t *testing.T) {
 			Confirm: true,
 		},
 		apiKey: "1",
-		GlobalOpts: cli.GlobalOpts{
+		OrgOpts: cli.OrgOpts{
 			OrgID: "2",
 		},
 	}

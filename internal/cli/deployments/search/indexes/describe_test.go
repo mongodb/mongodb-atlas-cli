@@ -142,7 +142,7 @@ func TestDescribe_RunAtlas(t *testing.T) {
 			OutWriter: buf,
 			Template:  describeTemplate,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "ProjectID",
 		},
 		mongodbClient: mockMongodbClient,

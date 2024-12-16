@@ -110,9 +110,8 @@ func (opts *UpgradeOpts) atlasTenantClusterUpgradeRequest20240805() (*atlasv2.At
 			return nil, err
 		}
 
-		if opts.name == "" {
-			opts.name = cluster.Name
-		}
+		cluster.Name = opts.name
+
 		return cluster, nil
 	}
 
@@ -202,10 +201,8 @@ func (opts *UpgradeOpts) cluster() (*atlas.Cluster, error) {
 		if err != nil {
 			return nil, err
 		}
+		cluster.Name = opts.name
 
-		if opts.name == "" {
-			opts.name = cluster.Name
-		}
 		return cluster, nil
 	}
 

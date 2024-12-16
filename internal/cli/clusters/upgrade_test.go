@@ -226,6 +226,7 @@ func TestUpgrade_RunFlexCluster(t *testing.T) {
 			fs:            appFS,
 			store:         mockStore,
 			isFlexCluster: true,
+			name:          "Test",
 		}
 
 		reqBody := &atlasv2.AtlasTenantClusterUpgradeRequest20240805{
@@ -254,7 +255,7 @@ func TestUpgrade_RunFlexCluster(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			UpgradeFlexCluster("", reqBody).
+			UpgradeFlexCluster(upgradeOpts.ConfigProjectID(), reqBody).
 			Return(expected, nil).
 			Times(1)
 

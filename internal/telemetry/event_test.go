@@ -18,6 +18,7 @@ package telemetry
 
 import (
 	"errors"
+	"fmt"
 	"runtime"
 	"testing"
 	"time"
@@ -262,9 +263,12 @@ func TestSanitizePrompt(t *testing.T) {
 		},
 	}
 
-	for _, testCase := range testCases {
-		got := sanitizePrompt(testCase.input)
-		assert.Equal(t, testCase.expected, got)
+	for i, tc := range testCases {
+		t.Run(fmt.Sprintf("case_%d", i), func(t *testing.T) {
+			t.Parallel()
+			got := sanitizePrompt(tc.input)
+			assert.Equal(t, tc.expected, got)
+		})
 	}
 }
 
@@ -384,6 +388,54 @@ func TestWithEmptySearchIndexType(t *testing.T) {
 	assert.Nil(t, e.Properties["search_index_type"])
 }
 
+func Test_withOutput(t *testing.T) {
+	tests := []struct {
+		name        string
+		flagValue   string
+		configValue string
+		want        string
+	}{
+		{
+			name:        "from flag",
+			flagValue:   "json",
+			configValue: "",
+			want:        "json",
+		},
+		{
+			name:        "from config",
+			flagValue:   "",
+			configValue: "json",
+			want:        "json",
+		},
+		{
+			name:        "no value",
+			flagValue:   "",
+			configValue: "",
+			want:        "plaintext",
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			cmd := &cobra.Command{
+				Use: "test-command",
+				Run: func(_ *cobra.Command, _ []string) {},
+			}
+			var p string
+			cmd.Flags().StringVar(&p, flag.Output, "", "")
+			if tc.flagValue != "" {
+				require.NoError(t, cmd.Flags().Set(flag.Output, tc.flagValue))
+			}
+			c := &configMock{}
+			if tc.configValue != "" {
+				c.out = tc.configValue
+			}
+			require.NoError(t, cmd.ExecuteContext(NewContext()))
+			e := newEvent(withOutput(cmd, c))
+			assert.Equal(t, tc.want, e.Properties["output"])
+		})
+	}
+}
+
 type configMock struct {
 	name        string
 	publicKey   string
@@ -393,6 +445,7 @@ type configMock struct {
 	url         string
 	project     string
 	org         string
+	out         string
 }
 
 var _ Authenticator = configMock{}
@@ -427,4 +480,8 @@ func (c configMock) PrivateAPIKey() string {
 
 func (c configMock) AccessToken() string {
 	return c.accessToken
+}
+
+func (c configMock) Output() string {
+	return c.out
 }

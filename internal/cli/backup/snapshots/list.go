@@ -46,10 +46,14 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 var listTemplate = `ID	TYPE	STATUS	CREATED AT	EXPIRES AT{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.SnapshotType}}	{{.Status}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
 `
+var listTemplateFlex = `ID	STATUS	MONGODB VERSION	START TIME	FINISH TIME	EXPIRATION{{range valueOrEmptySlice .Results}}
+{{.Id}}	{{.Status}}	{{.MongoDBVersion}}	{{.StartTime}}	{{.FinishTime}}	{{.Expiration}}{{end}}
+`
 
 func (opts *ListOpts) Run() error {
 	r, err := opts.store.FlexClusterSnapshots(opts.newListFlexBackupsAPIParams())
 	if err == nil {
+		opts.Template = listTemplateFlex
 		return opts.Print(r)
 	}
 

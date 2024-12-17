@@ -19,6 +19,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	cannotUseNotFlexWithFlexApisErrorCode = "CANNOT_USE_NON_FLEX_CLUSTER_IN_FLEX_API"
+)
+
 func Builder() *cobra.Command {
 	const use = "snapshots"
 	cmd := &cobra.Command{

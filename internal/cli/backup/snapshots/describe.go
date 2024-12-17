@@ -25,10 +25,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
 )
 
 const describeTemplate = `ID	SNAPSHOT TYPE	TYPE	DESCRIPTION	EXPIRES AT
 {{.Id}}	{{.SnapshotType}}	{{.Type}}	{{.Description}}	{{.ExpiresAt}}
+`
+
+const describeTemplateFlex = `ID	STATUS	MONGODB VERSION	START TIME	FINISH TIME	EXPIRATION
+{{.Id}}	{{.Status}}	{{.MongoDBVersion}}	{{.StartTime}}	{{.FinishTime}}	{{.Expiration}}
 `
 
 type DescribeOpts struct {
@@ -48,22 +53,40 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.Snapshot(opts.ConfigProjectID(), opts.clusterName, opts.snapshot)
+	r, err := opts.store.FlexClusterSnapshot(opts.ConfigProjectID(), opts.clusterName, opts.snapshot)
+	apiError, ok := atlasv2.AsError(err)
+	if !ok {
+		opts.Template = describeTemplateFlex
+		return opts.Print(r)
+	}
+
+	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode {
+		return err
+	}
+
+	if err == nil {
+		opts.Template = describeTemplateFlex
+		return opts.Print(r)
+	}
+
+	snapshots, err := opts.store.Snapshot(opts.ConfigProjectID(), opts.clusterName, opts.snapshot)
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(snapshots)
 }
 
+// DescribeBuilder builds a cobra.Command that can run as:
 // atlas backup snapshots describe snapshotId  --clusterName clusterName --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <snapshotId>",
-		Short: "Return the details for the specified snapshot for your project.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
-		Args:  require.ExactArgs(1),
+		Use:     "describe <snapshotId>",
+		Aliases: []string{"get"},
+		Short:   "Return the details for the specified snapshot for your project.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Args:    require.ExactArgs(1),
 		Example: `  # Return the details for the backup snapshot with the ID 5f4007f327a3bd7b6f4103c5 for the cluster named myDemo:
   atlas backups snapshots describe 5f4007f327a3bd7b6f4103c5 --clusterName myDemo`,
 		Annotations: map[string]string{

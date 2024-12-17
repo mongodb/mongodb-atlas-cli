@@ -30,7 +30,7 @@ require (
 	go.mongodb.org/atlas v0.37.0
 	go.mongodb.org/mongo-driver v1.17.1
 	go.mongodb.org/ops-manager v0.59.0
-	golang.org/x/crypto v0.30.0
+	golang.org/x/crypto v0.31.0
 	golang.org/x/mod v0.22.0
 	golang.org/x/tools v0.28.0
 	gopkg.in/yaml.v3 v3.0.1

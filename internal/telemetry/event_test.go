@@ -287,9 +287,12 @@ func TestSanitizeSelectOption(t *testing.T) {
 		},
 	}
 
-	for _, testCase := range testCases {
-		got := sanitizeSelectOption(testCase.input)
-		assert.Equal(t, testCase.expected, got)
+	for i, tc := range testCases {
+		t.Run(fmt.Sprintf("case_%d", i), func(t *testing.T) {
+			t.Parallel()
+			got := sanitizeSelectOption(tc.input)
+			assert.Equal(t, tc.expected, got)
+		})
 	}
 }
 
@@ -416,6 +419,7 @@ func Test_withOutput(t *testing.T) {
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			cmd := &cobra.Command{
 				Use: "test-command",
 				Run: func(_ *cobra.Command, _ []string) {},

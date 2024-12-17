@@ -290,6 +290,40 @@ func withOrgID(cmd CmdFlags, c OrgIDGetter) EventOpt {
 	}
 }
 
+type OutputGetter interface {
+	Output() string
+}
+
+func withOutput(cmd CmdFlags, c OutputGetter) EventOpt {
+	return func(event Event) {
+		if cmd.Flags().Changed(flag.Output) {
+			v, _ := cmd.Flags().GetString(flag.Output)
+			event.Properties["output"] = output(v)
+			return
+		}
+		event.Properties["output"] = output(c.Output())
+	}
+}
+
+const (
+	plaintextFormat = "plaintext"
+	jsonFormat      = "json"
+	jsonPath        = "json-path"
+	goTemplate      = "go-template"
+	goTemplateFile  = "go-template-file"
+)
+
+var templateFormats = []string{jsonFormat, goTemplate, goTemplateFile, jsonPath}
+
+func output(o string) string {
+	for _, f := range templateFormats {
+		if strings.HasPrefix(o, f) {
+			return f
+		}
+	}
+	return plaintextFormat
+}
+
 type Printer interface {
 	OutOrStdout() io.Writer
 }

@@ -54,19 +54,18 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.FlexClusterSnapshot(opts.ConfigProjectID(), opts.clusterName, opts.snapshot)
-	apiError, ok := atlasv2.AsError(err)
-	if !ok {
+	if err == nil {
 		opts.Template = describeTemplateFlex
 		return opts.Print(r)
+	}
+
+	apiError, ok := atlasv2.AsError(err)
+	if !ok {
+		return err
 	}
 
 	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode {
 		return err
-	}
-
-	if err == nil {
-		opts.Template = describeTemplateFlex
-		return opts.Print(r)
 	}
 
 	snapshots, err := opts.store.Snapshot(opts.ConfigProjectID(), opts.clusterName, opts.snapshot)

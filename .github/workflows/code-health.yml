@@ -342,7 +342,7 @@ jobs:
         with:
           dockerfile: Dockerfile
       - name: Enable containerd image store
-        uses: crazy-max/ghaction-setup-docker@v4.0.0
+        uses: crazy-max/ghaction-setup-docker@v4.1.0
         with:
           version: v24.0.6
           daemon-config: |

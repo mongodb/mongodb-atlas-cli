@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"go.mongodb.org/atlas-sdk/v20241113002/admin"
+	"go.mongodb.org/atlas-sdk/v20241113003/admin"
 )
 
 func TestDBUserUpdate_Run(t *testing.T) {

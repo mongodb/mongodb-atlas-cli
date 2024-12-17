@@ -24,7 +24,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113003/admin"
 )
 
 func TestCreate_Run(t *testing.T) {

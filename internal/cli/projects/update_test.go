@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113003/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {

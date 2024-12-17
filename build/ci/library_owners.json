@@ -33,7 +33,7 @@
 	"github.com/stretchr/testify": "apix-2",
 	"github.com/tangzero/inflector": "apix-2",
 	"go.mongodb.org/atlas": "apix-2",
-	"go.mongodb.org/atlas-sdk/v20241113002": "apix-2",
+	"go.mongodb.org/atlas-sdk/v20241113003": "apix-2",
 	"go.mongodb.org/atlas-sdk/v20240530005": "apix-2",
 	"go.mongodb.org/mongo-driver": "apix-2",
 	"golang.org/x/sys": "apix-2",

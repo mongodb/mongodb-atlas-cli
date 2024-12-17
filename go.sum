@@ -462,8 +462,8 @@ go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0 h1:OuV1HfIpZUZa4+BKvtrvDl
 go.mongodb.org/atlas-sdk/v20231115008 v20231115008.5.0/go.mod h1:0707RpWIrNFZ6Msy/dwRDCzC5JVDon61JoOqcbfCujg=
 go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0 h1:d/gbYJ+obR0EM/3DZf7+ZMi2QWISegm3mid7Or708cc=
 go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0/go.mod h1:O47ZrMMfcWb31wznNIq2PQkkdoFoK0ea2GlmRqGJC2s=
-go.mongodb.org/atlas-sdk/v20241113002 v20241113002.0.0 h1:jvcAUlQ4V28HD7mfByrWHy/2H0aPBNDqU5VqN1LaoTc=
-go.mongodb.org/atlas-sdk/v20241113002 v20241113002.0.0/go.mod h1:QSQSZK5IQQhraVlY1FvdALqH9vdTyAgihhlOI4TzfG8=
+go.mongodb.org/atlas-sdk/v20241113003 v20241113003.0.0 h1:aH1LZIgSLxKhCuPm99OIwwzhVKVYpzHuJ9RjCOYlh0s=
+go.mongodb.org/atlas-sdk/v20241113003 v20241113003.0.0/go.mod h1:bdVaUm4xI5Ns3+ie3VPPVravSfiGlnMfaAlVAiscA0U=
 go.mongodb.org/mongo-driver v1.17.1 h1:Wic5cJIwJgSpBhe3lx3+/RybR5PiYRMpVFgO7cOHyIM=
 go.mongodb.org/mongo-driver v1.17.1/go.mod h1:wwWm/+BuOddhcq3n68LKRmgk2wXzmF6s0SFOa0GINL4=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=

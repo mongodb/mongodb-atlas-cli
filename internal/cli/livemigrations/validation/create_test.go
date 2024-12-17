@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/livemigrations/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113003/admin"
 )
 
 func TestLiveMigrationValidationCreateOpts_Run(t *testing.T) {

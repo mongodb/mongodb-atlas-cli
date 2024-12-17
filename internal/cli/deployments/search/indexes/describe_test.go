@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113003/admin"
 )
 
 func TestDescribe_RunLocal(t *testing.T) {

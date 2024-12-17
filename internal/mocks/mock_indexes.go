@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	admin "go.mongodb.org/atlas-sdk/v20241113003/admin"
 )
 
 // MockIndexCreator is a mock of IndexCreator interface.

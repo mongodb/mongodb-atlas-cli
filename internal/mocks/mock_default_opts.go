@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	admin "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	admin "go.mongodb.org/atlas-sdk/v20241113003/admin"
 )
 
 // MockProjectOrgsLister is a mock of ProjectOrgsLister interface.

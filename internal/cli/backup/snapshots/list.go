@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
 )
 
 type ListOpts struct {
@@ -47,15 +48,41 @@ var listTemplate = `ID	TYPE	STATUS	CREATED AT	EXPIRES AT{{range valueOrEmptySlic
 `
 
 func (opts *ListOpts) Run() error {
+	r, err := opts.store.FlexClusterSnapshots(opts.newListFlexBackupsAPIParams())
+	if err == nil {
+		return opts.Print(r)
+	}
+
+	apiError, ok := atlasv2.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode {
+		return err
+	}
+
 	listOpts := opts.NewListOptions()
-	r, err := opts.store.Snapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
+	snapshotsList, err := opts.store.Snapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(snapshotsList)
 }
 
+func (opts *ListOpts) newListFlexBackupsAPIParams() *atlasv2.ListFlexBackupsApiParams {
+	includeCount := !opts.ListOpts.OmitCount
+	return &atlasv2.ListFlexBackupsApiParams{
+		GroupId:      opts.ConfigProjectID(),
+		Name:         opts.clusterName,
+		IncludeCount: &includeCount,
+		ItemsPerPage: &opts.ListOpts.ItemsPerPage,
+		PageNum:      &opts.ListOpts.PageNum,
+	}
+}
+
+// ListBuilder builds a cobra.Command that can run as:
 // atlas backups snapshots list <clusterName> [--projectId projectId] [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)

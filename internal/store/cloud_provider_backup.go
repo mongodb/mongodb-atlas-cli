@@ -177,8 +177,7 @@ func (s *Store) FlexClusterSnapshots(opts *atlasv2.ListFlexBackupsApiParams) (*a
 	return result, err
 }
 
-// DownloadFlexClusterSnapshots encapsulates the logic to manage different cloud providers.
-func (s *Store) DownloadFlexClusterSnapshots(groupID, name string, flexBackupSnapshotDownloadCreate20241113 *atlasv2.FlexBackupSnapshotDownloadCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error) {
+func (s *Store) DownloadFlexClusterSnapshot(groupID, name string, flexBackupSnapshotDownloadCreate20241113 *atlasv2.FlexBackupSnapshotDownloadCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

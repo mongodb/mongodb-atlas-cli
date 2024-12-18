@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
 )
 
@@ -40,15 +41,46 @@ func TestDescribeOpts_Run(t *testing.T) {
 		id:          "1",
 	}
 
+	expectedError := &atlasv2.GenericOpenAPIError{}
+	expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
+
+	mockStore.
+		EXPECT().
+		RestoreFlexClusterJob(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.id).
+		Return(nil, expectedError).
+		Times(1)
+
 	mockStore.
 		EXPECT().
 		RestoreJob(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.id).
 		Return(expected, nil).
 		Times(1)
 
-	if err := describeOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+	require.NoError(t, describeOpts.Run())
+	test.VerifyOutputTemplate(t, restoreDescribeTemplate, expected)
+}
+
+func TestDescribeOpts_Run_FlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
+
+	expected := &atlasv2.FlexBackupRestoreJob20241113{
+		Id: pointer.Get("1"),
 	}
 
-	test.VerifyOutputTemplate(t, restoreDescribeTemplate, expected)
+	describeOpts := &DescribeOpts{
+		store:       mockStore,
+		clusterName: "Cluster0",
+		id:          "1",
+	}
+
+	mockStore.
+		EXPECT().
+		RestoreFlexClusterJob(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.id).
+		Return(nil, nil).
+		Times(1)
+
+	require.NoError(t, describeOpts.Run())
+
+	test.VerifyOutputTemplate(t, restoreDescribeFlexClusterTemplate, expected)
 }

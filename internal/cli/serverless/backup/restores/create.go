@@ -205,7 +205,7 @@ func CreateBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-		Deprecated: "Command 'serverless backup restores create' is deprecated. Please use the 'atlas backup restores create' command instead.  For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
+		Deprecated: "please use the 'atlas backup restores create' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.Flags().StringVar(&opts.snapshotID, flag.SnapshotID, "", usage.SnapshotID)

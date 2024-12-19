@@ -82,7 +82,7 @@ func ListBuilder() *cobra.Command {
 
 			return opts.Run()
 		},
-		Deprecated: "Command 'serverless backup restores list' is deprecated. Please use the 'atlas backup restores list' command instead.  For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
+		Deprecated: "please use the 'atlas backup restores list' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	opts.AddListOptsFlags(cmd)

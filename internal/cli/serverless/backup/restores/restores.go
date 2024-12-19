@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 		Use:        use,
 		Short:      "Manage cloud backup restore jobs for your project.",
 		Aliases:    cli.GenerateAliases(use),
-		Deprecated: "Command 'serverless backup restores' is deprecated. Please use the 'atlas backup restores' command instead.  For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
+		Deprecated: "please use the 'atlas backup restores' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.AddCommand(

@@ -110,7 +110,7 @@ func CreateBuilder() *cobra.Command {
 			opts.instanceName = args[0]
 			return opts.Run()
 		},
-		Deprecated: "Command 'serverless create' is deprecated. The command creates a Flex Cluster instead of Serverless. Please use the 'atlas cluster create <ClusterName> --tier FLEX [--projectId projectId]' command instead.  For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
+		Deprecated: "the command creates a Flex Cluster instead of Serverless. Please use the 'atlas cluster create <ClusterName> --tier FLEX [--projectId projectId]' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.ServerlessProvider)

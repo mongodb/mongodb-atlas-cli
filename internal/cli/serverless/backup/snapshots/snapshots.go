@@ -25,7 +25,7 @@ func Builder() *cobra.Command {
 		Use:        use,
 		Aliases:    cli.GenerateAliases(use),
 		Short:      "Manage cloud backup snapshots for your project.",
-		Deprecated: "Command 'serverless backup snapshots' is deprecated. Please use the 'atlas backup snapshots' command instead.  For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
+		Deprecated: "please use the 'atlas backup snapshots' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.AddCommand(

@@ -91,7 +91,7 @@ You can interrupt the command's polling at any time with CTRL-C.
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
-		Deprecated: "Command 'serverless backup restores watch' is deprecated. Please use the 'atlas backup restores watch' command instead.  For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
+		Deprecated: "please use the 'atlas backup restores watch' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)

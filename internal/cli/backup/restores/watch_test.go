@@ -22,6 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
@@ -34,9 +35,10 @@ func TestWatchOpts_Run(t *testing.T) {
 	}
 
 	describeOpts := &WatchOpts{
-		store:       mockStore,
-		clusterName: "Cluster0",
-		id:          "1",
+		store:         mockStore,
+		clusterName:   "Cluster0",
+		id:            "1",
+		isFlexCluster: false,
 	}
 
 	mockStore.
@@ -48,4 +50,26 @@ func TestWatchOpts_Run(t *testing.T) {
 	if err := describeOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
+}
+
+func TestWatch_Run_FlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
+
+	watchOpts := &WatchOpts{
+		id:            "test",
+		store:         mockStore,
+		clusterName:   "cluster",
+		isFlexCluster: true,
+	}
+
+	expected := &atlasv2.FlexBackupRestoreJob20241113{Status: pointer.Get("COMPLETED")}
+
+	mockStore.
+		EXPECT().
+		RestoreFlexClusterJob(watchOpts.ConfigProjectID(), watchOpts.clusterName, watchOpts.id).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, watchOpts.Run())
 }

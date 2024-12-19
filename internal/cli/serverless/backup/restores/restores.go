@@ -22,9 +22,10 @@ import (
 func Builder() *cobra.Command {
 	const use = "restores"
 	cmd := &cobra.Command{
-		Use:     use,
-		Short:   "Manage cloud backup restore jobs for your project.",
-		Aliases: cli.GenerateAliases(use),
+		Use:        use,
+		Short:      "Manage cloud backup restore jobs for your project.",
+		Aliases:    cli.GenerateAliases(use),
+		Deprecated: "please use the 'atlas backup restores' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.AddCommand(

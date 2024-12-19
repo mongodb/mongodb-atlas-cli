@@ -106,6 +106,7 @@ func UpdateBuilder() *cobra.Command {
 			opts.instanceName = args[0]
 			return opts.Run()
 		},
+		Deprecated: "please use the 'atlas cluster update <ClusterName> [--projectId projectId]' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)

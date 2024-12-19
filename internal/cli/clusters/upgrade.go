@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
@@ -115,7 +114,7 @@ func (opts *UpgradeOpts) atlasTenantClusterUpgradeRequest20240805() (*atlasv2.At
 		return cluster, nil
 	}
 
-	flexClusterDescription, err := opts.store.FlexCluster(opts.ProjectID, opts.name)
+	flexClusterDescription, err := opts.store.FlexCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return nil, err
 	}
@@ -129,18 +128,18 @@ func (opts *UpgradeOpts) newAtlasTenantClusterUpgradeRequestFromFlexClusterDescr
 		mdbVersion = &opts.mdbVersion
 	}
 
-	terminationProtectionEnabled := flexCluster.TerminationProtectionEnabled
+	terminationProtectionEnabled := flexCluster.GetTerminationProtectionEnabled()
 	if opts.disableTerminationProtection {
-		terminationProtectionEnabled = pointer.Get(false)
+		terminationProtectionEnabled = false
 	}
 
 	if opts.enableTerminationProtection {
-		terminationProtectionEnabled = pointer.Get(true)
+		terminationProtectionEnabled = true
 	}
 
 	var tags []atlasv2.ResourceTag
 	if flexCluster.Tags != nil {
-		tags = *flexCluster.Tags
+		tags = flexCluster.GetTags()
 	}
 
 	if len(opts.tag) > 0 {
@@ -149,19 +148,23 @@ func (opts *UpgradeOpts) newAtlasTenantClusterUpgradeRequestFromFlexClusterDescr
 	}
 
 	backupEnabled := false
-	if flexCluster.BackupSettings != nil {
-		backupEnabled = *flexCluster.BackupSettings.Enabled
+	if settings, ok := flexCluster.GetBackupSettingsOk(); ok {
+		backupEnabled = settings.GetEnabled()
 	}
+
+	flexGroupID, _ := flexCluster.GetGroupIdOk()
+	versionRelease, _ := flexCluster.GetVersionReleaseSystemOk()
+	flexClusterType, _ := flexCluster.GetClusterTypeOk()
 
 	return &atlasv2.AtlasTenantClusterUpgradeRequest20240805{
 		BackupEnabled:                &backupEnabled,
-		ClusterType:                  flexCluster.ClusterType,
-		GroupId:                      flexCluster.GroupId,
+		ClusterType:                  flexClusterType,
+		GroupId:                      flexGroupID,
 		MongoDBVersion:               mdbVersion,
-		Name:                         *flexCluster.Name,
+		Name:                         flexCluster.GetName(),
 		Tags:                         &tags,
-		TerminationProtectionEnabled: terminationProtectionEnabled,
-		VersionReleaseSystem:         flexCluster.VersionReleaseSystem,
+		TerminationProtectionEnabled: &terminationProtectionEnabled,
+		VersionReleaseSystem:         versionRelease,
 		ReplicationSpecs:             opts.newReplicationSpecFromOpts(flexCluster),
 	}
 }
@@ -171,22 +174,33 @@ func (opts *UpgradeOpts) newReplicationSpecFromOpts(flexCluster *atlasv2.FlexClu
 		return nil
 	}
 
-	diskSizeGb := flexCluster.ProviderSettings.DiskSizeGB
-	if opts.diskSizeGB != 0 {
-		diskSizeGb = &opts.diskSizeGB
+	diskSizeGb := 0.0
+	backingProviderName := ""
+	regionN := ""
+	if settings, ok := flexCluster.GetProviderSettingsOk(); ok {
+		diskSizeGb = settings.GetDiskSizeGB()
+		backingProviderName = settings.GetBackingProviderName()
+		regionN = settings.GetRegionName()
 	}
+
+	if opts.diskSizeGB != 0 {
+		diskSizeGb = opts.diskSizeGB
+	}
+
+	replicaSetCount := replicaSetNodeCount
+	priority := replicaSetPriority
 
 	replicaSpec := atlasv2.ReplicationSpec20240805{
 		RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
 			{
 				ElectableSpecs: &atlasv2.HardwareSpec20240805{
 					InstanceSize: &opts.tier,
-					DiskSizeGB:   diskSizeGb,
-					NodeCount:    pointer.Get(replicaSetNodeCount),
+					DiskSizeGB:   &diskSizeGb,
+					NodeCount:    &replicaSetCount,
 				},
-				ProviderName: flexCluster.ProviderSettings.BackingProviderName,
-				RegionName:   flexCluster.ProviderSettings.RegionName,
-				Priority:     pointer.Get(replicaSetPriority),
+				ProviderName: &backingProviderName,
+				RegionName:   &regionN,
+				Priority:     &priority,
 			},
 		},
 	}

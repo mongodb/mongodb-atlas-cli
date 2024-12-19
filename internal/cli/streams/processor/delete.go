@@ -14,7 +14,7 @@ import (
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	*cli.DeleteOpts
 	streamsInstance string
 	store           store.ProcessorDeleter

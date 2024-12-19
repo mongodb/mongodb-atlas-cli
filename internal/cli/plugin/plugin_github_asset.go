@@ -106,7 +106,7 @@ var architectureAliases = map[string][]string{
 	"386":   {"i386", "x86"},
 }
 
-//nolint: mnd
+//nolint:mnd
 var contentTypePriority = map[string]int{
 	"application/gzip":   0, // tar.gz
 	"application/x-gtar": 1, // tar.gz

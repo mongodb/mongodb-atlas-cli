@@ -1,0 +1,23 @@
+{
+    "pipeline": [
+        {
+            "$source": {
+                "connectionName": "sample_stream_solar"
+            }
+        },
+        {
+            "$match": {
+                "group_id": 10
+            }
+        },
+        {
+            "$merge": {
+                "into": {
+                    "db": "testdb",
+                    "coll": "testcoll",
+                    "connectionName": "ClusterConn"
+                }
+            }
+        }
+    ]
+}

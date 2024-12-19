@@ -1,0 +1,10 @@
+{
+  "name": "ClusterConn",
+  "type": "Cluster",
+  "clusterName": "cluster-875",
+  "dbRoleToExecute": {
+    "links": [],
+    "role": "atlasAdmin",
+    "type": "BUILT_IN"
+  }
+}

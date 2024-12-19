@@ -18,6 +18,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/streams/connection"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/streams/instance"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/streams/processor"
 	"github.com/spf13/cobra"
 )
 
@@ -32,6 +33,7 @@ func Builder() *cobra.Command {
 	cmd.AddCommand(
 		instance.Builder(),
 		connection.Builder(),
+		processor.Builder(),
 	)
 
 	return cmd

@@ -18,6 +18,7 @@ package atlas_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -104,6 +105,166 @@ func TestStreamsWithClusters(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(connectionName, *connection.Name)
 		a.Equal("atlasAdmin", *connection.DbRoleToExecute.Role)
+	})
+
+	processorName := "ExampleSP"
+	t.Run("Create streams connection to sample stream", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"connection",
+			"create",
+			"-f",
+			"data/create_streams_connection_sample.json",
+			"-i",
+			instanceName,
+			"-o=json",
+			"--projectId",
+			g.projectID,
+		)
+
+		streamsCmd.Env = os.Environ()
+		streamsResp, streamsErr := e2e.RunAndGetStdOut(streamsCmd)
+		req.NoError(streamsErr, string(streamsResp))
+
+		var connection atlasv2.StreamsConnection
+		req.NoError(json.Unmarshal(streamsResp, &connection))
+
+		// Assert on config from create_streams_connection_atlas_test.json
+		a := assert.New(t)
+		a.Equal("sample_stream_solar", *connection.Name)
+	})
+
+	t.Run("Create a stream processor with an atlas cluster sink", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"processor",
+			"create",
+			processorName,
+			"-f",
+			"data/create_stream_processor_test.json",
+			"-i",
+			instanceName,
+			"-o=json",
+			"--projectId",
+			g.projectID,
+		)
+
+		streamsCmd.Env = os.Environ()
+		streamsResp, streamsErr := e2e.RunAndGetStdOut(streamsCmd)
+		req.NoError(streamsErr, string(streamsResp))
+
+		var processor atlasv2.StreamsProcessor
+		req.NoError(json.Unmarshal(streamsResp, &processor))
+
+		a := assert.New(t)
+		a.Equal(processorName, *processor.Name)
+	})
+
+	t.Run("Describe a stream processor with an atlas cluster sink", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"processor",
+			"describe",
+			processorName,
+			"-i",
+			instanceName,
+			"--projectId",
+			g.projectID,
+		)
+
+		streamsCmd.Env = os.Environ()
+		streamsResp, streamsErr := e2e.RunAndGetStdOut(streamsCmd)
+		req.NoError(streamsErr, string(streamsResp))
+
+		var processor atlasv2.StreamsProcessorWithStats
+		req.NoError(json.Unmarshal(streamsResp, &processor))
+
+		a := assert.New(t)
+		a.Equal(processorName, processor.Name)
+	})
+
+	t.Run("List stream processors", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"processor",
+			"list",
+			"-i",
+			instanceName,
+			"--projectId",
+			g.projectID,
+		)
+
+		streamsCmd.Env = os.Environ()
+		streamsResp, streamsErr := e2e.RunAndGetStdOut(streamsCmd)
+		req.NoError(streamsErr, string(streamsResp))
+
+		var processors []atlasv2.StreamsProcessorWithStats
+		req.NoError(json.Unmarshal(streamsResp, &processors))
+
+		a := assert.New(t)
+		a.Len(processors, 1)
+		a.Equal(processorName, processors[0].Name)
+	})
+
+	t.Run("Start a stream processor with an atlas cluster sink", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"processor",
+			"start",
+			processorName,
+			"-i",
+			instanceName,
+			"--projectId",
+			g.projectID,
+		)
+
+		streamsCmd.Env = os.Environ()
+		streamsResp, streamsErr := e2e.RunAndGetStdOut(streamsCmd)
+		req.NoError(streamsErr, string(streamsResp))
+
+		a := assert.New(t)
+		a.Equal("Successfully started Stream Processor\n", string(streamsResp))
+	})
+
+	t.Run("Stop a stream processor with an atlas cluster sink", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"processor",
+			"stop",
+			processorName,
+			"-i",
+			instanceName,
+			"--projectId",
+			g.projectID,
+		)
+
+		streamsCmd.Env = os.Environ()
+		streamsResp, streamsErr := e2e.RunAndGetStdOut(streamsCmd)
+		req.NoError(streamsErr, string(streamsResp))
+
+		a := assert.New(t)
+		a.Equal("Successfully stopped Stream Processor\n", string(streamsResp))
+	})
+
+	t.Run("Delete a stream processor with an atlas cluster sink", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"processor",
+			"delete",
+			processorName,
+			"-i",
+			instanceName,
+			"--projectId",
+			g.projectID,
+			"--force",
+		)
+
+		streamsCmd.Env = os.Environ()
+		streamsResp, streamsErr := e2e.RunAndGetStdOut(streamsCmd)
+		req.NoError(streamsErr, string(streamsResp))
+
+		a := assert.New(t)
+		a.Equal(fmt.Sprintf("Atlas Stream Processor '%s' deleted\n", processorName), string(streamsResp))
 	})
 }
 

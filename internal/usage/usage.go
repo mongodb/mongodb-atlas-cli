@@ -240,6 +240,7 @@ dbName and collection are required only for built-in roles.`
 	StreamsInstance                           = "Name of your Atlas Stream Processing instance."
 	StreamsConnectionFilename                 = "Path to a JSON configuration file that defines an Atlas Stream Processing connection."
 	StreamsInstanceTier                       = "Tier for your Stream Instance."
+	IncludeStreamProcessorStats               = "Flag that indicates whether to include Stream Processor stats. This flag defaults to false."
 	WithoutDefaultAlertSettings               = "Flag that creates the new project without the default alert settings enabled. This flag defaults to false. This option is useful if you create projects programmatically and want to create your own alerts instead of using the default alert settings."
 	FormatOut                                 = "Output format. Valid values are json, json-path, go-template, or go-template-file. To see the full output, use the -o json option."
 	TargetClusterName                         = "Name of the target cluster. For use only with automated restore jobs. You must specify a targetClusterName for automated restores."

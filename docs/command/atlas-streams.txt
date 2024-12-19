@@ -53,6 +53,7 @@ Related Commands
 
 * :ref:`atlas-streams-connections` - Manage Atlas Stream Processing connections.
 * :ref:`atlas-streams-instances` - Manage Atlas Stream Processing instances.
+* :ref:`atlas-streams-processors` - Manage Atlas Stream Processors.
 
 
 .. toctree::
@@ -60,4 +61,5 @@ Related Commands
 
    connections </command/atlas-streams-connections>
    instances </command/atlas-streams-instances>
+   processors </command/atlas-streams-processors>
 

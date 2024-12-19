@@ -1,0 +1,71 @@
+.. _atlas-streams-processors:
+
+========================
+atlas streams processors
+========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Manage Atlas Stream Processors.
+
+Create, list, update and delete your Atlas Stream Processors.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for processors
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-streams-processors-create` - Creates a stream processor for an Atlas Stream Processing instance.
+* :ref:`atlas-streams-processors-delete` - Delete a specific Atlas Stream Processor in a Stream Processing Instance.
+* :ref:`atlas-streams-processors-describe` - Get details about a specific Atlas Stream Processor in a Stream Processing Instance.
+* :ref:`atlas-streams-processors-list` - List all the Atlas Stream Processing Processors for your project.
+* :ref:`atlas-streams-processors-start` - Start a specific Atlas Stream Processor in a Stream Processing Instance.
+* :ref:`atlas-streams-processors-stop` - Stop a specific Atlas Stream Processor in a Stream Processing Instance.
+
+
+.. toctree::
+   :titlesonly:
+
+   create </command/atlas-streams-processors-create>
+   delete </command/atlas-streams-processors-delete>
+   describe </command/atlas-streams-processors-describe>
+   list </command/atlas-streams-processors-list>
+   start </command/atlas-streams-processors-start>
+   stop </command/atlas-streams-processors-stop>
+

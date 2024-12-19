@@ -40,7 +40,7 @@ type ListOpts struct {
 const (
 	atlasM2                    = "M2"
 	atlasM5                    = "M5"
-	deprecateMessageSharedTier = "The '%s' tier is deprecated. Please use 'atlas cluster create <ClusterName> --tier FLEX' instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
+	deprecateMessageSharedTier = "The '%s' tier is deprecated. Please use '--tier FLEX' instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
 )
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

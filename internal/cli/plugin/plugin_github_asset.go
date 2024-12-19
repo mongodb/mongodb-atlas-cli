@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -99,34 +100,63 @@ func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 	return release.Assets, nil
 }
 
+var architectureAliases = map[string][]string{
+	"amd64": {"x86_64"},
+	"arm64": {"aarch64"},
+	"386":   {"i386", "x86"},
+}
+
+//nolint: mnd
+var contentTypePriority = map[string]int{
+	"application/gzip":   0, // tar.gz
+	"application/x-gtar": 1, // tar.gz
+	"application/x-gzip": 2, // tar.gz
+	"application/zip":    3, // zip
+}
+
 func (g *GithubAsset) getID(assets []*github.ReleaseAsset) (int64, error) {
-	operatingSystem, architecture := runtime.GOOS, runtime.GOARCH
-	archiveContentTypesAndPriority := map[string]int{
-		"application/gzip": 0,
-		"application/zip":  1,
+	return g.getIDForOSArch(assets, runtime.GOOS, runtime.GOARCH)
+}
+
+func (g *GithubAsset) getIDForOSArch(assets []*github.ReleaseAsset, goos, goarch string) (int64, error) {
+	// Get all possible architecture names for the current architecture
+	archNames := []string{goarch}
+	if aliases, ok := architectureAliases[goarch]; ok {
+		archNames = append(archNames, aliases...)
 	}
 
-	archiveAssets := make([]*github.ReleaseAsset, 0)
-
+	var archiveAssets []*github.ReleaseAsset
 	for _, asset := range assets {
-		if _, ok := archiveContentTypesAndPriority[*asset.ContentType]; !ok {
+		if asset.ContentType == nil || asset.Name == nil {
 			continue
 		}
-		name := *asset.Name
 
-		if strings.Contains(name, operatingSystem) && strings.Contains(name, architecture) {
-			archiveAssets = append(archiveAssets, asset)
+		if _, ok := contentTypePriority[*asset.ContentType]; !ok {
+			continue
+		}
+
+		name := strings.ToLower(*asset.Name)
+		if !strings.Contains(name, goos) {
+			continue
+		}
+
+		// Check if any of the architecture names match
+		for _, arch := range archNames {
+			if strings.Contains(name, arch) {
+				archiveAssets = append(archiveAssets, asset)
+				break
+			}
 		}
 	}
 
 	if len(archiveAssets) == 0 {
-		return 0, fmt.Errorf("could not find an asset to download from %s for %s %s", g.repository(), operatingSystem, architecture)
+		return 0, fmt.Errorf("no compatible asset found in %s for OS=%s, arch=%s (including aliases: %v)",
+			g.repository(), goos, goarch, archNames[1:])
 	}
 
+	// Sort by content type priority
 	slices.SortFunc(archiveAssets, func(a, b *github.ReleaseAsset) int {
-		priortyA := archiveContentTypesAndPriority[*a.ContentType]
-		priortyB := archiveContentTypesAndPriority[*b.ContentType]
-		return priortyA - priortyB
+		return contentTypePriority[*a.ContentType] - contentTypePriority[*b.ContentType]
 	})
 
 	return *archiveAssets[0].ID, nil
@@ -221,6 +251,12 @@ func extractPluginAssetArchiveFile(ctx context.Context, pluginArchivePath string
 }
 
 func extractArchive(ctx context.Context, pluginArchivePath string, pluginDirectoryName string) error {
+	// Strip prefix
+	prefix, err := getArchivePrefix(ctx, pluginArchivePath)
+	if err != nil {
+		return fmt.Errorf("failed to determine archive prefix: %w", err)
+	}
+
 	archiveFile, err := os.Open(pluginArchivePath)
 	if err != nil {
 		return fmt.Errorf("failed to open source file: %w", err)
@@ -243,7 +279,7 @@ func extractArchive(ctx context.Context, pluginArchivePath string, pluginDirecto
 	// Extract the archive
 	if err := ex.Extract(ctx, archiveFile, func(_ context.Context, fileInfo archives.FileInfo) error {
 		// Get the destination path
-		destPath := filepath.Join(pluginDirectoryName, fileInfo.NameInArchive)
+		destPath := filepath.Join(pluginDirectoryName, strings.TrimPrefix(fileInfo.NameInArchive, prefix))
 
 		// Handle directories
 		if fileInfo.IsDir() {
@@ -285,4 +321,28 @@ func extractArchive(ctx context.Context, pluginArchivePath string, pluginDirecto
 	}
 
 	return nil
+}
+
+func getArchivePrefix(ctx context.Context, pluginArchivePath string) (string, error) {
+	fsys, err := archives.FileSystem(ctx, pluginArchivePath, nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to open archive file: %w", err)
+	}
+
+	// Read the contents of the archive root
+	entries, err := fs.ReadDir(fsys, ".")
+	if err != nil {
+		return "", fmt.Errorf("failed to read root directory of archive: %w", err)
+	}
+
+	// Strip prefix
+	prefix := ""
+	if len(entries) == 1 {
+		entry := entries[0]
+		if entry.IsDir() {
+			prefix = entry.Name()
+		}
+	}
+
+	return prefix, nil
 }

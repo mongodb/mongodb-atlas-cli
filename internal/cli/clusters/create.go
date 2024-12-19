@@ -114,7 +114,7 @@ func (opts *CreateOpts) RunFlexCluster() error {
 		}
 	}
 
-	return nil
+	return err
 }
 
 func (opts *CreateOpts) newFlexCluster() (*atlasv2.FlexClusterDescriptionCreate20241113, error) {

@@ -18,6 +18,7 @@ command_type: system
 pre_error_fails_task: true
 include:
   - filename: build/ci/release.yml
+  - filename: build/ci/snyk.yml
 
 variables:
   - &go_linux_version

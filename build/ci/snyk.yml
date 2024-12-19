@@ -1,0 +1,24 @@
+tasks:
+  - name: snyk_monitor
+    commands:
+      - command: shell.exec
+        params:
+          include_expansions_in_env:
+            - workdir
+          shell: bash
+          script: |
+            docker run \
+              --rm \
+              -e SNYK_TOKEN=${SNYK_TOKEN} \
+              -e SNYK_CFG_ORG=${SNYK_ORG} \
+              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/app \
+              snyk/snyk:golang snyk monitor
+
+buildvariants:
+- name: ubuntu
+  display_name: Snyk
+  cron: '@daily'
+  run_on:
+  - ubuntu2204-large
+  tasks:
+  - name: snyk_monitor

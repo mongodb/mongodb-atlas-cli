@@ -269,7 +269,7 @@ func isTenant(instanceSizeName string) bool {
 // a FlexCluster. The function calls the AtlasSharedAPI to get the cluster, and it sets the opts.isFlexCluster = true
 // in the event of a cannotUseFlexWithClusterApisErrorCode.
 func (opts *UpgradeOpts) newIsFlexCluster() error {
-	_, err := opts.store.AtlasSharedCluster(opts.ProjectID, opts.name)
+	_, err := opts.store.AtlasSharedCluster(opts.ConfigProjectID(), opts.name)
 	var errorResponse *atlas.ErrorResponse
 	ok := errors.As(err, &errorResponse)
 	if !ok {

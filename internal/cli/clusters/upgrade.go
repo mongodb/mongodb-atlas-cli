@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -27,10 +28,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-const upgradeTemplate = "Upgrading cluster '{{.Name}}'.\n"
+const (
+	upgradeTemplate     = "Upgrading cluster '{{.Name}}'.\n"
+	replicaSetNodeCount = 3
+	replicaSetPriority  = 7
+)
 
 type UpgradeOpts struct {
 	cli.ProjectOpts
@@ -42,6 +48,7 @@ type UpgradeOpts struct {
 	filename                     string
 	enableTerminationProtection  bool
 	disableTerminationProtection bool
+	isFlexCluster                bool
 	tag                          map[string]string
 	fs                           afero.Fs
 	store                        store.AtlasSharedClusterGetterUpgrader
@@ -56,6 +63,28 @@ func (opts *UpgradeOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpgradeOpts) Run() error {
+	if opts.isFlexCluster {
+		return opts.RunFlexCluster()
+	}
+
+	return opts.RunSharedCluster()
+}
+
+func (opts *UpgradeOpts) RunFlexCluster() error {
+	cluster, err := opts.atlasTenantClusterUpgradeRequest20240805()
+	if err != nil {
+		return err
+	}
+
+	r, err := opts.store.UpgradeFlexCluster(opts.ConfigProjectID(), cluster)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
+}
+
+func (opts *UpgradeOpts) RunSharedCluster() error {
 	cluster, err := opts.cluster()
 	if err != nil {
 		return err
@@ -72,6 +101,113 @@ func (opts *UpgradeOpts) Run() error {
 	return opts.Print(r)
 }
 
+func (opts *UpgradeOpts) atlasTenantClusterUpgradeRequest20240805() (*atlasv2.AtlasTenantClusterUpgradeRequest20240805, error) {
+	var cluster *atlasv2.AtlasTenantClusterUpgradeRequest20240805
+	if opts.filename != "" {
+		err := file.Load(opts.fs, opts.filename, &cluster)
+		if err != nil {
+			return nil, err
+		}
+
+		cluster.Name = opts.name
+
+		return cluster, nil
+	}
+
+	flexClusterDescription, err := opts.store.FlexCluster(opts.ConfigProjectID(), opts.name)
+	if err != nil {
+		return nil, err
+	}
+
+	return opts.newAtlasTenantClusterUpgradeRequestFromFlexClusterDescription(flexClusterDescription), nil
+}
+
+func (opts *UpgradeOpts) newAtlasTenantClusterUpgradeRequestFromFlexClusterDescription(flexCluster *atlasv2.FlexClusterDescription20241113) *atlasv2.AtlasTenantClusterUpgradeRequest20240805 {
+	mdbVersion := flexCluster.MongoDBVersion
+	if opts.mdbVersion != "" {
+		mdbVersion = &opts.mdbVersion
+	}
+
+	terminationProtectionEnabled := flexCluster.GetTerminationProtectionEnabled()
+	if opts.disableTerminationProtection {
+		terminationProtectionEnabled = false
+	}
+
+	if opts.enableTerminationProtection {
+		terminationProtectionEnabled = true
+	}
+
+	var tags []atlasv2.ResourceTag
+	if flexCluster.Tags != nil {
+		tags = flexCluster.GetTags()
+	}
+
+	if len(opts.tag) > 0 {
+		newTags := newResourceTags(opts.tag)
+		tags = append(tags, *newTags...)
+	}
+
+	backupEnabled := false
+	if settings, ok := flexCluster.GetBackupSettingsOk(); ok {
+		backupEnabled = settings.GetEnabled()
+	}
+
+	flexGroupID, _ := flexCluster.GetGroupIdOk()
+	versionRelease, _ := flexCluster.GetVersionReleaseSystemOk()
+	flexClusterType, _ := flexCluster.GetClusterTypeOk()
+
+	return &atlasv2.AtlasTenantClusterUpgradeRequest20240805{
+		BackupEnabled:                &backupEnabled,
+		ClusterType:                  flexClusterType,
+		GroupId:                      flexGroupID,
+		MongoDBVersion:               mdbVersion,
+		Name:                         flexCluster.GetName(),
+		Tags:                         &tags,
+		TerminationProtectionEnabled: &terminationProtectionEnabled,
+		VersionReleaseSystem:         versionRelease,
+		ReplicationSpecs:             opts.newReplicationSpecFromOpts(flexCluster),
+	}
+}
+
+func (opts *UpgradeOpts) newReplicationSpecFromOpts(flexCluster *atlasv2.FlexClusterDescription20241113) *[]atlasv2.ReplicationSpec20240805 {
+	if opts.tier == "" {
+		return nil
+	}
+
+	diskSizeGb := 0.0
+	backingProviderName := ""
+	regionN := ""
+	if settings, ok := flexCluster.GetProviderSettingsOk(); ok {
+		diskSizeGb = settings.GetDiskSizeGB()
+		backingProviderName = settings.GetBackingProviderName()
+		regionN = settings.GetRegionName()
+	}
+
+	if opts.diskSizeGB != 0 {
+		diskSizeGb = opts.diskSizeGB
+	}
+
+	replicaSetCount := replicaSetNodeCount
+	priority := replicaSetPriority
+
+	replicaSpec := atlasv2.ReplicationSpec20240805{
+		RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
+			{
+				ElectableSpecs: &atlasv2.HardwareSpec20240805{
+					InstanceSize: &opts.tier,
+					DiskSizeGB:   &diskSizeGb,
+					NodeCount:    &replicaSetCount,
+				},
+				ProviderName: &backingProviderName,
+				RegionName:   &regionN,
+				Priority:     &priority,
+			},
+		},
+	}
+
+	return &[]atlasv2.ReplicationSpec20240805{replicaSpec}
+}
+
 func (opts *UpgradeOpts) cluster() (*atlas.Cluster, error) {
 	var cluster *atlas.Cluster
 	if opts.filename != "" {
@@ -79,11 +215,11 @@ func (opts *UpgradeOpts) cluster() (*atlas.Cluster, error) {
 		if err != nil {
 			return nil, err
 		}
-		if opts.name == "" {
-			opts.name = cluster.Name
-		}
+		cluster.Name = opts.name
+
 		return cluster, nil
 	}
+
 	return opts.store.AtlasSharedCluster(opts.ProjectID, opts.name)
 }
 
@@ -129,6 +265,26 @@ func isTenant(instanceSizeName string) bool {
 		instanceSizeName == atlasM5
 }
 
+// newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is
+// a FlexCluster. The function calls the AtlasSharedAPI to get the cluster, and it sets the opts.isFlexCluster = true
+// in the event of a cannotUseFlexWithClusterApisErrorCode.
+func (opts *UpgradeOpts) newIsFlexCluster() error {
+	_, err := opts.store.AtlasSharedCluster(opts.ConfigProjectID(), opts.name)
+	var errorResponse *atlas.ErrorResponse
+	ok := errors.As(err, &errorResponse)
+	if !ok {
+		opts.isFlexCluster = false
+		return err
+	}
+
+	if errorResponse.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+		return err
+	}
+
+	opts.isFlexCluster = true
+	return nil
+}
+
 // UpgradeBuilder builds a cobra.Command that can run as:
 // atlas cluster(s) upgrade [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpgradeBuilder() *cobra.Command {
@@ -152,6 +308,7 @@ func UpgradeBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), upgradeTemplate),
+				opts.newIsFlexCluster,
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {

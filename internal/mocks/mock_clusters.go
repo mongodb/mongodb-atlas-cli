@@ -10,7 +10,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -882,6 +882,21 @@ func (m *MockAtlasSharedClusterGetterUpgrader) EXPECT() *MockAtlasSharedClusterG
 	return m.recorder
 }
 
+// AtlasCluster mocks base method.
+func (m *MockAtlasSharedClusterGetterUpgrader) AtlasCluster(arg0, arg1 string) (*admin.AdvancedClusterDescription, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AtlasCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin.AdvancedClusterDescription)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AtlasCluster indicates an expected call of AtlasCluster.
+func (mr *MockAtlasSharedClusterGetterUpgraderMockRecorder) AtlasCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasCluster", reflect.TypeOf((*MockAtlasSharedClusterGetterUpgrader)(nil).AtlasCluster), arg0, arg1)
+}
+
 // AtlasSharedCluster mocks base method.
 func (m *MockAtlasSharedClusterGetterUpgrader) AtlasSharedCluster(arg0, arg1 string) (*mongodbatlas.Cluster, error) {
 	m.ctrl.T.Helper()
@@ -895,6 +910,21 @@ func (m *MockAtlasSharedClusterGetterUpgrader) AtlasSharedCluster(arg0, arg1 str
 func (mr *MockAtlasSharedClusterGetterUpgraderMockRecorder) AtlasSharedCluster(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasSharedCluster", reflect.TypeOf((*MockAtlasSharedClusterGetterUpgrader)(nil).AtlasSharedCluster), arg0, arg1)
+}
+
+// FlexCluster mocks base method.
+func (m *MockAtlasSharedClusterGetterUpgrader) FlexCluster(arg0, arg1 string) (*admin0.FlexClusterDescription20241113, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FlexCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.FlexClusterDescription20241113)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FlexCluster indicates an expected call of FlexCluster.
+func (mr *MockAtlasSharedClusterGetterUpgraderMockRecorder) FlexCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlexCluster", reflect.TypeOf((*MockAtlasSharedClusterGetterUpgrader)(nil).FlexCluster), arg0, arg1)
 }
 
 // UpgradeCluster mocks base method.

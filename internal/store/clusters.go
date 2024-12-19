@@ -16,7 +16,7 @@ package store
 
 import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -96,6 +96,7 @@ type AtlasClusterGetterUpdater interface {
 
 type AtlasSharedClusterGetterUpgrader interface {
 	AtlasSharedClusterDescriber
+	ClusterDescriber
 	ClusterUpgrader
 }
 

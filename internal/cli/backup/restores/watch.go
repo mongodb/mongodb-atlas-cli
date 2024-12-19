@@ -30,9 +30,10 @@ import (
 type WatchOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
-	id          string
-	clusterName string
-	store       store.RestoreJobsDescriber
+	id            string
+	clusterName   string
+	isFlexCluster bool
+	store         store.RestoreJobsDescriber
 }
 
 var watchTemplate = "\nRestore completed.\n"
@@ -56,12 +57,59 @@ func (opts *WatchOpts) watcher() (any, bool, error) {
 	return nil, result.GetExpired() || result.GetCancelled() || result.GetFailed() || result.HasFinishedAt(), nil
 }
 
+func (opts *WatchOpts) watcherFlexCluster() (any, bool, error) {
+	result, err := opts.store.RestoreFlexClusterJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
+	if err != nil {
+		return nil, false, err
+	}
+	return nil, result.GetStatus() == "COMPLETED" || result.GetStatus() == "FAILED", nil
+}
+
 func (opts *WatchOpts) Run() error {
+	if opts.isFlexCluster {
+		return opts.RunFlexCluster()
+	}
+
+	return opts.RunDedicatedCluster()
+}
+
+func (opts *WatchOpts) RunFlexCluster() error {
+	if _, err := opts.Watch(opts.watcherFlexCluster); err != nil {
+		return err
+	}
+
+	return opts.Print(nil)
+}
+
+func (opts *WatchOpts) RunDedicatedCluster() error {
 	if _, err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
 
-	return opts.Print(result)
+	return opts.Print(nil)
+}
+
+// newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is
+// a FlexCluster. The function calls the RestoreFlexClusterJob to get a flex cluster snapshot,
+// and it sets the opts.isFlexCluster = true in the event of a cannotUseNotFlexWithFlexApisErrorCode.
+func (opts *WatchOpts) newIsFlexCluster() error {
+	_, err := opts.store.RestoreFlexClusterJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
+	if err == nil {
+		opts.isFlexCluster = true
+		return nil
+	}
+
+	apiError, ok := atlasv2.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode {
+		return err
+	}
+
+	opts.isFlexCluster = false
+	return nil
 }
 
 // WatchBuilder atlas backup(s) restore(s) job(s) watch <restoreJobId>.
@@ -90,6 +138,9 @@ You can interrupt the command's polling at any time with CTRL-C.`,
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
+			if err := opts.newIsFlexCluster(); err != nil {
+				return nil
+			}
 			return opts.Run()
 		},
 	}

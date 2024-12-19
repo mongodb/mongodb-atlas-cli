@@ -141,7 +141,7 @@ jobs:
           cat "comment.md" >> "$GITHUB_STEP_SUMMARY"
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@v4
+        uses: mongodb/apix-action/token@v5
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}

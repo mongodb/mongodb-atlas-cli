@@ -17,6 +17,8 @@ package availableregions
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -34,6 +36,12 @@ type ListOpts struct {
 	provider string
 	tier     string
 }
+
+const (
+	atlasM2                    = "M2"
+	atlasM5                    = "M5"
+	deprecateMessageSharedTier = "The '%s' tier is deprecated. Please use '--tier FLEX' instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
+)
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
 	return func() error {
@@ -62,6 +70,14 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
+func (opts *ListOpts) validateTier() error {
+	opts.tier = strings.ToUpper(opts.tier)
+	if opts.tier == atlasM2 || opts.tier == atlasM5 {
+		_, _ = fmt.Fprintf(os.Stderr, deprecateMessageSharedTier, opts.tier)
+	}
+	return nil
+}
+
 // ListBuilder atlas cluster(s) availableRegions list --provider provider --tier tier --projectId projectId.
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
@@ -81,6 +97,7 @@ func ListBuilder() *cobra.Command {
 			}
 
 			return opts.PreRunE(
+				opts.validateTier,
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),

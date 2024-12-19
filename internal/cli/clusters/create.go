@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -336,6 +337,14 @@ func (opts *CreateOpts) newIsFlexCluster() error {
 	return nil
 }
 
+func (opts *CreateOpts) validateTier() error {
+	opts.tier = strings.ToUpper(opts.tier)
+	if opts.tier == atlasM2 || opts.tier == atlasM5 {
+		_, _ = fmt.Fprintf(os.Stderr, deprecateMessageSharedTier, opts.tier)
+	}
+	return nil
+}
+
 // CreateBuilder builds a cobra.Command that can run as:
 // create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion] [--tag key=value].
 func CreateBuilder() *cobra.Command {
@@ -383,6 +392,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 			opts.tier = strings.ToUpper(opts.tier)
 			opts.region = strings.ToUpper(opts.region)
 			return opts.PreRunE(
+				opts.validateTier,
 				opts.newIsFlexCluster,
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -411,7 +421,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.CreateProvider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.CreateRegion)
 	cmd.Flags().IntVarP(&opts.members, flag.Members, flag.MembersShort, defaultMembersSize, usage.Members)
-	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasFlex, usage.Tier)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, defaultDiskSize, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)

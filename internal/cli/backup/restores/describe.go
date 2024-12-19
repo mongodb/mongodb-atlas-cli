@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type DescribeOpts struct {
@@ -47,23 +48,44 @@ var restoreDescribeTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
 {{.Id}}	{{.SnapshotId}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}	{{range $index, $element := valueOrEmptySlice .DeliveryUrl}}{{if $index}}; {{end}}{{$element}}{{end}}
 `
 
+var restoreDescribeFlexClusterTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
+{{.Id}}	{{.SnapshotId}}	{{.TargetDeploymentItemName}}	{{.DeliveryType}}	{{.ExpirationDate}}	{{range $index, $element := valueOrEmptySlice .SnapshotUrl}}{{if $index}}; {{end}}{{$element}}{{end}}
+`
+
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.RestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
+	r, err := opts.store.RestoreFlexClusterJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
+	if err == nil {
+		opts.Template = restoreDescribeFlexClusterTemplate
+		return opts.Print(r)
+	}
+
+	apiError, ok := atlasv2.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode {
+		return err
+	}
+
+	restoreJob, err := opts.store.RestoreJob(opts.ConfigProjectID(), opts.clusterName, opts.id)
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(restoreJob)
 }
 
+// DescribeBuilder builds a cobra.Command that can run as:
 // atlas backup(s) restore(s) job(s) describe <ID>.
 func DescribeBuilder() *cobra.Command {
 	opts := new(DescribeOpts)
 	cmd := &cobra.Command{
-		Use:   "describe <restoreJobId>",
-		Short: "Describe a cloud backup restore job.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:  require.ExactArgs(1),
+		Use:     "describe <restoreJobId>",
+		Aliases: []string{"get"},
+		Short:   "Describe a cloud backup restore job.",
+		Long:    fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Args:    require.ExactArgs(1),
 		Annotations: map[string]string{
 			"restoreJobIdDesc": "ID of the restore job.",
 		},

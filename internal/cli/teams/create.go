@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 var createTemplate = "Team '{{.Name}}' created.\n"
@@ -57,7 +57,7 @@ func (opts *CreateOpts) Run() error {
 func (opts *CreateOpts) newTeam() *atlasv2.Team {
 	return &atlasv2.Team{
 		Name:      opts.name,
-		Usernames: &opts.userNames,
+		Usernames: opts.userNames,
 	}
 }
 

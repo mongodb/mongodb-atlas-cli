@@ -30,7 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type DownloadOpts struct {
@@ -127,8 +127,8 @@ func DownloadBuilder() *cobra.Command {
 ` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "Atlas supports this command only for Flex clusters."),
 		Args: require.ExactArgs(1),
 		Annotations: map[string]string{
-			"snapshotId": "Unique 24-hexadecimal digit string that identifies the snapshot to download.",
-			"output":     downloadTemplate,
+			"snapshotIdDesc": "Unique 24-hexadecimal digit string that identifies the snapshot to download.",
+			"output":         downloadTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(

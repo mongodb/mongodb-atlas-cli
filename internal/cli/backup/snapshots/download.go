@@ -108,7 +108,7 @@ func (opts *DownloadOpts) Download(url *string) error {
 func (opts *DownloadOpts) initDefaultOut() error {
 	if opts.Out == "" {
 		opts.Out = opts.id + ".tgz"
-	} else if strings.Contains(opts.Out, ".tgz") {
+	} else if !strings.Contains(opts.Out, ".tgz") {
 		return errExtNotSupported
 	}
 
@@ -149,7 +149,6 @@ func DownloadBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.Out, flag.Out, "", usage.SnapshotOut)
 
 	opts.AddProjectOptsFlags(cmd)
-	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 

@@ -193,6 +193,13 @@
 |                `streams instance list`                |     Y     |   Y   |
 |               `streams instance update`               |     Y     |   Y   |
 |                `streams instance log`                 |     Y     |   Y   |
+|                  `streams processor`                  |           |       |
+|               `streams processor create`              |     Y     |   Y   |
+|               `streams processor delete`              |     Y     |   Y   |
+|              `streams processor describe`             |     Y     |   Y   |
+|                `streams processor list`               |     Y     |   Y   |
+|               `streams processor start`               |     Y     |   Y   |
+|                `streams processor stop`               |     Y     |   Y   |
 |                       `config`                        |           |       |
 |                     `completion`                      |     Y     |   Y   |
 |                    `config delete`                    |     Y     |   Y   |

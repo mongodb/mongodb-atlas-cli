@@ -57,7 +57,7 @@ func (opts *CreateOpts) Run() error {
 func (opts *CreateOpts) newTeam() *atlasv2.Team {
 	return &atlasv2.Team{
 		Name:      opts.name,
-		Usernames: &opts.userNames,
+		Usernames: opts.userNames,
 	}
 }
 

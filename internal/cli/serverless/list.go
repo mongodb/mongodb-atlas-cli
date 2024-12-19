@@ -79,6 +79,7 @@ func ListBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
+		Deprecated: "Command 'serverless list' is deprecated. Please use the 'atlas cluster list --tier FLEX [--projectId projectId]' command instead.  For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	opts.AddListOptsFlags(cmd)

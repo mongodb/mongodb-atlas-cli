@@ -22,10 +22,11 @@ import (
 func Builder() *cobra.Command {
 	const use = "serverless"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: []string{"sl"},
-		Short:   "Manage serverless instances for your project.",
-		Long:    `The serverless command provides access to your serverless instance configurations. You can create, edit, and delete serverless instances.`,
+		Use:        use,
+		Aliases:    []string{"sl"},
+		Short:      "Manage serverless instances for your project.",
+		Long:       `The serverless command provides access to your serverless instance configurations. You can create, edit, and delete serverless instances.`,
+		Deprecated: "Command 'serverless' is deprecated. Please use the 'atlas cluster' commands instead.  For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 	cmd.AddCommand(
 		ListBuilder(),

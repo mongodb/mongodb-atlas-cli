@@ -1728,6 +1728,22 @@ tasks:
         vars:
           span: "coverage"
           attr: "total=${percentage},count=${count}"
+  - name: snyk_monitor
+    tags:
+    - snyk
+    commands:
+      - command: shell.exec
+        params:
+          include_expansions_in_env:
+            - workdir
+          shell: bash
+          script: |
+            docker run \
+              --rm \
+              -e SNYK_TOKEN=${SNYK_TOKEN} \
+              -e SNYK_CFG_ORG=${SNYK_ORG} \
+              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/app \
+              snyk/snyk:golang snyk monitor
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
@@ -2032,6 +2048,15 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".coverage"
+  - name: ubuntu
+    display_name: Snyk
+    tags:
+    - snyk
+    - cron
+    run_on:
+    - ubuntu2204-large
+    tasks:
+      - name: ".snyk"
 patch_aliases:
   - alias: "localdev"
     variant_tags: [".localdev .cron"]
@@ -2041,6 +2066,9 @@ patch_aliases:
     task: ".*"
   - alias: "cleanup"
     variant_tags: [".cleanup .cron"]
+    task: ".*"
+  - alias: "snyk"
+    variant_tags: [".snyk .cron"]
     task: ".*"
 github_pr_aliases:
   - variant: "code_health"

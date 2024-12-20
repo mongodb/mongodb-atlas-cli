@@ -92,7 +92,7 @@ func TestFlexCluster(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Deleting cluster '%s'", flexClusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted", flexClusterName)
 		assert.Equal(t, expected, string(resp))
 	})
 
@@ -118,10 +118,8 @@ func TestFlexCluster(t *testing.T) {
 			clustersEntity,
 			"upgrade",
 			flexClusterUpgradeName,
-			"--region=US_EAST_1",
 			"--diskSizeGB=10",
 			"--tier=M10",
-			"--provider", e2eClusterProvider,
 			"-o=json")
 
 		cmdUpgrade.Env = os.Environ()
@@ -139,7 +137,7 @@ func TestFlexCluster(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Deleting cluster '%s'", flexClusterUpgradeName)
+		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted", flexClusterUpgradeName)
 		assert.Equal(t, expected, string(resp))
 	})
 }

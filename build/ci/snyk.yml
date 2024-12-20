@@ -1,5 +1,7 @@
 tasks:
   - name: snyk_monitor
+    tags:
+    - snyk
     commands:
       - command: shell.exec
         params:
@@ -17,8 +19,15 @@ tasks:
 buildvariants:
 - name: ubuntu
   display_name: Snyk
-  cron: '@daily'
+  tags:
+  - snyk
+  - cron
   run_on:
   - ubuntu2204-large
   tasks:
-  - name: snyk_monitor
+    - name: ".snyk"
+
+patch_aliases:
+  - alias: "snyk"
+    variant_tags: [".snyk .cron"]
+    task: ".*"

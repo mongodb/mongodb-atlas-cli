@@ -83,11 +83,6 @@ func BuildCustomRoles(provider store.DatabaseRoleLister, request CustomRolesRequ
 					InheritedRoles: inhRoles,
 					Actions:        actions,
 				},
-				LocalCredentialHolder: akoapi.LocalCredentialHolder{
-					ConnectionSecret: &akoapi.LocalObjectReference{
-						Name: resources.NormalizeAtlasName(request.Credentials, request.Dict),
-					},
-				},
 			},
 			Status: akov2status.AtlasCustomRoleStatus{
 				Common: akoapi.Common{Conditions: []akoapi.Condition{}},

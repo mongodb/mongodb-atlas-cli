@@ -35,6 +35,7 @@ var errFailedToLoadClusterFileMessage = errors.New("failed to parse JSON file")
 
 const (
 	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
+	deprecateMessageSharedTier            = "The '%s' tier is deprecated. Please use '--tier FLEX' instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
 )
 
 func Builder() *cobra.Command {

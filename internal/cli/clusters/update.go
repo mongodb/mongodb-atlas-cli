@@ -17,6 +17,7 @@ package clusters
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -238,6 +239,14 @@ func (opts *UpdateOpts) newIsFlexCluster() error {
 	return nil
 }
 
+func (opts *UpdateOpts) validateTier() error {
+	opts.tier = strings.ToUpper(opts.tier)
+	if opts.tier == atlasM2 || opts.tier == atlasM5 {
+		_, _ = fmt.Fprintf(os.Stderr, deprecateMessageSharedTier, opts.tier)
+	}
+	return nil
+}
+
 // UpdateBuilder builds a cobra.Command that can run as:
 // atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpdateBuilder() *cobra.Command {
@@ -277,6 +286,7 @@ You can only update a replica set to a single-shard cluster; you cannot update a
 				opts.name = args[0]
 			}
 			return opts.PreRunE(
+				opts.validateTier,
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTmpl),

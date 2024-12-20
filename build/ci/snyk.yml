@@ -17,7 +17,6 @@ tasks:
 buildvariants:
 - name: ubuntu
   display_name: Snyk
-  cron: '@daily'
   run_on:
   - ubuntu2204-large
   tasks:

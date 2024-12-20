@@ -34,7 +34,8 @@ type DeleteOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	*cli.DeleteOpts
-	store store.ClusterDeleter
+	store         store.ClusterDeleter
+	isFlexCluster bool
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
@@ -50,6 +51,7 @@ func (opts *DeleteOpts) Run() error {
 		return opts.RunFlexCluster(err)
 	}
 
+	opts.isFlexCluster = false
 	return nil
 }
 
@@ -62,12 +64,18 @@ func (opts *DeleteOpts) RunFlexCluster(err error) error {
 	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
 		return err
 	}
+
+	opts.isFlexCluster = true
 	return opts.Delete(opts.store.DeleteFlexCluster, opts.ConfigProjectID())
 }
 
 func (opts *DeleteOpts) PostRun() error {
 	if !opts.EnableWatch {
 		return nil
+	}
+
+	if opts.isFlexCluster {
+		return opts.PostRunFlexCluster()
 	}
 
 	watcher := watchers.NewWatcher(
@@ -85,6 +93,25 @@ func (opts *DeleteOpts) PostRun() error {
 	}
 
 	return opts.Print(nil)
+}
+
+func (opts *DeleteOpts) PostRunFlexCluster() error {
+	watcher := watchers.NewWatcherWithDefaultWait(
+		*watchers.ClusterDeleted,
+		watchers.NewAtlasFlexClusterStateDescriber(
+			opts.store.(store.ClusterDescriber),
+			opts.ProjectID,
+			opts.Entry,
+		),
+		opts.GetDefaultWait(),
+	)
+
+	watcher.Timeout = time.Duration(opts.Timeout)
+	if err := opts.WatchWatcher(watcher); err != nil {
+		return err
+	}
+
+	return opts.Print(flexCluster)
 }
 
 // DeleteBuilder

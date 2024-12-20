@@ -44,7 +44,6 @@ func TestFlexCluster(t *testing.T) {
 			"--region=US_EAST_1",
 			"--tier=FLEX",
 			"--provider", e2eClusterProvider,
-			"--watch",
 			"-o=json")
 
 		cmd.Env = os.Environ()

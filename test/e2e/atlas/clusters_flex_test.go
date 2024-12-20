@@ -77,7 +77,7 @@ func TestFlexCluster(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"ls",
-			flexClusterName,
+			"--tier=FLEX",
 			"-o=json")
 
 		cmd.Env = os.Environ()
@@ -101,11 +101,14 @@ func TestFlexCluster(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
+	flexClusterUpgradeName, err := RandClusterName()
+	req.NoError(err)
+
 	t.Run("Upgrade flex cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
-			flexClusterName,
+			flexClusterUpgradeName,
 			"--region=US_EAST_1",
 			"--tier=FLEX",
 			"--provider", e2eClusterProvider,
@@ -119,7 +122,7 @@ func TestFlexCluster(t *testing.T) {
 		cmdUpgrade := exec.Command(cliPath,
 			clustersEntity,
 			"upgrade",
-			flexClusterName,
+			flexClusterUpgradeName,
 			"--region=US_EAST_1",
 			"--diskSizeGB=10",
 			"--tier=M10",
@@ -132,16 +135,16 @@ func TestFlexCluster(t *testing.T) {
 
 		var cluster admin.FlexClusterDescription20241113
 		req.NoError(json.Unmarshal(resp, &cluster))
-		ensureFlexCluster(t, &cluster, flexClusterName, 10, false)
+		ensureFlexCluster(t, &cluster, flexClusterUpgradeName, 10, false)
 	})
 
 	t.Run("Delete upgraded cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", flexClusterName, "--force", "--watch")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", flexClusterUpgradeName, "--force", "--watch")
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Deleting cluster '%s'", flexClusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'", flexClusterUpgradeName)
 		assert.Equal(t, expected, string(resp))
 	})
 }

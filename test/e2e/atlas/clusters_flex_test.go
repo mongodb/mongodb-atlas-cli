@@ -74,12 +74,7 @@ func TestFlexCluster(t *testing.T) {
 	})
 
 	t.Run("List flex cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"ls",
-			"--tier=FLEX",
-			"-o=json")
-
+		cmd := exec.Command(cliPath, clustersEntity, "list", "--tier=FLEX", "-o=json")
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))

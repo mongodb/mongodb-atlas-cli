@@ -2077,8 +2077,6 @@ github_pr_aliases:
     task_tags: ["e2e", "generic"]
   - variant: "e2e_required"
     task_tags: ["e2e", "required"]
-  - variant: "snyk"
-    task_tags: ["snyk"]
 git_tag_aliases:
   - git_tag: "atlascli/v*"
     variant: "^release_atlascli"

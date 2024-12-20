@@ -13,7 +13,7 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"testing"
 )
@@ -30,7 +30,7 @@ func TestBuildCustomRoles(t *testing.T) {
 	tests := []struct {
 		name         string
 		args         args
-		rolesInAtlas []admin.UserCustomDBRole
+		rolesInAtlas []atlasv2.UserCustomDBRole
 		errInAtlas   error
 		want         []akov2.AtlasCustomRole
 		wantErr      assert.ErrorAssertionFunc
@@ -87,12 +87,12 @@ func TestBuildCustomRoles(t *testing.T) {
 					Dict:            resources.AtlasNameToKubernetesName(),
 				},
 			},
-			rolesInAtlas: []admin.UserCustomDBRole{
+			rolesInAtlas: []atlasv2.UserCustomDBRole{
 				{
-					Actions: &([]admin.DatabasePrivilegeAction{
+					Actions: &([]atlasv2.DatabasePrivilegeAction{
 						{
 							Action: "test",
-							Resources: &([]admin.DatabasePermittedNamespaceResource{
+							Resources: &([]atlasv2.DatabasePermittedNamespaceResource{
 								{
 									Cluster:    false,
 									Collection: "c-1",
@@ -101,7 +101,7 @@ func TestBuildCustomRoles(t *testing.T) {
 							}),
 						},
 					}),
-					InheritedRoles: &([]admin.DatabaseInheritedRole{
+					InheritedRoles: &([]atlasv2.DatabaseInheritedRole{
 						{
 							Db:   "d-1",
 							Role: "ADMIN",
@@ -171,12 +171,12 @@ func TestBuildCustomRoles(t *testing.T) {
 					Dict:            resources.AtlasNameToKubernetesName(),
 				},
 			},
-			rolesInAtlas: []admin.UserCustomDBRole{
+			rolesInAtlas: []atlasv2.UserCustomDBRole{
 				{
-					Actions: &([]admin.DatabasePrivilegeAction{
+					Actions: &([]atlasv2.DatabasePrivilegeAction{
 						{
 							Action: "test",
-							Resources: &([]admin.DatabasePermittedNamespaceResource{
+							Resources: &([]atlasv2.DatabasePermittedNamespaceResource{
 								{
 									Cluster:    false,
 									Collection: "c-1",
@@ -185,7 +185,7 @@ func TestBuildCustomRoles(t *testing.T) {
 							}),
 						},
 					}),
-					InheritedRoles: &([]admin.DatabaseInheritedRole{
+					InheritedRoles: &([]atlasv2.DatabaseInheritedRole{
 						{
 							Db:   "d-1",
 							Role: "ADMIN",

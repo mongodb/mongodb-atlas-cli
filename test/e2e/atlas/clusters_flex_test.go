@@ -92,7 +92,7 @@ func TestFlexCluster(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted", flexClusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", flexClusterName)
 		assert.Equal(t, expected, string(resp))
 	})
 
@@ -118,7 +118,7 @@ func TestFlexCluster(t *testing.T) {
 			clustersEntity,
 			"upgrade",
 			flexClusterUpgradeName,
-			"--diskSizeGB=10",
+			"--diskSizeGB=5",
 			"--tier=M10",
 			"-o=json")
 
@@ -128,7 +128,7 @@ func TestFlexCluster(t *testing.T) {
 
 		var cluster admin.FlexClusterDescription20241113
 		req.NoError(json.Unmarshal(resp, &cluster))
-		ensureFlexCluster(t, &cluster, flexClusterUpgradeName, 10, false)
+		ensureFlexCluster(t, &cluster, flexClusterUpgradeName, 5, false)
 	})
 
 	t.Run("Delete upgraded cluster", func(t *testing.T) {
@@ -137,7 +137,7 @@ func TestFlexCluster(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
-		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted", flexClusterUpgradeName)
+		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", flexClusterUpgradeName)
 		assert.Equal(t, expected, string(resp))
 	})
 }

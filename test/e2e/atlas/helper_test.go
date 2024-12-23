@@ -244,6 +244,22 @@ func deployFlexClusterForProject(projectID string) (string, error) {
 		return "", fmt.Errorf("error creating flex cluster (%s): %w - %s", clusterName, err, string(resp))
 	}
 
+	watchArgs := []string{
+		clustersEntity,
+		"watch",
+		clusterName,
+	}
+
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+
+	watch := exec.Command(cliPath, watchArgs...)
+	watch.Env = os.Environ()
+	if resp, err := e2e.RunAndGetStdOut(watch); err != nil {
+		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
+	}
+
 	return clusterName, nil
 }
 

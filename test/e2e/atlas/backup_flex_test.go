@@ -17,6 +17,7 @@ package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -153,5 +154,15 @@ func TestFlexBackup(t *testing.T) {
 		var result atlasv2.FlexBackupRestoreJob20241113
 		require.NoError(t, json.Unmarshal(resp, &result))
 		assert.NotEmpty(t, result)
+	})
+
+	t.Run("Delete flex cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--force", "--watch")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+
+		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", clusterName)
+		assert.Equal(t, expected, string(resp))
 	})
 }

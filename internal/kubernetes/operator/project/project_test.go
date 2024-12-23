@@ -55,239 +55,348 @@ const (
 )
 
 func TestBuildAtlasProject(t *testing.T) {
-	ctl := gomock.NewController(t)
-	projectStore := mocks.NewMockOperatorProjectStore(ctl)
-	featureValidator := mocks.NewMockFeatureValidator(ctl)
-	t.Run("Can convert Project entity with secrets data", func(t *testing.T) {
-		p := &atlasv2.Group{
-			Id:                        pointer.Get(projectID),
-			OrgId:                     orgID,
-			Name:                      "TestProjectName",
-			ClusterCount:              0,
-			WithDefaultAlertsSettings: pointer.Get(false),
-		}
+	p := &atlasv2.Group{
+		Id:                        pointer.Get(projectID),
+		OrgId:                     orgID,
+		Name:                      "TestProjectName",
+		ClusterCount:              0,
+		WithDefaultAlertsSettings: pointer.Get(false),
+	}
 
-		ipAccessLists := &atlasv2.PaginatedNetworkAccess{
-			Links: nil,
-			Results: &[]atlasv2.NetworkPermissionEntry{
-				{
-					AwsSecurityGroup: pointer.Get("TestSecurity group"),
-					CidrBlock:        pointer.Get("0.0.0.0/0"),
-					Comment:          pointer.Get("Allow everyone"),
-					DeleteAfterDate:  pointer.Get(time.Now()),
-					GroupId:          pointer.Get("TestGroupID"),
-					IpAddress:        pointer.Get("0.0.0.0"),
-				},
-			},
-			TotalCount: pointer.Get(1),
-		}
-
-		auditing := &atlasv2.AuditLog{
-			AuditAuthorizationSuccess: pointer.Get(true),
-			AuditFilter:               pointer.Get("TestFilter"),
-			ConfigurationType:         pointer.Get("TestConfigType"),
-			Enabled:                   pointer.Get(true),
-		}
-
-		authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
-		createDate, _ := time.Parse(time.RFC3339, "01-02-2001")
-
-		cpas := &atlasv2.CloudProviderAccessRoles{
-			AwsIamRoles: &[]atlasv2.CloudProviderAccessAWSIAMRole{
-				{
-					AtlasAWSAccountArn:         pointer.Get("TestARN"),
-					AtlasAssumedRoleExternalId: pointer.Get("TestExternalRoleID"),
-					AuthorizedDate:             &authDate,
-					CreatedDate:                &createDate,
-					FeatureUsages:              nil,
-					IamAssumedRoleArn:          pointer.Get("TestRoleARN"),
-					ProviderName:               string(akov2provider.ProviderAWS),
-					RoleId:                     pointer.Get("TestRoleID"),
-				},
-			},
-		}
-
-		encryptionAtRest := &atlasv2.EncryptionAtRest{
-			AwsKms:        &atlasv2.AWSKMSConfiguration{},
-			AzureKeyVault: &atlasv2.AzureKeyVault{},
-			GoogleCloudKms: &atlasv2.GoogleCloudKMS{
-				Enabled:              pointer.Get(true),
-				ServiceAccountKey:    pointer.Get("TestServiceAccountKey"),
-				KeyVersionResourceID: pointer.Get("TestKeyVersionResourceID"),
-			},
-		}
-
-		thirdPartyIntegrations := &atlasv2.PaginatedIntegration{
-			Links: nil,
-			Results: &[]atlasv2.ThirdPartyIntegration{
-				{
-					Type:             pointer.Get("PROMETHEUS"),
-					Username:         pointer.Get("TestPrometheusUserName"),
-					Password:         pointer.Get("TestPrometheusPassword"),
-					ServiceDiscovery: pointer.Get("TestPrometheusServiceDiscovery"),
-				},
-			},
-			TotalCount: pointer.Get(1),
-		}
-
-		mw := &atlasv2.GroupMaintenanceWindow{
-			DayOfWeek:            1,
-			HourOfDay:            pointer.Get(10),
-			StartASAP:            pointer.Get(false),
-			AutoDeferOnceEnabled: pointer.Get(false),
-		}
-
-		peeringConnectionAWS := &atlasv2.BaseNetworkPeeringConnectionSettings{
-			AccepterRegionName:  pointer.Get("TestRegionName"),
-			AwsAccountId:        pointer.Get("TestAWSAccountID"),
-			ConnectionId:        pointer.Get("TestConnID"),
-			ContainerId:         "TestContainerID",
-			ErrorStateName:      pointer.Get("TestErrStateName"),
-			Id:                  pointer.Get("TestID"),
-			ProviderName:        pointer.Get(string(akov2provider.ProviderAWS)),
-			RouteTableCidrBlock: pointer.Get("0.0.0.0/0"),
-			StatusName:          pointer.Get("TestStatusName"),
-			VpcId:               pointer.Get("TestVPCID"),
-		}
-
-		peeringConnections := []atlasv2.BaseNetworkPeeringConnectionSettings{*peeringConnectionAWS}
-
-		privateAWSEndpoint := atlasv2.EndpointService{
-			Id:                  pointer.Get("TestID"),
-			CloudProvider:       string(akov2provider.ProviderAWS),
-			RegionName:          pointer.Get("US_WEST_2"),
-			EndpointServiceName: nil,
-			ErrorMessage:        nil,
-			InterfaceEndpoints:  nil,
-			Status:              nil,
-		}
-		privateEndpoints := []atlasv2.EndpointService{privateAWSEndpoint}
-
-		alertConfigResult := &atlasv2.PaginatedAlertConfig{
-			Results: &[]atlasv2.GroupAlertsConfig{
-				{
-					Enabled:       pointer.Get(true),
-					EventTypeName: pointer.Get("TestEventTypeName"),
-					Matchers: &[]atlasv2.StreamsMatcher{
-						{
-							FieldName: "TestFieldName",
-							Operator:  "TestOperator",
-							Value:     "TestValue",
-						},
-					},
-					MetricThreshold: &atlasv2.ServerlessMetricThreshold{
-						MetricName: "TestMetricName",
-						Operator:   pointer.Get("TestOperator"),
-						Threshold:  pointer.Get(10.0),
-						Units:      pointer.Get("TestUnits"),
-						Mode:       pointer.Get("TestMode"),
-					},
-					Threshold: &atlasv2.GreaterThanRawThreshold{
-						Operator:  pointer.Get("TestOperator"),
-						Units:     pointer.Get("TestUnits"),
-						Threshold: pointer.Get(10),
-					},
-					Notifications: &[]atlasv2.AlertsNotificationRootForGroup{
-						{
-							ChannelName:         pointer.Get("TestChannelName"),
-							DatadogApiKey:       pointer.Get("TestDatadogAPIKey"),
-							DatadogRegion:       pointer.Get("TestDatadogRegion"),
-							DelayMin:            pointer.Get(5),
-							EmailAddress:        pointer.Get("TestEmail@mongodb.com"),
-							EmailEnabled:        pointer.Get(true),
-							IntervalMin:         pointer.Get(0),
-							MobileNumber:        pointer.Get("+12345678900"),
-							OpsGenieApiKey:      pointer.Get("TestGenieAPIKey"),
-							OpsGenieRegion:      pointer.Get("TestGenieRegion"),
-							ServiceKey:          pointer.Get("TestServiceKey"),
-							SmsEnabled:          pointer.Get(true),
-							TeamId:              pointer.Get("TestTeamID"),
-							TeamName:            pointer.Get("TestTeamName"),
-							TypeName:            pointer.Get("TestTypeName"),
-							Username:            pointer.Get("TestUserName"),
-							VictorOpsApiKey:     pointer.Get("TestVictorOpsAPIKey"),
-							VictorOpsRoutingKey: pointer.Get("TestVictorOpsRoutingKey"),
-							Roles:               &[]string{"Role1", "Role2"},
-						},
-					},
-				},
-			},
-			TotalCount: pointer.GetNonZeroValue(1),
-		}
-
-		projectSettings := &atlasv2.GroupSettings{
-			IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
-			IsDataExplorerEnabled:                       pointer.Get(true),
-			IsPerformanceAdvisorEnabled:                 pointer.Get(true),
-			IsRealtimePerformancePanelEnabled:           pointer.Get(true),
-			IsSchemaAdvisorEnabled:                      pointer.Get(true),
-		}
-
-		customRoles := []atlasv2.UserCustomDBRole{
+	ipAccessLists := &atlasv2.PaginatedNetworkAccess{
+		Links: nil,
+		Results: &[]atlasv2.NetworkPermissionEntry{
 			{
-				Actions: &[]atlasv2.DatabasePrivilegeAction{
+				AwsSecurityGroup: pointer.Get("TestSecurity group"),
+				CidrBlock:        pointer.Get("0.0.0.0/0"),
+				Comment:          pointer.Get("Allow everyone"),
+				DeleteAfterDate:  pointer.Get(time.Now()),
+				GroupId:          pointer.Get("TestGroupID"),
+				IpAddress:        pointer.Get("0.0.0.0"),
+			},
+		},
+		TotalCount: pointer.Get(1),
+	}
+
+	auditing := &atlasv2.AuditLog{
+		AuditAuthorizationSuccess: pointer.Get(true),
+		AuditFilter:               pointer.Get("TestFilter"),
+		ConfigurationType:         pointer.Get("TestConfigType"),
+		Enabled:                   pointer.Get(true),
+	}
+
+	authDate, _ := time.Parse(time.RFC3339, "01-01-2001")
+	createDate, _ := time.Parse(time.RFC3339, "01-02-2001")
+
+	cpas := &atlasv2.CloudProviderAccessRoles{
+		AwsIamRoles: &[]atlasv2.CloudProviderAccessAWSIAMRole{
+			{
+				AtlasAWSAccountArn:         pointer.Get("TestARN"),
+				AtlasAssumedRoleExternalId: pointer.Get("TestExternalRoleID"),
+				AuthorizedDate:             &authDate,
+				CreatedDate:                &createDate,
+				FeatureUsages:              nil,
+				IamAssumedRoleArn:          pointer.Get("TestRoleARN"),
+				ProviderName:               string(akov2provider.ProviderAWS),
+				RoleId:                     pointer.Get("TestRoleID"),
+			},
+		},
+	}
+
+	encryptionAtRest := &atlasv2.EncryptionAtRest{
+		AwsKms:        &atlasv2.AWSKMSConfiguration{},
+		AzureKeyVault: &atlasv2.AzureKeyVault{},
+		GoogleCloudKms: &atlasv2.GoogleCloudKMS{
+			Enabled:              pointer.Get(true),
+			ServiceAccountKey:    pointer.Get("TestServiceAccountKey"),
+			KeyVersionResourceID: pointer.Get("TestKeyVersionResourceID"),
+		},
+	}
+
+	thirdPartyIntegrations := &atlasv2.PaginatedIntegration{
+		Links: nil,
+		Results: &[]atlasv2.ThirdPartyIntegration{
+			{
+				Type:             pointer.Get("PROMETHEUS"),
+				Username:         pointer.Get("TestPrometheusUserName"),
+				Password:         pointer.Get("TestPrometheusPassword"),
+				ServiceDiscovery: pointer.Get("TestPrometheusServiceDiscovery"),
+			},
+		},
+		TotalCount: pointer.Get(1),
+	}
+
+	mw := &atlasv2.GroupMaintenanceWindow{
+		DayOfWeek:            1,
+		HourOfDay:            pointer.Get(10),
+		StartASAP:            pointer.Get(false),
+		AutoDeferOnceEnabled: pointer.Get(false),
+	}
+
+	peeringConnectionAWS := &atlasv2.BaseNetworkPeeringConnectionSettings{
+		AccepterRegionName:  pointer.Get("TestRegionName"),
+		AwsAccountId:        pointer.Get("TestAWSAccountID"),
+		ConnectionId:        pointer.Get("TestConnID"),
+		ContainerId:         "TestContainerID",
+		ErrorStateName:      pointer.Get("TestErrStateName"),
+		Id:                  pointer.Get("TestID"),
+		ProviderName:        pointer.Get(string(akov2provider.ProviderAWS)),
+		RouteTableCidrBlock: pointer.Get("0.0.0.0/0"),
+		StatusName:          pointer.Get("TestStatusName"),
+		VpcId:               pointer.Get("TestVPCID"),
+	}
+
+	peeringConnections := []atlasv2.BaseNetworkPeeringConnectionSettings{*peeringConnectionAWS}
+
+	privateAWSEndpoint := atlasv2.EndpointService{
+		Id:                  pointer.Get("TestID"),
+		CloudProvider:       string(akov2provider.ProviderAWS),
+		RegionName:          pointer.Get("US_WEST_2"),
+		EndpointServiceName: nil,
+		ErrorMessage:        nil,
+		InterfaceEndpoints:  nil,
+		Status:              nil,
+	}
+	privateEndpoints := []atlasv2.EndpointService{privateAWSEndpoint}
+
+	alertConfigResult := &atlasv2.PaginatedAlertConfig{
+		Results: &[]atlasv2.GroupAlertsConfig{
+			{
+				Enabled:       pointer.Get(true),
+				EventTypeName: pointer.Get("TestEventTypeName"),
+				Matchers: &[]atlasv2.StreamsMatcher{
 					{
-						Action: "Action-1",
-						Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
-							{
-								Collection: "Collection-1",
-								Db:         "DB-1",
-								Cluster:    true,
-							},
+						FieldName: "TestFieldName",
+						Operator:  "TestOperator",
+						Value:     "TestValue",
+					},
+				},
+				MetricThreshold: &atlasv2.ServerlessMetricThreshold{
+					MetricName: "TestMetricName",
+					Operator:   pointer.Get("TestOperator"),
+					Threshold:  pointer.Get(10.0),
+					Units:      pointer.Get("TestUnits"),
+					Mode:       pointer.Get("TestMode"),
+				},
+				Threshold: &atlasv2.GreaterThanRawThreshold{
+					Operator:  pointer.Get("TestOperator"),
+					Units:     pointer.Get("TestUnits"),
+					Threshold: pointer.Get(10),
+				},
+				Notifications: &[]atlasv2.AlertsNotificationRootForGroup{
+					{
+						ChannelName:         pointer.Get("TestChannelName"),
+						DatadogApiKey:       pointer.Get("TestDatadogAPIKey"),
+						DatadogRegion:       pointer.Get("TestDatadogRegion"),
+						DelayMin:            pointer.Get(5),
+						EmailAddress:        pointer.Get("TestEmail@mongodb.com"),
+						EmailEnabled:        pointer.Get(true),
+						IntervalMin:         pointer.Get(0),
+						MobileNumber:        pointer.Get("+12345678900"),
+						OpsGenieApiKey:      pointer.Get("TestGenieAPIKey"),
+						OpsGenieRegion:      pointer.Get("TestGenieRegion"),
+						ServiceKey:          pointer.Get("TestServiceKey"),
+						SmsEnabled:          pointer.Get(true),
+						TeamId:              pointer.Get("TestTeamID"),
+						TeamName:            pointer.Get("TestTeamName"),
+						TypeName:            pointer.Get("TestTypeName"),
+						Username:            pointer.Get("TestUserName"),
+						VictorOpsApiKey:     pointer.Get("TestVictorOpsAPIKey"),
+						VictorOpsRoutingKey: pointer.Get("TestVictorOpsRoutingKey"),
+						Roles:               &[]string{"Role1", "Role2"},
+					},
+				},
+			},
+		},
+		TotalCount: pointer.GetNonZeroValue(1),
+	}
+	alertConfigs := alertConfigResult.GetResults()
+
+	projectSettings := &atlasv2.GroupSettings{
+		IsCollectDatabaseSpecificsStatisticsEnabled: pointer.Get(true),
+		IsDataExplorerEnabled:                       pointer.Get(true),
+		IsPerformanceAdvisorEnabled:                 pointer.Get(true),
+		IsRealtimePerformancePanelEnabled:           pointer.Get(true),
+		IsSchemaAdvisorEnabled:                      pointer.Get(true),
+	}
+
+	customRoles := []atlasv2.UserCustomDBRole{
+		{
+			Actions: &[]atlasv2.DatabasePrivilegeAction{
+				{
+					Action: "Action-1",
+					Resources: &[]atlasv2.DatabasePermittedNamespaceResource{
+						{
+							Collection: "Collection-1",
+							Db:         "DB-1",
+							Cluster:    true,
 						},
 					},
 				},
-				InheritedRoles: &[]atlasv2.DatabaseInheritedRole{
-					{
-						Db:   "Inherited-DB",
-						Role: "Inherited-ROLE",
-					},
-				},
-				RoleName: "TestCustomRoleName",
 			},
-		}
-
-		projectTeams := &atlasv2.PaginatedTeamRole{
-			Links: nil,
-			Results: &[]atlasv2.TeamRole{
+			InheritedRoles: &[]atlasv2.DatabaseInheritedRole{
 				{
-					TeamId:    pointer.Get(teamID),
-					RoleNames: &[]string{string(akov2.TeamRoleClusterManager)},
+					Db:   "Inherited-DB",
+					Role: "Inherited-ROLE",
 				},
 			},
-			TotalCount: pointer.Get(1),
-		}
-		teams := &atlasv2.TeamResponse{
-			Id:   pointer.Get(teamID),
-			Name: pointer.Get("TestTeamName"),
-		}
+			RoleName: "TestCustomRoleName",
+		},
+	}
 
-		teamUsers := &atlasv2.PaginatedAppUser{
-			Results: &[]atlasv2.CloudAppUser{
-				{
-					EmailAddress: "testuser@mooooongodb.com",
-					FirstName:    "TestName",
-					Id:           pointer.Get("TestID"),
-					LastName:     "TestLastName",
+	projectTeams := &atlasv2.PaginatedTeamRole{
+		Links: nil,
+		Results: &[]atlasv2.TeamRole{
+			{
+				TeamId:    pointer.Get(teamID),
+				RoleNames: &[]string{string(akov2.TeamRoleClusterManager)},
+			},
+		},
+		TotalCount: pointer.Get(1),
+	}
+	teams := &atlasv2.TeamResponse{
+		Id:   pointer.Get(teamID),
+		Name: pointer.Get("TestTeamName"),
+	}
+
+	teamUsers := &atlasv2.PaginatedAppUser{
+		Results: &[]atlasv2.CloudAppUser{
+			{
+				EmailAddress: "testuser@mooooongodb.com",
+				FirstName:    "TestName",
+				Id:           pointer.Get("TestID"),
+				LastName:     "TestLastName",
+			},
+		},
+		TotalCount: pointer.Get(1),
+	}
+
+	bcp := &atlasv2.DataProtectionSettings20231001{
+		AuthorizedEmail:         "test@example.com",
+		AuthorizedUserFirstName: "John",
+		AuthorizedUserLastName:  "Smith",
+		CopyProtectionEnabled:   pointer.Get(false),
+		EncryptionAtRestEnabled: pointer.Get(false),
+		OnDemandPolicyItem: &atlasv2.BackupComplianceOnDemandPolicyItem{
+			RetentionUnit:  "days",
+			RetentionValue: 20,
+		},
+		PitEnabled:        pointer.Get(true),
+		ProjectId:         pointer.Get("TestID"),
+		RestoreWindowDays: pointer.Get(14),
+		ScheduledPolicyItems: &[]atlasv2.BackupComplianceScheduledPolicyItem{
+			{
+				FrequencyInterval: 1,
+				FrequencyType:     "daily",
+				RetentionUnit:     "weeks",
+				RetentionValue:    1,
+			},
+		},
+	}
+
+	listOption := &store.ListOptions{ItemsPerPage: MaxItems}
+	listAlterOpt := &atlasv2.ListAlertConfigurationsApiParams{
+		GroupId:      projectID,
+		ItemsPerPage: &listOption.ItemsPerPage,
+	}
+	containerListOptionAWS := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAWS)}
+	containerListOptionGCP := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderGCP)}
+	containerListOptionAzure := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAzure)}
+
+	dictionary := resources.AtlasNameToKubernetesName()
+
+	expectedThreshold := &akov2.Threshold{
+		Operator:  alertConfigs[0].Threshold.GetOperator(),
+		Units:     alertConfigs[0].Threshold.GetUnits(),
+		Threshold: strconv.Itoa(alertConfigs[0].Threshold.GetThreshold()),
+	}
+	expectedMatchers := []akov2.Matcher{
+		{
+			FieldName: alertConfigs[0].GetMatchers()[0].GetFieldName(),
+			Operator:  alertConfigs[0].GetMatchers()[0].GetOperator(),
+			Value:     alertConfigs[0].GetMatchers()[0].GetValue(),
+		},
+	}
+	expectedNotifications := []akov2.Notification{
+		{
+			APITokenRef:        akov2common.ResourceRefNamespaced{},
+			ChannelName:        alertConfigs[0].GetNotifications()[0].GetChannelName(),
+			DatadogRegion:      alertConfigs[0].GetNotifications()[0].GetDatadogRegion(),
+			DatadogAPIKeyRef:   akov2common.ResourceRefNamespaced{},
+			DelayMin:           alertConfigs[0].GetNotifications()[0].DelayMin,
+			EmailAddress:       alertConfigs[0].GetNotifications()[0].GetEmailAddress(),
+			EmailEnabled:       alertConfigs[0].GetNotifications()[0].EmailEnabled,
+			IntervalMin:        alertConfigs[0].GetNotifications()[0].GetIntervalMin(),
+			MobileNumber:       alertConfigs[0].GetNotifications()[0].GetMobileNumber(),
+			OpsGenieRegion:     alertConfigs[0].GetNotifications()[0].GetOpsGenieRegion(),
+			OpsGenieAPIKeyRef:  akov2common.ResourceRefNamespaced{},
+			ServiceKeyRef:      akov2common.ResourceRefNamespaced{},
+			SMSEnabled:         alertConfigs[0].GetNotifications()[0].SmsEnabled,
+			TeamID:             alertConfigs[0].GetNotifications()[0].GetTeamId(),
+			TeamName:           alertConfigs[0].GetNotifications()[0].GetTeamName(),
+			TypeName:           alertConfigs[0].GetNotifications()[0].GetTypeName(),
+			Username:           alertConfigs[0].GetNotifications()[0].GetUsername(),
+			Roles:              alertConfigs[0].GetNotifications()[0].GetRoles(),
+			VictorOpsSecretRef: akov2common.ResourceRefNamespaced{},
+		},
+	}
+	expectedMetricThreshold := &akov2.MetricThreshold{
+		MetricName: alertConfigs[0].MetricThreshold.MetricName,
+		Operator:   alertConfigs[0].MetricThreshold.GetOperator(),
+		Threshold:  fmt.Sprintf("%f", alertConfigs[0].MetricThreshold.GetThreshold()),
+		Units:      alertConfigs[0].MetricThreshold.GetUnits(),
+		Mode:       alertConfigs[0].MetricThreshold.GetMode(),
+	}
+	teamsName := teams.GetName()
+	expectedTeams := []*akov2.AtlasTeam{
+		{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       "AtlasTeam",
+				APIVersion: "atlas.mongodb.com/v1",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
+				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: resourceVersion,
 				},
 			},
-			TotalCount: pointer.Get(1),
-		}
-
-		bcp := &atlasv2.DataProtectionSettings20231001{
+			Spec: akov2.TeamSpec{
+				Name:      teamsName,
+				Usernames: []akov2.TeamUser{akov2.TeamUser(teamUsers.GetResults()[0].Username)},
+			},
+			Status: akov2status.TeamStatus{
+				Common: akoapi.Common{
+					Conditions: []akoapi.Condition{},
+				},
+			},
+		},
+	}
+	expectedBCP := &akov2.AtlasBackupCompliancePolicy{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "AtlasBackupCompliancePolicy",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(p.Name+"-bcp", dictionary),
+			Namespace: targetNamespace,
+			Labels: map[string]string{
+				features.ResourceVersion: resourceVersion,
+			},
+		},
+		Spec: akov2.AtlasBackupCompliancePolicySpec{
 			AuthorizedEmail:         "test@example.com",
 			AuthorizedUserFirstName: "John",
 			AuthorizedUserLastName:  "Smith",
-			CopyProtectionEnabled:   pointer.Get(false),
-			EncryptionAtRestEnabled: pointer.Get(false),
-			OnDemandPolicyItem: &atlasv2.BackupComplianceOnDemandPolicyItem{
+			CopyProtectionEnabled:   false,
+			EncryptionAtRestEnabled: false,
+			OnDemandPolicy: akov2.AtlasOnDemandPolicy{
 				RetentionUnit:  "days",
 				RetentionValue: 20,
 			},
-			PitEnabled:        pointer.Get(true),
-			ProjectId:         pointer.Get("TestID"),
-			RestoreWindowDays: pointer.Get(14),
-			ScheduledPolicyItems: &[]atlasv2.BackupComplianceScheduledPolicyItem{
+			PITEnabled:        true,
+			RestoreWindowDays: 14,
+			ScheduledPolicyItems: []akov2.AtlasBackupPolicyItem{
 				{
 					FrequencyInterval: 1,
 					FrequencyType:     "daily",
@@ -295,355 +404,394 @@ func TestBuildAtlasProject(t *testing.T) {
 					RetentionValue:    1,
 				},
 			},
-		}
+		},
+		Status: akov2status.BackupCompliancePolicyStatus{},
+	}
 
-		listOption := &store.ListOptions{ItemsPerPage: MaxItems}
-		listAlterOpt := &atlasv2.ListAlertConfigurationsApiParams{
-			GroupId:      projectID,
-			ItemsPerPage: &listOption.ItemsPerPage,
-		}
-		containerListOptionAWS := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAWS)}
-		containerListOptionGCP := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderGCP)}
-		containerListOptionAzure := &store.ContainersListOptions{ListOptions: *listOption, ProviderName: string(akov2provider.ProviderAzure)}
-		projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
-		projectStore.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
-		projectStore.EXPECT().Integrations(projectID).Return(thirdPartyIntegrations, nil)
-		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
-		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionGCP).Return(nil, nil)
-		projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAzure).Return(nil, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderAWS)).Return(privateEndpoints, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderGCP)).Return(nil, nil)
-		projectStore.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderAzure)).Return(nil, nil)
-		projectStore.EXPECT().EncryptionAtRest(projectID).Return(encryptionAtRest, nil)
-		projectStore.EXPECT().CloudProviderAccessRoles(projectID).Return(cpas, nil)
-		projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
-		projectStore.EXPECT().Auditing(projectID).Return(auditing, nil)
-		projectStore.EXPECT().AlertConfigurations(listAlterOpt).Return(alertConfigResult, nil)
-		projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
-		projectStore.EXPECT().ProjectTeams(projectID, nil).Return(projectTeams, nil)
-		projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
-		projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
-		projectStore.EXPECT().DescribeCompliancePolicy(projectID).Return(bcp, nil)
-
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAccessLists).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureMaintenanceWindows).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureIntegrations).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureNetworkPeering).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureEncryptionAtRest).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureCloudProviderAccessRoles).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureProjectSettings).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAuditing).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureCustomRoles).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureTeams).Return(true)
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureBCP).Return(true)
-
-		dictionary := resources.AtlasNameToKubernetesName()
-		projectResult, err := BuildAtlasProject(&AtlasProjectBuildRequest{
-			ProjectStore:    projectStore,
-			Project:         p,
-			Validator:       featureValidator,
-			OrgID:           orgID,
-			ProjectID:       projectID,
-			TargetNamespace: targetNamespace,
-			IncludeSecret:   true,
-			Dictionary:      dictionary,
-			Version:         resourceVersion,
-		})
-		if err != nil {
-			t.Fatalf("%v", err)
-		}
-		gotProject := projectResult.Project
-		gotTeams := projectResult.Teams
-		gotBCP := projectResult.BCP
-
-		alertConfigs := alertConfigResult.GetResults()
-		expectedThreshold := &akov2.Threshold{
-			Operator:  alertConfigs[0].Threshold.GetOperator(),
-			Units:     alertConfigs[0].Threshold.GetUnits(),
-			Threshold: strconv.Itoa(alertConfigs[0].Threshold.GetThreshold()),
-		}
-		expectedMatchers := []akov2.Matcher{
-			{
-				FieldName: alertConfigs[0].GetMatchers()[0].GetFieldName(),
-				Operator:  alertConfigs[0].GetMatchers()[0].GetOperator(),
-				Value:     alertConfigs[0].GetMatchers()[0].GetValue(),
+	tests := map[string]struct {
+		independentResource bool
+		privateEndpointMock func(peAPI *mocks.MockOperatorProjectStore)
+		expectedProject     *akov2.AtlasProject
+	}{
+		"Can convert Project entity with secrets data without support for independent resource": {
+			independentResource: false,
+			privateEndpointMock: func(projectStore *mocks.MockOperatorProjectStore) {
+				projectStore.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderAWS)).Return(privateEndpoints, nil)
+				projectStore.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderGCP)).Return(nil, nil)
+				projectStore.EXPECT().PrivateEndpoints(projectID, string(akov2provider.ProviderAzure)).Return(nil, nil)
 			},
-		}
-		expectedNotifications := []akov2.Notification{
-			{
-				APITokenRef: akov2common.ResourceRefNamespaced{
-					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Name,
-					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].APITokenRef.Namespace,
-				},
-				ChannelName:   alertConfigs[0].GetNotifications()[0].GetChannelName(),
-				DatadogRegion: alertConfigs[0].GetNotifications()[0].GetDatadogRegion(),
-				DatadogAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Name,
-					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].DatadogAPIKeyRef.Namespace,
-				},
-				DelayMin:       alertConfigs[0].GetNotifications()[0].DelayMin,
-				EmailAddress:   alertConfigs[0].GetNotifications()[0].GetEmailAddress(),
-				EmailEnabled:   alertConfigs[0].GetNotifications()[0].EmailEnabled,
-				IntervalMin:    alertConfigs[0].GetNotifications()[0].GetIntervalMin(),
-				MobileNumber:   alertConfigs[0].GetNotifications()[0].GetMobileNumber(),
-				OpsGenieRegion: alertConfigs[0].GetNotifications()[0].GetOpsGenieRegion(),
-				OpsGenieAPIKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Name,
-					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].OpsGenieAPIKeyRef.Namespace,
-				},
-				ServiceKeyRef: akov2common.ResourceRefNamespaced{
-					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].ServiceKeyRef.Name,
-					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].ServiceKeyRef.Namespace,
-				},
-				SMSEnabled: alertConfigs[0].GetNotifications()[0].SmsEnabled,
-				TeamID:     alertConfigs[0].GetNotifications()[0].GetTeamId(),
-				TeamName:   alertConfigs[0].GetNotifications()[0].GetTeamName(),
-				TypeName:   alertConfigs[0].GetNotifications()[0].GetTypeName(),
-				Username:   alertConfigs[0].GetNotifications()[0].GetUsername(),
-				Roles:      alertConfigs[0].GetNotifications()[0].GetRoles(),
-				VictorOpsSecretRef: akov2common.ResourceRefNamespaced{
-					Name:      gotProject.Spec.AlertConfigurations[0].Notifications[0].VictorOpsSecretRef.Name,
-					Namespace: gotProject.Spec.AlertConfigurations[0].Notifications[0].VictorOpsSecretRef.Namespace,
-				},
-			},
-		}
-		expectedMetricThreshold := &akov2.MetricThreshold{
-			MetricName: alertConfigs[0].MetricThreshold.MetricName,
-			Operator:   alertConfigs[0].MetricThreshold.GetOperator(),
-			Threshold:  fmt.Sprintf("%f", alertConfigs[0].MetricThreshold.GetThreshold()),
-			Units:      alertConfigs[0].MetricThreshold.GetUnits(),
-			Mode:       alertConfigs[0].MetricThreshold.GetMode(),
-		}
-		teamsName := teams.GetName()
-		expectedTeams := []*akov2.AtlasTeam{
-			{
+			expectedProject: &akov2.AtlasProject{
 				TypeMeta: metav1.TypeMeta{
-					Kind:       "AtlasTeam",
+					Kind:       "AtlasProject",
 					APIVersion: "atlas.mongodb.com/v1",
 				},
 				ObjectMeta: metav1.ObjectMeta{
-					Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
+					Name:      resources.NormalizeAtlasName(p.Name, dictionary),
 					Namespace: targetNamespace,
 					Labels: map[string]string{
 						features.ResourceVersion: resourceVersion,
 					},
 				},
-				Spec: akov2.TeamSpec{
-					Name:      teamsName,
-					Usernames: []akov2.TeamUser{akov2.TeamUser(teamUsers.GetResults()[0].Username)},
-				},
-				Status: akov2status.TeamStatus{
-					Common: akoapi.Common{
-						Conditions: []akoapi.Condition{},
+				Spec: akov2.AtlasProjectSpec{
+					Name: p.Name,
+					ConnectionSecret: &akov2common.ResourceRefNamespaced{
+						Name: resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, p.Name), dictionary),
 					},
-				},
-			},
-		}
-		expectedBCP := &akov2.AtlasBackupCompliancePolicy{
-			TypeMeta: metav1.TypeMeta{
-				Kind:       "AtlasBackupCompliancePolicy",
-				APIVersion: "atlas.mongodb.com/v1",
-			},
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      resources.NormalizeAtlasName(p.Name+"-bcp", dictionary),
-				Namespace: targetNamespace,
-				Labels: map[string]string{
-					features.ResourceVersion: resourceVersion,
-				},
-			},
-			Spec: akov2.AtlasBackupCompliancePolicySpec{
-				AuthorizedEmail:         "test@example.com",
-				AuthorizedUserFirstName: "John",
-				AuthorizedUserLastName:  "Smith",
-				CopyProtectionEnabled:   false,
-				EncryptionAtRestEnabled: false,
-				OnDemandPolicy: akov2.AtlasOnDemandPolicy{
-					RetentionUnit:  "days",
-					RetentionValue: 20,
-				},
-				PITEnabled:        true,
-				RestoreWindowDays: 14,
-				ScheduledPolicyItems: []akov2.AtlasBackupPolicyItem{
-					{
-						FrequencyInterval: 1,
-						FrequencyType:     "daily",
-						RetentionUnit:     "weeks",
-						RetentionValue:    1,
-					},
-				},
-			},
-			Status: akov2status.BackupCompliancePolicyStatus{},
-		}
-		expectedProject := &akov2.AtlasProject{
-			TypeMeta: metav1.TypeMeta{
-				Kind:       "AtlasProject",
-				APIVersion: "atlas.mongodb.com/v1",
-			},
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      resources.NormalizeAtlasName(p.Name, dictionary),
-				Namespace: targetNamespace,
-				Labels: map[string]string{
-					features.ResourceVersion: resourceVersion,
-				},
-			},
-			Spec: akov2.AtlasProjectSpec{
-				Name: p.Name,
-				ConnectionSecret: &akov2common.ResourceRefNamespaced{
-					Name: resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, p.Name), dictionary),
-				},
-				ProjectIPAccessList: []akov2project.IPAccessList{
-					{
-						AwsSecurityGroup: ipAccessLists.GetResults()[0].GetAwsSecurityGroup(),
-						CIDRBlock:        ipAccessLists.GetResults()[0].GetCidrBlock(),
-						Comment:          ipAccessLists.GetResults()[0].GetComment(),
-						DeleteAfterDate:  ipAccessLists.GetResults()[0].GetDeleteAfterDate().String(),
-						IPAddress:        ipAccessLists.GetResults()[0].GetIpAddress(),
-					},
-				},
-				MaintenanceWindow: akov2project.MaintenanceWindow{
-					DayOfWeek: mw.DayOfWeek,
-					HourOfDay: mw.GetHourOfDay(),
-					AutoDefer: mw.GetAutoDeferOnceEnabled(),
-					StartASAP: mw.GetStartASAP(),
-					Defer:     false,
-				},
-				PrivateEndpoints: []akov2.PrivateEndpoint{
-					{
-						Provider:          akov2provider.ProviderAWS,
-						Region:            *privateAWSEndpoint.RegionName,
-						ID:                firstElementOrZeroValue(privateAWSEndpoint.GetInterfaceEndpoints()),
-						IP:                "",
-						GCPProjectID:      "",
-						EndpointGroupName: "",
-						Endpoints:         akov2.GCPEndpoints{},
-					},
-				},
-				CloudProviderAccessRoles: []akov2.CloudProviderAccessRole{
-					{
-						ProviderName:      cpas.GetAwsIamRoles()[0].ProviderName,
-						IamAssumedRoleArn: *cpas.GetAwsIamRoles()[0].IamAssumedRoleArn,
-					},
-				},
-				AlertConfigurations: []akov2.AlertConfiguration{
-					{
-						Enabled:         alertConfigs[0].GetEnabled(),
-						EventTypeName:   alertConfigs[0].GetEventTypeName(),
-						Matchers:        expectedMatchers,
-						Threshold:       expectedThreshold,
-						Notifications:   expectedNotifications,
-						MetricThreshold: expectedMetricThreshold,
-					},
-				},
-				AlertConfigurationSyncEnabled: false,
-				NetworkPeers: []akov2.NetworkPeer{
-					{
-						AccepterRegionName:  peeringConnectionAWS.GetAccepterRegionName(),
-						ContainerRegion:     "",
-						AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
-						ContainerID:         peeringConnectionAWS.ContainerId,
-						ProviderName:        akov2provider.ProviderName(peeringConnectionAWS.GetProviderName()),
-						RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
-						VpcID:               peeringConnectionAWS.GetVpcId(),
-					},
-				},
-				WithDefaultAlertsSettings: false,
-				X509CertRef:               nil,
-				Integrations: []akov2project.Integration{
-					{
-						Type:     thirdPartyIntegrations.GetResults()[0].GetType(),
-						UserName: thirdPartyIntegrations.GetResults()[0].GetUsername(),
-						PasswordRef: akov2common.ResourceRefNamespaced{
-							Name: fmt.Sprintf("%s-integration-%s",
-								strings.ToLower(projectID),
-								strings.ToLower(thirdPartyIntegrations.GetResults()[0].GetType())),
-							Namespace: targetNamespace,
-						},
-						ServiceDiscovery: thirdPartyIntegrations.GetResults()[0].GetServiceDiscovery(),
-					},
-				},
-				EncryptionAtRest: &akov2.EncryptionAtRest{
-					AwsKms: akov2.AwsKms{
-						SecretRef: akov2common.ResourceRefNamespaced{
-							Name:      gotProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Name,
-							Namespace: gotProject.Spec.EncryptionAtRest.AwsKms.SecretRef.Namespace,
+					ProjectIPAccessList: []akov2project.IPAccessList{
+						{
+							AwsSecurityGroup: ipAccessLists.GetResults()[0].GetAwsSecurityGroup(),
+							CIDRBlock:        ipAccessLists.GetResults()[0].GetCidrBlock(),
+							Comment:          ipAccessLists.GetResults()[0].GetComment(),
+							DeleteAfterDate:  ipAccessLists.GetResults()[0].GetDeleteAfterDate().String(),
+							IPAddress:        ipAccessLists.GetResults()[0].GetIpAddress(),
 						},
 					},
-					AzureKeyVault: akov2.AzureKeyVault{
-						SecretRef: akov2common.ResourceRefNamespaced{
-							Name:      gotProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Name,
-							Namespace: gotProject.Spec.EncryptionAtRest.AzureKeyVault.SecretRef.Namespace,
+					MaintenanceWindow: akov2project.MaintenanceWindow{
+						DayOfWeek: mw.DayOfWeek,
+						HourOfDay: mw.GetHourOfDay(),
+						AutoDefer: mw.GetAutoDeferOnceEnabled(),
+						StartASAP: mw.GetStartASAP(),
+						Defer:     false,
+					},
+					PrivateEndpoints: []akov2.PrivateEndpoint{
+						{
+							Provider:          akov2provider.ProviderAWS,
+							Region:            *privateAWSEndpoint.RegionName,
+							ID:                firstElementOrZeroValue(privateAWSEndpoint.GetInterfaceEndpoints()),
+							IP:                "",
+							GCPProjectID:      "",
+							EndpointGroupName: "",
+							Endpoints:         akov2.GCPEndpoints{},
 						},
 					},
-					GoogleCloudKms: akov2.GoogleCloudKms{
-						Enabled: encryptionAtRest.GoogleCloudKms.Enabled,
-						SecretRef: akov2common.ResourceRefNamespaced{
-							Name:      gotProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Name,
-							Namespace: gotProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Namespace,
+					CloudProviderAccessRoles: []akov2.CloudProviderAccessRole{
+						{
+							ProviderName:      cpas.GetAwsIamRoles()[0].ProviderName,
+							IamAssumedRoleArn: *cpas.GetAwsIamRoles()[0].IamAssumedRoleArn,
 						},
 					},
-				},
-				Auditing: &akov2.Auditing{
-					AuditAuthorizationSuccess: auditing.GetAuditAuthorizationSuccess(),
-					AuditFilter:               auditing.GetAuditFilter(),
-					Enabled:                   auditing.GetEnabled(),
-				},
-				Settings: &akov2.ProjectSettings{
-					IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
-					IsDataExplorerEnabled:                       projectSettings.IsDataExplorerEnabled,
-					IsPerformanceAdvisorEnabled:                 projectSettings.IsPerformanceAdvisorEnabled,
-					IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
-					IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
-				},
-				CustomRoles: []akov2.CustomRole{
-					{
-						Name: customRoles[0].RoleName,
-						InheritedRoles: []akov2.Role{
-							{
-								Name:     customRoles[0].GetInheritedRoles()[0].Role,
-								Database: customRoles[0].GetInheritedRoles()[0].Db,
+					AlertConfigurations: []akov2.AlertConfiguration{
+						{
+							Enabled:         alertConfigs[0].GetEnabled(),
+							EventTypeName:   alertConfigs[0].GetEventTypeName(),
+							Matchers:        expectedMatchers,
+							Threshold:       expectedThreshold,
+							Notifications:   expectedNotifications,
+							MetricThreshold: expectedMetricThreshold,
+						},
+					},
+					AlertConfigurationSyncEnabled: false,
+					NetworkPeers: []akov2.NetworkPeer{
+						{
+							AccepterRegionName:  peeringConnectionAWS.GetAccepterRegionName(),
+							ContainerRegion:     "",
+							AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
+							ContainerID:         peeringConnectionAWS.ContainerId,
+							ProviderName:        akov2provider.ProviderName(peeringConnectionAWS.GetProviderName()),
+							RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
+							VpcID:               peeringConnectionAWS.GetVpcId(),
+						},
+					},
+					WithDefaultAlertsSettings: false,
+					X509CertRef:               nil,
+					Integrations: []akov2project.Integration{
+						{
+							Type:     thirdPartyIntegrations.GetResults()[0].GetType(),
+							UserName: thirdPartyIntegrations.GetResults()[0].GetUsername(),
+							PasswordRef: akov2common.ResourceRefNamespaced{
+								Name: fmt.Sprintf("%s-integration-%s",
+									strings.ToLower(projectID),
+									strings.ToLower(thirdPartyIntegrations.GetResults()[0].GetType())),
+								Namespace: targetNamespace,
+							},
+							ServiceDiscovery: thirdPartyIntegrations.GetResults()[0].GetServiceDiscovery(),
+						},
+					},
+					EncryptionAtRest: &akov2.EncryptionAtRest{
+						AwsKms: akov2.AwsKms{
+							SecretRef: akov2common.ResourceRefNamespaced{},
+						},
+						AzureKeyVault: akov2.AzureKeyVault{
+							SecretRef: akov2common.ResourceRefNamespaced{},
+						},
+						GoogleCloudKms: akov2.GoogleCloudKms{
+							Enabled: encryptionAtRest.GoogleCloudKms.Enabled,
+							SecretRef: akov2common.ResourceRefNamespaced{
+								Namespace: targetNamespace,
 							},
 						},
-						Actions: []akov2.Action{
-							{
-								Name: customRoles[0].GetActions()[0].Action,
-								Resources: []akov2.Resource{
-									{
-										Cluster:    &customRoles[0].GetActions()[0].GetResources()[0].Cluster,
-										Database:   &customRoles[0].GetActions()[0].GetResources()[0].Db,
-										Collection: &customRoles[0].GetActions()[0].GetResources()[0].Collection,
+					},
+					Auditing: &akov2.Auditing{
+						AuditAuthorizationSuccess: auditing.GetAuditAuthorizationSuccess(),
+						AuditFilter:               auditing.GetAuditFilter(),
+						Enabled:                   auditing.GetEnabled(),
+					},
+					Settings: &akov2.ProjectSettings{
+						IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
+						IsDataExplorerEnabled:                       projectSettings.IsDataExplorerEnabled,
+						IsPerformanceAdvisorEnabled:                 projectSettings.IsPerformanceAdvisorEnabled,
+						IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
+						IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
+					},
+					CustomRoles: []akov2.CustomRole{
+						{
+							Name: customRoles[0].RoleName,
+							InheritedRoles: []akov2.Role{
+								{
+									Name:     customRoles[0].GetInheritedRoles()[0].Role,
+									Database: customRoles[0].GetInheritedRoles()[0].Db,
+								},
+							},
+							Actions: []akov2.Action{
+								{
+									Name: customRoles[0].GetActions()[0].Action,
+									Resources: []akov2.Resource{
+										{
+											Cluster:    &customRoles[0].GetActions()[0].GetResources()[0].Cluster,
+											Database:   &customRoles[0].GetActions()[0].GetResources()[0].Db,
+											Collection: &customRoles[0].GetActions()[0].GetResources()[0].Collection,
+										},
 									},
 								},
 							},
 						},
 					},
-				},
-				Teams: []akov2.Team{
-					{
-						TeamRef: akov2common.ResourceRefNamespaced{
-							Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
-							Namespace: targetNamespace,
+					Teams: []akov2.Team{
+						{
+							TeamRef: akov2common.ResourceRefNamespaced{
+								Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
+								Namespace: targetNamespace,
+							},
+							Roles: []akov2.TeamRole{akov2.TeamRole(projectTeams.GetResults()[0].GetRoleNames()[0])},
 						},
-						Roles: []akov2.TeamRole{akov2.TeamRole(projectTeams.GetResults()[0].GetRoleNames()[0])},
+					},
+					BackupCompliancePolicyRef: &akov2common.ResourceRefNamespaced{
+						Name:      expectedBCP.ObjectMeta.Name,
+						Namespace: expectedBCP.ObjectMeta.Namespace,
 					},
 				},
-				BackupCompliancePolicyRef: &akov2common.ResourceRefNamespaced{
-					Name:      expectedBCP.ObjectMeta.Name,
-					Namespace: expectedBCP.ObjectMeta.Namespace,
+				Status: akov2status.AtlasProjectStatus{
+					Common: akoapi.Common{
+						Conditions: []akoapi.Condition{},
+					},
 				},
 			},
-			Status: akov2status.AtlasProjectStatus{
-				Common: akoapi.Common{
-					Conditions: []akoapi.Condition{},
+		},
+		"Can convert Project entity with secrets data wit support for independent resource": {
+			independentResource: true,
+			privateEndpointMock: func(_ *mocks.MockOperatorProjectStore) {},
+			expectedProject: &akov2.AtlasProject{
+				TypeMeta: metav1.TypeMeta{
+					Kind:       "AtlasProject",
+					APIVersion: "atlas.mongodb.com/v1",
+				},
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      resources.NormalizeAtlasName(p.Name, dictionary),
+					Namespace: targetNamespace,
+					Labels: map[string]string{
+						features.ResourceVersion: resourceVersion,
+					},
+				},
+				Spec: akov2.AtlasProjectSpec{
+					Name: p.Name,
+					ConnectionSecret: &akov2common.ResourceRefNamespaced{
+						Name: resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, p.Name), dictionary),
+					},
+					ProjectIPAccessList: []akov2project.IPAccessList{
+						{
+							AwsSecurityGroup: ipAccessLists.GetResults()[0].GetAwsSecurityGroup(),
+							CIDRBlock:        ipAccessLists.GetResults()[0].GetCidrBlock(),
+							Comment:          ipAccessLists.GetResults()[0].GetComment(),
+							DeleteAfterDate:  ipAccessLists.GetResults()[0].GetDeleteAfterDate().String(),
+							IPAddress:        ipAccessLists.GetResults()[0].GetIpAddress(),
+						},
+					},
+					MaintenanceWindow: akov2project.MaintenanceWindow{
+						DayOfWeek: mw.DayOfWeek,
+						HourOfDay: mw.GetHourOfDay(),
+						AutoDefer: mw.GetAutoDeferOnceEnabled(),
+						StartASAP: mw.GetStartASAP(),
+						Defer:     false,
+					},
+					CloudProviderAccessRoles: []akov2.CloudProviderAccessRole{
+						{
+							ProviderName:      cpas.GetAwsIamRoles()[0].ProviderName,
+							IamAssumedRoleArn: *cpas.GetAwsIamRoles()[0].IamAssumedRoleArn,
+						},
+					},
+					AlertConfigurations: []akov2.AlertConfiguration{
+						{
+							Enabled:         alertConfigs[0].GetEnabled(),
+							EventTypeName:   alertConfigs[0].GetEventTypeName(),
+							Matchers:        expectedMatchers,
+							Threshold:       expectedThreshold,
+							Notifications:   expectedNotifications,
+							MetricThreshold: expectedMetricThreshold,
+						},
+					},
+					AlertConfigurationSyncEnabled: false,
+					NetworkPeers: []akov2.NetworkPeer{
+						{
+							AccepterRegionName:  peeringConnectionAWS.GetAccepterRegionName(),
+							ContainerRegion:     "",
+							AWSAccountID:        peeringConnectionAWS.GetAwsAccountId(),
+							ContainerID:         peeringConnectionAWS.ContainerId,
+							ProviderName:        akov2provider.ProviderName(peeringConnectionAWS.GetProviderName()),
+							RouteTableCIDRBlock: peeringConnectionAWS.GetRouteTableCidrBlock(),
+							VpcID:               peeringConnectionAWS.GetVpcId(),
+						},
+					},
+					WithDefaultAlertsSettings: false,
+					X509CertRef:               nil,
+					Integrations: []akov2project.Integration{
+						{
+							Type:     thirdPartyIntegrations.GetResults()[0].GetType(),
+							UserName: thirdPartyIntegrations.GetResults()[0].GetUsername(),
+							PasswordRef: akov2common.ResourceRefNamespaced{
+								Name: fmt.Sprintf("%s-integration-%s",
+									strings.ToLower(projectID),
+									strings.ToLower(thirdPartyIntegrations.GetResults()[0].GetType())),
+								Namespace: targetNamespace,
+							},
+							ServiceDiscovery: thirdPartyIntegrations.GetResults()[0].GetServiceDiscovery(),
+						},
+					},
+					EncryptionAtRest: &akov2.EncryptionAtRest{
+						AwsKms: akov2.AwsKms{
+							SecretRef: akov2common.ResourceRefNamespaced{},
+						},
+						AzureKeyVault: akov2.AzureKeyVault{
+							SecretRef: akov2common.ResourceRefNamespaced{},
+						},
+						GoogleCloudKms: akov2.GoogleCloudKms{
+							Enabled: encryptionAtRest.GoogleCloudKms.Enabled,
+							SecretRef: akov2common.ResourceRefNamespaced{
+								Namespace: targetNamespace,
+							},
+						},
+					},
+					Auditing: &akov2.Auditing{
+						AuditAuthorizationSuccess: auditing.GetAuditAuthorizationSuccess(),
+						AuditFilter:               auditing.GetAuditFilter(),
+						Enabled:                   auditing.GetEnabled(),
+					},
+					Settings: &akov2.ProjectSettings{
+						IsCollectDatabaseSpecificsStatisticsEnabled: projectSettings.IsCollectDatabaseSpecificsStatisticsEnabled,
+						IsDataExplorerEnabled:                       projectSettings.IsDataExplorerEnabled,
+						IsPerformanceAdvisorEnabled:                 projectSettings.IsPerformanceAdvisorEnabled,
+						IsRealtimePerformancePanelEnabled:           projectSettings.IsRealtimePerformancePanelEnabled,
+						IsSchemaAdvisorEnabled:                      projectSettings.IsSchemaAdvisorEnabled,
+					},
+					CustomRoles: []akov2.CustomRole{
+						{
+							Name: customRoles[0].RoleName,
+							InheritedRoles: []akov2.Role{
+								{
+									Name:     customRoles[0].GetInheritedRoles()[0].Role,
+									Database: customRoles[0].GetInheritedRoles()[0].Db,
+								},
+							},
+							Actions: []akov2.Action{
+								{
+									Name: customRoles[0].GetActions()[0].Action,
+									Resources: []akov2.Resource{
+										{
+											Cluster:    &customRoles[0].GetActions()[0].GetResources()[0].Cluster,
+											Database:   &customRoles[0].GetActions()[0].GetResources()[0].Db,
+											Collection: &customRoles[0].GetActions()[0].GetResources()[0].Collection,
+										},
+									},
+								},
+							},
+						},
+					},
+					Teams: []akov2.Team{
+						{
+							TeamRef: akov2common.ResourceRefNamespaced{
+								Name:      fmt.Sprintf("%s-team-%s", strings.ToLower(p.Name), strings.ToLower(teamsName)),
+								Namespace: targetNamespace,
+							},
+							Roles: []akov2.TeamRole{akov2.TeamRole(projectTeams.GetResults()[0].GetRoleNames()[0])},
+						},
+					},
+					BackupCompliancePolicyRef: &akov2common.ResourceRefNamespaced{
+						Name:      expectedBCP.ObjectMeta.Name,
+						Namespace: expectedBCP.ObjectMeta.Namespace,
+					},
+				},
+				Status: akov2status.AtlasProjectStatus{
+					Common: akoapi.Common{
+						Conditions: []akoapi.Condition{},
+					},
 				},
 			},
-		}
+		},
+	}
 
-		assert.Equal(t, expectedProject, gotProject)
-		assert.Equal(t, expectedTeams, gotTeams)
-		assert.Equal(t, expectedBCP, gotBCP)
-	})
+	for name, tt := range tests {
+		ctl := gomock.NewController(t)
+		projectStore := mocks.NewMockOperatorProjectStore(ctl)
+		featureValidator := mocks.NewMockFeatureValidator(ctl)
+		t.Run(name, func(t *testing.T) {
+			projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
+			projectStore.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
+			projectStore.EXPECT().Integrations(projectID).Return(thirdPartyIntegrations, nil)
+			projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
+			projectStore.EXPECT().PeeringConnections(projectID, containerListOptionGCP).Return(nil, nil)
+			projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAzure).Return(nil, nil)
+			projectStore.EXPECT().EncryptionAtRest(projectID).Return(encryptionAtRest, nil)
+			projectStore.EXPECT().CloudProviderAccessRoles(projectID).Return(cpas, nil)
+			projectStore.EXPECT().ProjectSettings(projectID).Return(projectSettings, nil)
+			projectStore.EXPECT().Auditing(projectID).Return(auditing, nil)
+			projectStore.EXPECT().AlertConfigurations(listAlterOpt).Return(alertConfigResult, nil)
+			projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
+			projectStore.EXPECT().ProjectTeams(projectID, nil).Return(projectTeams, nil)
+			projectStore.EXPECT().TeamByID(orgID, teamID).Return(teams, nil)
+			projectStore.EXPECT().TeamUsers(orgID, teamID).Return(teamUsers, nil)
+			projectStore.EXPECT().DescribeCompliancePolicy(projectID).Return(bcp, nil)
+			tt.privateEndpointMock(projectStore)
+
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAccessLists).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureMaintenanceWindows).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureIntegrations).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureNetworkPeering).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureEncryptionAtRest).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureCloudProviderAccessRoles).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureProjectSettings).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAuditing).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureAlertConfiguration).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureCustomRoles).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureTeams).Return(true)
+			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureBCP).Return(true)
+			featureValidator.EXPECT().IsResourceSupported(features.ResourceAtlasPrivateEndpoint).Return(tt.independentResource)
+
+			projectResult, err := BuildAtlasProject(&AtlasProjectBuildRequest{
+				ProjectStore:    projectStore,
+				Project:         p,
+				Validator:       featureValidator,
+				OrgID:           orgID,
+				ProjectID:       projectID,
+				TargetNamespace: targetNamespace,
+				IncludeSecret:   true,
+				Dictionary:      dictionary,
+				Version:         resourceVersion,
+			})
+			if err != nil {
+				t.Fatalf("%v", err)
+			}
+			gotProject := projectResult.Project
+			gotTeams := projectResult.Teams
+			gotBCP := projectResult.BCP
+
+			// bypass generated name
+			tt.expectedProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Name = gotProject.Spec.EncryptionAtRest.GoogleCloudKms.SecretRef.Name
+
+			assert.Equal(t, tt.expectedProject, gotProject)
+			assert.Equal(t, expectedTeams, gotTeams)
+			assert.Equal(t, expectedBCP, gotBCP)
+		})
+	}
 }
 
 func TestBuildProjectConnectionSecret(t *testing.T) {

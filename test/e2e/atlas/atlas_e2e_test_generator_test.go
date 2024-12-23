@@ -183,6 +183,61 @@ func (g *atlasE2ETestGenerator) generateEmptyProject(prefix string) {
 	})
 }
 
+func (g *atlasE2ETestGenerator) generatePrivateEndpoint(provider, region string) {
+	g.t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		g.t.Fatalf("%v: invalid bin", err)
+	}
+
+	cmd := exec.Command(cliPath,
+		privateEndpointsEntity,
+		provider,
+		"create",
+		"--region",
+		region,
+		"--projectId",
+		g.projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(g.t, err, string(resp))
+	var r atlasv2.EndpointService
+	require.NoError(g.t, json.Unmarshal(resp, &r))
+
+	g.t.Logf("endpointServiceID=%s", r.GetId())
+
+	g.t.Cleanup(func() {
+		g.t.Logf("deleting privat endpoint service - ID=%s", r.GetId())
+		cmd := exec.Command(cliPath,
+			privateEndpointsEntity,
+			provider,
+			"delete",
+			r.GetId(),
+			"--projectId",
+			g.projectID,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(g.t, err, string(resp))
+
+		cmd = exec.Command(cliPath,
+			privateEndpointsEntity,
+			provider,
+			"watch",
+			r.GetId(),
+			"--projectId",
+			g.projectID)
+		cmd.Env = os.Environ()
+
+		resp, err = cmd.CombinedOutput()
+		// We expect a 404 error once the private endpoint has been completely deleted
+		require.Error(g.t, err)
+		assert.Contains(g.t, string(resp), "404")
+	})
+}
+
 func (g *atlasE2ETestGenerator) generateDBUser(prefix string) {
 	g.t.Helper()
 

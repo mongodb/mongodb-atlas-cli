@@ -160,14 +160,14 @@ func TestFlexBackup(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",
-			clusterName,
+			g.clusterName,
 			"--force",
 			"--watch")
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", clusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", g.clusterName)
 		assert.Equal(t, expected, string(resp))
 	})
 }

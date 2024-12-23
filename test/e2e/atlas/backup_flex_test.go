@@ -157,7 +157,12 @@ func TestFlexBackup(t *testing.T) {
 	})
 
 	t.Run("Delete flex cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--force", "--watch")
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			clusterName,
+			"--force",
+			"--watch")
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

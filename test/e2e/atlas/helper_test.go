@@ -225,22 +225,23 @@ func deployFlexClusterForProject(projectID string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	args := []string{
 		clustersEntity,
 		"create",
 		clusterName,
 		"--region", "US_EAST_1",
 		"--provider", "AWS",
-		"--watch",
 	}
 
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
 	}
+
 	create := exec.Command(cliPath, args...)
 	create.Env = os.Environ()
 	if resp, err := e2e.RunAndGetStdOut(create); err != nil {
-		return "", fmt.Errorf("error creating flex cluster %w: %s", err, string(resp))
+		return "", fmt.Errorf("error creating flex cluster (%s): %w - %s", clusterName, err, string(resp))
 	}
 
 	return clusterName, nil

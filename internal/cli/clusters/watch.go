@@ -129,7 +129,7 @@ func (opts *WatchOpts) newIsFlexCluster() error {
 		var atlasClustersPinnedErr *atlasClustersPinned.GenericOpenAPIError
 		if errors.As(err, &atlasClustersPinnedErr) {
 			if *atlasClustersPinnedErr.Model().ErrorCode == cannotUseFlexWithClusterApisErrorCode {
-				opts.isFlexCluster = false
+				opts.isFlexCluster = true
 				return nil
 			}
 		}
@@ -137,7 +137,7 @@ func (opts *WatchOpts) newIsFlexCluster() error {
 		return err
 	}
 
-	opts.isFlexCluster = true
+	opts.isFlexCluster = false
 	return nil
 }
 

@@ -183,7 +183,7 @@ func (e *ConfigExporter) Run() (string, error) {
 	return output.String(), nil
 }
 
-// nolint:gocyclo
+//nolint:gocyclo
 func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	atlasProject, err := e.dataProvider.Project(e.projectID)
 	if err != nil {

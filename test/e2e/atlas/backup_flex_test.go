@@ -112,7 +112,6 @@ func TestFlexBackup(t *testing.T) {
 			backupsEntity,
 			restoresEntity,
 			"watch",
-			"--restoreJobId",
 			restoreJobID,
 			"--clusterName",
 			clusterName,

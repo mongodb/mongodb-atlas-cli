@@ -64,7 +64,7 @@ func (opts *DescribeOpts) Run() error {
 		return err
 	}
 
-	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode {
+	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode && apiError.ErrorCode != featureUnsupported {
 		return err
 	}
 

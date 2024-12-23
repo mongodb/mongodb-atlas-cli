@@ -70,7 +70,7 @@ func (opts *StartOpts) Run() error {
 		return commonerrors.Check(err)
 	}
 
-	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode {
+	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode && apiError.ErrorCode != featureUnsupported {
 		return commonerrors.Check(err)
 	}
 

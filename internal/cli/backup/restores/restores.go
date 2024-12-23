@@ -21,6 +21,7 @@ import (
 
 const (
 	cannotUseNotFlexWithFlexApisErrorCode = "CANNOT_USE_NON_FLEX_CLUSTER_IN_FLEX_API"
+	featureUnsupported                    = "FEATURE_UNSUPPORTED"
 )
 
 func Builder() *cobra.Command {

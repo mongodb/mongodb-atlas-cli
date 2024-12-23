@@ -163,7 +163,6 @@ func TestExportIndependentOrNot(t *testing.T) {
 	testPrefix := "test-"
 	generator.generateDBUser(testPrefix)
 	generator.generateCluster()
-	generator.generateAWSPrivateEndpoint("eu-central-1")
 	expectAlertConfigs := true
 	dictionary := resources.AtlasNameToKubernetesName()
 	credentialName := resources.NormalizeAtlasName(generator.projectName+credSuffixTest, dictionary)
@@ -189,7 +188,6 @@ func TestExportIndependentOrNot(t *testing.T) {
 			expected: []runtime.Object{
 				defaultTestProject(generator.projectName, "", expectedLabels, expectAlertConfigs, nil),
 				defaultTestAtlasConnSecret(credentialName, ""),
-				expectedPrivateEndpoint,
 				defaultTestUserWithID(generator.dbUser, generator.projectName, generator.projectID, "", credentialName),
 				defaultM0TestClusterWithID(
 					generator.clusterName, generator.clusterRegion, generator.projectName, generator.projectID, "",

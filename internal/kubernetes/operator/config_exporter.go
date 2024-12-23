@@ -124,6 +124,7 @@ func (e *ConfigExporter) WithIndependentResources(enabled bool) *ConfigExporter 
 	return e
 }
 
+//nolint:gocyclo
 func (e *ConfigExporter) Run() (string, error) {
 	// TODO: Add REST to OPERATOR entities matcher
 	output := bytes.NewBufferString(yamlSeparator)

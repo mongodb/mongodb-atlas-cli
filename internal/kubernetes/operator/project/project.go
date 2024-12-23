@@ -275,6 +275,7 @@ func BuildProjectNamedConnectionSecret(credsProvider store.CredentialsGetter, na
 	return secret
 }
 
+//nolint:revive
 func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]akov2.CustomRole, error) {
 	dbRoles, err := crProvider.DatabaseRoles(projectID)
 	if err != nil {

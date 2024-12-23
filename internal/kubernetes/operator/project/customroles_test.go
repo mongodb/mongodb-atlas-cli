@@ -17,6 +17,8 @@ package project
 import (
 	"errors"
 	"fmt"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
@@ -29,7 +31,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
 )
 
 func TestBuildCustomRoles(t *testing.T) {
@@ -64,7 +65,7 @@ func TestBuildCustomRoles(t *testing.T) {
 			},
 			errInAtlas: errors.New("no roles found"),
 			want:       nil,
-			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
+			wantErr: func(t assert.TestingT, err error, i ...any) bool {
 				return true
 			},
 		},
@@ -84,7 +85,7 @@ func TestBuildCustomRoles(t *testing.T) {
 			rolesInAtlas: nil,
 			errInAtlas:   nil,
 			want:         nil,
-			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
+			wantErr: func(t assert.TestingT, err error, i ...any) bool {
 				return false
 			},
 		},
@@ -132,7 +133,7 @@ func TestBuildCustomRoles(t *testing.T) {
 						APIVersion: "atlas.mongodb.com/v1",
 					},
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      fmt.Sprintf("%s-custom-role-r-1", projectName),
+						Name:      projectName + "%-custom-role-r-1",
 						Namespace: targetNamespace,
 						Labels: map[string]string{
 							features.ResourceVersion: "v2.6.0",
@@ -168,7 +169,7 @@ func TestBuildCustomRoles(t *testing.T) {
 					Status: akov2status.AtlasCustomRoleStatus{},
 				},
 			},
-			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
+			wantErr: func(t assert.TestingT, err error, i ...any) bool {
 				return false
 			},
 		},
@@ -216,7 +217,7 @@ func TestBuildCustomRoles(t *testing.T) {
 						APIVersion: "atlas.mongodb.com/v1",
 					},
 					ObjectMeta: metav1.ObjectMeta{
-						Name:      fmt.Sprintf("%s-custom-role-r-1", projectName),
+						Name:      projectName + "%-custom-role-r-1",
 						Namespace: targetNamespace,
 						Labels: map[string]string{
 							features.ResourceVersion: "v2.6.0",
@@ -249,7 +250,7 @@ func TestBuildCustomRoles(t *testing.T) {
 					Status: akov2status.AtlasCustomRoleStatus{},
 				},
 			},
-			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
+			wantErr: func(t assert.TestingT, err error, i ...any) bool {
 				return false
 			},
 		},

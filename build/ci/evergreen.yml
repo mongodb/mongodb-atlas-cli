@@ -138,6 +138,7 @@ functions:
           - AZURE_CLIENT_SECRET
           - E2E_TIMEOUT
           - E2E_SERVERLESS_INSTANCE_NAME
+          - E2E_FLEX_INSTANCE_NAME
           - E2E_PARALLEL
           - IDENTITY_PROVIDER_ID
           - LOCALDEV_IMAGE

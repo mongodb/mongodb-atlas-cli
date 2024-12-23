@@ -23,7 +23,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestWatch_Run(t *testing.T) {
@@ -33,8 +35,9 @@ func TestWatch_Run(t *testing.T) {
 	expected := &atlasClustersPinned.AdvancedClusterDescription{StateName: pointer.Get("IDLE")}
 
 	opts := &WatchOpts{
-		name:  "test",
-		store: mockStore,
+		name:          "test",
+		store:         mockStore,
+		isFlexCluster: false,
 	}
 
 	mockStore.
@@ -43,7 +46,26 @@ func TestWatch_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(context.Background()); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+	require.NoError(t, opts.Run(context.Background()))
+}
+
+func TestWatch_Run_FlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterDescriber(ctrl)
+
+	expected := &atlasv2.FlexClusterDescription20241113{StateName: pointer.Get("IDLE")}
+
+	opts := &WatchOpts{
+		name:          "test",
+		store:         mockStore,
+		isFlexCluster: true,
 	}
+
+	mockStore.
+		EXPECT().
+		FlexCluster(opts.ProjectID, opts.name).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, opts.Run(context.Background()))
 }

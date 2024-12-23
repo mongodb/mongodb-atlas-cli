@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -213,6 +213,53 @@ func deployServerlessInstanceForProject(projectID string) (string, error) {
 	if resp, err := e2e.RunAndGetStdOut(watch); err != nil {
 		return "", fmt.Errorf("error watching serverless instance %w: %s", err, string(resp))
 	}
+	return clusterName, nil
+}
+
+func deployFlexClusterForProject(projectID string) (string, error) {
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		return "", err
+	}
+	clusterName, err := RandClusterName()
+	if err != nil {
+		return "", err
+	}
+
+	args := []string{
+		clustersEntity,
+		"create",
+		clusterName,
+		"--region", "US_EAST_1",
+		"--provider", "AWS",
+	}
+
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+
+	create := exec.Command(cliPath, args...)
+	create.Env = os.Environ()
+	if resp, err := e2e.RunAndGetStdOut(create); err != nil {
+		return "", fmt.Errorf("error creating flex cluster (%s): %w - %s", clusterName, err, string(resp))
+	}
+
+	watchArgs := []string{
+		clustersEntity,
+		"watch",
+		clusterName,
+	}
+
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+
+	watch := exec.Command(cliPath, watchArgs...)
+	watch.Env = os.Environ()
+	if resp, err := e2e.RunAndGetStdOut(watch); err != nil {
+		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
+	}
+
 	return clusterName, nil
 }
 
@@ -1018,6 +1065,17 @@ func ensureCluster(t *testing.T, cluster *atlasClustersPinned.AdvancedClusterDes
 	a.Equal(clusterName, cluster.GetName())
 	a.Equal(version, cluster.GetMongoDBMajorVersion())
 	a.InDelta(diskSizeGB, cluster.GetDiskSizeGB(), 0.01)
+	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
+}
+
+func ensureFlexCluster(t *testing.T, cluster *atlasv2.FlexClusterDescription20241113, clusterName string, diskSizeGB float64, terminationProtection bool) {
+	t.Helper()
+	a := assert.New(t)
+	setting, ok := cluster.GetProviderSettingsOk()
+
+	a.True(ok)
+	a.Equal(clusterName, cluster.GetName())
+	a.InDelta(diskSizeGB, setting.GetDiskSizeGB(), 0.01)
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 

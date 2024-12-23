@@ -32,7 +32,7 @@ func TestFlexBackup(t *testing.T) {
 	require.NoError(t, err)
 
 	g := newAtlasE2ETestGenerator(t)
-	g.generateProject("flexBackup")
+	g.projectID = os.Getenv("MCLI_PROJECT_ID")
 	g.generateFlexCluster()
 
 	clusterName := os.Getenv("E2E_FLEX_INSTANCE_NAME")

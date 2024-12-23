@@ -123,8 +123,6 @@ func (e *ConfigExporter) WithIndependentResources(enabled bool) *ConfigExporter 
 	e.independentResources = enabled
 	return e
 }
-
-//nolint:gocyclo
 func (e *ConfigExporter) Run() (string, error) {
 	// TODO: Add REST to OPERATOR entities matcher
 	output := bytes.NewBufferString(yamlSeparator)
@@ -185,6 +183,7 @@ func (e *ConfigExporter) Run() (string, error) {
 	return output.String(), nil
 }
 
+// nolint:gocyclo
 func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	atlasProject, err := e.dataProvider.Project(e.projectID)
 	if err != nil {

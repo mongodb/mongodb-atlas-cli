@@ -65,7 +65,7 @@ func TestBuildCustomRoles(t *testing.T) {
 			},
 			errInAtlas: errors.New("no roles found"),
 			want:       nil,
-			wantErr: func(t assert.TestingT, err error, i ...any) bool {
+			wantErr: func(_ assert.TestingT, err error, i ...any) bool {
 				return true
 			},
 		},
@@ -85,7 +85,7 @@ func TestBuildCustomRoles(t *testing.T) {
 			rolesInAtlas: nil,
 			errInAtlas:   nil,
 			want:         nil,
-			wantErr: func(t assert.TestingT, err error, i ...any) bool {
+			wantErr: func(_ assert.TestingT, err error, i ...any) bool {
 				return false
 			},
 		},
@@ -169,7 +169,7 @@ func TestBuildCustomRoles(t *testing.T) {
 					Status: akov2status.AtlasCustomRoleStatus{},
 				},
 			},
-			wantErr: func(t assert.TestingT, err error, i ...any) bool {
+			wantErr: func(_ assert.TestingT, err error, i ...any) bool {
 				return false
 			},
 		},

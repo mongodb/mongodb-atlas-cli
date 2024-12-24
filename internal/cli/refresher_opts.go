@@ -18,9 +18,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 	atlasauth "go.mongodb.org/atlas/auth"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
@@ -42,7 +44,9 @@ type Refresher interface {
 func (opts *RefresherOpts) InitFlow(c oauth.ServiceGetter) func() error {
 	return func() error {
 		var err error
-		opts.flow, err = oauth.FlowWithConfig(c)
+		client := http.DefaultClient
+		client.Transport = transport.Default()
+		opts.flow, err = oauth.FlowWithConfig(c, client)
 		return err
 	}
 }

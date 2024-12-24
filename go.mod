@@ -52,9 +52,9 @@ require (
 	golang.org/x/mod v0.22.0
 	golang.org/x/sys v0.28.0
 	golang.org/x/tools v0.28.0
-	google.golang.org/api v0.212.0
-	google.golang.org/grpc v1.69.0
-	google.golang.org/protobuf v1.36.0
+	google.golang.org/api v0.214.0
+	google.golang.org/grpc v1.69.2
+	google.golang.org/protobuf v1.36.1
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.32.0
 	k8s.io/apiextensions-apiserver v0.32.0

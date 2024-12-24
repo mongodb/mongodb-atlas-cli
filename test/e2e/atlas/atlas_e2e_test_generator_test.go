@@ -434,6 +434,25 @@ func (g *atlasE2ETestGenerator) generateServerlessCluster() {
 	})
 }
 
+func (g *atlasE2ETestGenerator) generateFlexCluster() {
+	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Fatal("unexpected error: project must be generated")
+	}
+
+	var err error
+	g.clusterName, err = deployFlexClusterForProject(g.projectID)
+	if err != nil {
+		g.t.Errorf("unexpected error deploying flex cluster: %v", err)
+	}
+	g.t.Logf("flexClusterName=%s", g.clusterName)
+
+	g.t.Cleanup(func() {
+		_ = deleteClusterForProject(g.projectID, g.clusterName)
+	})
+}
+
 // generateCluster generates a new cluster and also registers its deletion on test cleanup.
 func (g *atlasE2ETestGenerator) generateCluster() {
 	g.t.Helper()

@@ -21,15 +21,18 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
+	tier  string
 	store store.ClusterLister
 }
 
@@ -46,6 +49,14 @@ var listTemplate = `ID	NAME	MDB VER	STATE{{range valueOrEmptySlice .Results}}
 `
 
 func (opts *ListOpts) Run() error {
+	if opts.tier == atlasFlex {
+		return opts.RunFlexCluster()
+	}
+
+	return opts.RunDedicatedCluster()
+}
+
+func (opts *ListOpts) RunDedicatedCluster() error {
 	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
 	if err != nil {
@@ -55,7 +66,27 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas cluster(s) list --projectId projectId [--page N] [--limit N].
+func (opts *ListOpts) RunFlexCluster() error {
+	r, err := opts.store.ListFlexClusters(opts.newListFlexClustersAPIParams())
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
+}
+
+func (opts *ListOpts) newListFlexClustersAPIParams() *atlasv2.ListFlexClustersApiParams {
+	includeCount := !opts.OmitCount
+	return &atlasv2.ListFlexClustersApiParams{
+		GroupId:      opts.ConfigProjectID(),
+		IncludeCount: &includeCount,
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
+	}
+}
+
+// ListBuilder builds a cobra.Command that can run as:
+// atlas cluster(s) list --projectId projectId [--page N] [--limit N] [--tier tier].
 func ListBuilder() *cobra.Command {
 	opts := &ListOpts{}
 	cmd := &cobra.Command{
@@ -81,6 +112,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, "", usage.Tier)
 	opts.AddListOptsFlags(cmd)
 
 	opts.AddProjectOptsFlags(cmd)

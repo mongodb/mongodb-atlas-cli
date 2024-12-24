@@ -88,6 +88,7 @@ You can interrupt the command's polling at any time with CTRL-C.
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
+		Deprecated: "please use the 'atlas backup snapshots watch' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 	cmd.Flags().StringVar(&opts.id, flag.SnapshotID, "", usage.SnapshotID)

@@ -27,14 +27,18 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
+
+const idle = "IDLE"
 
 type WatchOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	cli.RefresherOpts
-	name  string
-	store store.ClusterDescriber
+	name          string
+	isFlexCluster bool
+	store         store.ClusterDescriber
 }
 
 var watchTemplate = "\nCluster available.\n"
@@ -44,6 +48,35 @@ func (opts *WatchOpts) initStore(ctx context.Context) func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
+	}
+}
+
+func (opts *WatchOpts) flexClusterWatcher(ctx context.Context) func() (any, bool, error) {
+	return func() (any, bool, error) {
+		result, err := opts.store.FlexCluster(opts.ConfigProjectID(), opts.name)
+		if err != nil {
+			apiError, ok := atlasv2.AsError(err)
+			if !ok {
+				return nil, false, err
+			}
+
+			if apiError.Error == http.StatusUnauthorized {
+				// Refresh the access token
+				// Note: this only updates the config, so we have to re-initialize the store
+				if err := opts.RefreshAccessToken(ctx); err != nil {
+					return nil, false, err
+				}
+
+				// Re-initialize store, refreshAccessToken only refreshes the config
+				return nil, false, opts.initStore(ctx)()
+			}
+		}
+
+		if err != nil {
+			return nil, false, err
+		}
+
+		return nil, result.GetStateName() == idle, nil
 	}
 }
 
@@ -69,11 +102,18 @@ func (opts *WatchOpts) watcher(ctx context.Context) func() (any, bool, error) {
 		if err != nil {
 			return nil, false, err
 		}
-		return nil, result.GetStateName() == "IDLE", nil
+		return nil, result.GetStateName() == idle, nil
 	}
 }
 
 func (opts *WatchOpts) Run(ctx context.Context) error {
+	if opts.isFlexCluster {
+		if _, err := opts.Watch(opts.flexClusterWatcher(ctx)); err != nil {
+			return err
+		}
+		return opts.Print(nil)
+	}
+
 	if _, err := opts.Watch(opts.watcher(ctx)); err != nil {
 		return err
 	}
@@ -81,6 +121,27 @@ func (opts *WatchOpts) Run(ctx context.Context) error {
 	return opts.Print(nil)
 }
 
+// newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is
+// a FlexCluster.
+func (opts *WatchOpts) newIsFlexCluster() error {
+	_, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+	if err != nil {
+		var atlasClustersPinnedErr *atlasClustersPinned.GenericOpenAPIError
+		if errors.As(err, &atlasClustersPinnedErr) {
+			if *atlasClustersPinnedErr.Model().ErrorCode == cannotUseFlexWithClusterApisErrorCode {
+				opts.isFlexCluster = true
+				return nil
+			}
+		}
+
+		return err
+	}
+
+	opts.isFlexCluster = false
+	return nil
+}
+
+// WatchBuilder builds a cobra.Command that can run as:
 // atlas cluster(s) watch <clusterName> [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
@@ -110,6 +171,9 @@ You can interrupt the command's polling at any time with CTRL-C.
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			opts.name = args[0]
+			if err := opts.newIsFlexCluster(); err != nil {
+				return err
+			}
 			return opts.Run(cmd.Context())
 		},
 	}

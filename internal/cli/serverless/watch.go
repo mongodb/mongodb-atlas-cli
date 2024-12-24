@@ -89,6 +89,7 @@ You can interrupt the command's polling at any time with CTRL-C.
 			opts.name = args[0]
 			return opts.Run()
 		},
+		Deprecated: "please use the 'atlas cluster create <ClusterName> --watch [--projectId projectId]' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	opts.AddProjectOptsFlags(cmd)

@@ -46,21 +46,22 @@ import (
 )
 
 const (
-	DefaultAtlasTier    = "M0"
-	defaultAtlasGovTier = "M30"
-	atlasAdmin          = "atlasAdmin"
-	replicaSet          = "REPLICASET"
-	defaultProvider     = "AWS"
-	defaultRegion       = "US_EAST_1"
-	defaultRegionGCP    = "US_EAST_4"
-	defaultRegionAzure  = "US_EAST_2"
-	defaultRegionGov    = "US_GOV_EAST_1"
-	defaultSettings     = "default"
-	customSettings      = "custom"
-	cancelSettings      = "cancel"
-	skipConnect         = "skip"
-	compassConnect      = "compass"
-	mongoshConnect      = "mongosh"
+	DefaultAtlasTier           = "M0"
+	defaultAtlasGovTier        = "M30"
+	atlasAdmin                 = "atlasAdmin"
+	replicaSet                 = "REPLICASET"
+	defaultProvider            = "AWS"
+	defaultRegion              = "US_EAST_1"
+	defaultRegionGCP           = "US_EAST_4"
+	defaultRegionAzure         = "US_EAST_2"
+	defaultRegionGov           = "US_GOV_EAST_1"
+	defaultSettings            = "default"
+	customSettings             = "custom"
+	cancelSettings             = "cancel"
+	skipConnect                = "skip"
+	compassConnect             = "compass"
+	mongoshConnect             = "mongosh"
+	deprecateMessageSharedTier = "The '%s' tier is deprecated. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
 )
 
 var (
@@ -618,6 +619,14 @@ func (opts *Opts) SetupFlowFlags(cmd *cobra.Command) {
 	cmd.MarkFlagsMutuallyExclusive(flag.SkipMongosh, flag.ConnectWith)
 }
 
+func (opts *Opts) validateTier() error {
+	opts.Tier = strings.ToUpper(opts.Tier)
+	if opts.Tier == atlasM2 || opts.Tier == atlasM5 {
+		_, _ = fmt.Fprintf(os.Stderr, deprecateMessageSharedTier, opts.Tier)
+	}
+	return nil
+}
+
 // Builder
 // atlas setup
 //
@@ -667,6 +676,7 @@ func Builder() *cobra.Command {
 			if !opts.skipLogin && opts.skipRegister {
 				preRun = append(preRun, opts.register.LoginPreRun(cmd.Context()))
 			}
+			preRun = append(preRun, opts.validateTier)
 
 			return opts.PreRunE(preRun...)
 		},

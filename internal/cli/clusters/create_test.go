@@ -27,7 +27,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
@@ -54,9 +56,7 @@ func TestCreateOpts_Run(t *testing.T) {
 			CreateCluster(cluster).Return(expected, nil).
 			Times(1)
 
-		if err := createOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		require.NoError(t, createOpts.Run())
 	})
 
 	t.Run("file run", func(t *testing.T) {
@@ -103,9 +103,7 @@ func TestCreateOpts_Run(t *testing.T) {
 			EXPECT().
 			CreateCluster(cluster).Return(expected, nil).
 			Times(1)
-		if err := createOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		require.NoError(t, createOpts.Run())
 	})
 }
 
@@ -138,13 +136,8 @@ func TestCreateOpts_PostRun(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
-	if err := createOpts.PostRun(); err != nil {
-		t.Fatalf("PostRun() unexpected error: %v", err)
-	}
+	require.NoError(t, createOpts.Run())
+	require.NoError(t, createOpts.PostRun())
 	assert.Contains(t, `Cluster 'ProjectBar' is being created.
 `, buf.String())
 	t.Log(buf.String())
@@ -209,13 +202,8 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 			Times(1),
 	)
 
-	if err := createOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-
-	if err := createOpts.PostRun(); err != nil {
-		t.Fatalf("PostRun() unexpected error: %v", err)
-	}
+	require.NoError(t, createOpts.Run())
+	require.NoError(t, createOpts.PostRun())
 	assert.Contains(t, `Cluster 'ProjectBar' created successfully.
 `, buf.String())
 	t.Log(buf.String())
@@ -224,4 +212,138 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 func TestCreateTemplates(t *testing.T) {
 	test.VerifyOutputTemplate(t, createTemplate, &atlasClustersPinned.AdvancedClusterDescription{})
 	test.VerifyOutputTemplate(t, createWatchTemplate, &atlasClustersPinned.AdvancedClusterDescription{})
+}
+
+func TestCreateOpts_RunFlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterCreator(ctrl)
+
+	expected := &atlasv2.FlexClusterDescription20241113{}
+
+	t.Run("flags run", func(t *testing.T) {
+		createOpts := &CreateOpts{
+			name:        "ProjectBar",
+			region:      "US",
+			tier:        atlasFlex,
+			provider:    "AWS",
+			store:       mockStore,
+			ProjectOpts: cli.ProjectOpts{ProjectID: "test"},
+		}
+
+		require.NoError(t, createOpts.newIsFlexCluster())
+		cluster, _ := createOpts.newFlexCluster()
+		mockStore.
+			EXPECT().
+			CreateFlexCluster(createOpts.ProjectID, cluster).Return(expected, nil).
+			Times(1)
+
+		require.NoError(t, createOpts.Run())
+	})
+
+	t.Run("file run", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		// create test file
+		fileYML := `
+{
+	"name": "TestCluster",
+	"providerSettings": {
+	"backingProviderName": "AWS",
+	"regionName": "string"
+	},
+	"tags": [
+		{
+			"key": "testK",
+			"value": "testV"
+		}
+	],
+	"terminationProtectionEnabled": true
+}`
+		fileName := "atlas_flex_cluster_create_test.json"
+		_ = afero.WriteFile(appFS, fileName, []byte(fileYML), 0600)
+
+		createOpts := &CreateOpts{
+			filename:    fileName,
+			fs:          appFS,
+			store:       mockStore,
+			ProjectOpts: cli.ProjectOpts{ProjectID: "test"},
+		}
+
+		require.NoError(t, createOpts.newIsFlexCluster())
+		cluster, _ := createOpts.newFlexCluster()
+		mockStore.
+			EXPECT().
+			CreateFlexCluster(createOpts.ProjectID, cluster).
+			Return(expected, nil).
+			Times(1)
+		require.NoError(t, createOpts.Run())
+	})
+}
+
+func TestCreateOpts_PostRunFlexCluster_EnableWatch(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := &struct {
+		*mocks.MockClusterCreator
+		*mocks.MockClusterDescriber
+	}{
+		mocks.NewMockClusterCreator(ctrl),
+		mocks.NewMockClusterDescriber(ctrl),
+	}
+
+	expected := &atlasv2.FlexClusterDescription20241113{
+		Name:      pointer.Get("ProjectBar"),
+		StateName: pointer.Get("CREATING"),
+	}
+	expectedIdle := &atlasv2.FlexClusterDescription20241113{
+		Name:      expected.Name,
+		StateName: pointer.Get("IDLE"),
+	}
+
+	buf := new(bytes.Buffer)
+
+	createOpts := &CreateOpts{
+		ProjectOpts: cli.ProjectOpts{
+			ProjectID: "aaaa1e7e0f2912c554080abc",
+		},
+		WatchOpts: cli.WatchOpts{
+			EnableWatch: true,
+			OutputOpts: cli.OutputOpts{
+				Template:  createTemplate,
+				OutWriter: buf,
+			},
+		},
+		name:  "ProjectBar",
+		store: mockStore,
+		tier:  atlasFlex,
+	}
+
+	cluster, _ := createOpts.newFlexCluster()
+
+	mockStore.
+		MockClusterCreator.
+		EXPECT().
+		CreateFlexCluster(createOpts.ProjectID, cluster).
+		Return(expected, nil).
+		Times(1)
+
+	gomock.InOrder(
+		mockStore.
+			MockClusterDescriber.
+			EXPECT().
+			FlexCluster(createOpts.ProjectID, expected.GetName()).
+			Return(expected, nil).
+			Times(1),
+		mockStore.
+			MockClusterDescriber.
+			EXPECT().
+			FlexCluster(createOpts.ProjectID, expected.GetName()).
+			Return(expectedIdle, nil).
+			Times(1),
+	)
+
+	require.NoError(t, createOpts.newIsFlexCluster())
+	require.NoError(t, createOpts.Run())
+	require.NoError(t, createOpts.PostRun())
+	assert.Contains(t, `Cluster 'ProjectBar' created successfully.
+`, buf.String())
+	t.Log(buf.String())
 }

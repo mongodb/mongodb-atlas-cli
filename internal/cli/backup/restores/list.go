@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type ListOpts struct {
@@ -45,17 +46,47 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 var restoreListTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.SnapshotId}}	{{.TargetClusterName}}	{{.DeliveryType}}	{{.ExpiresAt}}{{end}}
 `
+var restoreListFlexClusterTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT{{range valueOrEmptySlice .Results}}
+{{.Id}}	{{.SnapshotId}}	{{.TargetDeploymentItemName}}	{{.DeliveryType}}	{{.ExpirationDate}}{{end}}
+`
 
 func (opts *ListOpts) Run() error {
+	r, err := opts.store.RestoreFlexClusterJobs(opts.newListFlexBackupRestoreJobsAPIParams())
+	if err == nil {
+		opts.Template = restoreListFlexClusterTemplate
+		return opts.Print(r)
+	}
+
+	apiError, ok := atlasv2.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode && apiError.ErrorCode != featureUnsupported {
+		return err
+	}
+
 	listOpts := opts.NewListOptions()
-	r, err := opts.store.RestoreJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
+	restoreJobs, err := opts.store.RestoreJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
 	if err != nil {
 		return err
 	}
 
-	return opts.Print(r)
+	return opts.Print(restoreJobs)
 }
 
+func (opts *ListOpts) newListFlexBackupRestoreJobsAPIParams() *atlasv2.ListFlexBackupRestoreJobsApiParams {
+	includeCount := !opts.OmitCount
+	return &atlasv2.ListFlexBackupRestoreJobsApiParams{
+		GroupId:      opts.ConfigProjectID(),
+		Name:         opts.clusterName,
+		IncludeCount: &includeCount,
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
+	}
+}
+
+// ListBuilder builds a cobra.Command that can run as:
 // atlas backup(s) restore(s) job(s) list <clusterName> [--page N] [--limit N].
 func ListBuilder() *cobra.Command {
 	opts := new(ListOpts)

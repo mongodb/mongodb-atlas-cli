@@ -1,0 +1,13 @@
+{
+  "providerSettings": {
+    "backingProviderName": "AWS",
+    "regionName": "US_EAST_1"
+  },
+  "tags": [
+    {
+      "key": "e2e_test",
+      "value": "yes"
+    }
+  ],
+  "terminationProtectionEnabled": false
+}

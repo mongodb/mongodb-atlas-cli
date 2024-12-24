@@ -22,6 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
@@ -35,14 +36,40 @@ func TestDescribe_Run(t *testing.T) {
 		store: mockStore,
 	}
 
+	expectedError := &atlasv2.GenericOpenAPIError{}
+	expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
+
+	mockStore.
+		EXPECT().
+		FlexClusterSnapshot(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.snapshot).
+		Return(nil, expectedError).
+		Times(1)
+
 	mockStore.
 		EXPECT().
 		Snapshot(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.snapshot).
 		Return(&expected, nil).
 		Times(1)
 
-	if err := describeOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, describeOpts.Run())
 	test.VerifyOutputTemplate(t, describeTemplate, expected)
+}
+
+func TestDescribe_Run_FlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockSnapshotsDescriber(ctrl)
+	expected := &atlasv2.FlexBackupSnapshot20241113{}
+
+	describeOpts := &DescribeOpts{
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		FlexClusterSnapshot(describeOpts.ProjectID, describeOpts.clusterName, describeOpts.snapshot).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, describeOpts.Run())
+	test.VerifyOutputTemplate(t, describeTemplateFlex, expected)
 }

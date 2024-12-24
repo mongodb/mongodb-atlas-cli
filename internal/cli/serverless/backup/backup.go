@@ -24,9 +24,10 @@ import (
 func baseCommand() *cobra.Command {
 	const use = "backups"
 	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage cloud backups for your project.",
+		Use:        use,
+		Aliases:    cli.GenerateAliases(use),
+		Short:      "Manage cloud backups for your project.",
+		Deprecated: "please use the 'atlas backup' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	return cmd

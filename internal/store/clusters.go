@@ -96,6 +96,7 @@ type AtlasClusterGetterUpdater interface {
 
 type AtlasSharedClusterGetterUpgrader interface {
 	AtlasSharedClusterDescriber
+	ClusterDescriber
 	ClusterUpgrader
 }
 

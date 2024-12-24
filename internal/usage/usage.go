@@ -92,6 +92,7 @@ dbName and collection are required only for built-in roles.`
 	ForceFile                                 = "Flag that indicates whether to overwrite the destination file."
 	Email                                     = "Email address for the user."
 	LogOut                                    = "Output file name. This value defaults to the log name."
+	SnapshotOut                               = "Output file name. This value defaults to the Snapshot ID."
 	LogStart                                  = "UNIX Epoch-formatted starting date and time for the range of log messages to retrieve. This value defaults to 24 hours prior to the current timestamp."
 	LogEnd                                    = "Ending date and time for the range of log messages to retrieve, given in UNIX time. Defaults to the start date plus 24 hours, if the start date is set. If start date is not provided, ending time defaults to the current time."
 	MeasurementStart                          = "ISO 8601-formatted date and time that specifies when to start retrieving measurements. You can't set this parameter and period in the same request."

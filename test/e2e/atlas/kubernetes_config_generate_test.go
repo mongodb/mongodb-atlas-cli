@@ -1122,7 +1122,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 }
 
 func verifyCustomRoles(t *testing.T, objects []runtime.Object, expectedRoles []akov2.AtlasCustomRole) {
-	var roles []*akov2.CustomRole
+	var roles []*akov2.AtlasCustomRole
 	for i := range objects {
 		d, ok := objects[i].(*akov2.AtlasCustomRole)
 		if ok {

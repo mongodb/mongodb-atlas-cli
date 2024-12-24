@@ -1095,7 +1095,8 @@ func TestProjectWithCustomRole(t *testing.T) {
 					APIVersion: "atlas.mongodb.com/v1",
 				},
 				ObjectMeta: metav1.ObjectMeta{
-					Name: fmt.Sprintf("%s-custom-role-%s", expectedProject.Name, newCustomRole.Name),
+					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-custom-role-%s", expectedProject.Name, newCustomRole.Name), resources.AtlasNameToKubernetesName()),
+					Namespace: expectedProject.Namespace,
 				},
 				Spec: akov2.AtlasCustomRoleSpec{
 					Role: akov2.CustomRole{

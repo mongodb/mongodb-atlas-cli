@@ -66,7 +66,7 @@ Options
    * - --out
      - string
      - false
-     - Output file name. This value defaults to the Snapshot id.
+     - Output file name. This value defaults to the Snapshot ID.
    * - --projectId
      - string
      - false

@@ -49,7 +49,7 @@ var restoreDescribeTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
 `
 
 var restoreDescribeFlexClusterTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT	URLs
-{{.Id}}	{{.SnapshotId}}	{{.TargetDeploymentItemName}}	{{.DeliveryType}}	{{.ExpirationDate}}	{{range $index, $element := valueOrEmptySlice .SnapshotUrl}}{{if $index}}; {{end}}{{$element}}{{end}}
+{{.Id}}	{{.SnapshotId}}	{{.TargetDeploymentItemName}}	{{.DeliveryType}}	{{.ExpirationDate}}	{{.SnapshotUrl}}
 `
 
 func (opts *DescribeOpts) Run() error {

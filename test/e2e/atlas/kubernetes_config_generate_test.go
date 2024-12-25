@@ -1042,7 +1042,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 				Name: "FIND",
 				Resources: []akov2.Resource{
 					{
-						Database:   pointer.Get("test-db	"),
+						Database:   pointer.Get("test-db"),
 						Collection: pointer.Get(""),
 						Cluster:    pointer.Get(false),
 					},
@@ -1096,8 +1096,15 @@ func TestProjectWithCustomRole(t *testing.T) {
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-custom-role-%s", expectedProject.Name, newCustomRole.Name), resources.AtlasNameToKubernetesName()),
 				Namespace: expectedProject.Namespace,
+				Labels: map[string]string{
+					"mongodb.com/atlas-resource-version": features.LatestOperatorMajorVersion,
+				},
 			},
 			Spec: akov2.AtlasCustomRoleSpec{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      expectedProject.Name,
+					Namespace: expectedProject.Namespace,
+				}
 				Role: akov2.CustomRole{
 					Name: "test-role",
 					Actions: []akov2.Action{
@@ -1114,7 +1121,9 @@ func TestProjectWithCustomRole(t *testing.T) {
 					},
 				},
 			},
-			Status: akov2status.AtlasCustomRoleStatus{},
+			Status: akov2status.AtlasCustomRoleStatus{
+				Conditions: []akoapi.Condition{},
+			},
 		},
 		)
 		checkProject(t, objects, expectedProject)

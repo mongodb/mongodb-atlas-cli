@@ -1088,50 +1088,50 @@ func TestProjectWithCustomRole(t *testing.T) {
 		require.NoError(t, err, "should not fail on decode")
 		require.NotEmpty(t, objects)
 		expectedProject.Spec.CustomRoles = nil
-		verifyCustomRoles(t, objects, []akov2.AtlasCustomRole{
-			{
-				TypeMeta: metav1.TypeMeta{
-					Kind:       "AtlasCustomRole",
-					APIVersion: "atlas.mongodb.com/v1",
-				},
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-custom-role-%s", expectedProject.Name, newCustomRole.Name), resources.AtlasNameToKubernetesName()),
-					Namespace: expectedProject.Namespace,
-				},
-				Spec: akov2.AtlasCustomRoleSpec{
-					Role: akov2.CustomRole{
-						Name: "test-role",
-						Actions: []akov2.Action{
-							{
-								Name: "FIND",
-								Resources: []akov2.Resource{
-									{
-										Database:   pointer.Get("test-db	"),
-										Collection: pointer.Get(""),
-										Cluster:    pointer.Get(false),
-									},
+		verifyCustomRole(t, objects, akov2.AtlasCustomRole{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       "AtlasCustomRole",
+				APIVersion: "atlas.mongodb.com/v1",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-custom-role-%s", expectedProject.Name, newCustomRole.Name), resources.AtlasNameToKubernetesName()),
+				Namespace: expectedProject.Namespace,
+			},
+			Spec: akov2.AtlasCustomRoleSpec{
+				Role: akov2.CustomRole{
+					Name: "test-role",
+					Actions: []akov2.Action{
+						{
+							Name: "FIND",
+							Resources: []akov2.Resource{
+								{
+									Database:   pointer.Get("test-db"),
+									Collection: pointer.Get(""),
+									Cluster:    pointer.Get(false),
 								},
 							},
 						},
 					},
 				},
-				Status: akov2status.AtlasCustomRoleStatus{},
 			},
-		})
+			Status: akov2status.AtlasCustomRoleStatus{},
+		},
+		)
 		checkProject(t, objects, expectedProject)
 	})
 }
 
-func verifyCustomRoles(t *testing.T, objects []runtime.Object, expectedRoles []akov2.AtlasCustomRole) {
+func verifyCustomRole(t *testing.T, objects []runtime.Object, expectedRole akov2.AtlasCustomRole) {
 	t.Helper()
-	var roles []*akov2.AtlasCustomRole
+	var role *akov2.AtlasCustomRole
 	for i := range objects {
 		d, ok := objects[i].(*akov2.AtlasCustomRole)
 		if ok {
-			roles = append(roles, d)
+			role = d
+			break
 		}
 	}
-	assert.ElementsMatch(t, expectedRoles, roles)
+	assert.Equal(t, &role, expectedRole)
 }
 
 func TestProjectWithIntegration(t *testing.T) {

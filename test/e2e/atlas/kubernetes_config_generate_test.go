@@ -1131,7 +1131,7 @@ func verifyCustomRole(t *testing.T, objects []runtime.Object, expectedRole akov2
 			break
 		}
 	}
-	assert.Equal(t, &role, expectedRole)
+	assert.Equal(t, expectedRole, &role)
 }
 
 func TestProjectWithIntegration(t *testing.T) {

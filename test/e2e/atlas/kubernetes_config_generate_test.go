@@ -1088,7 +1088,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 		require.NoError(t, err, "should not fail on decode")
 		require.NotEmpty(t, objects)
 		expectedProject.Spec.CustomRoles = nil
-		verifyCustomRole(t, objects, akov2.AtlasCustomRole{
+		verifyCustomRole(t, objects, &akov2.AtlasCustomRole{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "AtlasCustomRole",
 				APIVersion: "atlas.mongodb.com/v1",
@@ -1121,7 +1121,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 	})
 }
 
-func verifyCustomRole(t *testing.T, objects []runtime.Object, expectedRole akov2.AtlasCustomRole) {
+func verifyCustomRole(t *testing.T, objects []runtime.Object, expectedRole *akov2.AtlasCustomRole) {
 	t.Helper()
 	var role *akov2.AtlasCustomRole
 	for i := range objects {
@@ -1131,7 +1131,7 @@ func verifyCustomRole(t *testing.T, objects []runtime.Object, expectedRole akov2
 			break
 		}
 	}
-	assert.Equal(t, expectedRole, &role)
+	assert.Equal(t, expectedRole, role)
 }
 
 func TestProjectWithIntegration(t *testing.T) {

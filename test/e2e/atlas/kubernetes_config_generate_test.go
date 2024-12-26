@@ -1104,7 +1104,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 				ProjectRef: &akov2common.ResourceRefNamespaced{
 					Name:      expectedProject.Name,
 					Namespace: expectedProject.Namespace,
-				}
+				},
 				Role: akov2.CustomRole{
 					Name: "test-role",
 					Actions: []akov2.Action{

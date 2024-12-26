@@ -1122,7 +1122,9 @@ func TestProjectWithCustomRole(t *testing.T) {
 				},
 			},
 			Status: akov2status.AtlasCustomRoleStatus{
-				Conditions: []akoapi.Condition{},
+				Common: akoapi.Common{
+					Conditions: []akoapi.Condition{},
+				},
 			},
 		},
 		)

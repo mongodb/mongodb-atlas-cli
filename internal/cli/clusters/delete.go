@@ -82,7 +82,7 @@ func (opts *DeleteOpts) PostRun() error {
 		*watchers.ClusterDeleted,
 		watchers.NewAtlasClusterStateDescriber(
 			opts.store.(store.ClusterDescriber),
-			opts.ProjectID,
+			opts.ConfigProjectID(),
 			opts.Entry,
 		),
 	)
@@ -100,7 +100,7 @@ func (opts *DeleteOpts) PostRunFlexCluster() error {
 		*watchers.ClusterDeleted,
 		watchers.NewAtlasFlexClusterStateDescriber(
 			opts.store.(store.ClusterDescriber),
-			opts.ProjectID,
+			opts.ConfigProjectID(),
 			opts.Entry,
 		),
 		opts.GetDefaultWait(),

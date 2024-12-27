@@ -174,7 +174,7 @@ func (opts *CreateOpts) PostRunFlexCluster() error {
 		*watchers.ClusterCreated,
 		watchers.NewAtlasFlexClusterStateDescriber(
 			opts.store.(store.ClusterDescriber),
-			opts.ProjectID,
+			opts.ConfigProjectID(),
 			opts.name,
 		),
 		opts.GetDefaultWait(),
@@ -199,7 +199,7 @@ func (opts *CreateOpts) PostRunDedicatedCluster() error {
 		*watchers.ClusterCreated,
 		watchers.NewAtlasClusterStateDescriber(
 			opts.store.(store.ClusterDescriber),
-			opts.ProjectID,
+			opts.ConfigProjectID(),
 			opts.name,
 		),
 		opts.GetDefaultWait(),

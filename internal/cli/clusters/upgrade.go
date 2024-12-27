@@ -220,7 +220,7 @@ func (opts *UpgradeOpts) cluster() (*atlas.Cluster, error) {
 		return cluster, nil
 	}
 
-	return opts.store.AtlasSharedCluster(opts.ProjectID, opts.name)
+	return opts.store.AtlasSharedCluster(opts.ConfigProjectID(), opts.name)
 }
 
 func (opts *UpgradeOpts) patchOpts(out *atlas.Cluster) {

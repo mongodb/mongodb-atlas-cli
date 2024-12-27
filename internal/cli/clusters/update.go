@@ -179,7 +179,7 @@ func (opts *UpdateOpts) cluster() (*atlasClustersPinned.AdvancedClusterDescripti
 
 		return cluster, nil
 	}
-	return opts.store.AtlasCluster(opts.ProjectID, opts.name)
+	return opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 }
 
 func (opts *UpdateOpts) patchOpts(out *atlasClustersPinned.AdvancedClusterDescription) {

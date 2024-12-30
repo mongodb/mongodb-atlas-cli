@@ -123,7 +123,6 @@ func (e *ConfigExporter) WithIndependentResources(enabled bool) *ConfigExporter 
 	e.independentResources = enabled
 	return e
 }
-
 func (e *ConfigExporter) Run() (string, error) {
 	// TODO: Add REST to OPERATOR entities matcher
 	output := bytes.NewBufferString(yamlSeparator)
@@ -184,6 +183,7 @@ func (e *ConfigExporter) Run() (string, error) {
 	return output.String(), nil
 }
 
+//nolint:gocyclo
 func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 	atlasProject, err := e.dataProvider.Project(e.projectID)
 	if err != nil {
@@ -253,6 +253,26 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 
 		for _, privateEndpoint := range privateEndpoints {
 			r = append(r, &privateEndpoint)
+		}
+	}
+
+	// Independent custom roles (AtlasCustomRole CR)
+	if e.featureValidator.IsResourceSupported(features.ResourceAtlasCustomRole) {
+		roles, err := project.BuildCustomRoles(e.dataProvider, project.CustomRolesRequest{
+			ProjectID:       e.projectID,
+			ProjectName:     projectData.Project.Name,
+			TargetNamespace: e.targetNamespace,
+			Version:         e.operatorVersion,
+			Credentials:     credentialsName,
+			IsIndependent:   e.independentResources,
+			Dict:            e.dictionaryForAtlasNames,
+		})
+		if err != nil {
+			return nil, "", err
+		}
+
+		for i := range len(roles) {
+			r = append(r, &roles[i])
 		}
 	}
 

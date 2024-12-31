@@ -18,7 +18,6 @@ import (
 	"net/http"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 	"go.mongodb.org/atlas/auth"
 )
 
@@ -37,9 +36,7 @@ const (
 	GovClientID = "0oabtyfelbTBdoucy297" // GovClientID for production
 )
 
-func FlowWithConfig(c ServiceGetter) (*auth.Config, error) {
-	client := http.DefaultClient
-	client.Transport = transport.Default()
+func FlowWithConfig(c ServiceGetter, client *http.Client) (*auth.Config, error) {
 	id := ClientID
 	if c.Service() == config.CloudGovService {
 		id = GovClientID

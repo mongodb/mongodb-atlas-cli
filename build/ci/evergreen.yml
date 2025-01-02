@@ -2067,13 +2067,14 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".coverage"
-  - name: ubuntu
+  - name: snyk
     display_name: Snyk
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
     tags:
-    - snyk
-    - cron
+      - snyk
+      - cron
     run_on:
-    - ubuntu2204-large
+      - ubuntu2204-small
     tasks:
       - name: ".snyk"
 patch_aliases:

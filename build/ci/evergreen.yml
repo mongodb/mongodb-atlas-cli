@@ -2074,7 +2074,7 @@ buildvariants:
       - snyk
       - cron
     run_on:
-      - ubuntu2204-large
+      - ubuntu2204-small
     tasks:
       - name: ".snyk"
 patch_aliases:

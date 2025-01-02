@@ -2079,13 +2079,13 @@ buildvariants:
       - name: ".snyk"
 patch_aliases:
   - alias: "localdev"
-    variant_tags: [".localdev .cron"]
+    variant_tags: ["localdev cron"]
     task: ".*"
   - alias: "packer"
-    variant_tags: [".packer .cron"]
+    variant_tags: ["packer cron"]
     task: ".*"
   - alias: "cleanup"
-    variant_tags: [".cleanup .cron"]
+    variant_tags: ["cleanup cron"]
     task: ".*"
   - alias: "snyk"
     variant_tags: ["snyk cron"]

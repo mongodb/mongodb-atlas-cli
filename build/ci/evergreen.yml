@@ -2088,7 +2088,7 @@ patch_aliases:
     variant_tags: [".cleanup .cron"]
     task: ".*"
   - alias: "snyk"
-    variant_tags: [".snyk .cron"]
+    variant_tags: ["snyk cron"]
     task: ".*"
 github_pr_aliases:
   - variant: "code_health"

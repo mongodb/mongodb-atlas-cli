@@ -328,4 +328,5 @@ const (
 	AuditFilter                               = "auditFilter"                               // AuditFilter flag
 	IndependentResources                      = "independentResources"                      // IndependentResources flag
 	InitDB                                    = "initdb"                                    // InitDB flag
+	IncludeStats                              = "includeStats"                              // IncludeStats flag
 )

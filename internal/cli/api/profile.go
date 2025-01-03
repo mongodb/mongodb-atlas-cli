@@ -36,10 +36,20 @@ func NewProfileFlagValueProviderForDefaultProfile() *ProfileFlagValueProvider {
 func (p *ProfileFlagValueProvider) ValueForFlag(flagName string) (*string, error) {
 	switch flagName {
 	case "groupId":
-		return pointer.Get(p.profile.ProjectID()), nil
+		return noneEmptyStringPointer(p.profile.ProjectID()), nil
 	case "orgId":
-		return pointer.Get(p.profile.OrgID()), nil
+		return noneEmptyStringPointer(p.profile.OrgID()), nil
+	case "version":
+		return noneEmptyStringPointer(p.profile.APIVersion()), nil
 	}
 
 	return nil, nil
+}
+
+func noneEmptyStringPointer(value string) *string {
+	if value != "" {
+		return pointer.Get(value)
+	}
+
+	return nil
 }

@@ -55,6 +55,7 @@ const (
 	ClientIDField            = "client_id"
 	OpsManagerURLField       = "ops_manager_url"
 	baseURL                  = "base_url"
+	apiVersion               = "api_version"
 	output                   = "output"
 	fileFlags                = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 	configPerm               = 0600
@@ -121,6 +122,7 @@ func Properties() []string {
 		TelemetryEnabledProperty,
 		AccessTokenField,
 		RefreshTokenField,
+		apiVersion,
 	}
 }
 
@@ -439,6 +441,18 @@ func (p *Profile) tokenClaims() (jwt.RegisteredClaims, error) {
 	// ParseUnverified is ok here, only want to make sure is a JWT and to get the claims for a Subject
 	_, _, err := new(jwt.Parser).ParseUnverified(p.AccessToken(), &c)
 	return c, err
+}
+
+// APIVersion get the default API version.
+func APIVersion() string { return Default().APIVersion() }
+func (p *Profile) APIVersion() string {
+	return p.GetString(apiVersion)
+}
+
+// SetAPIVersion sets the default API version.
+func SetAPIVersion(v string) { Default().SetAPIVersion(v) }
+func (p *Profile) SetAPIVersion(v string) {
+	p.Set(apiVersion, v)
 }
 
 // OpsManagerURL get configured ops manager base url.

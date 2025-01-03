@@ -25,11 +25,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type GCPOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	atlasCIDRBlock string
 	gcpProjectID   string
@@ -137,7 +137,7 @@ func GCPBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)
 	cmd.Flags().StringSliceVar(&opts.regions, flag.Region, []string{}, usage.ContainerRegions)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.AtlasCIDRBlock)

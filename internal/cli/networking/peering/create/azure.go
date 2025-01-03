@@ -27,11 +27,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type AzureOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	region         string
 	atlasCIDRBlock string
@@ -166,7 +166,7 @@ To learn more about network peering connections, see https://www.mongodb.com/doc
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.ContainerRegion)
 	cmd.Flags().StringVar(&opts.atlasCIDRBlock, flag.AtlasCIDRBlock, "", usage.AtlasCIDRBlock)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.DirectoryID)

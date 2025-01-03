@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/livemigrations/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestLiveMigrationCreateOpts_Run(t *testing.T) {
@@ -34,7 +34,7 @@ func TestLiveMigrationCreateOpts_Run(t *testing.T) {
 
 	createOpts := &CreateOpts{
 		LiveMigrationsOpts: options.LiveMigrationsOpts{
-			GlobalOpts:                  cli.GlobalOpts{ProjectID: "1"},
+			ProjectOpts:                 cli.ProjectOpts{ProjectID: "1"},
 			SourceProjectID:             "2",
 			SourceClusterName:           "testSrc",
 			SourceManagedAuthentication: true,

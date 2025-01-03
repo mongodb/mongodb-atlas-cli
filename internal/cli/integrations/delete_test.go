@@ -34,7 +34,7 @@ func TestDelete_Run(t *testing.T) {
 			Entry:   "SLACK",
 			Confirm: true,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "5a0a1e7e0f2912c554080adc",
 		},
 	}

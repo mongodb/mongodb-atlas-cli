@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const (
@@ -180,6 +180,61 @@ func (g *atlasE2ETestGenerator) generateEmptyProject(prefix string) {
 
 	g.t.Cleanup(func() {
 		deleteProjectWithRetry(g.t, g.projectID)
+	})
+}
+
+func (g *atlasE2ETestGenerator) generatePrivateEndpoint(provider, region string) {
+	g.t.Helper()
+
+	cliPath, err := e2e.AtlasCLIBin()
+	if err != nil {
+		g.t.Fatalf("%v: invalid bin", err)
+	}
+
+	cmd := exec.Command(cliPath,
+		privateEndpointsEntity,
+		provider,
+		"create",
+		"--region",
+		region,
+		"--projectId",
+		g.projectID,
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(g.t, err, string(resp))
+	var r atlasv2.EndpointService
+	require.NoError(g.t, json.Unmarshal(resp, &r))
+
+	g.t.Logf("endpointServiceID=%s", r.GetId())
+
+	g.t.Cleanup(func() {
+		g.t.Logf("deleting privat endpoint service - ID=%s", r.GetId())
+		cmd := exec.Command(cliPath,
+			privateEndpointsEntity,
+			provider,
+			"delete",
+			r.GetId(),
+			"--projectId",
+			g.projectID,
+			"--force")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(g.t, err, string(resp))
+
+		cmd = exec.Command(cliPath,
+			privateEndpointsEntity,
+			provider,
+			"watch",
+			r.GetId(),
+			"--projectId",
+			g.projectID)
+		cmd.Env = os.Environ()
+
+		resp, err = cmd.CombinedOutput()
+		// We expect a 404 error once the private endpoint has been completely deleted
+		require.Error(g.t, err)
+		assert.Contains(g.t, string(resp), "404")
 	})
 }
 
@@ -376,6 +431,25 @@ func (g *atlasE2ETestGenerator) generateServerlessCluster() {
 		cliPath, err := e2e.AtlasCLIBin()
 		require.NoError(g.t, err)
 		deleteServerlessInstanceForProject(g.t, cliPath, g.projectID, g.serverlessName)
+	})
+}
+
+func (g *atlasE2ETestGenerator) generateFlexCluster() {
+	g.t.Helper()
+
+	if g.projectID == "" {
+		g.t.Fatal("unexpected error: project must be generated")
+	}
+
+	var err error
+	g.clusterName, err = deployFlexClusterForProject(g.projectID)
+	if err != nil {
+		g.t.Errorf("unexpected error deploying flex cluster: %v", err)
+	}
+	g.t.Logf("flexClusterName=%s", g.clusterName)
+
+	g.t.Cleanup(func() {
+		_ = deleteClusterForProject(g.projectID, g.clusterName)
 	})
 }
 

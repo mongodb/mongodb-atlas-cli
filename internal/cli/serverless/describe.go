@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package serverless
 
 import (
@@ -20,7 +21,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
@@ -31,7 +31,7 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 `
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store        store.ServerlessInstanceDescriber
 	instanceName string
@@ -80,9 +80,10 @@ func DescribeBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
+		Deprecated: "please use the 'atlas cluster describe <ClusterName> [--projectId projectId]' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

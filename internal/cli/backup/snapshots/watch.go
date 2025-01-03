@@ -25,14 +25,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type WatchOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.WatchOpts
-	id          string
-	clusterName string
-	store       store.SnapshotsDescriber
+	id            string
+	clusterName   string
+	isFlexCluster bool
+	store         store.SnapshotsDescriber
 }
 
 var watchTemplate = "\nSnapshot changes completed.\n"
@@ -53,7 +55,31 @@ func (opts *WatchOpts) watcher() (any, bool, error) {
 	return nil, result.GetStatus() == "completed" || result.GetStatus() == "failed", nil
 }
 
+func (opts *WatchOpts) watcherFlexCluster() (any, bool, error) {
+	result, err := opts.store.FlexClusterSnapshot(opts.ConfigProjectID(), opts.clusterName, opts.id)
+	if err != nil {
+		return nil, false, err
+	}
+	return nil, result.GetStatus() == "COMPLETED" || result.GetStatus() == "FAILED", nil
+}
+
 func (opts *WatchOpts) Run() error {
+	if opts.isFlexCluster {
+		return opts.RunFlexCluster()
+	}
+
+	return opts.RunDedicatedCluster()
+}
+
+func (opts *WatchOpts) RunFlexCluster() error {
+	if _, err := opts.Watch(opts.watcherFlexCluster); err != nil {
+		return err
+	}
+
+	return opts.Print(nil)
+}
+
+func (opts *WatchOpts) RunDedicatedCluster() error {
 	if _, err := opts.Watch(opts.watcher); err != nil {
 		return err
 	}
@@ -61,6 +87,30 @@ func (opts *WatchOpts) Run() error {
 	return opts.Print(nil)
 }
 
+// newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is
+// a FlexCluster. The function calls the FlexClusterSnapshot to get a flex cluster snapshot,
+// and it sets the opts.isFlexCluster = true in the event of a cannotUseNotFlexWithFlexApisErrorCode.
+func (opts *WatchOpts) newIsFlexCluster() error {
+	_, err := opts.store.FlexClusterSnapshot(opts.ConfigProjectID(), opts.clusterName, opts.id)
+	if err == nil {
+		opts.isFlexCluster = true
+		return nil
+	}
+
+	apiError, ok := atlasv2.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode && apiError.ErrorCode != featureUnsupported {
+		return err
+	}
+
+	opts.isFlexCluster = false
+	return nil
+}
+
+// WatchBuilder builds a cobra.Command that can run as:
 // atlas snapshot(s) watch <snapshotId> --clusterName clusterName [--projectId projectId].
 func WatchBuilder() *cobra.Command {
 	opts := &WatchOpts{}
@@ -89,12 +139,15 @@ You can interrupt the command's polling at any time with CTRL-C.
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
 			opts.id = args[0]
+			if err := opts.newIsFlexCluster(); err != nil {
+				return nil
+			}
 			return opts.Run()
 		},
 	}
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 

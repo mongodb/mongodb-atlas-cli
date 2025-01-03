@@ -26,7 +26,7 @@ import (
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	validationID string
 	store        store.LiveMigrationValidationsDescriber
@@ -74,7 +74,7 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.validationID, flag.LiveMigrationValidationID, "", usage.LiveMigrationValidationID)
 	opts.AddOutputOptFlags(cmd)
 

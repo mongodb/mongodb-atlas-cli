@@ -22,15 +22,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
+	cli.ListOpts
 	cli.MetricsOpts
 	host  string
 	port  int
@@ -44,6 +48,30 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
 		return err
 	}
+}
+
+func (opts *DescribeOpts) NewDiskMeasurementsAPIParams(groupID string, processID string, partitionName string) *atlasv2.GetDiskMeasurementsApiParams {
+	p := &atlasv2.GetDiskMeasurementsApiParams{
+		GroupId:       groupID,
+		ProcessId:     processID,
+		PartitionName: partitionName,
+	}
+	if opts.Granularity != "" {
+		p.Granularity = &opts.Granularity
+	}
+	if len(opts.MeasurementType) > 0 {
+		p.M = &opts.MeasurementType
+	}
+	if opts.Period != "" {
+		p.Period = &opts.Period
+	}
+	if start, err := convert.ParseTimestamp(opts.Start); err == nil {
+		p.Start = pointer.Get(start)
+	}
+	if end, err := convert.ParseTimestamp(opts.End); err == nil {
+		p.End = pointer.Get(end)
+	}
+	return p
 }
 
 func (opts *DescribeOpts) Run() error {
@@ -100,16 +128,11 @@ atlas processes list
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
+	opts.AddListOptsFlagsWithoutOmitCount(cmd)
 
-	cmd.Flags().StringVar(&opts.Granularity, flag.Granularity, "", usage.Granularity)
-	cmd.Flags().StringVar(&opts.Period, flag.Period, "", usage.Period)
-	cmd.Flags().StringVar(&opts.Start, flag.Start, "", usage.MeasurementStart)
-	cmd.Flags().StringVar(&opts.End, flag.End, "", usage.MeasurementEnd)
-	cmd.Flags().StringSliceVar(&opts.MeasurementType, flag.TypeFlag, nil, usage.MeasurementType)
+	opts.AddMetricsOptsFlags(cmd)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Granularity)

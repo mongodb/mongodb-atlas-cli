@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
@@ -37,7 +37,7 @@ func TestUpdate_Run(t *testing.T) {
 		federationSettingsID: "federationSettingsID",
 		file:                 "config.json",
 		fs:                   afero.NewMemMapFs(),
-		GlobalOpts: cli.GlobalOpts{
+		OrgOpts: cli.OrgOpts{
 			OrgID: "6627f3ee0c9eba75f37240b3",
 		},
 	}

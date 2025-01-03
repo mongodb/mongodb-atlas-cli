@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
@@ -33,7 +33,7 @@ const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.ListOpts
 	cli.OutputOpts
 	store              store.OrganizationLister
@@ -97,9 +97,7 @@ func ListBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().IntVar(&opts.PageNum, flag.Page, cli.DefaultPage, usage.Page)
-	cmd.Flags().IntVar(&opts.ItemsPerPage, flag.Limit, cli.DefaultPageLimit, usage.Limit)
-	cmd.Flags().BoolVar(&opts.OmitCount, flag.OmitCount, false, usage.OmitCount)
+	opts.AddListOptsFlags(cmd)
 
 	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.OrgNameFilter)
 	cmd.Flags().BoolVar(&opts.includeDeletedOrgs, flag.IncludeDeleted, false, usage.OrgIncludeDeleted)

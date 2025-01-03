@@ -21,7 +21,8 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestStart_Run(t *testing.T) {
@@ -39,15 +40,44 @@ func TestStart_Run(t *testing.T) {
 			targetProjectID:   "1",
 		}
 
+		expectedError := &atlasv2.GenericOpenAPIError{}
+		expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
+
+		mockStore.
+			EXPECT().
+			CreateRestoreFlexClusterJobs(listOpts.ProjectID, "Cluster0", listOpts.newFlexBackupRestoreJobCreate()).
+			Return(nil, expectedError).
+			Times(1)
+
 		mockStore.
 			EXPECT().
 			CreateRestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.newCloudProviderSnapshotRestoreJob()).
 			Return(expected, nil).
 			Times(1)
 
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
+		require.NoError(t, listOpts.Run())
+	})
+
+	t.Run("Flex Cluster automated restore job", func(t *testing.T) {
+		listOpts := &StartOpts{
+			store:             mockStore,
+			method:            automatedRestore,
+			clusterName:       "Cluster0",
+			targetClusterName: "Cluster1",
+			targetProjectID:   "1",
 		}
+
+		expectedFlex := &atlasv2.FlexBackupRestoreJob20241113{}
+		expectedError := &atlasv2.GenericOpenAPIError{}
+		expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
+
+		mockStore.
+			EXPECT().
+			CreateRestoreFlexClusterJobs(listOpts.ProjectID, "Cluster0", listOpts.newFlexBackupRestoreJobCreate()).
+			Return(expectedFlex, nil).
+			Times(1)
+
+		require.NoError(t, listOpts.Run())
 	})
 
 	t.Run(pointInTimeRestore, func(t *testing.T) {
@@ -59,15 +89,22 @@ func TestStart_Run(t *testing.T) {
 			targetProjectID:   "1",
 		}
 
+		expectedError := &atlasv2.GenericOpenAPIError{}
+		expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
+
+		mockStore.
+			EXPECT().
+			CreateRestoreFlexClusterJobs(listOpts.ProjectID, "Cluster0", listOpts.newFlexBackupRestoreJobCreate()).
+			Return(nil, expectedError).
+			Times(1)
+
 		mockStore.
 			EXPECT().
 			CreateRestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.newCloudProviderSnapshotRestoreJob()).
 			Return(expected, nil).
 			Times(1)
 
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		require.NoError(t, listOpts.Run())
 	})
 
 	t.Run(downloadRestore, func(t *testing.T) {
@@ -77,14 +114,21 @@ func TestStart_Run(t *testing.T) {
 			clusterName: "Cluster0",
 		}
 
+		expectedError := &atlasv2.GenericOpenAPIError{}
+		expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
+
+		mockStore.
+			EXPECT().
+			CreateRestoreFlexClusterJobs(listOpts.ProjectID, "Cluster0", listOpts.newFlexBackupRestoreJobCreate()).
+			Return(nil, expectedError).
+			Times(1)
+
 		mockStore.
 			EXPECT().
 			CreateRestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.newCloudProviderSnapshotRestoreJob()).
 			Return(expected, nil).
 			Times(1)
 
-		if err := listOpts.Run(); err != nil {
-			t.Fatalf("Run() unexpected error: %v", err)
-		}
+		require.NoError(t, listOpts.Run())
 	})
 }

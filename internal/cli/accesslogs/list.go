@@ -39,7 +39,7 @@ const (
 )
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	hostname    string
 	clusterName string
@@ -138,7 +138,7 @@ func ListBuilder() *cobra.Command {
 	cmd.Flags().IntVar(&opts.nLogs, flag.NLog, 0, usage.NLog)
 	cmd.Flags().StringVar(&opts.ipAddresses, flag.IP, "", usage.AccessLogIP)
 	cmd.Flags().StringVar(&opts.authResult, flag.AuthResult, "", usage.AuthResult)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.ClusterName, flag.Hostname)

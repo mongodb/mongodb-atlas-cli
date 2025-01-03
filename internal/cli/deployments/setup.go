@@ -50,16 +50,19 @@ import (
 )
 
 const (
-	internalMongodPort = 27017
-	mdb7               = "7.0"
-	mdb8               = "8.0"
-	defaultSettings    = "default"
-	customSettings     = "custom"
-	cancelSettings     = "cancel"
-	skipConnect        = "skip"
-	autoassignPort     = "autoassign"
-	spinnerSpeed       = 100 * time.Millisecond
-	steps              = 3
+	internalMongodPort         = 27017
+	mdb7                       = "7.0"
+	mdb8                       = "8.0"
+	defaultSettings            = "default"
+	customSettings             = "custom"
+	cancelSettings             = "cancel"
+	skipConnect                = "skip"
+	autoassignPort             = "autoassign"
+	spinnerSpeed               = 100 * time.Millisecond
+	steps                      = 3
+	atlasM2                    = "M2"
+	atlasM5                    = "M5"
+	deprecateMessageSharedTier = "The '%s' tier is deprecated. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
 )
 
 var (
@@ -107,7 +110,7 @@ var (
 type SetupOpts struct {
 	options.DeploymentOpts
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.InputOpts
 	mongodbClient mongodbclient.MongoDBClient
 	settings      string
@@ -632,9 +635,7 @@ func (opts *SetupOpts) runAtlas(ctx context.Context) error {
 	_, _ = log.Debugf("Removing flags and args from original args %s\n", os.Args)
 
 	flagstoRemove := map[string]string{
-		flag.TypeFlag:    "1",
-		flag.MDBVersion:  "1", // TODO: CLOUDP-200331
-		flag.ConnectWith: "1", // TODO: CLOUDP-199422
+		flag.TypeFlag: "1",
 	}
 
 	newArgs, err := workflows.RemoveFlagsAndArgs(flagstoRemove, map[string]bool{opts.DeploymentName: true}, os.Args)
@@ -678,6 +679,15 @@ func (opts *SetupOpts) PostRun() {
 	opts.DeploymentTelemetry.AppendDeploymentType()
 }
 
+func (opts *SetupOpts) validateTier() error {
+	opts.atlasSetup.Tier = strings.ToUpper(opts.atlasSetup.Tier)
+	if opts.atlasSetup.Tier == atlasM2 || opts.atlasSetup.Tier == atlasM5 {
+		_, _ = fmt.Fprintf(os.Stderr, deprecateMessageSharedTier, opts.atlasSetup.Tier)
+	}
+	return nil
+}
+
+// SetupBuilder builds a cobra.Command that can run as:
 // atlas deployments setup.
 func SetupBuilder() *cobra.Command {
 	opts := &SetupOpts{
@@ -703,6 +713,7 @@ func SetupBuilder() *cobra.Command {
 			opts.DBUserPassword = opts.atlasSetup.DBUserPassword
 
 			return opts.PreRunE(
+				opts.validateTier,
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitInput(cmd.InOrStdin()),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),

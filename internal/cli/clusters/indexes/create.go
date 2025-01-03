@@ -28,11 +28,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	clusterName string
 	name        string
 	db          string
@@ -182,7 +182,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().BoolVar(&opts.sparse, flag.Sparse, false, usage.Sparse)
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.IndexFilename)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Database)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Collection)

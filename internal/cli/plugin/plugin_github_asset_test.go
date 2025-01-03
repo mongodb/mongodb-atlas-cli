@@ -18,8 +18,6 @@ package plugin
 
 import (
 	"errors"
-	"fmt"
-	"runtime"
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
@@ -35,50 +33,154 @@ func Test_repository(t *testing.T) {
 	assert.Equal(t, opts.owner+"/"+opts.name, opts.repository())
 }
 
-func Test_getID(t *testing.T) {
-	validAssetName := fmt.Sprintf("plugin_%s_%s", runtime.GOOS, runtime.GOARCH)
-
+func Test_getIDForOSArch(t *testing.T) {
 	tests := []struct {
 		name            string
 		pluginAssets    []*github.ReleaseAsset
 		expectedAssetID int64
 		expectError     bool
+		os              string
+		arch            string
 	}{
 		{
-			name: "Valid asset",
+			name: "Valid asset linux amd64",
 			pluginAssets: []*github.ReleaseAsset{
 				{
 					ID:          github.Int64(1),
-					Name:        github.String(validAssetName + ".tar.gz"),
+					Name:        github.String("plugin_linux_amd64.tar.gz"),
 					ContentType: github.String("application/gzip"),
 				},
 			},
 			expectedAssetID: 1,
 			expectError:     false,
+			os:              "linux",
+			arch:            "amd64",
+		},
+		{
+			name: "Valid asset windows amd64",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(2),
+					Name:        github.String("plugin_windows_amd64.zip"),
+					ContentType: github.String("application/zip"),
+				},
+			},
+			expectedAssetID: 2,
+			expectError:     false,
+			os:              "windows",
+			arch:            "amd64",
+		},
+		{
+			name: "Valid asset darwin arm64",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(3),
+					Name:        github.String("plugin_darwin_arm64.tar.gz"),
+					ContentType: github.String("application/gzip"),
+				},
+			},
+			expectedAssetID: 3,
+			expectError:     false,
+			os:              "darwin",
+			arch:            "arm64",
+		},
+		{
+			name: "Valid asset with x86_64 linux",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(4),
+					Name:        github.String("plugin_linux_x86_64.tar.gz"),
+					ContentType: github.String("application/gzip"),
+				},
+			},
+			expectedAssetID: 4,
+			expectError:     false,
+			os:              "linux",
+			arch:            "amd64",
+		},
+		{
+			name: "Valid asset with x86_64 darwin",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(5),
+					Name:        github.String("plugin_darwin_x86_64.tar.gz"),
+					ContentType: github.String("application/gzip"),
+				},
+			},
+			expectedAssetID: 5,
+			expectError:     false,
+			os:              "darwin",
+			arch:            "amd64",
+		},
+		{
+			name: "Valid asset with aarch64 linux",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(6),
+					Name:        github.String("plugin_linux_aarch64.tar.gz"),
+					ContentType: github.String("application/gzip"),
+				},
+			},
+			expectedAssetID: 6,
+			expectError:     false,
+			os:              "linux",
+			arch:            "arm64",
+		},
+		{
+			name: "Valid asset with aarch64 darwin",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(7),
+					Name:        github.String("plugin_darwin_aarch64.tar.gz"),
+					ContentType: github.String("application/gzip"),
+				},
+			},
+			expectedAssetID: 7,
+			expectError:     false,
+			os:              "darwin",
+			arch:            "arm64",
 		},
 		{
 			name: "No matching asset",
 			pluginAssets: []*github.ReleaseAsset{
 				{
-					ID:          github.Int64(2),
+					ID:          github.Int64(8),
 					Name:        github.String("plugin_invalid_assetname.tar.gz"),
 					ContentType: github.String("application/gzip"),
 				},
 			},
 			expectedAssetID: 0,
 			expectError:     true,
+			os:              "linux",
+			arch:            "amd64",
 		},
 		{
 			name: "Non-gzip asset",
 			pluginAssets: []*github.ReleaseAsset{
 				{
-					ID:          github.Int64(3),
-					Name:        github.String(validAssetName + ".zip"),
-					ContentType: github.String("application/zip"),
+					ID:          github.Int64(9),
+					Name:        github.String("plugin_linux_amd64.json"),
+					ContentType: github.String("application/json"),
 				},
 			},
 			expectedAssetID: 0,
 			expectError:     true,
+			os:              "linux",
+			arch:            "amd64",
+		},
+		{
+			name: "Zip asset",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(10),
+					Name:        github.String("plugin_linux_amd64.zip"),
+					ContentType: github.String("application/zip"),
+				},
+			},
+			expectedAssetID: 10,
+			expectError:     false,
+			os:              "linux",
+			arch:            "amd64",
 		},
 	}
 
@@ -86,7 +188,7 @@ func Test_getID(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			opts := &GithubAsset{}
 
-			assetID, err := opts.getID(tt.pluginAssets)
+			assetID, err := opts.getIDForOSArch(tt.pluginAssets, tt.os, tt.arch)
 			if (err != nil) != tt.expectError {
 				t.Errorf("expected error: %v, got: %v", tt.expectError, err)
 			}

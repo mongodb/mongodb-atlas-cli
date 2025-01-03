@@ -20,7 +20,7 @@ import (
 )
 
 func Builder() *cobra.Command {
-	description := "Create, list and manage your Atlas users."
+	description := "Create and manage your Atlas users."
 
 	const use = "users"
 	cmd := &cobra.Command{

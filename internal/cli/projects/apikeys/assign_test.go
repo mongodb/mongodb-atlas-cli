@@ -36,7 +36,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AssignProjectAPIKey(opts.OrgID, opts.id, opts.newAssignAPIKey()).
+		AssignProjectAPIKey(opts.ProjectID, opts.id, opts.newAssignAPIKey()).
 		Return(nil).
 		Times(1)
 

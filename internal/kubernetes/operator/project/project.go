@@ -32,7 +32,7 @@ import (
 	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8snames "k8s.io/apiserver/pkg/storage/names"
@@ -133,7 +133,7 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 		projectResult.Spec.NetworkPeers = networkPeering
 	}
 
-	if br.Validator.FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints) {
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featurePrivateEndpoints) && !br.Validator.IsResourceSupported(features.ResourceAtlasPrivateEndpoint) {
 		privateEndpoints, ferr := buildPrivateEndpoints(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
@@ -642,7 +642,7 @@ func buildEncryptionAtRest(encProvider store.EncryptionAtRestDescriber, projectI
 			Build())
 
 	case data.GoogleCloudKms.Enabled != nil && *data.GoogleCloudKms.Enabled:
-		ref.AzureKeyVault.SecretRef = akov2common.ResourceRefNamespaced{
+		ref.GoogleCloudKms.SecretRef = akov2common.ResourceRefNamespaced{
 			Name:      resources.NormalizeAtlasName(generateName("gcp-credentials-"), dictionary),
 			Namespace: targetNamespace,
 		}

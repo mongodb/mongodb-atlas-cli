@@ -25,7 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -52,14 +53,45 @@ func TestList_Run(t *testing.T) {
 		},
 	}
 
+	expectedError := &atlasv2.GenericOpenAPIError{}
+	expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
+
+	mockStore.
+		EXPECT().
+		FlexClusterSnapshots(listOpts.newListFlexBackupsAPIParams()).
+		Return(nil, expectedError).
+		Times(1)
+
 	mockStore.
 		EXPECT().
 		Snapshots(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
 		Return(expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+	require.NoError(t, listOpts.Run())
+	test.VerifyOutputTemplate(t, listTemplate, expected)
+}
+
+func TestList_Run_FlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockSnapshotsLister(ctrl)
+	expected := &atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113{}
+	buf := new(bytes.Buffer)
+	listOpts := &ListOpts{
+		store:       mockStore,
+		clusterName: "Cluster0",
+		OutputOpts: cli.OutputOpts{
+			Template:  listTemplate,
+			OutWriter: buf,
+		},
 	}
+
+	mockStore.
+		EXPECT().
+		FlexClusterSnapshots(listOpts.newListFlexBackupsAPIParams()).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, listOpts.Run())
 	test.VerifyOutputTemplate(t, listTemplate, expected)
 }

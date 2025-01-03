@@ -23,11 +23,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type ConnectOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	cli.InputOpts
 	*DescribeOrgConfigsOpts
@@ -125,7 +125,7 @@ func ConnectBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
 	cmd.Flags().StringVar(&opts.identityProviderID, flag.IdentityProviderID, "", usage.IdentityProviderID)
 	cmd.Flags().StringVar(&opts.protocol, flag.Protocol, oidc, usage.Protocol)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 
 	opts.AddOutputOptFlags(cmd)
 

@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestDisableOpts_Run(t *testing.T) {
@@ -32,7 +32,7 @@ func TestDisableOpts_Run(t *testing.T) {
 
 	opts := &DisableOpts{
 		alertID: "alertID",
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "projectID",
 		},
 		store: mockStore,

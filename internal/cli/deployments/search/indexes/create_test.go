@@ -32,7 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 var indexID = "6509bc5080b2f007e6a2a0ce"
@@ -270,7 +270,7 @@ func TestCreate_RunAtlas(t *testing.T) {
 			OutWriter: buf,
 			Template:  createTemplate,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "projectID",
 		},
 		store: mockIndexStore,

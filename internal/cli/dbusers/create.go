@@ -29,11 +29,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.InputOpts
 	username    string
@@ -43,6 +43,7 @@ type CreateOpts struct {
 	ldapType    string
 	oidcType    string
 	deleteAfter string
+	description string
 	roles       []string
 	scopes      []string
 	store       store.DatabaseUserCreator
@@ -138,6 +139,10 @@ func (opts *CreateOpts) newDatabaseUser() *atlasv2.CloudDatabaseUser {
 
 	if opts.oidcType != "" {
 		u.OidcAuthType = &opts.oidcType
+	}
+
+	if opts.description != "" {
+		u.Description = &opts.description
 	}
 
 	return u
@@ -239,6 +244,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.DBUsername)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.DBUserPassword)
 	cmd.Flags().StringVar(&opts.deleteAfter, flag.DeleteAfter, "", usage.BDUsersDeleteAfter)
+	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.DBUserDescription)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.RolesExtended)
 	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes)
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
@@ -249,7 +255,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.AWSIAMType, flag.LDAPType, flag.X509Type, flag.OIDCType)
 	cmd.MarkFlagsMutuallyExclusive(flag.Password, flag.OIDCType)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Username)

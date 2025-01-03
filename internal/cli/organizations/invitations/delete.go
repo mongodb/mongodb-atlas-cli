@@ -29,7 +29,7 @@ import (
 
 type DeleteOpts struct {
 	*cli.DeleteOpts
-	cli.GlobalOpts
+	cli.OrgOpts
 	store store.OrganizationInvitationDeleter
 }
 
@@ -75,7 +75,7 @@ func DeleteBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 
 	return cmd
 }

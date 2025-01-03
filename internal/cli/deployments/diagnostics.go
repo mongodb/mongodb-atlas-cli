@@ -30,7 +30,7 @@ import (
 
 type diagnosticsOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	options.DeploymentOpts
 }
 

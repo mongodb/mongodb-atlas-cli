@@ -30,7 +30,7 @@ import (
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	*cli.DeleteOpts
 	streamsInstance string
 	store           store.ConnectionDeleter
@@ -87,7 +87,7 @@ Before deleting an Atlas Streams Processing connection, you must first stop all 
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVarP(&opts.streamsInstance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
 	_ = cmd.MarkFlagRequired(flag.Instance)
 

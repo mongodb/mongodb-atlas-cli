@@ -22,7 +22,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"github.com/stretchr/testify/require"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestWatch_Run(t *testing.T) {
@@ -30,9 +31,10 @@ func TestWatch_Run(t *testing.T) {
 	mockStore := mocks.NewMockSnapshotsDescriber(ctrl)
 
 	watchOpts := &WatchOpts{
-		id:          "test",
-		store:       mockStore,
-		clusterName: "cluster",
+		id:            "test",
+		store:         mockStore,
+		clusterName:   "cluster",
+		isFlexCluster: false,
 	}
 
 	expected := &atlasv2.DiskBackupReplicaSet{Status: pointer.Get("completed")}
@@ -43,7 +45,27 @@ func TestWatch_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := watchOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+	require.NoError(t, watchOpts.Run())
+}
+
+func TestWatch_Run_FlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockSnapshotsDescriber(ctrl)
+
+	watchOpts := &WatchOpts{
+		id:            "test",
+		store:         mockStore,
+		clusterName:   "cluster",
+		isFlexCluster: true,
 	}
+
+	expected := &atlasv2.FlexBackupSnapshot20241113{Status: pointer.Get("COMPLETED")}
+
+	mockStore.
+		EXPECT().
+		FlexClusterSnapshot(watchOpts.ConfigProjectID(), watchOpts.clusterName, watchOpts.id).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, watchOpts.Run())
 }

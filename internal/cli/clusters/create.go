@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -33,19 +34,24 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const (
-	replicaSet = "REPLICASET"
-	tenant     = "TENANT"
-	atlasM0    = "M0"
-	atlasM2    = "M2"
-	atlasM5    = "M5"
-	zoneName   = "Zone 1"
+	replicaSet                    = "REPLICASET"
+	tenant                        = "TENANT"
+	atlasM0                       = "M0"
+	atlasM2                       = "M2"
+	atlasFlex                     = "FLEX"
+	atlasM5                       = "M5"
+	zoneName                      = "Zone 1"
+	invalidAttributeErrorCode     = "INVALID_ATTRIBUTE"
+	duplicateClusterNameErrorCode = "DUPLICATE_CLUSTER_NAME"
+	regionName                    = "regionName"
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.WatchOpts
 	name                        string
 	provider                    string
@@ -58,6 +64,7 @@ type CreateOpts struct {
 	backup                      bool
 	biConnector                 bool
 	enableTerminationProtection bool
+	isFlexCluster               bool
 	mdbVersion                  string
 	filename                    string
 	tag                         map[string]string
@@ -79,8 +86,56 @@ const (
 )
 
 var clusterObj *atlasClustersPinned.AdvancedClusterDescription
+var flexCluster *atlasv2.FlexClusterDescription20241113
 
 func (opts *CreateOpts) Run() error {
+	if opts.isFlexCluster {
+		return opts.RunFlexCluster()
+	}
+
+	return opts.RunDedicatedCluster()
+}
+
+func (opts *CreateOpts) RunFlexCluster() error {
+	flexClusterReq, err := opts.newFlexCluster()
+	if err != nil {
+		return err
+	}
+
+	flexCluster, err = opts.store.CreateFlexCluster(opts.ConfigProjectID(), flexClusterReq)
+
+	apiError, ok := atlasv2.AsError(err)
+	code := apiError.GetErrorCode()
+	if ok {
+		if apiError.GetErrorCode() == invalidAttributeErrorCode && strings.Contains(apiError.GetDetail(), regionName) {
+			return cli.ErrNoRegionExistsTryCommand
+		}
+		if ok && code == duplicateClusterNameErrorCode {
+			return cli.ErrNameExists
+		}
+	}
+
+	return err
+}
+
+func (opts *CreateOpts) newFlexCluster() (*atlasv2.FlexClusterDescriptionCreate20241113, error) {
+	cluster := new(atlasv2.FlexClusterDescriptionCreate20241113)
+	if opts.filename != "" {
+		if err := file.Load(opts.fs, opts.filename, cluster); err != nil {
+			return nil, err
+		}
+	} else {
+		cluster = opts.newFlexClusterDescriptionCreate20241113()
+	}
+
+	if opts.name != "" {
+		cluster.Name = opts.name
+	}
+
+	return cluster, nil
+}
+
+func (opts *CreateOpts) RunDedicatedCluster() error {
 	cluster, err := opts.newCluster()
 	if err != nil {
 		return err
@@ -90,22 +145,50 @@ func (opts *CreateOpts) Run() error {
 	apiError, ok := atlasClustersPinned.AsError(err)
 	code := apiError.GetErrorCode()
 	if ok {
-		if apiError.GetErrorCode() == "INVALID_ATTRIBUTE" && strings.Contains(apiError.GetDetail(), "regionName") {
+		if apiError.GetErrorCode() == invalidAttributeErrorCode && strings.Contains(apiError.GetDetail(), regionName) {
 			return cli.ErrNoRegionExistsTryCommand
 		}
-		if ok && code == "DUPLICATE_CLUSTER_NAME" {
+		if ok && code == duplicateClusterNameErrorCode {
 			return cli.ErrNameExists
 		}
 	}
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func (opts *CreateOpts) PostRun() error {
+	if opts.isFlexCluster {
+		return opts.PostRunFlexCluster()
+	}
+
+	return opts.PostRunDedicatedCluster()
+}
+
+func (opts *CreateOpts) PostRunFlexCluster() error {
+	if !opts.EnableWatch {
+		return opts.Print(flexCluster)
+	}
+	opts.Template = createWatchTemplate
+
+	watcher := watchers.NewWatcherWithDefaultWait(
+		*watchers.ClusterCreated,
+		watchers.NewAtlasFlexClusterStateDescriber(
+			opts.store.(store.ClusterDescriber),
+			opts.ConfigProjectID(),
+			opts.name,
+		),
+		opts.GetDefaultWait(),
+	)
+
+	watcher.Timeout = time.Duration(opts.Timeout)
+	if err := opts.WatchWatcher(watcher); err != nil {
+		return err
+	}
+
+	return opts.Print(flexCluster)
+}
+
+func (opts *CreateOpts) PostRunDedicatedCluster() error {
 	if !opts.EnableWatch {
 		return opts.Print(clusterObj)
 	}
@@ -116,7 +199,7 @@ func (opts *CreateOpts) PostRun() error {
 		*watchers.ClusterCreated,
 		watchers.NewAtlasClusterStateDescriber(
 			opts.store.(store.ClusterDescriber),
-			opts.ProjectID,
+			opts.ConfigProjectID(),
 			opts.name,
 		),
 		opts.GetDefaultWait(),
@@ -138,7 +221,7 @@ func (opts *CreateOpts) newCluster() (*atlasClustersPinned.AdvancedClusterDescri
 		}
 		removeReadOnlyAttributes(cluster)
 	} else {
-		opts.applyOpts(cluster)
+		opts.applyOptsAdvancedCluster(cluster)
 	}
 
 	if opts.name != "" {
@@ -149,7 +232,7 @@ func (opts *CreateOpts) newCluster() (*atlasClustersPinned.AdvancedClusterDescri
 	return cluster, nil
 }
 
-func (opts *CreateOpts) applyOpts(out *atlasClustersPinned.AdvancedClusterDescription) {
+func (opts *CreateOpts) applyOptsAdvancedCluster(out *atlasClustersPinned.AdvancedClusterDescription) {
 	replicationSpec := opts.newAdvanceReplicationSpec()
 	if opts.backup {
 		out.BackupEnabled = &opts.backup
@@ -169,6 +252,19 @@ func (opts *CreateOpts) applyOpts(out *atlasClustersPinned.AdvancedClusterDescri
 	out.ReplicationSpecs = &[]atlasClustersPinned.ReplicationSpec{replicationSpec}
 
 	addTags(out, opts.tag)
+}
+
+func (opts *CreateOpts) newFlexClusterDescriptionCreate20241113() *atlasv2.FlexClusterDescriptionCreate20241113 {
+	return &atlasv2.FlexClusterDescriptionCreate20241113{
+		Name: opts.name,
+		ProviderSettings: atlasv2.FlexProviderSettingsCreate20241113{
+			BackingProviderName: opts.provider,
+			ProviderName:        pointer.Get(opts.tier),
+			RegionName:          opts.region,
+		},
+		TerminationProtectionEnabled: &opts.enableTerminationProtection,
+		Tags:                         newResourceTags(opts.tag),
+	}
 }
 
 func (opts *CreateOpts) isTenant() bool {
@@ -220,6 +316,35 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasClustersPinned.CloudRegio
 	return regionConfig
 }
 
+// newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster to create is
+// a FlexCluster. When opts.filename is not provided, a FlexCluster has the opts.tier==FLEX.
+// When opts.filename is provided, the function loads the file and check that the field replicationSpecs
+// (available only for Dedicated Cluster) is present.
+func (opts *CreateOpts) newIsFlexCluster() error {
+	if opts.filename == "" {
+		opts.isFlexCluster = opts.tier == atlasFlex
+		return nil
+	}
+
+	var m map[string]any
+	if err := file.Load(opts.fs, opts.filename, &m); err != nil {
+		opts.isFlexCluster = false
+		return fmt.Errorf("%w: %w", errFailedToLoadClusterFileMessage, err)
+	}
+
+	_, ok := m["replicationSpecs"]
+	opts.isFlexCluster = !ok
+	return nil
+}
+
+func (opts *CreateOpts) validateTier() error {
+	opts.tier = strings.ToUpper(opts.tier)
+	if opts.tier == atlasM2 || opts.tier == atlasM5 {
+		_, _ = fmt.Fprintf(os.Stderr, deprecateMessageSharedTier, opts.tier)
+	}
+	return nil
+}
+
 // CreateBuilder builds a cobra.Command that can run as:
 // create <name> --projectId projectId --provider AWS|GCP|AZURE --region regionName [--members N] [--tier M#] [--diskSizeGB N] [--backup] [--mdbVersion] [--tag key=value].
 func CreateBuilder() *cobra.Command {
@@ -263,7 +388,12 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 			if len(args) != 0 {
 				opts.name = args[0]
 			}
+
+			opts.tier = strings.ToUpper(opts.tier)
+			opts.region = strings.ToUpper(opts.region)
 			return opts.PreRunE(
+				opts.validateTier,
+				opts.newIsFlexCluster,
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
@@ -291,7 +421,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.CreateProvider)
 	cmd.Flags().StringVarP(&opts.region, flag.Region, flag.RegionShort, "", usage.CreateRegion)
 	cmd.Flags().IntVarP(&opts.members, flag.Members, flag.MembersShort, defaultMembersSize, usage.Members)
-	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasM2, usage.Tier)
+	cmd.Flags().StringVar(&opts.tier, flag.Tier, atlasFlex, usage.Tier)
 	cmd.Flags().Float64Var(&opts.diskSizeGB, flag.DiskSizeGB, defaultDiskSize, usage.DiskSizeGB)
 	cmd.Flags().StringVar(&opts.mdbVersion, flag.MDBVersion, currentMDBVersion, usage.MDBVersion)
 	cmd.Flags().BoolVar(&opts.backup, flag.Backup, false, usage.Backup)
@@ -305,7 +435,7 @@ For full control of your deployment, or to create multi-cloud clusters, provide 
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
 	cmd.Flags().Int64Var(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagFilename(flag.File)

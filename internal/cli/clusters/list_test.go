@@ -23,10 +23,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
-func TestList_Run(t *testing.T) {
+func TestList_RunDedicatedCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterLister(ctrl)
 
@@ -49,9 +51,34 @@ func TestList_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := listOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
+	require.NoError(t, listOpts.Run())
+}
+
+func TestList_RunFlexCluster(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := mocks.NewMockClusterLister(ctrl)
+
+	expected := &atlasv2.PaginatedFlexClusters20241113{
+		Results: &[]atlasv2.FlexClusterDescription20241113{
+			{
+				Name: pointer.Get("test"),
+				Id:   pointer.Get("123"),
+			},
+		},
 	}
+
+	listOpts := &ListOpts{
+		store: mockStore,
+		tier:  atlasFlex,
+	}
+
+	mockStore.
+		EXPECT().
+		ListFlexClusters(listOpts.newListFlexClustersAPIParams()).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, listOpts.Run())
 }
 
 func TestListTemplate(t *testing.T) {

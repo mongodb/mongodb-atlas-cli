@@ -28,7 +28,7 @@ import (
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	id          string
 	clusterName string
@@ -76,11 +76,12 @@ func DescribeBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
+		Deprecated: "please use the 'atlas backup restores describe' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.Flags().StringVar(&opts.id, flag.RestoreJobID, "", usage.RestoreJobID)
 	cmd.Flags().StringVar(&opts.clusterName, flag.ClusterName, "", usage.ClusterName)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)

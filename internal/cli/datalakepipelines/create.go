@@ -31,11 +31,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store        store.PipelinesCreator
 	pipelineName string
@@ -204,7 +204,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.MarkFlagsMutuallyExclusive(flag.SourcePolicyItemID, flag.File)
 	cmd.MarkFlagsMutuallyExclusive(flag.Transform, flag.File)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

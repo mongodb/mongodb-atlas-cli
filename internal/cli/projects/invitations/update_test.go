@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
@@ -32,9 +32,9 @@ func TestUpdate_Run(t *testing.T) {
 	expected := &atlasv2.GroupInvitation{}
 
 	updateOpts := &UpdateOpts{
-		roles:      []string{"test"},
-		store:      mockStore,
-		GlobalOpts: cli.GlobalOpts{OrgID: "1"},
+		roles:       []string{"test"},
+		store:       mockStore,
+		ProjectOpts: cli.ProjectOpts{ProjectID: "1"},
 	}
 
 	mockStore.

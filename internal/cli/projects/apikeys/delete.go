@@ -29,7 +29,7 @@ import (
 
 type DeleteOpts struct {
 	*cli.DeleteOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	store store.ProjectAPIKeyDeleter
 }
 
@@ -80,7 +80,7 @@ To view possible values for the ID argument, run atlas organizations apiKeys lis
 	}
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	return cmd
 }

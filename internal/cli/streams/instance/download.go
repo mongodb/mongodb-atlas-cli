@@ -27,13 +27,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 var downloadMessage = "Download of %s completed.\n"
 
 type DownloadOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.DownloaderOpts
 	tenantName string
 	start      int64
@@ -113,7 +113,7 @@ func DownloadBuilder() *cobra.Command {
 	cmd.Flags().Int64Var(&opts.end, flag.End, 0, usage.LogEnd)
 	cmd.Flags().BoolVar(&opts.Force, flag.Force, false, usage.ForceFile)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Out)
 	_ = cmd.MarkFlagFilename(flag.Out)

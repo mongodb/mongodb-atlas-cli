@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2024 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,12 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && backup && serverless)
+//go:build e2e || (atlas && backup && flex)
 
 package atlas_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -24,25 +25,26 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
-func TestServerlessBackup(t *testing.T) {
+// Note that the FlexClusters are only available in the 5efda6aea3f2ed2e7dd6ce05 (Atlas CLI E2E Project)
+// They will be fully enabled in https://jira.mongodb.org/browse/CLOUDP-291186. We will be able to move these e2e tests
+// to create their project once the ticket is completed.
+func TestFlexBackup(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	clusterName := os.Getenv("E2E_SERVERLESS_INSTANCE_NAME")
+	g := newAtlasE2ETestGenerator(t)
+	g.projectID = os.Getenv("MCLI_PROJECT_ID")
+	g.generateFlexCluster()
+
+	clusterName := os.Getenv("E2E_FLEX_INSTANCE_NAME")
 	require.NotEmpty(t, clusterName)
 
 	var snapshotID string
-
-	g := newAtlasE2ETestGenerator(t)
-	g.generateProject("serverlessBackup")
-	g.generateServerlessCluster()
-
 	t.Run("Snapshot List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			serverlessEntity,
 			backupsEntity,
 			snapshotsEntity,
 			"list",
@@ -52,7 +54,7 @@ func TestServerlessBackup(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var r atlasv2.PaginatedApiAtlasServerlessBackupSnapshot
+		var r atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113
 		require.NoError(t, json.Unmarshal(resp, &r), string(resp))
 		assert.NotEmpty(t, r)
 		snapshotID = r.GetResults()[0].GetId()
@@ -62,11 +64,9 @@ func TestServerlessBackup(t *testing.T) {
 
 	t.Run("Snapshot Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			serverlessEntity,
 			backupsEntity,
 			snapshotsEntity,
 			"describe",
-			"--snapshotId",
 			snapshotID,
 			"--clusterName",
 			clusterName,
@@ -75,7 +75,7 @@ func TestServerlessBackup(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
-		var result atlasv2.ServerlessBackupSnapshot
+		var result atlasv2.FlexBackupSnapshot20241113
 		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
 		assert.Equal(t, snapshotID, result.GetId())
 	})
@@ -84,18 +84,16 @@ func TestServerlessBackup(t *testing.T) {
 
 	t.Run("Restores Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			serverlessEntity,
 			backupsEntity,
 			restoresEntity,
-			"create",
-			"--deliveryType",
+			"start",
 			"automated",
 			"--clusterName",
 			clusterName,
 			"--snapshotId",
 			snapshotID,
 			"--targetClusterName",
-			g.serverlessName,
+			g.clusterName,
 			"--targetProjectId",
 			g.projectID,
 			"-o=json")
@@ -103,7 +101,7 @@ func TestServerlessBackup(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
-		var result atlasv2.ServerlessBackupRestoreJob
+		var result atlasv2.FlexBackupRestoreJob20241113
 		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
 		restoreJobID = result.GetId()
 		t.Log("snapshotID", restoreJobID)
@@ -112,11 +110,9 @@ func TestServerlessBackup(t *testing.T) {
 
 	t.Run("Restores Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			serverlessEntity,
 			backupsEntity,
 			restoresEntity,
 			"watch",
-			"--restoreJobId",
 			restoreJobID,
 			"--clusterName",
 			clusterName,
@@ -129,7 +125,6 @@ func TestServerlessBackup(t *testing.T) {
 
 	t.Run("Restores List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			serverlessEntity,
 			backupsEntity,
 			restoresEntity,
 			"list",
@@ -139,18 +134,16 @@ func TestServerlessBackup(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var result atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob
+		var result atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113
 		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
 		assert.NotEmpty(t, result)
 	})
 
 	t.Run("Restores Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
-			serverlessEntity,
 			backupsEntity,
 			restoresEntity,
 			"describe",
-			"--restoreJobId",
 			restoreJobID,
 			"--clusterName",
 			clusterName,
@@ -158,8 +151,23 @@ func TestServerlessBackup(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		var result atlasv2.ServerlessBackupRestoreJob
+		var result atlasv2.FlexBackupRestoreJob20241113
 		require.NoError(t, json.Unmarshal(resp, &result))
 		assert.NotEmpty(t, result)
+	})
+
+	t.Run("Delete flex cluster", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"delete",
+			g.clusterName,
+			"--force",
+			"--watch")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+
+		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", g.clusterName)
+		assert.Equal(t, expected, string(resp))
 	})
 }

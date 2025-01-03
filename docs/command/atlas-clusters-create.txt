@@ -135,7 +135,7 @@ Options
      - false
      - Tier for each data-bearing server in the cluster. To learn more about cluster tiers, see https://dochub.mongodb.org/core/cluster-tier-atlas.
 
-       Mutually exclusive with --file. This value defaults to "M2".
+       Mutually exclusive with --file. This value defaults to "FLEX".
    * - --type
      - string
      - false

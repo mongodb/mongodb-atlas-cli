@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/require"
-	"go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestUpdate_Run(t *testing.T) {
@@ -33,9 +33,9 @@ func TestUpdate_Run(t *testing.T) {
 	expected := &admin.OrganizationInvitation{}
 
 	updateOpts := &UpdateOpts{
-		roles:      []string{"test"},
-		store:      mockStore,
-		GlobalOpts: cli.GlobalOpts{OrgID: "1"},
+		roles:   []string{"test"},
+		store:   mockStore,
+		OrgOpts: cli.OrgOpts{OrgID: "1"},
 	}
 
 	request, err := updateOpts.newInvitation()

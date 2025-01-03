@@ -15,6 +15,8 @@
 package clusters
 
 import (
+	"errors"
+
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/advancedsettings"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/availableregions"
@@ -25,7 +27,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
+)
+
+var errFailedToLoadClusterFileMessage = errors.New("failed to parse JSON file")
+
+const (
+	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
+	deprecateMessageSharedTier            = "The '%s' tier is deprecated. Please use '--tier FLEX' instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
 )
 
 func Builder() *cobra.Command {
@@ -62,21 +72,42 @@ func Builder() *cobra.Command {
 }
 
 func addTags(out *atlasClustersPinned.AdvancedClusterDescription, tags map[string]string) {
-	if len(tags) > 0 {
-		var t []atlasClustersPinned.ResourceTag
-		for k, v := range tags {
-			if k == "" || v == "" {
-				continue
-			}
-			key, value := k, v
-			tag := atlasClustersPinned.ResourceTag{
-				Key:   key,
-				Value: value,
-			}
-			t = append(t, tag)
-		}
-		out.Tags = &t
+	resourceTagsAtlasV2 := newResourceTags(tags)
+	if resourceTagsAtlasV2 == nil {
+		return
 	}
+
+	resourceTags := make([]atlasClustersPinned.ResourceTag, len(*resourceTagsAtlasV2))
+	for i, v := range *resourceTagsAtlasV2 {
+		resourceTags[i] = atlasClustersPinned.ResourceTag{
+			Key:   v.Key,
+			Value: v.Value,
+		}
+	}
+
+	out.Tags = &resourceTags
+}
+
+func newResourceTags(tags map[string]string) *[]atlasv2.ResourceTag {
+	if len(tags) == 0 {
+		return nil
+	}
+	t := make([]atlasv2.ResourceTag, len(tags))
+	i := 0
+	for k, v := range tags {
+		if k == "" || v == "" {
+			continue
+		}
+		key, value := k, v
+		tag := atlasv2.ResourceTag{
+			Key:   key,
+			Value: value,
+		}
+		t[i] = tag
+		i++
+	}
+
+	return &t
 }
 
 func removeReadOnlyAttributes(out *atlasClustersPinned.AdvancedClusterDescription) {

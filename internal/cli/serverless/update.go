@@ -25,11 +25,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	instanceName                      string
 	enableServerlessContinuousBackup  bool
@@ -106,6 +106,7 @@ func UpdateBuilder() *cobra.Command {
 			opts.instanceName = args[0]
 			return opts.Run()
 		},
+		Deprecated: "please use the 'atlas cluster update <ClusterName> [--projectId projectId]' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
@@ -118,7 +119,7 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.ServerlessTag+usage.UpdateWarning)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

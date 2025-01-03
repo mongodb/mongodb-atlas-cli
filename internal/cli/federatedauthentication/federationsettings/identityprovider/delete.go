@@ -28,7 +28,7 @@ import (
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	*cli.DeleteOpts
 	store                store.IdentityProviderDeleter

@@ -25,13 +25,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 var webhookIntegrationType = "WEBHOOK"
 
 type WebhookOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	url    string
 	secret string
@@ -95,7 +95,7 @@ func WebhookBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.url, flag.URL, "", usage.URL)
 	cmd.Flags().StringVar(&opts.secret, flag.Secret, "", usage.Secret)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.URL)

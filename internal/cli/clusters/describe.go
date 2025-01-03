@@ -21,14 +21,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	name  string
 	store store.ClusterDescriber
@@ -49,11 +49,31 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 func (opts *DescribeOpts) Run() error {
 	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return err
+		return opts.RunFlexCluster(err)
 	}
+
 	return opts.Print(r)
 }
 
+func (opts *DescribeOpts) RunFlexCluster(err error) error {
+	apiError, ok := atlasClustersPinned.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+		return err
+	}
+
+	r, err := opts.store.FlexCluster(opts.ConfigProjectID(), opts.name)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
+}
+
+// DescribeBuilder builds a cobra.Command that can run as:
 // atlas cluster(s) describe <clusterName> --projectId projectId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
@@ -82,7 +102,7 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

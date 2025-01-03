@@ -29,13 +29,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 var errInvalidIndex = errors.New("invalid index")
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	IndexOpts
 	clusterName string
@@ -152,7 +152,7 @@ func CreateBuilder() *cobra.Command {
 	_ = cmd.MarkFlagFilename(flag.File)
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	// deprecated flags

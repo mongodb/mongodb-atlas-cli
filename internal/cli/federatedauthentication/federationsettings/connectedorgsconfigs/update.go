@@ -25,11 +25,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.OrgOpts
 	cli.OutputOpts
 	cli.InputOpts
 	*DescribeOrgConfigsOpts
@@ -104,7 +104,7 @@ func UpdateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.federationSettingsID, flag.FederationSettingsID, "", usage.FederationSettingsID)
-	cmd.Flags().StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
+	opts.AddOrgOptFlags(cmd)
 	cmd.Flags().StringVar(&opts.file, flag.File, "", usage.ConnectedOrgConfigFilename)
 
 	opts.AddOutputOptFlags(cmd)

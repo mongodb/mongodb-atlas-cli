@@ -27,13 +27,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/watchers"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.WatchOpts
 	*cli.DeleteOpts
-	store store.ClusterDeleter
+	store         store.ClusterDeleter
+	isFlexCluster bool
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
@@ -45,7 +47,26 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID())
+	if err := opts.Delete(opts.store.DeleteCluster, opts.ConfigProjectID()); err != nil {
+		return opts.RunFlexCluster(err)
+	}
+
+	opts.isFlexCluster = false
+	return nil
+}
+
+func (opts *DeleteOpts) RunFlexCluster(err error) error {
+	apiError, ok := atlasClustersPinned.AsError(err)
+	if !ok {
+		return err
+	}
+
+	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+		return err
+	}
+
+	opts.isFlexCluster = true
+	return opts.Delete(opts.store.DeleteFlexCluster, opts.ConfigProjectID())
 }
 
 func (opts *DeleteOpts) PostRun() error {
@@ -53,11 +74,15 @@ func (opts *DeleteOpts) PostRun() error {
 		return nil
 	}
 
+	if opts.isFlexCluster {
+		return opts.PostRunFlexCluster()
+	}
+
 	watcher := watchers.NewWatcher(
 		*watchers.ClusterDeleted,
 		watchers.NewAtlasClusterStateDescriber(
 			opts.store.(store.ClusterDescriber),
-			opts.ProjectID,
+			opts.ConfigProjectID(),
 			opts.Entry,
 		),
 	)
@@ -68,6 +93,25 @@ func (opts *DeleteOpts) PostRun() error {
 	}
 
 	return opts.Print(nil)
+}
+
+func (opts *DeleteOpts) PostRunFlexCluster() error {
+	watcher := watchers.NewWatcherWithDefaultWait(
+		*watchers.ClusterDeleted,
+		watchers.NewAtlasFlexClusterStateDescriber(
+			opts.store.(store.ClusterDescriber),
+			opts.ConfigProjectID(),
+			opts.Entry,
+		),
+		opts.GetDefaultWait(),
+	)
+
+	watcher.Timeout = time.Duration(opts.Timeout)
+	if err := opts.WatchWatcher(watcher); err != nil {
+		return err
+	}
+
+	return opts.Print(flexCluster)
 }
 
 // DeleteBuilder
@@ -119,7 +163,7 @@ Deleting a cluster also deletes any backup snapshots for that cluster.
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
 	cmd.Flags().Int64Var(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	return cmd
 }

@@ -23,13 +23,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const updateTemplate = "Project settings updated.\n"
 
 type UpdateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store                                     store.ProjectSettingsUpdater
 	enableCollectDatabaseSpecificsStatistics  bool
@@ -97,7 +97,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	cmd.Flags().BoolVarP(&opts.enableCollectDatabaseSpecificsStatistics, flag.EnableCollectDatabaseSpecificsStatistics, "", false, usage.EnableCollectDatabaseSpecificsStatistics)
 	cmd.Flags().BoolVarP(&opts.disableCollectDatabaseSpecificsStatistics, flag.DisableCollectDatabaseSpecificsStatistics, "", false, usage.DisableCollectDatabaseSpecificsStatistics)

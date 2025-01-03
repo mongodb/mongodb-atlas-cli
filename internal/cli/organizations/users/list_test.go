@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestList_Run(t *testing.T) {
@@ -40,7 +40,7 @@ func TestList_Run(t *testing.T) {
 	}
 
 	listOpts := &ListOpts{
-		GlobalOpts: cli.GlobalOpts{
+		OrgOpts: cli.OrgOpts{
 			OrgID: "1",
 		},
 		store: mockStore,

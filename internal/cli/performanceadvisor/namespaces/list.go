@@ -25,7 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const listTemplate = `NAMESPACE	TYPE{{range valueOrEmptySlice .Namespaces}}
@@ -33,7 +33,7 @@ const listTemplate = `NAMESPACE	TYPE{{range valueOrEmptySlice .Namespaces}}
 `
 
 type ListOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
 	store    store.PerformanceAdvisorNamespacesLister
@@ -103,14 +103,11 @@ If you don't set the duration option or the since option, this command returns d
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.HostID, flag.HostID, "", usage.HostID)
-	_ = cmd.Flags().MarkDeprecated(flag.HostID, "Flag is invalid for MongoDB Atlas")
-	cmd.Flags().StringVar(&opts.ProcessName, flag.ProcessName, "", usage.ProcessNameAtlasCLI)
-	_ = cmd.MarkFlagRequired(flag.ProcessName)
+	opts.AddPerformanceAdvisorOptsFlags(cmd)
 	cmd.Flags().Int64Var(&opts.since, flag.Since, 0, usage.Since)
 	cmd.Flags().Int64Var(&opts.duration, flag.Duration, 0, usage.Duration)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

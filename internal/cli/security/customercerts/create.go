@@ -31,7 +31,7 @@ import (
 const createTemplate = "Certificate successfully created.\n"
 
 type SaveOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store   store.X509CertificateConfSaver
 	casPath string
@@ -93,7 +93,7 @@ func CreateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.casPath, flag.CASFilePath, "", usage.CASFilePath)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.CASFilePath)

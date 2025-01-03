@@ -28,7 +28,7 @@ import (
 )
 
 type DeleteOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	*cli.DeleteOpts
 	store store.ServerlessInstanceDeleter
 }
@@ -74,11 +74,12 @@ func DeleteBuilder() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return opts.Run()
 		},
+		Deprecated: "please use the 'atlas cluster delete <ClusterName> [--projectId projectId]' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	return cmd
 }

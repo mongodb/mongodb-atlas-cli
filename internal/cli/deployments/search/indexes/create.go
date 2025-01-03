@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -59,7 +59,7 @@ type IndexID struct {
 
 type CreateOpts struct {
 	cli.WatchOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	options.DeploymentOpts
 	search.IndexOpts
@@ -418,7 +418,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.DeploymentOpts.DBUserPassword, flag.Password, "", usage.Password)
 
 	// Atlas only
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.Database, flag.File)
 	cmd.MarkFlagsMutuallyExclusive(flag.Collection, flag.File)

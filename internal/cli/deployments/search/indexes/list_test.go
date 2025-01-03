@@ -32,7 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestList_RunLocal(t *testing.T) {
@@ -174,7 +174,7 @@ func TestList_RunAtlas(t *testing.T) {
 			DBName:     expectedDB,
 			Collection: expectedCollection,
 		},
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: expectedProjectID,
 		},
 		store: mockStore,

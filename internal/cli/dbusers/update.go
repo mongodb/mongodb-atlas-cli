@@ -27,21 +27,22 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
 
 type UpdateOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	username        string
 	currentUsername string
 	password        string
 	authDB          string
+	x509Type        string
+	description     string
 	roles           []string
 	scopes          []string
-	x509Type        string
 	store           store.DatabaseUserUpdater
 }
 
@@ -80,6 +81,10 @@ func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 	}
 	if opts.password != "" {
 		out.Password = &opts.password
+	}
+
+	if opts.description != "" {
+		out.Description = &opts.description
 	}
 
 	roles := convert.BuildAtlasRoles(opts.roles)
@@ -136,12 +141,13 @@ func UpdateBuilder() *cobra.Command {
 
 	cmd.Flags().StringVarP(&opts.username, flag.Username, flag.UsernameShort, "", usage.DBUsername)
 	cmd.Flags().StringVarP(&opts.password, flag.Password, flag.PasswordShort, "", usage.DBUserPassword)
+	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.DBUserDescription)
 	cmd.Flags().StringVar(&opts.authDB, flag.AuthDB, "", usage.AtlasAuthDB)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.Roles+usage.UpdateWarning)
 	cmd.Flags().StringSliceVar(&opts.scopes, flag.Scope, []string{}, usage.Scopes+usage.UpdateWarning)
 	cmd.Flags().StringVar(&opts.x509Type, flag.X509Type, none, usage.X509Type)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

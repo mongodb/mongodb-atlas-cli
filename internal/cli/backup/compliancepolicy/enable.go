@@ -28,11 +28,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type EnableOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.WatchOpts
 	policy                  *atlasv2.DataProtectionSettings20231001
 	store                   store.CompliancePolicyEnabler
@@ -124,7 +124,7 @@ func EnableBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.authorizedUserFirstName, flag.AuthorizedUserFirstName, "", usage.AuthorizedUserFirstName)
 	_ = cmd.MarkFlagRequired(flag.AuthorizedUserFirstName)
 	cmd.Flags().StringVar(&opts.authorizedUserLastName, flag.AuthorizedUserLastName, "", usage.AuthorizedUserLastName)

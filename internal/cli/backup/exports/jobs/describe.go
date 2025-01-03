@@ -28,7 +28,7 @@ import (
 )
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	clusterName string
 	exportID    string
@@ -88,7 +88,7 @@ func DescribeBuilder() *cobra.Command {
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.BucketID, flag.ExportID)

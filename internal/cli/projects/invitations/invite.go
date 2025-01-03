@@ -25,14 +25,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const createTemplate = "User '{{.Username}}' invited.\n"
 
 type InviteOpts struct {
 	cli.OutputOpts
-	cli.GlobalOpts
+	cli.ProjectOpts
 	username string
 	roles    []string
 	teamIDs  []string
@@ -94,7 +94,7 @@ func InviteBuilder() *cobra.Command {
 
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.ProjectRole)
 	cmd.Flags().StringSliceVar(&opts.teamIDs, flag.TeamID, []string{}, usage.TeamID)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 
 	opts.AddOutputOptFlags(cmd)
 

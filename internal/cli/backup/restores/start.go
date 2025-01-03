@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const (
@@ -36,7 +36,7 @@ const (
 )
 
 type StartOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	method                string
 	clusterName           string
@@ -60,14 +60,37 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 var startTemplate = "Restore job '{{.Id}}' successfully started\n"
 
 func (opts *StartOpts) Run() error {
+	r, err := opts.store.CreateRestoreFlexClusterJobs(opts.ConfigProjectID(), opts.clusterName, opts.newFlexBackupRestoreJobCreate())
+	if err == nil {
+		return opts.Print(r)
+	}
+
+	apiError, ok := admin.AsError(err)
+	if !ok {
+		return commonerrors.Check(err)
+	}
+
+	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode && apiError.ErrorCode != featureUnsupported {
+		return commonerrors.Check(err)
+	}
+
 	request := opts.newCloudProviderSnapshotRestoreJob()
-	r, err := opts.store.CreateRestoreJobs(opts.ConfigProjectID(), opts.clusterName, request)
+	restoreJob, err := opts.store.CreateRestoreJobs(opts.ConfigProjectID(), opts.clusterName, request)
 
 	if err != nil {
 		return commonerrors.Check(err)
 	}
 
-	return opts.Print(r)
+	return opts.Print(restoreJob)
+}
+
+func (opts *StartOpts) newFlexBackupRestoreJobCreate() *admin.FlexBackupRestoreJobCreate20241113 {
+	return &admin.FlexBackupRestoreJobCreate20241113{
+		SnapshotId:               opts.snapshotID,
+		TargetDeploymentItemName: opts.targetClusterName,
+		TargetProjectId:          &opts.targetProjectID,
+		InstanceName:             &opts.clusterName,
+	}
 }
 
 func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *admin.DiskBackupSnapshotRestoreJob {
@@ -134,6 +157,7 @@ func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
 	return cmd.MarkFlagRequired(flag.TargetClusterName)
 }
 
+// StartBuilder builds a cobra.Command that can run as:
 // atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>.
 func StartBuilder() *cobra.Command {
 	opts := new(StartOpts)
@@ -142,7 +166,8 @@ func StartBuilder() *cobra.Command {
 		Short: "Start a restore job for your project and cluster.",
 		Long: `If you create an automated or pointInTime restore job, Atlas removes all existing data on the target cluster prior to the restore.
 
-` + fmt.Sprintf("%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "Atlas supports this command only for M10+ clusters."),
+` + fmt.Sprintf("%s\n%s\n%s", fmt.Sprintf(usage.RequiredRole, "Project Owner"), "Atlas supports this command only for Flex and M10+ clusters.",
+			"Flex clusters support only automated restore jobs."),
 		Args:      require.ExactValidArgs(1),
 		ValidArgs: []string{automatedRestore, downloadRestore, pointInTimeRestore},
 		Annotations: map[string]string{
@@ -154,6 +179,13 @@ func StartBuilder() *cobra.Command {
          --clusterName myDemo \
          --snapshotId 5e7e00128f8ce03996a47179 \
          --targetClusterName myDemo2 \
+         --targetProjectId 1a2345b67c8e9a12f3456de7
+
+  # Create an automated restore for a Flex Cluster:
+  atlas backup restore start automated \
+         --clusterName myFlexSource \
+         --snapshotId 5e7e00128f8ce03996a47179 \
+         --targetClusterName myFlexCluster \
          --targetProjectId 1a2345b67c8e9a12f3456de7
 
   # Create a point-in-time restore:
@@ -212,7 +244,7 @@ func StartBuilder() *cobra.Command {
 	_ = cmd.Flags().MarkDeprecated(flag.PointInTimeUTCMillis, fmt.Sprintf("please use --%s instead", flag.PointInTimeUTCSeconds))
 	cmd.Flags().IntVar(&opts.pointInTimeUTCSeconds, flag.PointInTimeUTCSeconds, 0, usage.PointInTimeUTCSeconds)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.ClusterName)

@@ -40,7 +40,7 @@
 	"github.com/tangzero/inflector": "apix-2",
 	"github.com/yuin/goldmark": "apix-2",
 	"go.mongodb.org/atlas-sdk/v20240530005": "apix-2",
-	"go.mongodb.org/atlas-sdk/v20241113001": "apix-2",
+	"go.mongodb.org/atlas-sdk/v20241113004": "apix-2",
 	"go.mongodb.org/atlas": "apix-2",
 	"go.mongodb.org/mongo-driver": "apix-2",
 	"go.opentelemetry.io/otel": "apix-2",
@@ -63,5 +63,14 @@
 	"k8s.io/client-go": "atlas_kubernetes_team",
 	"sigs.k8s.io/controller-runtime": "atlas_kubernetes_team",
 	"sigs.k8s.io/kind": "atlas_kubernetes_team",
-	"sigs.k8s.io/yaml": "atlas_kubernetes_team"
+	"sigs.k8s.io/yaml": "atlas_kubernetes_team",
+	"golang.org/x/exp": "atlas_kubernetes_team",
+	"github.com/denisbrodbeck/machineid": "apix-2",
+	"github.com/shirou/gopsutil/v4": "apix-2",
+	"go.opentelemetry.io/otel": "apix-2",
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc": "apix-2",
+	"go.opentelemetry.io/otel/sdk": "apix-2",
+	"go.opentelemetry.io/otel/trace": "apix-2",
+	"google.golang.org/grpc": "apix-2",
+	"github.com/mholt/archives": "apix-2"
 }

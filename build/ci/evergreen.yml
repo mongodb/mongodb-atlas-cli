@@ -138,6 +138,7 @@ functions:
           - AZURE_CLIENT_SECRET
           - E2E_TIMEOUT
           - E2E_SERVERLESS_INSTANCE_NAME
+          - E2E_FLEX_INSTANCE_NAME
           - E2E_PARALLEL
           - IDENTITY_PROVIDER_ID
           - LOCALDEV_IMAGE
@@ -674,6 +675,24 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters,sharded
+  - name: atlas_clusters_flex_e2e
+    tags: ["e2e","clusters","atlas"]
+    must_have_test_results: true
+    depends_on:
+      - name: atlas_clusters_flags_e2e
+        variant: "e2e_atlas_clusters"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MCLI_ORG_ID: ${atlas_org_id}
+          MCLI_PROJECT_ID: ${atlas_project_id}
+          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MCLI_SERVICE: cloud
+          E2E_TAGS: atlas,clusters,flex
   - name: atlas_plugin_install
     tags: ["e2e","atlas","plugin","install"]
     must_have_test_results: true
@@ -1413,7 +1432,7 @@ tasks:
           E2E_TAGS: atlas,backup,exports,jobs
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-  - name: atlas_backups_serverless_e2e
+  - name: atlas_backups_flex_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
     depends_on:
@@ -1430,10 +1449,10 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,serverless
+          E2E_TAGS: atlas,backup,flex
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_SERVERLESS_INSTANCE_NAME: ${e2e_serverless_instance_name}
+          E2E_FLEX_INSTANCE_NAME: ${e2e_flex_instance_name}
   - name: atlas_backups_restores_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true
@@ -1728,6 +1747,22 @@ tasks:
         vars:
           span: "coverage"
           attr: "total=${percentage},count=${count}"
+  - name: snyk_monitor
+    tags:
+    - snyk
+    commands:
+      - command: shell.exec
+        params:
+          include_expansions_in_env:
+            - workdir
+          shell: bash
+          script: |
+            docker run \
+              --rm \
+              -e SNYK_TOKEN=${SNYK_TOKEN} \
+              -e SNYK_CFG_ORG=${SNYK_ORG} \
+              -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/app \
+              snyk/snyk:golang snyk monitor
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
@@ -2032,6 +2067,16 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".coverage"
+  - name: snyk
+    display_name: Snyk
+    allowed_requesters: ["patch", "ad_hoc", "github_pr"]
+    tags:
+      - snyk
+      - cron
+    run_on:
+      - ubuntu2204-small
+    tasks:
+      - name: ".snyk"
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev cron"]
@@ -2041,6 +2086,9 @@ patch_aliases:
     task: ".*"
   - alias: "cleanup"
     variant_tags: ["cleanup cron"]
+    task: ".*"
+  - alias: "snyk"
+    variant_tags: ["snyk cron"]
     task: ".*"
 github_pr_aliases:
   - variant: "code_health"

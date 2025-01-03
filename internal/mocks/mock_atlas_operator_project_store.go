@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	admin "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	admin "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 // MockOperatorProjectStore is a mock of OperatorProjectStore interface.
@@ -183,6 +183,21 @@ func (m *MockOperatorProjectStore) Integrations(arg0 string) (*admin.PaginatedIn
 func (mr *MockOperatorProjectStoreMockRecorder) Integrations(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Integrations", reflect.TypeOf((*MockOperatorProjectStore)(nil).Integrations), arg0)
+}
+
+// InterfaceEndpoint mocks base method.
+func (m *MockOperatorProjectStore) InterfaceEndpoint(arg0, arg1, arg2, arg3 string) (*admin.PrivateLinkEndpoint, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InterfaceEndpoint", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*admin.PrivateLinkEndpoint)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// InterfaceEndpoint indicates an expected call of InterfaceEndpoint.
+func (mr *MockOperatorProjectStoreMockRecorder) InterfaceEndpoint(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InterfaceEndpoint", reflect.TypeOf((*MockOperatorProjectStore)(nil).InterfaceEndpoint), arg0, arg1, arg2, arg3)
 }
 
 // MaintenanceWindow mocks base method.

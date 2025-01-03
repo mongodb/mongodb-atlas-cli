@@ -10,7 +10,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 // MockOperatorGenericStore is a mock of OperatorGenericStore interface.
@@ -408,6 +408,21 @@ func (m *MockOperatorGenericStore) Integrations(arg0 string) (*admin0.PaginatedI
 func (mr *MockOperatorGenericStoreMockRecorder) Integrations(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Integrations", reflect.TypeOf((*MockOperatorGenericStore)(nil).Integrations), arg0)
+}
+
+// InterfaceEndpoint mocks base method.
+func (m *MockOperatorGenericStore) InterfaceEndpoint(arg0, arg1, arg2, arg3 string) (*admin0.PrivateLinkEndpoint, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InterfaceEndpoint", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*admin0.PrivateLinkEndpoint)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// InterfaceEndpoint indicates an expected call of InterfaceEndpoint.
+func (mr *MockOperatorGenericStoreMockRecorder) InterfaceEndpoint(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InterfaceEndpoint", reflect.TypeOf((*MockOperatorGenericStore)(nil).InterfaceEndpoint), arg0, arg1, arg2, arg3)
 }
 
 // ListFlexClusters mocks base method.

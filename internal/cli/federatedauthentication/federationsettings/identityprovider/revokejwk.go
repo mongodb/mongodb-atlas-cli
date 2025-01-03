@@ -28,7 +28,7 @@ import (
 )
 
 type RevokeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	*cli.DeleteOpts
 	store                store.IdentityProviderJwkRevoker

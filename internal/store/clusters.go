@@ -16,7 +16,7 @@ package store
 
 import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -74,7 +74,7 @@ type ClusterStarter interface {
 
 type ClusterUpgrader interface {
 	UpgradeCluster(string, *atlas.Cluster) (*atlas.Cluster, error)
-	UpgradeFlexCluster(string, *atlasv2.FlexClusterDescription20241113) (*atlasv2.FlexClusterDescription20241113, error)
+	UpgradeFlexCluster(string, *atlasv2.AtlasTenantClusterUpgradeRequest20240805) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type SampleDataAdder interface {
@@ -96,6 +96,7 @@ type AtlasClusterGetterUpdater interface {
 
 type AtlasSharedClusterGetterUpgrader interface {
 	AtlasSharedClusterDescriber
+	ClusterDescriber
 	ClusterUpgrader
 }
 

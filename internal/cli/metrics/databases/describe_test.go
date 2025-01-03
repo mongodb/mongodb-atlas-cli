@@ -22,7 +22,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestDatabasesDescribeOpts_Run(t *testing.T) {
@@ -34,7 +34,7 @@ func TestDatabasesDescribeOpts_Run(t *testing.T) {
 		port:  27017,
 		name:  "test",
 		store: mockStore,
-		GlobalOpts: cli.GlobalOpts{
+		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "groupID",
 		},
 	}

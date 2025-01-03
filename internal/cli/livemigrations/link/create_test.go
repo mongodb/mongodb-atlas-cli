@@ -21,7 +21,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestLinkTokenCreateOpts_Run(t *testing.T) {
@@ -30,7 +30,7 @@ func TestLinkTokenCreateOpts_Run(t *testing.T) {
 
 	expected := &atlasv2.TargetOrg{}
 	createOpts := &CreateOpts{
-		GlobalOpts:   cli.GlobalOpts{OrgID: "1"},
+		OrgOpts:      cli.OrgOpts{OrgID: "1"},
 		accessListIP: []string{"1.2.3.4", "5.6.7.8"},
 		store:        mockStore,
 	}

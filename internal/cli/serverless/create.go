@@ -26,13 +26,13 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const providerName = "SERVERLESS"
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	instanceName string
 	provider     string
@@ -110,13 +110,14 @@ func CreateBuilder() *cobra.Command {
 			opts.instanceName = args[0]
 			return opts.Run()
 		},
+		Deprecated: "the command creates a Flex Cluster instead of Serverless. Please use the 'atlas cluster create <ClusterName> --tier FLEX [--projectId projectId]' command instead. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration",
 	}
 
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "", usage.ServerlessProvider)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.ServerlessRegion)
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.ServerlessTag)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Provider)

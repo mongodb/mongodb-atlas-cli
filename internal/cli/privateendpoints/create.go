@@ -28,7 +28,7 @@ import (
 )
 
 type CreateOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	store    store.PrivateEndpointCreatorDeprecated
 	region   string
@@ -89,7 +89,7 @@ func CreateBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AWS", usage.PrivateEndpointProvider)
 	cmd.Flags().StringVar(&opts.region, flag.Region, "", usage.PrivateEndpointRegion)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	_ = cmd.MarkFlagRequired(flag.Region)

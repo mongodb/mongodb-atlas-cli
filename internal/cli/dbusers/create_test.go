@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestDBUserCreateOpts_Run(t *testing.T) {
@@ -49,12 +49,13 @@ func TestDBUserCreateOpts_Run(t *testing.T) {
 
 func TestCreateOpts_validate(t *testing.T) {
 	type fields struct {
-		x509Type   string
-		awsIamType string
-		oidcType   string
-		ldapType   string
-		password   string
-		roles      []string
+		x509Type    string
+		awsIamType  string
+		oidcType    string
+		ldapType    string
+		password    string
+		description string
+		roles       []string
 	}
 	tests := []struct {
 		name    string
@@ -113,23 +114,25 @@ func TestCreateOpts_validate(t *testing.T) {
 		{
 			name: "awsIamType and password",
 			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: user,
-				ldapType:   none,
-				oidcType:   none,
-				x509Type:   none,
-				password:   "password",
+				roles:       []string{"test"},
+				awsIamType:  user,
+				ldapType:    none,
+				oidcType:    none,
+				x509Type:    none,
+				description: "test",
+				password:    "password",
 			},
 			wantErr: true,
 		},
 		{
 			name: "no external auth",
 			fields: fields{
-				roles:      []string{"test"},
-				awsIamType: none,
-				ldapType:   none,
-				x509Type:   none,
-				oidcType:   none,
+				roles:       []string{"test"},
+				awsIamType:  none,
+				ldapType:    none,
+				x509Type:    none,
+				description: "test",
+				oidcType:    none,
 			},
 			wantErr: false,
 		},
@@ -163,12 +166,13 @@ func TestCreateOpts_validate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			opts := &CreateOpts{
-				x509Type:   fields.x509Type,
-				awsIamType: fields.awsIamType,
-				ldapType:   fields.ldapType,
-				oidcType:   fields.oidcType,
-				roles:      fields.roles,
-				password:   fields.password,
+				x509Type:    fields.x509Type,
+				awsIamType:  fields.awsIamType,
+				ldapType:    fields.ldapType,
+				oidcType:    fields.oidcType,
+				roles:       fields.roles,
+				password:    fields.password,
+				description: fields.description,
 			}
 			if err := opts.validate(); (err != nil) != wantErr {
 				t.Errorf("validate() error = %v, wantErr %v", err, wantErr)

@@ -31,7 +31,7 @@ const describeTemplate = `ID	NAME
 `
 
 type DescribeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	id    string
 	store store.OrganizationDescriber

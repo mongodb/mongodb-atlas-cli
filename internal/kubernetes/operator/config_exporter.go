@@ -29,7 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/streamsprocessing"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -233,6 +233,28 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		e.includeSecretsData,
 		e.dictionaryForAtlasNames,
 	))
+
+	if e.featureValidator.IsResourceSupported(features.ResourceAtlasPrivateEndpoint) {
+		privateEndpoints, err := project.BuildPrivateEndpointCustomResources(
+			e.dataProvider,
+			project.PrivateEndpointRequest{
+				ProjectName:         projectData.Project.Name,
+				ProjectID:           e.projectID,
+				TargetNamespace:     e.targetNamespace,
+				Version:             e.operatorVersion,
+				Credentials:         credentialsName,
+				IndependentResource: e.independentResources,
+				Dictionary:          e.dictionaryForAtlasNames,
+			},
+		)
+		if err != nil {
+			return nil, "", err
+		}
+
+		for _, privateEndpoint := range privateEndpoints {
+			r = append(r, &privateEndpoint)
+		}
+	}
 
 	// DB users
 	usersData, relatedSecrets, err := dbusers.BuildDBUsers(

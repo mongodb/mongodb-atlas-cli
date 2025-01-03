@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 func TestValidationDescribeOpts_Run(t *testing.T) {
@@ -33,7 +33,7 @@ func TestValidationDescribeOpts_Run(t *testing.T) {
 	expected := atlasv2.LiveImportValidation{}
 
 	describeOpts := &DescribeOpts{
-		GlobalOpts:   cli.GlobalOpts{ProjectID: "2"},
+		ProjectOpts:  cli.ProjectOpts{ProjectID: "2"},
 		validationID: "3",
 		store:        mockStore,
 	}

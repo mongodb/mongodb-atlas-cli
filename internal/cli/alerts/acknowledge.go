@@ -27,11 +27,11 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20241113001/admin"
+	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type AcknowledgeOpts struct {
-	cli.GlobalOpts
+	cli.ProjectOpts
 	cli.OutputOpts
 	alertID string
 	until   string
@@ -122,7 +122,7 @@ func AcknowledgeBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.until, flag.Until, "", usage.Until)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

@@ -24,6 +24,7 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -189,10 +190,10 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 		cmd.Flags().StringVar(&file, "file", "", "api request file content")
 	}
 
-	// Add format flags:
-	// - `--format`: desired output format, translates to ContentType. Can also be a go template
-	// - `--output`: file where we want to write the output to
-	if err := addFormatFlags(cmd, command, &format, &outputFile); err != nil {
+	// Add output flags:
+	// - `--output`: desired output format, translates to ContentType. Can also be a go template
+	// - `--output-file`: file where we want to write the output to
+	if err := addOutputFlags(cmd, command, &format, &outputFile); err != nil {
 		return nil, err
 	}
 
@@ -215,11 +216,11 @@ func addParameters(cmd *cobra.Command, parameters []api.Parameter) error {
 			return fmt.Errorf("there is already a parameter with that name, name='%s'", parameter.Name)
 		}
 
-		flag := parameterToPFlag(parameter)
-		cmd.Flags().AddFlag(flag)
+		parameterFlag := parameterToPFlag(parameter)
+		cmd.Flags().AddFlag(parameterFlag)
 
 		if parameter.Required {
-			_ = cmd.MarkFlagRequired(flag.Name)
+			_ = cmd.MarkFlagRequired(parameterFlag.Name)
 		}
 	}
 
@@ -333,7 +334,7 @@ func needsFileFlag(apiCommand api.Command) bool {
 	return false
 }
 
-func addFormatFlags(cmd *cobra.Command, apiCommand api.Command, format *string, outputFile *string) error {
+func addOutputFlags(cmd *cobra.Command, apiCommand api.Command, format *string, outputFile *string) error {
 	// Get the list of supported content types for the apiCommand
 	supportedContentTypesList := getContentTypes(&apiCommand)
 
@@ -353,12 +354,12 @@ func addFormatFlags(cmd *cobra.Command, apiCommand api.Command, format *string, 
 	supportedContentTypesString := strings.Join(supportedContentTypesList, ", ")
 
 	// Set the flags
-	cmd.Flags().StringVar(format, "format", *format, fmt.Sprintf("preferred api format, can be [%s]", supportedContentTypesString))
-	cmd.Flags().StringVar(outputFile, "output", "", "file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip).")
+	cmd.Flags().StringVar(format, flag.Output, *format, fmt.Sprintf("preferred api format, can be [%s]", supportedContentTypesString))
+	cmd.Flags().StringVar(outputFile, "output-file", "", "file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip).")
 
 	// If there's multiple content types, mark --format as required
 	if numSupportedContentTypes > 1 {
-		if err := cmd.MarkFlagRequired("format"); err != nil {
+		if err := cmd.MarkFlagRequired(flag.Output); err != nil {
 			return err
 		}
 	}

@@ -1042,7 +1042,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 				Name: "FIND",
 				Resources: []akov2.Resource{
 					{
-						Database:   pointer.Get("test-db	"),
+						Database:   pointer.Get("test-db"),
 						Collection: pointer.Get(""),
 						Cluster:    pointer.Get(false),
 					},
@@ -1087,8 +1087,62 @@ func TestProjectWithCustomRole(t *testing.T) {
 		objects, err = getK8SEntities(resp)
 		require.NoError(t, err, "should not fail on decode")
 		require.NotEmpty(t, objects)
+		expectedProject.Spec.CustomRoles = nil
+		verifyCustomRole(t, objects, &akov2.AtlasCustomRole{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       "AtlasCustomRole",
+				APIVersion: "atlas.mongodb.com/v1",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-custom-role-%s", expectedProject.Name, newCustomRole.Name), resources.AtlasNameToKubernetesName()),
+				Namespace: expectedProject.Namespace,
+				Labels: map[string]string{
+					"mongodb.com/atlas-resource-version": features.LatestOperatorMajorVersion,
+				},
+			},
+			Spec: akov2.AtlasCustomRoleSpec{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      expectedProject.Name,
+					Namespace: expectedProject.Namespace,
+				},
+				Role: akov2.CustomRole{
+					Name: "test-role",
+					Actions: []akov2.Action{
+						{
+							Name: "FIND",
+							Resources: []akov2.Resource{
+								{
+									Database:   pointer.Get("test-db"),
+									Collection: pointer.Get(""),
+									Cluster:    pointer.Get(false),
+								},
+							},
+						},
+					},
+				},
+			},
+			Status: akov2status.AtlasCustomRoleStatus{
+				Common: akoapi.Common{
+					Conditions: []akoapi.Condition{},
+				},
+			},
+		},
+		)
 		checkProject(t, objects, expectedProject)
 	})
+}
+
+func verifyCustomRole(t *testing.T, objects []runtime.Object, expectedRole *akov2.AtlasCustomRole) {
+	t.Helper()
+	var role *akov2.AtlasCustomRole
+	for i := range objects {
+		d, ok := objects[i].(*akov2.AtlasCustomRole)
+		if ok {
+			role = d
+			break
+		}
+	}
+	assert.Equal(t, expectedRole, role)
 }
 
 func TestProjectWithIntegration(t *testing.T) {

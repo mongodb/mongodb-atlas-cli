@@ -1,7 +1,7 @@
-.. _atlas-api-ldapConfiguration-saveLdapconfiguration:
+.. _atlas-api-ldapConfiguration-saveLdapConfiguration:
 
 =================================================
-atlas api ldapConfiguration saveLdapconfiguration
+atlas api ldapConfiguration saveLdapConfiguration
 =================================================
 
 .. default-domain:: mongodb
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api ldapConfiguration saveLdapconfiguration [options]
+   atlas api ldapConfiguration saveLdapConfiguration [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -52,7 +52,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for saveLdapconfiguration
+     - help for saveLdapConfiguration
    * - --output
      - string
      - false

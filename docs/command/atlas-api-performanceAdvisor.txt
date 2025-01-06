@@ -55,10 +55,12 @@ Related Commands
 * :ref:`atlas-api-performanceAdvisor-enableSlowOperationThresholding` - Enables MongoDB Cloud to use its slow operation threshold for the specified project.
 * :ref:`atlas-api-performanceAdvisor-getManagedSlowMs` - Get whether the Managed Slow MS feature is enabled.
 * :ref:`atlas-api-performanceAdvisor-getServerlessAutoIndexing` - Get whether the Serverless Auto Indexing feature is enabled.
+* :ref:`atlas-api-performanceAdvisor-listClusterSuggestedIndexes` - Returns the indexes that the Performance Advisor suggests.
+* :ref:`atlas-api-performanceAdvisor-listDropIndexes` - Returns the indexes that the Performance Advisor suggests to drop.
+* :ref:`atlas-api-performanceAdvisor-listSchemaAdvice` - Returns the schema suggestions that the Performance Advisor detects.
 * :ref:`atlas-api-performanceAdvisor-listSlowQueries` - Returns log lines for slow queries that the Performance Advisor and Query Profiler identified.
 * :ref:`atlas-api-performanceAdvisor-listSlowQueryNamespaces` - Returns up to 20 namespaces for collections experiencing slow queries on the specified host.
 * :ref:`atlas-api-performanceAdvisor-listSuggestedIndexes` - Returns the indexes that the Performance Advisor suggests.
-* :ref:`atlas-api-performanceAdvisor-listSuggestedIndexes1` - Returns the indexes that the Performance Advisor suggests.
 * :ref:`atlas-api-performanceAdvisor-setServerlessAutoIndexing` - Set whether the Serverless Auto Indexing feature is enabled.
 
 
@@ -69,9 +71,11 @@ Related Commands
    enableSlowOperationThresholding </command/atlas-api-performanceAdvisor-enableSlowOperationThresholding>
    getManagedSlowMs </command/atlas-api-performanceAdvisor-getManagedSlowMs>
    getServerlessAutoIndexing </command/atlas-api-performanceAdvisor-getServerlessAutoIndexing>
+   listClusterSuggestedIndexes </command/atlas-api-performanceAdvisor-listClusterSuggestedIndexes>
+   listDropIndexes </command/atlas-api-performanceAdvisor-listDropIndexes>
+   listSchemaAdvice </command/atlas-api-performanceAdvisor-listSchemaAdvice>
    listSlowQueries </command/atlas-api-performanceAdvisor-listSlowQueries>
    listSlowQueryNamespaces </command/atlas-api-performanceAdvisor-listSlowQueryNamespaces>
    listSuggestedIndexes </command/atlas-api-performanceAdvisor-listSuggestedIndexes>
-   listSuggestedIndexes1 </command/atlas-api-performanceAdvisor-listSuggestedIndexes1>
    setServerlessAutoIndexing </command/atlas-api-performanceAdvisor-setServerlessAutoIndexing>
 

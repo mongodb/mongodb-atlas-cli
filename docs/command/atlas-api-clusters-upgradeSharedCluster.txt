@@ -12,7 +12,7 @@ atlas api clusters upgradeSharedCluster
    :depth: 1
    :class: singlecol
 
-Upgrades a shared-tier cluster in the specified project.
+Upgrades a shared-tier cluster to a dedicated cluster (M10&#43;) in the specified project.
 
 To use this resource, the requesting API key must have the Project Cluster Manager role. Each project supports up to 25 clusters.
 

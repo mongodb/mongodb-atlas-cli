@@ -12,7 +12,7 @@ atlas api mongoDbCloudUsers addOrganizationRole
    :depth: 1
    :class: singlecol
 
-Adds one organization level role to the MongoDB Cloud user.
+Adds one organization-level role to the MongoDB Cloud user.
 
 You can add a role to an active user or a user that has not yet accepted the invitation to join the organization. To use this resource, the requesting API Key must have the Organization Owner role. Note: This operation is atomic. Note: This resource cannot be used to add a role to users invited using the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.
 
@@ -41,6 +41,10 @@ Options
      - 
      - false
      - flag that indicates whether Application wraps the response in an envelope JSON object
+   * - --file
+     - string
+     - false
+     - path to the file which contains the api request contents
    * - -h, --help
      - 
      - false
@@ -61,10 +65,6 @@ Options
      - 
      - false
      - flag that indicates whether the response body should be in the prettyprint format
-   * - --role
-     - string
-     - true
-     - organization level role to assign to the MongoDB Cloud user
    * - --userId
      - string
      - true
@@ -72,7 +72,7 @@ Options
    * - --version
      - string
      - false
-     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2025-01-01".
+     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2043-01-01".
 
 Inherited Options
 -----------------

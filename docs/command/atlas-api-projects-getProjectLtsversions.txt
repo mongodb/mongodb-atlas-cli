@@ -1,7 +1,7 @@
-.. _atlas-api-projects-getProjectLtsversions:
+.. _atlas-api-projects-getProjectLtsVersions:
 
 ========================================
-atlas api projects getProjectLtsversions
+atlas api projects getProjectLtsVersions
 ========================================
 
 .. default-domain:: mongodb
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api projects getProjectLtsversions [options]
+   atlas api projects getProjectLtsVersions [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -54,7 +54,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for getProjectLtsversions
+     - help for getProjectLtsVersions
    * - --instanceSize
      - string
      - false

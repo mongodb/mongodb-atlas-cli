@@ -61,7 +61,7 @@ Related Commands
 * :ref:`atlas-api-organizations-listOrganizationUsers` - Returns details about the MongoDB Cloud users associated with the specified organization.
 * :ref:`atlas-api-organizations-listOrganizations` - Returns all organizations to which the requesting API Key has access.
 * :ref:`atlas-api-organizations-removeOrganizationUser` - Removes one MongoDB Cloud user from the specified organization.
-* :ref:`atlas-api-organizations-renameOrganization` - Renames one organization.
+* :ref:`atlas-api-organizations-updateOrganization` - Updates one organization.
 * :ref:`atlas-api-organizations-updateOrganizationInvitation` - Updates the details of one pending invitation to the specified organization.
 * :ref:`atlas-api-organizations-updateOrganizationInvitationById` - Updates the details of one pending invitation to the specified organization.
 * :ref:`atlas-api-organizations-updateOrganizationRoles` - Updates the roles of the specified user in the specified organization.
@@ -83,7 +83,7 @@ Related Commands
    listOrganizationUsers </command/atlas-api-organizations-listOrganizationUsers>
    listOrganizations </command/atlas-api-organizations-listOrganizations>
    removeOrganizationUser </command/atlas-api-organizations-removeOrganizationUser>
-   renameOrganization </command/atlas-api-organizations-renameOrganization>
+   updateOrganization </command/atlas-api-organizations-updateOrganization>
    updateOrganizationInvitation </command/atlas-api-organizations-updateOrganizationInvitation>
    updateOrganizationInvitationById </command/atlas-api-organizations-updateOrganizationInvitationById>
    updateOrganizationRoles </command/atlas-api-organizations-updateOrganizationRoles>

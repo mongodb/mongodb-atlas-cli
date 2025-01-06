@@ -60,6 +60,7 @@ Related Commands
 * :ref:`atlas-api-cloudBackups-deleteExportBucket` - Deletes an Export Bucket.
 * :ref:`atlas-api-cloudBackups-deleteReplicaSetBackup` - Removes the specified snapshot.
 * :ref:`atlas-api-cloudBackups-deleteShardedClusterBackup` - Removes one snapshot of one sharded cluster from the specified project.
+* :ref:`atlas-api-cloudBackups-disableDataProtectionSettings` - Disables the Backup Compliance Policy settings with the specified project.
 * :ref:`atlas-api-cloudBackups-getBackupExportJob` - Returns one Cloud Backup Snapshot Export Job associated with the specified Atlas cluster.
 * :ref:`atlas-api-cloudBackups-getBackupRestoreJob` - Returns one cloud backup restore job for one cluster from the specified project.
 * :ref:`atlas-api-cloudBackups-getBackupSchedule` - Returns the cloud backup schedule for the specified cluster within the specified project.
@@ -94,6 +95,7 @@ Related Commands
    deleteExportBucket </command/atlas-api-cloudBackups-deleteExportBucket>
    deleteReplicaSetBackup </command/atlas-api-cloudBackups-deleteReplicaSetBackup>
    deleteShardedClusterBackup </command/atlas-api-cloudBackups-deleteShardedClusterBackup>
+   disableDataProtectionSettings </command/atlas-api-cloudBackups-disableDataProtectionSettings>
    getBackupExportJob </command/atlas-api-cloudBackups-getBackupExportJob>
    getBackupRestoreJob </command/atlas-api-cloudBackups-getBackupRestoreJob>
    getBackupSchedule </command/atlas-api-cloudBackups-getBackupSchedule>

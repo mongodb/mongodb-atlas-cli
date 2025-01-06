@@ -1,7 +1,7 @@
-.. _atlas-api-awsClustersDns-getAwscustomDns:
+.. _atlas-api-awsClustersDns-getAwsCustomDns:
 
 ========================================
-atlas api awsClustersDns getAwscustomDns
+atlas api awsClustersDns getAwsCustomDns
 ========================================
 
 .. default-domain:: mongodb
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api awsClustersDns getAwscustomDns [options]
+   atlas api awsClustersDns getAwsCustomDns [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -48,7 +48,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for getAwscustomDns
+     - help for getAwsCustomDns
    * - --output
      - string
      - false

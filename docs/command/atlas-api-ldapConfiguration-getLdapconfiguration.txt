@@ -1,7 +1,7 @@
-.. _atlas-api-ldapConfiguration-getLdapconfiguration:
+.. _atlas-api-ldapConfiguration-getLdapConfiguration:
 
 ================================================
-atlas api ldapConfiguration getLdapconfiguration
+atlas api ldapConfiguration getLdapConfiguration
 ================================================
 
 .. default-domain:: mongodb
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api ldapConfiguration getLdapconfiguration [options]
+   atlas api ldapConfiguration getLdapConfiguration [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -48,7 +48,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for getLdapconfiguration
+     - help for getLdapConfiguration
    * - --output
      - string
      - false

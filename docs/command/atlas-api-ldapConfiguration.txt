@@ -51,19 +51,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-ldapConfiguration-deleteLdapconfiguration` - Removes the current LDAP Distinguished Name mapping captured in the userToDNMapping document from the LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-getLdapconfiguration` - Returns the current LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-getLdapconfigurationStatus` - Returns the status of one request to verify one LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-saveLdapconfiguration` - Edits the LDAP configuration for the specified project.
-* :ref:`atlas-api-ldapConfiguration-verifyLdapconfiguration` - Verifies the LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-deleteLdapConfiguration` - Removes the current LDAP Distinguished Name mapping captured in the userToDNMapping document from the LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-getLdapConfiguration` - Returns the current LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-getLdapConfigurationStatus` - Returns the status of one request to verify one LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-saveLdapConfiguration` - Edits the LDAP configuration for the specified project.
+* :ref:`atlas-api-ldapConfiguration-verifyLdapConfiguration` - Verifies the LDAP configuration for the specified project.
 
 
 .. toctree::
    :titlesonly:
 
-   deleteLdapconfiguration </command/atlas-api-ldapConfiguration-deleteLdapconfiguration>
-   getLdapconfiguration </command/atlas-api-ldapConfiguration-getLdapconfiguration>
-   getLdapconfigurationStatus </command/atlas-api-ldapConfiguration-getLdapconfigurationStatus>
-   saveLdapconfiguration </command/atlas-api-ldapConfiguration-saveLdapconfiguration>
-   verifyLdapconfiguration </command/atlas-api-ldapConfiguration-verifyLdapconfiguration>
+   deleteLdapConfiguration </command/atlas-api-ldapConfiguration-deleteLdapConfiguration>
+   getLdapConfiguration </command/atlas-api-ldapConfiguration-getLdapConfiguration>
+   getLdapConfigurationStatus </command/atlas-api-ldapConfiguration-getLdapConfigurationStatus>
+   saveLdapConfiguration </command/atlas-api-ldapConfiguration-saveLdapConfiguration>
+   verifyLdapConfiguration </command/atlas-api-ldapConfiguration-verifyLdapConfiguration>
 

@@ -1,8 +1,8 @@
-.. _atlas-api-clusters-revokeMongoDbEmployeeAccess:
+.. _atlas-api-mongoDbCloudUsers-getProjectUser:
 
-==============================================
-atlas api clusters revokeMongoDbEmployeeAccess
-==============================================
+==========================================
+atlas api mongoDbCloudUsers getProjectUser
+==========================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,9 @@ atlas api clusters revokeMongoDbEmployeeAccess
    :depth: 1
    :class: singlecol
 
-Revokes a previously granted MongoDB employee cluster access.
+Returns information about the specified MongoDB Cloud user within the context of the specified project.
+
+To use this resource, the requesting API Key must have the Group Read Only role. Note: You can only use this resource to fetch information about MongoDB Cloud human users. To return information about an API Key, use the Return One Organization API Key endpoint. Note: This resource does not return information about pending users invited via the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.
 
 Syntax
 ------
@@ -20,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api clusters revokeMongoDbEmployeeAccess [options]
+   atlas api mongoDbCloudUsers getProjectUser [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -35,10 +37,6 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - human-readable label that identifies this cluster
    * - --envelope
      - 
      - false
@@ -50,7 +48,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for revokeMongoDbEmployeeAccess
+     - help for getProjectUser
    * - --output
      - string
      - false
@@ -63,10 +61,14 @@ Options
      - 
      - false
      - flag that indicates whether the response body should be in the prettyprint format
+   * - --userId
+     - string
+     - true
+     - unique 24-hexadecimal digit string that identifies the pending or active user in the project
    * - --version
      - string
      - false
-     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2024-08-05".
+     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2043-01-01".
 
 Inherited Options
 -----------------

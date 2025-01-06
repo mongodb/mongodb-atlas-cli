@@ -68,9 +68,9 @@ Related Commands
 * :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement` - Returns and edits the Encryption at Rest using Customer Key Management configuration.
 * :ref:`atlas-api-events` - Returns events.
 * :ref:`atlas-api-federatedAuthentication` - Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.
-* :ref:`atlas-api-flexClusters` - 
-* :ref:`atlas-api-flexRestoreJobs` - 
-* :ref:`atlas-api-flexSnapshots` - 
+* :ref:`atlas-api-flexClusters` - Returns, adds, edits, and removes flex clusters.
+* :ref:`atlas-api-flexRestoreJobs` - Returns and adds restore jobs for flex database deployments.
+* :ref:`atlas-api-flexSnapshots` - Returns and requests to download flex database deployment snapshots.
 * :ref:`atlas-api-globalClusters` - Returns, adds, and removes Global Cluster managed namespaces and custom zone mappings.
 * :ref:`atlas-api-invoices` - Returns invoices.
 * :ref:`atlas-api-ldapConfiguration` - Returns, edits, verifies, and removes LDAP configurations.

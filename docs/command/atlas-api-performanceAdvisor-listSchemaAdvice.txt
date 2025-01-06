@@ -1,8 +1,8 @@
-.. _atlas-api-performanceAdvisor-listSuggestedIndexes1:
+.. _atlas-api-performanceAdvisor-listSchemaAdvice:
 
-==================================================
-atlas api performanceAdvisor listSuggestedIndexes1
-==================================================
+=============================================
+atlas api performanceAdvisor listSchemaAdvice
+=============================================
 
 .. default-domain:: mongodb
 
@@ -12,9 +12,9 @@ atlas api performanceAdvisor listSuggestedIndexes1
    :depth: 1
    :class: singlecol
 
-Returns the indexes that the Performance Advisor suggests.
+Returns the schema suggestions that the Performance Advisor detects.
 
-The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. To use this resource, the requesting API Key must have the Project Read Only role.
+The Performance Advisor provides holistic schema recommendations for your cluster by sampling documents in your most active collections and collections with slow-running queries. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api performanceAdvisor listSuggestedIndexes1 [options]
+   atlas api performanceAdvisor listSchemaAdvice [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -48,11 +48,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for listSuggestedIndexes1
-   * - --namespaces
-     - stringArray
-     - false
-     - namespaces from which to retrieve suggested indexes
+     - help for listSchemaAdvice
    * - --output
      - string
      - false
@@ -61,18 +57,6 @@ Options
      - string
      - false
      - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip).
-   * - --processIds
-     - stringArray
-     - false
-     - processIds from which to retrieve suggested indexes
-   * - --since
-     - int
-     - false
-     - date and time from which the query retrieves the suggested indexes
-   * - --until
-     - int
-     - false
-     - date and time up until which the query retrieves the suggested indexes
    * - --version
      - string
      - false

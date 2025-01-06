@@ -1,7 +1,7 @@
-.. _atlas-api-awsClustersDns-toggleAwscustomDns:
+.. _atlas-api-awsClustersDns-toggleAwsCustomDns:
 
 ===========================================
-atlas api awsClustersDns toggleAwscustomDns
+atlas api awsClustersDns toggleAwsCustomDns
 ===========================================
 
 .. default-domain:: mongodb
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api awsClustersDns toggleAwscustomDns [options]
+   atlas api awsClustersDns toggleAwsCustomDns [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -52,7 +52,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for toggleAwscustomDns
+     - help for toggleAwsCustomDns
    * - --output
      - string
      - false

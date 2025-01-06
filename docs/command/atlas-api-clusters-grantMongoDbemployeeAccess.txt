@@ -1,7 +1,7 @@
-.. _atlas-api-clusters-grantMongoDbemployeeAccess:
+.. _atlas-api-clusters-grantMongoDbEmployeeAccess:
 
 =============================================
-atlas api clusters grantMongoDbemployeeAccess
+atlas api clusters grantMongoDbEmployeeAccess
 =============================================
 
 .. default-domain:: mongodb
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api clusters grantMongoDbemployeeAccess [options]
+   atlas api clusters grantMongoDbEmployeeAccess [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -54,7 +54,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for grantMongoDbemployeeAccess
+     - help for grantMongoDbEmployeeAccess
    * - --output
      - string
      - false

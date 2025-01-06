@@ -12,7 +12,7 @@ atlas api flexSnapshots
    :depth: 1
    :class: singlecol
 
-
+Returns and requests to download flex database deployment snapshots.
 
 Options
 -------

@@ -1,7 +1,7 @@
-.. _atlas-api-streams-deleteVpcpeeringConnection:
+.. _atlas-api-streams-deleteVpcPeeringConnection:
 
 ============================================
-atlas api streams deleteVpcpeeringConnection
+atlas api streams deleteVpcPeeringConnection
 ============================================
 
 .. default-domain:: mongodb
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api streams deleteVpcpeeringConnection [options]
+   atlas api streams deleteVpcPeeringConnection [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -46,7 +46,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for deleteVpcpeeringConnection
+     - help for deleteVpcPeeringConnection
    * - --id
      - string
      - true

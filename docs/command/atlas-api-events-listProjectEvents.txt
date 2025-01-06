@@ -12,7 +12,7 @@ atlas api events listProjectEvents
    :depth: 1
    :class: singlecol
 
-Returns one event for the specified project.
+Returns all events for the specified project.
 
 Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting API Key must have the Project Read Only role. This resource remains under revision and may change.
 

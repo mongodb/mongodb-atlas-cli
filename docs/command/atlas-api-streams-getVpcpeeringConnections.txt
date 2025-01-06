@@ -1,7 +1,7 @@
-.. _atlas-api-streams-getVpcpeeringConnections:
+.. _atlas-api-streams-getVpcPeeringConnections:
 
 ==========================================
-atlas api streams getVpcpeeringConnections
+atlas api streams getVpcPeeringConnections
 ==========================================
 
 .. default-domain:: mongodb
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api streams getVpcpeeringConnections [options]
+   atlas api streams getVpcPeeringConnections [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -46,7 +46,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for getVpcpeeringConnections
+     - help for getVpcPeeringConnections
    * - --itemsPerPage
      - int
      - false
@@ -67,6 +67,10 @@ Options
      - 
      - false
      - flag that indicates whether the response body should be in the prettyprint format
+   * - --requesterAccountId
+     - string
+     - true
+     - the Account ID of the VPC Peering connection/s
    * - --version
      - string
      - false

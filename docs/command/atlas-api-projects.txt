@@ -59,7 +59,7 @@ Related Commands
 * :ref:`atlas-api-projects-getProjectByName` - Returns details about the specified project.
 * :ref:`atlas-api-projects-getProjectInvitation` - Returns the details of one pending invitation to the specified project.
 * :ref:`atlas-api-projects-getProjectLimit` - Returns the specified limit for the specified project.
-* :ref:`atlas-api-projects-getProjectLtsversions` - Returns the MongoDB Long Term Support Major Versions available to new clusters in this project.
+* :ref:`atlas-api-projects-getProjectLtsVersions` - Returns the MongoDB Long Term Support Major Versions available to new clusters in this project.
 * :ref:`atlas-api-projects-getProjectSettings` - Returns details about the specified project&#39;s settings.
 * :ref:`atlas-api-projects-listProjectInvitations` - Returns all pending invitations to the specified project.
 * :ref:`atlas-api-projects-listProjectLimits` - Returns all the limits for the specified project.
@@ -67,7 +67,7 @@ Related Commands
 * :ref:`atlas-api-projects-listProjects` - Returns details about all projects.
 * :ref:`atlas-api-projects-migrateProjectToAnotherOrg` - Migrates a project from its current organization to another organization.
 * :ref:`atlas-api-projects-removeProjectUser` - Removes the specified user from the specified project.
-* :ref:`atlas-api-projects-returnAllIpaddresses` - Returns all IP addresses for this project.
+* :ref:`atlas-api-projects-returnAllIpAddresses` - Returns all IP addresses for this project.
 * :ref:`atlas-api-projects-setProjectLimit` - Sets the specified project limit.
 * :ref:`atlas-api-projects-updateProject` - Updates the human-readable label that identifies the specified project, or the tags associated with the project.
 * :ref:`atlas-api-projects-updateProjectInvitation` - Updates the details of one pending invitation to the specified project.
@@ -89,7 +89,7 @@ Related Commands
    getProjectByName </command/atlas-api-projects-getProjectByName>
    getProjectInvitation </command/atlas-api-projects-getProjectInvitation>
    getProjectLimit </command/atlas-api-projects-getProjectLimit>
-   getProjectLtsversions </command/atlas-api-projects-getProjectLtsversions>
+   getProjectLtsVersions </command/atlas-api-projects-getProjectLtsVersions>
    getProjectSettings </command/atlas-api-projects-getProjectSettings>
    listProjectInvitations </command/atlas-api-projects-listProjectInvitations>
    listProjectLimits </command/atlas-api-projects-listProjectLimits>
@@ -97,7 +97,7 @@ Related Commands
    listProjects </command/atlas-api-projects-listProjects>
    migrateProjectToAnotherOrg </command/atlas-api-projects-migrateProjectToAnotherOrg>
    removeProjectUser </command/atlas-api-projects-removeProjectUser>
-   returnAllIpaddresses </command/atlas-api-projects-returnAllIpaddresses>
+   returnAllIpAddresses </command/atlas-api-projects-returnAllIpAddresses>
    setProjectLimit </command/atlas-api-projects-setProjectLimit>
    updateProject </command/atlas-api-projects-updateProject>
    updateProjectInvitation </command/atlas-api-projects-updateProjectInvitation>

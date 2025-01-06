@@ -1,8 +1,8 @@
-.. _atlas-api-clusters-revokeMongoDbEmployeeAccess:
+.. _atlas-api-streams-getAccountDetails:
 
-==============================================
-atlas api clusters revokeMongoDbEmployeeAccess
-==============================================
+===================================
+atlas api streams getAccountDetails
+===================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,7 @@ atlas api clusters revokeMongoDbEmployeeAccess
    :depth: 1
    :class: singlecol
 
-Revokes a previously granted MongoDB employee cluster access.
+Returns the Account ID, and the VPC ID for the group and region specified.
 
 Syntax
 ------
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api clusters revokeMongoDbEmployeeAccess [options]
+   atlas api streams getAccountDetails [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -35,10 +35,10 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
+   * - --cloudProvider
      - string
      - true
-     - human-readable label that identifies this cluster
+     - one of &#34;aws&#34;, &#34;azure&#34; or &#34;gcp&#34;
    * - --envelope
      - 
      - false
@@ -50,7 +50,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for revokeMongoDbEmployeeAccess
+     - help for getAccountDetails
    * - --output
      - string
      - false
@@ -59,14 +59,14 @@ Options
      - string
      - false
      - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip).
-   * - --pretty
-     - 
-     - false
-     - flag that indicates whether the response body should be in the prettyprint format
+   * - --regionName
+     - string
+     - true
+     - the cloud provider specific region name, i.e
    * - --version
      - string
      - false
-     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2024-08-05".
+     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2024-11-13".
 
 Inherited Options
 -----------------

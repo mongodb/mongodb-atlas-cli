@@ -1,7 +1,7 @@
-.. _atlas-api-ldapConfiguration-verifyLdapconfiguration:
+.. _atlas-api-ldapConfiguration-verifyLdapConfiguration:
 
 ===================================================
-atlas api ldapConfiguration verifyLdapconfiguration
+atlas api ldapConfiguration verifyLdapConfiguration
 ===================================================
 
 .. default-domain:: mongodb
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api ldapConfiguration verifyLdapconfiguration [options]
+   atlas api ldapConfiguration verifyLdapConfiguration [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -52,7 +52,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for verifyLdapconfiguration
+     - help for verifyLdapConfiguration
    * - --output
      - string
      - false

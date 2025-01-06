@@ -57,18 +57,18 @@ Related Commands
 * :ref:`atlas-api-clusters-getClusterAdvancedConfiguration` - Returns the advanced configuration details for one cluster in the specified project.
 * :ref:`atlas-api-clusters-getClusterStatus` - Returns the status of all changes that you made to the specified cluster in the specified project.
 * :ref:`atlas-api-clusters-getSampleDatasetLoadStatus` - Checks the progress of loading the sample dataset into one cluster.
-* :ref:`atlas-api-clusters-grantMongoDbemployeeAccess` - Grants MongoDB employee cluster access for the given duration and at the specified level for one cluster.
+* :ref:`atlas-api-clusters-grantMongoDbEmployeeAccess` - Grants MongoDB employee cluster access for the given duration and at the specified level for one cluster.
 * :ref:`atlas-api-clusters-listCloudProviderRegions` - Returns the list of regions available for the specified cloud provider at the specified tier.
 * :ref:`atlas-api-clusters-listClusters` - Returns the details for all clusters in the specific project to which you have access.
 * :ref:`atlas-api-clusters-listClustersForAllProjects` - Returns the details for all clusters in all projects to which you have access.
 * :ref:`atlas-api-clusters-loadSampleDataset` - Requests loading the MongoDB sample dataset into the specified cluster.
 * :ref:`atlas-api-clusters-pinFeatureCompatibilityVersion` - Pins the Feature Compatibility Version (FCV) to the current MongoDB version and sets the pin expiration date.
-* :ref:`atlas-api-clusters-revokeMongoDbemployeeAccess` - Revokes a previously granted MongoDB employee cluster access.
+* :ref:`atlas-api-clusters-revokeMongoDbEmployeeAccess` - Revokes a previously granted MongoDB employee cluster access.
 * :ref:`atlas-api-clusters-testFailover` - Starts a failover test for the specified cluster in the specified project.
 * :ref:`atlas-api-clusters-unpinFeatureCompatibilityVersion` - Unpins the current fixed Feature Compatibility Version (FCV).
 * :ref:`atlas-api-clusters-updateCluster` - Updates the details for one cluster in the specified project.
 * :ref:`atlas-api-clusters-updateClusterAdvancedConfiguration` - Updates the advanced configuration details for one cluster in the specified project.
-* :ref:`atlas-api-clusters-upgradeSharedCluster` - Upgrades a shared-tier cluster in the specified project.
+* :ref:`atlas-api-clusters-upgradeSharedCluster` - Upgrades a shared-tier cluster to a dedicated cluster (M10&#43;) in the specified project.
 * :ref:`atlas-api-clusters-upgradeSharedClusterToServerless` - Upgrades a shared-tier cluster to a serverless instance in the specified project.
 
 
@@ -81,13 +81,13 @@ Related Commands
    getClusterAdvancedConfiguration </command/atlas-api-clusters-getClusterAdvancedConfiguration>
    getClusterStatus </command/atlas-api-clusters-getClusterStatus>
    getSampleDatasetLoadStatus </command/atlas-api-clusters-getSampleDatasetLoadStatus>
-   grantMongoDbemployeeAccess </command/atlas-api-clusters-grantMongoDbemployeeAccess>
+   grantMongoDbEmployeeAccess </command/atlas-api-clusters-grantMongoDbEmployeeAccess>
    listCloudProviderRegions </command/atlas-api-clusters-listCloudProviderRegions>
    listClusters </command/atlas-api-clusters-listClusters>
    listClustersForAllProjects </command/atlas-api-clusters-listClustersForAllProjects>
    loadSampleDataset </command/atlas-api-clusters-loadSampleDataset>
    pinFeatureCompatibilityVersion </command/atlas-api-clusters-pinFeatureCompatibilityVersion>
-   revokeMongoDbemployeeAccess </command/atlas-api-clusters-revokeMongoDbemployeeAccess>
+   revokeMongoDbEmployeeAccess </command/atlas-api-clusters-revokeMongoDbEmployeeAccess>
    testFailover </command/atlas-api-clusters-testFailover>
    unpinFeatureCompatibilityVersion </command/atlas-api-clusters-unpinFeatureCompatibilityVersion>
    updateCluster </command/atlas-api-clusters-updateCluster>

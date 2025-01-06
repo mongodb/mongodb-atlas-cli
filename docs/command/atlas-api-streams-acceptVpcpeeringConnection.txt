@@ -1,7 +1,7 @@
-.. _atlas-api-streams-acceptVpcpeeringConnection:
+.. _atlas-api-streams-acceptVpcPeeringConnection:
 
 ============================================
-atlas api streams acceptVpcpeeringConnection
+atlas api streams acceptVpcPeeringConnection
 ============================================
 
 .. default-domain:: mongodb
@@ -20,7 +20,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api streams acceptVpcpeeringConnection [options]
+   atlas api streams acceptVpcPeeringConnection [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -50,7 +50,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for acceptVpcpeeringConnection
+     - help for acceptVpcPeeringConnection
    * - --id
      - string
      - true

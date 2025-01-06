@@ -24,7 +24,7 @@ var Commands = GroupedAndSortedCommands{
 		Description: `Returns and edits custom DNS configurations for MongoDB Cloud database deployments on AWS. The resource requires your Project ID. If you use the VPC peering on AWS and you use your own DNS servers instead of Amazon Route 53, enable custom DNS. Before 31 March 2020, applications deployed within AWS using custom DNS services and VPC-peered with MongoDB Cloud couldn&#39;t connect over private IP addresses. Custom DNS resolved to public IP addresses. AWS internal DNS resolved to private IP addresses. Applications deployed with custom DNS services in AWS should use Private IP for Peering connection strings.`,
 		Commands: []Command{
 			{
-				OperationID: `getAWSCustomDNS`,
+				OperationID: `getAwsCustomDns`,
 				Description: `Returns the custom DNS configuration for AWS clusters in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/awsCustomDNS`,
@@ -75,7 +75,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `toggleAWSCustomDNS`,
+				OperationID: `toggleAwsCustomDns`,
 				Description: `Enables or disables the custom DNS configuration for AWS clusters in the specified project. Enable custom DNS if you use AWS VPC peering and use your own DNS servers. To use this resource, the requesting API Key must have the Project Atlas Admin role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/awsCustomDNS`,
@@ -3135,6 +3135,57 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
+				OperationID: `disableDataProtectionSettings`,
+				Description: `Disables the Backup Compliance Policy settings with the specified project. As a prerequisite, a support ticket needs to be file first, instructions in https://www.mongodb.com/docs/atlas/backup/cloud-backup/backup-compliance-policy/. To use this resource, the requesting API Key must have the Project Owner role.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/backupCompliancePolicy`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodDelete,
+				},
+				Versions: []Version{
+					{
+						Version:            `2024-11-13`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
 				OperationID: `getBackupExportJob`,
 				Description: `Returns one Cloud Backup Snapshot Export Job associated with the specified Atlas cluster. To use this resource, the requesting API Key must have the Project Atlas Admin role.`,
 				RequestParameters: RequestParameters{
@@ -5709,7 +5760,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getClusterAdvancedConfiguration`,
-				Description: `Returns the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. This feature isn&#39;t available for M0 free clusters, M2 and M5 shared-tier clusters, or serverless clusters. To use this resource, the requesting API Key must have the Project Read Only role.`,
+				Description: `Returns the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. This feature isn&#39;t available for M0 free clusters, M2 and M5 shared-tier clusters, flex clusters, or serverless clusters. To use this resource, the requesting API Key must have the Project Read Only role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/processArgs`,
 					QueryParameters: []Parameter{
@@ -5886,7 +5937,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `grantMongoDBEmployeeAccess`,
+				OperationID: `grantMongoDbEmployeeAccess`,
 				Description: `Grants MongoDB employee cluster access for the given duration and at the specified level for one cluster.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}:grantMongoDBEmployeeAccess`,
@@ -6319,7 +6370,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `revokeMongoDBEmployeeAccess`,
+				OperationID: `revokeMongoDbEmployeeAccess`,
 				Description: `Revokes a previously granted MongoDB employee cluster access.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}:revokeMongoDBEmployeeAccess`,
@@ -6588,7 +6639,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `updateClusterAdvancedConfiguration`,
-				Description: `Updates the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. To use this resource, the requesting API Key must have the Project Cluster Manager role. This feature isn&#39;t available for M0 free clusters, M2 and M5 shared-tier clusters, or serverless clusters.`,
+				Description: `Updates the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. To use this resource, the requesting API Key must have the Project Cluster Manager role. This feature isn&#39;t available for M0 free clusters, M2 and M5 shared-tier clusters, flex clusters, or serverless clusters.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/processArgs`,
 					QueryParameters: []Parameter{
@@ -6655,7 +6706,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `upgradeSharedCluster`,
-				Description: `Upgrades a shared-tier cluster in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role. Each project supports up to 25 clusters.`,
+				Description: `Upgrades a shared-tier cluster to a dedicated cluster (M10&#43;) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role. Each project supports up to 25 clusters.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/tenantUpgrade`,
 					QueryParameters: []Parameter{
@@ -10529,7 +10580,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 			},
 			{
 				OperationID: `listProjectEvents`,
-				Description: `Returns one event for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting API Key must have the Project Read Only role.
+				Description: `Returns all events for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting API Key must have the Project Read Only role.
 
 
 This resource remains under revision and may change.`,
@@ -11605,10 +11656,10 @@ Note: Changing authorization types and/or updating authorization claims can prev
 	},
 	{
 		Name:        `Flex Clusters`,
-		Description: ``,
+		Description: `Returns, adds, edits, and removes flex clusters.`,
 		Commands: []Command{
 			{
-				OperationID: `createFlexcluster`,
+				OperationID: `createFlexCluster`,
 				Description: `Creates one flex cluster in the specified project. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/flexClusters`,
@@ -11918,7 +11969,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `upgradeFlexCluster`,
-				Description: `Upgrades a flex cluster in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.`,
+				Description: `Upgrades a flex cluster to a dedicated cluster (M10&#43;) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/flexClusters:tenantUpgrade`,
 					QueryParameters: []Parameter{
@@ -11971,7 +12022,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 	{
 		Name:        `Flex Restore Jobs`,
-		Description: ``,
+		Description: `Returns and adds restore jobs for flex database deployments.`,
 		Commands: []Command{
 			{
 				OperationID: `createFlexBackupRestoreJob`,
@@ -12193,7 +12244,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 	{
 		Name:        `Flex Snapshots`,
-		Description: ``,
+		Description: `Returns and requests to download flex database deployment snapshots.`,
 		Commands: []Command{
 			{
 				OperationID: `downloadFlexBackup`,
@@ -12843,56 +12894,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `createCostExplorerQueryProcess_1`,
-				Description: `Returns the usage details for a Cost Explorer query, if the query is finished and the data is ready to be viewed. If the data is not ready, a &#39;processing&#39; response willindicate that another request should be sent later to view the data.`,
-				RequestParameters: RequestParameters{
-					URL: `/api/atlas/v2/orgs/{orgId}/billing/costExplorer/usage/{token}`,
-					QueryParameters: []Parameter{
-						{
-							Name:        `envelope`,
-							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `bool`,
-							},
-						},
-					},
-					URLParameters: []Parameter{
-						{
-							Name:        `orgId`,
-							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
-							Required:    true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
-						{
-							Name:        `token`,
-							Description: `Unique 64 digit string that identifies the Cost Explorer query.`,
-							Required:    true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
-					},
-					Verb: http.MethodGet,
-				},
-				Versions: []Version{
-					{
-						Version:            `2023-01-01`,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`csv`,
-							`json`,
-						},
-					},
-				},
-			},
-			{
-				OperationID: `downloadInvoiceCSV`,
+				OperationID: `downloadInvoiceCsv`,
 				Description: `Returns one invoice that MongoDB issued to the specified organization in CSV format. A unique 24-hexadecimal digit string identifies the invoice. To use this resource, the requesting API Key have at least the Organization Billing Viewer, Organization Billing Admin, or Organization Owner role. If you have a cross-organization setup, you can query for a linked invoice if you have the Organization Billing Admin or Organization Owner Role.
 To compute the total owed amount of the invoice - sum up total owed amount of each payment included into the invoice. To compute payment&#39;s owed amount - use formula totalBilledCents * unitPrice &#43; salesTax - startingBalanceCents.`,
 				RequestParameters: RequestParameters{
@@ -12945,6 +12947,55 @@ To compute the total owed amount of the invoice - sum up total owed amount of ea
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`csv`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `getCostExplorerQueryProcess`,
+				Description: `Returns the usage details for a Cost Explorer query, if the query is finished and the data is ready to be viewed. If the data is not ready, a &#39;processing&#39; response willindicate that another request should be sent later to view the data.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/orgs/{orgId}/billing/costExplorer/usage/{token}`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name:        `orgId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `token`,
+							Description: `Unique 64 digit string that identifies the Cost Explorer query.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []Version{
+					{
+						Version:            `2023-01-01`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`csv`,
+							`json`,
 						},
 					},
 				},
@@ -13259,7 +13310,7 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 		Description: `Returns, edits, verifies, and removes LDAP configurations. An LDAP configuration defines settings for MongoDB Cloud to connect to your LDAP server over TLS for user authentication and authorization. Your LDAP server must be visible to the internet or connected to your MongoDB Cloud cluster with VPC Peering. Also, your LDAP server must use TLS. You must have the MongoDB Cloud admin user privilege to use these endpoints. Also, to configure user authentication and authorization with LDAPS, your cluster must run MongoDB 3.6 or higher. Groups for which you have configured LDAPS can&#39;t create a cluster using a version of MongoDB 3.6 or lower.`,
 		Commands: []Command{
 			{
-				OperationID: `deleteLDAPConfiguration`,
+				OperationID: `deleteLdapConfiguration`,
 				Description: `Removes the current LDAP Distinguished Name mapping captured in the userToDNMapping document from the LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/userSecurity/ldap/userToDNMapping`,
@@ -13310,7 +13361,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `getLDAPConfiguration`,
+				OperationID: `getLdapConfiguration`,
 				Description: `Returns the current LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/userSecurity`,
@@ -13361,7 +13412,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `getLDAPConfigurationStatus`,
+				OperationID: `getLdapConfigurationStatus`,
 				Description: `Returns the status of one request to verify one LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/userSecurity/ldap/verify/{requestId}`,
@@ -13421,7 +13472,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `saveLDAPConfiguration`,
+				OperationID: `saveLdapConfiguration`,
 				Description: `Edits the LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 
@@ -13475,7 +13526,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `verifyLDAPConfiguration`,
+				OperationID: `verifyLdapConfiguration`,
 				Description: `Verifies the LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/userSecurity/ldap/verify`,
@@ -14580,7 +14631,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Commands: []Command{
 			{
 				OperationID: `addOrganizationRole`,
-				Description: `Adds one organization level role to the MongoDB Cloud user. You can add a role to an active user or a user that has not yet accepted the invitation to join the organization. To use this resource, the requesting API Key must have the Organization Owner role.
+				Description: `Adds one organization-level role to the MongoDB Cloud user. You can add a role to an active user or a user that has not yet accepted the invitation to join the organization. To use this resource, the requesting API Key must have the Organization Owner role.
 
 
 Note: This operation is atomic.
@@ -14608,15 +14659,6 @@ Note: This resource cannot be used to add a role to users invited using the depr
 								Type:    `bool`,
 							},
 						},
-						{
-							Name:        `role`,
-							Description: `Organization level role to assign to the MongoDB Cloud user.`,
-							Required:    true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
 					},
 					URLParameters: []Parameter{
 						{
@@ -14642,8 +14684,132 @@ Note: This resource cannot be used to add a role to users invited using the depr
 				},
 				Versions: []Version{
 					{
-						Version:            `2025-01-01`,
-						RequestContentType: ``,
+						Version:            `2043-01-01`,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `addProjectRole`,
+				Description: `Adds one project-level role to the MongoDB Cloud user. You can add a role to an active user or a user that has been invited to join the project. To use this resource, the requesting API Key must have the Project Owner role.
+
+
+Note: This resource cannot be used to add a role to users invited using the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/users/{userId}:addRole`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `userId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodPost,
+				},
+				Versions: []Version{
+					{
+						Version:            `2043-01-01`,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `addProjectUser`,
+				Description: `Adds one MongoDB Cloud user to one project. To use this resource, the requesting API Key must have the Group User Admin role.
+
+
+
+If the user has a pending invitation to join the project&#39;s organization, MongoDB Cloud modifies it and grants project access.
+
+
+If the user doesn&#39;t have an invitation to join the organization, MongoDB Cloud sends a new invitation that grants the user organization and project access.
+
+
+If the user is already active in the project&#39;s organization, MongoDB Cloud grants access to the project.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/users`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodPost,
+				},
+				Versions: []Version{
+					{
+						Version:            `2043-01-01`,
+						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
@@ -14702,7 +14868,7 @@ Note: This resource cannot be used to add a user invited via the deprecated Invi
 				},
 				Versions: []Version{
 					{
-						Version:            `2025-01-01`,
+						Version:            `2043-01-01`,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14753,7 +14919,7 @@ Note: If the user does not have an existing MongoDB Cloud account, they will be 
 				},
 				Versions: []Version{
 					{
-						Version:            `2025-01-01`,
+						Version:            `2043-01-01`,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14860,7 +15026,73 @@ Note: This resource does not return information about pending users invited via 
 				},
 				Versions: []Version{
 					{
-						Version:            `2025-01-01`,
+						Version:            `2043-01-01`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `getProjectUser`,
+				Description: `Returns information about the specified MongoDB Cloud user within the context of the specified project. To use this resource, the requesting API Key must have the Group Read Only role.
+
+
+Note: You can only use this resource to fetch information about MongoDB Cloud human users. To return information about an API Key, use the Return One Organization API Key endpoint.
+
+
+Note: This resource does not return information about pending users invited via the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/users/{userId}`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `userId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []Version{
+					{
+						Version:            `2043-01-01`,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14966,7 +15198,7 @@ Note: This resource does not return information about pending users invited via 
 			},
 			{
 				OperationID: `removeOrganizationRole`,
-				Description: `Removes one organization level role from the MongoDB Cloud user. You can remove a role from an active user or a user that has not yet accepted the invitation to join the organization. To replace a user&#39;s only role, add the new role before removing the old role. A user must have at least one role at all times. To use this resource, the requesting API Key must have the Organization Owner role.
+				Description: `Removes one organization-level role from the MongoDB Cloud user. You can remove a role from an active user or a user that has not yet accepted the invitation to join the organization. To replace a user&#39;s only role, add the new role before removing the old role. A user must have at least one role at all times. To use this resource, the requesting API Key must have the Organization Owner role.
 
 
 Note: This operation is atomic.
@@ -14994,15 +15226,6 @@ Note: This resource cannot be used to remove a role from users invited using the
 								Type:    `bool`,
 							},
 						},
-						{
-							Name:        `role`,
-							Description: `Organization level role to remove from the MongoDB Cloud user.`,
-							Required:    true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
 					},
 					URLParameters: []Parameter{
 						{
@@ -15028,8 +15251,131 @@ Note: This resource cannot be used to remove a role from users invited using the
 				},
 				Versions: []Version{
 					{
-						Version:            `2025-01-01`,
-						RequestContentType: ``,
+						Version:            `2043-01-01`,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `removeProjectRole`,
+				Description: `Removes one project-level role from the MongoDB Cloud user. You can remove a role from an active user or a user that has been invited to join the project. To replace a user&#39;s only role, add the new role before removing the old role. A user must have at least one role at all times. To use this resource, the requesting API Key must have the Project Owner role.
+
+
+Note: This resource cannot be used to remove a role from users invited using the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/users/{userId}:removeRole`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `userId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodPost,
+				},
+				Versions: []Version{
+					{
+						Version:            `2043-01-01`,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `removeUserFromTeam`,
+				Description: `Removes one MongoDB Cloud user from one team. You can remove an active user or a user that has not yet accepted the invitation to join the organization. To use this resource, the requesting API Key must have the Organization Owner role.
+
+
+Note: This resource cannot be used to remove a user invited via the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/orgs/{orgId}/teams/{teamId}:removeUser`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name:        `orgId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the /orgs endpoint to retrieve all organizations to which the authenticated user has access.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `teamId`,
+							Description: `Unique 24-hexadecimal digit string that identifies the team to remove the MongoDB user from.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodPost,
+				},
+				Versions: []Version{
+					{
+						Version:            `2043-01-01`,
+						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
@@ -15091,7 +15437,7 @@ Note: This resource cannot be used to update pending users invited via the depre
 				},
 				Versions: []Version{
 					{
-						Version:            `2025-01-01`,
+						Version:            `2043-01-01`,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15481,7 +15827,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getHostLogs`,
-				Description: `Returns a compressed (.gz) log file that contains a range of log messages for the specified host for the specified project. MongoDB updates process and audit logs from the cluster backend infrastructure every five minutes. Logs are stored in chunks approximately five minutes in length, but this duration may vary. If you poll the API for log files, we recommend polling every five minutes even though consecutive polls could contain some overlapping logs. This feature isn&#39;t available for M0 free clusters, M2, M5, or serverless clusters. To use this resource, the requesting API Key must have the Project Data Access Read Only or higher role. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: &#34;Accept: application/vnd.atlas.YYYY-MM-DD&#43;gzip&#34;.`,
+				Description: `Returns a compressed (.gz) log file that contains a range of log messages for the specified host for the specified project. MongoDB updates process and audit logs from the cluster backend infrastructure every five minutes. Logs are stored in chunks approximately five minutes in length, but this duration may vary. If you poll the API for log files, we recommend polling every five minutes even though consecutive polls could contain some overlapping logs. This feature isn&#39;t available for M0 free clusters, M2, M5, flex, or serverless clusters. To use this resource, the requesting API Key must have the Project Data Access Read Only or higher role. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: &#34;Accept: application/vnd.atlas.YYYY-MM-DD&#43;gzip&#34;.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{hostName}/logs/{logName}.gz`,
 					QueryParameters: []Parameter{
@@ -17746,7 +18092,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					{
-						Version:            `2025-01-01`,
+						Version:            `2043-01-01`,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18325,6 +18671,13 @@ To use this resource, the requesting API Key must have the Organization Member r
 							`json`,
 						},
 					},
+					{
+						Version:            `2043-01-01`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
 				},
 			},
 			{
@@ -18457,7 +18810,7 @@ To use this resource, the requesting API Key must have the Organization Member r
 						},
 					},
 					{
-						Version:            `2025-01-01`,
+						Version:            `2043-01-01`,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18466,8 +18819,8 @@ To use this resource, the requesting API Key must have the Organization Member r
 				},
 			},
 			{
-				OperationID: `renameOrganization`,
-				Description: `Renames one organization. To use this resource, the requesting API Key must have the Organization Owner role.`,
+				OperationID: `updateOrganization`,
+				Description: `Updates one organization. To use this resource, the requesting API Key must have the Organization Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}`,
 					QueryParameters: []Parameter{
@@ -18943,6 +19296,180 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
+				OperationID: `listClusterSuggestedIndexes`,
+				Description: `Returns the indexes that the Performance Advisor suggests. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. To use this resource, the requesting API Key must have the Project Read Only role.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/performanceAdvisor/suggestedIndexes`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `processIds`,
+							Description: `ProcessIds from which to retrieve suggested indexes. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (&amp;) between each processId.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `namespaces`,
+							Description: `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: &lt;database&gt;.&lt;collection&gt;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&amp;) between each namespace. Omit this parameter to return results for all namespaces.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: true,
+								Type:    `string`,
+							},
+						},
+						{
+							Name: `since`,
+							Description: `Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the UNIX epoch.
+
+
+
+If you don&#39;t specify the until parameter, the endpoint returns data covering from the since value and the current time.
+
+
+If you specify neither the since nor the until parameters, the endpoint returns data from the previous 24 hours.`,
+							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
+							Name: `until`,
+							Description: `Date and time up until which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the UNIX epoch.
+
+
+
+If you specify the until parameter, you must specify the since parameter.
+
+
+If you specify neither the since nor the until parameters, the endpoint returns data from the previous 24 hours.`,
+							Required: false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `clusterName`,
+							Description: `Human-readable label that identifies the cluster.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []Version{
+					{
+						Version:            `2024-08-05`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `listDropIndexes`,
+				Description: `Returns the indexes that the Performance Advisor suggests to drop. The Performance Advisor suggests dropping unused, redundant, and hidden indexes to improve write performance and increase storage space. To use this resource, the requesting API Key must have the Project Read Only role.`,
+				RequestParameters: RequestParameters{
+					URL:             `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/performanceAdvisor/dropIndexSuggestions`,
+					QueryParameters: []Parameter{},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `clusterName`,
+							Description: `Human-readable label that identifies the cluster.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []Version{
+					{
+						Version:            `2024-08-05`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `listSchemaAdvice`,
+				Description: `Returns the schema suggestions that the Performance Advisor detects. The Performance Advisor provides holistic schema recommendations for your cluster by sampling documents in your most active collections and collections with slow-running queries. To use this resource, the requesting API Key must have the Project Read Only role.`,
+				RequestParameters: RequestParameters{
+					URL:             `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/performanceAdvisor/schemaAdvice`,
+					QueryParameters: []Parameter{},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `clusterName`,
+							Description: `Human-readable label that identifies the cluster.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []Version{
+					{
+						Version:            `2024-08-05`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
 				OperationID: `listSlowQueries`,
 				Description: `Returns log lines for slow queries that the Performance Advisor and Query Profiler identified. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. MongoDB Cloud bases the threshold for slow queries on the average time of operations on your cluster. This enables workload-relevant recommendations. To use this resource, the requesting API Key must have the Project Data Access Read Write role.`,
 				RequestParameters: RequestParameters{
@@ -19283,98 +19810,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []Version{
 					{
 						Version:            `2023-01-01`,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-				},
-			},
-			{
-				OperationID: `listSuggestedIndexes_1`,
-				Description: `Returns the indexes that the Performance Advisor suggests. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. To use this resource, the requesting API Key must have the Project Read Only role.`,
-				RequestParameters: RequestParameters{
-					URL: `/api/atlas/v2/groups/{groupId}/performanceAdvisor/suggestedIndexes`,
-					QueryParameters: []Parameter{
-						{
-							Name:        `clusterName`,
-							Description: `Human-readable label that identifies the cluster.`,
-							Required:    true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
-						{
-							Name:        `processIds`,
-							Description: `ProcessIds from which to retrieve suggested indexes. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (&amp;) between each processId.`,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: true,
-								Type:    `string`,
-							},
-						},
-						{
-							Name:        `namespaces`,
-							Description: `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: &lt;database&gt;.&lt;collection&gt;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&amp;) between each namespace. Omit this parameter to return results for all namespaces.`,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: true,
-								Type:    `string`,
-							},
-						},
-						{
-							Name: `since`,
-							Description: `Date and time from which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the UNIX epoch.
-
-
-
-If you don&#39;t specify the until parameter, the endpoint returns data covering from the since value and the current time.
-
-
-If you specify neither the since nor the until parameters, the endpoint returns data from the previous 24 hours.`,
-							Required: false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `int`,
-							},
-						},
-						{
-							Name: `until`,
-							Description: `Date and time up until which the query retrieves the suggested indexes. This parameter expresses its value in the number of milliseconds that have elapsed since the UNIX epoch.
-
-
-
-If you specify the until parameter, you must specify the since parameter.
-
-
-If you specify neither the since nor the until parameters, the endpoint returns data from the previous 24 hours.`,
-							Required: false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `int`,
-							},
-						},
-					},
-					URLParameters: []Parameter{
-						{
-							Name: `groupId`,
-							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
-
-
-NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
-							Required: true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
-					},
-					Verb: http.MethodGet,
-				},
-				Versions: []Version{
-					{
-						Version:            `2024-08-05`,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21807,7 +22242,84 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `getProjectLTSVersions`,
+				OperationID: `getProjectLimit`,
+				Description: `Returns the specified limit for the specified project. To use this resource, the requesting API Key must have the Project Read Only role.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/limits/{limitName}`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `limitName`,
+							Description: `Human-readable label that identifies this project limit.
+
+
+| Limit Name | Description | Default | API Override Limit |
+| --- | --- | --- | --- |
+| atlas.project.deployment.clusters | Limit on the number of clusters in this project if the org is not sales-sold (If org is sales-sold, the limit is 100) | 25 | 90 |
+| atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
+| atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 |
+| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 900 |
+| atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 |
+| atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 |
+| dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
+| dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
+| dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
+| dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
+| atlas.project.deployment.privateServiceConnectionsPerRegionGroup | Number of Private Service Connections per Region Group | 50 | 100|
+| atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
+| atlas.project.deployment.salesSoldM0s | Limit on the number of M0 clusters in this project if the org is sales-sold | 100 | 100 |`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []Version{
+					{
+						Version:            `2023-01-01`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `getProjectLtsVersions`,
 				Description: `Returns the MongoDB Long Term Support Major Versions available to new clusters in this project.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/mongoDBVersions`,
@@ -21877,83 +22389,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					URLParameters: []Parameter{
-						{
-							Name: `groupId`,
-							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
-
-
-NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
-							Required: true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
-					},
-					Verb: http.MethodGet,
-				},
-				Versions: []Version{
-					{
-						Version:            `2023-01-01`,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-				},
-			},
-			{
-				OperationID: `getProjectLimit`,
-				Description: `Returns the specified limit for the specified project. To use this resource, the requesting API Key must have the Project Read Only role.`,
-				RequestParameters: RequestParameters{
-					URL: `/api/atlas/v2/groups/{groupId}/limits/{limitName}`,
-					QueryParameters: []Parameter{
-						{
-							Name:        `envelope`,
-							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `bool`,
-							},
-						},
-						{
-							Name:        `pretty`,
-							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `bool`,
-							},
-						},
-					},
-					URLParameters: []Parameter{
-						{
-							Name: `limitName`,
-							Description: `Human-readable label that identifies this project limit.
-
-
-| Limit Name | Description | Default | API Override Limit |
-| --- | --- | --- | --- |
-| atlas.project.deployment.clusters | Limit on the number of clusters in this project if the org is not sales-sold (If org is sales-sold, the limit is 100) | 25 | 90 |
-| atlas.project.deployment.nodesPerPrivateLinkRegion | Limit on the number of nodes per Private Link region in this project | 50 | 90 |
-| atlas.project.security.databaseAccess.customRoles | Limit on the number of custom roles in this project | 100 | 1400 |
-| atlas.project.security.databaseAccess.users | Limit on the number of database users in this project | 100 | 900 |
-| atlas.project.security.networkAccess.crossRegionEntries | Limit on the number of cross-region network access entries in this project | 40 | 220 |
-| atlas.project.security.networkAccess.entries | Limit on the number of network access entries in this project | 200 | 20 |
-| dataFederation.bytesProcessed.query | Limit on the number of bytes processed during a single Data Federation query | N/A | N/A |
-| dataFederation.bytesProcessed.daily | Limit on the number of bytes processed across all Data Federation tenants for the current day | N/A | N/A |
-| dataFederation.bytesProcessed.weekly | Limit on the number of bytes processed across all Data Federation tenants for the current week | N/A | N/A |
-| dataFederation.bytesProcessed.monthly | Limit on the number of bytes processed across all Data Federation tenants for the current month | N/A | N/A |
-| atlas.project.deployment.privateServiceConnectionsPerRegionGroup | Number of Private Service Connections per Region Group | 50 | 100|
-| atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
-| atlas.project.deployment.salesSoldM0s | Limit on the number of M0 clusters in this project if the org is sales-sold | 100 | 100 |`,
-							Required: true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
 						{
 							Name: `groupId`,
 							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
@@ -22210,6 +22645,15 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								Type:    `bool`,
 							},
 						},
+						{
+							Name:        `orgMembershipStatus`,
+							Description: `Flag that indicates whether to filter the returned list by users organization membership status. If you exclude this parameter, this resource returns both pending and active users.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
 					},
 					URLParameters: []Parameter{
 						{
@@ -22402,10 +22846,17 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							`json`,
 						},
 					},
+					{
+						Version:            `2043-01-01`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
 				},
 			},
 			{
-				OperationID: `returnAllIPAddresses`,
+				OperationID: `returnAllIpAddresses`,
 				Description: `Returns all IP addresses for this project. To use this resource, the requesting API Key must have the Project Read Only role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/ipAddresses`,
@@ -23489,7 +23940,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `returnAllControlPlaneIPAddresses`,
+				OperationID: `returnAllControlPlaneIpAddresses`,
 				Description: `Returns all control plane IP addresses.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/unauth/controlPlaneIPAddresses`,
@@ -25975,7 +26426,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Description: `Returns, adds, edits, and removes Streams Instances. This resource requires your project ID.`,
 		Commands: []Command{
 			{
-				OperationID: `acceptVPCPeeringConnection`,
+				OperationID: `acceptVpcPeeringConnection`,
 				Description: `Requests the acceptance of an incoming VPC Peering connection.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections/{id}:accept`,
@@ -26557,7 +27008,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `deleteVPCPeeringConnection`,
+				OperationID: `deleteVpcPeeringConnection`,
 				Description: `Deletes an incoming VPC Peering connection.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections/{id}`,
@@ -26672,6 +27123,66 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`gzip`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `getAccountDetails`,
+				Description: `Returns the Account ID, and the VPC ID for the group and region specified.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streams/accountDetails`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `cloudProvider`,
+							Description: `One of &#34;aws&#34;, &#34;azure&#34; or &#34;gcp&#34;.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `regionName`,
+							Description: `The cloud provider specific region name, i.e. &#34;US_EAST_1&#34; for cloud provider &#34;aws&#34;.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []Version{
+					{
+						Version:            `2024-11-13`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
 						},
 					},
 				},
@@ -26917,11 +27428,20 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `getVPCPeeringConnections`,
+				OperationID: `getVpcPeeringConnections`,
 				Description: `Returns a list of incoming VPC Peering Connections.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections`,
 					QueryParameters: []Parameter{
+						{
+							Name:        `requesterAccountId`,
+							Description: `The Account ID of the VPC Peering connection/s.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -27289,7 +27809,76 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 			},
 			{
-				OperationID: `rejectVPCPeeringConnection`,
+				OperationID: `modifyStreamProcessor`,
+				Description: `Modify one existing Stream Processor within the specified stream instance. To use this resource, the requesting API Key must have the Project Owner role or Project Stream Processing Owner role.`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streams/{tenantName}/processor/{processorName}`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `tenantName`,
+							Description: `Human-readable label that identifies the stream instance.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+						{
+							Name:        `processorName`,
+							Description: `Human-readable label that identifies the stream processor.`,
+							Required:    true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodPatch,
+				},
+				Versions: []Version{
+					{
+						Version:            `2024-05-30`,
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `rejectVpcPeeringConnection`,
 				Description: `Requests the rejection of an incoming VPC Peering connection.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections/{id}:reject`,
@@ -28160,6 +28749,13 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []Version{
 					{
 						Version:            `2023-01-01`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            `2043-01-01`,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,

@@ -1,8 +1,8 @@
-.. _atlas-api-clusters-revokeMongoDbEmployeeAccess:
+.. _atlas-api-organizations-updateOrganization:
 
-==============================================
-atlas api clusters revokeMongoDbEmployeeAccess
-==============================================
+==========================================
+atlas api organizations updateOrganization
+==========================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,9 @@ atlas api clusters revokeMongoDbEmployeeAccess
    :depth: 1
    :class: singlecol
 
-Revokes a previously granted MongoDB employee cluster access.
+Updates one organization.
+
+To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------
@@ -20,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api clusters revokeMongoDbEmployeeAccess [options]
+   atlas api organizations updateOrganization [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -35,22 +37,22 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - human-readable label that identifies this cluster
    * - --envelope
      - 
      - false
      - flag that indicates whether Application wraps the response in an envelope JSON object
-   * - --groupId
+   * - --file
      - string
-     - true
-     - unique 24-hexadecimal digit string that identifies your project
+     - false
+     - path to the file which contains the api request contents
    * - -h, --help
      - 
      - false
-     - help for revokeMongoDbEmployeeAccess
+     - help for updateOrganization
+   * - --orgId
+     - string
+     - true
+     - unique 24-hexadecimal digit string that identifies the organization that contains your projects
    * - --output
      - string
      - false
@@ -66,7 +68,7 @@ Options
    * - --version
      - string
      - false
-     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2024-08-05".
+     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2023-01-01".
 
 Inherited Options
 -----------------

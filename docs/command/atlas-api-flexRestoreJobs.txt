@@ -12,7 +12,7 @@ atlas api flexRestoreJobs
    :depth: 1
    :class: singlecol
 
-
+Returns and adds restore jobs for flex database deployments.
 
 Options
 -------

@@ -52,12 +52,12 @@ Related Commands
 ----------------
 
 * :ref:`atlas-api-root-getSystemStatus` - This resource returns information about the MongoDB application along with API key meta data.
-* :ref:`atlas-api-root-returnAllControlPlaneIpaddresses` - Returns all control plane IP addresses.
+* :ref:`atlas-api-root-returnAllControlPlaneIpAddresses` - Returns all control plane IP addresses.
 
 
 .. toctree::
    :titlesonly:
 
    getSystemStatus </command/atlas-api-root-getSystemStatus>
-   returnAllControlPlaneIpaddresses </command/atlas-api-root-returnAllControlPlaneIpaddresses>
+   returnAllControlPlaneIpAddresses </command/atlas-api-root-returnAllControlPlaneIpAddresses>
 

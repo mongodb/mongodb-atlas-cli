@@ -50,8 +50,8 @@ Related Commands
 ----------------
 
 * :ref:`atlas-api-invoices-createCostExplorerQueryProcess` - Creates a query process within the Cost Explorer for the given parameters.
-* :ref:`atlas-api-invoices-createCostExplorerQueryProcess1` - Returns the usage details for a Cost Explorer query, if the query is finished and the data is ready to be viewed.
 * :ref:`atlas-api-invoices-downloadInvoiceCsv` - Returns one invoice that MongoDB issued to the specified organization in CSV format.
+* :ref:`atlas-api-invoices-getCostExplorerQueryProcess` - Returns the usage details for a Cost Explorer query, if the query is finished and the data is ready to be viewed.
 * :ref:`atlas-api-invoices-getInvoice` - Returns one invoice that MongoDB issued to the specified organization.
 * :ref:`atlas-api-invoices-listInvoices` - Returns all invoices that MongoDB issued to the specified organization.
 * :ref:`atlas-api-invoices-listPendingInvoices` - Returns all invoices accruing charges for the current billing cycle for the specified organization.
@@ -62,8 +62,8 @@ Related Commands
    :titlesonly:
 
    createCostExplorerQueryProcess </command/atlas-api-invoices-createCostExplorerQueryProcess>
-   createCostExplorerQueryProcess1 </command/atlas-api-invoices-createCostExplorerQueryProcess1>
    downloadInvoiceCsv </command/atlas-api-invoices-downloadInvoiceCsv>
+   getCostExplorerQueryProcess </command/atlas-api-invoices-getCostExplorerQueryProcess>
    getInvoice </command/atlas-api-invoices-getInvoice>
    listInvoices </command/atlas-api-invoices-listInvoices>
    listPendingInvoices </command/atlas-api-invoices-listPendingInvoices>

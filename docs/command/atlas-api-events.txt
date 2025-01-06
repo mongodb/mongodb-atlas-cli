@@ -55,7 +55,7 @@ Related Commands
 * :ref:`atlas-api-events-getProjectEvent` - Returns one event for the specified project.
 * :ref:`atlas-api-events-listEventTypes` - Returns a list of all event types, along with a description and additional metadata about each event.
 * :ref:`atlas-api-events-listOrganizationEvents` - Returns all events for the specified organization.
-* :ref:`atlas-api-events-listProjectEvents` - Returns one event for the specified project.
+* :ref:`atlas-api-events-listProjectEvents` - Returns all events for the specified project.
 
 
 .. toctree::

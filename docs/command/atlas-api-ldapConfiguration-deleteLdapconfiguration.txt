@@ -1,7 +1,7 @@
-.. _atlas-api-ldapConfiguration-deleteLdapconfiguration:
+.. _atlas-api-ldapConfiguration-deleteLdapConfiguration:
 
 ===================================================
-atlas api ldapConfiguration deleteLdapconfiguration
+atlas api ldapConfiguration deleteLdapConfiguration
 ===================================================
 
 .. default-domain:: mongodb
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api ldapConfiguration deleteLdapconfiguration [options]
+   atlas api ldapConfiguration deleteLdapConfiguration [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -48,7 +48,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for deleteLdapconfiguration
+     - help for deleteLdapConfiguration
    * - --output
      - string
      - false

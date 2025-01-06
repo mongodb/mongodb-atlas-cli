@@ -65,6 +65,10 @@ Options
      - int
      - false
      - number of items that the response returns per page
+   * - --orgMembershipStatus
+     - string
+     - false
+     - flag that indicates whether to filter the returned list by users organization membership status
    * - --output
      - string
      - false

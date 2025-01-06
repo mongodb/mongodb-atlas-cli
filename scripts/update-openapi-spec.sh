@@ -20,4 +20,4 @@ set -euo pipefail
 SCRIPT_DIR="${BASH_SOURCE%/*}"
 
 # Download the file using curl
-curl -L "https://github.com/mongodb/openapi/raw/refs/heads/main/openapi/v2.yaml" -o "${SCRIPT_DIR}/../tools/L1-generator/spec.yaml"
+curl -L "https://github.com/mongodb/openapi/raw/refs/heads/main/openapi/v2.yaml" -o "${SCRIPT_DIR}/../tools/api-generator/spec.yaml"

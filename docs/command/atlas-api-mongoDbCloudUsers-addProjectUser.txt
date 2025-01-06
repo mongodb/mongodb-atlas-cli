@@ -1,8 +1,8 @@
-.. _atlas-api-clusters-revokeMongoDbEmployeeAccess:
+.. _atlas-api-mongoDbCloudUsers-addProjectUser:
 
-==============================================
-atlas api clusters revokeMongoDbEmployeeAccess
-==============================================
+==========================================
+atlas api mongoDbCloudUsers addProjectUser
+==========================================
 
 .. default-domain:: mongodb
 
@@ -12,7 +12,9 @@ atlas api clusters revokeMongoDbEmployeeAccess
    :depth: 1
    :class: singlecol
 
-Revokes a previously granted MongoDB employee cluster access.
+Adds one MongoDB Cloud user to one project.
+
+To use this resource, the requesting API Key must have the Group User Admin role. If the user has a pending invitation to join the project&#39;s organization, MongoDB Cloud modifies it and grants project access. If the user doesn&#39;t have an invitation to join the organization, MongoDB Cloud sends a new invitation that grants the user organization and project access. If the user is already active in the project&#39;s organization, MongoDB Cloud grants access to the project.
 
 Syntax
 ------
@@ -20,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api clusters revokeMongoDbEmployeeAccess [options]
+   atlas api mongoDbCloudUsers addProjectUser [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -35,14 +37,14 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - human-readable label that identifies this cluster
    * - --envelope
      - 
      - false
      - flag that indicates whether Application wraps the response in an envelope JSON object
+   * - --file
+     - string
+     - false
+     - path to the file which contains the api request contents
    * - --groupId
      - string
      - true
@@ -50,7 +52,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for revokeMongoDbEmployeeAccess
+     - help for addProjectUser
    * - --output
      - string
      - false
@@ -66,7 +68,7 @@ Options
    * - --version
      - string
      - false
-     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2024-08-05".
+     - api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set This value defaults to "2043-01-01".
 
 Inherited Options
 -----------------

@@ -16,6 +16,7 @@ package api
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 )
 
@@ -35,11 +36,11 @@ func NewProfileFlagValueProviderForDefaultProfile() *ProfileFlagValueProvider {
 
 func (p *ProfileFlagValueProvider) ValueForFlag(flagName string) (*string, error) {
 	switch flagName {
-	case "groupId":
+	case flag.GroupID:
 		return noneEmptyStringPointer(p.profile.ProjectID()), nil
-	case "orgId":
+	case flag.OrgID:
 		return noneEmptyStringPointer(p.profile.OrgID()), nil
-	case "version":
+	case flag.Version:
 		return noneEmptyStringPointer(p.profile.APIVersion()), nil
 	}
 

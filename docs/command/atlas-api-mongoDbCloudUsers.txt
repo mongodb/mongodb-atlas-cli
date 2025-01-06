@@ -1,0 +1,75 @@
+.. _atlas-api-mongoDbCloudUsers:
+
+===========================
+atlas api mongoDbCloudUsers
+===========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, and edits MongoDB Cloud users.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for mongoDbCloudUsers
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-mongoDbCloudUsers-addOrganizationRole` - Adds one organization level role to the MongoDB Cloud user.
+* :ref:`atlas-api-mongoDbCloudUsers-addUserToTeam` - Adds one MongoDB Cloud user to one team.
+* :ref:`atlas-api-mongoDbCloudUsers-createOrganizationUser` - Invites one new or existing MongoDB Cloud user to join the organization.
+* :ref:`atlas-api-mongoDbCloudUsers-createUser` - Creates one MongoDB Cloud user account.
+* :ref:`atlas-api-mongoDbCloudUsers-getOrganizationUser` - Returns information about the specified MongoDB Cloud user within the context of the specified organization.
+* :ref:`atlas-api-mongoDbCloudUsers-getUser` - Returns the details for one MongoDB Cloud user account with the specified unique identifier for the user.
+* :ref:`atlas-api-mongoDbCloudUsers-getUserByUsername` - Returns the details for one MongoDB Cloud user account with the specified username.
+* :ref:`atlas-api-mongoDbCloudUsers-removeOrganizationRole` - Removes one organization level role from the MongoDB Cloud user.
+* :ref:`atlas-api-mongoDbCloudUsers-updateOrganizationUser` - Updates one MongoDB Cloud user in the specified organization.
+
+
+.. toctree::
+   :titlesonly:
+
+   addOrganizationRole </command/atlas-api-mongoDbCloudUsers-addOrganizationRole>
+   addUserToTeam </command/atlas-api-mongoDbCloudUsers-addUserToTeam>
+   createOrganizationUser </command/atlas-api-mongoDbCloudUsers-createOrganizationUser>
+   createUser </command/atlas-api-mongoDbCloudUsers-createUser>
+   getOrganizationUser </command/atlas-api-mongoDbCloudUsers-getOrganizationUser>
+   getUser </command/atlas-api-mongoDbCloudUsers-getUser>
+   getUserByUsername </command/atlas-api-mongoDbCloudUsers-getUserByUsername>
+   removeOrganizationRole </command/atlas-api-mongoDbCloudUsers-removeOrganizationRole>
+   updateOrganizationUser </command/atlas-api-mongoDbCloudUsers-updateOrganizationUser>
+

@@ -136,7 +136,7 @@ func buildAWSInterfaces(
 	configs := make([]akov2.AWSPrivateEndpointConfiguration, 0, len(interfaceIDs))
 
 	for _, interfaceID := range interfaceIDs {
-		pe, err := provider.InterfaceEndpoint(projectID, "AWS", serviceID, interfaceID)
+		pe, err := provider.InterfaceEndpoint(projectID, "AWS", interfaceID, serviceID)
 		if err != nil {
 			return nil, err
 		}
@@ -160,7 +160,7 @@ func buildAzureInterfaces(
 	configs := make([]akov2.AzurePrivateEndpointConfiguration, 0, len(interfaceIDs))
 
 	for _, interfaceID := range interfaceIDs {
-		pe, err := provider.InterfaceEndpoint(projectID, "AZURE", serviceID, interfaceID)
+		pe, err := provider.InterfaceEndpoint(projectID, "AZURE", interfaceID, serviceID)
 		if err != nil {
 			return nil, err
 		}
@@ -190,7 +190,7 @@ func buildGCPInterfaces(
 	configs := make([]akov2.GCPPrivateEndpointConfiguration, 0, len(interfaceIDs))
 
 	for _, interfaceID := range interfaceIDs {
-		pe, err := provider.InterfaceEndpoint(projectID, "GCP", serviceID, interfaceID)
+		pe, err := provider.InterfaceEndpoint(projectID, "GCP", interfaceID, serviceID)
 		if err != nil {
 			return nil, err
 		}

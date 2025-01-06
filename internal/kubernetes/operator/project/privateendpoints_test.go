@@ -329,15 +329,15 @@ func TestBuildPrivateEndpoints(t *testing.T) {
 			peStore.EXPECT().PrivateEndpoints(projectID, "GCP").Return(tt.gcpServices, nil)
 
 			if tt.awsEndpointInterface != nil {
-				peStore.EXPECT().InterfaceEndpoint(projectID, "AWS", "aws-pe-1", "vpcpe-123456").Return(tt.awsEndpointInterface, nil)
+				peStore.EXPECT().InterfaceEndpoint(projectID, "AWS", "vpcpe-123456", "aws-pe-1").Return(tt.awsEndpointInterface, nil)
 			}
 
 			if tt.azureEndpointInterface != nil {
-				peStore.EXPECT().InterfaceEndpoint(projectID, "AZURE", "azure-pe-1", "azure/resource/id").Return(tt.azureEndpointInterface, nil)
+				peStore.EXPECT().InterfaceEndpoint(projectID, "AZURE", "azure/resource/id", "azure-pe-1").Return(tt.azureEndpointInterface, nil)
 			}
 
 			if tt.gcpEndpointInterface != nil {
-				peStore.EXPECT().InterfaceEndpoint(projectID, "GCP", "gcp-pe-1", "groupName").Return(tt.gcpEndpointInterface, nil)
+				peStore.EXPECT().InterfaceEndpoint(projectID, "GCP", "groupName", "gcp-pe-1").Return(tt.gcpEndpointInterface, nil)
 			}
 
 			privateEndpoints, err := BuildPrivateEndpointCustomResources(

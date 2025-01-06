@@ -48,7 +48,7 @@ var describeTemplate = `ID	IP ADDRESS	STATUS	ERROR
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), provider, opts.privateEndpointServiceID, opts.privateEndpointID)
+	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), provider, opts.privateEndpointID, opts.privateEndpointServiceID)
 
 	if err != nil {
 		return err

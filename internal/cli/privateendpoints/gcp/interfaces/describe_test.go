@@ -39,7 +39,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		InterfaceEndpoint(opts.ProjectID, provider, opts.privateEndpointServiceID, opts.privateEndpointGroupID).
+		InterfaceEndpoint(opts.ProjectID, provider, opts.privateEndpointGroupID, opts.privateEndpointServiceID).
 		Return(expected, nil).
 		Times(1)
 

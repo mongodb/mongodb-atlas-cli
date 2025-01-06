@@ -48,7 +48,7 @@ var describeTemplate = `ENDPOINT	STATUS	DELETE REQUESTED
 `
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), provider, opts.privateEndpointServiceID, opts.privateEndpointGroupID)
+	r, err := opts.store.InterfaceEndpoint(opts.ConfigProjectID(), provider, opts.privateEndpointGroupID, opts.privateEndpointServiceID)
 
 	if err != nil {
 		return err

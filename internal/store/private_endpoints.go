@@ -53,7 +53,7 @@ type DataLakePrivateEndpointDeleter interface {
 }
 
 type InterfaceEndpointDescriber interface {
-	InterfaceEndpoint(string, string, string, string) (*atlasv2.PrivateLinkEndpoint, error)
+	InterfaceEndpoint(projectID, cloudProvider, privateEndpointID, endpointServiceID string) (*atlasv2.PrivateLinkEndpoint, error)
 }
 
 type InterfaceEndpointCreator interface {
@@ -130,8 +130,8 @@ func (s *Store) CreateInterfaceEndpoint(projectID, provider, endpointServiceID s
 }
 
 // InterfaceEndpoint encapsulates the logic to manage different cloud providers.
-func (s *Store) InterfaceEndpoint(projectID, cloudProvider, endpointServiceID, privateEndpointID string) (*atlasv2.PrivateLinkEndpoint, error) {
-	result, _, err := s.clientv2.PrivateEndpointServicesApi.GetPrivateEndpoint(s.ctx, projectID, cloudProvider, endpointServiceID, privateEndpointID).Execute()
+func (s *Store) InterfaceEndpoint(projectID, cloudProvider, privateEndpointID, endpointServiceID string) (*atlasv2.PrivateLinkEndpoint, error) {
+	result, _, err := s.clientv2.PrivateEndpointServicesApi.GetPrivateEndpoint(s.ctx, projectID, cloudProvider, privateEndpointID, endpointServiceID).Execute()
 	return result, err
 }
 

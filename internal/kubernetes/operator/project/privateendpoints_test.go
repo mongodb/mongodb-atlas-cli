@@ -54,7 +54,7 @@ func TestBuildPrivateEndpoints(t *testing.T) {
 					CloudProvider: "AWS",
 					Id:            pointer.Get("aws-pe-1"),
 					RegionName:    pointer.Get("US_EAST_1"),
-					describe_test},
+				},
 			},
 			azureServices: []admin.EndpointService{
 				{

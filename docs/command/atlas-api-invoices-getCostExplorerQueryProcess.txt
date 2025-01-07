@@ -14,7 +14,7 @@ atlas api invoices getCostExplorerQueryProcess
 
 Returns the usage details for a Cost Explorer query, if the query is finished and the data is ready to be viewed.
 
-If the data is not ready, a &#39;processing&#39; response willindicate that another request should be sent later to view the data.
+If the data is not ready, a 'processing' response willindicate that another request should be sent later to view the data.
 
 Syntax
 ------

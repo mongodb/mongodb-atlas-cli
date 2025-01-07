@@ -68,7 +68,7 @@ Related Commands
 * :ref:`atlas-api-clusters-unpinFeatureCompatibilityVersion` - Unpins the current fixed Feature Compatibility Version (FCV).
 * :ref:`atlas-api-clusters-updateCluster` - Updates the details for one cluster in the specified project.
 * :ref:`atlas-api-clusters-updateClusterAdvancedConfiguration` - Updates the advanced configuration details for one cluster in the specified project.
-* :ref:`atlas-api-clusters-upgradeSharedCluster` - Upgrades a shared-tier cluster to a dedicated cluster (M10&#43;) in the specified project.
+* :ref:`atlas-api-clusters-upgradeSharedCluster` - Upgrades a shared-tier cluster to a dedicated cluster (M10+) in the specified project.
 * :ref:`atlas-api-clusters-upgradeSharedClusterToServerless` - Upgrades a shared-tier cluster to a serverless instance in the specified project.
 
 

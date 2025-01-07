@@ -51,8 +51,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-accessTracking-listAccessLogsByClusterName` - Returns the access logs of one cluster identified by the cluster&#39;s name.
-* :ref:`atlas-api-accessTracking-listAccessLogsByHostname` - Returns the access logs of one cluster identified by the cluster&#39;s hostname.
+* :ref:`atlas-api-accessTracking-listAccessLogsByClusterName` - Returns the access logs of one cluster identified by the cluster's name.
+* :ref:`atlas-api-accessTracking-listAccessLogsByHostname` - Returns the access logs of one cluster identified by the cluster's hostname.
 
 
 .. toctree::

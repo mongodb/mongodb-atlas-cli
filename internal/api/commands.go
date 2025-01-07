@@ -21,7 +21,7 @@ import "net/http"
 var Commands = GroupedAndSortedCommands{
 	{
 		Name:        `AWS Clusters DNS`,
-		Description: `Returns and edits custom DNS configurations for MongoDB Cloud database deployments on AWS. The resource requires your Project ID. If you use the VPC peering on AWS and you use your own DNS servers instead of Amazon Route 53, enable custom DNS. Before 31 March 2020, applications deployed within AWS using custom DNS services and VPC-peered with MongoDB Cloud couldn&#39;t connect over private IP addresses. Custom DNS resolved to public IP addresses. AWS internal DNS resolved to private IP addresses. Applications deployed with custom DNS services in AWS should use Private IP for Peering connection strings.`,
+		Description: `Returns and edits custom DNS configurations for MongoDB Cloud database deployments on AWS. The resource requires your Project ID. If you use the VPC peering on AWS and you use your own DNS servers instead of Amazon Route 53, enable custom DNS. Before 31 March 2020, applications deployed within AWS using custom DNS services and VPC-peered with MongoDB Cloud couldn't connect over private IP addresses. Custom DNS resolved to public IP addresses. AWS internal DNS resolved to private IP addresses. Applications deployed with custom DNS services in AWS should use Private IP for Peering connection strings.`,
 		Commands: []Command{
 			{
 				OperationID: `getAwsCustomDns`,
@@ -133,7 +133,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Commands: []Command{
 			{
 				OperationID: `listAccessLogsByClusterName`,
-				Description: `Returns the access logs of one cluster identified by the cluster&#39;s name. Access logs contain a list of authentication requests made against your cluster. You can&#39;t use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role.`,
+				Description: `Returns the access logs of one cluster identified by the cluster's name. Access logs contain a list of authentication requests made against your cluster. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/dbAccessHistory/clusters/{clusterName}`,
 					QueryParameters: []Parameter{
@@ -238,7 +238,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `listAccessLogsByHostname`,
-				Description: `Returns the access logs of one cluster identified by the cluster&#39;s hostname. Access logs contain a list of authentication requests made against your clusters. You can&#39;t use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role.`,
+				Description: `Returns the access logs of one cluster identified by the cluster's hostname. Access logs contain a list of authentication requests made against your clusters. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/dbAccessHistory/processes/{hostname}`,
 					QueryParameters: []Parameter{
@@ -2480,7 +2480,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Commands: []Command{
 			{
 				OperationID: `getAuditingConfiguration`,
-				Description: `Returns the auditing configuration for the specified project. The auditing configuration defines the events that MongoDB Cloud records in the audit log. To use this resource, the requesting API Key must have the Project Owner role. This feature isn&#39;t available for M0, M2, M5, or serverless clusters.`,
+				Description: `Returns the auditing configuration for the specified project. The auditing configuration defines the events that MongoDB Cloud records in the audit log. To use this resource, the requesting API Key must have the Project Owner role. This feature isn't available for M0, M2, M5, or serverless clusters.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/auditLog`,
 					QueryParameters: []Parameter{
@@ -2531,7 +2531,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `updateAuditingConfiguration`,
-				Description: `Updates the auditing configuration for the specified project. The auditing configuration defines the events that MongoDB Cloud records in the audit log. To use this resource, the requesting API Key must have the Project Owner role. This feature isn&#39;t available for M0, M2, M5, or serverless clusters.`,
+				Description: `Updates the auditing configuration for the specified project. The auditing configuration defines the events that MongoDB Cloud records in the audit log. To use this resource, the requesting API Key must have the Project Owner role. This feature isn't available for M0, M2, M5, or serverless clusters.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/auditLog`,
 					QueryParameters: []Parameter{
@@ -4614,7 +4614,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 	{
 		Name:        `Cloud Migration Service`,
-		Description: `Manages the Cloud Migration Service. Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can&#39;t use any authentication except SCRAM-SHA.`,
+		Description: `Manages the Cloud Migration Service. Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can't use any authentication except SCRAM-SHA.`,
 		Commands: []Command{
 			{
 				OperationID: `createLinkToken`,
@@ -5760,7 +5760,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getClusterAdvancedConfiguration`,
-				Description: `Returns the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. This feature isn&#39;t available for M0 free clusters, M2 and M5 shared-tier clusters, flex clusters, or serverless clusters. To use this resource, the requesting API Key must have the Project Read Only role.`,
+				Description: `Returns the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. This feature isn't available for M0 free clusters, M2 and M5 shared-tier clusters, flex clusters, or serverless clusters. To use this resource, the requesting API Key must have the Project Read Only role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/processArgs`,
 					QueryParameters: []Parameter{
@@ -6431,7 +6431,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `testFailover`,
-				Description: `Starts a failover test for the specified cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. A failover test checks how MongoDB Cloud handles the failure of the cluster&#39;s primary node. During the test, MongoDB Cloud shuts down the primary node and elects a new primary. To use this resource, the requesting API Key must have the Project Cluster Manager role.`,
+				Description: `Starts a failover test for the specified cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. A failover test checks how MongoDB Cloud handles the failure of the cluster's primary node. During the test, MongoDB Cloud shuts down the primary node and elects a new primary. To use this resource, the requesting API Key must have the Project Cluster Manager role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/restartPrimaries`,
 					QueryParameters: []Parameter{
@@ -6558,7 +6558,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `updateCluster`,
-				Description: `Updates the details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. This resource can update clusters with asymmetrically-sized shards. To update a cluster&#39;s termination protection, the requesting API Key must have the Project Owner role. For all other updates, the requesting API Key must have the Project Cluster Manager role. You can&#39;t modify a paused cluster (paused : true). You must call this endpoint to set paused : false. After this endpoint responds with paused : false, you can call it again with the changes you want to make to the cluster. This feature is not available for serverless clusters.`,
+				Description: `Updates the details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. This resource can update clusters with asymmetrically-sized shards. To update a cluster's termination protection, the requesting API Key must have the Project Owner role. For all other updates, the requesting API Key must have the Project Cluster Manager role. You can't modify a paused cluster (paused : true). You must call this endpoint to set paused : false. After this endpoint responds with paused : false, you can call it again with the changes you want to make to the cluster. This feature is not available for serverless clusters.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}`,
 					QueryParameters: []Parameter{
@@ -6639,7 +6639,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `updateClusterAdvancedConfiguration`,
-				Description: `Updates the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. To use this resource, the requesting API Key must have the Project Cluster Manager role. This feature isn&#39;t available for M0 free clusters, M2 and M5 shared-tier clusters, flex clusters, or serverless clusters.`,
+				Description: `Updates the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. To use this resource, the requesting API Key must have the Project Cluster Manager role. This feature isn't available for M0 free clusters, M2 and M5 shared-tier clusters, flex clusters, or serverless clusters.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/processArgs`,
 					QueryParameters: []Parameter{
@@ -6706,7 +6706,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `upgradeSharedCluster`,
-				Description: `Upgrades a shared-tier cluster to a dedicated cluster (M10&#43;) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role. Each project supports up to 25 clusters.`,
+				Description: `Upgrades a shared-tier cluster to a dedicated cluster (M10+) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role. Each project supports up to 25 clusters.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/tenantUpgrade`,
 					QueryParameters: []Parameter{
@@ -6829,7 +6829,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `metrics`,
-							Description: `List that contains the metrics that you want to retrieve for the associated data series. If you don&#39;t set this parameter, this resource returns data series for all Coll Stats Latency metrics.`,
+							Description: `List that contains the metrics that you want to retrieve for the associated data series. If you don't set this parameter, this resource returns data series for all Coll Stats Latency metrics.`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: true,
@@ -6943,7 +6943,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `metrics`,
-							Description: `List that contains the metrics that you want to retrieve for the associated data series. If you don&#39;t set this parameter, this resource returns data series for all Coll Stats Latency metrics.`,
+							Description: `List that contains the metrics that you want to retrieve for the associated data series. If you don't set this parameter, this resource returns data series for all Coll Stats Latency metrics.`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: true,
@@ -7240,7 +7240,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getPinnedNamespaces`,
-				Description: `Returns a list of given cluster&#39;s pinned namespaces, a set of namespaces manually selected by users to collect query latency metrics on.`,
+				Description: `Returns a list of given cluster's pinned namespaces, a set of namespaces manually selected by users to collect query latency metrics on.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/collStats/pinned`,
 					QueryParameters: []Parameter{
@@ -7448,7 +7448,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 	{
 		Name:        `Custom Database Roles`,
-		Description: `Returns, adds, edits, and removes custom database user privilege roles. Use custom roles to specify custom sets of actions that the MongoDB Cloud built-in roles can&#39;t describe. You define custom roles at the project level, for all clusters in the project. This resource supports a subset of MongoDB privilege actions. You can create a subset of custom role actions. To create a wider list of custom role actions, use the MongoDB Cloud user interface. Custom roles must include actions that all project&#39;s clusters support, and that are compatible with each MongoDB version that your project&#39;s clusters use. For example, if your project has MongoDB 4.2 clusters, you can&#39;t create custom roles that use actions introduced in MongoDB 4.4.`,
+		Description: `Returns, adds, edits, and removes custom database user privilege roles. Use custom roles to specify custom sets of actions that the MongoDB Cloud built-in roles can't describe. You define custom roles at the project level, for all clusters in the project. This resource supports a subset of MongoDB privilege actions. You can create a subset of custom role actions. To create a wider list of custom role actions, use the MongoDB Cloud user interface. Custom roles must include actions that all project's clusters support, and that are compatible with each MongoDB version that your project's clusters use. For example, if your project has MongoDB 4.2 clusters, you can't create custom roles that use actions introduced in MongoDB 4.4.`,
 		Commands: []Command{
 			{
 				OperationID: `createCustomDatabaseRole`,
@@ -7503,7 +7503,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `deleteCustomDatabaseRole`,
-				Description: `Removes one custom role from the specified project. You can&#39;t remove a custom role that would leave one or more child roles with no parent roles or actions. You also can&#39;t remove a custom role that would leave one or more database users without roles. To use this resource, the requesting API Key must have the Project Atlas Admin role.`,
+				Description: `Removes one custom role from the specified project. You can't remove a custom role that would leave one or more child roles with no parent roles or actions. You also can't remove a custom role that would leave one or more database users without roles. To use this resource, the requesting API Key must have the Project Atlas Admin role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/customDBRoles/roles/{roleName}`,
 					QueryParameters: []Parameter{
@@ -7740,7 +7740,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Commands: []Command{
 			{
 				OperationID: `createDataFederationPrivateEndpoint`,
-				Description: `Adds one private endpoint for Federated Database Instances and Online Archives to the specified projects. If the endpoint ID already exists and the associated comment is unchanged, Atlas Data Federation makes no change to the endpoint ID list. If the endpoint ID already exists and the associated comment is changed, Atlas Data Federation updates the comment value only in the endpoint ID list. If the endpoint ID doesn&#39;t exist, Atlas Data Federation appends the new endpoint to the list of endpoints in the endpoint ID list. Each region has an associated service name for the various endpoints in each region.
+				Description: `Adds one private endpoint for Federated Database Instances and Online Archives to the specified projects. If the endpoint ID already exists and the associated comment is unchanged, Atlas Data Federation makes no change to the endpoint ID list. If the endpoint ID already exists and the associated comment is changed, Atlas Data Federation updates the comment value only in the endpoint ID list. If the endpoint ID doesn't exist, Atlas Data Federation appends the new endpoint to the list of endpoints in the endpoint ID list. Each region has an associated service name for the various endpoints in each region.
 
 
 us-east-1 is com.amazonaws.vpce.us-east-1.vpce-svc-00e311695874992b4.
@@ -8134,7 +8134,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `downloadFederatedDatabaseQueryLogs`,
-				Description: `Downloads the query logs for the specified federated database instance. To use this resource, the requesting API Key must have the Project Owner or Project Data Access Read Write roles. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: &#34;Accept: application/vnd.atlas.YYYY-MM-DD&#43;gzip&#34;.`,
+				Description: `Downloads the query logs for the specified federated database instance. To use this resource, the requesting API Key must have the Project Owner or Project Data Access Read Write roles. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: "Accept: application/vnd.atlas.YYYY-MM-DD+gzip".`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/dataFederation/{tenantName}/queryLogs.gz`,
 					QueryParameters: []Parameter{
@@ -9586,8 +9586,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | x.509 | x509Type | MANAGED | RFC 2253 Distinguished Name |
 | LDAP | ldapAuthType | USER | RFC 2253 Distinguished Name |
 | LDAP | ldapAuthType | GROUP | RFC 2253 Distinguished Name |
-| OIDC Workforce | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP group name |
-| OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP user name |
+| OIDC Workforce | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
+| OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
 | SCRAM-SHA | awsIAMType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |`,
 							Required: true,
 							Type: ParameterType{
@@ -9668,8 +9668,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | x.509 | x509Type | MANAGED | RFC 2253 Distinguished Name |
 | LDAP | ldapAuthType | USER | RFC 2253 Distinguished Name |
 | LDAP | ldapAuthType | GROUP | RFC 2253 Distinguished Name |
-| OIDC Workforce | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP group name |
-| OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP user name |
+| OIDC Workforce | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
+| OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
 | SCRAM-SHA | awsIAMType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |`,
 							Required: true,
 							Type: ParameterType{
@@ -9828,8 +9828,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 | x.509 | x509Type | MANAGED | RFC 2253 Distinguished Name |
 | LDAP | ldapAuthType | USER | RFC 2253 Distinguished Name |
 | LDAP | ldapAuthType | GROUP | RFC 2253 Distinguished Name |
-| OIDC Workforce | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP group name |
-| OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a &#39;/&#39;, followed by the IdP user name |
+| OIDC Workforce | oidcAuthType | IDP_GROUP | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP group name |
+| OIDC Workload | oidcAuthType | USER | Atlas OIDC IdP ID (found in federation settings), followed by a '/', followed by the IdP user name |
 | SCRAM-SHA | awsIAMType, x509Type, ldapAuthType, oidcAuthType | NONE | Alphanumeric string |`,
 							Required: true,
 							Type: ParameterType{
@@ -9918,7 +9918,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getEncryptionAtRest`,
-				Description: `Returns the configuration for encryption at rest using the keys you manage through your cloud provider. MongoDB Cloud encrypts all storage even if you don&#39;t use your own key management. This resource requires the requesting API Key to have the Project Owner role.
+				Description: `Returns the configuration for encryption at rest using the keys you manage through your cloud provider. MongoDB Cloud encrypts all storage even if you don't use your own key management. This resource requires the requesting API Key to have the Project Owner role.
 
 
 LIMITED TO M10 OR GREATER: MongoDB Cloud limits this feature to dedicated cluster tiers of M10 and greater.`,
@@ -10197,10 +10197,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `updateEncryptionAtRest`,
-				Description: `Updates the configuration for encryption at rest using the keys you manage through your cloud provider. MongoDB Cloud encrypts all storage even if you don&#39;t use your own key management. This resource requires the requesting API Key to have the Project Owner role. This feature isn&#39;t available for M0 free clusters, M2, M5, or serverless clusters.
+				Description: `Updates the configuration for encryption at rest using the keys you manage through your cloud provider. MongoDB Cloud encrypts all storage even if you don't use your own key management. This resource requires the requesting API Key to have the Project Owner role. This feature isn't available for M0 free clusters, M2, M5, or serverless clusters.
 
 
-After you configure at least one Encryption at Rest using a Customer Key Management provider for the MongoDB Cloud project, Project Owners can enable Encryption at Rest using Customer Key Management for each MongoDB Cloud cluster for which they require encryption. The Encryption at Rest using Customer Key Management provider doesn&#39;t have to match the cluster cloud service provider. MongoDB Cloud doesn&#39;t automatically rotate user-managed encryption keys. Defer to your preferred Encryption at Rest using Customer Key Management provider&#39;s documentation and guidance for best practices on key rotation. MongoDB Cloud automatically creates a 90-day key rotation alert when you configure Encryption at Rest using Customer Key Management using your Key Management in an MongoDB Cloud project. MongoDB Cloud encrypts all storage whether or not you use your own key management.`,
+After you configure at least one Encryption at Rest using a Customer Key Management provider for the MongoDB Cloud project, Project Owners can enable Encryption at Rest using Customer Key Management for each MongoDB Cloud cluster for which they require encryption. The Encryption at Rest using Customer Key Management provider doesn't have to match the cluster cloud service provider. MongoDB Cloud doesn't automatically rotate user-managed encryption keys. Defer to your preferred Encryption at Rest using Customer Key Management provider's documentation and guidance for best practices on key rotation. MongoDB Cloud automatically creates a 90-day key rotation alert when you configure Encryption at Rest using Customer Key Management using your Key Management in an MongoDB Cloud project. MongoDB Cloud encrypts all storage whether or not you use your own key management.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/encryptionAtRest`,
 					QueryParameters: []Parameter{
@@ -11050,7 +11050,7 @@ Note: Requests to this resource will fail if the identity provider has any conne
 			},
 			{
 				OperationID: `getIdentityProvider`,
-				Description: `Returns one identity provider in the specified federation by the identity provider&#39;s id. To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations.`,
+				Description: `Returns one identity provider in the specified federation by the identity provider's id. To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/federationSettings/{federationSettingsId}/identityProviders/{identityProviderId}`,
 					QueryParameters: []Parameter{
@@ -11076,7 +11076,7 @@ Note: Requests to this resource will fail if the identity provider has any conne
 						},
 						{
 							Name:        `identityProviderId`,
-							Description: `Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.`,
+							Description: `Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console > Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -11121,7 +11121,7 @@ Note: Requests to this resource will fail if the identity provider has any conne
 						},
 						{
 							Name:        `identityProviderId`,
-							Description: `Legacy 20-hexadecimal digit string that identifies the identity provider. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider.`,
+							Description: `Legacy 20-hexadecimal digit string that identifies the identity provider. This id can be found within the Federation Management Console > Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -11482,7 +11482,7 @@ Note: Revoking your JWKS tokens immediately refreshes your IdP public keys from 
 				Description: `Updates one connected organization configuration from the specified federation. To use this resource, the requesting API Key must have the Organization Owner role.
 
 
-Note If the organization configuration has no associated identity provider, you can&#39;t use this resource to update role mappings or post authorization role grants.
+Note If the organization configuration has no associated identity provider, you can't use this resource to update role mappings or post authorization role grants.
 
 
 Note: The domainRestrictionEnabled field defaults to false if not provided in the request.
@@ -11568,7 +11568,7 @@ Note: Changing authorization types and/or updating authorization claims can prev
 						},
 						{
 							Name:        `identityProviderId`,
-							Description: `Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console &gt; Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.`,
+							Description: `Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console > Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -11969,7 +11969,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `upgradeFlexCluster`,
-				Description: `Upgrades a flex cluster to a dedicated cluster (M10&#43;) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.`,
+				Description: `Upgrades a flex cluster to a dedicated cluster (M10+) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/flexClusters:tenantUpgrade`,
 					QueryParameters: []Parameter{
@@ -12457,7 +12457,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 	{
 		Name: `Global Clusters`,
-		Description: `Returns, adds, and removes Global Cluster managed namespaces and custom zone mappings. Each collection in a Global Cluster is associated with a managed namespace. When you create a managed namespace for a Global Cluster, MongoDB Cloud creates an empty collection for that namespace. Creating a managed namespace doesn&#39;t populate a collection with data. Similarly, deleting a managed namespace doesn&#39;t delete the associated collection.
+		Description: `Returns, adds, and removes Global Cluster managed namespaces and custom zone mappings. Each collection in a Global Cluster is associated with a managed namespace. When you create a managed namespace for a Global Cluster, MongoDB Cloud creates an empty collection for that namespace. Creating a managed namespace doesn't populate a collection with data. Similarly, deleting a managed namespace doesn't delete the associated collection.
 MongoDB Cloud shards the empty collection using the required location field and a custom shard key. For example, if your custom shard key is city, the compound shard key is location, city. Each Global Cluster is also associated with one or more Global Writes Zones. When a user creates a Global Cluster, MongoDB Cloud automatically maps each location code to the closest geographical zone. Custom zone mappings allow administrators to override these automatic mappings. For example, a use case might require mapping a location code to a geographically distant zone. Administrators can manage custom zone mappings with the APIs below and the Global Cluster Configuration pane when you create or modify your Global Cluster.`,
 		Commands: []Command{
 			{
@@ -12896,7 +12896,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `downloadInvoiceCsv`,
 				Description: `Returns one invoice that MongoDB issued to the specified organization in CSV format. A unique 24-hexadecimal digit string identifies the invoice. To use this resource, the requesting API Key have at least the Organization Billing Viewer, Organization Billing Admin, or Organization Owner role. If you have a cross-organization setup, you can query for a linked invoice if you have the Organization Billing Admin or Organization Owner Role.
-To compute the total owed amount of the invoice - sum up total owed amount of each payment included into the invoice. To compute payment&#39;s owed amount - use formula totalBilledCents * unitPrice &#43; salesTax - startingBalanceCents.`,
+To compute the total owed amount of the invoice - sum up total owed amount of each payment included into the invoice. To compute payment's owed amount - use formula totalBilledCents * unitPrice + salesTax - startingBalanceCents.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/invoices/{invoiceId}/csv`,
 					QueryParameters: []Parameter{
@@ -12953,7 +12953,7 @@ To compute the total owed amount of the invoice - sum up total owed amount of ea
 			},
 			{
 				OperationID: `getCostExplorerQueryProcess`,
-				Description: `Returns the usage details for a Cost Explorer query, if the query is finished and the data is ready to be viewed. If the data is not ready, a &#39;processing&#39; response willindicate that another request should be sent later to view the data.`,
+				Description: `Returns the usage details for a Cost Explorer query, if the query is finished and the data is ready to be viewed. If the data is not ready, a 'processing' response willindicate that another request should be sent later to view the data.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/billing/costExplorer/usage/{token}`,
 					QueryParameters: []Parameter{
@@ -13003,7 +13003,7 @@ To compute the total owed amount of the invoice - sum up total owed amount of ea
 			{
 				OperationID: `getInvoice`,
 				Description: `Returns one invoice that MongoDB issued to the specified organization. A unique 24-hexadecimal digit string identifies the invoice. You can choose to receive this invoice in JSON or CSV format. To use this resource, the requesting API Key must have the Organization Billing Viewer, Organization Billing Admin, or Organization Owner role. If you have a cross-organization setup, you can query for a linked invoice if you have the Organization Billing Admin or Organization Owner role.
-To compute the total owed amount of the invoice - sum up total owed amount of each payment included into the invoice. To compute payment&#39;s owed amount - use formula totalBilledCents * unitPrice &#43; salesTax - startingBalanceCents.`,
+To compute the total owed amount of the invoice - sum up total owed amount of each payment included into the invoice. To compute payment's owed amount - use formula totalBilledCents * unitPrice + salesTax - startingBalanceCents.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/invoices/{invoiceId}`,
 					QueryParameters: []Parameter{
@@ -13062,7 +13062,7 @@ To compute the total owed amount of the invoice - sum up total owed amount of ea
 			{
 				OperationID: `listInvoices`,
 				Description: `Returns all invoices that MongoDB issued to the specified organization. This list includes all invoices regardless of invoice status. To use this resource, the requesting API Key must have the Organization Billing Viewer, Organization Billing Admin, or Organization Owner role. If you have a cross-organization setup, you can view linked invoices if you have the Organization Billing Admin or Organization Owner role.
-To compute the total owed amount of the invoices - sum up total owed of each invoice. It could be computed as a sum of owed amount of each payment included into the invoice. To compute payment&#39;s owed amount - use formula totalBilledCents * unitPrice &#43; salesTax - startingBalanceCents.`,
+To compute the total owed amount of the invoices - sum up total owed of each invoice. It could be computed as a sum of owed amount of each payment included into the invoice. To compute payment's owed amount - use formula totalBilledCents * unitPrice + salesTax - startingBalanceCents.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/invoices`,
 					QueryParameters: []Parameter{
@@ -13307,7 +13307,7 @@ To compute the total owed amount of the invoices - sum up total owed of each inv
 	},
 	{
 		Name:        `LDAP Configuration`,
-		Description: `Returns, edits, verifies, and removes LDAP configurations. An LDAP configuration defines settings for MongoDB Cloud to connect to your LDAP server over TLS for user authentication and authorization. Your LDAP server must be visible to the internet or connected to your MongoDB Cloud cluster with VPC Peering. Also, your LDAP server must use TLS. You must have the MongoDB Cloud admin user privilege to use these endpoints. Also, to configure user authentication and authorization with LDAPS, your cluster must run MongoDB 3.6 or higher. Groups for which you have configured LDAPS can&#39;t create a cluster using a version of MongoDB 3.6 or lower.`,
+		Description: `Returns, edits, verifies, and removes LDAP configurations. An LDAP configuration defines settings for MongoDB Cloud to connect to your LDAP server over TLS for user authentication and authorization. Your LDAP server must be visible to the internet or connected to your MongoDB Cloud cluster with VPC Peering. Also, your LDAP server must use TLS. You must have the MongoDB Cloud admin user privilege to use these endpoints. Also, to configure user authentication and authorization with LDAPS, your cluster must run MongoDB 3.6 or higher. Groups for which you have configured LDAPS can't create a cluster using a version of MongoDB 3.6 or lower.`,
 		Commands: []Command{
 			{
 				OperationID: `deleteLdapConfiguration`,
@@ -13584,7 +13584,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Commands: []Command{
 			{
 				OperationID: `createLegacyBackupRestoreJob`,
-				Description: `Restores one legacy backup for one cluster in the specified project. To use this resource, the requesting API Key must have the Project Owner role. Effective 23 March 2020, all new clusters can use only Cloud Backups. When you upgrade to 4.2, your backup system upgrades to cloud backup if it is currently set to legacy backup. After this upgrade, all your existing legacy backup snapshots remain available. They expire over time in accordance with your retention policy. Your backup policy resets to the default schedule. If you had a custom backup policy in place with legacy backups, you must re-create it with the procedure outlined in the Cloud Backup documentation. This endpoint doesn&#39;t support creating checkpoint restore jobs for sharded clusters, or creating restore jobs for queryable backup snapshots. If you create an automated restore job by specifying delivery.methodName of AUTOMATED_RESTORE in your request body, MongoDB Cloud removes all existing data on the target cluster prior to the restore.`,
+				Description: `Restores one legacy backup for one cluster in the specified project. To use this resource, the requesting API Key must have the Project Owner role. Effective 23 March 2020, all new clusters can use only Cloud Backups. When you upgrade to 4.2, your backup system upgrades to cloud backup if it is currently set to legacy backup. After this upgrade, all your existing legacy backup snapshots remain available. They expire over time in accordance with your retention policy. Your backup policy resets to the default schedule. If you had a custom backup policy in place with legacy backups, you must re-create it with the procedure outlined in the Cloud Backup documentation. This endpoint doesn't support creating checkpoint restore jobs for sharded clusters, or creating restore jobs for queryable backup snapshots. If you create an automated restore job by specifying delivery.methodName of AUTOMATED_RESTORE in your request body, MongoDB Cloud removes all existing data on the target cluster prior to the restore.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/restoreJobs`,
 					QueryParameters: []Parameter{
@@ -14076,7 +14076,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Description: `Returns all legacy backup restore jobs for one cluster in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 
-Effective 23 March 2020, all new clusters can use only Cloud Backups. When you upgrade to 4.2, your backup system upgrades to cloud backup if it is currently set to legacy backup. After this upgrade, all your existing legacy backup snapshots remain available. They expire over time in accordance with your retention policy. Your backup policy resets to the default schedule. If you had a custom backup policy in place with legacy backups, you must re-create it with the procedure outlined in the Cloud Backup documentation. If you use the BATCH-ID query parameter, you can retrieve all restore jobs in the specified batch. When creating a restore job for a sharded cluster, MongoDB Cloud creates a separate job for each shard, plus another for the config server. Each of those jobs are part of a batch. However, a batch can&#39;t include a restore job for a replica set.`,
+Effective 23 March 2020, all new clusters can use only Cloud Backups. When you upgrade to 4.2, your backup system upgrades to cloud backup if it is currently set to legacy backup. After this upgrade, all your existing legacy backup snapshots remain available. They expire over time in accordance with your retention policy. Your backup policy resets to the default schedule. If you had a custom backup policy in place with legacy backups, you must re-create it with the procedure outlined in the Cloud Backup documentation. If you use the BATCH-ID query parameter, you can retrieve all restore jobs in the specified batch. When creating a restore job for a sharded cluster, MongoDB Cloud creates a separate job for each shard, plus another for the config server. Each of those jobs are part of a batch. However, a batch can't include a restore job for a replica set.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/restoreJobs`,
 					QueryParameters: []Parameter{
@@ -14127,7 +14127,7 @@ Effective 23 March 2020, all new clusters can use only Cloud Backups. When you u
 						},
 						{
 							Name:        `batchId`,
-							Description: `Unique 24-hexadecimal digit string that identifies the batch of restore jobs to return. Timestamp in ISO 8601 date and time format in UTC when creating a restore job for a sharded cluster, Application creates a separate job for each shard, plus another for the config host. Each of these jobs comprise one batch. A restore job for a replica set can&#39;t be part of a batch.`,
+							Description: `Unique 24-hexadecimal digit string that identifies the batch of restore jobs to return. Timestamp in ISO 8601 date and time format in UTC when creating a restore job for a sharded cluster, Application creates a separate job for each shard, plus another for the config host. Each of these jobs comprise one batch. A restore job for a replica set can't be part of a batch.`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -14406,7 +14406,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Commands: []Command{
 			{
 				OperationID: `deferMaintenanceWindow`,
-				Description: `Defers the maintenance window for the specified project. Urgent maintenance activities such as security patches can&#39;t wait for your chosen window. MongoDB Cloud starts those maintenance activities when needed. After you schedule maintenance for your cluster, you can&#39;t change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.`,
+				Description: `Defers the maintenance window for the specified project. Urgent maintenance activities such as security patches can't wait for your chosen window. MongoDB Cloud starts those maintenance activities when needed. After you schedule maintenance for your cluster, you can't change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/maintenanceWindow/defer`,
 					QueryParameters: []Parameter{
@@ -14448,7 +14448,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getMaintenanceWindow`,
-				Description: `Returns the maintenance window for the specified project. MongoDB Cloud starts those maintenance activities when needed. You can&#39;t change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.`,
+				Description: `Returns the maintenance window for the specified project. MongoDB Cloud starts those maintenance activities when needed. You can't change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/maintenanceWindow`,
 					QueryParameters: []Parameter{
@@ -14499,7 +14499,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `resetMaintenanceWindow`,
-				Description: `Resets the maintenance window for the specified project. To use this resource, the requesting API Key must have the Project Owner role. Urgent maintenance activities such as security patches can&#39;t wait for your chosen window. MongoDB Cloud starts those maintenance activities when needed. After you schedule maintenance for your cluster, you can&#39;t change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.`,
+				Description: `Resets the maintenance window for the specified project. To use this resource, the requesting API Key must have the Project Owner role. Urgent maintenance activities such as security patches can't wait for your chosen window. MongoDB Cloud starts those maintenance activities when needed. After you schedule maintenance for your cluster, you can't change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/maintenanceWindow`,
 					QueryParameters: []Parameter{
@@ -14583,7 +14583,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `updateMaintenanceWindow`,
-				Description: `Updates the maintenance window for the specified project. Urgent maintenance activities such as security patches can&#39;t wait for your chosen window. MongoDB Cloud starts those maintenance activities when needed. After you schedule maintenance for your cluster, you can&#39;t change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.`,
+				Description: `Updates the maintenance window for the specified project. Urgent maintenance activities such as security patches can't wait for your chosen window. MongoDB Cloud starts those maintenance activities when needed. After you schedule maintenance for your cluster, you can't change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/maintenanceWindow`,
 					QueryParameters: []Parameter{
@@ -14672,7 +14672,7 @@ Note: This resource cannot be used to add a role to users invited using the depr
 						},
 						{
 							Name:        `userId`,
-							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -14735,7 +14735,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `userId`,
-							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -14761,13 +14761,13 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 
 
-If the user has a pending invitation to join the project&#39;s organization, MongoDB Cloud modifies it and grants project access.
+If the user has a pending invitation to join the project's organization, MongoDB Cloud modifies it and grants project access.
 
 
-If the user doesn&#39;t have an invitation to join the organization, MongoDB Cloud sends a new invitation that grants the user organization and project access.
+If the user doesn't have an invitation to join the organization, MongoDB Cloud sends a new invitation that grants the user organization and project access.
 
 
-If the user is already active in the project&#39;s organization, MongoDB Cloud grants access to the project.`,
+If the user is already active in the project's organization, MongoDB Cloud grants access to the project.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/users`,
 					QueryParameters: []Parameter{
@@ -14929,10 +14929,10 @@ Note: If the user does not have an existing MongoDB Cloud account, they will be 
 			},
 			{
 				OperationID: `createUser`,
-				Description: `Creates one MongoDB Cloud user account. A MongoDB Cloud user account grants access to only the MongoDB Cloud application. To grant database access, create a database user. MongoDB Cloud sends an email to the users you specify, inviting them to join the project. Invited users don&#39;t have access to the project until they accept the invitation. Invitations expire after 30 days.
+				Description: `Creates one MongoDB Cloud user account. A MongoDB Cloud user account grants access to only the MongoDB Cloud application. To grant database access, create a database user. MongoDB Cloud sends an email to the users you specify, inviting them to join the project. Invited users don't have access to the project until they accept the invitation. Invitations expire after 30 days.
 
 
-MongoDB Cloud limits MongoDB Cloud user membership to a maximum of 250 MongoDB Cloud users per team. MongoDB Cloud limits MongoDB Cloud user membership to 500 MongoDB Cloud users per project and 500 MongoDB Cloud users per organization, which includes the combined membership of all projects in the organization. MongoDB Cloud raises an error if an operation exceeds these limits. For example, if you have an organization with five projects, and each project has 100 MongoDB Cloud users, and each MongoDB Cloud user belongs to only one project, you can&#39;t add any MongoDB Cloud users to this organization without first removing existing MongoDB Cloud users from the organization.
+MongoDB Cloud limits MongoDB Cloud user membership to a maximum of 250 MongoDB Cloud users per team. MongoDB Cloud limits MongoDB Cloud user membership to 500 MongoDB Cloud users per project and 500 MongoDB Cloud users per organization, which includes the combined membership of all projects in the organization. MongoDB Cloud raises an error if an operation exceeds these limits. For example, if you have an organization with five projects, and each project has 100 MongoDB Cloud users, and each MongoDB Cloud user belongs to only one project, you can't add any MongoDB Cloud users to this organization without first removing existing MongoDB Cloud users from the organization.
 
 
 To use this resource, the requesting API Key can have any role.`,
@@ -15014,7 +15014,7 @@ Note: This resource does not return information about pending users invited via 
 						},
 						{
 							Name:        `userId`,
-							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -15080,7 +15080,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `userId`,
-							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -15102,7 +15102,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getUser`,
-				Description: `Returns the details for one MongoDB Cloud user account with the specified unique identifier for the user. You can&#39;t use this endpoint to return information on an API Key. To return information about an API Key, use the Return One Organization API Key endpoint. You can always retrieve your own user account. If you are the owner of a MongoDB Cloud organization or project, you can also retrieve the user profile for any user with membership in that organization or project. To use this resource, the requesting API Key can have any role.`,
+				Description: `Returns the details for one MongoDB Cloud user account with the specified unique identifier for the user. You can't use this endpoint to return information on an API Key. To return information about an API Key, use the Return One Organization API Key endpoint. You can always retrieve your own user account. If you are the owner of a MongoDB Cloud organization or project, you can also retrieve the user profile for any user with membership in that organization or project. To use this resource, the requesting API Key can have any role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/users/{userId}`,
 					QueryParameters: []Parameter{
@@ -15150,7 +15150,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getUserByUsername`,
-				Description: `Returns the details for one MongoDB Cloud user account with the specified username. You can&#39;t use this endpoint to return information about an API Key. To return information about an API Key, use the Return One Organization API Key endpoint. To use this resource, the requesting API Key can have any role.`,
+				Description: `Returns the details for one MongoDB Cloud user account with the specified username. You can't use this endpoint to return information about an API Key. To return information about an API Key, use the Return One Organization API Key endpoint. To use this resource, the requesting API Key can have any role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/users/byName/{userName}`,
 					QueryParameters: []Parameter{
@@ -15198,7 +15198,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `removeOrganizationRole`,
-				Description: `Removes one organization-level role from the MongoDB Cloud user. You can remove a role from an active user or a user that has not yet accepted the invitation to join the organization. To replace a user&#39;s only role, add the new role before removing the old role. A user must have at least one role at all times. To use this resource, the requesting API Key must have the Organization Owner role.
+				Description: `Removes one organization-level role from the MongoDB Cloud user. You can remove a role from an active user or a user that has not yet accepted the invitation to join the organization. To replace a user's only role, add the new role before removing the old role. A user must have at least one role at all times. To use this resource, the requesting API Key must have the Organization Owner role.
 
 
 Note: This operation is atomic.
@@ -15239,7 +15239,7 @@ Note: This resource cannot be used to remove a role from users invited using the
 						},
 						{
 							Name:        `userId`,
-							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -15261,7 +15261,7 @@ Note: This resource cannot be used to remove a role from users invited using the
 			},
 			{
 				OperationID: `removeProjectRole`,
-				Description: `Removes one project-level role from the MongoDB Cloud user. You can remove a role from an active user or a user that has been invited to join the project. To replace a user&#39;s only role, add the new role before removing the old role. A user must have at least one role at all times. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Removes one project-level role from the MongoDB Cloud user. You can remove a role from an active user or a user that has been invited to join the project. To replace a user's only role, add the new role before removing the old role. A user must have at least one role at all times. To use this resource, the requesting API Key must have the Project Owner role.
 
 
 Note: This resource cannot be used to remove a role from users invited using the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.`,
@@ -15302,7 +15302,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `userId`,
-							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -15425,7 +15425,7 @@ Note: This resource cannot be used to update pending users invited via the depre
 						},
 						{
 							Name:        `userId`,
-							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user&#39;s userId or verify a user&#39;s status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
+							Description: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -15582,7 +15582,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getDatabaseMeasurements`,
-				Description: `Returns the measurements of one database for the specified host for the specified project. Returns the database&#39;s on-disk storage space based on the MongoDB dbStats command output. To calculate some metric series, Atlas takes the rate between every two adjacent points. For these metric series, the first data point has a null value because Atlas can&#39;t calculate a rate for the first data point given the query time range. Atlas retrieves database metrics every 20 minutes but reduces frequency when necessary to optimize database performance. To use this resource, the requesting API Key must have the Project Read Only role.`,
+				Description: `Returns the measurements of one database for the specified host for the specified project. Returns the database's on-disk storage space based on the MongoDB dbStats command output. To calculate some metric series, Atlas takes the rate between every two adjacent points. For these metric series, the first data point has a null value because Atlas can't calculate a rate for the first data point given the query time range. Atlas retrieves database metrics every 20 minutes but reduces frequency when necessary to optimize database performance. To use this resource, the requesting API Key must have the Project Read Only role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/processes/{processId}/databases/{databaseName}/measurements`,
 					QueryParameters: []Parameter{
@@ -15827,7 +15827,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getHostLogs`,
-				Description: `Returns a compressed (.gz) log file that contains a range of log messages for the specified host for the specified project. MongoDB updates process and audit logs from the cluster backend infrastructure every five minutes. Logs are stored in chunks approximately five minutes in length, but this duration may vary. If you poll the API for log files, we recommend polling every five minutes even though consecutive polls could contain some overlapping logs. This feature isn&#39;t available for M0 free clusters, M2, M5, flex, or serverless clusters. To use this resource, the requesting API Key must have the Project Data Access Read Only or higher role. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: &#34;Accept: application/vnd.atlas.YYYY-MM-DD&#43;gzip&#34;.`,
+				Description: `Returns a compressed (.gz) log file that contains a range of log messages for the specified host for the specified project. MongoDB updates process and audit logs from the cluster backend infrastructure every five minutes. Logs are stored in chunks approximately five minutes in length, but this duration may vary. If you poll the API for log files, we recommend polling every five minutes even though consecutive polls could contain some overlapping logs. This feature isn't available for M0 free clusters, M2, M5, flex, or serverless clusters. To use this resource, the requesting API Key must have the Project Data Access Read Only or higher role. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: "Accept: application/vnd.atlas.YYYY-MM-DD+gzip".`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{hostName}/logs/{logName}.gz`,
 					QueryParameters: []Parameter{
@@ -16211,7 +16211,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `metrics`,
-							Description: `List that contains the metrics that you want MongoDB Atlas to report for the associated data series. If you don&#39;t set this parameter, this resource returns all hardware and status metrics for the associated data series.`,
+							Description: `List that contains the metrics that you want MongoDB Atlas to report for the associated data series. If you don't set this parameter, this resource returns all hardware and status metrics for the associated data series.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: true,
@@ -16736,7 +16736,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	{
 		Name: `Network Peering`,
 		Description: `Returns, adds, edits, and removes network peering containers and peering connections.
-When you deploy an M10&#43; dedicated cluster, Atlas creates a VPC for the selected provider and region or regions if no existing VPC or VPC peering connection exists for that provider and region. Atlas assigns the VPC a Classless Inter-Domain Routing (CIDR) block.`,
+When you deploy an M10+ dedicated cluster, Atlas creates a VPC for the selected provider and region or regions if no existing VPC or VPC peering connection exists for that provider and region. Atlas assigns the VPC a Classless Inter-Domain Routing (CIDR) block.`,
 		Commands: []Command{
 			{
 				OperationID: `createPeeringConnection`,
@@ -17691,7 +17691,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `downloadOnlineArchiveQueryLogs`,
-				Description: `Downloads query logs for the specified online archive. To use this resource, the requesting API Key must have the Project Data Access Read Only or higher role. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: &#34;Accept: application/vnd.atlas.YYYY-MM-DD&#43;gzip&#34;.`,
+				Description: `Downloads query logs for the specified online archive. To use this resource, the requesting API Key must have the Project Data Access Read Only or higher role. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: "Accept: application/vnd.atlas.YYYY-MM-DD+gzip".`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/onlineArchives/queryLogs.gz`,
 					QueryParameters: []Parameter{
@@ -18108,7 +18108,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Commands: []Command{
 			{
 				OperationID: `createOrganization`,
-				Description: `Creates one organization in MongoDB Cloud and links it to the requesting API Key&#39;s organization. To use this resource, the requesting API Key must have the Organization Owner role. The requesting API Key&#39;s organization must be a paying organization. To learn more, see Configure a Paying Organization in the MongoDB Atlas documentation.`,
+				Description: `Creates one organization in MongoDB Cloud and links it to the requesting API Key's organization. To use this resource, the requesting API Key must have the Organization Owner role. The requesting API Key's organization must be a paying organization. To learn more, see Configure a Paying Organization in the MongoDB Atlas documentation.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs`,
 					QueryParameters: []Parameter{
@@ -18241,7 +18241,7 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 			},
 			{
 				OperationID: `deleteOrganizationInvitation`,
-				Description: `Cancels one pending invitation sent to the specified MongoDB Cloud user to join an organization. You can&#39;t cancel an invitation that the user accepted. To use this resource, the requesting API Key must have the Organization Owner role.`,
+				Description: `Cancels one pending invitation sent to the specified MongoDB Cloud user to join an organization. You can't cancel an invitation that the user accepted. To use this resource, the requesting API Key must have the Organization Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/invites/{invitationId}`,
 					QueryParameters: []Parameter{
@@ -18394,7 +18394,7 @@ To use this resource, the requesting API Key must have the Organization Owner ro
 			},
 			{
 				OperationID: `getOrganizationSettings`,
-				Description: `Returns details about the specified organization&#39;s settings. To use this resource, the requesting API Key must have the Organization Owner role.`,
+				Description: `Returns details about the specified organization's settings. To use this resource, the requesting API Key must have the Organization Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/settings`,
 					QueryParameters: []Parameter{
@@ -19030,7 +19030,7 @@ To use this resource, the requesting API Key must have the Organization Member r
 			},
 			{
 				OperationID: `updateOrganizationSettings`,
-				Description: `Updates the organization&#39;s settings. To use this resource, the requesting API Key must have the Organization Owner role.`,
+				Description: `Updates the organization's settings. To use this resource, the requesting API Key must have the Organization Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/settings`,
 					QueryParameters: []Parameter{
@@ -19084,7 +19084,7 @@ To use this resource, the requesting API Key must have the Organization Member r
 		Commands: []Command{
 			{
 				OperationID: `disableSlowOperationThresholding`,
-				Description: `Disables the slow operation threshold that MongoDB Cloud calculated for the specified project. The threshold determines which operations the Performance Advisor and Query Profiler considers slow. When enabled, MongoDB Cloud uses the average execution time for operations on your cluster to determine slow-running queries. As a result, the threshold is more pertinent to your cluster workload. The slow operation threshold is enabled by default for dedicated clusters (M10&#43;). When disabled, MongoDB Cloud considers any operation that takes longer than 100 milliseconds to be slow. To use this resource, the requesting API Key must have the Project Owner role.`,
+				Description: `Disables the slow operation threshold that MongoDB Cloud calculated for the specified project. The threshold determines which operations the Performance Advisor and Query Profiler considers slow. When enabled, MongoDB Cloud uses the average execution time for operations on your cluster to determine slow-running queries. As a result, the threshold is more pertinent to your cluster workload. The slow operation threshold is enabled by default for dedicated clusters (M10+). When disabled, MongoDB Cloud considers any operation that takes longer than 100 milliseconds to be slow. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/managedSlowMs/disable`,
 					QueryParameters: []Parameter{
@@ -19135,7 +19135,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `enableSlowOperationThresholding`,
-				Description: `Enables MongoDB Cloud to use its slow operation threshold for the specified project. The threshold determines which operations the Performance Advisor and Query Profiler considers slow. When enabled, MongoDB Cloud uses the average execution time for operations on your cluster to determine slow-running queries. As a result, the threshold is more pertinent to your cluster workload. The slow operation threshold is enabled by default for dedicated clusters (M10&#43;). When disabled, MongoDB Cloud considers any operation that takes longer than 100 milliseconds to be slow. To use this resource, the requesting API Key must have the Project Owner role.`,
+				Description: `Enables MongoDB Cloud to use its slow operation threshold for the specified project. The threshold determines which operations the Performance Advisor and Query Profiler considers slow. When enabled, MongoDB Cloud uses the average execution time for operations on your cluster to determine slow-running queries. As a result, the threshold is more pertinent to your cluster workload. The slow operation threshold is enabled by default for dedicated clusters (M10+). When disabled, MongoDB Cloud considers any operation that takes longer than 100 milliseconds to be slow. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/managedSlowMs/enable`,
 					QueryParameters: []Parameter{
@@ -19303,7 +19303,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					QueryParameters: []Parameter{
 						{
 							Name:        `processIds`,
-							Description: `ProcessIds from which to retrieve suggested indexes. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (&amp;) between each processId.`,
+							Description: `ProcessIds from which to retrieve suggested indexes. A processId is a combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (mongod or mongos). The port must be the IANA port on which the MongoDB process listens for requests. To include multiple processIds, pass the parameter multiple times delimited with an ampersand (&) between each processId.`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: true,
@@ -19312,7 +19312,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `namespaces`,
-							Description: `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: &lt;database&gt;.&lt;collection&gt;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&amp;) between each namespace. Omit this parameter to return results for all namespaces.`,
+							Description: `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: <database>.<collection>. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&) between each namespace. Omit this parameter to return results for all namespaces.`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: true,
@@ -19325,7 +19325,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 
 
-If you don&#39;t specify the until parameter, the endpoint returns data covering from the since value and the current time.
+If you don't specify the until parameter, the endpoint returns data covering from the since value and the current time.
 
 
 If you specify neither the since nor the until parameters, the endpoint returns data from the previous 24 hours.`,
@@ -19499,7 +19499,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 
 
-If you don&#39;t specify the since parameter, the endpoint returns data covering the duration before the current time.
+If you don't specify the since parameter, the endpoint returns data covering the duration before the current time.
 
 
 If you specify neither the duration nor since parameters, the endpoint returns data from the previous 24 hours.`,
@@ -19511,7 +19511,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 						},
 						{
 							Name:        `namespaces`,
-							Description: `Namespaces from which to retrieve slow queries. A namespace consists of one database and one collection resource written as .: &lt;database&gt;.&lt;collection&gt;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&amp;) between each namespace. Omit this parameter to return results for all namespaces.`,
+							Description: `Namespaces from which to retrieve slow queries. A namespace consists of one database and one collection resource written as .: <database>.<collection>. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&) between each namespace. Omit this parameter to return results for all namespaces.`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: true,
@@ -19533,7 +19533,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 
 
 
-If you don&#39;t specify the duration parameter, the endpoint returns data covering from the since value and the current time.
+If you don't specify the duration parameter, the endpoint returns data covering from the since value and the current time.
 
 
 If you specify neither the duration nor the since parameters, the endpoint returns data from the previous 24 hours.`,
@@ -19581,7 +19581,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `listSlowQueryNamespaces`,
-				Description: `Returns up to 20 namespaces for collections experiencing slow queries on the specified host. If you specify a secondary member of a replica set that hasn&#39;t received any database read operations, the endpoint doesn&#39;t return any namespaces. To use this resource, the requesting API Key must have the Project Read Only role.`,
+				Description: `Returns up to 20 namespaces for collections experiencing slow queries on the specified host. If you specify a secondary member of a replica set that hasn't received any database read operations, the endpoint doesn't return any namespaces. To use this resource, the requesting API Key must have the Project Read Only role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/processes/{processId}/performanceAdvisor/namespaces`,
 					QueryParameters: []Parameter{
@@ -19609,7 +19609,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 
 
-If you don&#39;t specify the since parameter, the endpoint returns data covering the duration before the current time.
+If you don't specify the since parameter, the endpoint returns data covering the duration before the current time.
 
 
 If you specify neither the duration nor since parameters, the endpoint returns data from the previous 24 hours.`,
@@ -19625,7 +19625,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 
 
 
-If you don&#39;t specify the duration parameter, the endpoint returns data covering from the since value and the current time.
+If you don't specify the duration parameter, the endpoint returns data covering from the since value and the current time.
 
 
 If you specify neither the duration nor the since parameters, the endpoint returns data from the previous 24 hours.`,
@@ -19728,7 +19728,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 
 
-If you don&#39;t specify the since parameter, the endpoint returns data covering the duration before the current time.
+If you don't specify the since parameter, the endpoint returns data covering the duration before the current time.
 
 
 If you specify neither the duration nor since parameters, the endpoint returns data from the previous 24 hours.`,
@@ -19740,7 +19740,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 						},
 						{
 							Name:        `namespaces`,
-							Description: `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: &lt;database&gt;.&lt;collection&gt;. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&amp;) between each namespace. Omit this parameter to return results for all namespaces.`,
+							Description: `Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: <database>.<collection>. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (&) between each namespace. Omit this parameter to return results for all namespaces.`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: true,
@@ -19771,7 +19771,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 
 
 
-If you don&#39;t specify the duration parameter, the endpoint returns data covering from the since value and the current time.
+If you don't specify the duration parameter, the endpoint returns data covering from the since value and the current time.
 
 
 If you specify neither the duration nor the since parameters, the endpoint returns data from the previous 24 hours.`,
@@ -19954,7 +19954,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `createPrivateEndpointService`,
-				Description: `Creates one private endpoint service for the specified cloud service provider. This cloud service provider manages the private endpoint service for the project. When you create a private endpoint service, MongoDB Cloud creates a network container in the project for the cloud provider for which you create the private endpoint service if one doesn&#39;t already exist. To learn more about private endpoint terminology in MongoDB Cloud, see Private Endpoint Concepts. To use this resource, the requesting API Key must have the Project Owner role.`,
+				Description: `Creates one private endpoint service for the specified cloud service provider. This cloud service provider manages the private endpoint service for the project. When you create a private endpoint service, MongoDB Cloud creates a network container in the project for the cloud provider for which you create the private endpoint service if one doesn't already exist. To learn more about private endpoint terminology in MongoDB Cloud, see Private Endpoint Concepts. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/privateEndpoint/endpointService`,
 					QueryParameters: []Parameter{
@@ -20527,7 +20527,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `createApiKey`,
-				Description: `Creates one API key for the specified organization. An organization API key grants programmatic access to an organization. You can&#39;t use the API key to log into the console. To use this resource, the requesting API Key must have the Organization Owner role.`,
+				Description: `Creates one API key for the specified organization. An organization API key grants programmatic access to an organization. You can't use the API key to log into the console. To use this resource, the requesting API Key must have the Organization Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/apiKeys`,
 					QueryParameters: []Parameter{
@@ -20833,7 +20833,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getApiKey`,
-				Description: `Returns one organization API key. The organization API keys grant programmatic access to an organization. You can&#39;t use the API key to log into MongoDB Cloud through the user interface. To use this resource, the requesting API Key must have the  Organization Member role.`,
+				Description: `Returns one organization API key. The organization API keys grant programmatic access to an organization. You can't use the API key to log into MongoDB Cloud through the user interface. To use this resource, the requesting API Key must have the  Organization Member role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/apiKeys/{apiUserId}`,
 					QueryParameters: []Parameter{
@@ -21040,7 +21040,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `listApiKeys`,
-				Description: `Returns all organization API keys for the specified organization. The organization API keys grant programmatic access to an organization. You can&#39;t use the API key to log into MongoDB Cloud through the console. To use this resource, the requesting API Key must have the Organization Member role.`,
+				Description: `Returns all organization API keys for the specified organization. The organization API keys grant programmatic access to an organization. You can't use the API key to log into MongoDB Cloud through the console. To use this resource, the requesting API Key must have the Organization Member role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/apiKeys`,
 					QueryParameters: []Parameter{
@@ -21399,11 +21399,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 	{
 		Name:        `Project IP Access List`,
-		Description: `Returns, adds, edits, and removes network access limits to database deployments in Atlas. This resource replaces the whitelist resource. Atlas removed whitelists in July 2021. Update your applications to use this new resource. This resource manages a project&#39;s IP Access List and supports creating temporary Access List entries that automatically expire within a user-configurable 7-day period.`,
+		Description: `Returns, adds, edits, and removes network access limits to database deployments in Atlas. This resource replaces the whitelist resource. Atlas removed whitelists in July 2021. Update your applications to use this new resource. This resource manages a project's IP Access List and supports creating temporary Access List entries that automatically expire within a user-configurable 7-day period.`,
 		Commands: []Command{
 			{
 				OperationID: `createProjectIpAccessList`,
-				Description: `Adds one or more access list entries to the specified project. MongoDB Cloud only allows client connections to the cluster from entries in the project&#39;s IP access list. Write each entry as either one IP address or one CIDR-notated block of IP addresses. To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. The /groups/{GROUP-ID}/accessList endpoint manages the database IP access list. This endpoint is distinct from the orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist endpoint, which manages the access list for MongoDB Cloud organizations. This endpoint doesn&#39;t support concurrent POST requests. You must submit multiple POST requests synchronously.`,
+				Description: `Adds one or more access list entries to the specified project. MongoDB Cloud only allows client connections to the cluster from entries in the project's IP access list. Write each entry as either one IP address or one CIDR-notated block of IP addresses. To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. The /groups/{GROUP-ID}/accessList endpoint manages the database IP access list. This endpoint is distinct from the orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist endpoint, which manages the access list for MongoDB Cloud organizations. This endpoint doesn't support concurrent POST requests. You must submit multiple POST requests synchronously.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/accessList`,
 					QueryParameters: []Parameter{
@@ -21481,7 +21481,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `deleteProjectIpAccessList`,
-				Description: `Removes one access list entry from the specified project&#39;s IP access list. Each entry in the project&#39;s IP access list contains one IP address, one CIDR-notated block of IP addresses, or one AWS Security Group ID. MongoDB Cloud only allows client connections to the cluster from entries in the project&#39;s IP access list. To use this resource, the requesting API Key must have the Project Owner role. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. The /groups/{GROUP-ID}/accessList endpoint manages the database IP access list. This endpoint is distinct from the orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist endpoint, which manages the access list for MongoDB Cloud organizations.`,
+				Description: `Removes one access list entry from the specified project's IP access list. Each entry in the project's IP access list contains one IP address, one CIDR-notated block of IP addresses, or one AWS Security Group ID. MongoDB Cloud only allows client connections to the cluster from entries in the project's IP access list. To use this resource, the requesting API Key must have the Project Owner role. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. The /groups/{GROUP-ID}/accessList endpoint manages the database IP access list. This endpoint is distinct from the orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist endpoint, which manages the access list for MongoDB Cloud organizations.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/accessList/{entryValue}`,
 					QueryParameters: []Parameter{
@@ -21519,7 +21519,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name: `entryValue`,
-							Description: `Access list entry that you want to remove from the project&#39;s IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (/) with its URL-encoded value (%2F). When you remove an entry from the IP access list, existing connections from the removed address or addresses may remain open for a variable amount of time. The amount of time it takes MongoDB Cloud to close the connection depends upon several factors, including:
+							Description: `Access list entry that you want to remove from the project's IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (/) with its URL-encoded value (%2F). When you remove an entry from the IP access list, existing connections from the removed address or addresses may remain open for a variable amount of time. The amount of time it takes MongoDB Cloud to close the connection depends upon several factors, including:
 
 
 
@@ -21611,7 +21611,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getProjectIpList`,
-				Description: `Returns one access list entry from the specified project&#39;s IP access list. Each entry in the project&#39;s IP access list contains either one IP address or one CIDR-notated block of IP addresses. MongoDB Cloud only allows client connections to the cluster from entries in the project&#39;s IP access list. To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. This endpoint (/groups/{GROUP-ID}/accessList) manages the Project IP Access List. It doesn&#39;t manage the access list for MongoDB Cloud organizations. TheProgrammatic API Keys endpoint (/orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist) manages those access lists.`,
+				Description: `Returns one access list entry from the specified project's IP access list. Each entry in the project's IP access list contains either one IP address or one CIDR-notated block of IP addresses. MongoDB Cloud only allows client connections to the cluster from entries in the project's IP access list. To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. This endpoint (/groups/{GROUP-ID}/accessList) manages the Project IP Access List. It doesn't manage the access list for MongoDB Cloud organizations. TheProgrammatic API Keys endpoint (/orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist) manages those access lists.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/accessList/{entryValue}`,
 					QueryParameters: []Parameter{
@@ -21649,7 +21649,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `entryValue`,
-							Description: `Access list entry that you want to return from the project&#39;s IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (/) with its URL-encoded value (%2F).`,
+							Description: `Access list entry that you want to return from the project's IP access list. This value can use one of the following: one AWS security group ID, one IP address, or one CIDR block of addresses. For CIDR blocks that use a subnet mask, replace the forward slash (/) with its URL-encoded value (%2F).`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -21671,7 +21671,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `listProjectIpAccessLists`,
-				Description: `Returns all access list entries from the specified project&#39;s IP access list. Each entry in the project&#39;s IP access list contains either one IP address or one CIDR-notated block of IP addresses. MongoDB Cloud only allows client connections to the cluster from entries in the project&#39;s IP access list. To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. The /groups/{GROUP-ID}/accessList endpoint manages the database IP access list. This endpoint is distinct from the orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist endpoint, which manages the access list for MongoDB Cloud organizations.`,
+				Description: `Returns all access list entries from the specified project's IP access list. Each entry in the project's IP access list contains either one IP address or one CIDR-notated block of IP addresses. MongoDB Cloud only allows client connections to the cluster from entries in the project's IP access list. To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. The /groups/{GROUP-ID}/accessList endpoint manages the database IP access list. This endpoint is distinct from the orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist endpoint, which manages the access list for MongoDB Cloud organizations.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/accessList`,
 					QueryParameters: []Parameter{
@@ -21755,7 +21755,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Commands: []Command{
 			{
 				OperationID: `addUserToProject`,
-				Description: `Adds one MongoDB Cloud user to the specified project. If the MongoDB Cloud user is not a member of the project&#39;s organization, then the user must accept their invitation to the organization to access information within the specified project. If the MongoDB Cloud User is already a member of the project&#39;s organization, then they will be added to the project immediately and an invitation will not be returned by this resource. To use this resource, the requesting API Key must have the Group User Admin role.`,
+				Description: `Adds one MongoDB Cloud user to the specified project. If the MongoDB Cloud user is not a member of the project's organization, then the user must accept their invitation to the organization to access information within the specified project. If the MongoDB Cloud User is already a member of the project's organization, then they will be added to the project immediately and an invitation will not be returned by this resource. To use this resource, the requesting API Key must have the Group User Admin role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/access`,
 					QueryParameters: []Parameter{
@@ -21956,7 +21956,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `deleteProjectInvitation`,
-				Description: `Cancels one pending invitation sent to the specified MongoDB Cloud user to join a project. You can&#39;t cancel an invitation that the user accepted. To use this resource, the requesting API Key must have the Project Owner role.`,
+				Description: `Cancels one pending invitation sent to the specified MongoDB Cloud user to join a project. You can't cancel an invitation that the user accepted. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/invites/{invitationId}`,
 					QueryParameters: []Parameter{
@@ -22416,7 +22416,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `getProjectSettings`,
-				Description: `Returns details about the specified project&#39;s settings. To use this resource, the requesting API Key must have the Project Read Only role.`,
+				Description: `Returns details about the specified project's settings. To use this resource, the requesting API Key must have the Project Read Only role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/settings`,
 					QueryParameters: []Parameter{
@@ -22629,7 +22629,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `flattenTeams`,
-							Description: `Flag that indicates whether the returned list should include users who belong to a team with a role in this project. You might not have assigned the individual users a role in this project. If &#34;flattenTeams&#34; : false, this resource returns only users with a role in the project.  If &#34;flattenTeams&#34; : true, this resource returns both users with roles in the project and users who belong to teams with roles in the project.`,
+							Description: `Flag that indicates whether the returned list should include users who belong to a team with a role in this project. You might not have assigned the individual users a role in this project. If "flattenTeams" : false, this resource returns only users with a role in the project.  If "flattenTeams" : true, this resource returns both users with roles in the project and users who belong to teams with roles in the project.`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -22638,7 +22638,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `includeOrgUsers`,
-							Description: `Flag that indicates whether the returned list should include users with implicit access to the project, the Organization Owner or Organization Read Only role. You might not have assigned the individual users a role in this project. If &#34;includeOrgUsers&#34;: false, this resource returns only users with a role in the project. If &#34;includeOrgUsers&#34;: true, this resource returns both users with roles in the project and users who have implicit access to the project through their organization role.`,
+							Description: `Flag that indicates whether the returned list should include users with implicit access to the project, the Organization Owner or Organization Read Only role. You might not have assigned the individual users a role in this project. If "includeOrgUsers": false, this resource returns only users with a role in the project. If "includeOrgUsers": true, this resource returns both users with roles in the project and users who have implicit access to the project through their organization role.`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -22828,7 +22828,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `userId`,
-							Description: `Unique 24-hexadecimal string that identifies MongoDB Cloud user you want to remove from the specified project. To return a application user&#39;s ID using their application username, use the Get All application users in One Project endpoint.`,
+							Description: `Unique 24-hexadecimal string that identifies MongoDB Cloud user you want to remove from the specified project. To return a application user's ID using their application username, use the Get All application users in One Project endpoint.`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -23833,7 +23833,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 	{
 		Name:        `Rolling Index`,
-		Description: `Creates one index to a database deployment in a rolling manner. You can&#39;t create a rolling index on an M0 free cluster or M2/M5 shared cluster.`,
+		Description: `Creates one index to a database deployment in a rolling manner. You can't create a rolling index on an M0 free cluster or M2/M5 shared cluster.`,
 		Commands: []Command{
 			{
 				OperationID: `createRollingIndex`,
@@ -24294,7 +24294,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Description: `Creates one private endpoint for one serverless instance. To use this resource, the requesting API Key must have the Project Owner role.
 
 
-A new endpoint won&#39;t be immediately available after creation.  Read the steps in the linked tutorial for detailed guidance.`,
+A new endpoint won't be immediately available after creation.  Read the steps in the linked tutorial for detailed guidance.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/privateEndpoint/serverless/instance/{instanceName}/endpoint`,
 					QueryParameters: []Parameter{
@@ -25089,7 +25089,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `deleteProjectServiceAccountAccessListEntry`,
-				Description: `Removes the specified access list entry from the specified Service Account for the project. You can&#39;t remove the requesting IP address from the access list. Available as a preview feature.`,
+				Description: `Removes the specified access list entry from the specified Service Account for the project. You can't remove the requesting IP address from the access list. Available as a preview feature.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}/accessList/{ipAddress}`,
 					QueryParameters: []Parameter{
@@ -25284,7 +25284,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `deleteServiceAccountAccessListEntry`,
-				Description: `Removes the specified access list entry from the specified Service Account for the organization. You can&#39;t remove the requesting IP address from the access list. Available as a preview feature.`,
+				Description: `Removes the specified access list entry from the specified Service Account for the organization. You can't remove the requesting IP address from the access list. Available as a preview feature.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/accessList/{ipAddress}`,
 					QueryParameters: []Parameter{
@@ -26037,7 +26037,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		Commands: []Command{
 			{
 				OperationID: `createSharedClusterBackupRestoreJob`,
-				Description: `Restores the specified cluster. MongoDB Cloud limits which clusters can be the target clusters of a restore. The target cluster can&#39;t use encryption at rest, run a major release MongoDB version different than the snapshot, or receive client requests during restores. MongoDB Cloud deletes all existing data on the target cluster prior to the restore operation. To use this resource, the requesting API Key must have the Project Owner role.`,
+				Description: `Restores the specified cluster. MongoDB Cloud limits which clusters can be the target clusters of a restore. The target cluster can't use encryption at rest, run a major release MongoDB version different than the snapshot, or receive client requests during restores. MongoDB Cloud deletes all existing data on the target cluster prior to the restore operation. To use this resource, the requesting API Key must have the Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/restore`,
 					QueryParameters: []Parameter{
@@ -27060,7 +27060,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `downloadStreamTenantAuditLogs`,
-				Description: `Downloads the audit logs for the specified Atlas Streams Processing instance. By default, logs cover periods of 30 days. To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: &#34;Accept: application/vnd.atlas.YYYY-MM-DD&#43;gzip&#34;.`,
+				Description: `Downloads the audit logs for the specified Atlas Streams Processing instance. By default, logs cover periods of 30 days. To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: "Accept: application/vnd.atlas.YYYY-MM-DD+gzip".`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/streams/{tenantName}/auditLogs`,
 					QueryParameters: []Parameter{
@@ -27144,7 +27144,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `cloudProvider`,
-							Description: `One of &#34;aws&#34;, &#34;azure&#34; or &#34;gcp&#34;.`,
+							Description: `One of "aws", "azure" or "gcp".`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -27153,7 +27153,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						{
 							Name:        `regionName`,
-							Description: `The cloud provider specific region name, i.e. &#34;US_EAST_1&#34; for cloud provider &#34;aws&#34;.`,
+							Description: `The cloud provider specific region name, i.e. "US_EAST_1" for cloud provider "aws".`,
 							Required:    true,
 							Type: ParameterType{
 								IsArray: false,
@@ -29146,7 +29146,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `deleteThirdPartyIntegration`,
-				Description: `Removes the settings that permit configuring one third-party service integration. These settings apply to all databases managed in one MongoDB Cloud project. If you delete an integration from a project, you remove that integration configuration only for that project. This action doesn&#39;t affect any other project or organization&#39;s configured {INTEGRATION-TYPE} integrations. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role.`,
+				Description: `Removes the settings that permit configuring one third-party service integration. These settings apply to all databases managed in one MongoDB Cloud project. If you delete an integration from a project, you remove that integration configuration only for that project. This action doesn't affect any other project or organization's configured {INTEGRATION-TYPE} integrations. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role.`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/integrations/{integrationType}`,
 					QueryParameters: []Parameter{
@@ -29440,7 +29440,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Description: `Generates one X.509 certificate for the specified MongoDB user. Atlas manages the certificate and MongoDB user that belong to one project. To use this resource, the requesting API Key must have the Project Owner role.
 
 
-To get MongoDB Cloud to generate a managed certificate for a database user, set &#34;x509Type&#34; : &#34;MANAGED&#34; on the desired MongoDB Database User.
+To get MongoDB Cloud to generate a managed certificate for a database user, set "x509Type" : "MANAGED" on the desired MongoDB Database User.
 
 
 If you are managing your own Certificate Authority (CA) in Self-Managed X.509 mode, you must generate certificates for database users using your own CA.`,

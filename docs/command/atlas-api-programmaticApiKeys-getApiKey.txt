@@ -14,7 +14,7 @@ atlas api programmaticApiKeys getApiKey
 
 Returns one organization API key.
 
-The organization API keys grant programmatic access to an organization. You can&#39;t use the API key to log into MongoDB Cloud through the user interface. To use this resource, the requesting API Key must have the  Organization Member role.
+The organization API keys grant programmatic access to an organization. You can't use the API key to log into MongoDB Cloud through the user interface. To use this resource, the requesting API Key must have the  Organization Member role.
 
 Syntax
 ------

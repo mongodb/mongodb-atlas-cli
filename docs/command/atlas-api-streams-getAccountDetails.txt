@@ -38,7 +38,7 @@ Options
    * - --cloudProvider
      - string
      - true
-     - one of &#34;aws&#34;, &#34;azure&#34; or &#34;gcp&#34;
+     - one of "aws", "azure" or "gcp"
    * - --envelope
      - 
      - false

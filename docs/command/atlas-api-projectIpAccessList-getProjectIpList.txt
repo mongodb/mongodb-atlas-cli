@@ -12,9 +12,9 @@ atlas api projectIpAccessList getProjectIpList
    :depth: 1
    :class: singlecol
 
-Returns one access list entry from the specified project&#39;s IP access list.
+Returns one access list entry from the specified project's IP access list.
 
-Each entry in the project&#39;s IP access list contains either one IP address or one CIDR-notated block of IP addresses. MongoDB Cloud only allows client connections to the cluster from entries in the project&#39;s IP access list. To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. This endpoint (/groups/{GROUP-ID}/accessList) manages the Project IP Access List. It doesn&#39;t manage the access list for MongoDB Cloud organizations. TheProgrammatic API Keys endpoint (/orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist) manages those access lists.
+Each entry in the project's IP access list contains either one IP address or one CIDR-notated block of IP addresses. MongoDB Cloud only allows client connections to the cluster from entries in the project's IP access list. To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. This endpoint (/groups/{GROUP-ID}/accessList) manages the Project IP Access List. It doesn't manage the access list for MongoDB Cloud organizations. TheProgrammatic API Keys endpoint (/orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist) manages those access lists.
 
 Syntax
 ------
@@ -40,7 +40,7 @@ Options
    * - --entryValue
      - string
      - true
-     - access list entry that you want to return from the project&#39;s IP access list
+     - access list entry that you want to return from the project's IP access list
    * - --envelope
      - 
      - false

@@ -12,7 +12,7 @@ atlas api federatedAuthentication getIdentityProvider
    :depth: 1
    :class: singlecol
 
-Returns one identity provider in the specified federation by the identity provider&#39;s id.
+Returns one identity provider in the specified federation by the identity provider's id.
 
 To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations.
 

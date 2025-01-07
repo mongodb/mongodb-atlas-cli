@@ -14,7 +14,7 @@ atlas api mongoDbCloudUsers addProjectUser
 
 Adds one MongoDB Cloud user to one project.
 
-To use this resource, the requesting API Key must have the Group User Admin role. If the user has a pending invitation to join the project&#39;s organization, MongoDB Cloud modifies it and grants project access. If the user doesn&#39;t have an invitation to join the organization, MongoDB Cloud sends a new invitation that grants the user organization and project access. If the user is already active in the project&#39;s organization, MongoDB Cloud grants access to the project.
+To use this resource, the requesting API Key must have the Group User Admin role. If the user has a pending invitation to join the project's organization, MongoDB Cloud modifies it and grants project access. If the user doesn't have an invitation to join the organization, MongoDB Cloud sends a new invitation that grants the user organization and project access. If the user is already active in the project's organization, MongoDB Cloud grants access to the project.
 
 Syntax
 ------

@@ -60,7 +60,7 @@ Related Commands
 * :ref:`atlas-api-projects-getProjectInvitation` - Returns the details of one pending invitation to the specified project.
 * :ref:`atlas-api-projects-getProjectLimit` - Returns the specified limit for the specified project.
 * :ref:`atlas-api-projects-getProjectLtsVersions` - Returns the MongoDB Long Term Support Major Versions available to new clusters in this project.
-* :ref:`atlas-api-projects-getProjectSettings` - Returns details about the specified project&#39;s settings.
+* :ref:`atlas-api-projects-getProjectSettings` - Returns details about the specified project's settings.
 * :ref:`atlas-api-projects-listProjectInvitations` - Returns all pending invitations to the specified project.
 * :ref:`atlas-api-projects-listProjectLimits` - Returns all the limits for the specified project.
 * :ref:`atlas-api-projects-listProjectUsers` - Returns details about all users in the specified project.

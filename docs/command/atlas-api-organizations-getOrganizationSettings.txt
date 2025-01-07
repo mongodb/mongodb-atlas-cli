@@ -12,7 +12,7 @@ atlas api organizations getOrganizationSettings
    :depth: 1
    :class: singlecol
 
-Returns details about the specified organization&#39;s settings.
+Returns details about the specified organization's settings.
 
 To use this resource, the requesting API Key must have the Organization Owner role.
 

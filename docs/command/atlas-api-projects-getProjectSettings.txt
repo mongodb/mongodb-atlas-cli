@@ -12,7 +12,7 @@ atlas api projects getProjectSettings
    :depth: 1
    :class: singlecol
 
-Returns details about the specified project&#39;s settings.
+Returns details about the specified project's settings.
 
 To use this resource, the requesting API Key must have the Project Read Only role.
 

@@ -12,9 +12,9 @@ atlas api organizations createOrganization
    :depth: 1
    :class: singlecol
 
-Creates one organization in MongoDB Cloud and links it to the requesting API Key&#39;s organization.
+Creates one organization in MongoDB Cloud and links it to the requesting API Key's organization.
 
-To use this resource, the requesting API Key must have the Organization Owner role. The requesting API Key&#39;s organization must be a paying organization. To learn more, see Configure a Paying Organization in the MongoDB Atlas documentation.
+To use this resource, the requesting API Key must have the Organization Owner role. The requesting API Key's organization must be a paying organization. To learn more, see Configure a Paying Organization in the MongoDB Atlas documentation.
 
 Syntax
 ------

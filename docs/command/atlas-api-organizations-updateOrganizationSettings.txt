@@ -12,7 +12,7 @@ atlas api organizations updateOrganizationSettings
    :depth: 1
    :class: singlecol
 
-Updates the organization&#39;s settings.
+Updates the organization's settings.
 
 To use this resource, the requesting API Key must have the Organization Owner role.
 

@@ -56,11 +56,11 @@ Options
    * - --output
      - string
      - false
-     - preferred api format, can be [json, {{go template}}] This value defaults to "json".
+     - preferred api format, can be ["json", go-template] This value defaults to "json".
    * - --output-file
      - string
      - false
-     - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip).
+     - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)
    * - --tenantName
      - string
      - true
@@ -68,7 +68,7 @@ Options
    * - --version
      - string
      - false
-     - api version to use when calling the api call [options: '2023-01-01'], defaults to the latest version or the profiles api_version config value if set This value defaults to "2023-01-01".
+     - api version to use when calling the api call [options: "2023-01-01"], defaults to the latest version or the profiles api_version config value if set This value defaults to "2023-01-01".
 
 Inherited Options
 -----------------

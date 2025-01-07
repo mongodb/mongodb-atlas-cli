@@ -344,7 +344,7 @@ func addVersionFlag(cmd *cobra.Command, apiCommand api.Command, version *string)
 	// Convert the keys of the map into a list
 	supportedVersionsVersions := make([]string, 0, len(versions))
 	for version := range versions {
-		supportedVersionsVersions = append(supportedVersionsVersions, "'"+version+"'")
+		supportedVersionsVersions = append(supportedVersionsVersions, `"`+version+`"`)
 	}
 
 	// Sort the list
@@ -366,18 +366,26 @@ func addOutputFlags(cmd *cobra.Command, apiCommand api.Command, format *string, 
 		*format = supportedContentTypesList[0]
 	}
 
-	// If the content type has json, also add {{go template}} as an option to the --format help
-	if slices.Contains(supportedContentTypesList, "json") {
-		supportedContentTypesList = append(supportedContentTypesList, "{{go template}}")
+	// If the content type has json, also add go-template as an option to the --format help
+	containsJSON := slices.Contains(supportedContentTypesList, "json")
+
+	// Place quotes around every supported content type
+	for i, value := range supportedContentTypesList {
+		supportedContentTypesList[i] = `"` + value + `"`
+	}
+
+	// Add go-template, we add it here because we don't want go-template to be between quotes
+	if containsJSON {
+		supportedContentTypesList = append(supportedContentTypesList, "go-template")
 	}
 
 	// Generate a list of supported content types and add it to --help for --format
-	// Example [csv, json, {{go template}}]
+	// Example ['csv', 'json', go-template]
 	supportedContentTypesString := strings.Join(supportedContentTypesList, ", ")
 
 	// Set the flags
 	cmd.Flags().StringVar(format, flag.Output, *format, fmt.Sprintf("preferred api format, can be [%s]", supportedContentTypesString))
-	cmd.Flags().StringVar(outputFile, flag.OutputFile, "", "file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip).")
+	cmd.Flags().StringVar(outputFile, flag.OutputFile, "", "file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)")
 
 	// If there's multiple content types, mark --format as required
 	if numSupportedContentTypes > 1 {

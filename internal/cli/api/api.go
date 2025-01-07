@@ -183,7 +183,8 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	}
 
 	// Common flags
-	cmd.Flags().StringVar(&version, flag.Version, version, "api version to use when calling the api call, defaults to the latest version or the profiles api_version config value if set")
+	addVersionFlag(cmd, command, &version)
+
 	if needsFileFlag(command) {
 		cmd.Flags().StringVar(&file, flag.File, "", "path to the file which contains the api request contents")
 	}
@@ -195,10 +196,12 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 		return nil, err
 	}
 
+	// Add URL parameters as flags
 	if err := addParameters(cmd, command.RequestParameters.URLParameters); err != nil {
 		return nil, err
 	}
 
+	// Add query parameters as flags
 	if err := addParameters(cmd, command.RequestParameters.QueryParameters); err != nil {
 		return nil, err
 	}
@@ -329,6 +332,28 @@ func needsFileFlag(apiCommand api.Command) bool {
 	}
 
 	return false
+}
+
+func addVersionFlag(cmd *cobra.Command, apiCommand api.Command, version *string) {
+	// Create a unique list of all supported versions
+	versions := make(map[string]struct{}, 0)
+	for _, version := range apiCommand.Versions {
+		versions[version.Version] = struct{}{}
+	}
+
+	// Convert the keys of the map into a list
+	supportedVersionsVersions := make([]string, 0, len(versions))
+	for version := range versions {
+		supportedVersionsVersions = append(supportedVersionsVersions, "'"+version+"'")
+	}
+
+	// Sort the list
+	slices.Sort(supportedVersionsVersions)
+
+	// Convert the list to a string
+	supportedVersionsVersionsString := strings.Join(supportedVersionsVersions, ", ")
+
+	cmd.Flags().StringVar(version, flag.Version, *version, fmt.Sprintf("api version to use when calling the api call [options: %s], defaults to the latest version or the profiles api_version config value if set", supportedVersionsVersionsString))
 }
 
 func addOutputFlags(cmd *cobra.Command, apiCommand api.Command, format *string, outputFile *string) error {

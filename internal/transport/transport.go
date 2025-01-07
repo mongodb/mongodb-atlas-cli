@@ -20,6 +20,8 @@ import (
 	"time"
 
 	"github.com/mongodb-forks/digest"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/oauth"
 	atlasauth "go.mongodb.org/atlas/auth"
 )
 
@@ -67,19 +69,44 @@ func NewDigestTransport(username, password string, base http.RoundTripper) *dige
 	}
 }
 
-func NewAccessTokenTransport(token *atlasauth.Token, base http.RoundTripper) http.RoundTripper {
-	return &tokenTransport{
-		token: token,
-		base:  base,
+func NewAccessTokenTransport(token *atlasauth.Token, base http.RoundTripper, saveToken func(*atlasauth.Token) error) (http.RoundTripper, error) {
+	client := http.DefaultClient
+	client.Transport = Default()
+
+	flow, err := oauth.FlowWithConfig(config.Default(), client)
+
+	if err != nil {
+		return nil, err
 	}
+
+	return &tokenTransport{
+		token:      token,
+		base:       base,
+		authConfig: flow,
+		saveToken:  saveToken,
+	}, nil
 }
 
 type tokenTransport struct {
-	token *atlasauth.Token
-	base  http.RoundTripper
+	token      *atlasauth.Token
+	authConfig *atlasauth.Config
+	base       http.RoundTripper
+	saveToken  func(*atlasauth.Token) error
 }
 
 func (tr *tokenTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	if !tr.token.Valid() {
+		token, _, err := tr.authConfig.RefreshToken(req.Context(), tr.token.RefreshToken)
+		if err != nil {
+			return nil, err
+		}
+		tr.token = token
+		if err := tr.saveToken(tr.token); err != nil {
+			return nil, err
+		}
+	}
+
 	tr.token.SetAuthHeader(req)
+
 	return tr.base.RoundTrip(req)
 }

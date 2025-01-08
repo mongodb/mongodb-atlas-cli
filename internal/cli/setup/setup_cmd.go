@@ -210,7 +210,7 @@ func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 
 	values.MdbVersion = opts.MDBVersion
 	if opts.MDBVersion == "" {
-		_, defaultVersion, err := opts.mdbVersions(opts.Tier, opts.Provider)
+		_, defaultVersion, err := opts.mdbVersions(opts.Tier)
 		if err != nil {
 			return nil, err
 		}

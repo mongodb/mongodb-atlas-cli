@@ -210,11 +210,7 @@ func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 
 	values.MdbVersion = opts.MDBVersion
 	if opts.MDBVersion == "" {
-		_, defaultVersion, err := opts.mdbVersions(opts.Tier)
-		if err != nil {
-			return nil, err
-		}
-		values.MdbVersion = defaultVersion
+		opts.MDBVersion, _ = cli.DefaultMongoDBMajorVersion()
 	}
 
 	values.DBUsername = opts.DBUsername

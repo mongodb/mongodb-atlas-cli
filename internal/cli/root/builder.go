@@ -44,7 +44,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/events"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/federatedauthentication"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/integrations"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/livemigrations"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/logs"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/maintenance"
@@ -244,7 +243,6 @@ Use the --help flag with any command for more info on that command.`,
 		logoutCmd,
 		whoCmd,
 		registerCmd,
-		kubernetes.Builder(),
 		datafederation.Builder(),
 		auditing.Builder(),
 		deployments.Builder(),

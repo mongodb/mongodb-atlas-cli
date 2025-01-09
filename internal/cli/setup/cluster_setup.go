@@ -101,7 +101,7 @@ func (opts *Opts) askClusterMDBVersion() error {
 		return nil
 	}
 
-	versions, defaultVersion, err := opts.mdbVersions(opts.Tier, opts.Provider)
+	versions, defaultVersion, err := opts.mdbVersions(opts.Tier)
 	if err != nil {
 		return err
 	}
@@ -262,7 +262,7 @@ func (opts *Opts) defaultRegions() ([]string, error) {
 	return defaultRegions, nil
 }
 
-func (opts *Opts) mdbVersions(instanceSize string, cloudProvider string) ([]string, string, error) {
+func (opts *Opts) mdbVersions(instanceSize string) ([]string, string, error) {
 	const maxItems = 500
 	versions, err := opts.store.MDBVersions(
 		opts.ConfigProjectID(),
@@ -270,8 +270,7 @@ func (opts *Opts) mdbVersions(instanceSize string, cloudProvider string) ([]stri
 			ListOptions: store.ListOptions{
 				ItemsPerPage: maxItems,
 			},
-			CloudProvider: &cloudProvider,
-			InstanceSize:  &instanceSize,
+			InstanceSize: &instanceSize,
 		},
 	)
 

@@ -42,6 +42,19 @@ var firstClassPlugins = []*FirstClassPlugin{
 	// 		},
 	// 	},
 	// },
+	{
+		Name: "atlas-cli-plugin-kubernetes",
+		Github: &Github{
+			Owner: "mongodb",
+			Name:  "atlas-cli-plugin-kubernetes",
+		},
+		Commands: []*Command{
+			{
+				Name:        "kubernetes",
+				Description: "Root command of the Atlas CLI Kuberenetes plugin",
+			},
+		},
+	},
 }
 
 type Command struct {

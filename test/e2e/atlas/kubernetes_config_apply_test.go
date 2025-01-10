@@ -23,7 +23,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
@@ -501,8 +500,4 @@ func deleteTeamFromProject(t *testing.T, cliPath, projectID, teamID string) {
 	cmd.Env = os.Environ()
 	resp, err := cmd.CombinedOutput()
 	require.NoError(t, err, string(resp))
-}
-
-func prepareK8sName(pattern string) string {
-	return resources.NormalizeAtlasName(pattern, resources.AtlasNameToKubernetesName())
 }

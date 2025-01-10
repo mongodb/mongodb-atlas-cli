@@ -28,6 +28,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
@@ -1371,4 +1372,8 @@ func deleteAllIDPs(t *testing.T, cliPath string) {
 	for _, idp := range *idps.Results {
 		deleteIDP(t, cliPath, idp.Id, fedSettingsID)
 	}
+}
+
+func prepareK8sName(pattern string) string {
+	return resources.NormalizeAtlasName(pattern, resources.AtlasNameToKubernetesName())
 }

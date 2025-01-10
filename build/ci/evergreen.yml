@@ -793,6 +793,9 @@ tasks:
         variant: "e2e_atlas_clusters"
         patch_optional: true
     commands:
+
+
+    
       - func: "install gotestsum"
       - func: "e2e test"
         vars:

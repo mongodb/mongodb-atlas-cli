@@ -820,7 +820,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,cluster,kubernetes,install
+          E2E_TAGS: atlas,cluster,kubernetes,local
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true

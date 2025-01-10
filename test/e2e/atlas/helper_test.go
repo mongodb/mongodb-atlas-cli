@@ -170,53 +170,6 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 	return o.String(), e.String(), err
 }
 
-func deployServerlessInstanceForProject(projectID string) (string, error) {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return "", err
-	}
-	clusterName, err := RandClusterName()
-	if err != nil {
-		return "", err
-	}
-	tier := e2eTier()
-	region, err := newAvailableRegion(projectID, tier, e2eClusterProvider)
-	if err != nil {
-		return "", err
-	}
-	args := []string{
-		serverlessEntity,
-		"create",
-		clusterName,
-		"--region", region,
-		"--provider", e2eClusterProvider,
-	}
-
-	if projectID != "" {
-		args = append(args, "--projectId", projectID)
-	}
-	create := exec.Command(cliPath, args...)
-	create.Env = os.Environ()
-	if resp, err := e2e.RunAndGetStdOut(create); err != nil {
-		return "", fmt.Errorf("error creating serverless instance %w: %s", err, string(resp))
-	}
-
-	watchArgs := []string{
-		serverlessEntity,
-		"watch",
-		clusterName,
-	}
-	if projectID != "" {
-		watchArgs = append(watchArgs, "--projectId", projectID)
-	}
-	watch := exec.Command(cliPath, watchArgs...)
-	watch.Env = os.Environ()
-	if resp, err := e2e.RunAndGetStdOut(watch); err != nil {
-		return "", fmt.Errorf("error watching serverless instance %w: %s", err, string(resp))
-	}
-	return clusterName, nil
-}
-
 func deployFlexClusterForProject(projectID string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
@@ -628,63 +581,6 @@ func IsGov() bool {
 	return os.Getenv("MCLI_SERVICE") == "cloudgov"
 }
 
-func getFirstOrgUser() (string, error) {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return "", err
-	}
-	args := []string{
-		orgEntity,
-		"users",
-		"list",
-		"-o=json",
-	}
-	cmd := exec.Command(cliPath, args...)
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	if err != nil {
-		return "", fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	var users atlasv2.PaginatedAppUser
-	if err := json.Unmarshal(resp, &users); err != nil {
-		return "", fmt.Errorf("%w: %s", err, string(resp))
-	}
-	if users.GetTotalCount() == 0 {
-		return "", errors.New("no users found")
-	}
-
-	return users.GetResults()[0].Username, nil
-}
-
-func createTeam(teamName, userName string) (string, error) {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return "", fmt.Errorf("%w: invalid bin", err)
-	}
-	args := []string{
-		teamsEntity,
-		"create",
-		teamName,
-		"--username",
-		userName,
-		"-o=json",
-	}
-	cmd := exec.Command(cliPath, args...)
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	if err != nil {
-		return "", fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	var team atlasv2.Team
-	if err := json.Unmarshal(resp, &team); err != nil {
-		return "", fmt.Errorf("%w: %s", err, string(resp))
-	}
-
-	return team.GetId(), nil
-}
-
 func createProject(projectName string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {
@@ -695,36 +591,6 @@ func createProject(projectName string) (string, error) {
 		"create",
 		projectName,
 		"-o=json",
-	}
-	if IsGov() {
-		args = append(args, "--govCloudRegionsOnly")
-	}
-	cmd := exec.Command(cliPath, args...)
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	if err != nil {
-		return "", fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	var project atlasv2.Group
-	if err := json.Unmarshal(resp, &project); err != nil {
-		return "", fmt.Errorf("invalid response: %s (%w)", string(resp), err)
-	}
-
-	return project.GetId(), nil
-}
-
-func createProjectWithoutAlertSettings(projectName string) (string, error) {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return "", fmt.Errorf("%w: invalid bin", err)
-	}
-	args := []string{
-		projectEntity,
-		"create",
-		projectName,
-		"-o=json",
-		"--withoutDefaultAlertSettings",
 	}
 	if IsGov() {
 		args = append(args, "--govCloudRegionsOnly")
@@ -928,55 +794,6 @@ func deleteProject(projectID string) error {
 	return nil
 }
 
-func createDBUserWithCert(projectID, username string) error {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
-	}
-
-	cmd := exec.Command(cliPath,
-		dbusersEntity,
-		"create",
-		"readAnyDatabase",
-		"--username", username,
-		"--x509Type", "MANAGED",
-		"--projectId", projectID)
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	if err != nil {
-		return fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	return nil
-}
-
-func createDataFederationForProject(projectID string) (string, error) {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return "", err
-	}
-
-	n, err := e2e.RandInt(1000)
-	if err != nil {
-		return "", err
-	}
-	dataFederationName := fmt.Sprintf("e2e-data-federation-%v", n)
-
-	cmd := exec.Command(cliPath,
-		datafederationEntity,
-		"create",
-		dataFederationName,
-		"--projectId", projectID,
-		"--region", "DUBLIN_IRL")
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	if err != nil {
-		return "", fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	return dataFederationName, nil
-}
-
 func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atlasv2.DataLakeTenant {
 	t.Helper()
 
@@ -1080,18 +897,6 @@ func ensureFlexCluster(t *testing.T, cluster *atlasv2.FlexClusterDescription2024
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
-func compareStingsWithHiddenPart(expectedSting, actualString string, specialChar uint8) bool {
-	if len(expectedSting) != len(actualString) {
-		return false
-	}
-	for i := 0; i < len(expectedSting); i++ {
-		if expectedSting[i] != actualString[i] && actualString[i] != specialChar {
-			return false
-		}
-	}
-	return true
-}
-
 // createJSONFile creates a new JSON file at the specified path with the specified data
 // and also registers its deletion on test cleanup.
 func createJSONFile(t *testing.T, data any, path string) {
@@ -1183,125 +988,6 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 // the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
 func removeDotsFromWatching(consoleOutput []byte) []byte {
 	return []byte(strings.TrimLeft(string(consoleOutput), "."))
-}
-
-func createStreamsInstance(t *testing.T, projectID, name string) (string, error) {
-	t.Helper()
-
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return "", err
-	}
-
-	n, err := e2e.RandInt(1000)
-	if err != nil {
-		return "", err
-	}
-	instanceName := fmt.Sprintf("e2e-%s-%v", name, n)
-
-	cmd := exec.Command(
-		cliPath,
-		streamsEntity,
-		"instance",
-		"create",
-		instanceName,
-		"--projectId", projectID,
-		"--provider", "AWS",
-		"--region", "VIRGINIA_USA",
-	)
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	if err != nil {
-		return "", fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	return instanceName, nil
-}
-
-func deleteStreamsInstance(t *testing.T, projectID, name string) error {
-	t.Helper()
-
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
-	}
-
-	cmd := exec.Command(
-		cliPath,
-		streamsEntity,
-		"instance",
-		"delete",
-		name,
-		"--projectId", projectID,
-		"--force",
-	)
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	if err != nil {
-		return fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	return nil
-}
-
-func createStreamsConnection(t *testing.T, projectID, instanceName, name string) (string, error) {
-	t.Helper()
-
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return "", err
-	}
-
-	n, err := e2e.RandInt(1000)
-	if err != nil {
-		return "", err
-	}
-	connectionName := fmt.Sprintf("e2e-%s-%v", name, n)
-
-	cmd := exec.Command(
-		cliPath,
-		streamsEntity,
-		"connection",
-		"create",
-		connectionName,
-		"--file", "data/create_streams_connection_test.json",
-		"--instance", instanceName,
-		"--projectId", projectID,
-	)
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	if err != nil {
-		return "", fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	return connectionName, nil
-}
-
-func deleteStreamsConnection(t *testing.T, projectID, instanceName, name string) error {
-	t.Helper()
-
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return err
-	}
-
-	cmd := exec.Command(
-		cliPath,
-		streamsEntity,
-		"connection",
-		"delete",
-		name,
-		"--instance", instanceName,
-		"--projectId", projectID,
-		"--force",
-	)
-	cmd.Env = os.Environ()
-	resp, err := e2e.RunAndGetStdOut(cmd)
-	if err != nil {
-		return fmt.Errorf("%s (%w)", string(resp), err)
-	}
-
-	return nil
 }
 
 func deleteAllPlugins(t *testing.T) {

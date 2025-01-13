@@ -14,7 +14,7 @@ atlas api projectIpAccessList
 
 Returns, adds, edits, and removes network access limits to database deployments in Atlas.
 
-This resource replaces the whitelist resource. Atlas removed whitelists in July 2021. Update your applications to use this new resource. This resource manages a project's IP Access List and supports creating temporary Access List entries that automatically expire within a user-configurable 7-day period.
+Returns, adds, edits, and removes network access limits to database deployments in Atlas. This resource replaces the whitelist resource. Atlas removed whitelists in July 2021. Update your applications to use this new resource. This resource manages a project's IP Access List and supports creating temporary Access List entries that automatically expire within a user-configurable 7-day period.
 
 Options
 -------

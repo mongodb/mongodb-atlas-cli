@@ -14,7 +14,7 @@ atlas api dataFederation listDataFederationPrivateEndpoints
 
 Returns all private endpoints for Federated Database Instances and Online Archives in the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles.
+Returns all private endpoints for Federated Database Instances and Online Archives in the specified project. To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles.
 
 Syntax
 ------

@@ -14,7 +14,10 @@ atlas api ldapConfiguration saveLdapConfiguration
 
 Edits the LDAP configuration for the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role. Updating this configuration triggers a rolling restart of the database.
+Edits the LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+
+
+Updating this configuration triggers a rolling restart of the database.
 
 Syntax
 ------

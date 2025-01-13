@@ -14,7 +14,7 @@ atlas api projects getProjectInvitation
 
 Returns the details of one pending invitation to the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Returns the details of one pending invitation to the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

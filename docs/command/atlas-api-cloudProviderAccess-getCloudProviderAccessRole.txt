@@ -14,7 +14,7 @@ atlas api cloudProviderAccess getCloudProviderAccessRole
 
 Returns the access role with the specified id and with access to the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Returns the access role with the specified id and with access to the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api atlasSearch
 
 Returns, adds, edits, and removes Atlas Search indexes for the specified cluster.
 
-Also returns and updates user-defined analyzers for the specified cluster.
+Returns, adds, edits, and removes Atlas Search indexes for the specified cluster. Also returns and updates user-defined analyzers for the specified cluster.
 
 Options
 -------

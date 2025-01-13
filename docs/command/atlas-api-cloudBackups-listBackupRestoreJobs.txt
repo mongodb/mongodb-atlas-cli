@@ -14,7 +14,7 @@ atlas api cloudBackups listBackupRestoreJobs
 
 Returns all cloud backup restore jobs for one cluster from the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Returns all cloud backup restore jobs for one cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

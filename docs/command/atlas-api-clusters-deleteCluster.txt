@@ -14,7 +14,7 @@ atlas api clusters deleteCluster
 
 Removes one cluster from the specified project.
 
-The cluster must have termination protection disabled in order to be deleted. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
+Removes one cluster from the specified project. The cluster must have termination protection disabled in order to be deleted. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
 
 Syntax
 ------

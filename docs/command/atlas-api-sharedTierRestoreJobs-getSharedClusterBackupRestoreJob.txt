@@ -14,7 +14,7 @@ atlas api sharedTierRestoreJobs getSharedClusterBackupRestoreJob
 
 Returns the specified restore job.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns the specified restore job. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

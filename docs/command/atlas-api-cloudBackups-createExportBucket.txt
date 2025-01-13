@@ -14,7 +14,7 @@ atlas api cloudBackups createExportBucket
 
 Creates a Snapshot Export Bucket for an AWS S3 Bucket or Azure Blob Storage Container.
 
-Once created, an snapshots can be exported to the Export Bucket and its referenced AWS S3 Bucket or Azure Blob Storage Container. To use this resource, the requesting API Key must have the Project Owner role.
+Creates a Snapshot Export Bucket for an AWS S3 Bucket or Azure Blob Storage Container. Once created, an snapshots can be exported to the Export Bucket and its referenced AWS S3 Bucket or Azure Blob Storage Container. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

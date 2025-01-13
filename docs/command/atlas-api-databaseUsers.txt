@@ -14,6 +14,8 @@ atlas api databaseUsers
 
 Returns, adds, edits, and removes database users.
 
+Returns, adds, edits, and removes database users.
+
 Options
 -------
 

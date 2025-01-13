@@ -14,7 +14,7 @@ atlas api organizations updateOrganizationInvitation
 
 Updates the details of one pending invitation to the specified organization.
 
-To specify which invitation, provide the username of the invited user. To use this resource, the requesting API Key must have the Organization Owner role.
+Updates the details of one pending invitation to the specified organization. To specify which invitation, provide the username of the invited user. To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api organizations listOrganizations
 
 Returns all organizations to which the requesting API Key has access.
 
-To use this resource, the requesting API Key must have the Organization Member role.
+Returns all organizations to which the requesting API Key has access. To use this resource, the requesting API Key must have the Organization Member role.
 
 Syntax
 ------

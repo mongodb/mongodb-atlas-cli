@@ -14,7 +14,7 @@ atlas api flexClusters createFlexCluster
 
 Creates one flex cluster in the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Creates one flex cluster in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

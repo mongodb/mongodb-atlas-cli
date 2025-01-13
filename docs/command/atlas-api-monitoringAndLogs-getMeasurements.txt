@@ -14,7 +14,7 @@ atlas api monitoringAndLogs getMeasurements
 
 Returns the Atlas Search hardware and status data series within the provided time range for one process in the specified project.
 
-You must have the Project Read Only or higher role to view the Atlas Search metric types.
+Returns the Atlas Search hardware and status data series within the provided time range for one process in the specified project. You must have the Project Read Only or higher role to view the Atlas Search metric types.
 
 Syntax
 ------

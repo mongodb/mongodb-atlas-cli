@@ -14,7 +14,13 @@ atlas api mongoDbCloudUsers getOrganizationUser
 
 Returns information about the specified MongoDB Cloud user within the context of the specified organization.
 
-To use this resource, the requesting API Key must have the Organization Read Only role. Note: This resource can only be used to fetch information about MongoDB Cloud human users. To return information about an API Key, use the Return One Organization API Key endpoint. Note: This resource does not return information about pending users invited via the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.
+Returns information about the specified MongoDB Cloud user within the context of the specified organization. To use this resource, the requesting API Key must have the Organization Read Only role.
+
+
+Note: This resource can only be used to fetch information about MongoDB Cloud human users. To return information about an API Key, use the Return One Organization API Key endpoint.
+
+
+Note: This resource does not return information about pending users invited via the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.
 
 Syntax
 ------

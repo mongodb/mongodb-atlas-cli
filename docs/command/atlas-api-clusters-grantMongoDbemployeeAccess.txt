@@ -14,6 +14,8 @@ atlas api clusters grantMongoDbEmployeeAccess
 
 Grants MongoDB employee cluster access for the given duration and at the specified level for one cluster.
 
+Grants MongoDB employee cluster access for the given duration and at the specified level for one cluster.
+
 Syntax
 ------
 

@@ -14,7 +14,7 @@ atlas api customDatabaseRoles listCustomDatabaseRoles
 
 Returns all custom roles for the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns all custom roles for the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

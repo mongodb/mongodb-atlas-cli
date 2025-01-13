@@ -14,7 +14,7 @@ atlas api monitoringAndLogs listDatabases
 
 Returns the list of databases running on the specified host for the specified project.
 
-M0 free clusters, M2, M5, and serverless clusters have some operational limits. The MongoDB Cloud process must be a mongod. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns the list of databases running on the specified host for the specified project. M0 free clusters, M2, M5, and serverless clusters have some operational limits. The MongoDB Cloud process must be a mongod. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

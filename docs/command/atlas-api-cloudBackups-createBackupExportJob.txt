@@ -14,7 +14,7 @@ atlas api cloudBackups createBackupExportJob
 
 Exports one backup Snapshot for dedicated Atlas cluster using Cloud Backups to an Export Bucket.
 
-To use this resource, the requesting API Key must have the Project Atlas Admin role.
+Exports one backup Snapshot for dedicated Atlas cluster using Cloud Backups to an Export Bucket. To use this resource, the requesting API Key must have the Project Atlas Admin role.
 
 Syntax
 ------

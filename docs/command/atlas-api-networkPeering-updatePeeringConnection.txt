@@ -14,7 +14,7 @@ atlas api networkPeering updatePeeringConnection
 
 Updates one specified network peering connection in the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Updates one specified network peering connection in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

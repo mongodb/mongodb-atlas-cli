@@ -14,7 +14,7 @@ atlas api atlasSearch deleteAtlasSearchIndexDeprecated
 
 Removes one Atlas Search index that you identified with its unique ID.
 
-To use this resource, the requesting API Key must have the Project Data Access Admin role.
+Removes one Atlas Search index that you identified with its unique ID. To use this resource, the requesting API Key must have the Project Data Access Admin role.
 
 Syntax
 ------

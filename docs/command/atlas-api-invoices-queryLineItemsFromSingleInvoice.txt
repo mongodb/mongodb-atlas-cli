@@ -14,7 +14,7 @@ atlas api invoices queryLineItemsFromSingleInvoice
 
 Query the lineItems of the specified invoice and return the result JSON.
 
-A unique 24-hexadecimal digit string identifies the invoice.
+Query the lineItems of the specified invoice and return the result JSON. A unique 24-hexadecimal digit string identifies the invoice.
 
 Syntax
 ------

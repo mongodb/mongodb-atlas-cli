@@ -14,7 +14,7 @@ atlas api legacyBackup listLegacyBackupCheckpoints
 
 Returns all legacy backup checkpoints for one cluster in the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns all legacy backup checkpoints for one cluster in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api atlasSearch updateAtlasSearchIndexDeprecated
 
 Updates one Atlas Search index that you identified with its unique ID.
 
-Atlas Search indexes define the fields on which to create the index and the analyzers to use when creating the index. To use this resource, the requesting API Key must have the Project Data Access Admin role.
+Updates one Atlas Search index that you identified with its unique ID. Atlas Search indexes define the fields on which to create the index and the analyzers to use when creating the index. To use this resource, the requesting API Key must have the Project Data Access Admin role.
 
 Syntax
 ------

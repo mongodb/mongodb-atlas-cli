@@ -14,7 +14,7 @@ atlas api maintenanceWindows toggleMaintenanceAutoDefer
 
 Toggles automatic deferral of the maintenance window for the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Toggles automatic deferral of the maintenance window for the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

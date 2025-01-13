@@ -14,7 +14,7 @@ atlas api programmaticApiKeys listApiKeyAccessListsEntries
 
 Returns all access list entries that you configured for the specified organization API key.
 
-To use this resource, the requesting API Key must have the Organization Member role.
+Returns all access list entries that you configured for the specified organization API key. To use this resource, the requesting API Key must have the Organization Member role.
 
 Syntax
 ------

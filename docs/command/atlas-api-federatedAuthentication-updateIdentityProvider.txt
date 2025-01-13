@@ -14,7 +14,10 @@ atlas api federatedAuthentication updateIdentityProvider
 
 Updates one identity provider in the specified federation.
 
-To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations. Note: Changing authorization types and/or updating authorization claims can prevent current users and/or groups from accessing the database.
+Updates one identity provider in the specified federation. To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations.
+
+
+Note: Changing authorization types and/or updating authorization claims can prevent current users and/or groups from accessing the database.
 
 Syntax
 ------

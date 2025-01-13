@@ -14,7 +14,7 @@ atlas api monitoringAndLogs listDiskPartitions
 
 Returns the list of disks or partitions for the specified host for the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns the list of disks or partitions for the specified host for the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

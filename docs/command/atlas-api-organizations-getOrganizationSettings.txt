@@ -14,7 +14,7 @@ atlas api organizations getOrganizationSettings
 
 Returns details about the specified organization's settings.
 
-To use this resource, the requesting API Key must have the Organization Owner role.
+Returns details about the specified organization's settings. To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

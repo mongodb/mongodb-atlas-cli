@@ -14,7 +14,7 @@ atlas api serverlessInstances createServerlessInstance
 
 Creates one serverless instance in the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Creates one serverless instance in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

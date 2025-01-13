@@ -14,7 +14,10 @@ atlas api alertConfigurations listAlertConfigurationsByAlertId
 
 Returns all alert configurations set for the specified alert.
 
-To use this resource, the requesting API Key must have the Project Read Only role. This resource remains under revision and may change.
+Returns all alert configurations set for the specified alert. To use this resource, the requesting API Key must have the Project Read Only role.
+
+
+This resource remains under revision and may change.
 
 Syntax
 ------

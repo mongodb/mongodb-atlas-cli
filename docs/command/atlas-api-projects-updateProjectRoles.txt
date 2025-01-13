@@ -14,7 +14,7 @@ atlas api projects updateProjectRoles
 
 Updates the roles of the specified user in the specified project.
 
-To specify the user to update, provide the unique 24-hexadecimal digit string that identifies the user in the specified project. To use this resource, the requesting API Key must have the Group User Admin role.
+Updates the roles of the specified user in the specified project. To specify the user to update, provide the unique 24-hexadecimal digit string that identifies the user in the specified project. To use this resource, the requesting API Key must have the Group User Admin role.
 
 Syntax
 ------

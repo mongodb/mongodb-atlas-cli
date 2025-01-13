@@ -14,7 +14,7 @@ atlas api globalClusters createManagedNamespace
 
 Creates one managed namespace within the specified global cluster.
 
-A managed namespace identifies a collection using the database name, the dot separator, and the collection name. To use this resource, the requesting API Key must have the Project Data Access Admin role.
+Creates one managed namespace within the specified global cluster. A managed namespace identifies a collection using the database name, the dot separator, and the collection name. To use this resource, the requesting API Key must have the Project Data Access Admin role.
 
 Syntax
 ------

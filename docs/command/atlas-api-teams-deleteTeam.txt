@@ -14,7 +14,7 @@ atlas api teams deleteTeam
 
 Removes one team specified using its unique 24-hexadecimal digit identifier from the organization specified using its unique 24-hexadecimal digit identifier.
 
-To use this resource, the requesting API Key must have the Organization Owner role.
+Removes one team specified using its unique 24-hexadecimal digit identifier from the organization specified using its unique 24-hexadecimal digit identifier. To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

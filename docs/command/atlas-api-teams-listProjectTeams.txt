@@ -14,7 +14,7 @@ atlas api teams listProjectTeams
 
 Returns all teams to which the authenticated user has access in the project specified using its unique 24-hexadecimal digit identifier.
 
-All members of the team share the same project access. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns all teams to which the authenticated user has access in the project specified using its unique 24-hexadecimal digit identifier. All members of the team share the same project access. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

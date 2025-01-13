@@ -14,7 +14,7 @@ atlas api networkPeering getPeeringConnection
 
 Returns details about one specified network peering connection in the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns details about one specified network peering connection in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

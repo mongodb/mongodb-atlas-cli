@@ -14,7 +14,7 @@ atlas api projects createProjectInvitation
 
 Invites one MongoDB Cloud user to join the specified project.
 
-The MongoDB Cloud user must accept the invitation to access information within the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+Invites one MongoDB Cloud user to join the specified project. The MongoDB Cloud user must accept the invitation to access information within the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

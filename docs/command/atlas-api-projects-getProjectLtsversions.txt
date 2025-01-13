@@ -14,6 +14,8 @@ atlas api projects getProjectLtsVersions
 
 Returns the MongoDB Long Term Support Major Versions available to new clusters in this project.
 
+Returns the MongoDB Long Term Support Major Versions available to new clusters in this project.
+
 Syntax
 ------
 

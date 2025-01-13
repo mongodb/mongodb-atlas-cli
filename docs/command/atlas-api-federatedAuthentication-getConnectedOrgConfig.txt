@@ -14,7 +14,7 @@ atlas api federatedAuthentication getConnectedOrgConfig
 
 Returns the specified connected org config from the specified federation.
 
-To use this resource, the requesting API Key must have the Organization Owner role in the connected org.
+Returns the specified connected org config from the specified federation. To use this resource, the requesting API Key must have the Organization Owner role in the connected org.
 
 Syntax
 ------

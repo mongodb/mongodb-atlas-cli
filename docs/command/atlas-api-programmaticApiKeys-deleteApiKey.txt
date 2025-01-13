@@ -14,7 +14,7 @@ atlas api programmaticApiKeys deleteApiKey
 
 Removes one organization API key from the specified organization.
 
-When you remove an API key from an organization, MongoDB Cloud also removes that key from any projects that use that key. To use this resource, the requesting API Key must have the Organization Owner role.
+Removes one organization API key from the specified organization. When you remove an API key from an organization, MongoDB Cloud also removes that key from any projects that use that key. To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

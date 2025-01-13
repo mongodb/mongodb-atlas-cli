@@ -14,6 +14,8 @@ atlas api atlasSearch getAtlasSearchDeployment
 
 Return the Search Nodes for the specified cluster.
 
+Return the Search Nodes for the specified cluster.
+
 Syntax
 ------
 

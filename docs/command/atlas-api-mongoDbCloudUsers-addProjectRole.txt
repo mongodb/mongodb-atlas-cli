@@ -14,7 +14,10 @@ atlas api mongoDbCloudUsers addProjectRole
 
 Adds one project-level role to the MongoDB Cloud user.
 
-You can add a role to an active user or a user that has been invited to join the project. To use this resource, the requesting API Key must have the Project Owner role. Note: This resource cannot be used to add a role to users invited using the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.
+Adds one project-level role to the MongoDB Cloud user. You can add a role to an active user or a user that has been invited to join the project. To use this resource, the requesting API Key must have the Project Owner role.
+
+
+Note: This resource cannot be used to add a role to users invited using the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.
 
 Syntax
 ------

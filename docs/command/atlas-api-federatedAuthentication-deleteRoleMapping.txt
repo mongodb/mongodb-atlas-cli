@@ -14,7 +14,7 @@ atlas api federatedAuthentication deleteRoleMapping
 
 Removes one role mapping in the specified organization from the specified federation.
 
-To use this resource, the requesting API Key must have the Organization Owner role.
+Removes one role mapping in the specified organization from the specified federation. To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

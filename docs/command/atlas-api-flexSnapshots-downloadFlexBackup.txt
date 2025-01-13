@@ -14,7 +14,7 @@ atlas api flexSnapshots downloadFlexBackup
 
 Requests one snapshot for the specified flex cluster.
 
-This resource returns a snapshotURL that you can use to download the snapshot. This snapshotURL remains active for four hours after you make the request. To use this resource, the requesting API Key must have the Project Owner role.
+Requests one snapshot for the specified flex cluster. This resource returns a snapshotURL that you can use to download the snapshot. This snapshotURL remains active for four hours after you make the request. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

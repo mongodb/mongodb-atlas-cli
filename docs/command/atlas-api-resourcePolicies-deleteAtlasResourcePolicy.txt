@@ -14,6 +14,8 @@ atlas api resourcePolicies deleteAtlasResourcePolicy
 
 Delete one Atlas Resource Policy for an org.
 
+Delete one Atlas Resource Policy for an org.
+
 Syntax
 ------
 

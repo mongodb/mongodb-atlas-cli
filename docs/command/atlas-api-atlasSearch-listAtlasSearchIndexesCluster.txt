@@ -14,7 +14,7 @@ atlas api atlasSearch listAtlasSearchIndexesCluster
 
 Returns all Atlas Search indexes on the specified cluster.
 
-Atlas Search indexes contain the indexed fields and the analyzers used to create the indexes. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
+Returns all Atlas Search indexes on the specified cluster. Atlas Search indexes contain the indexed fields and the analyzers used to create the indexes. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
 
 Syntax
 ------

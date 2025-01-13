@@ -14,7 +14,7 @@ atlas api projects createProject
 
 Creates one project.
 
-Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, tags, and alert settings. To use this resource, the requesting API Key must have the Read Write role.
+Creates one project. Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, tags, and alert settings. To use this resource, the requesting API Key must have the Read Write role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api monitoringAndLogs listDiskMeasurements
 
 Returns measurement details for one disk or partition for the specified host for the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns measurement details for one disk or partition for the specified host for the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

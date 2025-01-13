@@ -14,7 +14,7 @@ atlas api collectionLevelMetrics
 
 Returns, adds, and edits pinned namespaces for the specified cluster or process.
 
-Also returns collection level latency metric data.
+Returns, adds, and edits pinned namespaces for the specified cluster or process. Also returns collection level latency metric data.
 
 Options
 -------

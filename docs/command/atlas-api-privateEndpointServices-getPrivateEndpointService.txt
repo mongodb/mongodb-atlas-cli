@@ -14,7 +14,7 @@ atlas api privateEndpointServices getPrivateEndpointService
 
 Returns the name, interfaces, and state of the specified private endpoint service from one project.
 
-The cloud service provider hosted this private endpoint service that belongs to the project. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns the name, interfaces, and state of the specified private endpoint service from one project. The cloud service provider hosted this private endpoint service that belongs to the project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

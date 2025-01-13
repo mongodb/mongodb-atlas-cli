@@ -14,7 +14,7 @@ atlas api dataFederation deleteFederatedDatabase
 
 Removes one federated database instance from the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles.
+Removes one federated database instance from the specified project. To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles.
 
 Syntax
 ------

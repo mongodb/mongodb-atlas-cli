@@ -14,7 +14,7 @@ atlas api networkPeering getPeeringContainer
 
 Returns details about one network peering container in one specified project.
 
-Network peering containers contain network peering connections. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns details about one network peering container in one specified project. Network peering containers contain network peering connections. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

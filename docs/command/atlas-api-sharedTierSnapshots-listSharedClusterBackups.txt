@@ -14,7 +14,7 @@ atlas api sharedTierSnapshots listSharedClusterBackups
 
 Returns details for all snapshots for the specified shared cluster.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns details for all snapshots for the specified shared cluster. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

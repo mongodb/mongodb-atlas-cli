@@ -14,7 +14,7 @@ atlas api cloudBackups cancelBackupRestoreJob
 
 Cancels one cloud backup restore job of one cluster from the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Cancels one cloud backup restore job of one cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

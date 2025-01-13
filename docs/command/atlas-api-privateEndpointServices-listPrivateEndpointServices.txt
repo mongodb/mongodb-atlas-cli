@@ -14,7 +14,7 @@ atlas api privateEndpointServices listPrivateEndpointServices
 
 Returns the name, interfaces, and state of all private endpoint services for the specified cloud service provider.
 
-This cloud service provider manages the private endpoint service for the project. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns the name, interfaces, and state of all private endpoint services for the specified cloud service provider. This cloud service provider manages the private endpoint service for the project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

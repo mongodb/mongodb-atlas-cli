@@ -14,7 +14,7 @@ atlas api privateEndpointServices getRegionalizedPrivateEndpointSetting
 
 Checks whether each region in the specified cloud service provider can create multiple private endpoints per region.
 
-The cloud service provider manages the private endpoint for the project. To use this resource, the requesting API Key must have the Project Read Only role.
+Checks whether each region in the specified cloud service provider can create multiple private endpoints per region. The cloud service provider manages the private endpoint for the project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

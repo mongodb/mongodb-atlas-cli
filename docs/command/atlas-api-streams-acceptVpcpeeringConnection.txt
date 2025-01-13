@@ -14,6 +14,8 @@ atlas api streams acceptVpcPeeringConnection
 
 Requests the acceptance of an incoming VPC Peering connection.
 
+Requests the acceptance of an incoming VPC Peering connection.
+
 Syntax
 ------
 

@@ -14,7 +14,10 @@ atlas api alertConfigurations getAlertConfiguration
 
 Returns the specified alert configuration from the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role. This resource remains under revision and may change.
+Returns the specified alert configuration from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
+
+
+This resource remains under revision and may change.
 
 Syntax
 ------

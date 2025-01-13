@@ -14,7 +14,7 @@ atlas api programmaticApiKeys removeProjectApiKey
 
 Removes one organization API key from the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Removes one organization API key from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

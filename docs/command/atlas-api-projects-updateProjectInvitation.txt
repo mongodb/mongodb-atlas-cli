@@ -14,7 +14,7 @@ atlas api projects updateProjectInvitation
 
 Updates the details of one pending invitation to the specified project.
 
-To specify which invitation to update, provide the username of the invited user. To use this resource, the requesting API Key must have the Project Owner role.
+Updates the details of one pending invitation to the specified project. To specify which invitation to update, provide the username of the invited user. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api cloudBackups
 
 Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules.
 
-This resource applies only to clusters that use Cloud Backups.
+Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules. This resource applies only to clusters that use Cloud Backups.
 
 Options
 -------

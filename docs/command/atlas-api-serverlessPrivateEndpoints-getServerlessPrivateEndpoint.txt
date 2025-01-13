@@ -14,7 +14,7 @@ atlas api serverlessPrivateEndpoints getServerlessPrivateEndpoint
 
 Return one private endpoint for one serverless instance.
 
-Identify this endpoint using its unique ID. You must have at least the Project Read Only role for the project to successfully call this resource.
+Return one private endpoint for one serverless instance. Identify this endpoint using its unique ID. You must have at least the Project Read Only role for the project to successfully call this resource.
 
 Syntax
 ------

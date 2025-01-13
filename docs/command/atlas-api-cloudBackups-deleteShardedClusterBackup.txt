@@ -14,7 +14,7 @@ atlas api cloudBackups deleteShardedClusterBackup
 
 Removes one snapshot of one sharded cluster from the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Removes one snapshot of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api flexSnapshots getFlexBackup
 
 Returns one snapshot of one flex cluster from the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns one snapshot of one flex cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

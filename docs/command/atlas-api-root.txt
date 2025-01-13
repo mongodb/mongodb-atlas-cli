@@ -14,7 +14,7 @@ atlas api root
 
 Returns details that describe the MongoDB Cloud build and the access token that requests this resource.
 
-This starts the MongoDB Cloud API.
+Returns details that describe the MongoDB Cloud build and the access token that requests this resource. This starts the MongoDB Cloud API.
 
 Options
 -------

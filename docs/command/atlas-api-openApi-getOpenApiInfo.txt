@@ -14,6 +14,8 @@ atlas api openApi getOpenApiInfo
 
 This resource returns general information about the MongoDB Atlas Administration API OpenAPI Specification.
 
+This resource returns general information about the MongoDB Atlas Administration API OpenAPI Specification.
+
 Syntax
 ------
 

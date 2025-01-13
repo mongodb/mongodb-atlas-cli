@@ -14,7 +14,7 @@ atlas api projectIpAccessList getProjectIpAccessListStatus
 
 Returns the status of one project IP access list entry.
 
-This resource checks if the provided project IP access list entry applies to all cloud providers serving clusters from the specified project.
+Returns the status of one project IP access list entry. This resource checks if the provided project IP access list entry applies to all cloud providers serving clusters from the specified project.
 
 Syntax
 ------

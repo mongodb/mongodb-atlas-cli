@@ -14,7 +14,7 @@ atlas api flexClusters deleteFlexCluster
 
 Removes one flex cluster from the specified project.
 
-The flex cluster must have termination protection disabled in order to be deleted. To use this resource, the requesting API Key must have the Project Owner role.
+Removes one flex cluster from the specified project. The flex cluster must have termination protection disabled in order to be deleted. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

@@ -14,6 +14,8 @@ atlas api clusterOutageSimulation endOutageSimulation
 
 Ends a cluster outage simulation.
 
+Ends a cluster outage simulation.
+
 Syntax
 ------
 

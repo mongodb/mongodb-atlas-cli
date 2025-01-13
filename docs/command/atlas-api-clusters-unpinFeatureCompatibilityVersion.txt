@@ -14,7 +14,7 @@ atlas api clusters unpinFeatureCompatibilityVersion
 
 Unpins the current fixed Feature Compatibility Version (FCV).
 
-This feature is not available for clusters on rapid release.
+Unpins the current fixed Feature Compatibility Version (FCV). This feature is not available for clusters on rapid release.
 
 Syntax
 ------

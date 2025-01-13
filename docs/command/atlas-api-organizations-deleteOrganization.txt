@@ -14,11 +14,15 @@ atlas api organizations deleteOrganization
 
 Removes one specified organization.
 
-MongoDB Cloud imposes the following limits on this resource:
+Removes one specified organization. MongoDB Cloud imposes the following limits on this resource:
 
 
 
-Organizations with active projects cannot be removed. All projects in the organization must be removed before you can remove the organization. To use this resource, the requesting API Key must have the Organization Owner role.
+Organizations with active projects cannot be removed.
+
+
+All projects in the organization must be removed before you can remove the organization.
+To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

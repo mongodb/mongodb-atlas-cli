@@ -14,7 +14,7 @@ atlas api projects removeProjectUser
 
 Removes the specified user from the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Removes the specified user from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

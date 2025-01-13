@@ -14,6 +14,8 @@ atlas api root getSystemStatus
 
 This resource returns information about the MongoDB application along with API key meta data.
 
+This resource returns information about the MongoDB application along with API key meta data.
+
 Syntax
 ------
 

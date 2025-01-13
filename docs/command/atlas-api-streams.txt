@@ -14,7 +14,7 @@ atlas api streams
 
 Returns, adds, edits, and removes Streams Instances.
 
-This resource requires your project ID.
+Returns, adds, edits, and removes Streams Instances. This resource requires your project ID.
 
 Options
 -------

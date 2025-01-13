@@ -14,7 +14,7 @@ atlas api privateEndpointServices deletePrivateEndpointService
 
 Removes one private endpoint service from the specified project.
 
-This cloud service provider manages the private endpoint service that belongs to the project. To use this resource, the requesting API Key must have the Project Owner role.
+Removes one private endpoint service from the specified project. This cloud service provider manages the private endpoint service that belongs to the project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api clusters listCloudProviderRegions
 
 Returns the list of regions available for the specified cloud provider at the specified tier.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns the list of regions available for the specified cloud provider at the specified tier. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

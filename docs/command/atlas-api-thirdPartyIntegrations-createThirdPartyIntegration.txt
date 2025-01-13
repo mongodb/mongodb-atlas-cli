@@ -14,7 +14,7 @@ atlas api thirdPartyIntegrations createThirdPartyIntegration
 
 Adds the settings for configuring one third-party service integration.
 
-These settings apply to all databases managed in the specified MongoDB Cloud project. Each project can have only one configuration per {INTEGRATION-TYPE}. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role.
+Adds the settings for configuring one third-party service integration. These settings apply to all databases managed in the specified MongoDB Cloud project. Each project can have only one configuration per {INTEGRATION-TYPE}. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role.
 
 Syntax
 ------

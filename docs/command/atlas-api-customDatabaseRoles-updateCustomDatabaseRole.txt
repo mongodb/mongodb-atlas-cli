@@ -14,7 +14,7 @@ atlas api customDatabaseRoles updateCustomDatabaseRole
 
 Updates one custom role in the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Updates one custom role in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

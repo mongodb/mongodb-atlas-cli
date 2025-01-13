@@ -14,7 +14,7 @@ atlas api clusters upgradeSharedClusterToServerless
 
 Upgrades a shared-tier cluster to a serverless instance in the specified project.
 
-To use this resource, the requesting API key must have the Project Cluster Manager role.
+Upgrades a shared-tier cluster to a serverless instance in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.
 
 Syntax
 ------

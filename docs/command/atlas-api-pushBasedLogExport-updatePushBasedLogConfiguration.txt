@@ -14,6 +14,8 @@ atlas api pushBasedLogExport updatePushBasedLogConfiguration
 
 Updates the project level settings for the push-based log export feature.
 
+Updates the project level settings for the push-based log export feature.
+
 Syntax
 ------
 

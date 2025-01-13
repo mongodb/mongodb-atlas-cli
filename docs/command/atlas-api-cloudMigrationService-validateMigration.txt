@@ -14,7 +14,7 @@ atlas api cloudMigrationService validateMigration
 
 Verifies whether the provided credentials, available disk space, MongoDB versions, and so on meet the requirements of the migration request.
 
-If the check passes, the migration can proceed. Your API Key must have the Organization Owner role to successfully call this resource.
+Verifies whether the provided credentials, available disk space, MongoDB versions, and so on meet the requirements of the migration request. If the check passes, the migration can proceed. Your API Key must have the Organization Owner role to successfully call this resource.
 
 Syntax
 ------

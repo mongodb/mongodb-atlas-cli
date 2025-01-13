@@ -14,6 +14,8 @@ atlas api streams deleteVpcPeeringConnection
 
 Deletes an incoming VPC Peering connection.
 
+Deletes an incoming VPC Peering connection.
+
 Syntax
 ------
 

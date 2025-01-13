@@ -14,7 +14,7 @@ atlas api projects getProjectSettings
 
 Returns details about the specified project's settings.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns details about the specified project's settings. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

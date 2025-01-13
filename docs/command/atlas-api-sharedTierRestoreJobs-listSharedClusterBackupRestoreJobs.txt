@@ -14,7 +14,7 @@ atlas api sharedTierRestoreJobs listSharedClusterBackupRestoreJobs
 
 Returns all restore jobs for the specified M2 or M5 cluster.
 
-Restore jobs restore a cluster using a snapshot. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns all restore jobs for the specified M2 or M5 cluster. Restore jobs restore a cluster using a snapshot. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

@@ -14,6 +14,8 @@ atlas api cloudMigrationService listSourceProjects
 
 Return all projects that you can migrate to the specified organization.
 
+Return all projects that you can migrate to the specified organization.
+
 Syntax
 ------
 

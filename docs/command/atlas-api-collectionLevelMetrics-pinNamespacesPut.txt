@@ -14,7 +14,7 @@ atlas api collectionLevelMetrics pinNamespacesPut
 
 Pin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster.
 
-This initializes a pinned namespaces list or replaces any existing pinned namespaces list for the Group and Cluster.
+Pin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster. This initializes a pinned namespaces list or replaces any existing pinned namespaces list for the Group and Cluster.
 
 Syntax
 ------

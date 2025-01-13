@@ -14,7 +14,7 @@ atlas api dataLakePipelines listPipelines
 
 Returns a list of Data Lake Pipelines.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns a list of Data Lake Pipelines. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

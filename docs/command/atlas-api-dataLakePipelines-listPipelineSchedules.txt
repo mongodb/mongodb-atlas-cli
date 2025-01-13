@@ -14,7 +14,7 @@ atlas api dataLakePipelines listPipelineSchedules
 
 Returns a list of backup schedule policy items that you can use as a Data Lake Pipeline source.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns a list of backup schedule policy items that you can use as a Data Lake Pipeline source. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

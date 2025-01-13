@@ -14,7 +14,7 @@ atlas api thirdPartyIntegrations getThirdPartyIntegration
 
 Returns the settings for configuring integration with one third-party service.
 
-These settings apply to all databases managed in one MongoDB Cloud project. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role.
+Returns the settings for configuring integration with one third-party service. These settings apply to all databases managed in one MongoDB Cloud project. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role.
 
 Syntax
 ------

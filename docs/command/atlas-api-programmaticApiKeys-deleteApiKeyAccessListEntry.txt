@@ -14,7 +14,7 @@ atlas api programmaticApiKeys deleteApiKeyAccessListEntry
 
 Removes the specified access list entry from the specified organization API key.
 
-Resources require all API requests originate from the IP addresses on the API access list. To use this resource, the requesting API Key must have the Read Write role. In addition, you cannot remove the requesting IP address from the requesting organization API key.
+Removes the specified access list entry from the specified organization API key. Resources require all API requests originate from the IP addresses on the API access list. To use this resource, the requesting API Key must have the Read Write role. In addition, you cannot remove the requesting IP address from the requesting organization API key.
 
 Syntax
 ------

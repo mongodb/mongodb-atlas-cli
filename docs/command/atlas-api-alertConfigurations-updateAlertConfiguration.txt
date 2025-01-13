@@ -14,7 +14,13 @@ atlas api alertConfigurations updateAlertConfiguration
 
 Updates one alert configuration in the specified project.
 
-Alert configurations define the triggers and notification methods for alerts. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role. NOTE: To enable or disable the alert configuration, see Toggle One State of One Alert Configuration in One Project. This resource remains under revision and may change.
+Updates one alert configuration in the specified project. Alert configurations define the triggers and notification methods for alerts. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role.
+
+
+NOTE: To enable or disable the alert configuration, see Toggle One State of One Alert Configuration in One Project.
+
+
+This resource remains under revision and may change.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api streams createStreamInstance
 
 Creates one stream instance in the specified project.
 
-To use this resource, the requesting API Key must have the Project Data Access Admin role, Project Owner role or Project Stream Processing Owner role.
+Creates one stream instance in the specified project. To use this resource, the requesting API Key must have the Project Data Access Admin role, Project Owner role or Project Stream Processing Owner role.
 
 Syntax
 ------

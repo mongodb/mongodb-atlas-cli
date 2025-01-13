@@ -14,7 +14,7 @@ atlas api performanceAdvisor listSuggestedIndexes
 
 Returns the indexes that the Performance Advisor suggests.
 
-The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns the indexes that the Performance Advisor suggests. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

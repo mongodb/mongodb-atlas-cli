@@ -14,7 +14,7 @@ atlas api cloudProviderAccess listCloudProviderAccessRoles
 
 Returns all cloud provider access roles with access to the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Returns all cloud provider access roles with access to the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

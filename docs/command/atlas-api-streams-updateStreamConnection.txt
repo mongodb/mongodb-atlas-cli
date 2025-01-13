@@ -14,7 +14,7 @@ atlas api streams updateStreamConnection
 
 Update one connection for the specified stream instance in the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role or Project Stream Processing Owner role.
+Update one connection for the specified stream instance in the specified project. To use this resource, the requesting API Key must have the Project Owner role or Project Stream Processing Owner role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api organizations getOrganizationInvitation
 
 Returns the details of one pending invitation to the specified organization.
 
-To use this resource, the requesting API Key must have the Organization Owner role.
+Returns the details of one pending invitation to the specified organization. To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

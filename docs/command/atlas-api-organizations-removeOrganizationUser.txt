@@ -14,7 +14,7 @@ atlas api organizations removeOrganizationUser
 
 Removes one MongoDB Cloud user from the specified organization.
 
-To use this resource, the requesting API Key must have the Organization User Admin role.
+Removes one MongoDB Cloud user from the specified organization. To use this resource, the requesting API Key must have the Organization User Admin role.
 
 Syntax
 ------

@@ -14,7 +14,10 @@ atlas api federatedAuthentication createIdentityProvider
 
 Creates one identity provider within the specified federation.
 
-To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations. Note: This resource only supports the creation of OIDC identity providers.
+Creates one identity provider within the specified federation. To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations.
+
+
+Note: This resource only supports the creation of OIDC identity providers.
 
 Syntax
 ------

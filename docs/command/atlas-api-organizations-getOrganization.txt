@@ -14,7 +14,7 @@ atlas api organizations getOrganization
 
 Returns one organization to which the requesting API key has access.
 
-To use this resource, the requesting API Key must have the Organization Member role.
+Returns one organization to which the requesting API key has access. To use this resource, the requesting API Key must have the Organization Member role.
 
 Syntax
 ------

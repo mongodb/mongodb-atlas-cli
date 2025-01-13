@@ -14,7 +14,7 @@ atlas api cloudBackups deleteAllBackupSchedules
 
 Removes all cloud backup schedules for the specified cluster.
 
-This schedule defines when MongoDB Cloud takes scheduled snapshots and how long it stores those snapshots. To use this resource, the requesting API Key must have the Project Atlas Admin role.
+Removes all cloud backup schedules for the specified cluster. This schedule defines when MongoDB Cloud takes scheduled snapshots and how long it stores those snapshots. To use this resource, the requesting API Key must have the Project Atlas Admin role.
 
 Syntax
 ------

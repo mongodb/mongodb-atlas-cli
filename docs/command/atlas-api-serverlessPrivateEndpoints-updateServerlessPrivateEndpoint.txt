@@ -14,7 +14,7 @@ atlas api serverlessPrivateEndpoints updateServerlessPrivateEndpoint
 
 Updates one private endpoint for one serverless instance.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Updates one private endpoint for one serverless instance. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

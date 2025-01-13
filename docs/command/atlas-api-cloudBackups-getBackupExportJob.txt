@@ -14,7 +14,7 @@ atlas api cloudBackups getBackupExportJob
 
 Returns one Cloud Backup Snapshot Export Job associated with the specified Atlas cluster.
 
-To use this resource, the requesting API Key must have the Project Atlas Admin role.
+Returns one Cloud Backup Snapshot Export Job associated with the specified Atlas cluster. To use this resource, the requesting API Key must have the Project Atlas Admin role.
 
 Syntax
 ------

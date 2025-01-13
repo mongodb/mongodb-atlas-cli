@@ -14,6 +14,8 @@ atlas api organizations
 
 Returns, adds, and edits organizational units in MongoDB Cloud.
 
+Returns, adds, and edits organizational units in MongoDB Cloud.
+
 Options
 -------
 

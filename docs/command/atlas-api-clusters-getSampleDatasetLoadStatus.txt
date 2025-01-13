@@ -14,7 +14,7 @@ atlas api clusters getSampleDatasetLoadStatus
 
 Checks the progress of loading the sample dataset into one cluster.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Checks the progress of loading the sample dataset into one cluster. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

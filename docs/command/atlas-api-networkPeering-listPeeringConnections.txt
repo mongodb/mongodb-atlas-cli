@@ -14,7 +14,7 @@ atlas api networkPeering listPeeringConnections
 
 Returns details about all network peering connections in the specified project.
 
-Network peering allows multiple cloud-hosted applications to securely connect to the same project. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns details about all network peering connections in the specified project. Network peering allows multiple cloud-hosted applications to securely connect to the same project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

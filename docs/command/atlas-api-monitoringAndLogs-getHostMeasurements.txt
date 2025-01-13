@@ -14,7 +14,7 @@ atlas api monitoringAndLogs getHostMeasurements
 
 Returns disk, partition, or host measurements per process for the specified host for the specified project.
 
-Returned value can be one of the following:
+Returns disk, partition, or host measurements per process for the specified host for the specified project. Returned value can be one of the following:
 
 
 

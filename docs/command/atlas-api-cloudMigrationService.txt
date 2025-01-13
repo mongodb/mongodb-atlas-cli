@@ -14,7 +14,7 @@ atlas api cloudMigrationService
 
 Manages the Cloud Migration Service.
 
-Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can't use any authentication except SCRAM-SHA.
+Manages the Cloud Migration Service. Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can't use any authentication except SCRAM-SHA.
 
 Options
 -------

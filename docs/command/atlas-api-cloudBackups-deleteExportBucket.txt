@@ -14,7 +14,7 @@ atlas api cloudBackups deleteExportBucket
 
 Deletes an Export Bucket.
 
-Auto export must be disabled on all clusters in this Project exporting to this Export Bucket before revoking access. To use this resource, the requesting API Key must have the Project Owner role.
+Deletes an Export Bucket. Auto export must be disabled on all clusters in this Project exporting to this Export Bucket before revoking access. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

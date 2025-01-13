@@ -14,7 +14,7 @@ atlas api clusters
 
 Returns, adds, edits, and removes database deployments.
 
-Changes to cluster configurations can affect costs. This resource requires your Project ID.
+Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.
 
 Options
 -------

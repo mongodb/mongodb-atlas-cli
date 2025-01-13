@@ -14,7 +14,7 @@ atlas api serverlessPrivateEndpoints listServerlessPrivateEndpoints
 
 Returns all private endpoints for one serverless instance.
 
-You must have at least the Project Read Only role for the project to successfully call this resource.
+Returns all private endpoints for one serverless instance. You must have at least the Project Read Only role for the project to successfully call this resource.
 
 Syntax
 ------

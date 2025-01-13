@@ -14,6 +14,8 @@ atlas api cloudBackups updateSnapshotRetention
 
 Changes the expiration date for one cloud backup snapshot for one cluster in the specified project.
 
+Changes the expiration date for one cloud backup snapshot for one cluster in the specified project.
+
 Syntax
 ------
 

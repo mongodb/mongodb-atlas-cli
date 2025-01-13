@@ -14,7 +14,7 @@ atlas api clusters loadSampleDataset
 
 Requests loading the MongoDB sample dataset into the specified cluster.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Requests loading the MongoDB sample dataset into the specified cluster. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

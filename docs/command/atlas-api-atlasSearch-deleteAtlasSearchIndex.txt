@@ -14,7 +14,7 @@ atlas api atlasSearch deleteAtlasSearchIndex
 
 Removes one Atlas Search index that you identified with its unique ID.
 
-To use this resource, the requesting API key must have the Project Data Access Admin role. This deletion is eventually consistent.
+Removes one Atlas Search index that you identified with its unique ID. To use this resource, the requesting API key must have the Project Data Access Admin role. This deletion is eventually consistent.
 
 Syntax
 ------

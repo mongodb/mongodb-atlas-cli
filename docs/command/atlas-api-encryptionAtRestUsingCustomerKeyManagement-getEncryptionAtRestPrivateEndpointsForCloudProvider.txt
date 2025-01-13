@@ -14,6 +14,8 @@ atlas api encryptionAtRestUsingCustomerKeyManagement getEncryptionAtRestPrivateE
 
 Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
 
+Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
+
 Syntax
 ------
 

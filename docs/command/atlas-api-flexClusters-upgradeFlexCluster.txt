@@ -14,7 +14,7 @@ atlas api flexClusters upgradeFlexCluster
 
 Upgrades a flex cluster to a dedicated cluster (M10+) in the specified project.
 
-To use this resource, the requesting API key must have the Project Cluster Manager role.
+Upgrades a flex cluster to a dedicated cluster (M10+) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.
 
 Syntax
 ------

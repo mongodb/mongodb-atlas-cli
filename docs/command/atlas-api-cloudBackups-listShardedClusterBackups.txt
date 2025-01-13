@@ -14,7 +14,7 @@ atlas api cloudBackups listShardedClusterBackups
 
 Returns all snapshots of one sharded cluster from the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns all snapshots of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api atlasSearch getAtlasSearchIndexByName
 
 Returns one Atlas Search index in the specified project.
 
-You identify this index using its database, collection and name. Atlas Search index contains the indexed fields and the analyzers used to create the index. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
+Returns one Atlas Search index in the specified project. You identify this index using its database, collection and name. Atlas Search index contains the indexed fields and the analyzers used to create the index. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api cloudBackups createServerlessBackupRestoreJob
 
 Restores one snapshot of one serverless instance from the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Restores one snapshot of one serverless instance from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

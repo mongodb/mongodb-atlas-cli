@@ -14,7 +14,7 @@ atlas api onlineArchive listOnlineArchives
 
 Returns details of all online archives.
 
-This archive stores data from one cluster within one project. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns details of all online archives. This archive stores data from one cluster within one project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

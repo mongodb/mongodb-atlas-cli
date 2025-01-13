@@ -14,7 +14,7 @@ atlas api streams deleteStreamProcessor
 
 Delete a Stream Processor within the specified stream instance.
 
-To use this resource, the requesting API Key must have the Project Owner role or Project Stream Processing Owner role.
+Delete a Stream Processor within the specified stream instance. To use this resource, the requesting API Key must have the Project Owner role or Project Stream Processing Owner role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api clusters pinFeatureCompatibilityVersion
 
 Pins the Feature Compatibility Version (FCV) to the current MongoDB version and sets the pin expiration date.
 
-If an FCV pin already exists for the cluster, calling this method will only update the expiration date of the existing pin and will not repin the FCV.
+Pins the Feature Compatibility Version (FCV) to the current MongoDB version and sets the pin expiration date. If an FCV pin already exists for the cluster, calling this method will only update the expiration date of the existing pin and will not repin the FCV.
 
 Syntax
 ------

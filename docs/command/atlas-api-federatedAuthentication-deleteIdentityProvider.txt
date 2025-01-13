@@ -14,7 +14,10 @@ atlas api federatedAuthentication deleteIdentityProvider
 
 Deletes one identity provider in the specified federation.
 
-To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations. Note: Requests to this resource will fail if the identity provider has any connected organizations. Before deleting an identity provider, disconnect all organizations and confirm that no organization in your account uses this identity provider. To learn more, see Manage Organization Mapping for Federated Authentication.
+Deletes one identity provider in the specified federation. To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations.
+
+
+Note: Requests to this resource will fail if the identity provider has any connected organizations. Before deleting an identity provider, disconnect all organizations and confirm that no organization in your account uses this identity provider. To learn more, see Manage Organization Mapping for Federated Authentication.
 
 Syntax
 ------

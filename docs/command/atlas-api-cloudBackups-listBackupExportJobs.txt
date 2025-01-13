@@ -14,7 +14,7 @@ atlas api cloudBackups listBackupExportJobs
 
 Returns all Cloud Backup Snapshot Export Jobs associated with the specified Atlas cluster.
 
-To use this resource, the requesting API Key must have the Project Atlas Admin role.
+Returns all Cloud Backup Snapshot Export Jobs associated with the specified Atlas cluster. To use this resource, the requesting API Key must have the Project Atlas Admin role.
 
 Syntax
 ------

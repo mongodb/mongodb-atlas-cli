@@ -14,7 +14,7 @@ atlas api streams getStreamInstance
 
 Returns the details of one stream instance within the specified project.
 
-To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
+Returns the details of one stream instance within the specified project. To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
 
 Syntax
 ------

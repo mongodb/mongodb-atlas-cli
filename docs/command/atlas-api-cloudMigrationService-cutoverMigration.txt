@@ -14,7 +14,7 @@ atlas api cloudMigrationService cutoverMigration
 
 Cut over the migrated cluster to MongoDB Atlas.
 
-Confirm when the cut over completes. When the cut over completes, MongoDB Atlas completes the live migration process and stops synchronizing with the source cluster. Your API Key must have the Organization Owner role to successfully call this resource.
+Cut over the migrated cluster to MongoDB Atlas. Confirm when the cut over completes. When the cut over completes, MongoDB Atlas completes the live migration process and stops synchronizing with the source cluster. Your API Key must have the Organization Owner role to successfully call this resource.
 
 Syntax
 ------

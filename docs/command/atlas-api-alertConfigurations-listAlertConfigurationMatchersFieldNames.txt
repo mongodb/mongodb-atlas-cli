@@ -14,7 +14,7 @@ atlas api alertConfigurations listAlertConfigurationMatchersFieldNames
 
 Get all field names that the matchers.fieldName parameter accepts when you create or update an Alert Configuration.
 
-You can successfully call this endpoint with any assigned role.
+Get all field names that the matchers.fieldName parameter accepts when you create or update an Alert Configuration. You can successfully call this endpoint with any assigned role.
 
 Syntax
 ------

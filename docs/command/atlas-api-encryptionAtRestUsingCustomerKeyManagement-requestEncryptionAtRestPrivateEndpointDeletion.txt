@@ -14,6 +14,8 @@ atlas api encryptionAtRestUsingCustomerKeyManagement requestEncryptionAtRestPriv
 
 Deletes one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
 
+Deletes one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
+
 Syntax
 ------
 

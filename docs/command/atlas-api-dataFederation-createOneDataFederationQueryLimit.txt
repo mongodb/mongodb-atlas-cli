@@ -14,7 +14,7 @@ atlas api dataFederation createOneDataFederationQueryLimit
 
 Creates or updates one query limit for one federated database instance.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Creates or updates one query limit for one federated database instance. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

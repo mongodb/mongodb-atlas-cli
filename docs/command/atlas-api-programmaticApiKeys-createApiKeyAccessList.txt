@@ -14,7 +14,7 @@ atlas api programmaticApiKeys createApiKeyAccessList
 
 Creates the access list entries for the specified organization API key.
 
-Resources require all API requests originate from IP addresses on the API access list. To use this resource, the requesting API Key must have the Read Write role.
+Creates the access list entries for the specified organization API key. Resources require all API requests originate from IP addresses on the API access list. To use this resource, the requesting API Key must have the Read Write role.
 
 Syntax
 ------

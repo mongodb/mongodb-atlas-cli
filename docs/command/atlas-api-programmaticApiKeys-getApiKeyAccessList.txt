@@ -14,7 +14,7 @@ atlas api programmaticApiKeys getApiKeyAccessList
 
 Returns one access list entry for the specified organization API key.
 
-Resources require  all API requests originate from IP addresses on the API access list. To use this resource, the requesting API Key must have the Organization Member role.
+Returns one access list entry for the specified organization API key. Resources require  all API requests originate from IP addresses on the API access list. To use this resource, the requesting API Key must have the Organization Member role.
 
 Syntax
 ------

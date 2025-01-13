@@ -14,7 +14,7 @@ atlas api monitoringAndLogs listAtlasProcesses
 
 Returns details of all processes for the specified project.
 
-A MongoDB process can be either a mongod or mongos. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns details of all processes for the specified project. A MongoDB process can be either a mongod or mongos. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

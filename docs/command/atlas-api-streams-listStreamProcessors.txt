@@ -14,7 +14,7 @@ atlas api streams listStreamProcessors
 
 Returns all Stream Processors within the specified stream instance.
 
-To use this resource, the requesting API Key must have the Project Owner role or Project Stream Processing Owner role.
+Returns all Stream Processors within the specified stream instance. To use this resource, the requesting API Key must have the Project Owner role or Project Stream Processing Owner role.
 
 Syntax
 ------

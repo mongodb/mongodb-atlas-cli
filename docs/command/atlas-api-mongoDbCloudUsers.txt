@@ -14,6 +14,8 @@ atlas api mongoDbCloudUsers
 
 Returns, adds, and edits MongoDB Cloud users.
 
+Returns, adds, and edits MongoDB Cloud users.
+
 Options
 -------
 

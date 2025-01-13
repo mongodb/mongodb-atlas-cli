@@ -14,7 +14,7 @@ atlas api cloudProviderAccess authorizeCloudProviderAccessRole
 
 Grants access to the specified project for the specified access role.
 
-To use this resource, the requesting API Key must have the Project Owner role. This API endpoint is one step in a procedure to create unified access for MongoDB Cloud services. This is not required for GCP service account access.
+Grants access to the specified project for the specified access role. To use this resource, the requesting API Key must have the Project Owner role. This API endpoint is one step in a procedure to create unified access for MongoDB Cloud services. This is not required for GCP service account access.
 
 Syntax
 ------

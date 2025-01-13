@@ -14,7 +14,7 @@ atlas api cloudBackups updateBackupSchedule
 
 Updates the cloud backup schedule for one cluster within the specified project.
 
-This schedule defines when MongoDB Cloud takes scheduled snapshots and how long it stores those snapshots. To use this resource, the requesting API Key must have the Project Owner role.
+Updates the cloud backup schedule for one cluster within the specified project. This schedule defines when MongoDB Cloud takes scheduled snapshots and how long it stores those snapshots. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

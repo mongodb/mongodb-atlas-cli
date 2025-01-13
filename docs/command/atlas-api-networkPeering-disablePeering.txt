@@ -14,7 +14,7 @@ atlas api networkPeering disablePeering
 
 Disables Connect via Peering Only mode for the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Disables Connect via Peering Only mode for the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

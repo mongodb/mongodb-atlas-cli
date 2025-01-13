@@ -14,7 +14,7 @@ atlas api onlineArchive createOnlineArchive
 
 Creates one online archive.
 
-This archive stores data from one cluster within one project. To use this resource, the requesting API Key must have the Project Data Access Admin role.
+Creates one online archive. This archive stores data from one cluster within one project. To use this resource, the requesting API Key must have the Project Data Access Admin role.
 
 Syntax
 ------

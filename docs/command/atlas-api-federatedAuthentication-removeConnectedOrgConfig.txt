@@ -14,7 +14,7 @@ atlas api federatedAuthentication removeConnectedOrgConfig
 
 Removes one connected organization configuration from the specified federation.
 
-To use this resource, the requesting API Key must have the Organization Owner role. Note: This request fails if only one connected organization exists in the federation.
+Removes one connected organization configuration from the specified federation. To use this resource, the requesting API Key must have the Organization Owner role. Note: This request fails if only one connected organization exists in the federation.
 
 Syntax
 ------

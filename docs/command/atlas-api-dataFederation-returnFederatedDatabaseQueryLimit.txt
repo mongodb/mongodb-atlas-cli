@@ -14,7 +14,7 @@ atlas api dataFederation returnFederatedDatabaseQueryLimit
 
 Returns the details of one query limit for the specified federated database instance in the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns the details of one query limit for the specified federated database instance in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

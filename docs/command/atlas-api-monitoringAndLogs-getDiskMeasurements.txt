@@ -14,7 +14,7 @@ atlas api monitoringAndLogs getDiskMeasurements
 
 Returns the measurements of one disk or partition for the specified host for the specified project.
 
-Returned value can be one of the following:
+Returns the measurements of one disk or partition for the specified host for the specified project. Returned value can be one of the following:
 
 
 

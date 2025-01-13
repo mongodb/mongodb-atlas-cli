@@ -14,7 +14,7 @@ atlas api databaseUsers deleteDatabaseUser
 
 Removes one database user from the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Removes one database user from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

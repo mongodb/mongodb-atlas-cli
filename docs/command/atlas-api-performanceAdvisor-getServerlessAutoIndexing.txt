@@ -14,6 +14,8 @@ atlas api performanceAdvisor getServerlessAutoIndexing
 
 Get whether the Serverless Auto Indexing feature is enabled.
 
+Get whether the Serverless Auto Indexing feature is enabled.
+
 Syntax
 ------
 

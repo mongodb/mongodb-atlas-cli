@@ -14,7 +14,7 @@ atlas api monitoringAndLogs listMetricTypes
 
 Returns all Atlas Search metric types available for one process in the specified project.
 
-You must have the Project Read Only or higher role to view the Atlas Search metric types.
+Returns all Atlas Search metric types available for one process in the specified project. You must have the Project Read Only or higher role to view the Atlas Search metric types.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api organizations createOrganizationInvitation
 
 Invites one MongoDB Cloud user to join the specified organization.
 
-The user must accept the invitation to access information within the specified organization. To use this resource, the requesting API Key must have the Organization Owner role.
+Invites one MongoDB Cloud user to join the specified organization. The user must accept the invitation to access information within the specified organization. To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

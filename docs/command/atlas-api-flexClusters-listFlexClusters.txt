@@ -14,7 +14,7 @@ atlas api flexClusters listFlexClusters
 
 Returns details for all flex clusters in the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns details for all flex clusters in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

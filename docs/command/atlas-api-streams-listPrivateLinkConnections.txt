@@ -14,6 +14,8 @@ atlas api streams listPrivateLinkConnections
 
 Returns all Private Link connections for the specified project.To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
 
+Returns all Private Link connections for the specified project.To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
+
 Syntax
 ------
 

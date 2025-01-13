@@ -14,7 +14,7 @@ atlas api databaseUsers updateDatabaseUser
 
 Updates one database user that belongs to the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles.
+Updates one database user that belongs to the specified project. To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles.
 
 Syntax
 ------

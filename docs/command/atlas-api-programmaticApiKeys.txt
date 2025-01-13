@@ -14,7 +14,7 @@ atlas api programmaticApiKeys
 
 Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API.
 
-MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.
+Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API. MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.
 
 Options
 -------

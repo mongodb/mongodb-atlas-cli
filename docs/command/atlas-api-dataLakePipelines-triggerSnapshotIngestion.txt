@@ -14,6 +14,8 @@ atlas api dataLakePipelines triggerSnapshotIngestion
 
 Triggers a Data Lake Pipeline ingestion of a specified snapshot.
 
+Triggers a Data Lake Pipeline ingestion of a specified snapshot.
+
 Syntax
 ------
 

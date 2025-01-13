@@ -14,7 +14,7 @@ atlas api organizations updateOrganizationSettings
 
 Updates the organization's settings.
 
-To use this resource, the requesting API Key must have the Organization Owner role.
+Updates the organization's settings. To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

@@ -14,6 +14,8 @@ atlas api dataLakePipelines updatePipeline
 
 Updates one Data Lake Pipeline.
 
+Updates one Data Lake Pipeline.
+
 Syntax
 ------
 

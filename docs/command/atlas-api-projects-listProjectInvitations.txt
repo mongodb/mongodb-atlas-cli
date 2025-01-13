@@ -14,7 +14,7 @@ atlas api projects listProjectInvitations
 
 Returns all pending invitations to the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Returns all pending invitations to the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

@@ -14,7 +14,7 @@ atlas api federatedAuthentication deleteFederationApp
 
 Deletes the federation settings instance and all associated data, including identity providers and domains.
 
-To use this resource, the requesting API Key must have the Organization Owner role in the last remaining connected organization. Note: requests to this resource will fail if there is more than one connected organization in the federation.
+Deletes the federation settings instance and all associated data, including identity providers and domains. To use this resource, the requesting API Key must have the Organization Owner role in the last remaining connected organization. Note: requests to this resource will fail if there is more than one connected organization in the federation.
 
 Syntax
 ------

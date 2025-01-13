@@ -14,7 +14,7 @@ atlas api serverlessInstances listServerlessInstances
 
 Returns details for all serverless instances in the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+Returns details for all serverless instances in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

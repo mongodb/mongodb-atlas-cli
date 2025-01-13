@@ -14,6 +14,8 @@ atlas api pushBasedLogExport createPushBasedLogConfiguration
 
 Configures the project level settings for the push-based log export feature.
 
+Configures the project level settings for the push-based log export feature.
+
 Syntax
 ------
 

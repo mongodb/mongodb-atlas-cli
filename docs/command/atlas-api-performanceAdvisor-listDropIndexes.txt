@@ -14,7 +14,7 @@ atlas api performanceAdvisor listDropIndexes
 
 Returns the indexes that the Performance Advisor suggests to drop.
 
-The Performance Advisor suggests dropping unused, redundant, and hidden indexes to improve write performance and increase storage space. To use this resource, the requesting API Key must have the Project Read Only role.
+Returns the indexes that the Performance Advisor suggests to drop. The Performance Advisor suggests dropping unused, redundant, and hidden indexes to improve write performance and increase storage space. To use this resource, the requesting API Key must have the Project Read Only role.
 
 Syntax
 ------

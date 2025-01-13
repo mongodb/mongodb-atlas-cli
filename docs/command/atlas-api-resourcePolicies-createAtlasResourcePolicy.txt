@@ -14,6 +14,8 @@ atlas api resourcePolicies createAtlasResourcePolicy
 
 Create one Atlas Resource Policy for an org.
 
+Create one Atlas Resource Policy for an org.
+
 Syntax
 ------
 

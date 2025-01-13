@@ -14,7 +14,7 @@ atlas api events
 
 Returns events.
 
-This collection remains under revision and may change.
+Returns events. This collection remains under revision and may change.
 
 Options
 -------

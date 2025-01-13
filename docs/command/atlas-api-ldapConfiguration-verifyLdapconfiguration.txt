@@ -14,7 +14,7 @@ atlas api ldapConfiguration verifyLdapConfiguration
 
 Verifies the LDAP configuration for the specified project.
 
-To use this resource, the requesting API Key must have the Project Owner role.
+Verifies the LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 Syntax
 ------

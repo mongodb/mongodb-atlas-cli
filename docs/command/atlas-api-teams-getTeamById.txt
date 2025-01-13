@@ -14,7 +14,7 @@ atlas api teams getTeamById
 
 Returns one team that you identified using its unique 24-hexadecimal digit ID.
 
-This team belongs to one organization. Teams enable you to grant project access roles to MongoDB Cloud users. To use this resource, the requesting API Key must have the Organization Member role.
+Returns one team that you identified using its unique 24-hexadecimal digit ID. This team belongs to one organization. Teams enable you to grant project access roles to MongoDB Cloud users. To use this resource, the requesting API Key must have the Organization Member role.
 
 Syntax
 ------

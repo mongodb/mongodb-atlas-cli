@@ -14,7 +14,7 @@ atlas api teams renameTeam
 
 Renames one team in the specified organization.
 
-Teams enable you to grant project access roles to MongoDB Cloud users. To use this resource, the requesting API Key must have the Organization Owner role.
+Renames one team in the specified organization. Teams enable you to grant project access roles to MongoDB Cloud users. To use this resource, the requesting API Key must have the Organization Owner role.
 
 Syntax
 ------

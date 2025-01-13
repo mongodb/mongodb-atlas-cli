@@ -14,7 +14,7 @@ atlas api mongoDbCloudUsers getUserByUsername
 
 Returns the details for one MongoDB Cloud user account with the specified username.
 
-You can't use this endpoint to return information about an API Key. To return information about an API Key, use the Return One Organization API Key endpoint. To use this resource, the requesting API Key can have any role.
+Returns the details for one MongoDB Cloud user account with the specified username. You can't use this endpoint to return information about an API Key. To return information about an API Key, use the Return One Organization API Key endpoint. To use this resource, the requesting API Key can have any role.
 
 Syntax
 ------

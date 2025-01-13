@@ -14,7 +14,7 @@ atlas api dataFederation getFederatedDatabase
 
 Returns the details of one federated database instance within the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles.
+Returns the details of one federated database instance within the specified project. To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles.
 
 Syntax
 ------

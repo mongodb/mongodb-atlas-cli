@@ -14,6 +14,8 @@ atlas api streams getAccountDetails
 
 Returns the Account ID, and the VPC ID for the group and region specified.
 
+Returns the Account ID, and the VPC ID for the group and region specified.
+
 Syntax
 ------
 

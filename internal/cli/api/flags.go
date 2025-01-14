@@ -73,7 +73,7 @@ func createFlag(factory func(f *pflag.FlagSet)) *pflag.Flag {
 }
 
 func flagDescription(description string) string {
-	shortDescription, _ := splitShortAndLongDescription(description)
+	shortDescription, _ := splitFirstSentenceOfDescription(description)
 	if len(shortDescription) > 0 {
 		shortDescription = strings.ToLower(shortDescription[:1]) + shortDescription[1:]
 	}

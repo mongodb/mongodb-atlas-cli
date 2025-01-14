@@ -48,3 +48,112 @@ func TestCleanString(t *testing.T) {
 		})
 	}
 }
+
+func TestSafeSlugify(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"Access Tracking", "Access-Tracking"},
+		{"Alert Configurations", "Alert-Configurations"},
+		{"Alerts", "Alerts"},
+		{"Atlas Search", "Atlas-Search"},
+		{"Auditing", "Auditing"},
+		{"AWS Clusters DNS", "AWS-Clusters-DNS"},
+		{"Cloud Backups", "Cloud-Backups"},
+		{"Cloud Migration Service", "Cloud-Migration-Service"},
+		{"Cloud Provider Access", "Cloud-Provider-Access"},
+		{"Cluster Outage Simulation", "Cluster-Outage-Simulation"},
+		{"Clusters", "Clusters"},
+		{"Collection Level Metrics", "Collection-Level-Metrics"},
+		{"Custom Database Roles", "Custom-Database-Roles"},
+		{"Data Federation", "Data-Federation"},
+		{"Data Lake Pipelines", "Data-Lake-Pipelines"},
+		{"Database Users", "Database-Users"},
+		{"Encryption at Rest using Customer Key Management", "Encryption-at-Rest-using-Customer-Key-Management"},
+		{"Events", "Events"},
+		{"Federated Authentication", "Federated-Authentication"},
+		{"Flex Clusters", "Flex-Clusters"},
+		{"Flex Restore Jobs", "Flex-Restore-Jobs"},
+		{"Flex Snapshots", "Flex-Snapshots"},
+		{"Global Clusters", "Global-Clusters"},
+		{"Internal", "Internal"},
+		{"Invoices", "Invoices"},
+		{"LDAP Configuration", "LDAP-Configuration"},
+		{"Legacy Backup", "Legacy-Backup"},
+		{"Maintenance Windows", "Maintenance-Windows"},
+		{"MongoDB Cloud Users", "MongoDB-Cloud-Users"},
+		{"Monitoring and Logs", "Monitoring-and-Logs"},
+		{"Network Peering", "Network-Peering"},
+		{"Online Archive", "Online-Archive"},
+		{"OpenAPI", "OpenAPI"},
+		{"Organizations", "Organizations"},
+		{"Performance Advisor", "Performance-Advisor"},
+		{"Private Endpoint Services", "Private-Endpoint-Services"},
+		{"Programmatic API Keys", "Programmatic-API-Keys"},
+		{"Project IP Access List", "Project-IP-Access-List"},
+		{"Projects", "Projects"},
+		{"Push-Based Log Export", "Push-Based-Log-Export"},
+		{"Resource Policies", "Resource-Policies"},
+		{"Rolling Index", "Rolling-Index"},
+		{"Root", "Root"},
+		{"Serverless Instances", "Serverless-Instances"},
+		{"Serverless Private Endpoints", "Serverless-Private-Endpoints"},
+		{"Service Accounts", "Service-Accounts"},
+		{"Shared-Tier Restore Jobs", "Shared-Tier-Restore-Jobs"},
+		{"Shared-Tier Snapshots", "Shared-Tier-Snapshots"},
+		{"Streams", "Streams"},
+		{"Teams", "Teams"},
+		{"Test", "Test"},
+		{"Third-Party Integrations", "Third-Party-Integrations"},
+		{"X.509 Authentication", "X.509-Authentication"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			result := safeSlugify(tt.input)
+			require.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+func TestToURL(t *testing.T) {
+	tests := []struct {
+		name        string
+		tag         string
+		operationID string
+		expected    string
+	}{
+		{
+			name:        "Atlas Search with camelCase operationId",
+			tag:         "Atlas Search",
+			operationID: "createAtlasSearchIndex",
+			expected:    "https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/createAtlasSearchIndex",
+		},
+		{
+			name:        "X.509 Authentication with complex operationId",
+			tag:         "X.509 Authentication",
+			operationID: "disableCustomerManagedX509",
+			expected:    "https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/X.509-Authentication/operation/disableCustomerManagedX509",
+		},
+		{
+			name:        "Simple tag with simple operationId",
+			tag:         "Projects",
+			operationID: "getProject",
+			expected:    "https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/getProject",
+		},
+		{
+			name:        "Multi-word tag with complex operationId",
+			tag:         "Cloud Provider Access",
+			operationID: "authorizeCloudProviderAccess",
+			expected:    "https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Provider-Access/operation/authorizeCloudProviderAccess",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := ToURL(tt.tag, tt.operationID)
+			require.Equal(t, tt.expected, result)
+		})
+	}
+}

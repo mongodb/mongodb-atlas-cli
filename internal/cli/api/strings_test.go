@@ -63,7 +63,7 @@ func TestSplitShortAndLongDescription(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotShort, gotLong := splitShortAndLongDescription(tt.description)
+			gotShort, gotLong := splitFirstSentenceOfDescription(tt.description)
 			if gotShort != tt.wantShort {
 				t.Errorf("splitShortAndLongDescription() gotShort = %v, want %v", gotShort, tt.wantShort)
 			}

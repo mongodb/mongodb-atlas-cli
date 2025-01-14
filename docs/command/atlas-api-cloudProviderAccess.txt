@@ -1,0 +1,69 @@
+.. _atlas-api-cloudProviderAccess:
+
+=============================
+atlas api cloudProviderAccess
+=============================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Returns, adds, authorizes, and removes AWS IAM roles in Atlas.
+
+Returns, adds, authorizes, and removes AWS IAM roles in Atlas.
+
+Options
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -h, --help
+     - 
+     - false
+     - help for cloudProviderAccess
+
+Inherited Options
+-----------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 10 60
+
+   * - Name
+     - Type
+     - Required
+     - Description
+   * - -P, --profile
+     - string
+     - false
+     - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
+
+Related Commands
+----------------
+
+* :ref:`atlas-api-cloudProviderAccess-authorizeCloudProviderAccessRole` - Grants access to the specified project for the specified access role.
+* :ref:`atlas-api-cloudProviderAccess-createCloudProviderAccessRole` - Creates one access role for the specified cloud provider.
+* :ref:`atlas-api-cloudProviderAccess-deauthorizeCloudProviderAccessRole` - Revokes access to the specified project for the specified access role.
+* :ref:`atlas-api-cloudProviderAccess-getCloudProviderAccessRole` - Returns the access role with the specified id and with access to the specified project.
+* :ref:`atlas-api-cloudProviderAccess-listCloudProviderAccessRoles` - Returns all cloud provider access roles with access to the specified project.
+
+
+.. toctree::
+   :titlesonly:
+
+   authorizeCloudProviderAccessRole </command/atlas-api-cloudProviderAccess-authorizeCloudProviderAccessRole>
+   createCloudProviderAccessRole </command/atlas-api-cloudProviderAccess-createCloudProviderAccessRole>
+   deauthorizeCloudProviderAccessRole </command/atlas-api-cloudProviderAccess-deauthorizeCloudProviderAccessRole>
+   getCloudProviderAccessRole </command/atlas-api-cloudProviderAccess-getCloudProviderAccessRole>
+   listCloudProviderAccessRoles </command/atlas-api-cloudProviderAccess-listCloudProviderAccessRoles>
+

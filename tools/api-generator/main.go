@@ -21,8 +21,8 @@ import (
 	"errors"
 	"fmt"
 	"go/format"
-	"html/template"
 	"os"
+	"text/template"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"

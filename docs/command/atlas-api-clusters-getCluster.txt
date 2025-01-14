@@ -16,6 +16,9 @@ Returns the details for one cluster in the specified project.
 
 Returns the details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting API Key must have the Project Read Only role. This feature is not available for serverless clusters.
 
+This command is invoking the endpoint with OperationID: 'getCluster'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getCluster
+
 Syntax
 ------
 

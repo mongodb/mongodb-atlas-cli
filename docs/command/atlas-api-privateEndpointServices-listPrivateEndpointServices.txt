@@ -16,6 +16,9 @@ Returns the name, interfaces, and state of all private endpoint services for the
 
 Returns the name, interfaces, and state of all private endpoint services for the specified cloud service provider. This cloud service provider manages the private endpoint service for the project. To use this resource, the requesting API Key must have the Project Read Only role.
 
+This command is invoking the endpoint with OperationID: 'listPrivateEndpointServices'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Private-Endpoint-Services/operation/listPrivateEndpointServices
+
 Syntax
 ------
 

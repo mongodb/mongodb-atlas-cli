@@ -19,6 +19,9 @@ Returns one alert. This alert applies to any component in one project. You recei
 
 This resource remains under revision and may change.
 
+This command is invoking the endpoint with OperationID: 'getAlert'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alerts/operation/getAlert
+
 Syntax
 ------
 

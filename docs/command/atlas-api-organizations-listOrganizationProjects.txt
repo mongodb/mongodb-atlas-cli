@@ -33,6 +33,9 @@ Create different alert settings.
 
 To use this resource, the requesting API Key must have the Organization Member role.
 
+This command is invoking the endpoint with OperationID: 'listOrganizationProjects'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Organizations/operation/listOrganizationProjects
+
 Syntax
 ------
 

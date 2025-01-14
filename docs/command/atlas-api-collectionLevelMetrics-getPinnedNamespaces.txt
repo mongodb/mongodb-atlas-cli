@@ -16,6 +16,9 @@ Returns a list of given cluster's pinned namespaces, a set of namespaces manuall
 
 Returns a list of given cluster's pinned namespaces, a set of namespaces manually selected by users to collect query latency metrics on.
 
+This command is invoking the endpoint with OperationID: 'getPinnedNamespaces'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Collection-Level-Metrics/operation/getPinnedNamespaces
+
 Syntax
 ------
 

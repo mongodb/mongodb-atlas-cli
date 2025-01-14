@@ -16,6 +16,9 @@ Pins the Feature Compatibility Version (FCV) to the current MongoDB version and 
 
 Pins the Feature Compatibility Version (FCV) to the current MongoDB version and sets the pin expiration date. If an FCV pin already exists for the cluster, calling this method will only update the expiration date of the existing pin and will not repin the FCV.
 
+This command is invoking the endpoint with OperationID: 'pinFeatureCompatibilityVersion'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/pinFeatureCompatibilityVersion
+
 Syntax
 ------
 

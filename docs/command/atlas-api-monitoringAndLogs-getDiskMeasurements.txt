@@ -33,6 +33,9 @@ Amount of free and used disk space on the disk partition used for the MongoDB pr
 
 To use this resource, the requesting API Key must have the Project Read Only role.
 
+This command is invoking the endpoint with OperationID: 'getDiskMeasurements'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs/operation/getDiskMeasurements
+
 Syntax
 ------
 

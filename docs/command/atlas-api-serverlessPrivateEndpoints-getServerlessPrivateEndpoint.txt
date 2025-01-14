@@ -16,6 +16,9 @@ Return one private endpoint for one serverless instance.
 
 Return one private endpoint for one serverless instance. Identify this endpoint using its unique ID. You must have at least the Project Read Only role for the project to successfully call this resource.
 
+This command is invoking the endpoint with OperationID: 'getServerlessPrivateEndpoint'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Private-Endpoints/operation/getServerlessPrivateEndpoint
+
 Syntax
 ------
 

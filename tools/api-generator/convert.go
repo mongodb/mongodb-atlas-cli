@@ -91,7 +91,7 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 		return nil, err
 	}
 
-	description, err := Clean(operation.Description)
+	description, err := buildDescription(operation)
 	if err != nil {
 		return nil, fmt.Errorf("failed to clean description: %w", err)
 	}
@@ -109,6 +109,29 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 	}
 
 	return &command, nil
+}
+
+func buildDescription(operation *openapi3.Operation) (string, error) {
+	// Get the original description and clean it up
+	description, err := Clean(operation.Description)
+	if err != nil {
+		return "", fmt.Errorf("failed to clean description: %w", err)
+	}
+
+	// Get the tag and build the documentation URL
+	if len(operation.Tags) != 1 {
+		return "", fmt.Errorf("expect exactly 1 tag, got: %v", len(operation.Tags))
+	}
+
+	tag := operation.Tags[0]
+	operationID := operation.OperationID
+
+	url := ToURL(tag, operationID)
+
+	// Add the documentation URL to the description
+	description += fmt.Sprintf("\n\nThis command is invoking the endpoint with OperationID: '%v'.\nFor more information about flags, format of --file and examples, see: %v", operationID, url)
+
+	return description, nil
 }
 
 // Struct to hold both types of parameters.

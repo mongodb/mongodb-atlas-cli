@@ -19,6 +19,9 @@ Returns all alerts. These alerts apply to all components in one project. You rec
 
 This resource remains under revision and may change.
 
+This command is invoking the endpoint with OperationID: 'listAlerts'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alerts/operation/listAlerts
+
 Syntax
 ------
 

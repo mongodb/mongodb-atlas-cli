@@ -19,6 +19,9 @@ Revokes the JWKS tokens from the requested OIDC identity provider. To use this r
 
 Note: Revoking your JWKS tokens immediately refreshes your IdP public keys from all your Atlas clusters, invalidating previously signed access tokens and logging out all users. You may need to restart your MongoDB clients. All organizations connected to the identity provider will be affected. To learn more, see Configure OIDC Authorization.
 
+This command is invoking the endpoint with OperationID: 'revokeJwksFromIdentityProvider'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/revokeJwksFromIdentityProvider
+
 Syntax
 ------
 

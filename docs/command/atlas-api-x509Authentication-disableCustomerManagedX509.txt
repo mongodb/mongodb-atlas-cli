@@ -19,6 +19,9 @@ Clears the customer-managed X.509 settings on a project, including the uploaded 
 
 Updating this configuration triggers a rolling restart of the database. You must have the Project Owner role to use this endpoint.
 
+This command is invoking the endpoint with OperationID: 'disableCustomerManagedX509'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/X.509-Authentication/operation/disableCustomerManagedX509
+
 Syntax
 ------
 

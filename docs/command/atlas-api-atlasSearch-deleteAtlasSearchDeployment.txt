@@ -16,6 +16,9 @@ Deletes the Search Nodes for the specified cluster.
 
 Deletes the Search Nodes for the specified cluster.
 
+This command is invoking the endpoint with OperationID: 'deleteAtlasSearchDeployment'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/deleteAtlasSearchDeployment
+
 Syntax
 ------
 

@@ -16,6 +16,9 @@ Delete one Atlas Resource Policy for an org.
 
 Delete one Atlas Resource Policy for an org.
 
+This command is invoking the endpoint with OperationID: 'deleteAtlasResourcePolicy'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/deleteAtlasResourcePolicy
+
 Syntax
 ------
 

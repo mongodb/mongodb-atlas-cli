@@ -22,6 +22,9 @@ NOTE: This endpoint updates only the enabled/disabled state for the alert config
 
 This resource remains under revision and may change.
 
+This command is invoking the endpoint with OperationID: 'toggleAlertConfiguration'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alert-Configurations/operation/toggleAlertConfiguration
+
 Syntax
 ------
 

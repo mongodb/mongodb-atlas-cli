@@ -82,3 +82,38 @@ func addNewLineForBlockLevelElements(n *html.Node, buf *bytes.Buffer) {
 		}
 	}
 }
+
+// Simplified port of:
+// - https://github.com/Redocly/redoc/blob/59ee73fefa8e8edb398940076bdd721fc284caa3/src/utils/helpers.ts#L123
+// - https://github.com/simov/slugify/blob/master/slugify.js
+//
+// Note: this does not handle special characters, which is fine for now as none of or tags or OperationIDs use special characters.
+func safeSlugify(value string) string {
+	// Trim spaces from both ends
+	result := strings.TrimSpace(value)
+
+	// Replace whitespace with single dash
+	words := strings.Fields(result)
+	result = strings.Join(words, "-")
+
+	// Replace & with -and-
+	result = strings.ReplaceAll(result, "&", "-and-")
+
+	// Replace multiple consecutive dashes with single dash
+	for strings.Contains(result, "--") {
+		result = strings.ReplaceAll(result, "--", "-")
+	}
+
+	// Trim dashes from start and end
+	result = strings.Trim(result, "-")
+
+	return result
+}
+
+// ToURL creates a URL for the MongoDB Atlas API documentation based on a tag and operationId.
+// Both inputs are processed using safeSlugify before being inserted into the URL.
+func ToURL(tag, operationID string) string {
+	safeTag := safeSlugify(tag)
+	safeOperationID := safeSlugify(operationID)
+	return "https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/" + safeTag + "/operation/" + safeOperationID
+}

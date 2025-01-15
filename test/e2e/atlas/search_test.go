@@ -55,6 +55,17 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, resp)
+		var r *atlasv2.SampleDatasetStatus
+		require.NoError(t, json.Unmarshal(resp, &r))
+
+		cmd = exec.Command(cliPath,
+			clustersEntity,
+			"sampleData",
+			"watch",
+			r.GetId())
+		cmd.Env = os.Environ()
 		require.NoError(t, cmd.Run())
 	})
 
@@ -460,6 +471,17 @@ func TestSearchDeprecated(t *testing.T) {
 			g.clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, resp)
+		var r *atlasv2.SampleDatasetStatus
+		require.NoError(t, json.Unmarshal(resp, &r))
+
+		cmd = exec.Command(cliPath,
+			clustersEntity,
+			"sampleData",
+			"watch",
+			r.GetId())
 		cmd.Env = os.Environ()
 		require.NoError(t, cmd.Run())
 	})

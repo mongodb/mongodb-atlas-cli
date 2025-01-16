@@ -204,8 +204,8 @@ github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 go.mongodb.org/atlas v0.37.0 h1:zQnO1o5+bVP9IotpAYpres4UjMD2F4nwNEFTZhNL4ck=
 go.mongodb.org/atlas v0.37.0/go.mod h1:DJYtM+vsEpPEMSkQzJnFHrT0sP7ev6cseZc/GGjJYG8=
-go.mongodb.org/mongo-driver v1.17.1 h1:Wic5cJIwJgSpBhe3lx3+/RybR5PiYRMpVFgO7cOHyIM=
-go.mongodb.org/mongo-driver v1.17.1/go.mod h1:wwWm/+BuOddhcq3n68LKRmgk2wXzmF6s0SFOa0GINL4=
+go.mongodb.org/mongo-driver v1.17.2 h1:gvZyk8352qSfzyZ2UMWcpDpMSGEr1eqE4T793SqyhzM=
+go.mongodb.org/mongo-driver v1.17.2/go.mod h1:Hy04i7O2kC4RS06ZrhPRqj/u4DTYkFDAAccj+rVKqgQ=
 go.mongodb.org/ops-manager v0.59.0 h1:H1dz3+MJd09CqdO5dW4ZXTO1maEbOxKsXUMWqFJTk9E=
 go.mongodb.org/ops-manager v0.59.0/go.mod h1:QlZtX9OCOMwjtywG6bnBq4dmkZ1rZjorUC7bHo1C4iU=
 go.opentelemetry.io/proto/otlp v0.7.0/go.mod h1:PqfVotwruBrMGOCsRd/89rSnXhoiJIqeYNgFYFoEGnI=

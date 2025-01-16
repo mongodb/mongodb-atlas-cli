@@ -767,7 +767,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters,m0
-  - name: atlas_kubernetes_generate_e2e
+  - name: atlas_kubernetes_plugin
     tags: ["e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas"]
     must_have_test_results: true
     depends_on:
@@ -784,7 +784,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,cluster,kubernetes,generate
+          E2E_TAGS: atlas,plugin,kubenetes
   - name: atlas_kubernetes_apply_e2e
     tags: [ "e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas" ]
     must_have_test_results: true

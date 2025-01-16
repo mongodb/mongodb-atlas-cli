@@ -30,7 +30,3 @@ else
     echo "library_owners are NOT sorted"
     exit 1
 fi
-
-
-
-

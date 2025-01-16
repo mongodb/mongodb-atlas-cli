@@ -22,10 +22,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
-	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
-	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
-	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/api"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/common"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20241113004/admin"
@@ -329,15 +329,15 @@ func TestBuildPrivateEndpoints(t *testing.T) {
 			peStore.EXPECT().PrivateEndpoints(projectID, "GCP").Return(tt.gcpServices, nil)
 
 			if tt.awsEndpointInterface != nil {
-				peStore.EXPECT().InterfaceEndpoint(projectID, "AWS", "aws-pe-1", "vpcpe-123456").Return(tt.awsEndpointInterface, nil)
+				peStore.EXPECT().InterfaceEndpoint(projectID, "AWS", "vpcpe-123456", "aws-pe-1").Return(tt.awsEndpointInterface, nil)
 			}
 
 			if tt.azureEndpointInterface != nil {
-				peStore.EXPECT().InterfaceEndpoint(projectID, "AZURE", "azure-pe-1", "azure/resource/id").Return(tt.azureEndpointInterface, nil)
+				peStore.EXPECT().InterfaceEndpoint(projectID, "AZURE", "azure/resource/id", "azure-pe-1").Return(tt.azureEndpointInterface, nil)
 			}
 
 			if tt.gcpEndpointInterface != nil {
-				peStore.EXPECT().InterfaceEndpoint(projectID, "GCP", "gcp-pe-1", "groupName").Return(tt.gcpEndpointInterface, nil)
+				peStore.EXPECT().InterfaceEndpoint(projectID, "GCP", "groupName", "gcp-pe-1").Return(tt.gcpEndpointInterface, nil)
 			}
 
 			privateEndpoints, err := BuildPrivateEndpointCustomResources(

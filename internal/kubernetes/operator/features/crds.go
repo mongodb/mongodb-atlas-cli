@@ -42,6 +42,7 @@ const (
 	ResourceAtlasStreamConnection       = "atlasstreamconnections"
 	ResourceAtlasBackupCompliancePolicy = "atlasbackupcompliancepolicies"
 	ResourceAtlasPrivateEndpoint        = "atlasprivateendpoints"
+	ResourceAtlasCustomRole             = "atlascustomroles"
 )
 
 var (
@@ -92,6 +93,7 @@ var (
 			resource{ResourceAtlasStreamConnection, NopPatcher()},
 			resource{ResourceAtlasBackupCompliancePolicy, NopPatcher()},
 			resource{ResourceAtlasPrivateEndpoint, NopPatcher()},
+			resource{ResourceAtlasCustomRole, NopPatcher()},
 		},
 	}
 )

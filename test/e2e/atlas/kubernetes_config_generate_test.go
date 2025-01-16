@@ -34,12 +34,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/secrets"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
-	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
-	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
-	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
-	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
-	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
-	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/api"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/common"
+	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/project"
+	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/provider"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/status"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
@@ -1042,7 +1042,7 @@ func TestProjectWithCustomRole(t *testing.T) {
 				Name: "FIND",
 				Resources: []akov2.Resource{
 					{
-						Database:   pointer.Get("test-db	"),
+						Database:   pointer.Get("test-db"),
 						Collection: pointer.Get(""),
 						Cluster:    pointer.Get(false),
 					},
@@ -1087,8 +1087,62 @@ func TestProjectWithCustomRole(t *testing.T) {
 		objects, err = getK8SEntities(resp)
 		require.NoError(t, err, "should not fail on decode")
 		require.NotEmpty(t, objects)
+		expectedProject.Spec.CustomRoles = nil
+		verifyCustomRole(t, objects, &akov2.AtlasCustomRole{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       "AtlasCustomRole",
+				APIVersion: "atlas.mongodb.com/v1",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-custom-role-%s", expectedProject.Name, newCustomRole.Name), resources.AtlasNameToKubernetesName()),
+				Namespace: expectedProject.Namespace,
+				Labels: map[string]string{
+					"mongodb.com/atlas-resource-version": features.LatestOperatorMajorVersion,
+				},
+			},
+			Spec: akov2.AtlasCustomRoleSpec{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      expectedProject.Name,
+					Namespace: expectedProject.Namespace,
+				},
+				Role: akov2.CustomRole{
+					Name: "test-role",
+					Actions: []akov2.Action{
+						{
+							Name: "FIND",
+							Resources: []akov2.Resource{
+								{
+									Database:   pointer.Get("test-db"),
+									Collection: pointer.Get(""),
+									Cluster:    pointer.Get(false),
+								},
+							},
+						},
+					},
+				},
+			},
+			Status: akov2status.AtlasCustomRoleStatus{
+				Common: akoapi.Common{
+					Conditions: []akoapi.Condition{},
+				},
+			},
+		},
+		)
 		checkProject(t, objects, expectedProject)
 	})
+}
+
+func verifyCustomRole(t *testing.T, objects []runtime.Object, expectedRole *akov2.AtlasCustomRole) {
+	t.Helper()
+	var role *akov2.AtlasCustomRole
+	for i := range objects {
+		d, ok := objects[i].(*akov2.AtlasCustomRole)
+		if ok {
+			role = d
+			break
+		}
+	}
+	assert.Equal(t, expectedRole, role)
 }
 
 func TestProjectWithIntegration(t *testing.T) {

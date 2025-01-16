@@ -17,17 +17,17 @@ linters-settings:
         alias: atlas
       - pkg: go.mongodb.org/atlas/auth
         alias: atlasauth
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api
         alias: akoapi
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1
         alias: akov2
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/common
         alias: akov2common
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/provider
         alias: akov2provider
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/status
         alias: akov2status
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project
+      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/project
         alias: akov2project
       - pkg: k8s.io/apimachinery/pkg/apis/meta/v1
         alias: metav1

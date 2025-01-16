@@ -26,12 +26,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
-	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
-	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
-	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/project"
-	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/provider"
-	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/api"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/common"
+	akov2project "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/project"
+	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/provider"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -183,7 +183,7 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 		result.Secrets = append(result.Secrets, s...)
 	}
 
-	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) {
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) && !br.Validator.IsResourceSupported(features.ResourceAtlasCustomRole) {
 		customRoles, ferr := buildCustomRoles(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
@@ -275,6 +275,7 @@ func BuildProjectNamedConnectionSecret(credsProvider store.CredentialsGetter, na
 	return secret
 }
 
+//nolint:revive
 func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]akov2.CustomRole, error) {
 	dbRoles, err := crProvider.DatabaseRoles(projectID)
 	if err != nil {

@@ -59,7 +59,14 @@ func (s *Store) httpClient(httpTransport http.RoundTripper) (*http.Client, error
 		return t.Client()
 	}
 	if s.accessToken != nil {
-		tr := transport.NewAccessTokenTransport(s.accessToken, httpTransport)
+		tr, err := transport.NewAccessTokenTransport(s.accessToken, httpTransport, func(t *atlasauth.Token) error {
+			config.SetAccessToken(t.AccessToken)
+			config.SetRefreshToken(t.RefreshToken)
+			return config.Save()
+		})
+		if err != nil {
+			return nil, err
+		}
 
 		return &http.Client{Transport: tr}, nil
 	}

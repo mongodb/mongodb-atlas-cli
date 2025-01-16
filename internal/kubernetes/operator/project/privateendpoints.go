@@ -21,10 +21,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api"
-	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
-	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/common"
-	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1/status"
+	akoapi "github.com/mongodb/mongodb-atlas-kubernetes/v2/api"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1"
+	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/common"
+	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/status"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -136,7 +136,7 @@ func buildAWSInterfaces(
 	configs := make([]akov2.AWSPrivateEndpointConfiguration, 0, len(interfaceIDs))
 
 	for _, interfaceID := range interfaceIDs {
-		pe, err := provider.InterfaceEndpoint(projectID, "AWS", serviceID, interfaceID)
+		pe, err := provider.InterfaceEndpoint(projectID, "AWS", interfaceID, serviceID)
 		if err != nil {
 			return nil, err
 		}
@@ -160,7 +160,7 @@ func buildAzureInterfaces(
 	configs := make([]akov2.AzurePrivateEndpointConfiguration, 0, len(interfaceIDs))
 
 	for _, interfaceID := range interfaceIDs {
-		pe, err := provider.InterfaceEndpoint(projectID, "AZURE", serviceID, interfaceID)
+		pe, err := provider.InterfaceEndpoint(projectID, "AZURE", interfaceID, serviceID)
 		if err != nil {
 			return nil, err
 		}
@@ -190,7 +190,7 @@ func buildGCPInterfaces(
 	configs := make([]akov2.GCPPrivateEndpointConfiguration, 0, len(interfaceIDs))
 
 	for _, interfaceID := range interfaceIDs {
-		pe, err := provider.InterfaceEndpoint(projectID, "GCP", serviceID, interfaceID)
+		pe, err := provider.InterfaceEndpoint(projectID, "GCP", interfaceID, serviceID)
 		if err != nil {
 			return nil, err
 		}

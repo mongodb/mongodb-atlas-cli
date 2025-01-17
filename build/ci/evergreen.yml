@@ -1118,6 +1118,7 @@ tasks:
   # Search depend on a cluster to create the indexes against
   - name: atlas_search_e2e
     tags: ["e2e","clusters","atlas"]
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e
@@ -1134,6 +1135,7 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,search
+          E2E_TIMEOUT: 3h
   - name: atlas_gov_search_e2e
     tags: ["e2e","clusters","atlasgov"]
     must_have_test_results: true

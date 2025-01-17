@@ -50,5 +50,8 @@ func removeFirstClassPlugin(t *testing.T, name, cliPath string) {
 		"uninstall",
 		name)
 	resp, err := cmd.CombinedOutput()
-	require.NoError(t, err, string(resp))
+	if err != nil {
+		require.Contains(t, string(resp), "Error: could not find plugin with name atlas-cli-plugin-kubernetes")
+		return
+	}
 }

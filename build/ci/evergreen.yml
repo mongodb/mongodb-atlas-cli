@@ -785,13 +785,9 @@ tasks:
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,clusters,m0
-  - name: atlas_kubernetes_generate_e2e
-    tags: ["e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas"]
+  - name: atlas_kubernetes_plugin
+    tags: ["e2e","atlas","plugin","kubernetes"]
     must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
     commands:
       - func: "install gotestsum"
       - func: "e2e test"
@@ -802,43 +798,7 @@ tasks:
           MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
           MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,cluster,kubernetes,generate
-  - name: atlas_kubernetes_apply_e2e
-    tags: [ "e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas" ]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,cluster,kubernetes,apply
-  - name: atlas_kubernetes_install_e2e
-    tags: [ "e2e","atlas","kubernetes", "assigned_to_jira_team_cloudp_kubernetes_atlas" ]
-    must_have_test_results: true
-    depends_on:
-      - name: atlas_clusters_flags_e2e
-        variant: "e2e_atlas_clusters"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,cluster,kubernetes,local
+          E2E_TAGS: atlas,plugin,kubenetes
   - name: atlas_clusters_upgrade_e2e
     tags: ["e2e","clusters","atlas"]
     must_have_test_results: true
@@ -1881,14 +1841,14 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .clusters .atlas"
-  - name: e2e_atlas_kubernetes
-    display_name: "E2E Atlas Kubernetes Tests"
+  - name: e2e_atlas_kubernetes_plugin
+    display_name: "E2E Atlas Kubernetes Plugin Tests"
     run_on:
       - ubuntu2204-small
     expansions:
       <<: *go_linux_version
     tasks:
-      - name: ".e2e .atlas .kubernetes"
+      - name: ".e2e .atlas .plugin .kubernetes"
   - name: e2e_decryption
     display_name: "E2E Decryption Tests"
     run_on:

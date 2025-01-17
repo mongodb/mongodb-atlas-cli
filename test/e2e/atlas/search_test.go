@@ -63,9 +63,11 @@ func TestSearch(t *testing.T) {
 			clustersEntity,
 			"sampleData",
 			"watch",
-			r.GetId())
+			r.GetId(),
+			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
-		require.NoError(t, cmd.Run())
+		resp, err = e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, resp)
 	})
 
 	t.Run("Create via file", func(t *testing.T) {
@@ -477,7 +479,8 @@ func TestSearchDeprecated(t *testing.T) {
 			clustersEntity,
 			"sampleData",
 			"watch",
-			r.GetId())
+			r.GetId(),
+			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		require.NoError(t, cmd.Run())
 	})

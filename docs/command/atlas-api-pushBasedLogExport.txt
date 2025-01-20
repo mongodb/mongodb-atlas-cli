@@ -14,7 +14,7 @@ atlas api pushBasedLogExport
 
 You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
 
-You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket. Atlas exports logs every 5 minutes.
+Atlas exports logs every 5 minutes.
 
 Options
 -------

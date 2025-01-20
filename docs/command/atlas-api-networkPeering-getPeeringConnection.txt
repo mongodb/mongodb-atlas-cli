@@ -14,10 +14,7 @@ atlas api networkPeering getPeeringConnection
 
 Returns details about one specified network peering connection in the specified project.
 
-Returns details about one specified network peering connection in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
-
-This command is invoking the endpoint with OperationID: 'getPeeringConnection'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/getPeeringConnection
+To use this resource, the requesting API Key must have the Project Read Only role. This command is invoking the endpoint with OperationID: 'getPeeringConnection'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/getPeeringConnection
 
 Syntax
 ------

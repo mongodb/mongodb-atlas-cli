@@ -14,10 +14,7 @@ atlas api cloudBackups deleteReplicaSetBackup
 
 Removes the specified snapshot.
 
-Removes the specified snapshot. To use this resource, the requesting API Key must have the Project Owner role.
-
-This command is invoking the endpoint with OperationID: 'deleteReplicaSetBackup'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/deleteReplicaSetBackup
+To use this resource, the requesting API Key must have the Project Owner role. This command is invoking the endpoint with OperationID: 'deleteReplicaSetBackup'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/deleteReplicaSetBackup
 
 Syntax
 ------

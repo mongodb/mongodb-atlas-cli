@@ -14,10 +14,7 @@ atlas api sharedTierSnapshots getSharedClusterBackup
 
 Returns details for one snapshot for the specified shared cluster.
 
-Returns details for one snapshot for the specified shared cluster. To use this resource, the requesting API Key must have the Project Read Only role.
-
-This command is invoking the endpoint with OperationID: 'getSharedClusterBackup'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Snapshots/operation/getSharedClusterBackup
+To use this resource, the requesting API Key must have the Project Read Only role. This command is invoking the endpoint with OperationID: 'getSharedClusterBackup'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Snapshots/operation/getSharedClusterBackup
 
 Syntax
 ------

@@ -19,7 +19,7 @@ import (
 	"strings"
 )
 
-func splitFirstSentenceOfDescription(description string) (string, string) {
+func splitShortAndLongDescription(description string) (string, string) {
 	// Split on periods that are followed by a space or end of string
 	// This approach allows us to not accidentally split verion numbers like 8.0
 	split := regexp.MustCompile(`\.(?:\s+|$)`).Split(description, -1)

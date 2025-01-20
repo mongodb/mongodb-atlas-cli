@@ -14,8 +14,6 @@ atlas api teams
 
 Returns, adds, edits, or removes teams.
 
-Returns, adds, edits, or removes teams.
-
 Options
 -------
 

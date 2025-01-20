@@ -14,10 +14,7 @@ atlas api flexRestoreJobs createFlexBackupRestoreJob
 
 Restores one snapshot of one flex cluster from the specified project.
 
-Restores one snapshot of one flex cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
-
-This command is invoking the endpoint with OperationID: 'createFlexBackupRestoreJob'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Restore-Jobs/operation/createFlexBackupRestoreJob
+To use this resource, the requesting API Key must have the Project Owner role. This command is invoking the endpoint with OperationID: 'createFlexBackupRestoreJob'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Flex-Restore-Jobs/operation/createFlexBackupRestoreJob
 
 Syntax
 ------

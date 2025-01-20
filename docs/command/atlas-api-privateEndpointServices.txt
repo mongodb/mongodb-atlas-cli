@@ -14,8 +14,6 @@ atlas api privateEndpointServices
 
 Returns, adds, edits, and removes private endpoint services.
 
-Returns, adds, edits, and removes private endpoint services.
-
 Options
 -------
 

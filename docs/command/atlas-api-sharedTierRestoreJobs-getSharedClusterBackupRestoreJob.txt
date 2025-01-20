@@ -14,10 +14,7 @@ atlas api sharedTierRestoreJobs getSharedClusterBackupRestoreJob
 
 Returns the specified restore job.
 
-Returns the specified restore job. To use this resource, the requesting API Key must have the Project Read Only role.
-
-This command is invoking the endpoint with OperationID: 'getSharedClusterBackupRestoreJob'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Restore-Jobs/operation/getSharedClusterBackupRestoreJob
+To use this resource, the requesting API Key must have the Project Read Only role. This command is invoking the endpoint with OperationID: 'getSharedClusterBackupRestoreJob'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Restore-Jobs/operation/getSharedClusterBackupRestoreJob
 
 Syntax
 ------

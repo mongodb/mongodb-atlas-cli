@@ -14,8 +14,6 @@ atlas api federatedAuthentication
 
 Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.
 
-Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.
-
 Options
 -------
 

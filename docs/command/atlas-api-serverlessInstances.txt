@@ -14,8 +14,6 @@ atlas api serverlessInstances
 
 Returns, adds, edits, and removes serverless instances.
 
-Returns, adds, edits, and removes serverless instances.
-
 Options
 -------
 

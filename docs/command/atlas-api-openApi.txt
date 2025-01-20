@@ -14,8 +14,6 @@ atlas api openApi
 
 Returns information about the MongoDB Atlas Specification.
 
-Returns information about the MongoDB Atlas Specification.
-
 Options
 -------
 

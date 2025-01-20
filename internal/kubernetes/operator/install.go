@@ -19,8 +19,6 @@ import (
 	"errors"
 	"fmt"
 
-	"k8s.io/client-go/util/retry"
-
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
@@ -30,6 +28,7 @@ import (
 	akov2common "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/common"
 	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/client-go/util/retry"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -292,10 +291,7 @@ func (i *Install) ensureCredentialsAssignment(ctx context.Context) error {
 
 			project.Spec.ConnectionSecret = connectionSecret
 
-			if err := i.kubectl.Update(ctx, &project); err != nil {
-				return err
-			}
-			return nil
+			return i.kubectl.Update(ctx, &project)
 		})
 		if err != nil {
 			return fmt.Errorf("failed to update atlas project %s: %w", i.projectName, err)

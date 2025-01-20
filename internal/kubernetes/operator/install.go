@@ -19,6 +19,8 @@ import (
 	"errors"
 	"fmt"
 
+	"k8s.io/client-go/util/retry"
+
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
@@ -150,7 +152,6 @@ func (i *Install) ensureProject(orgID, projectName string) (*admin.Group, error)
 		Group: &admin.Group{
 			Name:                      projectName,
 			OrgId:                     orgID,
-			RegionUsageRestrictions:   pointer.Get(""),
 			WithDefaultAlertsSettings: pointer.Get(true),
 		},
 	})
@@ -284,10 +285,20 @@ func (i *Install) ensureCredentialsAssignment(ctx context.Context) error {
 			}
 		}
 
-		project.Spec.ConnectionSecret = connectionSecret
+		err := retry.RetryOnConflict(retry.DefaultRetry, func() error {
+			if err := i.kubectl.Get(ctx, client.ObjectKeyFromObject(&project), &project); err != nil {
+				return err
+			}
 
-		if err = i.kubectl.Update(ctx, &project); err != nil {
-			return fmt.Errorf("failed to update atlas project %s", i.projectName)
+			project.Spec.ConnectionSecret = connectionSecret
+
+			if err := i.kubectl.Update(ctx, &project); err != nil {
+				return err
+			}
+			return nil
+		})
+		if err != nil {
+			return fmt.Errorf("failed to update atlas project %s: %w", i.projectName, err)
 		}
 	}
 

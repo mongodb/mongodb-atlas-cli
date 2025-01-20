@@ -64,7 +64,7 @@ func (opts *ClearOpts) Prompt() error {
 		return nil
 	}
 
-	p := prompt.NewDeleteConfirm("maintenance window")
+	p := prompt.NewConfirm("Are you sure you want to delete: maintenance window")
 	return telemetry.TrackAskOne(p, &opts.Confirm)
 }
 

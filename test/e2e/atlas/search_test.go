@@ -43,7 +43,6 @@ func TestSearch(t *testing.T) {
 	n, err := e2e.RandInt(1000)
 	r.NoError(err)
 	indexName := fmt.Sprintf("index-%v", n)
-	collectionName := fmt.Sprintf("collection-%v", n)
 	var indexID string
 
 	t.Run("Load Sample data", func(t *testing.T) {
@@ -55,7 +54,20 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		require.NoError(t, cmd.Run())
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, resp)
+		var r *atlasv2.SampleDatasetStatus
+		require.NoError(t, json.Unmarshal(resp, &r))
+
+		cmd = exec.Command(cliPath,
+			clustersEntity,
+			"sampleData",
+			"watch",
+			r.GetId(),
+			"--projectId", g.projectID)
+		cmd.Env = os.Environ()
+		resp, err = e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, resp)
 	})
 
 	t.Run("Create via file", func(t *testing.T) {
@@ -69,8 +81,8 @@ func TestSearch(t *testing.T) {
 
 		tpl := template.Must(template.New("").Parse(`
 {
-	"collectionName": "{{ .collectionName }}",
-	"database": "test",
+	"collectionName": "movies",
+	"database": "sample_mflix",
 	"name": "{{ .indexName }}",
 	"definition": {
 		"mappings": {
@@ -79,8 +91,7 @@ func TestSearch(t *testing.T) {
 	}
 }`))
 		require.NoError(t, tpl.Execute(file, map[string]string{
-			"collectionName": collectionName,
-			"indexName":      indexName,
+			"indexName": indexName,
 		}))
 
 		cmd := exec.Command(cliPath,
@@ -132,8 +143,8 @@ func TestSearch(t *testing.T) {
 
 		tpl := template.Must(template.New("").Parse(`
 {
-	"collectionName": "{{ .collectionName }}",
-	"database": "test",
+	"collectionName": "movies",
+	"database": "sample_mflix",
 	"name": "{{ .indexName }}",
 	"definition": {
 		"analyzer": "{{ .analyzer }}",
@@ -143,9 +154,8 @@ func TestSearch(t *testing.T) {
 	}
 }`))
 		require.NoError(t, tpl.Execute(file, map[string]string{
-			"collectionName": collectionName,
-			"indexName":      indexName,
-			"analyzer":       analyzer,
+			"indexName": indexName,
+			"analyzer":  analyzer,
 		}))
 
 		cmd := exec.Command(cliPath,
@@ -423,8 +433,8 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"list",
 			"--clusterName", g.clusterName,
-			"--db=test",
-			"--collection", collectionName,
+			"--db=sample_mflix",
+			"--collection=movies",
 			"--projectId", g.projectID,
 			"-o=json")
 
@@ -449,7 +459,6 @@ func TestSearchDeprecated(t *testing.T) {
 	n, err := e2e.RandInt(1000)
 	r.NoError(err)
 	indexName := fmt.Sprintf("index-%v", n)
-	collectionName := fmt.Sprintf("collection-%v", n)
 	var indexID string
 
 	t.Run("Load Sample data", func(t *testing.T) {
@@ -460,6 +469,18 @@ func TestSearchDeprecated(t *testing.T) {
 			g.clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		require.NoError(t, err, resp)
+		var r *atlasv2.SampleDatasetStatus
+		require.NoError(t, json.Unmarshal(resp, &r))
+
+		cmd = exec.Command(cliPath,
+			clustersEntity,
+			"sampleData",
+			"watch",
+			r.GetId(),
+			"--projectId", g.projectID)
 		cmd.Env = os.Environ()
 		require.NoError(t, cmd.Run())
 	})
@@ -475,16 +496,15 @@ func TestSearchDeprecated(t *testing.T) {
 
 		tpl := template.Must(template.New("").Parse(`
 {
-	"collectionName": "{{ .collectionName }}",
-	"database": "test",
+	"collectionName": "movies",
+	"database": "sample_mflix",
 	"name": "{{ .indexName }}",
 	"mappings": {
 		"dynamic": true
 	}
 }`))
 		require.NoError(t, tpl.Execute(file, map[string]string{
-			"collectionName": collectionName,
-			"indexName":      indexName,
+			"indexName": indexName,
 		}))
 
 		cmd := exec.Command(cliPath,
@@ -536,8 +556,8 @@ func TestSearchDeprecated(t *testing.T) {
 
 		tpl := template.Must(template.New("").Parse(`
 {
-	"collectionName": "{{ .collectionName }}",
-	"database": "test",
+	"collectionName": "movies",
+	"database": "sample_mflix",
 	"name": "{{ .indexName }}",
 	"analyzer": "{{ .analyzer }}",
 	"mappings": {
@@ -545,9 +565,8 @@ func TestSearchDeprecated(t *testing.T) {
 	}
 }`))
 		require.NoError(t, tpl.Execute(file, map[string]string{
-			"collectionName": collectionName,
-			"indexName":      indexName,
-			"analyzer":       analyzer,
+			"indexName": indexName,
+			"analyzer":  analyzer,
 		}))
 
 		cmd := exec.Command(cliPath,
@@ -819,8 +838,8 @@ func TestSearchDeprecated(t *testing.T) {
 			indexEntity,
 			"list",
 			"--clusterName", g.clusterName,
-			"--db=test",
-			"--collection", collectionName,
+			"--db=sample_mflix",
+			"--collection=movies",
 			"--projectId", g.projectID,
 			"-o=json")
 

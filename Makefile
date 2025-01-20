@@ -165,6 +165,7 @@ list: ## List all make targets
 check-library-owners: ## Check that all the dependencies in go.mod has a owner in library_owners.json
 	@echo "==> Check library_owners.json"
 	go run ./tools/libraryowners/main.go
+	./scripts/verify-library-owners-sorted.sh
 
 .PHONY: update-atlas-sdk
 update-atlas-sdk: ## Update the atlas-sdk dependency

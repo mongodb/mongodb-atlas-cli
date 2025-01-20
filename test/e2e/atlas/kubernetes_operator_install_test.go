@@ -25,7 +25,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/features"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
-	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/pkg/api/v1"
+	akov2 "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	appsv1 "k8s.io/api/apps/v1"

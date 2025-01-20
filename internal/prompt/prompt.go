@@ -18,14 +18,6 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 )
 
-// NewDeleteConfirm creates a prompt to confirm if the entry should be deleted.
-func NewDeleteConfirm(entry string) survey.Prompt {
-	prompt := &survey.Confirm{
-		Message: "Are you sure you want to delete: " + entry,
-	}
-	return prompt
-}
-
 // NewConfirm creates a prompt to confirm if the entry should be deleted.
 func NewConfirm(message string) survey.Prompt {
 	prompt := &survey.Confirm{

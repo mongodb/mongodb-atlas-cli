@@ -85,7 +85,7 @@ func (opts *DeleteOpts) watcher() (any, bool, error) {
 // atlas clusters search nodes delete [--clusterName clusterName].
 func DeleteBuilder() *cobra.Command {
 	opts := &DeleteOpts{
-		DeleteOpts: cli.NewDeleteOpts(deleteTemplate, "Search node not deleted."),
+		DeleteOpts: cli.NewDeleteOptsWithPrompt(deleteTemplate, "Search node not deleted.", "Are you sure you want to delete search nodes for cluster: %s"),
 	}
 
 	cmd := &cobra.Command{

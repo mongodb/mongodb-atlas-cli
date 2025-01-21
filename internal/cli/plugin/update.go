@@ -21,6 +21,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strings"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v61/github"
@@ -55,7 +56,7 @@ func printPluginUpdateWarning(p *plugin.Plugin, err error) {
 
 // extract plugin specifier and version given the input argument of the update command.
 func extractPluginSpecifierAndVersionFromArg(arg string) (string, *semver.Version, error) {
-	regexPattern := `^(?P<pluginValue>[^\s@]+)(@(?P<version>v?(\d+)(\.\d+)?(\.\d+)?|latest))?$`
+	regexPattern := `^(?P<pluginValue>[^\s@]+)(@(?P<version>.+))?$`
 	regex, err := regexp.Compile(regexPattern)
 	if err != nil {
 		return "", nil, fmt.Errorf("error compiling regex: %w", err)
@@ -78,6 +79,7 @@ func extractPluginSpecifierAndVersionFromArg(arg string) (string, *semver.Versio
 	var version *semver.Version
 
 	if versionValue, ok := groupMap["version"]; ok && versionValue != latest && versionValue != "" {
+		versionValue := strings.TrimPrefix(versionValue, "v")
 		semverVersion, err := semver.NewVersion(versionValue)
 		if err != nil {
 			return "", nil, fmt.Errorf(`the specified version "%s" is invalid, it needs to follow the rules of Semantic Versioning`, versionValue)

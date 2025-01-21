@@ -80,7 +80,7 @@ func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 	// download latest release if version is not specified
 	if g.version == nil {
 		// download the 100 latest releases
-		const maxPerPage = 100
+		const MaxPerPage = 100
 		releases, _, err := g.ghClient.Repositories.ListReleases(context.Background(), g.owner, g.name, &github.ListOptions{
 			Page:    0,
 			PerPage: MaxPerPage,

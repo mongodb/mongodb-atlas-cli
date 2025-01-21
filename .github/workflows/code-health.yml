@@ -146,7 +146,7 @@ jobs:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - name: Comment PR
-        uses: marocchino/sticky-pull-request-comment@v2.9.0
+        uses: marocchino/sticky-pull-request-comment@v2.9.1
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           recreate: true

@@ -20,7 +20,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 )
 
-func validateConfigOpts(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateConfigOpts() error {
 	if opts.event == "" {
 		return fmt.Errorf("--%s flag is required", flag.Event)
 	}
@@ -31,94 +31,94 @@ func validateConfigOpts(opts *ConfigOpts) error {
 		return fmt.Errorf("--%s is required", flag.NotificationType)
 	}
 
-	return validateAlertSettingsTypes(opts)
+	return opts.validateAlertSettingsTypes()
 }
 
-func validateAlertSettingsTypes(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateAlertSettingsTypes() error {
 	switch opts.notificationType {
 	case datadog:
-		return validateDatadog(opts)
+		return opts.validateDatadog(opts.notificationType)
 	case email:
-		return validateEmail(opts)
+		return opts.validateEmail()
 	case microsoftTeams:
-		return validateMicrosoftTeams(opts)
+		return opts.validateMicrosoftTeams()
 	case opsGenie:
-		return validateOpsGenie(opts)
+		return opts.validateOpsGenie()
 	case pagerDuty:
-		return validatePagerDuty(opts)
+		return opts.validatePagerDuty()
 	case slack:
-		return validateSlack(opts)
+		return opts.validateSlack()
 	case sms:
-		return validateSMS(opts)
+		return opts.validateSMS()
 	case team:
-		return validateTeams(opts)
+		return opts.validateTeams()
 	case user:
-		return validateUser(opts)
+		return opts.validateUser()
 	case victor:
 		return validateVictor(opts)
 	case webhook:
-		return validateWebhook(opts)
+		return opts.validateWebhook()
 	}
 	return nil
 }
 
-func validateDatadog(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateDatadog(t string) error {
 	if opts.apiKey == "" || opts.notificationRegion == "" {
-		return fmt.Errorf("--%s and --%s are required when --%s is DATADOG", flag.APIKey, flag.NotificationRegion, flag.NotificationType)
+		return fmt.Errorf("--%s and --%s are required when --%s is %s", flag.APIKey, flag.NotificationRegion, flag.NotificationType, t)
 	}
 	return nil
 }
 
-func validateEmail(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateEmail() error {
 	if opts.notificationEmailAddress == "" {
 		return fmt.Errorf("--%s is required when --%s is EMAIL", flag.NotificationEmailAddress, flag.NotificationType)
 	}
 	return nil
 }
 
-func validateMicrosoftTeams(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateMicrosoftTeams() error {
 	if opts.notificationWebhookURL == "" {
 		return fmt.Errorf("--%s is required when --%s is MICROSOFT_TEAMS", flag.NotificationWebhookURL, flag.NotificationType)
 	}
 	return nil
 }
 
-func validateOpsGenie(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateOpsGenie() error {
 	if opts.apiKey == "" || opts.notificationRegion == "" {
 		return fmt.Errorf("--%s and --%s are required when --%s is OPS_GENIE", flag.APIKey, flag.NotificationRegion, flag.NotificationType)
 	}
 	return nil
 }
 
-func validatePagerDuty(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validatePagerDuty() error {
 	if opts.notificationServiceKey == "" || opts.notificationRegion == "" {
 		return fmt.Errorf("--%s and --%s are required when --%s is PAGER_DUTY", flag.NotificationServiceKey, flag.NotificationRegion, flag.NotificationType)
 	}
 	return nil
 }
 
-func validateSlack(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateSlack() error {
 	if opts.notificationToken == "" || opts.notificationChannelName == "" {
 		return fmt.Errorf("--%s and --%s are required when --%s is SLACK", flag.NotificationToken, flag.NotificationChannelName, flag.NotificationType)
 	}
 	return nil
 }
 
-func validateSMS(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateSMS() error {
 	if opts.notificationMobileNumber == "" {
 		return fmt.Errorf("--%s is required when --%s is SMS", flag.NotificationMobileNumber, flag.NotificationType)
 	}
 	return nil
 }
 
-func validateTeams(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateTeams() error {
 	if opts.notificationTeamID == "" {
 		return fmt.Errorf("--%s is required when --%s is TEAM", flag.NotificationTeamID, flag.NotificationType)
 	}
 	return nil
 }
 
-func validateUser(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateUser() error {
 	if opts.notificationUsername == "" {
 		return fmt.Errorf("--%s is required when --%s is USER", flag.NotificationUsername, flag.NotificationType)
 	}
@@ -132,7 +132,7 @@ func validateVictor(opts *ConfigOpts) error {
 	return nil
 }
 
-func validateWebhook(opts *ConfigOpts) error {
+func (opts *ConfigOpts) validateWebhook() error {
 	if opts.notificationWebhookURL == "" {
 		return fmt.Errorf("--%s is required when --%s is WEBHOOK", flag.NotificationWebhookURL, flag.NotificationType)
 	}

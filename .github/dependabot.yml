@@ -30,6 +30,9 @@ updates:
       containers:
         patterns:
           - "github.com/containers*"
+      otel:
+        patterns:
+          - "go.opentelemetry.io/otel*"
   - package-ecosystem: github-actions
     directory: "/"
     target-branch: master

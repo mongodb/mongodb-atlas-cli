@@ -37,7 +37,7 @@ func (opts *ConfigOpts) validateConfigOpts() error {
 func (opts *ConfigOpts) validateAlertSettingsTypes() error {
 	switch opts.notificationType {
 	case datadog:
-		return opts.validateDatadog(opts.notificationType)
+		return opts.validateDatadog()
 	case email:
 		return opts.validateEmail()
 	case microsoftTeams:
@@ -62,9 +62,9 @@ func (opts *ConfigOpts) validateAlertSettingsTypes() error {
 	return nil
 }
 
-func (opts *ConfigOpts) validateDatadog(t string) error {
+func (opts *ConfigOpts) validateDatadog() error {
 	if opts.apiKey == "" || opts.notificationRegion == "" {
-		return fmt.Errorf("--%s and --%s are required when --%s is %s", flag.APIKey, flag.NotificationRegion, flag.NotificationType, t)
+		return fmt.Errorf("--%s and --%s are required when --%s is DATADOG", flag.APIKey, flag.NotificationRegion, flag.NotificationType)
 	}
 	return nil
 }

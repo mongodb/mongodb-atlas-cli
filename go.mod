@@ -7,7 +7,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
 	github.com/PaesslerAG/jsonpath v0.1.1
-	github.com/briandowns/spinner v1.23.1
+	github.com/briandowns/spinner v1.23.2
 	github.com/creack/pty v1.1.24
 	github.com/evergreen-ci/shrub v0.0.0-20240215220116-3f233ddeff2a
 	github.com/gemalto/kmip-go v0.0.10

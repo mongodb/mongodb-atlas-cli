@@ -14,7 +14,7 @@ atlas api serverlessPrivateEndpoints
 
 Returns, adds, edits, and removes private endpoints for serverless instances.
 
-Returns, adds, edits, and removes private endpoints for serverless instances. To learn more, see the Atlas Administration API tab on the following tutorial.
+To learn more, see the Atlas Administration API tab on the following tutorial.
 
 Options
 -------

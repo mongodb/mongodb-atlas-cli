@@ -14,10 +14,7 @@ atlas api clusterOutageSimulation getOutageSimulation
 
 Returns one outage simulation for one cluster.
 
-Returns one outage simulation for one cluster.
-
-This command is invoking the endpoint with OperationID: 'getOutageSimulation'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cluster-Outage-Simulation/operation/getOutageSimulation
+This command is invoking the endpoint with OperationID: 'getOutageSimulation'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cluster-Outage-Simulation/operation/getOutageSimulation
 
 Syntax
 ------

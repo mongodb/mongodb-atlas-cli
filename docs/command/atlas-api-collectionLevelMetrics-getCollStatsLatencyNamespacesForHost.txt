@@ -14,10 +14,7 @@ atlas api collectionLevelMetrics getCollStatsLatencyNamespacesForHost
 
 Return the subset of namespaces from the given process ranked by highest total execution time (descending) within the given time window.
 
-Return the subset of namespaces from the given process ranked by highest total execution time (descending) within the given time window.
-
-This command is invoking the endpoint with OperationID: 'getCollStatsLatencyNamespacesForHost'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Collection-Level-Metrics/operation/getCollStatsLatencyNamespacesForHost
+This command is invoking the endpoint with OperationID: 'getCollStatsLatencyNamespacesForHost'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Collection-Level-Metrics/operation/getCollStatsLatencyNamespacesForHost
 
 Syntax
 ------

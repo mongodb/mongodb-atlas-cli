@@ -14,7 +14,7 @@ atlas api alertConfigurations
 
 Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users.
 
-Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users. This collection remains under revision and may change.
+This collection remains under revision and may change.
 
 Options
 -------

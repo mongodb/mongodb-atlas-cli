@@ -14,8 +14,6 @@ atlas api flexSnapshots
 
 Returns and requests to download flex database deployment snapshots.
 
-Returns and requests to download flex database deployment snapshots.
-
 Options
 -------
 

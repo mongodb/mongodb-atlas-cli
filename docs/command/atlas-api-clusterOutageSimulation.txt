@@ -14,8 +14,6 @@ atlas api clusterOutageSimulation
 
 Returns, starts, or ends a cluster outage simulation.
 
-Returns, starts, or ends a cluster outage simulation.
-
 Options
 -------
 

@@ -14,10 +14,7 @@ atlas api networkPeering verifyConnectViaPeeringOnlyModeForOneProject
 
 Verifies if someone set the specified project to Connect via Peering Only mode.
 
-Verifies if someone set the specified project to Connect via Peering Only mode. To use this resource, the requesting API Key must have the Project Read Only role.
-
-This command is invoking the endpoint with OperationID: 'verifyConnectViaPeeringOnlyModeForOneProject'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/verifyConnectViaPeeringOnlyModeForOneProject
+To use this resource, the requesting API Key must have the Project Read Only role. This command is invoking the endpoint with OperationID: 'verifyConnectViaPeeringOnlyModeForOneProject'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/verifyConnectViaPeeringOnlyModeForOneProject
 
 Syntax
 ------

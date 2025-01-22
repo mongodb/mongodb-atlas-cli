@@ -14,7 +14,7 @@ atlas api alerts
 
 Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define.
 
-Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define. This collection remains under revision and may change.
+This collection remains under revision and may change.
 
 Options
 -------

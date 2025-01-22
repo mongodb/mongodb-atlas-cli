@@ -14,8 +14,6 @@ atlas api sharedTierSnapshots
 
 Returns and requests to download shared-tier database deployment snapshots.
 
-Returns and requests to download shared-tier database deployment snapshots.
-
 Options
 -------
 

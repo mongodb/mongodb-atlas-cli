@@ -14,8 +14,6 @@ atlas api flexClusters
 
 Returns, adds, edits, and removes flex clusters.
 
-Returns, adds, edits, and removes flex clusters.
-
 Options
 -------
 

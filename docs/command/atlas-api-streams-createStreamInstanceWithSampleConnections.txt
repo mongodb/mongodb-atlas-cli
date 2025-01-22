@@ -14,10 +14,7 @@ atlas api streams createStreamInstanceWithSampleConnections
 
 Creates one stream instance in the specified project with sample connections.
 
-Creates one stream instance in the specified project with sample connections. To use this resource the requesting API Key must have the Project Data Access Admin role, Project Owner role or Project Stream Processing Owner role.
-
-This command is invoking the endpoint with OperationID: 'createStreamInstanceWithSampleConnections'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createStreamInstanceWithSampleConnections
+To use this resource the requesting API Key must have the Project Data Access Admin role, Project Owner role or Project Stream Processing Owner role. This command is invoking the endpoint with OperationID: 'createStreamInstanceWithSampleConnections'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createStreamInstanceWithSampleConnections
 
 Syntax
 ------

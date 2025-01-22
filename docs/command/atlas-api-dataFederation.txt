@@ -14,7 +14,7 @@ atlas api dataFederation
 
 Returns, adds, edits, and removes Federated Database Instances.
 
-Returns, adds, edits, and removes Federated Database Instances. This resource requires your project ID. Changes to federated database instance configurations can affect costs.
+This resource requires your project ID. Changes to federated database instance configurations can affect costs.
 
 Options
 -------

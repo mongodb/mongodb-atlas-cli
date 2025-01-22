@@ -14,10 +14,7 @@ atlas api serverlessInstances listServerlessInstances
 
 Returns details for all serverless instances in the specified project.
 
-Returns details for all serverless instances in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
-
-This command is invoking the endpoint with OperationID: 'listServerlessInstances'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Instances/operation/listServerlessInstances
+To use this resource, the requesting API Key must have the Project Read Only role. This command is invoking the endpoint with OperationID: 'listServerlessInstances'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Instances/operation/listServerlessInstances
 
 Syntax
 ------

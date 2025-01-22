@@ -14,7 +14,7 @@ atlas api accessTracking
 
 Returns access logs for authentication attempts made to Atlas database deployments.
 
-Returns access logs for authentication attempts made to Atlas database deployments. To view database access history, you must have either the Project Owner or Organization Owner role.
+To view database access history, you must have either the Project Owner or Organization Owner role.
 
 Options
 -------

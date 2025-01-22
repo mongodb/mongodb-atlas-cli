@@ -69,12 +69,12 @@ func createRootAPICommand() *cobra.Command {
 
 func createAPICommandGroupToCobraCommand(group api.Group) *cobra.Command {
 	groupName := strcase.ToLowerCamel(group.Name)
-	shortDescription, _ := splitFirstSentenceOfDescription(group.Description)
+	shortDescription, longDescription := splitShortAndLongDescription(group.Description)
 
 	return &cobra.Command{
 		Use:   groupName,
 		Short: shortDescription,
-		Long:  group.Description,
+		Long:  longDescription,
 	}
 }
 
@@ -82,7 +82,7 @@ func createAPICommandGroupToCobraCommand(group api.Group) *cobra.Command {
 func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	// command properties
 	commandName := strcase.ToLowerCamel(command.OperationID)
-	shortDescription, _ := splitFirstSentenceOfDescription(command.Description)
+	shortDescription, longDescription := splitShortAndLongDescription(command.Description)
 
 	// flag values
 	file := ""
@@ -96,7 +96,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   commandName,
 		Short: shortDescription,
-		Long:  command.Description,
+		Long:  longDescription,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			// Go through all commands that have not been touched/modified by the user and try to populate them from the users profile
 			// Common usecases:

@@ -14,10 +14,7 @@ atlas api clusterOutageSimulation endOutageSimulation
 
 Ends a cluster outage simulation.
 
-Ends a cluster outage simulation.
-
-This command is invoking the endpoint with OperationID: 'endOutageSimulation'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cluster-Outage-Simulation/operation/endOutageSimulation
+This command is invoking the endpoint with OperationID: 'endOutageSimulation'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cluster-Outage-Simulation/operation/endOutageSimulation
 
 Syntax
 ------

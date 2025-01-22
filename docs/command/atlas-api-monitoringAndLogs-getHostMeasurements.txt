@@ -14,7 +14,7 @@ atlas api monitoringAndLogs getHostMeasurements
 
 Returns disk, partition, or host measurements per process for the specified host for the specified project.
 
-Returns disk, partition, or host measurements per process for the specified host for the specified project. Returned value can be one of the following:
+Returned value can be one of the following:
 
 
 
@@ -34,10 +34,7 @@ Measurements for the host, such as CPU usage or number of I/O operations
 
 
 
-To use this resource, the requesting API Key must have the Project Read Only role.
-
-This command is invoking the endpoint with OperationID: 'getHostMeasurements'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs/operation/getHostMeasurements
+To use this resource, the requesting API Key must have the Project Read Only role. This command is invoking the endpoint with OperationID: 'getHostMeasurements'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs/operation/getHostMeasurements
 
 Syntax
 ------

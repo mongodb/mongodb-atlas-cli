@@ -1510,7 +1510,7 @@ func Test_buildCustomRoles(t *testing.T) {
 			},
 		}
 
-		got, err := buildCustomRoles(rolesProvider, projectID)
+		got, err := projectBuildCustomRoles(rolesProvider, projectID)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

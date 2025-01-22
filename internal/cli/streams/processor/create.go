@@ -35,7 +35,7 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	result, err := opts.store.CreateStreamProcessor(createParams)
+	result, err := opts.store.CreateStreamProcessor(createParams.GroupId, createParams.TenantName, createParams.StreamsProcessor)
 	if err != nil {
 		return err
 	}

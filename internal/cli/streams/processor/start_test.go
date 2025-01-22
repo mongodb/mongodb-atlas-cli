@@ -26,7 +26,7 @@ func TestStartOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		StartStreamProcessor(gomock.Any()).
+		StartStreamProcessor(gomock.Any(), gomock.Any(), gomock.Any()).
 		Return(nil).
 		Times(1)
 

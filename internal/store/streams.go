@@ -68,27 +68,27 @@ type ConnectionUpdater interface {
 }
 
 type ProcessorLister interface {
-	ListProcessors(*atlasv2.ListStreamProcessorsApiParams) (*atlasv2.PaginatedApiStreamsStreamProcessorWithStats, error)
+	ListProcessors(projectID, tenantName string) (*atlasv2.PaginatedApiStreamsStreamProcessorWithStats, error)
 }
 
 type ProcessorDescriber interface {
-	StreamProcessor(*atlasv2.GetStreamProcessorApiParams) (*atlasv2.StreamsProcessorWithStats, error)
+	StreamProcessor(projectID, tenantName, processorName string) (*atlasv2.StreamsProcessorWithStats, error)
 }
 
 type ProcessorStarter interface {
-	StartStreamProcessor(*atlasv2.StartStreamProcessorApiParams) error
+	StartStreamProcessor(projectID, tenantName, processorName string) error
 }
 
 type ProcessorStopper interface {
-	StopStreamProcessor(*atlasv2.StopStreamProcessorApiParams) error
+	StopStreamProcessor(projectID, tenantName, processorName string) error
 }
 
 type ProcessorDeleter interface {
-	DeleteStreamProcessor(string, string, string) error
+	DeleteStreamProcessor(projectID, tenantName, processorName string) error
 }
 
 type ProcessorCreator interface {
-	CreateStreamProcessor(*atlasv2.CreateStreamProcessorApiParams) (*atlasv2.StreamsProcessor, error)
+	CreateStreamProcessor(projectID, tenantName string, streamProcessor *atlasv2.StreamsProcessor) (*atlasv2.StreamsProcessor, error)
 }
 
 func (s *Store) ProjectStreams(opts *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
@@ -158,26 +158,26 @@ func (s *Store) DeleteConnection(projectID, tenantName, connectionName string) e
 }
 
 // ListProcessors returns a list of processors for a specific tenant.
-func (s *Store) ListProcessors(request *atlasv2.ListStreamProcessorsApiParams) (*atlasv2.PaginatedApiStreamsStreamProcessorWithStats, error) {
-	result, _, err := s.clientv2.StreamsApi.ListStreamProcessors(s.ctx, request.GroupId, request.TenantName).Execute()
+func (s *Store) ListProcessors(projectID, tenantName string) (*atlasv2.PaginatedApiStreamsStreamProcessorWithStats, error) {
+	result, _, err := s.clientv2.StreamsApi.ListStreamProcessors(s.ctx, projectID, tenantName).Execute()
 	return result, err
 }
 
 // StreamProcessor returns details about the specified Stream Processor.
-func (s *Store) StreamProcessor(request *atlasv2.GetStreamProcessorApiParams) (*atlasv2.StreamsProcessorWithStats, error) {
-	result, _, err := s.clientv2.StreamsApi.GetStreamProcessor(s.ctx, request.GroupId, request.TenantName, request.ProcessorName).Execute()
+func (s *Store) StreamProcessor(projectID, tenantName, processorName string) (*atlasv2.StreamsProcessorWithStats, error) {
+	result, _, err := s.clientv2.StreamsApi.GetStreamProcessor(s.ctx, projectID, tenantName, processorName).Execute()
 	return result, err
 }
 
 // StartStreamProcessor starts running the specified Stream Processor.
-func (s *Store) StartStreamProcessor(request *atlasv2.StartStreamProcessorApiParams) error {
-	_, _, err := s.clientv2.StreamsApi.StartStreamProcessor(s.ctx, request.GroupId, request.TenantName, request.ProcessorName).Execute()
+func (s *Store) StartStreamProcessor(projectID, tenantName, processorName string) error {
+	_, _, err := s.clientv2.StreamsApi.StartStreamProcessor(s.ctx, projectID, tenantName, processorName).Execute()
 	return err
 }
 
 // StopStreamProcessor stops running the specified Stream Processor.
-func (s *Store) StopStreamProcessor(request *atlasv2.StopStreamProcessorApiParams) error {
-	_, _, err := s.clientv2.StreamsApi.StopStreamProcessor(s.ctx, request.GroupId, request.TenantName, request.ProcessorName).Execute()
+func (s *Store) StopStreamProcessor(projectID, tenantName, processorName string) error {
+	_, _, err := s.clientv2.StreamsApi.StopStreamProcessor(s.ctx, projectID, tenantName, processorName).Execute()
 	return err
 }
 
@@ -188,7 +188,7 @@ func (s *Store) DeleteStreamProcessor(projectID, tenantName, processorName strin
 }
 
 // CreateStreamProcessor creates a Stream Processor.
-func (s *Store) CreateStreamProcessor(request *atlasv2.CreateStreamProcessorApiParams) (*atlasv2.StreamsProcessor, error) {
-	result, _, err := s.clientv2.StreamsApi.CreateStreamProcessor(s.ctx, request.GroupId, request.TenantName, request.StreamsProcessor).Execute()
+func (s *Store) CreateStreamProcessor(projectID, tenantName string, streamProcessor *atlasv2.StreamsProcessor) (*atlasv2.StreamsProcessor, error) {
+	result, _, err := s.clientv2.StreamsApi.CreateStreamProcessor(s.ctx, projectID, tenantName, streamProcessor).Execute()
 	return result, err
 }

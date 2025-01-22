@@ -11,7 +11,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type StartOpts struct {
@@ -23,12 +22,7 @@ type StartOpts struct {
 }
 
 func (opts *StartOpts) Run() error {
-	startParams := new(atlasv2.StartStreamProcessorApiParams)
-	startParams.GroupId = opts.ProjectID
-	startParams.TenantName = opts.streamsInstance
-	startParams.ProcessorName = opts.processorName
-
-	err := opts.store.StartStreamProcessor(startParams)
+	err := opts.store.StartStreamProcessor(opts.ProjectID, opts.streamsInstance, opts.processorName)
 	if err != nil {
 		return err
 	}

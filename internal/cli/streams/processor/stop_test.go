@@ -26,7 +26,7 @@ func TestStopOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		StopStreamProcessor(gomock.Any()).
+		StopStreamProcessor(gomock.Any(), gomock.Any(), gomock.Any()).
 		Return(nil).
 		Times(1)
 

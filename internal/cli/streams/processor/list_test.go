@@ -78,7 +78,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ListProcessors(gomock.Any()).
+		ListProcessors(gomock.Any(), gomock.Any()).
 		Return(ret, nil).
 		Times(2)
 

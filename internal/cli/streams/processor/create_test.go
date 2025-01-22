@@ -141,7 +141,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			CreateStreamProcessor(gomock.Any()).Return(expected, nil).
+			CreateStreamProcessor(gomock.Any(), gomock.Any(), gomock.Any()).Return(expected, nil).
 			Times(1)
 
 		if err := createOpts.Run(); err != nil {

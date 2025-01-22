@@ -46,7 +46,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		StreamProcessor(gomock.Any()).
+		StreamProcessor(gomock.Any(), gomock.Any(), gomock.Any()).
 		Return(expected, nil).
 		Times(2)
 

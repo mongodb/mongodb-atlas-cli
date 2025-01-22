@@ -26,12 +26,7 @@ type DescribeOpts struct {
 }
 
 func (opts *DescribeOpts) Run() error {
-	describeParams := new(atlasv2.GetStreamProcessorApiParams)
-	describeParams.GroupId = opts.ProjectID
-	describeParams.TenantName = opts.streamsInstance
-	describeParams.ProcessorName = opts.processorName
-
-	r, err := opts.store.StreamProcessor(describeParams)
+	r, err := opts.store.StreamProcessor(opts.ProjectID, opts.streamsInstance, opts.processorName)
 	if err != nil {
 		return err
 	}

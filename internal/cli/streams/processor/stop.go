@@ -11,7 +11,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 type StopOpts struct {
@@ -23,12 +22,7 @@ type StopOpts struct {
 }
 
 func (opts *StopOpts) Run() error {
-	stopParams := new(atlasv2.StopStreamProcessorApiParams)
-	stopParams.GroupId = opts.ProjectID
-	stopParams.TenantName = opts.streamsInstance
-	stopParams.ProcessorName = opts.processorName
-
-	err := opts.store.StopStreamProcessor(stopParams)
+	err := opts.store.StopStreamProcessor(opts.ProjectID, opts.streamsInstance, opts.processorName)
 	if err != nil {
 		return err
 	}

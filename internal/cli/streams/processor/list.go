@@ -24,13 +24,7 @@ type ListOpts struct {
 }
 
 func (opts *ListOpts) Run() error {
-	listParams := new(atlasv2.ListStreamProcessorsApiParams)
-	listParams.ItemsPerPage = &opts.ItemsPerPage
-	listParams.GroupId = opts.ProjectID
-	listParams.PageNum = &opts.PageNum
-	listParams.TenantName = opts.streamsInstance
-
-	r, err := opts.store.ListProcessors(listParams)
+	r, err := opts.store.ListProcessors(opts.ProjectID, opts.streamsInstance)
 	if err != nil {
 		return err
 	}

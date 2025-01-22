@@ -452,18 +452,18 @@ func (m *MockProcessorLister) EXPECT() *MockProcessorListerMockRecorder {
 }
 
 // ListProcessors mocks base method.
-func (m *MockProcessorLister) ListProcessors(arg0 *admin.ListStreamProcessorsApiParams) (*admin.PaginatedApiStreamsStreamProcessorWithStats, error) {
+func (m *MockProcessorLister) ListProcessors(arg0, arg1 string) (*admin.PaginatedApiStreamsStreamProcessorWithStats, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListProcessors", arg0)
+	ret := m.ctrl.Call(m, "ListProcessors", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedApiStreamsStreamProcessorWithStats)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListProcessors indicates an expected call of ListProcessors.
-func (mr *MockProcessorListerMockRecorder) ListProcessors(arg0 interface{}) *gomock.Call {
+func (mr *MockProcessorListerMockRecorder) ListProcessors(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProcessors", reflect.TypeOf((*MockProcessorLister)(nil).ListProcessors), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProcessors", reflect.TypeOf((*MockProcessorLister)(nil).ListProcessors), arg0, arg1)
 }
 
 // MockProcessorDescriber is a mock of ProcessorDescriber interface.
@@ -490,18 +490,18 @@ func (m *MockProcessorDescriber) EXPECT() *MockProcessorDescriberMockRecorder {
 }
 
 // StreamProcessor mocks base method.
-func (m *MockProcessorDescriber) StreamProcessor(arg0 *admin.GetStreamProcessorApiParams) (*admin.StreamsProcessorWithStats, error) {
+func (m *MockProcessorDescriber) StreamProcessor(arg0, arg1, arg2 string) (*admin.StreamsProcessorWithStats, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StreamProcessor", arg0)
+	ret := m.ctrl.Call(m, "StreamProcessor", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.StreamsProcessorWithStats)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // StreamProcessor indicates an expected call of StreamProcessor.
-func (mr *MockProcessorDescriberMockRecorder) StreamProcessor(arg0 interface{}) *gomock.Call {
+func (mr *MockProcessorDescriberMockRecorder) StreamProcessor(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StreamProcessor", reflect.TypeOf((*MockProcessorDescriber)(nil).StreamProcessor), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StreamProcessor", reflect.TypeOf((*MockProcessorDescriber)(nil).StreamProcessor), arg0, arg1, arg2)
 }
 
 // MockProcessorStarter is a mock of ProcessorStarter interface.
@@ -528,17 +528,17 @@ func (m *MockProcessorStarter) EXPECT() *MockProcessorStarterMockRecorder {
 }
 
 // StartStreamProcessor mocks base method.
-func (m *MockProcessorStarter) StartStreamProcessor(arg0 *admin.StartStreamProcessorApiParams) error {
+func (m *MockProcessorStarter) StartStreamProcessor(arg0, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StartStreamProcessor", arg0)
+	ret := m.ctrl.Call(m, "StartStreamProcessor", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // StartStreamProcessor indicates an expected call of StartStreamProcessor.
-func (mr *MockProcessorStarterMockRecorder) StartStreamProcessor(arg0 interface{}) *gomock.Call {
+func (mr *MockProcessorStarterMockRecorder) StartStreamProcessor(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartStreamProcessor", reflect.TypeOf((*MockProcessorStarter)(nil).StartStreamProcessor), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartStreamProcessor", reflect.TypeOf((*MockProcessorStarter)(nil).StartStreamProcessor), arg0, arg1, arg2)
 }
 
 // MockProcessorStopper is a mock of ProcessorStopper interface.
@@ -565,17 +565,17 @@ func (m *MockProcessorStopper) EXPECT() *MockProcessorStopperMockRecorder {
 }
 
 // StopStreamProcessor mocks base method.
-func (m *MockProcessorStopper) StopStreamProcessor(arg0 *admin.StopStreamProcessorApiParams) error {
+func (m *MockProcessorStopper) StopStreamProcessor(arg0, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StopStreamProcessor", arg0)
+	ret := m.ctrl.Call(m, "StopStreamProcessor", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // StopStreamProcessor indicates an expected call of StopStreamProcessor.
-func (mr *MockProcessorStopperMockRecorder) StopStreamProcessor(arg0 interface{}) *gomock.Call {
+func (mr *MockProcessorStopperMockRecorder) StopStreamProcessor(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopStreamProcessor", reflect.TypeOf((*MockProcessorStopper)(nil).StopStreamProcessor), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopStreamProcessor", reflect.TypeOf((*MockProcessorStopper)(nil).StopStreamProcessor), arg0, arg1, arg2)
 }
 
 // MockProcessorDeleter is a mock of ProcessorDeleter interface.
@@ -639,16 +639,16 @@ func (m *MockProcessorCreator) EXPECT() *MockProcessorCreatorMockRecorder {
 }
 
 // CreateStreamProcessor mocks base method.
-func (m *MockProcessorCreator) CreateStreamProcessor(arg0 *admin.CreateStreamProcessorApiParams) (*admin.StreamsProcessor, error) {
+func (m *MockProcessorCreator) CreateStreamProcessor(arg0, arg1 string, arg2 *admin.StreamsProcessor) (*admin.StreamsProcessor, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateStreamProcessor", arg0)
+	ret := m.ctrl.Call(m, "CreateStreamProcessor", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.StreamsProcessor)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateStreamProcessor indicates an expected call of CreateStreamProcessor.
-func (mr *MockProcessorCreatorMockRecorder) CreateStreamProcessor(arg0 interface{}) *gomock.Call {
+func (mr *MockProcessorCreatorMockRecorder) CreateStreamProcessor(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateStreamProcessor", reflect.TypeOf((*MockProcessorCreator)(nil).CreateStreamProcessor), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateStreamProcessor", reflect.TypeOf((*MockProcessorCreator)(nil).CreateStreamProcessor), arg0, arg1, arg2)
 }

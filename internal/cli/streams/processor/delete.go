@@ -1,3 +1,17 @@
+// Copyright 2025 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package processor
 
 import (
@@ -16,8 +30,8 @@ import (
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	streamsInstance string
-	store           store.ProcessorDeleter
+	cli.StreamsOpts
+	store store.ProcessorDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
@@ -29,7 +43,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteStreamProcessor, opts.ProjectID, opts.streamsInstance)
+	return opts.Delete(opts.store.DeleteStreamProcessor, opts.ProjectID, opts.Instance)
 }
 
 // atlas streams processor delete <processorName>.
@@ -39,8 +53,8 @@ func DeleteBuilder() *cobra.Command {
 	}
 	cmd := &cobra.Command{
 		Use:   "delete <processorName>",
-		Short: "Delete a specific Atlas Stream Processor in a Stream Processing Instance.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Short: "Delete an Atlas Stream Processor in a Stream Processing Instance.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: `# deletes stream processor 'ExampleSP' from instance 'ExampleInstance':
   atlas streams processors delete ExampleSP --instance ExampleInstance`,
 		Args: require.ExactArgs(1),
@@ -51,6 +65,7 @@ func DeleteBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(
 				opts.ValidateProjectID,
+				opts.ValidateInstance,
 				opts.initStore(cmd.Context()),
 			); err != nil {
 				return err
@@ -63,12 +78,10 @@ func DeleteBuilder() *cobra.Command {
 		},
 	}
 
+	opts.AddProjectOptsFlags(cmd)
+	opts.AddStreamsOptsFlags(cmd)
+
 	cmd.Flags().BoolVar(&opts.Confirm, flag.Force, false, usage.Force)
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.Flags().StringVarP(&opts.streamsInstance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
-
-	_ = cmd.MarkFlagRequired(flag.Instance)
 
 	return cmd
 }

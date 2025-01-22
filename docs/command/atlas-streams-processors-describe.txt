@@ -12,9 +12,9 @@ atlas streams processors describe
    :depth: 1
    :class: singlecol
 
-Get details about a specific Atlas Stream Processor in a Stream Processing Instance.
+Get details about an Atlas Stream Processor in a Stream Processing Instance.
 
-To use this command, you must authenticate with a user account or an API key with the Project Read Only role.
+To use this command, you must authenticate with a user account or an API key with the Project Owner role.
 
 Syntax
 ------
@@ -63,7 +63,7 @@ Options
      - Flag that indicates whether to include Stream Processor stats. This flag defaults to false.
    * - -i, --instance
      - string
-     - true
+     - false
      - Name of your Atlas Stream Processing instance.
    * - --projectId
      - string

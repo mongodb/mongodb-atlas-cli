@@ -12,9 +12,9 @@ atlas streams processors delete
    :depth: 1
    :class: singlecol
 
-Delete a specific Atlas Stream Processor in a Stream Processing Instance.
+Delete an Atlas Stream Processor in a Stream Processing Instance.
 
-To use this command, you must authenticate with a user account or an API key with the Project Read Only role.
+To use this command, you must authenticate with a user account or an API key with the Project Owner role.
 
 Syntax
 ------
@@ -63,7 +63,7 @@ Options
      - help for delete
    * - -i, --instance
      - string
-     - true
+     - false
      - Name of your Atlas Stream Processing instance.
    * - --projectId
      - string

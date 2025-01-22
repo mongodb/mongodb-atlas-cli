@@ -24,6 +24,7 @@ import (
 const requiredF = `required flag(s) "%s" not set`
 
 var errMissingProjectID = fmt.Errorf(requiredF, flag.ProjectID)
+var errMissingInstance = fmt.Errorf(requiredF, flag.Instance)
 var ErrMissingOrgID = fmt.Errorf(requiredF, flag.OrgID)
 var ErrFreeClusterAlreadyExists = errors.New("this project already has another free cluster. To learn how to create non-free clusters, run \"atlas cluster create --help\"")
 var ErrNoRegionExistsTryCommand = errors.New(`the region does not exist. To find the available regions, run "atlas cluster availableRegions list"`)

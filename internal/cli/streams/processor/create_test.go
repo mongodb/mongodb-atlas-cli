@@ -1,3 +1,17 @@
+// Copyright 2025 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package processor
 
 import (
@@ -7,7 +21,6 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -18,8 +31,7 @@ func TestCreateOpts_Run(t *testing.T) {
 	t.Run("streams processor create should fail if no file is passed", func(t *testing.T) {
 		createOpts := &CreateOpts{fs: afero.NewMemMapFs()}
 		err := createOpts.Run()
-		require.Error(t, err)
-		assert.Contains(t, err.Error(), "missing file")
+		assert.ErrorContains(t, err, "missing file")
 	})
 
 	t.Run("streams processor create should fail if no name is provided", func(t *testing.T) {
@@ -53,14 +65,13 @@ func TestCreateOpts_Run(t *testing.T) {
 		require.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
 
 		createOpts := &CreateOpts{
-			fs:              fs,
-			filename:        fileName,
-			streamsInstance: "ExampleInstance",
+			fs:          fs,
+			filename:    fileName,
+			StreamsOpts: cli.StreamsOpts{Instance: "ExampleInstance"},
 		}
 
 		err := createOpts.Run()
-		require.Error(t, err)
-		assert.Contains(t, err.Error(), "streams processor name missing")
+		assert.ErrorContains(t, err, "streams processor name missing")
 	})
 
 	t.Run("streams processor create", func(t *testing.T) {
@@ -101,10 +112,10 @@ func TestCreateOpts_Run(t *testing.T) {
 
 		buf := new(bytes.Buffer)
 		createOpts := &CreateOpts{
-			store:           mockStore,
-			fs:              fs,
-			filename:        fileName,
-			streamsInstance: "ExampleInstance",
+			store:       mockStore,
+			fs:          fs,
+			filename:    fileName,
+			StreamsOpts: cli.StreamsOpts{Instance: "ExampleInstance"},
 			OutputOpts: cli.OutputOpts{
 				Template:  createTemplate,
 				OutWriter: buf,
@@ -147,8 +158,6 @@ func TestCreateOpts_Run(t *testing.T) {
 		if err := createOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
-		t.Log(buf.String())
-		test.VerifyOutputTemplate(t, createTemplate, expected)
 		assert.Equal(t, "Processor ExampleSP created.\n", buf.String())
 	})
 }

@@ -56,14 +56,14 @@ Options
    * - -f, --file
      - string
      - true
-     - Path to a JSON configuration file that defines an Atlas Stream Processing connection.
+     - Path to a JSON configuration file that defines an Atlas Stream Processor.
    * - -h, --help
      - 
      - false
      - help for create
    * - -i, --instance
      - string
-     - true
+     - false
      - Name of your Atlas Stream Processing instance.
    * - -o, --output
      - string

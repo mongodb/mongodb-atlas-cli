@@ -1,3 +1,17 @@
+// Copyright 2025 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package processor
 
 import (
@@ -58,7 +72,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 			OutputOpts: cli.OutputOpts{
 				OutWriter: buf,
 			},
-			streamsInstance: "ExampleInstance",
+			StreamsOpts: cli.StreamsOpts{Instance: "ExampleInstance"},
 		}
 
 		if err := describeOpts.Run(); err != nil {
@@ -105,14 +119,13 @@ func TestDescribeOpts_Run(t *testing.T) {
 			OutputOpts: cli.OutputOpts{
 				OutWriter: buf,
 			},
-			streamsInstance: "ExampleInstance",
-			includeStats:    true,
+			StreamsOpts:  cli.StreamsOpts{Instance: "ExampleInstance"},
+			includeStats: true,
 		}
 
 		if err := describeOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
-		t.Log(buf.String())
 
 		expectedOutput := `{
   "_id": "1",

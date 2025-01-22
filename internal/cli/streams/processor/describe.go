@@ -1,3 +1,17 @@
+// Copyright 2025 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package processor
 
 import (
@@ -19,14 +33,14 @@ const jsonOutput = "json"
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	streamsInstance string
-	processorName   string
-	includeStats    bool
-	store           store.ProcessorDescriber
+	cli.StreamsOpts
+	processorName string
+	includeStats  bool
+	store         store.ProcessorDescriber
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.StreamProcessor(opts.ProjectID, opts.streamsInstance, opts.processorName)
+	r, err := opts.store.StreamProcessor(opts.ProjectID, opts.Instance, opts.processorName)
 	if err != nil {
 		return err
 	}
@@ -36,6 +50,8 @@ func (opts *DescribeOpts) Run() error {
 		return opts.Print(r)
 	}
 
+	// NewStreamsProcessorWithStats will return a Stream Processor without the stats field populated (which gets omitted)
+	// but has a State field, unlike NewStreamsProcessor
 	sp := atlasv2.NewStreamsProcessorWithStats(r.Id, r.Name, r.Pipeline, r.State)
 	return opts.Print(sp)
 }
@@ -53,8 +69,8 @@ func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
 	cmd := &cobra.Command{
 		Use:   "describe <processorName>",
-		Short: "Get details about a specific Atlas Stream Processor in a Stream Processing Instance.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Short: "Get details about an Atlas Stream Processor in a Stream Processing Instance.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: `# Return a JSON-formatted view of stream processor 'ExampleProcessor' for an instance 'ExampleInstance':
   atlas streams processors describe ExampleProcessor --instance ExampleInstance`,
 		Args: require.ExactArgs(1),
@@ -64,6 +80,7 @@ func DescribeBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(
 				opts.ValidateProjectID,
+				opts.ValidateInstance,
 				opts.initStore(cmd.Context()),
 			); err != nil {
 				return err
@@ -76,13 +93,10 @@ func DescribeBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
+	opts.AddProjectOptsFlags(cmd)
+	opts.AddStreamsOptsFlags(cmd)
 
 	cmd.Flags().BoolVar(&opts.includeStats, flag.IncludeStats, false, usage.IncludeStreamProcessorStats)
-
-	cmd.Flags().StringVarP(&opts.streamsInstance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
-
-	_ = cmd.MarkFlagRequired(flag.Instance)
 
 	return cmd
 }

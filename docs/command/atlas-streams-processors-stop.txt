@@ -12,9 +12,9 @@ atlas streams processors stop
    :depth: 1
    :class: singlecol
 
-Stop a specific Atlas Stream Processor in a Stream Processing Instance.
+Stop an Atlas Stream Processor in a Stream Processing Instance.
 
-To use this command, you must authenticate with a user account or an API key with the Project Read Only role.
+To use this command, you must authenticate with a user account or an API key with the Project Owner role.
 
 Syntax
 ------
@@ -59,7 +59,7 @@ Options
      - help for stop
    * - -i, --instance
      - string
-     - true
+     - false
      - Name of your Atlas Stream Processing instance.
    * - --projectId
      - string

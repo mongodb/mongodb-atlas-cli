@@ -239,6 +239,7 @@ dbName and collection are required only for built-in roles.`
 	StreamsProvider                           = "Cloud service provider that applies to the provisioned Atlas Stream Processing instance."
 	StreamsInstance                           = "Name of your Atlas Stream Processing instance."
 	StreamsConnectionFilename                 = "Path to a JSON configuration file that defines an Atlas Stream Processing connection."
+	StreamsProcessorFilename                  = "Path to a JSON configuration file that defines an Atlas Stream Processor."
 	StreamsInstanceTier                       = "Tier for your Stream Instance."
 	IncludeStreamProcessorStats               = "Flag that indicates whether to include Stream Processor stats. This flag defaults to false."
 	WithoutDefaultAlertSettings               = "Flag that creates the new project without the default alert settings enabled. This flag defaults to false. This option is useful if you create projects programmatically and want to create your own alerts instead of using the default alert settings."

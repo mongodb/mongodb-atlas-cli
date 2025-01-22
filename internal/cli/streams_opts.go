@@ -12,22 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package processor
+package cli
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 )
 
-func Builder() *cobra.Command {
-	const use = "processors"
-	cmd := &cobra.Command{
-		Use:     use,
-		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage Atlas Stream Processors.",
-		Long:    `Create, list, update and delete your Atlas Stream Processors.`,
-	}
-	cmd.AddCommand(ListBuilder(), DescribeBuilder(), StartBuilder(), StopBuilder(), DeleteBuilder(), CreateBuilder())
+type StreamsOpts struct {
+	Instance string
+}
 
-	return cmd
+// ValidateInstance validates instance.
+func (opts *StreamsOpts) ValidateInstance() error {
+	if opts.Instance == "" {
+		return errMissingInstance
+	}
+	return nil
+}
+
+func (opts *StreamsOpts) AddStreamsOptsFlags(cmd *cobra.Command) {
+	cmd.Flags().StringVarP(&opts.Instance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
 }

@@ -52,11 +52,11 @@ Related Commands
 ----------------
 
 * :ref:`atlas-streams-processors-create` - Creates a stream processor for an Atlas Stream Processing instance.
-* :ref:`atlas-streams-processors-delete` - Delete a specific Atlas Stream Processor in a Stream Processing Instance.
-* :ref:`atlas-streams-processors-describe` - Get details about a specific Atlas Stream Processor in a Stream Processing Instance.
+* :ref:`atlas-streams-processors-delete` - Delete an Atlas Stream Processor in a Stream Processing Instance.
+* :ref:`atlas-streams-processors-describe` - Get details about an Atlas Stream Processor in a Stream Processing Instance.
 * :ref:`atlas-streams-processors-list` - List all the Atlas Stream Processing Processors for your project.
-* :ref:`atlas-streams-processors-start` - Start a specific Atlas Stream Processor in a Stream Processing Instance.
-* :ref:`atlas-streams-processors-stop` - Stop a specific Atlas Stream Processor in a Stream Processing Instance.
+* :ref:`atlas-streams-processors-start` - Start an Atlas Stream Processor in a Stream Processing Instance.
+* :ref:`atlas-streams-processors-stop` - Stop an Atlas Stream Processor in a Stream Processing Instance.
 
 
 .. toctree::

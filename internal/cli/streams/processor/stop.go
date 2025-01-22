@@ -1,3 +1,17 @@
+// Copyright 2025 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package processor
 
 import (
@@ -7,7 +21,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
@@ -16,13 +29,13 @@ import (
 type StopOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	streamsInstance string
-	processorName   string
-	store           store.ProcessorStopper
+	cli.StreamsOpts
+	processorName string
+	store         store.ProcessorStopper
 }
 
 func (opts *StopOpts) Run() error {
-	err := opts.store.StopStreamProcessor(opts.ProjectID, opts.streamsInstance, opts.processorName)
+	err := opts.store.StopStreamProcessor(opts.ProjectID, opts.Instance, opts.processorName)
 	if err != nil {
 		return err
 	}
@@ -43,8 +56,8 @@ func StopBuilder() *cobra.Command {
 	opts := &StopOpts{}
 	cmd := &cobra.Command{
 		Use:   "stop <processorName>",
-		Short: "Stop a specific Atlas Stream Processor in a Stream Processing Instance.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Read Only"),
+		Short: "Stop an Atlas Stream Processor in a Stream Processing Instance.",
+		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: `  # stop Stream Processor 'ExampleProcessor' for an instance 'ExampleInstance' for the project with ID 5e2211c17a3e5a48f5497de3:
   atlas streams processors stop ExampleProcessor --projectId 5e2211c17a3e5a48f5497de3 --instance ExampleInstance`,
 		Args: require.ExactArgs(1),
@@ -54,6 +67,7 @@ func StopBuilder() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if err := opts.PreRunE(
 				opts.ValidateProjectID,
+				opts.ValidateInstance,
 				opts.initStore(cmd.Context()),
 			); err != nil {
 				return err
@@ -66,11 +80,8 @@ func StopBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&opts.ProjectID, flag.ProjectID, "", usage.ProjectID)
-
-	cmd.Flags().StringVarP(&opts.streamsInstance, flag.Instance, flag.InstanceShort, "", usage.StreamsInstance)
-
-	_ = cmd.MarkFlagRequired(flag.Instance)
+	opts.AddProjectOptsFlags(cmd)
+	opts.AddStreamsOptsFlags(cmd)
 
 	return cmd
 }

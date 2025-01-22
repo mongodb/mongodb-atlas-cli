@@ -85,12 +85,17 @@ func (opts *StartOpts) Run() error {
 }
 
 func (opts *StartOpts) newFlexBackupRestoreJobCreate() *admin.FlexBackupRestoreJobCreate20241113 {
-	return &admin.FlexBackupRestoreJobCreate20241113{
+	request := &admin.FlexBackupRestoreJobCreate20241113{
 		SnapshotId:               opts.snapshotID,
 		TargetDeploymentItemName: opts.targetClusterName,
-		TargetProjectId:          &opts.targetProjectID,
 		InstanceName:             &opts.clusterName,
 	}
+
+	if opts.targetProjectID != "" {
+		request.TargetProjectId = &opts.targetProjectID
+	}
+
+	return request
 }
 
 func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *admin.DiskBackupSnapshotRestoreJob {

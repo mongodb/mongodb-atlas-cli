@@ -184,7 +184,7 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 	}
 
 	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureCustomRoles) && !br.Validator.IsResourceSupported(features.ResourceAtlasCustomRole) {
-		customRoles, ferr := buildCustomRoles(br.ProjectStore, br.ProjectID)
+		customRoles, ferr := projectBuildCustomRoles(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr
 		}
@@ -275,8 +275,7 @@ func BuildProjectNamedConnectionSecret(credsProvider store.CredentialsGetter, na
 	return secret
 }
 
-//nolint:revive
-func buildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]akov2.CustomRole, error) {
+func projectBuildCustomRoles(crProvider store.DatabaseRoleLister, projectID string) ([]akov2.CustomRole, error) {
 	dbRoles, err := crProvider.DatabaseRoles(projectID)
 	if err != nil {
 		return nil, err

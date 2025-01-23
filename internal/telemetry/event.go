@@ -24,6 +24,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/denisbrodbeck/machineid"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -356,6 +357,29 @@ func withError(err error) EventOpt {
 		errorMessage := strings.Split(err.Error(), "\n")[0] // only first line
 
 		event.Properties["error"] = errorMessage
+	}
+}
+
+type PluginExecutionInfo struct {
+	GithubOwner      *string
+	GithubRepository *string
+	Version          *semver.Version
+}
+
+func WithPluginExecutionInfo(info PluginExecutionInfo) EventOpt {
+	return func(event Event) {
+		if info.GithubOwner != nil && info.GithubRepository != nil {
+			event.Properties["plugin_install_type"] = "atlas"
+
+			event.Properties["plugin_github_owner"] = info.GithubOwner
+			event.Properties["plugin_github_repository"] = info.GithubRepository
+		} else {
+			event.Properties["plugin_install_type"] = "local-copy"
+		}
+
+		if info.Version != nil {
+			event.Properties["plugin_version"] = info.Version.String()
+		}
 	}
 }
 

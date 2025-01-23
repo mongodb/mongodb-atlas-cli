@@ -58,11 +58,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	firstClassPath := []string{
+	firstClassPaths := []string{
 		"./docs/command/atlas-kubernetes.txt",
 	}
 
-	for _, filePath := range firstClassPath {
+	for _, filePath := range firstClassPaths {
 		err := os.Remove(filePath)
 		if err != nil {
 			log.Fatal(err)

@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/set"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/spf13/cobra"
 )
 
@@ -140,6 +141,8 @@ type Plugin struct {
 }
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
+	p.setTelemetry()
+
 	binaryPath := path.Join(p.PluginDirectoryPath, p.BinaryName)
 	// suppressing lint error flagging potential tainted input or cmd arguments
 	// we are this can happen, it is by design
@@ -238,4 +241,17 @@ func createPluginFromManifest(manifest *Manifest) (*Plugin, error) {
 
 func logPluginWarning(message string, args ...any) {
 	_, _ = log.Warningf(fmt.Sprintf("-- plugin warning: %s\n", message), args...)
+}
+
+func (p *Plugin) setTelemetry() {
+	info := telemetry.PluginExecutionInfo{
+		Version: p.Version,
+	}
+
+	if p.Github != nil {
+		info.GithubOwner = &p.Github.Owner
+		info.GithubRepository = &p.Github.Name
+	}
+
+	telemetry.AppendOption(telemetry.WithPluginExecutionInfo(info))
 }

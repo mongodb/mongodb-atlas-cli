@@ -45,7 +45,7 @@ func main() {
 	atlasBuilder := root.Builder()
 
 	for _, cmd := range atlasBuilder.Commands() {
-		if plugin.IsPluginCmd(cmd) && !isFCP(cmd) {
+		if plugin.IsPluginCmd(cmd) && !isFirstClassPlugin(cmd) {
 			atlasBuilder.RemoveCommand(cmd)
 		}
 	}
@@ -58,8 +58,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	firstClassPaths := []string{
-		"./docs/command/atlas-kubernetes.txt",
+	firstClassPaths := make([]string, 0, len(pluginCmd.FirstClassPlugins))
+	for _, fcp := range pluginCmd.FirstClassPlugins {
+		cmd := fcp.Commands
+		for _, c := range cmd {
+			filePath := "./docs/command/atlas-" + c.Name + ".txt"
+			firstClassPaths = append(firstClassPaths, filePath)
+		}
 	}
 
 	for _, filePath := range firstClassPaths {
@@ -70,7 +75,7 @@ func main() {
 	}
 }
 
-func isFCP(command *cobra.Command) bool {
+func isFirstClassPlugin(command *cobra.Command) bool {
 	for _, fcp := range pluginCmd.FirstClassPlugins {
 		cmd := fcp.Commands
 		for _, c := range cmd {

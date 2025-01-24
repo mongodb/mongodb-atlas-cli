@@ -122,7 +122,6 @@ func Properties() []string {
 		TelemetryEnabledProperty,
 		AccessTokenField,
 		RefreshTokenField,
-		LocalDeploymentImage,
 	}
 }
 
@@ -138,6 +137,7 @@ func GlobalProperties() []string {
 		skipUpdateCheck,
 		TelemetryEnabledProperty,
 		mongoShellPath,
+		LocalDeploymentImage,
 	}
 }
 
@@ -754,6 +754,6 @@ func (p *Profile) GetLocalDeploymentImage() string {
 
 // SetLocalDeploymentImage sets the MongoDB Docker image URL.
 func SetLocalDeploymentImage(v string) { Default().SetLocalDeploymentImage(v) }
-func (p *Profile) SetLocalDeploymentImage(v string) {
-	p.Set(LocalDeploymentImage, v)
+func (*Profile) SetLocalDeploymentImage(v string) {
+	SetGlobal(LocalDeploymentImage, v)
 }

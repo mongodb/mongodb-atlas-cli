@@ -72,6 +72,7 @@ const (
 	DockerContainerHostName  = "container"
 	GitHubActionsHostName    = "all_github_actions"
 	AtlasActionHostName      = "atlascli_github_action"
+	LocalDeploymentImage     = "local_deployment_image" // LocalDeploymentImage is the config key for the MongoDB Local Dev Docker image
 )
 
 var (
@@ -136,6 +137,7 @@ func GlobalProperties() []string {
 		skipUpdateCheck,
 		TelemetryEnabledProperty,
 		mongoShellPath,
+		LocalDeploymentImage,
 	}
 }
 
@@ -742,4 +744,16 @@ func Path(f string) (string, error) {
 	p.WriteString(h)
 	p.WriteString(f)
 	return p.String(), nil
+}
+
+// GetLocalDeploymentImage returns the configured MongoDB Docker image URL.
+func GetLocalDeploymentImage() string { return Default().GetLocalDeploymentImage() }
+func (p *Profile) GetLocalDeploymentImage() string {
+	return p.GetString(LocalDeploymentImage)
+}
+
+// SetLocalDeploymentImage sets the MongoDB Docker image URL.
+func SetLocalDeploymentImage(v string) { Default().SetLocalDeploymentImage(v) }
+func (*Profile) SetLocalDeploymentImage(v string) {
+	SetGlobal(LocalDeploymentImage, v)
 }

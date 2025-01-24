@@ -32,7 +32,7 @@ require (
 	github.com/mholt/archives v0.1.0
 	github.com/mongodb-forks/digest v1.1.0
 	github.com/mongodb-labs/cobra2snooty v0.18.2
-	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.6.1
+	github.com/mongodb/mongodb-atlas-kubernetes/v2 v2.6.2-0.20250123164100-b8aa5669900f
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.25.1

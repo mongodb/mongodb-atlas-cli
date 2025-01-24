@@ -35,6 +35,7 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/status"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -223,9 +224,11 @@ func TestBuildAtlasAdvancedDeployment(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasDeploymentSpec{
-				Project: &akov2common.ResourceRefNamespaced{
-					Name:      strings.ToLower(projectName),
-					Namespace: targetNamespace,
+				ProjectDualReference: akov2.ProjectDualReference{
+					ProjectRef: &akov2common.ResourceRefNamespaced{
+						Name:      strings.ToLower(projectName),
+						Namespace: targetNamespace,
+					},
 				},
 				DeploymentSpec: &akov2.AdvancedDeploymentSpec{
 					MongoDBMajorVersion: "5.0",
@@ -487,9 +490,11 @@ func TestBuildServerlessDeployments(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasDeploymentSpec{
-				Project: &akov2common.ResourceRefNamespaced{
-					Name:      strings.ToLower(projectName),
-					Namespace: targetNamespace,
+				ProjectDualReference: akov2.ProjectDualReference{
+					ProjectRef: &akov2common.ResourceRefNamespaced{
+						Name:      strings.ToLower(projectName),
+						Namespace: targetNamespace,
+					},
 				},
 				BackupScheduleRef: akov2common.ResourceRefNamespaced{},
 				ServerlessSpec: &akov2.ServerlessSpec{
@@ -589,9 +594,11 @@ func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasDeploymentSpec{
-				Project: &akov2common.ResourceRefNamespaced{
-					Name:      strings.ToLower(projectName),
-					Namespace: targetNamespace,
+				ProjectDualReference: akov2.ProjectDualReference{
+					ProjectRef: &akov2common.ResourceRefNamespaced{
+						Name:      strings.ToLower(projectName),
+						Namespace: targetNamespace,
+					},
 				},
 				BackupScheduleRef: akov2common.ResourceRefNamespaced{},
 				ServerlessSpec: &akov2.ServerlessSpec{
@@ -724,4 +731,80 @@ func TestCleanTenantFields(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestBuildFlexDeployment(t *testing.T) {
+	const projectID = "abcdef1234567"
+	const projectName = "testProject-3"
+	const clusterName = "testCluster-3"
+	const targetNamespace = "test-namespace-3"
+
+	ctl := gomock.NewController(t)
+	clusterStore := mocks.NewMockOperatorClusterStore(ctl)
+	dictionary := resources.AtlasNameToKubernetesName()
+
+	t.Run("Can import Flex deployment", func(t *testing.T) {
+		cluster := &atlasv2.FlexClusterDescription20241113{
+			Id:             pointer.Get("TestClusterID"),
+			GroupId:        pointer.Get("TestGroupID"),
+			MongoDBVersion: pointer.Get("5.0"),
+			Name:           pointer.Get(clusterName),
+			CreateDate:     pointer.Get(time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)),
+			ProviderSettings: atlasv2.FlexProviderSettings20241113{
+				BackingProviderName: pointer.Get("AWS"),
+				ProviderName:        pointer.Get("FLEX"),
+				RegionName:          pointer.Get("US_EAST_1"),
+			},
+			StateName:         pointer.Get(""),
+			ConnectionStrings: nil,
+			Links:             nil,
+		}
+
+		clusterStore.EXPECT().FlexCluster(projectID, clusterName).Return(cluster, nil)
+
+		expected := &akov2.AtlasDeployment{
+			TypeMeta: metav1.TypeMeta{
+				Kind:       "AtlasDeployment",
+				APIVersion: "atlas.mongodb.com/v1",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      strings.ToLower(fmt.Sprintf("%s-%s", projectName, clusterName)),
+				Namespace: targetNamespace,
+				Labels: map[string]string{
+					features.ResourceVersion: resourceVersion,
+				},
+			},
+			Spec: akov2.AtlasDeploymentSpec{
+				ProjectDualReference: akov2.ProjectDualReference{
+					ProjectRef: &akov2common.ResourceRefNamespaced{
+						Name:      strings.ToLower(projectName),
+						Namespace: targetNamespace,
+					},
+				},
+				BackupScheduleRef: akov2common.ResourceRefNamespaced{},
+				FlexSpec: &akov2.FlexSpec{
+					Name: cluster.GetName(),
+					ProviderSettings: &akov2.FlexProviderSettings{
+						BackingProviderName: "AWS",
+						RegionName:          "US_EAST_1",
+					},
+				},
+				ProcessArgs: nil,
+			},
+			Status: akov2status.AtlasDeploymentStatus{
+				Common: akoapi.Common{
+					Conditions: []akoapi.Condition{},
+				},
+			},
+		}
+
+		got, err := BuildFlexDeployments(clusterStore, projectID, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
+		if err != nil {
+			t.Fatalf("%v", err)
+		}
+
+		if !reflect.DeepEqual(expected, got) {
+			t.Fatalf("Flex deployment mismatch.\r\nexpected: %v\r\ngot: %v\r\n", expected, got)
+		}
+	})
 }

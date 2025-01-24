@@ -28,6 +28,7 @@ import (
 	akov2provider "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/provider"
 	akov2status "github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/status"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -194,7 +195,7 @@ func setReference(deployment *akov2.AtlasDeployment, independentResource bool, p
 		}
 		return deployment
 	}
-	deployment.Spec.Project = &akov2common.ResourceRefNamespaced{
+	deployment.Spec.ProjectRef = &akov2common.ResourceRefNamespaced{
 		Name:      projectName,
 		Namespace: namespace,
 	}
@@ -287,6 +288,14 @@ func isAdvancedDeploymentExportable(deployments *atlasClustersPinned.AdvancedClu
 }
 
 func isServerlessExportable(deployment *atlasClustersPinned.ServerlessInstanceDescription) bool {
+	stateName := deployment.GetStateName()
+	if stateName == DeletingState || stateName == DeletedState {
+		return false
+	}
+	return true
+}
+
+func isFlexExportable(deployment *atlasv2.FlexClusterDescription20241113) bool {
 	stateName := deployment.GetStateName()
 	if stateName == DeletingState || stateName == DeletedState {
 		return false
@@ -505,9 +514,11 @@ func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, vali
 			},
 		},
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: &akov2common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(projectName, dictionary),
-				Namespace: targetNamespace,
+			ProjectDualReference: akov2.ProjectDualReference{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(projectName, dictionary),
+					Namespace: targetNamespace,
+				},
 			},
 			BackupScheduleRef: akov2common.ResourceRefNamespaced{},
 			ServerlessSpec:    serverlessSpec,
@@ -560,4 +571,58 @@ func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndp
 		}
 	}
 	return result, nil
+}
+
+func BuildFlexDeployments(deploymentStore store.OperatorClusterStore, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*akov2.AtlasDeployment, error) {
+	deployment, err := deploymentStore.FlexCluster(projectID, clusterID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !isFlexExportable(deployment) {
+		return nil, nil
+	}
+
+	providerSettings := &akov2.FlexProviderSettings{
+		BackingProviderName: deployment.ProviderSettings.GetBackingProviderName(),
+		RegionName:          deployment.ProviderSettings.GetRegionName(),
+	}
+
+	flexSpec := &akov2.FlexSpec{
+		Name:             deployment.GetName(),
+		ProviderSettings: providerSettings,
+	}
+
+	atlasName := fmt.Sprintf("%s-%s", projectName, deployment.GetName())
+	atlasDeployment := &akov2.AtlasDeployment{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "AtlasDeployment",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(atlasName, dictionary),
+			Namespace: targetNamespace,
+			Labels: map[string]string{
+				features.ResourceVersion: version,
+			},
+		},
+		Spec: akov2.AtlasDeploymentSpec{
+			ProjectDualReference: akov2.ProjectDualReference{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(projectName, dictionary),
+					Namespace: targetNamespace,
+				},
+			},
+			BackupScheduleRef: akov2common.ResourceRefNamespaced{},
+			FlexSpec:          flexSpec,
+			ProcessArgs:       nil,
+		},
+		Status: akov2status.AtlasDeploymentStatus{
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
+			},
+		},
+	}
+
+	return atlasDeployment, nil
 }

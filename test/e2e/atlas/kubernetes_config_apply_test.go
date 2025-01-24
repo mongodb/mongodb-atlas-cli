@@ -327,9 +327,11 @@ func referenceExportedProject(projectName, teamName string, expectedProject *ako
 func referenceExportedDBUser(projectName, dbUser, namespace string) *akov2.AtlasDatabaseUser {
 	return &akov2.AtlasDatabaseUser{
 		Spec: akov2.AtlasDatabaseUserSpec{
-			Project: &akov2common.ResourceRefNamespaced{
-				Name:      prepareK8sName(projectName),
-				Namespace: namespace,
+			ProjectDualReference: akov2.ProjectDualReference{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      prepareK8sName(projectName),
+					Namespace: namespace,
+				},
 			},
 			Roles: []akov2.RoleSpec{
 				{
@@ -414,9 +416,11 @@ func referenceExportedBackupPolicy() *akov2.AtlasBackupPolicy {
 func referenceExportedDeployment(projectName, clusterName, namespace, mdbVersion string) *akov2.AtlasDeployment {
 	return &akov2.AtlasDeployment{
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: &akov2common.ResourceRefNamespaced{
-				Name:      prepareK8sName(projectName),
-				Namespace: namespace,
+			ProjectDualReference: akov2.ProjectDualReference{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      prepareK8sName(projectName),
+					Namespace: namespace,
+				},
 			},
 			BackupScheduleRef: akov2common.ResourceRefNamespaced{
 				Name:      prepareK8sName(fmt.Sprintf("%s-%s-backupschedule", projectName, clusterName)),

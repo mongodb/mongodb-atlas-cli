@@ -104,13 +104,11 @@ func BuildCustomRoles(provider store.DatabaseRoleLister, request CustomRolesRequ
 			},
 		}
 		if request.IsIndependent {
-			akoRole.Spec.ExternalProjectIDRef = &akov2.ExternalProjectReference{
+			akoRole.Spec.ExternalProjectRef = &akov2.ExternalProjectReference{
 				ID: request.ProjectID,
 			}
-			akoRole.Spec.LocalCredentialHolder = akoapi.LocalCredentialHolder{
-				ConnectionSecret: &akoapi.LocalObjectReference{
-					Name: resources.NormalizeAtlasName(request.Credentials, request.Dict),
-				},
+			akoRole.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
+				Name: resources.NormalizeAtlasName(request.Credentials, request.Dict),
 			}
 		} else {
 			akoRole.Spec.ProjectRef = &akov2common.ResourceRefNamespaced{

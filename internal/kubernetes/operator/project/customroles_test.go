@@ -162,9 +162,11 @@ func TestBuildCustomRoles(t *testing.T) {
 								},
 							},
 						},
-						ProjectRef: &akov2common.ResourceRefNamespaced{
-							Name:      projectName,
-							Namespace: targetNamespace,
+						ProjectDualReference: akov2.ProjectDualReference{
+							ProjectRef: &akov2common.ResourceRefNamespaced{
+								Name:      projectName,
+								Namespace: targetNamespace,
+							},
 						},
 					},
 					Status: akov2status.AtlasCustomRoleStatus{},
@@ -246,7 +248,9 @@ func TestBuildCustomRoles(t *testing.T) {
 								},
 							},
 						},
-						ExternalProjectIDRef: &akov2.ExternalProjectReference{ID: projectID},
+						ProjectDualReference: akov2.ProjectDualReference{
+							ExternalProjectRef: &akov2.ExternalProjectReference{ID: projectID},
+						},
 					},
 					Status: akov2status.AtlasCustomRoleStatus{},
 				},

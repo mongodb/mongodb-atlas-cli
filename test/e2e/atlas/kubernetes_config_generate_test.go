@@ -320,16 +320,18 @@ func defaultPrivateEndpoint(generator *atlasE2ETestGenerator, independent bool) 
 	}
 
 	if independent {
-		pe.Spec.ExternalProject = &akov2.ExternalProjectReference{
-			ID: generator.projectID,
+		pe.Spec.ProjectDualReference = akov2.ProjectDualReference{
+			ExternalProjectRef: &akov2.ExternalProjectReference{
+				ID: generator.projectID,
+			},
 		}
-		pe.Spec.LocalCredentialHolder = akoapi.LocalCredentialHolder{
+		pe.Spec.ProjectDualReference = akov2.ProjectDualReference{
 			ConnectionSecret: &akoapi.LocalObjectReference{
 				Name: resources.NormalizeAtlasName(strings.ToLower(generator.projectName)+"-credentials", resources.AtlasNameToKubernetesName()),
 			},
 		}
 	} else {
-		pe.Spec.Project = &akov2common.ResourceRefNamespaced{
+		pe.Spec.ProjectRef = &akov2common.ResourceRefNamespaced{
 			Name: strings.ToLower(generator.projectName),
 		}
 	}
@@ -463,9 +465,11 @@ func defaultTestUser(name, projectName, namespace string) *akov2.AtlasDatabaseUs
 			},
 		},
 		Spec: akov2.AtlasDatabaseUserSpec{
-			Project: &akov2common.ResourceRefNamespaced{
-				Name:      strings.ToLower(projectName),
-				Namespace: namespace,
+			ProjectDualReference: akov2.ProjectDualReference{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      strings.ToLower(projectName),
+					Namespace: namespace,
+				},
 			},
 			DatabaseName: "$external",
 			Roles: []akov2.RoleSpec{
@@ -487,11 +491,11 @@ func defaultTestUser(name, projectName, namespace string) *akov2.AtlasDatabaseUs
 
 func defaultTestUserWithID(name, projectName, projectID, namespace string, creds string) *akov2.AtlasDatabaseUser {
 	user := defaultTestUser(name, projectName, namespace)
-	user.Spec.Project = nil
-	user.Spec.ExternalProjectRef = &akov2.ExternalProjectReference{
+	user.Spec.ProjectDualReference.ProjectRef = nil
+	user.Spec.ProjectDualReference.ExternalProjectRef = &akov2.ExternalProjectReference{
 		ID: projectID,
 	}
-	user.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
+	user.Spec.ProjectDualReference.ConnectionSecret = &akoapi.LocalObjectReference{
 		Name: creds,
 	}
 	return user
@@ -513,9 +517,11 @@ func defaultM0TestCluster(name, region, projectName, namespace string) *akov2.At
 			},
 		},
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: &akov2common.ResourceRefNamespaced{
-				Name:      strings.ToLower(projectName),
-				Namespace: namespace,
+			ProjectDualReference: akov2.ProjectDualReference{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      strings.ToLower(projectName),
+					Namespace: namespace,
+				},
 			},
 			DeploymentSpec: &akov2.AdvancedDeploymentSpec{
 				ClusterType: "REPLICASET",
@@ -557,11 +563,11 @@ func defaultM0TestCluster(name, region, projectName, namespace string) *akov2.At
 
 func defaultM0TestClusterWithID(name, region, projectName, projectID, namespace, creds string) *akov2.AtlasDeployment {
 	deployment := defaultM0TestCluster(name, region, projectName, namespace)
-	deployment.Spec.Project = nil
-	deployment.Spec.ExternalProjectRef = &akov2.ExternalProjectReference{
+	deployment.Spec.ProjectDualReference.ProjectRef = nil
+	deployment.Spec.ProjectDualReference.ExternalProjectRef = &akov2.ExternalProjectReference{
 		ID: projectID,
 	}
-	deployment.Spec.ConnectionSecret = &akoapi.LocalObjectReference{
+	deployment.Spec.ProjectDualReference.ConnectionSecret = &akoapi.LocalObjectReference{
 		Name: creds,
 	}
 	return deployment
@@ -1101,9 +1107,11 @@ func TestProjectWithCustomRole(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasCustomRoleSpec{
-				ProjectRef: &akov2common.ResourceRefNamespaced{
-					Name:      expectedProject.Name,
-					Namespace: expectedProject.Namespace,
+				ProjectDualReference: akov2.ProjectDualReference{
+					ProjectRef: &akov2common.ResourceRefNamespaced{
+						Name:      expectedProject.Name,
+						Namespace: expectedProject.Namespace,
+					},
 				},
 				Role: akov2.CustomRole{
 					Name: "test-role",
@@ -1344,9 +1352,11 @@ func TestProjectWithPrivateEndpoint_Azure(t *testing.T) {
 			Spec: akov2.AtlasPrivateEndpointSpec{
 				Provider: "AZURE",
 				Region:   "EUROPE_NORTH",
-				Project: &akov2common.ResourceRefNamespaced{
-					Name:      strings.ToLower(s.generator.projectName),
-					Namespace: targetNamespace,
+				ProjectDualReference: akov2.ProjectDualReference{
+					ProjectRef: &akov2common.ResourceRefNamespaced{
+						Name:      strings.ToLower(s.generator.projectName),
+						Namespace: targetNamespace,
+					},
 				},
 			},
 			Status: akov2status.AtlasPrivateEndpointStatus{
@@ -1744,9 +1754,11 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 			Labels:    labels,
 		},
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: &akov2common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(projectName, dictionary),
-				Namespace: namespace,
+			ProjectDualReference: akov2.ProjectDualReference{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(projectName, dictionary),
+					Namespace: namespace,
+				},
 			},
 			BackupScheduleRef: akov2common.ResourceRefNamespaced{
 				Namespace: targetNamespace,
@@ -1835,9 +1847,11 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 			Labels:    labels,
 		},
 		Spec: akov2.AtlasDeploymentSpec{
-			Project: &akov2common.ResourceRefNamespaced{
-				Name:      resources.NormalizeAtlasName(projectName, dictionary),
-				Namespace: namespace,
+			ProjectDualReference: akov2.ProjectDualReference{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(projectName, dictionary),
+					Namespace: namespace,
+				},
 			},
 			ServerlessSpec: &akov2.ServerlessSpec{
 				Name: name,

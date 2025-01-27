@@ -57,7 +57,7 @@ func StopBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "stop <processorName>",
 		Short: "Stop an Atlas Stream Processor in a Stream Processing Instance.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long:  fmt.Sprintf(usage.RequiredOneOfRoles, streamsRoles),
 		Example: `  # stop Stream Processor 'ExampleProcessor' for an instance 'ExampleInstance' for the project with ID 5e2211c17a3e5a48f5497de3:
   atlas streams processors stop ExampleProcessor --projectId 5e2211c17a3e5a48f5497de3 --instance ExampleInstance`,
 		Args: require.ExactArgs(1),

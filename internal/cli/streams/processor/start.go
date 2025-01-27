@@ -57,7 +57,7 @@ func StartBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "start <processorName>",
 		Short: "Start an Atlas Stream Processor in a Stream Processing Instance.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long:  fmt.Sprintf(usage.RequiredOneOfRoles, streamsRoles),
 		Example: `  # start Stream Processor 'ExampleSP' for an instance 'ExampleInstance' for the project with ID 5e2211c17a3e5a48f5497de3:
   atlas streams processors start ExampleSP --projectId 5e2211c17a3e5a48f5497de3 --instance ExampleInstance`,
 		Args: require.ExactArgs(1),

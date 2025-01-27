@@ -23,12 +23,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestListOpts_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessorLister(ctrl)
-
 	pipeline1 := []any{
 		map[string]any{
 			"$source": map[string]any{
@@ -90,13 +88,10 @@ func TestListOpts_Run(t *testing.T) {
 	ret := atlasv2.NewPaginatedApiStreamsStreamProcessorWithStats()
 	ret.Results = &[]atlasv2.StreamsProcessorWithStats{*expected1, *expected2}
 
-	mockStore.
-		EXPECT().
-		ListProcessors(gomock.Any(), gomock.Any()).
-		Return(ret, nil).
-		Times(2)
-
 	t.Run("streams processors list without stats", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockStore := mocks.NewMockProcessorLister(ctrl)
+
 		buf := new(bytes.Buffer)
 		listOpts := &ListOpts{
 			store: mockStore,
@@ -104,7 +99,14 @@ func TestListOpts_Run(t *testing.T) {
 				OutWriter: buf,
 			},
 			StreamsOpts: cli.StreamsOpts{Instance: "ExampleInstance"},
+			ProjectOpts: cli.ProjectOpts{ProjectID: primitive.NewObjectID().Hex()},
 		}
+
+		mockStore.
+			EXPECT().
+			ListProcessors(gomock.Eq(listOpts.ProjectID), gomock.Eq(listOpts.Instance)).
+			Return(ret, nil).
+			Times(1)
 
 		if err := listOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
@@ -169,6 +171,9 @@ func TestListOpts_Run(t *testing.T) {
 	})
 
 	t.Run("streams processors list with stats", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockStore := mocks.NewMockProcessorLister(ctrl)
+
 		buf := new(bytes.Buffer)
 		listOpts := &ListOpts{
 			store: mockStore,
@@ -176,8 +181,15 @@ func TestListOpts_Run(t *testing.T) {
 				OutWriter: buf,
 			},
 			StreamsOpts:  cli.StreamsOpts{Instance: "ExampleInstance"},
+			ProjectOpts:  cli.ProjectOpts{ProjectID: primitive.NewObjectID().Hex()},
 			includeStats: true,
 		}
+
+		mockStore.
+			EXPECT().
+			ListProcessors(gomock.Eq(listOpts.ProjectID), gomock.Eq(listOpts.Instance)).
+			Return(ret, nil).
+			Times(1)
 
 		if err := listOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)

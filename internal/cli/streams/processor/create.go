@@ -37,10 +37,9 @@ type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.StreamsOpts
-	processorName string
-	store         store.ProcessorCreator
-	filename      string
-	fs            afero.Fs
+	store    store.ProcessorCreator
+	filename string
+	fs       afero.Fs
 }
 
 func (opts *CreateOpts) Run() error {
@@ -71,11 +70,7 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.CreateStreamProcessorApiPar
 		return nil, err
 	}
 
-	if opts.processorName != "" {
-		processor.Name = &opts.processorName
-	}
-
-	if opts.processorName == "" && processor.Name == nil {
+	if processor.Name == nil {
 		return nil, errors.New("streams processor name missing")
 	}
 
@@ -87,30 +82,23 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.CreateStreamProcessorApiPar
 	return createParams, nil
 }
 
-// atlas streams processor create <processorName> [--projectId projectId].
+// atlas streams processor create [--projectId projectId].
 func CreateBuilder() *cobra.Command {
 	opts := &CreateOpts{
 		fs: afero.NewOsFs(),
 	}
 	cmd := &cobra.Command{
-		Use:   "create <processorName>",
+		Use:   "create",
 		Short: "Creates a stream processor for an Atlas Stream Processing instance.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:  require.MaximumNArgs(1),
+		Long:  fmt.Sprintf(usage.RequiredOneOfRoles, streamsRoles),
+		Args:  require.NoArgs,
 		Annotations: map[string]string{
-			"processorNameDesc": "Name of the processor",
-			"output":            createTemplate,
+			"output": createTemplate,
 		},
 		Example: `# create a new stream processor for Atlas Stream Processing Instance:
-  atlas streams processor create kafkaprod -i test01 -f processorConfig.json
-
-# create a new stream processor using the name from a cluster configuration file
-  atlas streams processor create -i test01 -f clusterConfig.json
+  atlas streams processor create -i test01 -f processorConfig.json
 `,
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 0 {
-				opts.processorName = args[0]
-			}
+		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.ValidateInstance,

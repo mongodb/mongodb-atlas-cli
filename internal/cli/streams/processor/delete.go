@@ -54,7 +54,7 @@ func DeleteBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete <processorName>",
 		Short: "Delete an Atlas Stream Processor in a Stream Processing Instance.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long:  fmt.Sprintf(usage.RequiredOneOfRoles, streamsRoles),
 		Example: `# deletes stream processor 'ExampleSP' from instance 'ExampleInstance':
   atlas streams processors delete ExampleSP --instance ExampleInstance`,
 		Args: require.ExactArgs(1),

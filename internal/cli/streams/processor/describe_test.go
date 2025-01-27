@@ -23,12 +23,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProcessorDescriber(ctrl)
-
 	pipeline := []any{
 		map[string]any{
 			"$source": map[string]any{
@@ -58,13 +56,10 @@ func TestDescribeOpts_Run(t *testing.T) {
 		"inputMessageSize":  500,
 	}
 
-	mockStore.
-		EXPECT().
-		StreamProcessor(gomock.Any(), gomock.Any(), gomock.Any()).
-		Return(expected, nil).
-		Times(2)
-
 	t.Run("streams processors describe without stats", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockStore := mocks.NewMockProcessorDescriber(ctrl)
+
 		buf := new(bytes.Buffer)
 		describeOpts := &DescribeOpts{
 			store:         mockStore,
@@ -73,12 +68,18 @@ func TestDescribeOpts_Run(t *testing.T) {
 				OutWriter: buf,
 			},
 			StreamsOpts: cli.StreamsOpts{Instance: "ExampleInstance"},
+			ProjectOpts: cli.ProjectOpts{ProjectID: primitive.NewObjectID().Hex()},
 		}
+
+		mockStore.
+			EXPECT().
+			StreamProcessor(gomock.Eq(describeOpts.ProjectID), gomock.Eq(describeOpts.Instance), gomock.Eq(describeOpts.processorName)).
+			Return(expected, nil).
+			Times(1)
 
 		if err := describeOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)
 		}
-		t.Log(buf.String())
 
 		expectedOutput := `{
   "_id": "1",
@@ -112,6 +113,9 @@ func TestDescribeOpts_Run(t *testing.T) {
 	})
 
 	t.Run("streams processors describe with stats", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockStore := mocks.NewMockProcessorDescriber(ctrl)
+
 		buf := new(bytes.Buffer)
 		describeOpts := &DescribeOpts{
 			store:         mockStore,
@@ -120,8 +124,15 @@ func TestDescribeOpts_Run(t *testing.T) {
 				OutWriter: buf,
 			},
 			StreamsOpts:  cli.StreamsOpts{Instance: "ExampleInstance"},
+			ProjectOpts:  cli.ProjectOpts{ProjectID: primitive.NewObjectID().Hex()},
 			includeStats: true,
 		}
+
+		mockStore.
+			EXPECT().
+			StreamProcessor(gomock.Eq(describeOpts.ProjectID), gomock.Eq(describeOpts.Instance), gomock.Eq(describeOpts.processorName)).
+			Return(expected, nil).
+			Times(1)
 
 		if err := describeOpts.Run(); err != nil {
 			t.Fatalf("Run() unexpected error: %v", err)

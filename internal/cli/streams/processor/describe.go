@@ -70,7 +70,7 @@ func DescribeBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "describe <processorName>",
 		Short: "Get details about an Atlas Stream Processor in a Stream Processing Instance.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long:  fmt.Sprintf(usage.RequiredOneOfRoles, streamsRoles),
 		Example: `# Return a JSON-formatted view of stream processor 'ExampleProcessor' for an instance 'ExampleInstance':
   atlas streams processors describe ExampleProcessor --instance ExampleInstance`,
 		Args: require.ExactArgs(1),

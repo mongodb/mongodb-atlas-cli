@@ -15,9 +15,13 @@
 package processor
 
 import (
+	"strings"
+
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/spf13/cobra"
 )
+
+var streamsRoles = strings.Join([]string{"Project Owner", "Project Stream Processing Owner"}, ", ")
 
 func Builder() *cobra.Command {
 	const use = "processors"

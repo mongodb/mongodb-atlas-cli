@@ -14,7 +14,7 @@ atlas streams processors create
 
 Creates a stream processor for an Atlas Stream Processing instance.
 
-To use this command, you must authenticate with a user account or an API key with the Project Owner role.
+To use this command, you must authenticate with a user account or an API key with any of the following roles: Project Owner, Project Stream Processing Owner.
 
 Syntax
 ------
@@ -22,25 +22,9 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas streams processors create <processorName> [options]
+   atlas streams processors create [options]
 
 .. Code end marker, please don't delete this comment
-
-Arguments
----------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 10 10 60
-
-   * - Name
-     - Type
-     - Required
-     - Description
-   * - processorName
-     - string
-     - true
-     - Name of the processor
 
 Options
 -------
@@ -107,12 +91,5 @@ Examples
    :copyable: false
 
    # create a new stream processor for Atlas Stream Processing Instance:
-   atlas streams processor create kafkaprod -i test01 -f processorConfig.json
-
-
-.. code-block::
-   :copyable: false
-
-   # create a new stream processor using the name from a cluster configuration file
-   atlas streams processor create -i test01 -f clusterConfig.json
+   atlas streams processor create -i test01 -f processorConfig.json
 

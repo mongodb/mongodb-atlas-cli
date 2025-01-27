@@ -152,7 +152,11 @@ func TestCreateOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			CreateStreamProcessor(gomock.Any(), gomock.Any(), gomock.Any()).Return(expected, nil).
+			// gomock.Any() is necessary for the *atlasv2.StreamProcessor argument because newCreateRequest()
+			// creates a new *atlasv2.StreamProcessor with the same data but different memory address, causing
+			// the equality comparison to fail
+			CreateStreamProcessor(gomock.Eq(createOpts.ProjectID), gomock.Eq(createOpts.Instance), gomock.Any()).
+			Return(expected, nil).
 			Times(1)
 
 		if err := createOpts.Run(); err != nil {

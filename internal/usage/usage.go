@@ -337,6 +337,7 @@ dbName and collection are required only for built-in roles.`
 	OperatorSubResourceDeletionProtection     = "Toggle atlas operator deletion protection for subresources like Alerts, Integrations, etc. Read more: https://dochub.mongodb.org/core/ako-deletion-protection"
 	ExportID                                  = "Unique string that identifies the AWS S3 bucket to which you export your snapshots."
 	RequiredRole                              = "To use this command, you must authenticate with a user account or an API key with the %s role."
+	RequiredOneOfRoles                        = "To use this command, you must authenticate with a user account or an API key with any of the following roles: %s."
 	RestoreJobID                              = "Unique identifier that identifies the Restore Job."
 	DeliveryType                              = "Type of restore job to create. Valid values include: automated, download, pointInTime. To learn more about types of restore jobs, see https://dochub.mongodb.org/core/backup-restore-cluster-atlas."
 	EnableServerlessContinuousBackup          = "Flag that enables Serverless Continuous Backup for your serverless instance. If enabled, the serverless instance does not use Basic Backup."

@@ -22,6 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestStopOpts_Run(t *testing.T) {
@@ -36,11 +37,12 @@ func TestStopOpts_Run(t *testing.T) {
 		OutputOpts: cli.OutputOpts{
 			OutWriter: buf,
 		},
+		ProjectOpts: cli.ProjectOpts{ProjectID: primitive.NewObjectID().Hex()},
 	}
 
 	mockStore.
 		EXPECT().
-		StopStreamProcessor(gomock.Any(), gomock.Any(), gomock.Any()).
+		StopStreamProcessor(gomock.Eq(startOpts.ProjectID), gomock.Eq(startOpts.Instance), gomock.Eq(startOpts.processorName)).
 		Return(nil).
 		Times(1)
 

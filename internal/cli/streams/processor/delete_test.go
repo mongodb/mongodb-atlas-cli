@@ -20,6 +20,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestDeleteOpts_Run(t *testing.T) {
@@ -33,11 +34,12 @@ func TestDeleteOpts_Run(t *testing.T) {
 			Entry:   "test",
 		},
 		StreamsOpts: cli.StreamsOpts{Instance: "ExampleInstance"},
+		ProjectOpts: cli.ProjectOpts{ProjectID: primitive.NewObjectID().Hex()},
 	}
 
 	mockStore.
 		EXPECT().
-		DeleteStreamProcessor(deleteOpts.ProjectID, deleteOpts.Instance, deleteOpts.Entry).
+		DeleteStreamProcessor(gomock.Eq(deleteOpts.ProjectID), gomock.Eq(deleteOpts.Instance), gomock.Eq(deleteOpts.Entry)).
 		Return(nil).
 		Times(1)
 

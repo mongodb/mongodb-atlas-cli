@@ -14,7 +14,7 @@ atlas streams processors list
 
 List all the Atlas Stream Processing Processors for your project.
 
-To use this command, you must authenticate with a user account or an API key with the Project Owner role.
+To use this command, you must authenticate with a user account or an API key with any of the following roles: Project Owner, Project Stream Processing Owner.
 
 Syntax
 ------

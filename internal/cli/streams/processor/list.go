@@ -69,7 +69,7 @@ func ListBuilder() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all the Atlas Stream Processing Processors for your project.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Long:  fmt.Sprintf(usage.RequiredOneOfRoles, streamsRoles),
 		Example: `  # Return a JSON-formatted list of all Atlas Stream Processors for an instance 'ExampleInstance' for the project with ID 5e2211c17a3e5a48f5497de3:
   atlas streams processors list --projectId 5e2211c17a3e5a48f5497de3 --instance ExampleInstance`,
 		Args: require.NoArgs,

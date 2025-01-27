@@ -46,7 +46,7 @@ core.workflow(
         integrates = [],
     ),
     origin_files = glob(["docs/command/**"]),
-    destination_files = glob(["source/command/**"]),
+    destination_files = glob(["source/command/**"], exclude = ["source/command/atlas-api"]),
     authoring = authoring.pass_thru(author),
     transformations = [
         core.move("docs/command", "source/command"),

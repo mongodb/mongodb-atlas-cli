@@ -15,6 +15,7 @@
 package e2e
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -111,4 +112,14 @@ func RunAndGetStdOutAndErr(cmd *exec.Cmd) ([]byte, error) {
 	}
 
 	return resp, nil
+}
+
+func RunAndGetSeparateStdOutAndErr(cmd *exec.Cmd) ([]byte, []byte, error) {
+	var stdOut bytes.Buffer
+	var stdErr bytes.Buffer
+	cmd.Stdout = &stdOut
+	cmd.Stderr = &stdErr
+	err := cmd.Run()
+
+	return stdOut.Bytes(), stdErr.Bytes(), err
 }

@@ -102,9 +102,14 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 			// Common usecases:
 			// - set orgId
 			// - set projectId
+			// - default api version
 			if err := setUnTouchedFlags(NewProfileFlagValueProviderForDefaultProfile(), cmd); err != nil {
 				return errors.Join(ErrFailedToSetUntouchedFlags, err)
 			}
+
+			// Reset version to default if unsupported version was selected
+			// This can happen when the profile contains a default version which is not supported for a specific endpoint
+			ensureVersionIsSupported(command, &version)
 
 			// Detect if stdout is being piped (atlas api myTag myOperationId > output.json)
 			isPiped, err := IsStdOutPiped()
@@ -322,6 +327,24 @@ func defaultAPIVersion(command api.Command) (string, error) {
 
 	lastVersion := command.Versions[nVersions-1]
 	return lastVersion.Version, nil
+}
+
+func ensureVersionIsSupported(apiCommand api.Command, version *string) {
+	for _, commandVersion := range apiCommand.Versions {
+		if commandVersion.Version == *version {
+			return
+		}
+	}
+
+	// if we get here it means that the picked version is not supported
+	defaultVersion, err := defaultAPIVersion(apiCommand)
+	// if we fail to get a version (which should never happen), then quit
+	if err != nil {
+		return
+	}
+
+	fmt.Fprintf(os.Stderr, "warning: version '%s' is not supported for this endpoint, falling back to default version: '%s'", *version, defaultVersion)
+	*version = defaultVersion
 }
 
 func needsFileFlag(apiCommand api.Command) bool {

@@ -73,7 +73,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			StreamProcessor(gomock.Eq(describeOpts.ProjectID), gomock.Eq(describeOpts.Instance), gomock.Eq(describeOpts.processorName)).
+			StreamProcessor(gomock.Eq(describeOpts.ConfigProjectID()), gomock.Eq(describeOpts.Instance), gomock.Eq(describeOpts.processorName)).
 			Return(expected, nil).
 			Times(1)
 
@@ -130,7 +130,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			StreamProcessor(gomock.Eq(describeOpts.ProjectID), gomock.Eq(describeOpts.Instance), gomock.Eq(describeOpts.processorName)).
+			StreamProcessor(gomock.Eq(describeOpts.ConfigProjectID()), gomock.Eq(describeOpts.Instance), gomock.Eq(describeOpts.processorName)).
 			Return(expected, nil).
 			Times(1)
 

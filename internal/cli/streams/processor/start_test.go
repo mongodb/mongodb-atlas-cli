@@ -42,7 +42,7 @@ func TestStartOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		StartStreamProcessor(gomock.Eq(startOpts.ProjectID), gomock.Eq(startOpts.Instance), gomock.Eq(startOpts.processorName)).
+		StartStreamProcessor(gomock.Eq(startOpts.ConfigProjectID()), gomock.Eq(startOpts.Instance), gomock.Eq(startOpts.processorName)).
 		Return(nil).
 		Times(1)
 

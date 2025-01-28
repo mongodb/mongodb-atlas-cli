@@ -38,7 +38,7 @@ type ListOpts struct {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.ListProcessors(opts.ProjectID, opts.Instance)
+	r, err := opts.store.ListProcessors(opts.ConfigProjectID(), opts.Instance)
 	if err != nil {
 		return err
 	}

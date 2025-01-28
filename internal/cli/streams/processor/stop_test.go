@@ -42,7 +42,7 @@ func TestStopOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		StopStreamProcessor(gomock.Eq(startOpts.ProjectID), gomock.Eq(startOpts.Instance), gomock.Eq(startOpts.processorName)).
+		StopStreamProcessor(gomock.Eq(startOpts.ConfigProjectID()), gomock.Eq(startOpts.Instance), gomock.Eq(startOpts.processorName)).
 		Return(nil).
 		Times(1)
 

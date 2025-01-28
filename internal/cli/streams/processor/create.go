@@ -70,12 +70,12 @@ func (opts *CreateOpts) newCreateRequest() (*atlasv2.CreateStreamProcessorApiPar
 		return nil, err
 	}
 
-	if processor.Name == nil {
+	if processor.Name == nil || len(*processor.Name) == 0 {
 		return nil, errors.New("streams processor name missing")
 	}
 
 	createParams := new(atlasv2.CreateStreamProcessorApiParams)
-	createParams.GroupId = opts.ProjectID
+	createParams.GroupId = opts.ConfigProjectID()
 	createParams.TenantName = opts.Instance
 	createParams.StreamsProcessor = processor
 

@@ -104,7 +104,7 @@ func TestListOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			ListProcessors(gomock.Eq(listOpts.ProjectID), gomock.Eq(listOpts.Instance)).
+			ListProcessors(gomock.Eq(listOpts.ConfigProjectID()), gomock.Eq(listOpts.Instance)).
 			Return(ret, nil).
 			Times(1)
 
@@ -187,7 +187,7 @@ func TestListOpts_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			ListProcessors(gomock.Eq(listOpts.ProjectID), gomock.Eq(listOpts.Instance)).
+			ListProcessors(gomock.Eq(listOpts.ConfigProjectID()), gomock.Eq(listOpts.Instance)).
 			Return(ret, nil).
 			Times(1)
 

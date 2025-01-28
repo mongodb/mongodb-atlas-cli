@@ -35,7 +35,7 @@ type StopOpts struct {
 }
 
 func (opts *StopOpts) Run() error {
-	err := opts.store.StopStreamProcessor(opts.ProjectID, opts.Instance, opts.processorName)
+	err := opts.store.StopStreamProcessor(opts.ConfigProjectID(), opts.Instance, opts.processorName)
 	if err != nil {
 		return err
 	}

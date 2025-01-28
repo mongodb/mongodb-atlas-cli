@@ -39,7 +39,7 @@ func TestDeleteOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteStreamProcessor(gomock.Eq(deleteOpts.ProjectID), gomock.Eq(deleteOpts.Instance), gomock.Eq(deleteOpts.Entry)).
+		DeleteStreamProcessor(gomock.Eq(deleteOpts.ConfigProjectID()), gomock.Eq(deleteOpts.Instance), gomock.Eq(deleteOpts.Entry)).
 		Return(nil).
 		Times(1)
 

@@ -35,7 +35,7 @@ type StartOpts struct {
 }
 
 func (opts *StartOpts) Run() error {
-	err := opts.store.StartStreamProcessor(opts.ProjectID, opts.Instance, opts.processorName)
+	err := opts.store.StartStreamProcessor(opts.ConfigProjectID(), opts.Instance, opts.processorName)
 	if err != nil {
 		return err
 	}

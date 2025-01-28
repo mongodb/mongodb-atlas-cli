@@ -40,7 +40,7 @@ type DescribeOpts struct {
 }
 
 func (opts *DescribeOpts) Run() error {
-	r, err := opts.store.StreamProcessor(opts.ProjectID, opts.Instance, opts.processorName)
+	r, err := opts.store.StreamProcessor(opts.ConfigProjectID(), opts.Instance, opts.processorName)
 	if err != nil {
 		return err
 	}

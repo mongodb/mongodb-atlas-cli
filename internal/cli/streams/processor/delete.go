@@ -43,7 +43,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteStreamProcessor, opts.ProjectID, opts.Instance)
+	return opts.Delete(opts.store.DeleteStreamProcessor, opts.ConfigProjectID(), opts.Instance)
 }
 
 // atlas streams processor delete <processorName>.

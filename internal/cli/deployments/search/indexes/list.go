@@ -116,6 +116,7 @@ func (opts *ListOpts) validateAndPrompt() error {
 
 func (opts *ListOpts) PostRun() {
 	opts.DeploymentTelemetry.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
 }
 
 func ListBuilder() *cobra.Command {

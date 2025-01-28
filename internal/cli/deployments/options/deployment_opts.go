@@ -130,8 +130,19 @@ func (opts *DeploymentOpts) LocalMongodHostname() string {
 
 var LocalDevImage = "docker.io/mongodb/mongodb-atlas-local"
 
+func getLocalDevImage() string {
+	// Then check profile settings
+	// This will also check the MONGODB_ATLAS_LOCAL_DEPLOYMENT_IMAGE environment variable
+	if profileImage := config.Default().GetLocalDeploymentImage(); profileImage != "" {
+		return profileImage
+	}
+
+	// Fall back to default image
+	return LocalDevImage
+}
+
 func (opts *DeploymentOpts) MongodDockerImageName() string {
-	return LocalDevImage + ":" + opts.MdbVersion
+	return getLocalDevImage() + ":" + opts.MdbVersion
 }
 
 func (opts *DeploymentOpts) Spin(funcs ...func() error) error {

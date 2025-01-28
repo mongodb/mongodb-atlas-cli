@@ -53,9 +53,9 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"install",
 			"--operatorVersion", "1.1.0")
 		cmd.Env = os.Environ()
-		resp, inErr := e2e.RunAndGetStdOut(cmd)
-		require.Error(t, inErr, string(resp))
-		assert.Equal(t, "Error: version 1.1.0 is not supported\n", string(resp))
+		_, inErr := e2e.RunAndGetStdOutAndErr(cmd)
+		require.Error(t, inErr)
+		assert.Equal(t, "Error: version 1.1.0 is not supported\n (exit status 1)", inErr.Error())
 	})
 
 	t.Run("should failed to install a non-existing version of the operator", func(t *testing.T) {
@@ -65,9 +65,9 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"install",
 			"--operatorVersion", "100.0.0")
 		cmd.Env = os.Environ()
-		resp, inErr := e2e.RunAndGetStdOut(cmd)
-		require.Error(t, inErr, string(resp))
-		assert.Equal(t, "Error: version 100.0.0 is not supported\n", string(resp))
+		_, inErr := e2e.RunAndGetStdOutAndErr(cmd)
+		require.Error(t, inErr)
+		assert.Equal(t, "Error: version 100.0.0 is not supported\n (exit status 1)", inErr.Error())
 	})
 
 	t.Run("should failed when unable to setup connection to the cluster", func(t *testing.T) {
@@ -77,9 +77,9 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"install",
 			"--kubeconfig", "/path/to/non/existing/config")
 		cmd.Env = os.Environ()
-		resp, inErr := e2e.RunAndGetStdOut(cmd)
-		require.Error(t, inErr, string(resp))
-		assert.Equal(t, "Error: unable to prepare client configuration: invalid configuration: no configuration has been provided, try setting KUBERNETES_MASTER environment variable\n", string(resp))
+		_, inErr := e2e.RunAndGetStdOutAndErr(cmd)
+		require.Error(t, inErr)
+		assert.Equal(t, "Error: unable to prepare client configuration: invalid configuration: no configuration has been provided, try setting KUBERNETES_MASTER environment variable\n (exit status 1)", inErr.Error())
 	})
 
 	t.Run("should install operator with default options", func(t *testing.T) {
@@ -179,8 +179,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			"--import",
 			"--kubeContext", context)
 		cmd.Env = os.Environ()
-		resp, inErr := e2e.RunAndGetStdOut(cmd)
-		require.NoError(t, inErr, string(resp))
+		resp, inErr := e2e.RunAndGetStdOutAndErr(cmd)
+		require.NoError(t, inErr)
 		assert.Equal(t, "Atlas Kubernetes Operator installed successfully\n", string(resp))
 
 		checkDeployment(t, operator, operatorNamespace)
@@ -296,8 +296,8 @@ func TestKubernetesOperatorInstall(t *testing.T) {
 			deployment,
 			false,
 		))
-		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--resourceDeletionProtection=false")
-		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--subresourceDeletionProtection=false")
+		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--object-deletion-protection=false")
+		assert.Contains(t, deployment.Spec.Template.Spec.Containers[0].Args, "--subobject-deletion-protection=false")
 
 		cleanUpKeys(t, operator, operatorNamespace, cliPath)
 	})

@@ -23,6 +23,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v61/github"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -204,77 +205,96 @@ func Test_parseGithubRepoValues(t *testing.T) {
 		expectedOwner = "mongodb"
 		expectedName  = "atlas-cli-plugin-example"
 	)
-	var expectedVersion, _ = semver.NewVersion("1.0.0")
+	var v1_0_0, _ = semver.NewVersion("1.0.0")
+	//nolint:revive,stylecheck
+	var v1_0_0_PRE, _ = semver.NewVersion("1.0.0-prerelease")
+	//nolint:revive,stylecheck
+	var v1_0_0_BETA_AND_META, _ = semver.NewVersion("1.0.0-beta+very-meta")
 
 	tests := []struct {
-		arg           string
-		expectVersion bool
-		expectError   bool
+		arg             string
+		expectedVersion *semver.Version
+		expectError     bool
 	}{
 		{
-			arg:           "mongodb/atlas-cli-plugin-example",
-			expectVersion: false,
-			expectError:   false,
+			arg:             "mongodb/atlas-cli-plugin-example",
+			expectedVersion: nil,
+			expectError:     false,
 		},
 		{
-			arg:           "mongodb/atlas-cli-plugin-example@1.0.0",
-			expectVersion: true,
-			expectError:   false,
+			arg:             "mongodb/atlas-cli-plugin-example@1.0.0",
+			expectedVersion: v1_0_0,
+			expectError:     false,
 		},
 		{
-			arg:           "mongodb/atlas-cli-plugin-example@",
-			expectVersion: false,
-			expectError:   true,
+			arg:             "mongodb/atlas-cli-plugin-example@v1.0.0",
+			expectedVersion: v1_0_0,
+			expectError:     false,
 		},
 		{
-			arg:           "mongodb/atlas-cli-plugin-example/",
-			expectVersion: false,
-			expectError:   false,
+			arg:             "mongodb/atlas-cli-plugin-example@1.0.0-prerelease",
+			expectedVersion: v1_0_0_PRE,
+			expectError:     false,
 		},
 		{
-			arg:           "mongodb/atlas-cli-plugin-example/@v1",
-			expectVersion: true,
-			expectError:   false,
+			arg:             "mongodb/atlas-cli-plugin-example@1.0.0-beta+very-meta",
+			expectedVersion: v1_0_0_BETA_AND_META,
+			expectError:     false,
 		},
 		{
-			arg:           "https://github.com/mongodb/atlas-cli-plugin-example",
-			expectVersion: false,
-			expectError:   false,
+			arg:             "mongodb/atlas-cli-plugin-example@",
+			expectedVersion: nil,
+			expectError:     true,
 		},
 		{
-			arg:           "https://github.com/mongodb/atlas-cli-plugin-example@v1.0",
-			expectVersion: false,
-			expectError:   false,
+			arg:             "mongodb/atlas-cli-plugin-example/",
+			expectedVersion: nil,
+			expectError:     false,
 		},
 		{
-			arg:           "github.com/mongodb/atlas-cli-plugin-example/",
-			expectVersion: false,
-			expectError:   false,
+			arg:             "mongodb/atlas-cli-plugin-example/@v1",
+			expectedVersion: v1_0_0,
+			expectError:     false,
 		},
 		{
-			arg:           "github.com/mongodb/atlas-cli-plugin-example/@v1.0.0",
-			expectVersion: true,
-			expectError:   false,
+			arg:             "https://github.com/mongodb/atlas-cli-plugin-example",
+			expectedVersion: nil,
+			expectError:     false,
 		},
 		{
-			arg:           "/mongodb/atlas-cli-plugin-example/",
-			expectVersion: false,
-			expectError:   true,
+			arg:             "https://github.com/mongodb/atlas-cli-plugin-example@v1.0",
+			expectedVersion: v1_0_0,
+			expectError:     false,
 		},
 		{
-			arg:           "mongodb@atlas-cli-plugin-example",
-			expectVersion: false,
-			expectError:   true,
+			arg:             "github.com/mongodb/atlas-cli-plugin-example/",
+			expectedVersion: nil,
+			expectError:     false,
 		},
 		{
-			arg:           "mongodb@atlas-cli-plugin-example@1.0",
-			expectVersion: false,
-			expectError:   true,
+			arg:             "github.com/mongodb/atlas-cli-plugin-example/@v1.0.0",
+			expectedVersion: v1_0_0,
+			expectError:     false,
 		},
 		{
-			arg:           "invalidArgString",
-			expectVersion: false,
-			expectError:   true,
+			arg:             "/mongodb/atlas-cli-plugin-example/",
+			expectedVersion: nil,
+			expectError:     true,
+		},
+		{
+			arg:             "mongodb@atlas-cli-plugin-example",
+			expectedVersion: nil,
+			expectError:     true,
+		},
+		{
+			arg:             "mongodb@atlas-cli-plugin-example@1.0",
+			expectedVersion: nil,
+			expectError:     true,
+		},
+		{
+			arg:             "invalidArgString",
+			expectedVersion: nil,
+			expectError:     true,
 		},
 	}
 
@@ -291,8 +311,12 @@ func Test_parseGithubRepoValues(t *testing.T) {
 				if githubRelease.name != expectedName {
 					t.Errorf("expected name: %s, got: %s", expectedName, githubRelease.owner)
 				}
-				if tt.expectVersion && !expectedVersion.Equal(githubRelease.version) {
-					t.Errorf("expected version: %s, got: %s", expectedVersion.String(), githubRelease.version.String())
+				if tt.expectedVersion != nil && !tt.expectedVersion.Equal(githubRelease.version) {
+					t.Errorf("expected version: %s, got: %s", tt.expectedVersion.String(), githubRelease.version.String())
+				}
+
+				if tt.expectedVersion == nil && githubRelease.version != nil {
+					t.Errorf("expected version to be nil, got: %s", githubRelease.version.String())
 				}
 			}
 		})
@@ -351,4 +375,79 @@ func Test_createGithubAssetFromPlugin(t *testing.T) {
 func Test_getPluginDirectoryName(t *testing.T) {
 	githubAsset := &GithubAsset{owner: "owner", name: "name"}
 	require.Equal(t, "owner@name", githubAsset.getPluginDirectoryName())
+}
+
+func Test_getLatestStableRelease(t *testing.T) {
+	tests := []struct {
+		name     string
+		releases []*github.RepositoryRelease
+		expected *github.RepositoryRelease
+	}{
+		{
+			name: "Single valid value",
+			releases: []*github.RepositoryRelease{
+				{
+					TagName: pointer.Get("v1.0.0"),
+				},
+			},
+			expected: &github.RepositoryRelease{
+				TagName: pointer.Get("v1.0.0"),
+			},
+		},
+		{
+			name: "Single invalid value",
+			releases: []*github.RepositoryRelease{
+				{
+					TagName: pointer.Get("test"),
+				},
+			},
+			expected: nil,
+		},
+		{
+			name: "Single valid pre-release value",
+			releases: []*github.RepositoryRelease{
+				{
+					TagName: pointer.Get("v1.0.0-pre"),
+				},
+			},
+			expected: nil,
+		},
+		{
+			name: "Multiple",
+			releases: []*github.RepositoryRelease{
+				{
+					TagName: pointer.Get("v2.0.0-pre"),
+				},
+				{
+					TagName: pointer.Get("v2.0.0-beta"),
+				},
+				{
+					TagName: pointer.Get("v1.2.1"),
+				},
+				{
+					TagName: pointer.Get("v1.2.0"),
+				},
+				{
+					TagName: pointer.Get("v1.1.0"),
+				},
+				{
+					TagName: pointer.Get("v1.0.1"),
+				},
+				{
+					TagName: pointer.Get("v1.0.0"),
+				},
+			},
+			expected: &github.RepositoryRelease{
+				TagName: pointer.Get("v1.2.1"),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			actual := getLatestStableRelease(tt.releases)
+
+			assert.Equal(t, tt.expected, actual)
+		})
+	}
 }

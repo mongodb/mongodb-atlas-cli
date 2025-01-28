@@ -304,7 +304,9 @@ func (opts *CreateOpts) watchAtlas(_ context.Context) (any, bool, error) {
 }
 
 func (opts *CreateOpts) PostRun(ctx context.Context) error {
-	opts.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
+
 	if !opts.EnableWatch {
 		return opts.Print(opts.indexID.Index)
 	}

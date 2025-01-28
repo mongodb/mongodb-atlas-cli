@@ -58,6 +58,12 @@ func TestPause_RunLocal(t *testing.T) {
 		Return(nil).
 		Times(1)
 
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentUUID().
+		Times(1)
+
 	if err := pauseOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

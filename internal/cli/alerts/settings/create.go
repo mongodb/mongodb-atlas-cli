@@ -100,7 +100,7 @@ func CreateBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				func() error {
 					if opts.filename == "" {
-						return validateConfigOpts(&opts.ConfigOpts)
+						return opts.ConfigOpts.validateConfigOpts()
 					}
 					return nil
 				},

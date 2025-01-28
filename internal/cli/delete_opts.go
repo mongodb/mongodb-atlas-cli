@@ -23,24 +23,34 @@ import (
 )
 
 const (
-	fallbackSuccessMessage = "'%s' deleted\n"
-	fallbackFailMessage    = "Entry not deleted"
+	fallbackSuccessMessage    = "'%s' deleted\n"
+	fallbackFailMessage       = "Entry not deleted"
+	defaultConfirmationPrompt = "Are you sure you want to delete: %s"
 )
 
 // DeleteOpts options required when deleting a resource.
 // A command can compose this struct and then safely rely on the methods Prompt, or Delete
 // to manage the interactions with the user.
 type DeleteOpts struct {
-	Entry      string
-	Confirm    bool
-	successMsg string
-	failMsg    string
+	Entry              string
+	Confirm            bool
+	confirmationPrompt string
+	successMsg         string
+	failMsg            string
 }
 
 func NewDeleteOpts(successMsg, failMsg string) *DeleteOpts {
 	return &DeleteOpts{
 		successMsg: successMsg,
 		failMsg:    failMsg,
+	}
+}
+
+func NewDeleteOptsWithPrompt(successMsg, failMsg, confirmationPrompt string) *DeleteOpts {
+	return &DeleteOpts{
+		successMsg:         successMsg,
+		failMsg:            failMsg,
+		confirmationPrompt: confirmationPrompt,
 	}
 }
 
@@ -86,7 +96,13 @@ func (opts *DeleteOpts) Prompt() error {
 		return nil
 	}
 
-	p := prompt.NewDeleteConfirm(opts.Entry)
+	var template = opts.confirmationPrompt
+	if template == "" {
+		template = defaultConfirmationPrompt
+	}
+
+	message := fmt.Sprintf(template, opts.Entry)
+	p := prompt.NewConfirm(message)
 	return telemetry.TrackAskOne(p, &opts.Confirm)
 }
 

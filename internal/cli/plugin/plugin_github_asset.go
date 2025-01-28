@@ -79,10 +79,21 @@ func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 
 	// download latest release if version is not specified
 	if g.version == nil {
-		release, _, err = g.ghClient.Repositories.GetLatestRelease(context.Background(), g.owner, g.name)
+		// download the 100 latest releases
+		const MaxPerPage = 100
+		releases, _, err := g.ghClient.Repositories.ListReleases(context.Background(), g.owner, g.name, &github.ListOptions{
+			Page:    0,
+			PerPage: MaxPerPage,
+		})
 
 		if err != nil {
-			return nil, fmt.Errorf("could not find latest release for %s", g.repository())
+			return nil, fmt.Errorf("could not fetch releases for %s %w", g.repository(), err)
+		}
+
+		// get the latest release that doesn't have prerelease info or metadata in the version tag
+		release = getLatestStableRelease(releases)
+		if release == nil {
+			return nil, fmt.Errorf("could not find latest stable release for %s", g.repository())
 		}
 	} else {
 		// try to find the release with the version tag with v prefix, if it does not exist try again without the prefix
@@ -98,6 +109,32 @@ func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 	}
 
 	return release.Assets, nil
+}
+
+func getLatestStableRelease(releases []*github.RepositoryRelease) *github.RepositoryRelease {
+	var latestStableVersion *semver.Version
+	var latestStableRelease *github.RepositoryRelease
+
+	for _, release := range releases {
+		version, err := semver.NewVersion(*release.TagName)
+
+		// if we can't parse the version tag, skip this release
+		if err != nil {
+			continue
+		}
+
+		// if the version has pre-release info or metadata, skip this version
+		if version.Prerelease() != "" || version.Metadata() != "" {
+			continue
+		}
+
+		if latestStableVersion == nil || version.GreaterThan(latestStableVersion) {
+			latestStableVersion = version
+			latestStableRelease = release
+		}
+	}
+
+	return latestStableRelease
 }
 
 var architectureAliases = map[string][]string{
@@ -173,7 +210,7 @@ func (g *GithubAsset) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser, 
 }
 
 func parseGithubReleaseValues(arg string) (*GithubAsset, error) {
-	regexPattern := `^((https?://(www\.)?)?github\.com/)?(?P<owner>[\w.\-]+)/(?P<name>[\w.\-]+)/?(@(?P<version>v?(\d+)(\.\d+)?(\.\d+)?|latest))?$`
+	regexPattern := `^((https?://(www\.)?)?github\.com/)?(?P<owner>[\w.\-]+)/(?P<name>[\w.\-]+)/?(@(?P<version>.+))?$`
 	regex, err := regexp.Compile(regexPattern)
 	if err != nil {
 		return nil, fmt.Errorf("error compiling regex: %w", err)
@@ -196,6 +233,7 @@ func parseGithubReleaseValues(arg string) (*GithubAsset, error) {
 	githubRelease := &GithubAsset{owner: groupMap["owner"], name: groupMap["name"]}
 
 	if version, ok := groupMap["version"]; ok && version != latest && version != "" {
+		version := strings.TrimPrefix(version, "v")
 		semverVersion, err := semver.NewVersion(version)
 		if err != nil {
 			return nil, fmt.Errorf(`the specified version "%s" is invalid, it needs to follow the rules of Semantic Versioning`, version)

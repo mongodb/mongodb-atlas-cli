@@ -23,84 +23,100 @@ import (
 )
 
 func Test_extractPluginSpecifierAndVersionFromArg(t *testing.T) {
-	var expectedVersion, _ = semver.NewVersion("1.0.0")
+	var v1_0_0, _ = semver.NewVersion("1.0.0")
+	//nolint:revive,stylecheck
+	var v1_0_0_PRE, _ = semver.NewVersion("1.0.0-prerelease")
+	//nolint:revive,stylecheck
+	var v1_0_0_BETA_AND_META, _ = semver.NewVersion("1.0.0-beta+very-meta")
 
 	tests := []struct {
 		arg                     string
 		expectedPluginSpecifier string
-		expectVersion           bool
+		expectedVersion         *semver.Version
 		expectError             bool
 	}{
 		{
 			arg:                     "mongodb/atlas-cli-plugin-example",
 			expectedPluginSpecifier: "mongodb/atlas-cli-plugin-example",
-			expectVersion:           false,
+			expectedVersion:         nil,
 			expectError:             false,
 		},
 		{
 			arg:                     "atlas-cli-plugin-example@1.0.0",
 			expectedPluginSpecifier: "atlas-cli-plugin-example",
-			expectVersion:           true,
+			expectedVersion:         v1_0_0,
+			expectError:             false,
+		},
+		{
+			arg:                     "atlas-cli-plugin-example@1.0.0-prerelease",
+			expectedPluginSpecifier: "atlas-cli-plugin-example",
+			expectedVersion:         v1_0_0_PRE,
+			expectError:             false,
+		},
+		{
+			arg:                     "atlas-cli-plugin-example@1.0.0-beta+very-meta",
+			expectedPluginSpecifier: "atlas-cli-plugin-example",
+			expectedVersion:         v1_0_0_BETA_AND_META,
 			expectError:             false,
 		},
 		{
 			arg:                     "atlas-cli-plugin-example@",
 			expectedPluginSpecifier: "",
-			expectVersion:           false,
+			expectedVersion:         nil,
 			expectError:             true,
 		},
 		{
 			arg:                     "mongodb/atlas-cli-plugin-example/",
 			expectedPluginSpecifier: "mongodb/atlas-cli-plugin-example/",
-			expectVersion:           false,
+			expectedVersion:         nil,
 			expectError:             false,
 		},
 		{
 			arg:                     "mongodb/atlas-cli-plugin-example/@v1",
 			expectedPluginSpecifier: "mongodb/atlas-cli-plugin-example/",
-			expectVersion:           true,
+			expectedVersion:         v1_0_0,
 			expectError:             false,
 		},
 		{
 			arg:                     "https://github.com/mongodb/atlas-cli-plugin-example",
 			expectedPluginSpecifier: "https://github.com/mongodb/atlas-cli-plugin-example",
-			expectVersion:           false,
+			expectedVersion:         nil,
 			expectError:             false,
 		},
 		{
 			arg:                     "https://github.com/mongodb/atlas-cli-plugin-example@v1.0",
 			expectedPluginSpecifier: "https://github.com/mongodb/atlas-cli-plugin-example",
-			expectVersion:           false,
+			expectedVersion:         v1_0_0,
 			expectError:             false,
 		},
 		{
 			arg:                     "github.com/mongodb/atlas-cli-plugin-example/",
 			expectedPluginSpecifier: "github.com/mongodb/atlas-cli-plugin-example/",
-			expectVersion:           false,
+			expectedVersion:         nil,
 			expectError:             false,
 		},
 		{
 			arg:                     "github.com/mongodb/atlas-cli-plugin-example/@v1.0.0",
 			expectedPluginSpecifier: "github.com/mongodb/atlas-cli-plugin-example/",
-			expectVersion:           true,
+			expectedVersion:         v1_0_0,
 			expectError:             false,
 		},
 		{
 			arg:                     "/mongodb/atlas-cli-plugin-example/",
 			expectedPluginSpecifier: "/mongodb/atlas-cli-plugin-example/",
-			expectVersion:           false,
+			expectedVersion:         nil,
 			expectError:             false,
 		},
 		{
 			arg:                     "mongodb@atlas-cli-plugin-example",
 			expectedPluginSpecifier: "",
-			expectVersion:           false,
+			expectedVersion:         nil,
 			expectError:             true,
 		},
 		{
 			arg:                     "mongodb@atlas-cli-plugin-example@1.0",
 			expectedPluginSpecifier: "",
-			expectVersion:           false,
+			expectedVersion:         nil,
 			expectError:             true,
 		},
 	}
@@ -117,8 +133,12 @@ func Test_extractPluginSpecifierAndVersionFromArg(t *testing.T) {
 				t.Errorf("expected plugin specifier: %s, got: %s", tt.expectedPluginSpecifier, pluginSpecifier)
 			}
 
-			if tt.expectVersion && !expectedVersion.Equal(version) {
-				t.Errorf("expected version: %s, got: %s", expectedVersion.String(), version.String())
+			if tt.expectedVersion != nil && !tt.expectedVersion.Equal(version) {
+				t.Errorf("expected version: %s, got: %s", tt.expectedVersion.String(), version.String())
+			}
+
+			if tt.expectedVersion == nil && version != nil {
+				t.Errorf("expected version to be nil, got: %s", version.String())
 			}
 		})
 	}

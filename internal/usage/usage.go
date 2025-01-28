@@ -398,7 +398,7 @@ dbName and collection are required only for built-in roles.`
 	OIDCType                   = "OIDC method by which the provided database user is authenticated. Valid values are NONE, USER, or IDP_GROUP. If you set this to USER or GROUP_ID, the user authenticates with OIDC."
 	IdpType                    = "Type of Identity Provider. Valid values are WORKFORCE or WORKLOAD."
 	Audience                   = "Identifier of the intended recipient of the token."
-	AuthorizationType          = "Type of authorization. Valid values are NONE, JWT, or SAML."
+	AuthorizationType          = "Type of authorization. Valid values are GROUP or USER."
 	ClientID                   = "Client identifier that is assigned to an application by the Identity Provider.	"
 	Description                = "Description of the Identity Provider."
 	DisplayName                = "Display name of the Identity Provider."

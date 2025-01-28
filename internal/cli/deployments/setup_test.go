@@ -44,6 +44,10 @@ func TestSetupOpts_PostRun(t *testing.T) {
 		EXPECT().
 		AppendDeploymentType().
 		Times(1)
+	deploymentTest.MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentUUID().
+		Times(1)
 
 	opts.PostRun()
 }

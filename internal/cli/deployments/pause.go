@@ -70,6 +70,9 @@ func (opts *PauseOpts) Run(ctx context.Context) error {
 }
 
 func (opts *PauseOpts) RunLocal(ctx context.Context, deployment options.Deployment) error {
+	// Collect UUID before pausing
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
+
 	if err := opts.stopContainer(ctx, deployment); err != nil {
 		return err
 	}

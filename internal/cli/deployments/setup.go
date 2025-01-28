@@ -667,7 +667,6 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	opts.AppendDeploymentType()
 	if strings.EqualFold(options.LocalCluster, opts.DeploymentType) {
 		return opts.runLocal(ctx)
 	}
@@ -677,6 +676,7 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 
 func (opts *SetupOpts) PostRun() {
 	opts.DeploymentTelemetry.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
 }
 
 func (opts *SetupOpts) validateTier() error {

@@ -44,3 +44,15 @@ func (mr *MockDeploymentTelemetryMockRecorder) AppendDeploymentType() *gomock.Ca
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppendDeploymentType", reflect.TypeOf((*MockDeploymentTelemetry)(nil).AppendDeploymentType))
 }
+
+// AppendDeploymentUUID mocks base method.
+func (m *MockDeploymentTelemetry) AppendDeploymentUUID() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "AppendDeploymentUUID")
+}
+
+// AppendDeploymentUUID indicates an expected call of AppendDeploymentUUID.
+func (mr *MockDeploymentTelemetryMockRecorder) AppendDeploymentUUID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppendDeploymentUUID", reflect.TypeOf((*MockDeploymentTelemetry)(nil).AppendDeploymentUUID))
+}

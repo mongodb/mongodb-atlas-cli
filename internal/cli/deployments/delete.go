@@ -69,6 +69,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 	if opts.IsAtlasDeploymentType() {
 		return opts.runAtlas()
 	}
+
 	return opts.runLocal(ctx)
 }
 
@@ -77,9 +78,13 @@ func (opts *DeleteOpts) runAtlas() error {
 }
 
 func (opts *DeleteOpts) runLocal(ctx context.Context) error {
+	// Collect UUID before deletion
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
+
 	return opts.Delete(func() error {
 		_, _ = log.Warningln("deleting deployment...")
 		opts.StartSpinner()
+
 		defer opts.StopSpinner()
 		return opts.DeploymentOpts.RemoveLocal(ctx)
 	})
@@ -141,6 +146,7 @@ Deleting a Local deployment also deletes any local data volumes.
 			if len(args) == 1 {
 				opts.DeploymentName = args[0]
 			}
+
 			return opts.PreRunE(
 				opts.initAtlasStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""),

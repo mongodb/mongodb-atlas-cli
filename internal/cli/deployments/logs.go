@@ -229,6 +229,7 @@ func (opts *DownloadOpts) validateAtlasFlags() error {
 
 func (opts *DownloadOpts) PostRun() {
 	opts.DeploymentTelemetry.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
 }
 
 // atlas deployments logs.

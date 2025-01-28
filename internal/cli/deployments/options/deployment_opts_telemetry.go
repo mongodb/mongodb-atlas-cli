@@ -38,6 +38,7 @@ var (
 //go:generate mockgen -destination=../../../mocks/mock_deployment_opts_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options DeploymentTelemetry
 type DeploymentTelemetry interface {
 	AppendDeploymentType()
+	AppendDeploymentUUID()
 }
 
 func NewDeploymentTypeTelemetry(opts *DeploymentOpts) DeploymentTelemetry {
@@ -91,13 +92,20 @@ func (opts *DeploymentOpts) AppendDeploymentType() {
 	var deploymentType string
 	if opts.IsLocalDeploymentType() {
 		deploymentType = LocalCluster
-		if err := opts.collectUUID(context.TODO()); err != nil {
-			_, _ = log.Debugf("error collecting deployment uuid: %v", err)
-		}
 	} else if opts.IsAtlasDeploymentType() {
 		deploymentType = AtlasCluster
 	}
 	if deploymentType != "" {
 		telemetry.AppendOption(telemetry.WithDeploymentType(deploymentType))
+	}
+}
+
+func (opts *DeploymentOpts) AppendDeploymentUUID() {
+	if opts.IsAtlasDeploymentType() || opts.DeploymentType == "" || opts.DeploymentUUID != "" {
+		return
+	}
+
+	if err := opts.collectUUID(context.TODO()); err != nil {
+		_, _ = log.Debugf("error collecting deployment uuid: %v", err)
 	}
 }

@@ -87,6 +87,7 @@ func (opts *StartOpts) RunAtlas() error {
 
 func (opts *StartOpts) PostRun() error {
 	opts.DeploymentTelemetry.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
 	return opts.PostRunMessages()
 }
 

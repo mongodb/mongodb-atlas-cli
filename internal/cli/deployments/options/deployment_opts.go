@@ -19,7 +19,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 	"regexp"
 	"sort"
 	"strings"
@@ -132,12 +131,8 @@ func (opts *DeploymentOpts) LocalMongodHostname() string {
 var LocalDevImage = "docker.io/mongodb/mongodb-atlas-local"
 
 func getLocalDevImage() string {
-	// First check environment variable
-	if envImage := os.Getenv("ATLAS_LOCAL_DEPLOYMENT_IMAGE"); envImage != "" {
-		return envImage
-	}
-
 	// Then check profile settings
+	// This will also check the MONGODB_ATLAS_LOCAL_DEPLOYMENT_IMAGE environment variable
 	if profileImage := config.Default().GetLocalDeploymentImage(); profileImage != "" {
 		return profileImage
 	}

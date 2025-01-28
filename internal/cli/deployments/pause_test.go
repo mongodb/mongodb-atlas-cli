@@ -58,6 +58,12 @@ func TestPause_RunLocal(t *testing.T) {
 		Return(nil).
 		Times(1)
 
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentUUID().
+		Times(1)
+
 	if err := pauseOpts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
@@ -126,29 +132,5 @@ func TestPauseOpts_PostRun(t *testing.T) {
 
 	if err := opts.PostRun(); err != nil {
 		t.Fatalf("PostRun() unexpected error: %v", err)
-	}
-}
-
-func TestPauseOpts_PreRun(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
-	buf := new(bytes.Buffer)
-
-	opts := &PauseOpts{
-		DeploymentOpts: *deploymentTest.Opts,
-		OutputOpts: cli.OutputOpts{
-			OutWriter: buf,
-		},
-	}
-
-	deploymentTest.
-		MockDeploymentTelemetry.
-		EXPECT().
-		AppendDeploymentUUID().
-		Times(1)
-
-	preRun := opts.PreRun()
-	if err := preRun(); err != nil {
-		t.Fatalf("PreRun() unexpected error: %v", err)
 	}
 }

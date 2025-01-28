@@ -109,7 +109,6 @@ func (opts *DeleteOpts) initMongoDBClient() error {
 func (opts *DeleteOpts) PostRun() {
 	opts.DeploymentTelemetry.AppendDeploymentType()
 	opts.DeploymentTelemetry.AppendDeploymentUUID()
-
 }
 
 func DeleteBuilder() *cobra.Command {

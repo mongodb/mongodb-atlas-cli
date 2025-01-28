@@ -16,5 +16,8 @@ package options
 import "context"
 
 func (opts *DeploymentOpts) RemoveLocal(ctx context.Context) error {
+	// Collect UUID before deletion
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
+
 	return opts.ContainerEngine.ContainerRm(ctx, opts.LocalMongodHostname())
 }

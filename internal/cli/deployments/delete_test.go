@@ -91,6 +91,12 @@ func TestDelete_Run_Local(t *testing.T) {
 		Return(nil).
 		Times(1)
 
+	deploymentsTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentUUID().
+		Times(1)
+
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

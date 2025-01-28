@@ -676,6 +676,7 @@ func (opts *SetupOpts) Run(ctx context.Context) error {
 
 func (opts *SetupOpts) PostRun() {
 	opts.DeploymentTelemetry.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
 }
 
 func (opts *SetupOpts) validateTier() error {

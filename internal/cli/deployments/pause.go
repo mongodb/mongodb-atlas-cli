@@ -111,6 +111,14 @@ func (opts *PauseOpts) PostRun() error {
 	return opts.PostRunMessages()
 }
 
+func (opts *PauseOpts) PreRun() func() error {
+	// Collect UUID before pausing
+	return func() error {
+		opts.DeploymentTelemetry.AppendDeploymentUUID()
+		return nil
+	}
+}
+
 func PauseBuilder() *cobra.Command {
 	opts := &PauseOpts{}
 	cmd := &cobra.Command{
@@ -130,7 +138,8 @@ func PauseBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.initStore(cmd.Context()),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
-				opts.InitOutput(log.Writer(), pauseTemplate))
+				opts.InitOutput(log.Writer(), pauseTemplate),
+				opts.PreRun())
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

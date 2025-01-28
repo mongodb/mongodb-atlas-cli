@@ -38,6 +38,7 @@ var (
 //go:generate mockgen -destination=../../../mocks/mock_deployment_opts_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options DeploymentTelemetry
 type DeploymentTelemetry interface {
 	AppendDeploymentType()
+	AppendDeploymentUUID()
 }
 
 func NewDeploymentTypeTelemetry(opts *DeploymentOpts) DeploymentTelemetry {
@@ -99,5 +100,11 @@ func (opts *DeploymentOpts) AppendDeploymentType() {
 	}
 	if deploymentType != "" {
 		telemetry.AppendOption(telemetry.WithDeploymentType(deploymentType))
+	}
+}
+
+func (opts *DeploymentOpts) AppendDeploymentUUID() {
+	if opts.DeploymentUUID != "" {
+		telemetry.AppendOption(telemetry.WithDeploymentUUID(opts.DeploymentUUID))
 	}
 }

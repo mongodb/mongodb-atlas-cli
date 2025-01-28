@@ -112,6 +112,7 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 
 func (opts *DescribeOpts) PostRun() {
 	opts.DeploymentTelemetry.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
 }
 
 func DescribeBuilder() *cobra.Command {

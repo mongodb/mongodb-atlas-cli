@@ -85,6 +85,14 @@ func (opts *DeleteOpts) runLocal(ctx context.Context) error {
 	})
 }
 
+func (opts *DeleteOpts) PreRun() func() error {
+	// Collect UUID before deletion
+	return func() error {
+		opts.DeploymentTelemetry.AppendDeploymentUUID()
+		return nil
+	}
+}
+
 func (opts *DeleteOpts) PostRun() error {
 	opts.UpdateDeploymentTelemetry()
 	if !opts.EnableWatch || !opts.IsAtlasDeploymentType() {
@@ -141,10 +149,12 @@ Deleting a Local deployment also deletes any local data volumes.
 			if len(args) == 1 {
 				opts.DeploymentName = args[0]
 			}
+
 			return opts.PreRunE(
 				opts.initAtlasStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.PreRun(),
 			)
 		},
 		RunE: func(cmd *cobra.Command, _ []string) error {

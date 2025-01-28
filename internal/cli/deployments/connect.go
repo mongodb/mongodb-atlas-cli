@@ -50,6 +50,7 @@ func Run(ctx context.Context, opts *ConnectOpts) error {
 
 func PostRun(opts *ConnectOpts) {
 	opts.DeploymentTelemetry.AppendDeploymentType()
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
 }
 
 // atlas deployments connect [clusterName].

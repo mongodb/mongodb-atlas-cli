@@ -157,5 +157,11 @@ func TestPostRun(t *testing.T) {
 		AppendDeploymentType().
 		Times(1)
 
+	deploymentsTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentUUID().
+		Times(1)
+
 	PostRun(opts)
 }

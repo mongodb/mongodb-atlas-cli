@@ -92,9 +92,6 @@ func (opts *DeploymentOpts) AppendDeploymentType() {
 	var deploymentType string
 	if opts.IsLocalDeploymentType() {
 		deploymentType = LocalCluster
-		if err := opts.collectUUID(context.TODO()); err != nil {
-			_, _ = log.Debugf("error collecting deployment uuid: %v", err)
-		}
 	} else if opts.IsAtlasDeploymentType() {
 		deploymentType = AtlasCluster
 	}
@@ -104,7 +101,11 @@ func (opts *DeploymentOpts) AppendDeploymentType() {
 }
 
 func (opts *DeploymentOpts) AppendDeploymentUUID() {
-	if opts.DeploymentUUID != "" {
-		telemetry.AppendOption(telemetry.WithDeploymentUUID(opts.DeploymentUUID))
+	if opts.IsAtlasDeploymentType() || opts.DeploymentType == "" || opts.DeploymentUUID != "" {
+		return
+	}
+
+	if err := opts.collectUUID(context.TODO()); err != nil {
+		_, _ = log.Debugf("error collecting deployment uuid: %v", err)
 	}
 }

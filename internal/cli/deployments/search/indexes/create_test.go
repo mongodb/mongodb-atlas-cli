@@ -143,6 +143,18 @@ func TestCreate_RunLocal(t *testing.T) {
 		}, nil).
 		Times(1)
 
+	testDeployments.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	testDeployments.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentUUID().
+		Times(1)
+
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
@@ -293,6 +305,18 @@ func TestCreate_RunAtlas(t *testing.T) {
 		CreateSearchIndexesDeprecated(opts.ProjectID, opts.DeploymentName, index).
 		Times(1).
 		Return(indexWithID, nil)
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentType().
+		Times(1)
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentUUID().
+		Times(1)
 
 	if err := opts.Run(ctx); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)

@@ -139,7 +139,6 @@ func TestStreamsWithClusters(t *testing.T) {
 			"streams",
 			"processor",
 			"create",
-			processorName,
 			"-f",
 			"data/create_stream_processor_test.json",
 			"-i",

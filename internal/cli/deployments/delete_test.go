@@ -83,18 +83,17 @@ func TestDelete_Run_Local(t *testing.T) {
 	opts.Confirm = true
 
 	deploymentsTest.LocalMockFlow(ctx)
+	deploymentsTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendDeploymentUUID().
+		Times(1)
 
 	deploymentsTest.
 		MockContainerEngine.
 		EXPECT().
 		ContainerRm(ctx, opts.DeploymentName).
 		Return(nil).
-		Times(1)
-
-	deploymentsTest.
-		MockDeploymentTelemetry.
-		EXPECT().
-		AppendDeploymentUUID().
 		Times(1)
 
 	if err := opts.Run(ctx); err != nil {

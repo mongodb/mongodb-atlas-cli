@@ -78,6 +78,9 @@ func (opts *DeleteOpts) runAtlas() error {
 }
 
 func (opts *DeleteOpts) runLocal(ctx context.Context) error {
+	// Collect UUID before deletion
+	opts.DeploymentTelemetry.AppendDeploymentUUID()
+
 	return opts.Delete(func() error {
 		_, _ = log.Warningln("deleting deployment...")
 		opts.StartSpinner()

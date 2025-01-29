@@ -12,7 +12,7 @@ atlas api maintenanceWindows
    :depth: 1
    :class: singlecol
 
-Returns, edits, and removes maintenance windows.
+experimental: Returns, edits, and removes maintenance windows.
 
 The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. You can defer a scheduled maintenance event for a project up to two times. Deferred maintenance events occur during your preferred maintenance window exactly one week after the previously scheduled date and time.
 
@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-maintenanceWindows-deferMaintenanceWindow` - Defers the maintenance window for the specified project.
-* :ref:`atlas-api-maintenanceWindows-getMaintenanceWindow` - Returns the maintenance window for the specified project.
-* :ref:`atlas-api-maintenanceWindows-resetMaintenanceWindow` - Resets the maintenance window for the specified project.
-* :ref:`atlas-api-maintenanceWindows-toggleMaintenanceAutoDefer` - Toggles automatic deferral of the maintenance window for the specified project.
-* :ref:`atlas-api-maintenanceWindows-updateMaintenanceWindow` - Updates the maintenance window for the specified project.
+* :ref:`atlas-api-maintenanceWindows-deferMaintenanceWindow` - experimental: Defers the maintenance window for the specified project.
+* :ref:`atlas-api-maintenanceWindows-getMaintenanceWindow` - experimental: Returns the maintenance window for the specified project.
+* :ref:`atlas-api-maintenanceWindows-resetMaintenanceWindow` - experimental: Resets the maintenance window for the specified project.
+* :ref:`atlas-api-maintenanceWindows-toggleMaintenanceAutoDefer` - experimental: Toggles automatic deferral of the maintenance window for the specified project.
+* :ref:`atlas-api-maintenanceWindows-updateMaintenanceWindow` - experimental: Updates the maintenance window for the specified project.
 
 
 .. toctree::

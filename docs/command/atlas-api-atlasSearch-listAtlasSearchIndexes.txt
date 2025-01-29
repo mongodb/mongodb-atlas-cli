@@ -12,7 +12,7 @@ atlas api atlasSearch listAtlasSearchIndexes
    :depth: 1
    :class: singlecol
 
-Returns all Atlas Search indexes on the specified collection.
+experimental: Returns all Atlas Search indexes on the specified collection.
 
 Atlas Search indexes contain the indexed fields and the analyzers used to create the indexes. To use this resource, the requesting API Key must have the Project Data Access Read Write role. This command is invoking the endpoint with OperationID: 'listAtlasSearchIndexes'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/listAtlasSearchIndexes
 

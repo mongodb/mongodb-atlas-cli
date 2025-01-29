@@ -12,7 +12,7 @@ atlas api sharedTierSnapshots
    :depth: 1
    :class: singlecol
 
-Returns and requests to download shared-tier database deployment snapshots.
+experimental: Returns and requests to download shared-tier database deployment snapshots.
 
 Options
 -------
@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-sharedTierSnapshots-downloadSharedClusterBackup` - Requests one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-getSharedClusterBackup` - Returns details for one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-listSharedClusterBackups` - Returns details for all snapshots for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-downloadSharedClusterBackup` - experimental: Requests one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-getSharedClusterBackup` - experimental: Returns details for one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-listSharedClusterBackups` - experimental: Returns details for all snapshots for the specified shared cluster.
 
 
 .. toctree::

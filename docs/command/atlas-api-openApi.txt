@@ -12,7 +12,7 @@ atlas api openApi
    :depth: 1
    :class: singlecol
 
-Returns information about the MongoDB Atlas Specification.
+experimental: Returns information about the MongoDB Atlas Specification.
 
 Options
 -------
@@ -49,8 +49,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-openApi-getApiVersions` - API that provides a list of available versionsfor a given environment.
-* :ref:`atlas-api-openApi-getOpenApiInfo` - This resource returns general information about the MongoDB Atlas Administration API OpenAPI Specification.
+* :ref:`atlas-api-openApi-getApiVersions` - experimental: API that provides a list of available versionsfor a given environment.
+* :ref:`atlas-api-openApi-getOpenApiInfo` - experimental: This resource returns general information about the MongoDB Atlas Administration API OpenAPI Specification.
 
 
 .. toctree::

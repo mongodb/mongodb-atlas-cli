@@ -12,7 +12,7 @@ atlas api monitoringAndLogs listDiskMeasurements
    :depth: 1
    :class: singlecol
 
-Returns measurement details for one disk or partition for the specified host for the specified project.
+experimental: Returns measurement details for one disk or partition for the specified host for the specified project.
 
 To use this resource, the requesting API Key must have the Project Read Only role. This command is invoking the endpoint with OperationID: 'listDiskMeasurements'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs/operation/listDiskMeasurements
 

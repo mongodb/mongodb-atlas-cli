@@ -12,7 +12,7 @@ atlas api serverlessInstances
    :depth: 1
    :class: singlecol
 
-Returns, adds, edits, and removes serverless instances.
+experimental: Returns, adds, edits, and removes serverless instances.
 
 Options
 -------
@@ -49,11 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-serverlessInstances-createServerlessInstance` - Creates one serverless instance in the specified project.
-* :ref:`atlas-api-serverlessInstances-deleteServerlessInstance` - Removes one serverless instance from the specified project.
-* :ref:`atlas-api-serverlessInstances-getServerlessInstance` - Returns details for one serverless instance in the specified project.
-* :ref:`atlas-api-serverlessInstances-listServerlessInstances` - Returns details for all serverless instances in the specified project.
-* :ref:`atlas-api-serverlessInstances-updateServerlessInstance` - Updates one serverless instance in the specified project.
+* :ref:`atlas-api-serverlessInstances-createServerlessInstance` - experimental: Creates one serverless instance in the specified project.
+* :ref:`atlas-api-serverlessInstances-deleteServerlessInstance` - experimental: Removes one serverless instance from the specified project.
+* :ref:`atlas-api-serverlessInstances-getServerlessInstance` - experimental: Returns details for one serverless instance in the specified project.
+* :ref:`atlas-api-serverlessInstances-listServerlessInstances` - experimental: Returns details for all serverless instances in the specified project.
+* :ref:`atlas-api-serverlessInstances-updateServerlessInstance` - experimental: Updates one serverless instance in the specified project.
 
 
 .. toctree::

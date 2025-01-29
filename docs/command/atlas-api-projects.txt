@@ -12,7 +12,7 @@ atlas api projects
    :depth: 1
    :class: singlecol
 
-Returns, adds, and edits collections of clusters and users in MongoDB Cloud.
+experimental: Returns, adds, and edits collections of clusters and users in MongoDB Cloud.
 
 Options
 -------
@@ -49,31 +49,31 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-projects-addUserToProject` - Adds one MongoDB Cloud user to the specified project.
-* :ref:`atlas-api-projects-createProject` - Creates one project.
-* :ref:`atlas-api-projects-createProjectInvitation` - Invites one MongoDB Cloud user to join the specified project.
-* :ref:`atlas-api-projects-deleteProject` - Removes the specified project.
-* :ref:`atlas-api-projects-deleteProjectInvitation` - Cancels one pending invitation sent to the specified MongoDB Cloud user to join a project.
-* :ref:`atlas-api-projects-deleteProjectLimit` - Removes the specified project limit.
-* :ref:`atlas-api-projects-getProject` - Returns details about the specified project.
-* :ref:`atlas-api-projects-getProjectByName` - Returns details about the specified project.
-* :ref:`atlas-api-projects-getProjectInvitation` - Returns the details of one pending invitation to the specified project.
-* :ref:`atlas-api-projects-getProjectLimit` - Returns the specified limit for the specified project.
-* :ref:`atlas-api-projects-getProjectLtsVersions` - Returns the MongoDB Long Term Support Major Versions available to new clusters in this project.
-* :ref:`atlas-api-projects-getProjectSettings` - Returns details about the specified project's settings.
-* :ref:`atlas-api-projects-listProjectInvitations` - Returns all pending invitations to the specified project.
-* :ref:`atlas-api-projects-listProjectLimits` - Returns all the limits for the specified project.
-* :ref:`atlas-api-projects-listProjectUsers` - Returns details about all users in the specified project.
-* :ref:`atlas-api-projects-listProjects` - Returns details about all projects.
-* :ref:`atlas-api-projects-migrateProjectToAnotherOrg` - Migrates a project from its current organization to another organization.
-* :ref:`atlas-api-projects-removeProjectUser` - Removes the specified user from the specified project.
-* :ref:`atlas-api-projects-returnAllIpAddresses` - Returns all IP addresses for this project.
-* :ref:`atlas-api-projects-setProjectLimit` - Sets the specified project limit.
-* :ref:`atlas-api-projects-updateProject` - Updates the human-readable label that identifies the specified project, or the tags associated with the project.
-* :ref:`atlas-api-projects-updateProjectInvitation` - Updates the details of one pending invitation to the specified project.
-* :ref:`atlas-api-projects-updateProjectInvitationById` - Updates the details of one pending invitation to the specified project.
-* :ref:`atlas-api-projects-updateProjectRoles` - Updates the roles of the specified user in the specified project.
-* :ref:`atlas-api-projects-updateProjectSettings` - Updates the settings of the specified project.
+* :ref:`atlas-api-projects-addUserToProject` - experimental: Adds one MongoDB Cloud user to the specified project.
+* :ref:`atlas-api-projects-createProject` - experimental: Creates one project.
+* :ref:`atlas-api-projects-createProjectInvitation` - experimental: Invites one MongoDB Cloud user to join the specified project.
+* :ref:`atlas-api-projects-deleteProject` - experimental: Removes the specified project.
+* :ref:`atlas-api-projects-deleteProjectInvitation` - experimental: Cancels one pending invitation sent to the specified MongoDB Cloud user to join a project.
+* :ref:`atlas-api-projects-deleteProjectLimit` - experimental: Removes the specified project limit.
+* :ref:`atlas-api-projects-getProject` - experimental: Returns details about the specified project.
+* :ref:`atlas-api-projects-getProjectByName` - experimental: Returns details about the specified project.
+* :ref:`atlas-api-projects-getProjectInvitation` - experimental: Returns the details of one pending invitation to the specified project.
+* :ref:`atlas-api-projects-getProjectLimit` - experimental: Returns the specified limit for the specified project.
+* :ref:`atlas-api-projects-getProjectLtsVersions` - experimental: Returns the MongoDB Long Term Support Major Versions available to new clusters in this project.
+* :ref:`atlas-api-projects-getProjectSettings` - experimental: Returns details about the specified project's settings.
+* :ref:`atlas-api-projects-listProjectInvitations` - experimental: Returns all pending invitations to the specified project.
+* :ref:`atlas-api-projects-listProjectLimits` - experimental: Returns all the limits for the specified project.
+* :ref:`atlas-api-projects-listProjectUsers` - experimental: Returns details about all users in the specified project.
+* :ref:`atlas-api-projects-listProjects` - experimental: Returns details about all projects.
+* :ref:`atlas-api-projects-migrateProjectToAnotherOrg` - experimental: Migrates a project from its current organization to another organization.
+* :ref:`atlas-api-projects-removeProjectUser` - experimental: Removes the specified user from the specified project.
+* :ref:`atlas-api-projects-returnAllIpAddresses` - experimental: Returns all IP addresses for this project.
+* :ref:`atlas-api-projects-setProjectLimit` - experimental: Sets the specified project limit.
+* :ref:`atlas-api-projects-updateProject` - experimental: Updates the human-readable label that identifies the specified project, or the tags associated with the project.
+* :ref:`atlas-api-projects-updateProjectInvitation` - experimental: Updates the details of one pending invitation to the specified project.
+* :ref:`atlas-api-projects-updateProjectInvitationById` - experimental: Updates the details of one pending invitation to the specified project.
+* :ref:`atlas-api-projects-updateProjectRoles` - experimental: Updates the roles of the specified user in the specified project.
+* :ref:`atlas-api-projects-updateProjectSettings` - experimental: Updates the settings of the specified project.
 
 
 .. toctree::

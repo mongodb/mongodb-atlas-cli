@@ -12,7 +12,7 @@ atlas api thirdPartyIntegrations
    :depth: 1
    :class: singlecol
 
-Returns, adds, edits, and removes third-party service integration configurations.
+experimental: Returns, adds, edits, and removes third-party service integration configurations.
 
 MongoDB Cloud sends alerts to each third-party service that you configure. IMPORTANT: Each project can only have one configuration per integrationType.
 
@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-thirdPartyIntegrations-createThirdPartyIntegration` - Adds the settings for configuring one third-party service integration.
-* :ref:`atlas-api-thirdPartyIntegrations-deleteThirdPartyIntegration` - Removes the settings that permit configuring one third-party service integration.
-* :ref:`atlas-api-thirdPartyIntegrations-getThirdPartyIntegration` - Returns the settings for configuring integration with one third-party service.
-* :ref:`atlas-api-thirdPartyIntegrations-listThirdPartyIntegrations` - Returns the settings that permit integrations with all configured third-party services.
-* :ref:`atlas-api-thirdPartyIntegrations-updateThirdPartyIntegration` - Updates the settings for configuring integration with one third-party service.
+* :ref:`atlas-api-thirdPartyIntegrations-createThirdPartyIntegration` - experimental: Adds the settings for configuring one third-party service integration.
+* :ref:`atlas-api-thirdPartyIntegrations-deleteThirdPartyIntegration` - experimental: Removes the settings that permit configuring one third-party service integration.
+* :ref:`atlas-api-thirdPartyIntegrations-getThirdPartyIntegration` - experimental: Returns the settings for configuring integration with one third-party service.
+* :ref:`atlas-api-thirdPartyIntegrations-listThirdPartyIntegrations` - experimental: Returns the settings that permit integrations with all configured third-party services.
+* :ref:`atlas-api-thirdPartyIntegrations-updateThirdPartyIntegration` - experimental: Updates the settings for configuring integration with one third-party service.
 
 
 .. toctree::

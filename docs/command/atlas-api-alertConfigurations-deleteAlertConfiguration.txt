@@ -12,7 +12,7 @@ atlas api alertConfigurations deleteAlertConfiguration
    :depth: 1
    :class: singlecol
 
-Removes one alert configuration from the specified project.
+experimental: Removes one alert configuration from the specified project.
 
 To use this resource, the requesting API Key must have the Organization Owner or Project Owner role. This resource remains under revision and may change. This command is invoking the endpoint with OperationID: 'deleteAlertConfiguration'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alert-Configurations/operation/deleteAlertConfiguration
 

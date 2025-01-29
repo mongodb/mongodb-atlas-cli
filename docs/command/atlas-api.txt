@@ -12,7 +12,7 @@ atlas api
    :depth: 1
    :class: singlecol
 
-
+experimental: Interact directly with any Atlas Admin API endpoint through the Atlas CLI, streamlining script development.
 
 Options
 -------
@@ -49,58 +49,58 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-accessTracking` - Returns access logs for authentication attempts made to Atlas database deployments.
-* :ref:`atlas-api-alertConfigurations` - Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users.
-* :ref:`atlas-api-alerts` - Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define.
-* :ref:`atlas-api-atlasSearch` - Returns, adds, edits, and removes Atlas Search indexes for the specified cluster.
-* :ref:`atlas-api-auditing` - Returns and edits database auditing settings for MongoDB Cloud projects.
-* :ref:`atlas-api-awsClustersDns` - Returns and edits custom DNS configurations for MongoDB Cloud database deployments on AWS.
-* :ref:`atlas-api-cloudBackups` - Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules.
-* :ref:`atlas-api-cloudMigrationService` - Manages the Cloud Migration Service.
-* :ref:`atlas-api-cloudProviderAccess` - Returns, adds, authorizes, and removes AWS IAM roles in Atlas.
-* :ref:`atlas-api-clusterOutageSimulation` - Returns, starts, or ends a cluster outage simulation.
-* :ref:`atlas-api-clusters` - Returns, adds, edits, and removes database deployments.
-* :ref:`atlas-api-collectionLevelMetrics` - Returns, adds, and edits pinned namespaces for the specified cluster or process.
-* :ref:`atlas-api-customDatabaseRoles` - Returns, adds, edits, and removes custom database user privilege roles.
-* :ref:`atlas-api-dataFederation` - Returns, adds, edits, and removes Federated Database Instances.
-* :ref:`atlas-api-dataLakePipelines` - Returns, edits, and removes Atlas Data Lake Pipelines and associated runs.
-* :ref:`atlas-api-databaseUsers` - Returns, adds, edits, and removes database users.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement` - Returns and edits the Encryption at Rest using Customer Key Management configuration.
-* :ref:`atlas-api-events` - Returns events.
-* :ref:`atlas-api-federatedAuthentication` - Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.
-* :ref:`atlas-api-flexClusters` - Returns, adds, edits, and removes flex clusters.
-* :ref:`atlas-api-flexRestoreJobs` - Returns and adds restore jobs for flex database deployments.
-* :ref:`atlas-api-flexSnapshots` - Returns and requests to download flex database deployment snapshots.
-* :ref:`atlas-api-globalClusters` - Returns, adds, and removes Global Cluster managed namespaces and custom zone mappings.
-* :ref:`atlas-api-invoices` - Returns invoices.
-* :ref:`atlas-api-ldapConfiguration` - Returns, edits, verifies, and removes LDAP configurations.
-* :ref:`atlas-api-legacyBackup` - Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.
-* :ref:`atlas-api-maintenanceWindows` - Returns, edits, and removes maintenance windows.
-* :ref:`atlas-api-mongoDbCloudUsers` - Returns, adds, and edits MongoDB Cloud users.
-* :ref:`atlas-api-monitoringAndLogs` - Returns database deployment monitoring and logging data.
-* :ref:`atlas-api-networkPeering` - Returns, adds, edits, and removes network peering containers and peering connections.
-* :ref:`atlas-api-onlineArchive` - Returns, adds, edits, or removes an online archive.
-* :ref:`atlas-api-openApi` - Returns information about the MongoDB Atlas Specification.
-* :ref:`atlas-api-organizations` - Returns, adds, and edits organizational units in MongoDB Cloud.
-* :ref:`atlas-api-performanceAdvisor` - Returns suggested indexes and slow query data for a database deployment.
-* :ref:`atlas-api-privateEndpointServices` - Returns, adds, edits, and removes private endpoint services.
-* :ref:`atlas-api-programmaticApiKeys` - Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API.
-* :ref:`atlas-api-projectIpAccessList` - Returns, adds, edits, and removes network access limits to database deployments in Atlas.
-* :ref:`atlas-api-projects` - Returns, adds, and edits collections of clusters and users in MongoDB Cloud.
-* :ref:`atlas-api-pushBasedLogExport` - You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
-* :ref:`atlas-api-resourcePolicies` - Configure and manage Atlas Resource Policies within your organization.
-* :ref:`atlas-api-rollingIndex` - Creates one index to a database deployment in a rolling manner.
-* :ref:`atlas-api-root` - Returns details that describe the MongoDB Cloud build and the access token that requests this resource.
-* :ref:`atlas-api-serverlessInstances` - Returns, adds, edits, and removes serverless instances.
-* :ref:`atlas-api-serverlessPrivateEndpoints` - Returns, adds, edits, and removes private endpoints for serverless instances.
-* :ref:`atlas-api-serviceAccounts` - Endpoints for managing Service Accounts and secrets.
-* :ref:`atlas-api-sharedTierRestoreJobs` - Returns and adds restore jobs for shared-tier database deployments.
-* :ref:`atlas-api-sharedTierSnapshots` - Returns and requests to download shared-tier database deployment snapshots.
-* :ref:`atlas-api-streams` - Returns, adds, edits, and removes Streams Instances.
-* :ref:`atlas-api-teams` - Returns, adds, edits, or removes teams.
-* :ref:`atlas-api-test` - Atlas test endpoints.
-* :ref:`atlas-api-thirdPartyIntegrations` - Returns, adds, edits, and removes third-party service integration configurations.
-* :ref:`atlas-api-x509Authentication` - Returns, edits, and removes user-managed X.509 configurations.
+* :ref:`atlas-api-accessTracking` - experimental: Returns access logs for authentication attempts made to Atlas database deployments.
+* :ref:`atlas-api-alertConfigurations` - experimental: Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users.
+* :ref:`atlas-api-alerts` - experimental: Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define.
+* :ref:`atlas-api-atlasSearch` - experimental: Returns, adds, edits, and removes Atlas Search indexes for the specified cluster.
+* :ref:`atlas-api-auditing` - experimental: Returns and edits database auditing settings for MongoDB Cloud projects.
+* :ref:`atlas-api-awsClustersDns` - experimental: Returns and edits custom DNS configurations for MongoDB Cloud database deployments on AWS.
+* :ref:`atlas-api-cloudBackups` - experimental: Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules.
+* :ref:`atlas-api-cloudMigrationService` - experimental: Manages the Cloud Migration Service.
+* :ref:`atlas-api-cloudProviderAccess` - experimental: Returns, adds, authorizes, and removes AWS IAM roles in Atlas.
+* :ref:`atlas-api-clusterOutageSimulation` - experimental: Returns, starts, or ends a cluster outage simulation.
+* :ref:`atlas-api-clusters` - experimental: Returns, adds, edits, and removes database deployments.
+* :ref:`atlas-api-collectionLevelMetrics` - experimental: Returns, adds, and edits pinned namespaces for the specified cluster or process.
+* :ref:`atlas-api-customDatabaseRoles` - experimental: Returns, adds, edits, and removes custom database user privilege roles.
+* :ref:`atlas-api-dataFederation` - experimental: Returns, adds, edits, and removes Federated Database Instances.
+* :ref:`atlas-api-dataLakePipelines` - experimental: Returns, edits, and removes Atlas Data Lake Pipelines and associated runs.
+* :ref:`atlas-api-databaseUsers` - experimental: Returns, adds, edits, and removes database users.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement` - experimental: Returns and edits the Encryption at Rest using Customer Key Management configuration.
+* :ref:`atlas-api-events` - experimental: Returns events.
+* :ref:`atlas-api-federatedAuthentication` - experimental: Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.
+* :ref:`atlas-api-flexClusters` - experimental: Returns, adds, edits, and removes flex clusters.
+* :ref:`atlas-api-flexRestoreJobs` - experimental: Returns and adds restore jobs for flex database deployments.
+* :ref:`atlas-api-flexSnapshots` - experimental: Returns and requests to download flex database deployment snapshots.
+* :ref:`atlas-api-globalClusters` - experimental: Returns, adds, and removes Global Cluster managed namespaces and custom zone mappings.
+* :ref:`atlas-api-invoices` - experimental: Returns invoices.
+* :ref:`atlas-api-ldapConfiguration` - experimental: Returns, edits, verifies, and removes LDAP configurations.
+* :ref:`atlas-api-legacyBackup` - experimental: Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.
+* :ref:`atlas-api-maintenanceWindows` - experimental: Returns, edits, and removes maintenance windows.
+* :ref:`atlas-api-mongoDbCloudUsers` - experimental: Returns, adds, and edits MongoDB Cloud users.
+* :ref:`atlas-api-monitoringAndLogs` - experimental: Returns database deployment monitoring and logging data.
+* :ref:`atlas-api-networkPeering` - experimental: Returns, adds, edits, and removes network peering containers and peering connections.
+* :ref:`atlas-api-onlineArchive` - experimental: Returns, adds, edits, or removes an online archive.
+* :ref:`atlas-api-openApi` - experimental: Returns information about the MongoDB Atlas Specification.
+* :ref:`atlas-api-organizations` - experimental: Returns, adds, and edits organizational units in MongoDB Cloud.
+* :ref:`atlas-api-performanceAdvisor` - experimental: Returns suggested indexes and slow query data for a database deployment.
+* :ref:`atlas-api-privateEndpointServices` - experimental: Returns, adds, edits, and removes private endpoint services.
+* :ref:`atlas-api-programmaticApiKeys` - experimental: Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API.
+* :ref:`atlas-api-projectIpAccessList` - experimental: Returns, adds, edits, and removes network access limits to database deployments in Atlas.
+* :ref:`atlas-api-projects` - experimental: Returns, adds, and edits collections of clusters and users in MongoDB Cloud.
+* :ref:`atlas-api-pushBasedLogExport` - experimental: You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
+* :ref:`atlas-api-resourcePolicies` - experimental: Configure and manage Atlas Resource Policies within your organization.
+* :ref:`atlas-api-rollingIndex` - experimental: Creates one index to a database deployment in a rolling manner.
+* :ref:`atlas-api-root` - experimental: Returns details that describe the MongoDB Cloud build and the access token that requests this resource.
+* :ref:`atlas-api-serverlessInstances` - experimental: Returns, adds, edits, and removes serverless instances.
+* :ref:`atlas-api-serverlessPrivateEndpoints` - experimental: Returns, adds, edits, and removes private endpoints for serverless instances.
+* :ref:`atlas-api-serviceAccounts` - experimental: Endpoints for managing Service Accounts and secrets.
+* :ref:`atlas-api-sharedTierRestoreJobs` - experimental: Returns and adds restore jobs for shared-tier database deployments.
+* :ref:`atlas-api-sharedTierSnapshots` - experimental: Returns and requests to download shared-tier database deployment snapshots.
+* :ref:`atlas-api-streams` - experimental: Returns, adds, edits, and removes Streams Instances.
+* :ref:`atlas-api-teams` - experimental: Returns, adds, edits, or removes teams.
+* :ref:`atlas-api-test` - experimental: Atlas test endpoints.
+* :ref:`atlas-api-thirdPartyIntegrations` - experimental: Returns, adds, edits, and removes third-party service integration configurations.
+* :ref:`atlas-api-x509Authentication` - experimental: Returns, edits, and removes user-managed X.509 configurations.
 
 
 .. toctree::

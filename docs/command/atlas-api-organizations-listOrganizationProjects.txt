@@ -12,7 +12,7 @@ atlas api organizations listOrganizationProjects
    :depth: 1
    :class: singlecol
 
-Returns multiple projects in the specified organization.
+experimental: Returns multiple projects in the specified organization.
 
 Each organization can have multiple projects. Use projects to:
 

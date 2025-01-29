@@ -12,7 +12,7 @@ atlas api organizations deleteOrganization
    :depth: 1
    :class: singlecol
 
-Removes one specified organization.
+experimental: Removes one specified organization.
 
 MongoDB Cloud imposes the following limits on this resource:
 

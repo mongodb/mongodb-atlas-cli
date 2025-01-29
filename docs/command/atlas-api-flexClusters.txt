@@ -12,7 +12,7 @@ atlas api flexClusters
    :depth: 1
    :class: singlecol
 
-Returns, adds, edits, and removes flex clusters.
+experimental: Returns, adds, edits, and removes flex clusters.
 
 Options
 -------
@@ -49,12 +49,12 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-flexClusters-createFlexCluster` - Creates one flex cluster in the specified project.
-* :ref:`atlas-api-flexClusters-deleteFlexCluster` - Removes one flex cluster from the specified project.
-* :ref:`atlas-api-flexClusters-getFlexCluster` - Returns details for one flex cluster in the specified project.
-* :ref:`atlas-api-flexClusters-listFlexClusters` - Returns details for all flex clusters in the specified project.
-* :ref:`atlas-api-flexClusters-updateFlexCluster` - Updates one flex cluster in the specified project.
-* :ref:`atlas-api-flexClusters-upgradeFlexCluster` - Upgrades a flex cluster to a dedicated cluster (M10+) in the specified project.
+* :ref:`atlas-api-flexClusters-createFlexCluster` - experimental: Creates one flex cluster in the specified project.
+* :ref:`atlas-api-flexClusters-deleteFlexCluster` - experimental: Removes one flex cluster from the specified project.
+* :ref:`atlas-api-flexClusters-getFlexCluster` - experimental: Returns details for one flex cluster in the specified project.
+* :ref:`atlas-api-flexClusters-listFlexClusters` - experimental: Returns details for all flex clusters in the specified project.
+* :ref:`atlas-api-flexClusters-updateFlexCluster` - experimental: Updates one flex cluster in the specified project.
+* :ref:`atlas-api-flexClusters-upgradeFlexCluster` - experimental: Upgrades a flex cluster to a dedicated cluster (M10+) in the specified project.
 
 
 .. toctree::

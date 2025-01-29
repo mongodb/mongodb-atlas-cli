@@ -12,7 +12,7 @@ atlas api cloudProviderAccess
    :depth: 1
    :class: singlecol
 
-Returns, adds, authorizes, and removes AWS IAM roles in Atlas.
+experimental: Returns, adds, authorizes, and removes AWS IAM roles in Atlas.
 
 Options
 -------
@@ -49,11 +49,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-cloudProviderAccess-authorizeCloudProviderAccessRole` - Grants access to the specified project for the specified access role.
-* :ref:`atlas-api-cloudProviderAccess-createCloudProviderAccessRole` - Creates one access role for the specified cloud provider.
-* :ref:`atlas-api-cloudProviderAccess-deauthorizeCloudProviderAccessRole` - Revokes access to the specified project for the specified access role.
-* :ref:`atlas-api-cloudProviderAccess-getCloudProviderAccessRole` - Returns the access role with the specified id and with access to the specified project.
-* :ref:`atlas-api-cloudProviderAccess-listCloudProviderAccessRoles` - Returns all cloud provider access roles with access to the specified project.
+* :ref:`atlas-api-cloudProviderAccess-authorizeCloudProviderAccessRole` - experimental: Grants access to the specified project for the specified access role.
+* :ref:`atlas-api-cloudProviderAccess-createCloudProviderAccessRole` - experimental: Creates one access role for the specified cloud provider.
+* :ref:`atlas-api-cloudProviderAccess-deauthorizeCloudProviderAccessRole` - experimental: Revokes access to the specified project for the specified access role.
+* :ref:`atlas-api-cloudProviderAccess-getCloudProviderAccessRole` - experimental: Returns the access role with the specified id and with access to the specified project.
+* :ref:`atlas-api-cloudProviderAccess-listCloudProviderAccessRoles` - experimental: Returns all cloud provider access roles with access to the specified project.
 
 
 .. toctree::

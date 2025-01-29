@@ -12,7 +12,7 @@ atlas api cloudBackups takeSnapshot
    :depth: 1
    :class: singlecol
 
-Takes one on-demand snapshot for the specified cluster.
+experimental: Takes one on-demand snapshot for the specified cluster.
 
 Atlas takes on-demand snapshots immediately and scheduled snapshots at regular intervals. If an on-demand snapshot with a status of queued or inProgress exists, before taking another snapshot, wait until Atlas completes completes processing the previously taken on-demand snapshot. To use this resource, the requesting API Key must have the Project Owner role. This command is invoking the endpoint with OperationID: 'takeSnapshot'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/takeSnapshot
 

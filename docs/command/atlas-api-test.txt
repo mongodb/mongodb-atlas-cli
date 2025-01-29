@@ -12,7 +12,7 @@ atlas api test
    :depth: 1
    :class: singlecol
 
-Atlas test endpoints.
+experimental: Atlas test endpoints.
 
 Options
 -------
@@ -49,7 +49,7 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-test-versionedExample` - Returns some text dummy data for test purposes.
+* :ref:`atlas-api-test-versionedExample` - experimental: Returns some text dummy data for test purposes.
 
 
 .. toctree::

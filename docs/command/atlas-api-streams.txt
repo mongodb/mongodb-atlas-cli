@@ -12,7 +12,7 @@ atlas api streams
    :depth: 1
    :class: singlecol
 
-Returns, adds, edits, and removes Streams Instances.
+experimental: Returns, adds, edits, and removes Streams Instances.
 
 This resource requires your project ID.
 
@@ -51,34 +51,34 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-streams-acceptVpcPeeringConnection` - Requests the acceptance of an incoming VPC Peering connection.
-* :ref:`atlas-api-streams-createPrivateLinkConnection` - Creates one Private Link in the specified project.
-* :ref:`atlas-api-streams-createStreamConnection` - Creates one connection for a stream instance in the specified project.
-* :ref:`atlas-api-streams-createStreamInstance` - Creates one stream instance in the specified project.
-* :ref:`atlas-api-streams-createStreamInstanceWithSampleConnections` - Creates one stream instance in the specified project with sample connections.
-* :ref:`atlas-api-streams-createStreamProcessor` - Create one Stream Processor within the specified stream instance.
-* :ref:`atlas-api-streams-deletePrivateLinkConnection` - Deletes one Private Link in the specified project.
-* :ref:`atlas-api-streams-deleteStreamConnection` - Delete one connection of the specified stream instance.
-* :ref:`atlas-api-streams-deleteStreamInstance` - Delete one stream instance in the specified project.
-* :ref:`atlas-api-streams-deleteStreamProcessor` - Delete a Stream Processor within the specified stream instance.
-* :ref:`atlas-api-streams-deleteVpcPeeringConnection` - Deletes an incoming VPC Peering connection.
-* :ref:`atlas-api-streams-downloadStreamTenantAuditLogs` - Downloads the audit logs for the specified Atlas Streams Processing instance.
-* :ref:`atlas-api-streams-getAccountDetails` - Returns the Account ID, and the VPC ID for the group and region specified.
-* :ref:`atlas-api-streams-getPrivateLinkConnection` - Returns the details of one Private Link connection within the project.
-* :ref:`atlas-api-streams-getStreamConnection` - Returns the details of one stream connection within the specified stream instance.
-* :ref:`atlas-api-streams-getStreamInstance` - Returns the details of one stream instance within the specified project.
-* :ref:`atlas-api-streams-getStreamProcessor` - Get one Stream Processor within the specified stream instance.
-* :ref:`atlas-api-streams-getVpcPeeringConnections` - Returns a list of incoming VPC Peering Connections.
-* :ref:`atlas-api-streams-listPrivateLinkConnections` - Returns all Private Link connections for the specified project.To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
-* :ref:`atlas-api-streams-listStreamConnections` - Returns all connections of the stream instance for the specified project.To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
-* :ref:`atlas-api-streams-listStreamInstances` - Returns all stream instances for the specified project.
-* :ref:`atlas-api-streams-listStreamProcessors` - Returns all Stream Processors within the specified stream instance.
-* :ref:`atlas-api-streams-modifyStreamProcessor` - Modify one existing Stream Processor within the specified stream instance.
-* :ref:`atlas-api-streams-rejectVpcPeeringConnection` - Requests the rejection of an incoming VPC Peering connection.
-* :ref:`atlas-api-streams-startStreamProcessor` - Start a Stream Processor within the specified stream instance.
-* :ref:`atlas-api-streams-stopStreamProcessor` - Stop a Stream Processor within the specified stream instance.
-* :ref:`atlas-api-streams-updateStreamConnection` - Update one connection for the specified stream instance in the specified project.
-* :ref:`atlas-api-streams-updateStreamInstance` - Update one stream instance in the specified project.
+* :ref:`atlas-api-streams-acceptVpcPeeringConnection` - experimental: Requests the acceptance of an incoming VPC Peering connection.
+* :ref:`atlas-api-streams-createPrivateLinkConnection` - experimental: Creates one Private Link in the specified project.
+* :ref:`atlas-api-streams-createStreamConnection` - experimental: Creates one connection for a stream instance in the specified project.
+* :ref:`atlas-api-streams-createStreamInstance` - experimental: Creates one stream instance in the specified project.
+* :ref:`atlas-api-streams-createStreamInstanceWithSampleConnections` - experimental: Creates one stream instance in the specified project with sample connections.
+* :ref:`atlas-api-streams-createStreamProcessor` - experimental: Create one Stream Processor within the specified stream instance.
+* :ref:`atlas-api-streams-deletePrivateLinkConnection` - experimental: Deletes one Private Link in the specified project.
+* :ref:`atlas-api-streams-deleteStreamConnection` - experimental: Delete one connection of the specified stream instance.
+* :ref:`atlas-api-streams-deleteStreamInstance` - experimental: Delete one stream instance in the specified project.
+* :ref:`atlas-api-streams-deleteStreamProcessor` - experimental: Delete a Stream Processor within the specified stream instance.
+* :ref:`atlas-api-streams-deleteVpcPeeringConnection` - experimental: Deletes an incoming VPC Peering connection.
+* :ref:`atlas-api-streams-downloadStreamTenantAuditLogs` - experimental: Downloads the audit logs for the specified Atlas Streams Processing instance.
+* :ref:`atlas-api-streams-getAccountDetails` - experimental: Returns the Account ID, and the VPC ID for the group and region specified.
+* :ref:`atlas-api-streams-getPrivateLinkConnection` - experimental: Returns the details of one Private Link connection within the project.
+* :ref:`atlas-api-streams-getStreamConnection` - experimental: Returns the details of one stream connection within the specified stream instance.
+* :ref:`atlas-api-streams-getStreamInstance` - experimental: Returns the details of one stream instance within the specified project.
+* :ref:`atlas-api-streams-getStreamProcessor` - experimental: Get one Stream Processor within the specified stream instance.
+* :ref:`atlas-api-streams-getVpcPeeringConnections` - experimental: Returns a list of incoming VPC Peering Connections.
+* :ref:`atlas-api-streams-listPrivateLinkConnections` - experimental: Returns all Private Link connections for the specified project.To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
+* :ref:`atlas-api-streams-listStreamConnections` - experimental: Returns all connections of the stream instance for the specified project.To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
+* :ref:`atlas-api-streams-listStreamInstances` - experimental: Returns all stream instances for the specified project.
+* :ref:`atlas-api-streams-listStreamProcessors` - experimental: Returns all Stream Processors within the specified stream instance.
+* :ref:`atlas-api-streams-modifyStreamProcessor` - experimental: Modify one existing Stream Processor within the specified stream instance.
+* :ref:`atlas-api-streams-rejectVpcPeeringConnection` - experimental: Requests the rejection of an incoming VPC Peering connection.
+* :ref:`atlas-api-streams-startStreamProcessor` - experimental: Start a Stream Processor within the specified stream instance.
+* :ref:`atlas-api-streams-stopStreamProcessor` - experimental: Stop a Stream Processor within the specified stream instance.
+* :ref:`atlas-api-streams-updateStreamConnection` - experimental: Update one connection for the specified stream instance in the specified project.
+* :ref:`atlas-api-streams-updateStreamInstance` - experimental: Update one stream instance in the specified project.
 
 
 .. toctree::

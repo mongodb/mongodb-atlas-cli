@@ -12,7 +12,7 @@ atlas api cloudBackups deleteReplicaSetBackup
    :depth: 1
    :class: singlecol
 
-Removes the specified snapshot.
+experimental: Removes the specified snapshot.
 
 To use this resource, the requesting API Key must have the Project Owner role. This command is invoking the endpoint with OperationID: 'deleteReplicaSetBackup'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/deleteReplicaSetBackup
 

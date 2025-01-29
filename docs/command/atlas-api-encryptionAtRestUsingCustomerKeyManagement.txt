@@ -12,7 +12,7 @@ atlas api encryptionAtRestUsingCustomerKeyManagement
    :depth: 1
    :class: singlecol
 
-Returns and edits the Encryption at Rest using Customer Key Management configuration.
+experimental: Returns and edits the Encryption at Rest using Customer Key Management configuration.
 
 MongoDB Cloud encrypts all storage whether or not you use your own key management.
 
@@ -51,12 +51,12 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-createEncryptionAtRestPrivateEndpoint` - Creates a private endpoint in the specified region for encryption at rest using customer key management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRest` - Returns the configuration for encryption at rest using the keys you manage through your cloud provider.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRestPrivateEndpoint` - Returns one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRestPrivateEndpointsForCloudProvider` - Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestEncryptionAtRestPrivateEndpointDeletion` - Deletes one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
-* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-updateEncryptionAtRest` - Updates the configuration for encryption at rest using the keys you manage through your cloud provider.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-createEncryptionAtRestPrivateEndpoint` - experimental: Creates a private endpoint in the specified region for encryption at rest using customer key management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRest` - experimental: Returns the configuration for encryption at rest using the keys you manage through your cloud provider.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRestPrivateEndpoint` - experimental: Returns one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-getEncryptionAtRestPrivateEndpointsForCloudProvider` - experimental: Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-requestEncryptionAtRestPrivateEndpointDeletion` - experimental: Deletes one private endpoint, identified by its ID, for encryption at rest using Customer Key Management.
+* :ref:`atlas-api-encryptionAtRestUsingCustomerKeyManagement-updateEncryptionAtRest` - experimental: Updates the configuration for encryption at rest using the keys you manage through your cloud provider.
 
 
 .. toctree::

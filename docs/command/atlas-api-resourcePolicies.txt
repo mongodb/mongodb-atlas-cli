@@ -12,7 +12,7 @@ atlas api resourcePolicies
    :depth: 1
    :class: singlecol
 
-Configure and manage Atlas Resource Policies within your organization.
+experimental: Configure and manage Atlas Resource Policies within your organization.
 
 Options
 -------
@@ -49,13 +49,13 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-resourcePolicies-createAtlasResourcePolicy` - Create one Atlas Resource Policy for an org.
-* :ref:`atlas-api-resourcePolicies-deleteAtlasResourcePolicy` - Delete one Atlas Resource Policy for an org.
-* :ref:`atlas-api-resourcePolicies-getAtlasResourcePolicies` - Return all Atlas Resource Policies for the org.
-* :ref:`atlas-api-resourcePolicies-getAtlasResourcePolicy` - Return one Atlas Resource Policy for an org.
-* :ref:`atlas-api-resourcePolicies-getResourcesNonCompliant` - Return all non-compliant resources for an org.
-* :ref:`atlas-api-resourcePolicies-updateAtlasResourcePolicy` - Update one Atlas Resource Policy for an org.
-* :ref:`atlas-api-resourcePolicies-validateAtlasResourcePolicy` - Validate one Atlas Resource Policy for an org.
+* :ref:`atlas-api-resourcePolicies-createAtlasResourcePolicy` - experimental: Create one Atlas Resource Policy for an org.
+* :ref:`atlas-api-resourcePolicies-deleteAtlasResourcePolicy` - experimental: Delete one Atlas Resource Policy for an org.
+* :ref:`atlas-api-resourcePolicies-getAtlasResourcePolicies` - experimental: Return all Atlas Resource Policies for the org.
+* :ref:`atlas-api-resourcePolicies-getAtlasResourcePolicy` - experimental: Return one Atlas Resource Policy for an org.
+* :ref:`atlas-api-resourcePolicies-getResourcesNonCompliant` - experimental: Return all non-compliant resources for an org.
+* :ref:`atlas-api-resourcePolicies-updateAtlasResourcePolicy` - experimental: Update one Atlas Resource Policy for an org.
+* :ref:`atlas-api-resourcePolicies-validateAtlasResourcePolicy` - experimental: Validate one Atlas Resource Policy for an org.
 
 
 .. toctree::

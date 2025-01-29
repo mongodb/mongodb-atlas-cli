@@ -12,7 +12,7 @@ atlas api projects deleteProjectLimit
    :depth: 1
    :class: singlecol
 
-Removes the specified project limit.
+experimental: Removes the specified project limit.
 
 Depending on the limit, Atlas either resets the limit to its default value or removes the limit entirely. To use this resource, the requesting API Key must have the Project Owner role. This command is invoking the endpoint with OperationID: 'deleteProjectLimit'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/deleteProjectLimit
 

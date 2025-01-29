@@ -12,7 +12,7 @@ atlas api teams
    :depth: 1
    :class: singlecol
 
-Returns, adds, edits, or removes teams.
+experimental: Returns, adds, edits, or removes teams.
 
 Options
 -------
@@ -49,19 +49,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-teams-addAllTeamsToProject` - Adds one team to the specified project.
-* :ref:`atlas-api-teams-addTeamUser` - Adds one or more MongoDB Cloud users from the specified organization to the specified team.
-* :ref:`atlas-api-teams-createTeam` - Creates one team in the specified organization.
-* :ref:`atlas-api-teams-deleteTeam` - Removes one team specified using its unique 24-hexadecimal digit identifier from the organization specified using its unique 24-hexadecimal digit identifier.
-* :ref:`atlas-api-teams-getTeamById` - Returns one team that you identified using its unique 24-hexadecimal digit ID.
-* :ref:`atlas-api-teams-getTeamByName` - Returns one team that you identified using its human-readable name.
-* :ref:`atlas-api-teams-listOrganizationTeams` - Returns all teams that belong to the specified organization.
-* :ref:`atlas-api-teams-listProjectTeams` - Returns all teams to which the authenticated user has access in the project specified using its unique 24-hexadecimal digit identifier.
-* :ref:`atlas-api-teams-listTeamUsers` - Returns all MongoDB Cloud users assigned to the team specified using its unique 24-hexadecimal digit identifier.
-* :ref:`atlas-api-teams-removeProjectTeam` - Removes one team specified using its unique 24-hexadecimal digit identifier from the project specified using its unique 24-hexadecimal digit identifier.
-* :ref:`atlas-api-teams-removeTeamUser` - Removes one MongoDB Cloud user from the specified team.
-* :ref:`atlas-api-teams-renameTeam` - Renames one team in the specified organization.
-* :ref:`atlas-api-teams-updateTeamRoles` - Updates the project roles assigned to the specified team.
+* :ref:`atlas-api-teams-addAllTeamsToProject` - experimental: Adds one team to the specified project.
+* :ref:`atlas-api-teams-addTeamUser` - experimental: Adds one or more MongoDB Cloud users from the specified organization to the specified team.
+* :ref:`atlas-api-teams-createTeam` - experimental: Creates one team in the specified organization.
+* :ref:`atlas-api-teams-deleteTeam` - experimental: Removes one team specified using its unique 24-hexadecimal digit identifier from the organization specified using its unique 24-hexadecimal digit identifier.
+* :ref:`atlas-api-teams-getTeamById` - experimental: Returns one team that you identified using its unique 24-hexadecimal digit ID.
+* :ref:`atlas-api-teams-getTeamByName` - experimental: Returns one team that you identified using its human-readable name.
+* :ref:`atlas-api-teams-listOrganizationTeams` - experimental: Returns all teams that belong to the specified organization.
+* :ref:`atlas-api-teams-listProjectTeams` - experimental: Returns all teams to which the authenticated user has access in the project specified using its unique 24-hexadecimal digit identifier.
+* :ref:`atlas-api-teams-listTeamUsers` - experimental: Returns all MongoDB Cloud users assigned to the team specified using its unique 24-hexadecimal digit identifier.
+* :ref:`atlas-api-teams-removeProjectTeam` - experimental: Removes one team specified using its unique 24-hexadecimal digit identifier from the project specified using its unique 24-hexadecimal digit identifier.
+* :ref:`atlas-api-teams-removeTeamUser` - experimental: Removes one MongoDB Cloud user from the specified team.
+* :ref:`atlas-api-teams-renameTeam` - experimental: Renames one team in the specified organization.
+* :ref:`atlas-api-teams-updateTeamRoles` - experimental: Updates the project roles assigned to the specified team.
 
 
 .. toctree::

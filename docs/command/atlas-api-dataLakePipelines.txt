@@ -12,7 +12,7 @@ atlas api dataLakePipelines
    :depth: 1
    :class: singlecol
 
-Returns, edits, and removes Atlas Data Lake Pipelines and associated runs.
+experimental: Returns, edits, and removes Atlas Data Lake Pipelines and associated runs.
 
 Options
 -------
@@ -49,19 +49,19 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-dataLakePipelines-createPipeline` - Creates one Data Lake Pipeline.
-* :ref:`atlas-api-dataLakePipelines-deletePipeline` - Removes one Data Lake Pipeline.
-* :ref:`atlas-api-dataLakePipelines-deletePipelineRunDataset` - Deletes dataset that Atlas generated during the specified pipeline run.
-* :ref:`atlas-api-dataLakePipelines-getPipeline` - Returns the details of one Data Lake Pipeline within the specified project.
-* :ref:`atlas-api-dataLakePipelines-getPipelineRun` - Returns the details of one Data Lake Pipeline run within the specified project.
-* :ref:`atlas-api-dataLakePipelines-listPipelineRuns` - Returns a list of past Data Lake Pipeline runs.
-* :ref:`atlas-api-dataLakePipelines-listPipelineSchedules` - Returns a list of backup schedule policy items that you can use as a Data Lake Pipeline source.
-* :ref:`atlas-api-dataLakePipelines-listPipelineSnapshots` - Returns a list of backup snapshots that you can use to trigger an on demand pipeline run.
-* :ref:`atlas-api-dataLakePipelines-listPipelines` - Returns a list of Data Lake Pipelines.
-* :ref:`atlas-api-dataLakePipelines-pausePipeline` - Pauses ingestion for a Data Lake Pipeline within the specified project.
-* :ref:`atlas-api-dataLakePipelines-resumePipeline` - Resumes ingestion for a Data Lake Pipeline within the specified project.
-* :ref:`atlas-api-dataLakePipelines-triggerSnapshotIngestion` - Triggers a Data Lake Pipeline ingestion of a specified snapshot.
-* :ref:`atlas-api-dataLakePipelines-updatePipeline` - Updates one Data Lake Pipeline.
+* :ref:`atlas-api-dataLakePipelines-createPipeline` - experimental: Creates one Data Lake Pipeline.
+* :ref:`atlas-api-dataLakePipelines-deletePipeline` - experimental: Removes one Data Lake Pipeline.
+* :ref:`atlas-api-dataLakePipelines-deletePipelineRunDataset` - experimental: Deletes dataset that Atlas generated during the specified pipeline run.
+* :ref:`atlas-api-dataLakePipelines-getPipeline` - experimental: Returns the details of one Data Lake Pipeline within the specified project.
+* :ref:`atlas-api-dataLakePipelines-getPipelineRun` - experimental: Returns the details of one Data Lake Pipeline run within the specified project.
+* :ref:`atlas-api-dataLakePipelines-listPipelineRuns` - experimental: Returns a list of past Data Lake Pipeline runs.
+* :ref:`atlas-api-dataLakePipelines-listPipelineSchedules` - experimental: Returns a list of backup schedule policy items that you can use as a Data Lake Pipeline source.
+* :ref:`atlas-api-dataLakePipelines-listPipelineSnapshots` - experimental: Returns a list of backup snapshots that you can use to trigger an on demand pipeline run.
+* :ref:`atlas-api-dataLakePipelines-listPipelines` - experimental: Returns a list of Data Lake Pipelines.
+* :ref:`atlas-api-dataLakePipelines-pausePipeline` - experimental: Pauses ingestion for a Data Lake Pipeline within the specified project.
+* :ref:`atlas-api-dataLakePipelines-resumePipeline` - experimental: Resumes ingestion for a Data Lake Pipeline within the specified project.
+* :ref:`atlas-api-dataLakePipelines-triggerSnapshotIngestion` - experimental: Triggers a Data Lake Pipeline ingestion of a specified snapshot.
+* :ref:`atlas-api-dataLakePipelines-updatePipeline` - experimental: Updates one Data Lake Pipeline.
 
 
 .. toctree::

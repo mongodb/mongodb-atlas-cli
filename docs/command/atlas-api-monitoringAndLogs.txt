@@ -12,7 +12,7 @@ atlas api monitoringAndLogs
    :depth: 1
    :class: singlecol
 
-Returns database deployment monitoring and logging data.
+experimental: Returns database deployment monitoring and logging data.
 
 Options
 -------
@@ -49,20 +49,20 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-monitoringAndLogs-getAtlasProcess` - Returns the processes for the specified host for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-getDatabase` - Returns one database running on the specified host for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-getDatabaseMeasurements` - Returns the measurements of one database for the specified host for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-getDiskMeasurements` - Returns the measurements of one disk or partition for the specified host for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-getHostLogs` - Returns a compressed (.gz) log file that contains a range of log messages for the specified host for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-getHostMeasurements` - Returns disk, partition, or host measurements per process for the specified host for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-getIndexMetrics` - Returns the Atlas Search metrics data series within the provided time range for one namespace and index name on the specified process.
-* :ref:`atlas-api-monitoringAndLogs-getMeasurements` - Returns the Atlas Search hardware and status data series within the provided time range for one process in the specified project.
-* :ref:`atlas-api-monitoringAndLogs-listAtlasProcesses` - Returns details of all processes for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-listDatabases` - Returns the list of databases running on the specified host for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-listDiskMeasurements` - Returns measurement details for one disk or partition for the specified host for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-listDiskPartitions` - Returns the list of disks or partitions for the specified host for the specified project.
-* :ref:`atlas-api-monitoringAndLogs-listIndexMetrics` - Returns the Atlas Search index metrics within the specified time range for one namespace in the specified process.
-* :ref:`atlas-api-monitoringAndLogs-listMetricTypes` - Returns all Atlas Search metric types available for one process in the specified project.
+* :ref:`atlas-api-monitoringAndLogs-getAtlasProcess` - experimental: Returns the processes for the specified host for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-getDatabase` - experimental: Returns one database running on the specified host for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-getDatabaseMeasurements` - experimental: Returns the measurements of one database for the specified host for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-getDiskMeasurements` - experimental: Returns the measurements of one disk or partition for the specified host for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-getHostLogs` - experimental: Returns a compressed (.gz) log file that contains a range of log messages for the specified host for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-getHostMeasurements` - experimental: Returns disk, partition, or host measurements per process for the specified host for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-getIndexMetrics` - experimental: Returns the Atlas Search metrics data series within the provided time range for one namespace and index name on the specified process.
+* :ref:`atlas-api-monitoringAndLogs-getMeasurements` - experimental: Returns the Atlas Search hardware and status data series within the provided time range for one process in the specified project.
+* :ref:`atlas-api-monitoringAndLogs-listAtlasProcesses` - experimental: Returns details of all processes for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-listDatabases` - experimental: Returns the list of databases running on the specified host for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-listDiskMeasurements` - experimental: Returns measurement details for one disk or partition for the specified host for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-listDiskPartitions` - experimental: Returns the list of disks or partitions for the specified host for the specified project.
+* :ref:`atlas-api-monitoringAndLogs-listIndexMetrics` - experimental: Returns the Atlas Search index metrics within the specified time range for one namespace in the specified process.
+* :ref:`atlas-api-monitoringAndLogs-listMetricTypes` - experimental: Returns all Atlas Search metric types available for one process in the specified project.
 
 
 .. toctree::

@@ -12,7 +12,7 @@ atlas api streams listStreamProcessors
    :depth: 1
    :class: singlecol
 
-Returns all Stream Processors within the specified stream instance.
+experimental: Returns all Stream Processors within the specified stream instance.
 
 To use this resource, the requesting API Key must have the Project Owner role or Project Stream Processing Owner role. This command is invoking the endpoint with OperationID: 'listStreamProcessors'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listStreamProcessors
 

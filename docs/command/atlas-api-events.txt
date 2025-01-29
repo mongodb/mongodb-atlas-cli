@@ -12,7 +12,7 @@ atlas api events
    :depth: 1
    :class: singlecol
 
-Returns events.
+experimental: Returns events.
 
 This collection remains under revision and may change.
 
@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-events-getOrganizationEvent` - Returns one event for the specified organization.
-* :ref:`atlas-api-events-getProjectEvent` - Returns one event for the specified project.
-* :ref:`atlas-api-events-listEventTypes` - Returns a list of all event types, along with a description and additional metadata about each event.
-* :ref:`atlas-api-events-listOrganizationEvents` - Returns all events for the specified organization.
-* :ref:`atlas-api-events-listProjectEvents` - Returns all events for the specified project.
+* :ref:`atlas-api-events-getOrganizationEvent` - experimental: Returns one event for the specified organization.
+* :ref:`atlas-api-events-getProjectEvent` - experimental: Returns one event for the specified project.
+* :ref:`atlas-api-events-listEventTypes` - experimental: Returns a list of all event types, along with a description and additional metadata about each event.
+* :ref:`atlas-api-events-listOrganizationEvents` - experimental: Returns all events for the specified organization.
+* :ref:`atlas-api-events-listProjectEvents` - experimental: Returns all events for the specified project.
 
 
 .. toctree::

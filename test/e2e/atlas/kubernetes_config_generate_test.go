@@ -1870,6 +1870,41 @@ func referenceServerless(name, region, namespace, projectName string, labels map
 	}
 }
 
+func referenceFlex(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
+	dictionary := resources.AtlasNameToKubernetesName()
+	return &akov2.AtlasDeployment{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "AtlasDeployment",
+			APIVersion: "atlas.mongodb.com/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
+			Namespace: namespace,
+			Labels:    labels,
+		},
+		Spec: akov2.AtlasDeploymentSpec{
+			ProjectDualReference: akov2.ProjectDualReference{
+				ProjectRef: &akov2common.ResourceRefNamespaced{
+					Name:      resources.NormalizeAtlasName(projectName, dictionary),
+					Namespace: namespace,
+				},
+			},
+			FlexSpec: &akov2.FlexSpec{
+				Name: name,
+				ProviderSettings: &akov2.FlexProviderSettings{
+					BackingProviderName: string(akov2provider.ProviderAWS),
+					RegionName:          region,
+				},
+			},
+		},
+		Status: akov2status.AtlasDeploymentStatus{
+			Common: akoapi.Common{
+				Conditions: []akoapi.Condition{},
+			},
+		},
+	}
+}
+
 func referenceSharedCluster(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
 	cluster := referenceAdvancedCluster(name, region, namespace, projectName, labels, "")
 	cluster.Spec.DeploymentSpec.ReplicationSpecs[0].RegionConfigs[0].ElectableSpecs = &akov2.Specs{
@@ -2218,6 +2253,52 @@ func TestKubernetesConfigGenerateSharedCluster(t *testing.T) {
 	g.generateCluster()
 
 	expectedDeployment := referenceSharedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels)
+
+	cliPath, err := e2e.AtlasCLIBin()
+	require.NoError(t, err)
+
+	// always register atlas entities
+	require.NoError(t, akov2.AddToScheme(scheme.Scheme))
+
+	cmd := exec.Command(cliPath,
+		"kubernetes",
+		"config",
+		"generate",
+		"--projectId",
+		g.projectID,
+		"--targetNamespace",
+		targetNamespace,
+		"--includeSecrets")
+	cmd.Env = os.Environ()
+
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	t.Log(string(resp))
+	require.NoError(t, err, string(resp))
+	var objects []runtime.Object
+	objects, err = getK8SEntities(resp)
+	require.NoError(t, err, "should not fail on decode")
+	require.NotEmpty(t, objects)
+
+	p, found := findAtlasProject(objects)
+	require.True(t, found, "AtlasProject is not found in results")
+	assert.Equal(t, targetNamespace, p.Namespace)
+	ds := atlasDeployments(objects)
+	assert.Len(t, ds, 1)
+	assert.Equal(t, expectedDeployment, ds[0])
+	secret, found := findSecret(objects)
+	require.True(t, found, "Secret is not found in results")
+	assert.Equal(t, targetNamespace, secret.Namespace)
+}
+
+func TestKubernetesConfigGenerateFlexCluster(t *testing.T) {
+	n, err := e2e.RandInt(255)
+	require.NoError(t, err)
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject(fmt.Sprintf("kubernetes-%s", n))
+	g.tier = e2eSharedClusterTier
+	g.generateFlexCluster()
+
+	expectedDeployment := referenceFlex(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)

@@ -48,7 +48,7 @@ func addExperimenalToAPICommands(cmd *cobra.Command) {
 }
 
 func markExperimentalRecursively(cmd *cobra.Command) {
-	cmd.Short = "`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: " + cmd.Short
+	cmd.Short = "`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: " + cmd.Short
 
 	for _, subCommand := range cmd.Commands() {
 		markExperimentalRecursively(subCommand)

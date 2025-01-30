@@ -12,7 +12,7 @@ atlas api root
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns details that describe the MongoDB Cloud build and the access token that requests this resource.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns details that describe the MongoDB Cloud build and the access token that requests this resource.
 
 This starts the MongoDB Cloud API.
 
@@ -51,8 +51,8 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-root-getSystemStatus` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: This resource returns information about the MongoDB application along with API key meta data.
-* :ref:`atlas-api-root-returnAllControlPlaneIpAddresses` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all control plane IP addresses.
+* :ref:`atlas-api-root-getSystemStatus` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: This resource returns information about the MongoDB application along with API key meta data.
+* :ref:`atlas-api-root-returnAllControlPlaneIpAddresses` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all control plane IP addresses.
 
 
 .. toctree::

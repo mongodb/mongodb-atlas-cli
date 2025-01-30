@@ -12,7 +12,7 @@ atlas api encryptionAtRestUsingCustomerKeyManagement createEncryptionAtRestPriva
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Creates a private endpoint in the specified region for encryption at rest using customer key management.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates a private endpoint in the specified region for encryption at rest using customer key management.
 
 This command is invoking the endpoint with OperationID: 'createEncryptionAtRestPrivateEndpoint'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Encryption-at-Rest-using-Customer-Key-Management/operation/createEncryptionAtRestPrivateEndpoint
 

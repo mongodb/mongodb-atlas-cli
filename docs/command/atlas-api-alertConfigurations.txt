@@ -12,7 +12,7 @@ atlas api alertConfigurations
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users.
 
 This collection remains under revision and may change.
 
@@ -51,14 +51,14 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-alertConfigurations-createAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Creates one alert configuration for the specified project.
-* :ref:`atlas-api-alertConfigurations-deleteAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Removes one alert configuration from the specified project.
-* :ref:`atlas-api-alertConfigurations-getAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns the specified alert configuration from the specified project.
-* :ref:`atlas-api-alertConfigurations-listAlertConfigurationMatchersFieldNames` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Get all field names that the matchers.fieldName parameter accepts when you create or update an Alert Configuration.
-* :ref:`atlas-api-alertConfigurations-listAlertConfigurations` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all alert configurations for one project.
-* :ref:`atlas-api-alertConfigurations-listAlertConfigurationsByAlertId` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all alert configurations set for the specified alert.
-* :ref:`atlas-api-alertConfigurations-toggleAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Enables or disables the specified alert configuration in the specified project.
-* :ref:`atlas-api-alertConfigurations-updateAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates one alert configuration in the specified project.
+* :ref:`atlas-api-alertConfigurations-createAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one alert configuration for the specified project.
+* :ref:`atlas-api-alertConfigurations-deleteAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Removes one alert configuration from the specified project.
+* :ref:`atlas-api-alertConfigurations-getAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the specified alert configuration from the specified project.
+* :ref:`atlas-api-alertConfigurations-listAlertConfigurationMatchersFieldNames` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Get all field names that the matchers.fieldName parameter accepts when you create or update an Alert Configuration.
+* :ref:`atlas-api-alertConfigurations-listAlertConfigurations` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all alert configurations for one project.
+* :ref:`atlas-api-alertConfigurations-listAlertConfigurationsByAlertId` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all alert configurations set for the specified alert.
+* :ref:`atlas-api-alertConfigurations-toggleAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Enables or disables the specified alert configuration in the specified project.
+* :ref:`atlas-api-alertConfigurations-updateAlertConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Updates one alert configuration in the specified project.
 
 
 .. toctree::

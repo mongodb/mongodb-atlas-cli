@@ -12,7 +12,7 @@ atlas api collectionLevelMetrics getCollStatsLatencyNamespaceHostMeasurements
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Get a list of the Coll Stats Latency process-level measurements for the given namespace
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Get a list of the Coll Stats Latency process-level measurements for the given namespace
 
 This command is invoking the endpoint with OperationID: 'getCollStatsLatencyNamespaceHostMeasurements'.
 

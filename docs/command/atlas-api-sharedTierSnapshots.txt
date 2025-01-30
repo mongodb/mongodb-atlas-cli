@@ -12,7 +12,7 @@ atlas api sharedTierSnapshots
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns and requests to download shared-tier database deployment snapshots.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns and requests to download shared-tier database deployment snapshots.
 
 Options
 -------
@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-sharedTierSnapshots-downloadSharedClusterBackup` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Requests one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-getSharedClusterBackup` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns details for one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-listSharedClusterBackups` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns details for all snapshots for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-downloadSharedClusterBackup` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Requests one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-getSharedClusterBackup` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns details for one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-listSharedClusterBackups` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns details for all snapshots for the specified shared cluster.
 
 
 .. toctree::

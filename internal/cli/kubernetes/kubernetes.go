@@ -16,6 +16,7 @@ package kubernetes
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/kubernetes/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/kubernetes/dryrun"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/kubernetes/operator"
 	"github.com/spf13/cobra"
 )
@@ -28,7 +29,7 @@ func Builder() *cobra.Command {
 		Long:  `This command provides access to Kubernetes features within Atlas.`,
 	}
 
-	cmd.AddCommand(config.Builder(), operator.Builder())
+	cmd.AddCommand(config.Builder(), operator.Builder(), dryrun.Builder())
 
 	return cmd
 }

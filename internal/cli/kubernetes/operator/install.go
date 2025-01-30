@@ -95,7 +95,7 @@ func (opts *InstallOpts) ValidateOperatorVersion() error {
 func (opts *InstallOpts) ValidateWatchNamespace() error {
 	for _, ns := range opts.watchNamespace {
 		if errs := validation.IsDNS1123Label(ns); len(errs) != 0 {
-			return fmt.Errorf("item %s of %s parameter is invalid: %v", ns, flag.OperatorWatchNamespace, errs)
+			return fmt.Errorf("item %s of %s parameter is invalid: %v", ns, flag.OperatorWatchNamespaces, errs)
 		}
 	}
 
@@ -202,7 +202,7 @@ The key is scoped to the project when you specify the --projectName option and t
 	flags.StringVar(&opts.OrgID, flag.OrgID, "", usage.OrgID)
 	flags.StringVar(&opts.operatorVersion, flag.OperatorVersion, "", usage.OperatorVersionInstall)
 	flags.StringVar(&opts.targetNamespace, flag.OperatorTargetNamespace, "", usage.OperatorTargetNamespaceInstall)
-	flags.StringSliceVar(&opts.watchNamespace, flag.OperatorWatchNamespace, []string{}, usage.OperatorWatchNamespace)
+	flags.StringSliceVar(&opts.watchNamespace, flag.OperatorWatchNamespaces, []string{}, usage.OperatorWatchNamespace)
 	flags.StringVar(&opts.projectName, flag.OperatorProjectName, "", usage.OperatorProjectName)
 	flags.BoolVar(&opts.importResources, flag.OperatorImport, false, usage.OperatorImport)
 	flags.BoolVar(&opts.atlasGov, flag.OperatorAtlasGov, false, usage.OperatorAtlasGov)

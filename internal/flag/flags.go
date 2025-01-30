@@ -248,7 +248,7 @@ const (
 	BackupPolicy                              = "policy"                                    // BackupPolicy flag
 	OperatorIncludeSecrets                    = "includeSecrets"                            // OperatorIncludeSecrets flag
 	OperatorTargetNamespace                   = "targetNamespace"                           // OperatorTargetNamespace flag
-	OperatorWatchNamespace                    = "watchNamespace"                            // OperatorTargetNamespace flag
+	OperatorWatchNamespaces                   = "watchNamespaces"                           // OperatorTargetNamespace flag
 	OperatorVersion                           = "operatorVersion"                           // OperatorVersion flag
 	OperatorProjectName                       = "projectName"                               // OperatorProjectName flag
 	OperatorImport                            = "import"                                    // OperatorImport flag

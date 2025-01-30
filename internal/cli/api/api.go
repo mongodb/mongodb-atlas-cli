@@ -107,6 +107,9 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 				return errors.Join(ErrFailedToSetUntouchedFlags, err)
 			}
 
+			// Remind the user to pin their api command to a specific version to avoid breaking changes
+			remindUserToPinVersion(cmd)
+
 			// Reset version to default if unsupported version was selected
 			// This can happen when the profile contains a default version which is not supported for a specific endpoint
 			ensureVersionIsSupported(command, &version)
@@ -329,6 +332,22 @@ func defaultAPIVersion(command api.Command) (string, error) {
 	return lastVersion.Version, nil
 }
 
+func remindUserToPinVersion(cmd *cobra.Command) {
+	versionFlag := cmd.Flag(flag.Version)
+	// if we fail to get the version flag (which should never happen), then quit
+	if versionFlag == nil {
+		return
+	}
+
+	// check if the version flag is still in it's default state:
+	// - not set by the user
+	// - not set using api_version on the users profile
+	// in that case, print a warning
+	if !versionFlag.Changed {
+		fmt.Fprintf(os.Stderr, "warning: using default API version '%s'; consider pinning a version to ensure consisentcy when updating the CLI\n", versionFlag.Value.String())
+	}
+}
+
 func ensureVersionIsSupported(apiCommand api.Command, version *string) {
 	for _, commandVersion := range apiCommand.Versions {
 		if commandVersion.Version == *version {
@@ -343,7 +362,7 @@ func ensureVersionIsSupported(apiCommand api.Command, version *string) {
 		return
 	}
 
-	fmt.Fprintf(os.Stderr, "warning: version '%s' is not supported for this endpoint, falling back to default version: '%s'", *version, defaultVersion)
+	fmt.Fprintf(os.Stderr, "warning: version '%s' is not supported for this endpoint, using default API version '%s'; consider pinning a version to ensure consisentcy when updating the CLI\n", *version, defaultVersion)
 	*version = defaultVersion
 }
 

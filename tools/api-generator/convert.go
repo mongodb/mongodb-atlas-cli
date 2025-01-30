@@ -96,8 +96,14 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 		return nil, fmt.Errorf("failed to clean description: %w", err)
 	}
 
+	operationID := operation.OperationID
+
+	if overriddenOperationID, ok := operation.Extensions["x-xgen-cli-override-operationId"].(string); ok && overriddenOperationID != "" {
+		operationID = overriddenOperationID
+	}
+
 	command := api.Command{
-		OperationID: operation.OperationID,
+		OperationID: operationID,
 		Description: description,
 		RequestParameters: api.RequestParameters{
 			URL:             path,
@@ -112,24 +118,34 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 }
 
 func buildDescription(operation *openapi3.Operation) (string, error) {
-	// Get the original description and clean it up
-	description, err := Clean(operation.Description)
-	if err != nil {
-		return "", fmt.Errorf("failed to clean description: %w", err)
-	}
-
 	// Get the tag and build the documentation URL
 	if len(operation.Tags) != 1 {
 		return "", fmt.Errorf("expect exactly 1 tag, got: %v", len(operation.Tags))
 	}
 
-	tag := operation.Tags[0]
-	operationID := operation.OperationID
+	inputDescription := operation.Description
+	overridden := false
 
-	url := ToURL(tag, operationID)
+	if overriddenDescription, ok := operation.Extensions["x-xgen-cli-override-description"].(string); ok && overriddenDescription != "" {
+		inputDescription = overriddenDescription
+		overridden = true
+	}
 
-	// Add the documentation URL to the description
-	description += fmt.Sprintf("\n\nThis command is invoking the endpoint with OperationID: '%v'.\nFor more information about flags, format of --file and examples, see: %v", operationID, url)
+	// Get the original description and clean it up
+	description, err := Clean(inputDescription)
+	if err != nil {
+		return "", fmt.Errorf("failed to clean description: %w", err)
+	}
+
+	if !overridden {
+		tag := operation.Tags[0]
+		operationID := operation.OperationID
+
+		url := ToURL(tag, operationID)
+
+		// Add the documentation URL to the description
+		description += fmt.Sprintf("\n\nThis command is invoking the endpoint with OperationID: '%v'.\nFor more information about flags, format of --file and examples, see: %v", operationID, url)
+	}
 
 	return description, nil
 }
@@ -148,14 +164,28 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 
 	for _, parameterRef := range parameters {
 		parameter := parameterRef.Value
+		parameterName := parameter.Name
+		if overriddenName, ok := parameter.Extensions["x-xgen-cli-override-name"].(string); ok && overriddenName != "" {
+			parameterName = overriddenName
+		}
+		if overriddenName, ok := parameterRef.Extensions["x-xgen-cli-override-name"].(string); ok && overriddenName != "" {
+			parameterName = overriddenName
+		}
+		parameterDescription := parameter.Description
+		if overriddenDescription, ok := parameter.Extensions["x-xgen-cli-override-description"].(string); ok && overriddenDescription != "" {
+			parameterDescription = overriddenDescription
+		}
+		if overriddenDescription, ok := parameterRef.Extensions["x-xgen-cli-override-description"].(string); ok && overriddenDescription != "" {
+			parameterDescription = overriddenDescription
+		}
 
 		// Parameters are translated to flags, we don't want duplicates
 		// Duplicates should be resolved by customization, in case they ever appeared
-		if _, exists := parameterNames[parameter.Name]; exists {
+		if _, exists := parameterNames[parameterName]; exists {
 			return parameterSet{}, fmt.Errorf("parameter with the name '%s' already exists", parameter.Name)
 		}
 
-		description, err := Clean(parameter.Description)
+		description, err := Clean(parameterDescription)
 		if err != nil {
 			return parameterSet{}, fmt.Errorf("failed to clean description: %w", err)
 		}
@@ -166,7 +196,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 		}
 
 		apiParameter := api.Parameter{
-			Name:        parameter.Name,
+			Name:        parameterName,
 			Description: description,
 			Required:    parameter.Required,
 			Type:        *parameterType,
@@ -175,10 +205,10 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 		switch parameter.In {
 		case "query":
 			queryParameters = append(queryParameters, apiParameter)
-			parameterNames[parameter.Name] = struct{}{}
+			parameterNames[parameterName] = struct{}{}
 		case "path":
 			urlParameters = append(urlParameters, apiParameter)
-			parameterNames[parameter.Name] = struct{}{}
+			parameterNames[parameterName] = struct{}{}
 		default:
 			return parameterSet{}, fmt.Errorf("invalid parameter 'in' location: %s", parameter.In)
 		}

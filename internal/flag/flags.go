@@ -22,6 +22,7 @@ const (
 	URL                                       = "url"                                       // URL flag
 	Secret                                    = "secret"                                    // Secret flag
 	ProjectID                                 = "projectId"                                 // ProjectID flag to use a project ID
+	GroupID                                   = "groupId"                                   // GroupId flag to use a group ID / project ID in `atlas api` subcommands
 	ProcessName                               = "processName"                               // Process Name
 	HostID                                    = "hostId"                                    // HostID flag
 	Since                                     = "since"                                     // Since flag
@@ -77,6 +78,7 @@ const (
 	Out                                       = "out"                                       // Out flag
 	Output                                    = "output"                                    // Output flag
 	OutputShort                               = "o"                                         // OutputShort flag
+	OutputFile                                = "output-file"                               // OutputFile flag
 	Status                                    = "status"                                    // Status flag
 	Start                                     = "start"                                     // Start flag
 	End                                       = "end"                                       // End flag

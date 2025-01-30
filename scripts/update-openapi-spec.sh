@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Copyright 2020 MongoDB Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -euo pipefail
+
+# Get the directory where the script is located
+SCRIPT_DIR="${BASH_SOURCE%/*}"
+
+# Download the file using curl
+curl -L "https://github.com/mongodb/openapi/raw/refs/heads/main/openapi/v2.yaml" -o "${SCRIPT_DIR}/../tools/api-generator/spec.yaml"

@@ -33,7 +33,7 @@ import (
 )
 
 const (
-	cloudGovServiceURL = "https://cloud.mongodbgov.com/"
+	CloudGovServiceURL = "https://cloud.mongodbgov.com/"
 )
 
 var errUnsupportedService = errors.New("unsupported service")
@@ -263,7 +263,7 @@ func baseURLOption(c ServiceGetter) Option {
 	if configURL := c.OpsManagerURL(); configURL != "" {
 		return WithBaseURL(configURL)
 	} else if c.Service() == config.CloudGovService {
-		return WithBaseURL(cloudGovServiceURL)
+		return WithBaseURL(CloudGovServiceURL)
 	}
 	return nil
 }

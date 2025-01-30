@@ -32,6 +32,29 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 	}
 }
 
+func addExperimenalToAPICommands(cmd *cobra.Command) {
+	var apiCommand *cobra.Command
+	for _, subCommand := range cmd.Commands() {
+		if subCommand.Use == "api" {
+			apiCommand = subCommand
+		}
+	}
+
+	if apiCommand == nil {
+		panic("api command not found!")
+	}
+
+	markExperimentalRecursively(apiCommand)
+}
+
+func markExperimentalRecursively(cmd *cobra.Command) {
+	cmd.Short = "`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: " + cmd.Short
+
+	for _, subCommand := range cmd.Commands() {
+		markExperimentalRecursively(subCommand)
+	}
+}
+
 func main() {
 	if err := os.RemoveAll("./docs/command"); err != nil {
 		log.Fatal(err)
@@ -53,6 +76,7 @@ func main() {
 	atlasBuilder.InitDefaultCompletionCmd()
 
 	setDisableAutoGenTag(atlasBuilder)
+	addExperimenalToAPICommands(atlasBuilder)
 
 	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command"); err != nil {
 		log.Fatal(err)

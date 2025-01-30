@@ -47,10 +47,14 @@ linters-settings:
         alias: pseudotty
       - pkg: cloud.google.com/go/kms/apiv1
         alias: kmsv1
+      - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/api
+        alias: apiCmd
       - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/config
         alias: cliconfig
       - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin
         alias: pluginCmd
+      - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport
+        alias: storeTransport
   misspell:
     locale: US
     ignore-words:

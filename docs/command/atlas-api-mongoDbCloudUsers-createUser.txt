@@ -12,7 +12,7 @@ atlas api mongoDbCloudUsers createUser
    :depth: 1
    :class: singlecol
 
-Creates one MongoDB Cloud user account.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one MongoDB Cloud user account.
 
 A MongoDB Cloud user account grants access to only the MongoDB Cloud application. To grant database access, create a database user. MongoDB Cloud sends an email to the users you specify, inviting them to join the project. Invited users don't have access to the project until they accept the invitation. Invitations expire after 30 days. MongoDB Cloud limits MongoDB Cloud user membership to a maximum of 250 MongoDB Cloud users per team. MongoDB Cloud limits MongoDB Cloud user membership to 500 MongoDB Cloud users per project and 500 MongoDB Cloud users per organization, which includes the combined membership of all projects in the organization. MongoDB Cloud raises an error if an operation exceeds these limits. For example, if you have an organization with five projects, and each project has 100 MongoDB Cloud users, and each MongoDB Cloud user belongs to only one project, you can't add any MongoDB Cloud users to this organization without first removing existing MongoDB Cloud users from the organization. To use this resource, the requesting API Key can have any role. This command is invoking the endpoint with OperationID: 'createUser'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/MongoDB-Cloud-Users/operation/createUser
 

@@ -12,7 +12,7 @@ atlas api serverlessPrivateEndpoints deleteServerlessPrivateEndpoint
    :depth: 1
    :class: singlecol
 
-Remove one private endpoint from one serverless instance.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Remove one private endpoint from one serverless instance.
 
 To use this resource, the requesting API Key must have the Project Owner role. This command is invoking the endpoint with OperationID: 'deleteServerlessPrivateEndpoint'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Private-Endpoints/operation/deleteServerlessPrivateEndpoint
 

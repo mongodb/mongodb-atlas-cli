@@ -12,7 +12,7 @@ atlas api projects deleteProject
    :depth: 1
    :class: singlecol
 
-Removes the specified project.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Removes the specified project.
 
 Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, tags, and alert settings. You can delete a project only if there are no Online Archives for the clusters in the project. To use this resource, the requesting API Key must have the Project Owner role. This command is invoking the endpoint with OperationID: 'deleteProject'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/deleteProject
 

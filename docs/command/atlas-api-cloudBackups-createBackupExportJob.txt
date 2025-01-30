@@ -12,7 +12,7 @@ atlas api cloudBackups createBackupExportJob
    :depth: 1
    :class: singlecol
 
-Exports one backup Snapshot for dedicated Atlas cluster using Cloud Backups to an Export Bucket.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Exports one backup Snapshot for dedicated Atlas cluster using Cloud Backups to an Export Bucket.
 
 To use this resource, the requesting API Key must have the Project Atlas Admin role. This command is invoking the endpoint with OperationID: 'createBackupExportJob'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/createBackupExportJob
 

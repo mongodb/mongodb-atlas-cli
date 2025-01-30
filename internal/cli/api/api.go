@@ -24,6 +24,7 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/cobra"
@@ -62,9 +63,14 @@ func Builder() *cobra.Command {
 }
 
 func createRootAPICommand() *cobra.Command {
-	return &cobra.Command{
-		Use: "api",
+	rootCmd := &cobra.Command{
+		Use:   "api",
+		Short: "Interact directly with any Atlas Admin API endpoint through the Atlas CLI, streamlining script development.",
 	}
+
+	rootCmd.SetHelpTemplate(cli.ExperimentalHelpTemplate)
+
+	return rootCmd
 }
 
 func createAPICommandGroupToCobraCommand(group api.Group) *cobra.Command {

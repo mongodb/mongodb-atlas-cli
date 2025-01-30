@@ -12,7 +12,7 @@ atlas api encryptionAtRestUsingCustomerKeyManagement getEncryptionAtRestPrivateE
    :depth: 1
    :class: singlecol
 
-Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the private endpoints of the specified cloud provider for encryption at rest using customer key management.
 
 This command is invoking the endpoint with OperationID: 'getEncryptionAtRestPrivateEndpointsForCloudProvider'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Encryption-at-Rest-using-Customer-Key-Management/operation/getEncryptionAtRestPrivateEndpointsForCloudProvider
 

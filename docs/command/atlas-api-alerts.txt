@@ -12,7 +12,7 @@ atlas api alerts
    :depth: 1
    :class: singlecol
 
-experimental: Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns and acknowledges alerts that MongoDB Cloud triggers based on the alert conditions that you define.
 
 This collection remains under revision and may change.
 
@@ -51,10 +51,10 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-alerts-acknowledgeAlert` - experimental: Confirms receipt of one existing alert.
-* :ref:`atlas-api-alerts-getAlert` - experimental: Returns one alert.
-* :ref:`atlas-api-alerts-listAlerts` - experimental: Returns all alerts.
-* :ref:`atlas-api-alerts-listAlertsByAlertConfigurationId` - experimental: Returns all open alerts that the specified alert configuration triggers.
+* :ref:`atlas-api-alerts-acknowledgeAlert` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Confirms receipt of one existing alert.
+* :ref:`atlas-api-alerts-getAlert` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns one alert.
+* :ref:`atlas-api-alerts-listAlerts` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all alerts.
+* :ref:`atlas-api-alerts-listAlertsByAlertConfigurationId` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all open alerts that the specified alert configuration triggers.
 
 
 .. toctree::

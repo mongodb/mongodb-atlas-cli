@@ -12,7 +12,7 @@ atlas api privateEndpointServices createPrivateEndpoint
    :depth: 1
    :class: singlecol
 
-experimental: Creates one private endpoint for the specified cloud service provider.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Creates one private endpoint for the specified cloud service provider.
 
 This cloud service provider manages the private endpoint service, which in turn manages the private endpoints for the project. To use this resource, the requesting API Key must have the Project Owner role. To learn more about considerations, limitations, and prerequisites, see the MongoDB documentation for setting up a private endpoint. This command is invoking the endpoint with OperationID: 'createPrivateEndpoint'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Private-Endpoint-Services/operation/createPrivateEndpoint
 

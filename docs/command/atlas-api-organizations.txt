@@ -12,7 +12,7 @@ atlas api organizations
    :depth: 1
    :class: singlecol
 
-experimental: Returns, adds, and edits organizational units in MongoDB Cloud.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns, adds, and edits organizational units in MongoDB Cloud.
 
 Options
 -------
@@ -49,23 +49,23 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-organizations-createOrganization` - experimental: Creates one organization in MongoDB Cloud and links it to the requesting API Key's organization.
-* :ref:`atlas-api-organizations-createOrganizationInvitation` - experimental: Invites one MongoDB Cloud user to join the specified organization.
-* :ref:`atlas-api-organizations-deleteOrganization` - experimental: Removes one specified organization.
-* :ref:`atlas-api-organizations-deleteOrganizationInvitation` - experimental: Cancels one pending invitation sent to the specified MongoDB Cloud user to join an organization.
-* :ref:`atlas-api-organizations-getOrganization` - experimental: Returns one organization to which the requesting API key has access.
-* :ref:`atlas-api-organizations-getOrganizationInvitation` - experimental: Returns the details of one pending invitation to the specified organization.
-* :ref:`atlas-api-organizations-getOrganizationSettings` - experimental: Returns details about the specified organization's settings.
-* :ref:`atlas-api-organizations-listOrganizationInvitations` - experimental: Returns all pending invitations to the specified organization.
-* :ref:`atlas-api-organizations-listOrganizationProjects` - experimental: Returns multiple projects in the specified organization.
-* :ref:`atlas-api-organizations-listOrganizationUsers` - experimental: Returns details about the MongoDB Cloud users associated with the specified organization.
-* :ref:`atlas-api-organizations-listOrganizations` - experimental: Returns all organizations to which the requesting API Key has access.
-* :ref:`atlas-api-organizations-removeOrganizationUser` - experimental: Removes one MongoDB Cloud user from the specified organization.
-* :ref:`atlas-api-organizations-updateOrganization` - experimental: Updates one organization.
-* :ref:`atlas-api-organizations-updateOrganizationInvitation` - experimental: Updates the details of one pending invitation to the specified organization.
-* :ref:`atlas-api-organizations-updateOrganizationInvitationById` - experimental: Updates the details of one pending invitation to the specified organization.
-* :ref:`atlas-api-organizations-updateOrganizationRoles` - experimental: Updates the roles of the specified user in the specified organization.
-* :ref:`atlas-api-organizations-updateOrganizationSettings` - experimental: Updates the organization's settings.
+* :ref:`atlas-api-organizations-createOrganization` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Creates one organization in MongoDB Cloud and links it to the requesting API Key's organization.
+* :ref:`atlas-api-organizations-createOrganizationInvitation` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Invites one MongoDB Cloud user to join the specified organization.
+* :ref:`atlas-api-organizations-deleteOrganization` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Removes one specified organization.
+* :ref:`atlas-api-organizations-deleteOrganizationInvitation` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Cancels one pending invitation sent to the specified MongoDB Cloud user to join an organization.
+* :ref:`atlas-api-organizations-getOrganization` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns one organization to which the requesting API key has access.
+* :ref:`atlas-api-organizations-getOrganizationInvitation` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns the details of one pending invitation to the specified organization.
+* :ref:`atlas-api-organizations-getOrganizationSettings` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns details about the specified organization's settings.
+* :ref:`atlas-api-organizations-listOrganizationInvitations` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all pending invitations to the specified organization.
+* :ref:`atlas-api-organizations-listOrganizationProjects` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns multiple projects in the specified organization.
+* :ref:`atlas-api-organizations-listOrganizationUsers` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns details about the MongoDB Cloud users associated with the specified organization.
+* :ref:`atlas-api-organizations-listOrganizations` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all organizations to which the requesting API Key has access.
+* :ref:`atlas-api-organizations-removeOrganizationUser` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Removes one MongoDB Cloud user from the specified organization.
+* :ref:`atlas-api-organizations-updateOrganization` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates one organization.
+* :ref:`atlas-api-organizations-updateOrganizationInvitation` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates the details of one pending invitation to the specified organization.
+* :ref:`atlas-api-organizations-updateOrganizationInvitationById` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates the details of one pending invitation to the specified organization.
+* :ref:`atlas-api-organizations-updateOrganizationRoles` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates the roles of the specified user in the specified organization.
+* :ref:`atlas-api-organizations-updateOrganizationSettings` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates the organization's settings.
 
 
 .. toctree::

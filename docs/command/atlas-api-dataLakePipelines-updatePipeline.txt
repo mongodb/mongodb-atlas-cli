@@ -12,7 +12,7 @@ atlas api dataLakePipelines updatePipeline
    :depth: 1
    :class: singlecol
 
-experimental: Updates one Data Lake Pipeline.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates one Data Lake Pipeline.
 
 This command is invoking the endpoint with OperationID: 'updatePipeline'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/updatePipeline
 

@@ -12,7 +12,7 @@ atlas api serverlessPrivateEndpoints
    :depth: 1
    :class: singlecol
 
-experimental: Returns, adds, edits, and removes private endpoints for serverless instances.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns, adds, edits, and removes private endpoints for serverless instances.
 
 To learn more, see the Atlas Administration API tab on the following tutorial.
 
@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-serverlessPrivateEndpoints-createServerlessPrivateEndpoint` - experimental: Creates one private endpoint for one serverless instance.
-* :ref:`atlas-api-serverlessPrivateEndpoints-deleteServerlessPrivateEndpoint` - experimental: Remove one private endpoint from one serverless instance.
-* :ref:`atlas-api-serverlessPrivateEndpoints-getServerlessPrivateEndpoint` - experimental: Return one private endpoint for one serverless instance.
-* :ref:`atlas-api-serverlessPrivateEndpoints-listServerlessPrivateEndpoints` - experimental: Returns all private endpoints for one serverless instance.
-* :ref:`atlas-api-serverlessPrivateEndpoints-updateServerlessPrivateEndpoint` - experimental: Updates one private endpoint for one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-createServerlessPrivateEndpoint` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Creates one private endpoint for one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-deleteServerlessPrivateEndpoint` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Remove one private endpoint from one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-getServerlessPrivateEndpoint` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Return one private endpoint for one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-listServerlessPrivateEndpoints` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all private endpoints for one serverless instance.
+* :ref:`atlas-api-serverlessPrivateEndpoints-updateServerlessPrivateEndpoint` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates one private endpoint for one serverless instance.
 
 
 .. toctree::

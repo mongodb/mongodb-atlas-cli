@@ -12,7 +12,7 @@ atlas api cloudBackups deleteAllBackupSchedules
    :depth: 1
    :class: singlecol
 
-experimental: Removes all cloud backup schedules for the specified cluster.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Removes all cloud backup schedules for the specified cluster.
 
 This schedule defines when MongoDB Cloud takes scheduled snapshots and how long it stores those snapshots. To use this resource, the requesting API Key must have the Project Atlas Admin role. This command is invoking the endpoint with OperationID: 'deleteAllBackupSchedules'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/deleteAllBackupSchedules
 

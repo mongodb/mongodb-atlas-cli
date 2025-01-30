@@ -12,7 +12,7 @@ atlas api clusters listCloudProviderRegions
    :depth: 1
    :class: singlecol
 
-experimental: Returns the list of regions available for the specified cloud provider at the specified tier.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns the list of regions available for the specified cloud provider at the specified tier.
 
 To use this resource, the requesting API Key must have the Project Read Only role. This command is invoking the endpoint with OperationID: 'listCloudProviderRegions'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/listCloudProviderRegions
 

@@ -12,7 +12,7 @@ atlas api collectionLevelMetrics unpinNamespaces
    :depth: 1
    :class: singlecol
 
-experimental: Unpin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Unpin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster
 
 This command is invoking the endpoint with OperationID: 'unpinNamespaces'.
 

@@ -12,7 +12,7 @@ atlas api pushBasedLogExport
    :depth: 1
    :class: singlecol
 
-experimental: You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
 
 Atlas exports logs every 5 minutes.
 
@@ -51,10 +51,10 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-pushBasedLogExport-createPushBasedLogConfiguration` - experimental: Configures the project level settings for the push-based log export feature.
-* :ref:`atlas-api-pushBasedLogExport-deletePushBasedLogConfiguration` - experimental: Disables the push-based log export feature by resetting the project level settings to its default configuration.
-* :ref:`atlas-api-pushBasedLogExport-getPushBasedLogConfiguration` - experimental: Fetches the current project level settings for the push-based log export feature.
-* :ref:`atlas-api-pushBasedLogExport-updatePushBasedLogConfiguration` - experimental: Updates the project level settings for the push-based log export feature.
+* :ref:`atlas-api-pushBasedLogExport-createPushBasedLogConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Configures the project level settings for the push-based log export feature.
+* :ref:`atlas-api-pushBasedLogExport-deletePushBasedLogConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Disables the push-based log export feature by resetting the project level settings to its default configuration.
+* :ref:`atlas-api-pushBasedLogExport-getPushBasedLogConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Fetches the current project level settings for the push-based log export feature.
+* :ref:`atlas-api-pushBasedLogExport-updatePushBasedLogConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates the project level settings for the push-based log export feature.
 
 
 .. toctree::

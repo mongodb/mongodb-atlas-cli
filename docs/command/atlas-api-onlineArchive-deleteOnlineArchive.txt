@@ -12,7 +12,7 @@ atlas api onlineArchive deleteOnlineArchive
    :depth: 1
    :class: singlecol
 
-experimental: Removes one online archive.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Removes one online archive.
 
 This archive stores data from one cluster within one project. To use this resource, the requesting API Key must have the Project Data Access Admin role. This command is invoking the endpoint with OperationID: 'deleteOnlineArchive'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Online-Archive/operation/deleteOnlineArchive
 

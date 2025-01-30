@@ -12,7 +12,7 @@ atlas api mongoDbCloudUsers
    :depth: 1
    :class: singlecol
 
-experimental: Returns, adds, and edits MongoDB Cloud users.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns, adds, and edits MongoDB Cloud users.
 
 Options
 -------
@@ -49,20 +49,20 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-mongoDbCloudUsers-addOrganizationRole` - experimental: Adds one organization-level role to the MongoDB Cloud user.
-* :ref:`atlas-api-mongoDbCloudUsers-addProjectRole` - experimental: Adds one project-level role to the MongoDB Cloud user.
-* :ref:`atlas-api-mongoDbCloudUsers-addProjectUser` - experimental: Adds one MongoDB Cloud user to one project.
-* :ref:`atlas-api-mongoDbCloudUsers-addUserToTeam` - experimental: Adds one MongoDB Cloud user to one team.
-* :ref:`atlas-api-mongoDbCloudUsers-createOrganizationUser` - experimental: Invites one new or existing MongoDB Cloud user to join the organization.
-* :ref:`atlas-api-mongoDbCloudUsers-createUser` - experimental: Creates one MongoDB Cloud user account.
-* :ref:`atlas-api-mongoDbCloudUsers-getOrganizationUser` - experimental: Returns information about the specified MongoDB Cloud user within the context of the specified organization.
-* :ref:`atlas-api-mongoDbCloudUsers-getProjectUser` - experimental: Returns information about the specified MongoDB Cloud user within the context of the specified project.
-* :ref:`atlas-api-mongoDbCloudUsers-getUser` - experimental: Returns the details for one MongoDB Cloud user account with the specified unique identifier for the user.
-* :ref:`atlas-api-mongoDbCloudUsers-getUserByUsername` - experimental: Returns the details for one MongoDB Cloud user account with the specified username.
-* :ref:`atlas-api-mongoDbCloudUsers-removeOrganizationRole` - experimental: Removes one organization-level role from the MongoDB Cloud user.
-* :ref:`atlas-api-mongoDbCloudUsers-removeProjectRole` - experimental: Removes one project-level role from the MongoDB Cloud user.
-* :ref:`atlas-api-mongoDbCloudUsers-removeUserFromTeam` - experimental: Removes one MongoDB Cloud user from one team.
-* :ref:`atlas-api-mongoDbCloudUsers-updateOrganizationUser` - experimental: Updates one MongoDB Cloud user in the specified organization.
+* :ref:`atlas-api-mongoDbCloudUsers-addOrganizationRole` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Adds one organization-level role to the MongoDB Cloud user.
+* :ref:`atlas-api-mongoDbCloudUsers-addProjectRole` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Adds one project-level role to the MongoDB Cloud user.
+* :ref:`atlas-api-mongoDbCloudUsers-addProjectUser` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Adds one MongoDB Cloud user to one project.
+* :ref:`atlas-api-mongoDbCloudUsers-addUserToTeam` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Adds one MongoDB Cloud user to one team.
+* :ref:`atlas-api-mongoDbCloudUsers-createOrganizationUser` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Invites one new or existing MongoDB Cloud user to join the organization.
+* :ref:`atlas-api-mongoDbCloudUsers-createUser` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Creates one MongoDB Cloud user account.
+* :ref:`atlas-api-mongoDbCloudUsers-getOrganizationUser` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns information about the specified MongoDB Cloud user within the context of the specified organization.
+* :ref:`atlas-api-mongoDbCloudUsers-getProjectUser` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns information about the specified MongoDB Cloud user within the context of the specified project.
+* :ref:`atlas-api-mongoDbCloudUsers-getUser` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns the details for one MongoDB Cloud user account with the specified unique identifier for the user.
+* :ref:`atlas-api-mongoDbCloudUsers-getUserByUsername` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns the details for one MongoDB Cloud user account with the specified username.
+* :ref:`atlas-api-mongoDbCloudUsers-removeOrganizationRole` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Removes one organization-level role from the MongoDB Cloud user.
+* :ref:`atlas-api-mongoDbCloudUsers-removeProjectRole` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Removes one project-level role from the MongoDB Cloud user.
+* :ref:`atlas-api-mongoDbCloudUsers-removeUserFromTeam` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Removes one MongoDB Cloud user from one team.
+* :ref:`atlas-api-mongoDbCloudUsers-updateOrganizationUser` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates one MongoDB Cloud user in the specified organization.
 
 
 .. toctree::

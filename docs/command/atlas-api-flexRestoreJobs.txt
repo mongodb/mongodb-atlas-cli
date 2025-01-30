@@ -12,7 +12,7 @@ atlas api flexRestoreJobs
    :depth: 1
    :class: singlecol
 
-experimental: Returns and adds restore jobs for flex database deployments.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns and adds restore jobs for flex database deployments.
 
 Options
 -------
@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-flexRestoreJobs-createFlexBackupRestoreJob` - experimental: Restores one snapshot of one flex cluster from the specified project.
-* :ref:`atlas-api-flexRestoreJobs-getFlexBackupRestoreJob` - experimental: Returns one restore job for one flex cluster from the specified project.
-* :ref:`atlas-api-flexRestoreJobs-listFlexBackupRestoreJobs` - experimental: Returns all restore jobs for one flex cluster from the specified project.
+* :ref:`atlas-api-flexRestoreJobs-createFlexBackupRestoreJob` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Restores one snapshot of one flex cluster from the specified project.
+* :ref:`atlas-api-flexRestoreJobs-getFlexBackupRestoreJob` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns one restore job for one flex cluster from the specified project.
+* :ref:`atlas-api-flexRestoreJobs-listFlexBackupRestoreJobs` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all restore jobs for one flex cluster from the specified project.
 
 
 .. toctree::

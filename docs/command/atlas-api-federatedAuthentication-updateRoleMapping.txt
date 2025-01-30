@@ -12,7 +12,7 @@ atlas api federatedAuthentication updateRoleMapping
    :depth: 1
    :class: singlecol
 
-experimental: Updates one role mapping in the specified organization in the specified federation.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Updates one role mapping in the specified organization in the specified federation.
 
 To use this resource, the requesting API Key must have the Organization Owner role. This command is invoking the endpoint with OperationID: 'updateRoleMapping'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/updateRoleMapping
 

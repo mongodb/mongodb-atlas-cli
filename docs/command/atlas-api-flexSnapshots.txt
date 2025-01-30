@@ -12,7 +12,7 @@ atlas api flexSnapshots
    :depth: 1
    :class: singlecol
 
-experimental: Returns and requests to download flex database deployment snapshots.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns and requests to download flex database deployment snapshots.
 
 Options
 -------
@@ -49,9 +49,9 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-flexSnapshots-downloadFlexBackup` - experimental: Requests one snapshot for the specified flex cluster.
-* :ref:`atlas-api-flexSnapshots-getFlexBackup` - experimental: Returns one snapshot of one flex cluster from the specified project.
-* :ref:`atlas-api-flexSnapshots-listFlexBackups` - experimental: Returns all snapshots of one flex cluster from the specified project.
+* :ref:`atlas-api-flexSnapshots-downloadFlexBackup` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Requests one snapshot for the specified flex cluster.
+* :ref:`atlas-api-flexSnapshots-getFlexBackup` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns one snapshot of one flex cluster from the specified project.
+* :ref:`atlas-api-flexSnapshots-listFlexBackups` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`: Returns all snapshots of one flex cluster from the specified project.
 
 
 .. toctree::

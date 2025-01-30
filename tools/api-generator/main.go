@@ -23,6 +23,7 @@ import (
 	"go/format"
 	"os"
 	"text/template"
+	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
@@ -100,7 +101,11 @@ func loadSpec(fs afero.Fs, specPath string) (*openapi3.T, error) {
 }
 
 func writeCommands(fs afero.Fs, outputPath string, data api.GroupedAndSortedCommands) error {
-	tmpl, err := template.New("commands.go.tmpl").Parse(templateContent)
+	tmpl, err := template.New("commands.go.tmpl").Funcs(template.FuncMap{
+		"currentYear": func() int {
+			return time.Now().UTC().Year()
+		},
+	}).Parse(templateContent)
 	if err != nil {
 		return err
 	}

@@ -18,16 +18,15 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
-	"errors"
 	"fmt"
 	"go/format"
+	"io"
 	"os"
 	"text/template"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
-	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
 
@@ -35,32 +34,19 @@ import (
 var templateContent string
 
 func main() {
-	var (
-		specPath   string
-		outputPath string
-	)
+	var specPath string
 
 	var rootCmd = &cobra.Command{
 		Use:   "api-generator",
 		Short: "CLI which generates api command definitions from a OpenAPI spec",
-		PreRunE: func(_ *cobra.Command, _ []string) error {
-			if specPath == "" {
-				return errors.New("--spec is a required flag")
-			}
-
-			if outputPath == "" {
-				return errors.New("--output is a required flag")
-			}
-
-			return nil
-		},
 		RunE: func(command *cobra.Command, _ []string) error {
-			return convertSpecToAPICommands(command.Context(), afero.NewOsFs(), specPath, outputPath)
+			return run(command.Context(), specPath, command.OutOrStdout())
 		},
 	}
 
-	rootCmd.PersistentFlags().StringVar(&specPath, "spec", "", "Path to spec file")
-	rootCmd.PersistentFlags().StringVar(&outputPath, "output", "", "Path to output file")
+	rootCmd.Flags().StringVar(&specPath, "spec", "", "Path to spec file")
+	_ = rootCmd.MarkFlagRequired("spec")
+	_ = rootCmd.MarkFlagFilename("spec")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -68,10 +54,21 @@ func main() {
 	}
 }
 
-func convertSpecToAPICommands(ctx context.Context, fs afero.Fs, specPath, outputPath string) error {
-	spec, err := loadSpec(fs, specPath)
+func run(ctx context.Context, specPath string, w io.Writer) error {
+	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
-		return fmt.Errorf("failed to load spec: '%s', error: %w", specPath, err)
+		return err
+	}
+
+	defer specFile.Close()
+
+	return convertSpecToAPICommands(ctx, specFile, w)
+}
+
+func convertSpecToAPICommands(ctx context.Context, r io.Reader, w io.Writer) error {
+	spec, err := loadSpec(r)
+	if err != nil {
+		return fmt.Errorf("failed to load spec, error: %w", err)
 	}
 
 	if err := spec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
@@ -83,24 +80,15 @@ func convertSpecToAPICommands(ctx context.Context, fs afero.Fs, specPath, output
 		return fmt.Errorf("failed convert spec to api commands: %w", err)
 	}
 
-	return writeCommands(fs, outputPath, commands)
+	return writeCommands(w, commands)
 }
 
-func loadSpec(fs afero.Fs, specPath string) (*openapi3.T, error) {
-	file, err := fs.Open(specPath)
-	if err != nil {
-		return nil, err
-	}
-
-	defer func() {
-		_ = file.Close()
-	}()
-
+func loadSpec(r io.Reader) (*openapi3.T, error) {
 	loader := openapi3.NewLoader()
-	return loader.LoadFromIoReader(file)
+	return loader.LoadFromIoReader(r)
 }
 
-func writeCommands(fs afero.Fs, outputPath string, data api.GroupedAndSortedCommands) error {
+func writeCommands(w io.Writer, data api.GroupedAndSortedCommands) error {
 	tmpl, err := template.New("commands.go.tmpl").Funcs(template.FuncMap{
 		"currentYear": func() int {
 			return time.Now().UTC().Year()
@@ -122,15 +110,6 @@ func writeCommands(fs afero.Fs, outputPath string, data api.GroupedAndSortedComm
 		return fmt.Errorf("failed to format generated code: %w", err)
 	}
 
-	// Write the formatted code to file
-	file, err := fs.Create(outputPath)
-	if err != nil {
-		return fmt.Errorf("failed to open output file %s, error: %w", outputPath, err)
-	}
-	defer func() {
-		_ = file.Close()
-	}()
-
-	_, err = file.Write(formatted)
+	_, err = w.Write(formatted)
 	return err
 }

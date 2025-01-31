@@ -15,13 +15,13 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 )
 
@@ -29,30 +29,20 @@ func testSpec(t *testing.T, name, specPath string) {
 	t.Helper()
 	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".snapshot"))
 
-	realFs := afero.NewOsFs()
-
-	specBytes, err := afero.ReadFile(realFs, specPath)
+	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
 		t.Errorf("failed to load '%s', error: %s", specPath, err)
 		t.FailNow()
 	}
+	defer specFile.Close()
 
-	fs := afero.NewMemMapFs()
-	_ = afero.WriteFile(fs, "spec.yml", specBytes, os.ModeType)
-
-	if err := convertSpecToAPICommands(context.Background(), fs, "spec.yml", "commands.go"); err != nil {
+	buf := &bytes.Buffer{}
+	if err := convertSpecToAPICommands(context.Background(), specFile, buf); err != nil {
 		t.Errorf("failed to convert spec into commmands, error: %s", err)
 		t.FailNow()
 	}
 
-	resultBytes, err := afero.ReadFile(fs, "commands.go")
-	if err != nil {
-		t.Errorf("failed to read result commands file, error: %s", err)
-		t.FailNow()
-	}
-
-	resultString := string(resultBytes)
-	if err := snapshotter.SnapshotWithName(name, resultString); err != nil {
+	if err := snapshotter.SnapshotWithName(name, buf.String()); err != nil {
 		t.Errorf("unexpected result %s", err)
 		t.FailNow()
 	}

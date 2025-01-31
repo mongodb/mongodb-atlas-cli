@@ -108,23 +108,8 @@ type Profile struct {
 	err       error
 }
 
-func Properties() []string {
-	return []string{
-		projectID,
-		orgID,
-		service,
-		publicAPIKey,
-		privateAPIKey,
-		output,
-		OpsManagerURLField,
-		baseURL,
-		mongoShellPath,
-		skipUpdateCheck,
-		TelemetryEnabledProperty,
-		AccessTokenField,
-		RefreshTokenField,
-		apiVersion,
-	}
+func AllProperties() []string {
+	return append(ProfileProperties(), GlobalProperties()...)
 }
 
 func BooleanProperties() []string {
@@ -134,12 +119,28 @@ func BooleanProperties() []string {
 	}
 }
 
+func ProfileProperties() []string {
+	return []string{
+		AccessTokenField,
+		apiVersion,
+		baseURL,
+		OpsManagerURLField,
+		orgID,
+		output,
+		privateAPIKey,
+		projectID,
+		publicAPIKey,
+		RefreshTokenField,
+		service,
+	}
+}
+
 func GlobalProperties() []string {
 	return []string{
+		LocalDeploymentImage,
+		mongoShellPath,
 		skipUpdateCheck,
 		TelemetryEnabledProperty,
-		mongoShellPath,
-		LocalDeploymentImage,
 	}
 }
 
@@ -162,7 +163,7 @@ func List() []string {
 
 	keys := make([]string, 0, len(m))
 	for k := range m {
-		if !slices.Contains(Properties(), k) {
+		if !slices.Contains(AllProperties(), k) {
 			keys = append(keys, k)
 		}
 	}

@@ -39,7 +39,6 @@
 	"github.com/tangzero/inflector": "apix-2",
 	"github.com/yuin/goldmark": "apix-2",
 	"go.mongodb.org/atlas-sdk/v20240530005": "apix-2",
-	"go.mongodb.org/atlas-sdk/v20241113001": "apix-2",
 	"go.mongodb.org/atlas-sdk/v20241113004": "apix-2",
 	"go.mongodb.org/atlas": "apix-2",
 	"go.mongodb.org/mongo-driver": "apix-2",

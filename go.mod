@@ -36,6 +36,7 @@ require (
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.24.12
+	github.com/speakeasy-api/openapi-overlay v0.10.1
 	github.com/spf13/afero v1.12.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
@@ -67,6 +68,12 @@ require (
 	sigs.k8s.io/controller-runtime v0.20.0
 	sigs.k8s.io/kind v0.26.0
 	sigs.k8s.io/yaml v1.4.0
+)
+
+require (
+	github.com/dprotaso/go-yit v0.0.0-20191028211022-135eb7262960 // indirect
+	github.com/speakeasy-api/jsonpath v0.6.0 // indirect
+	github.com/vmware-labs/yaml-jsonpath v0.3.2 // indirect
 )
 
 require (

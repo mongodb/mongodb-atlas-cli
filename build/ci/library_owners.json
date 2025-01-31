@@ -33,6 +33,7 @@
 	"github.com/pelletier/go-toml": "apix-2",
 	"github.com/pkg/browser": "apix-2",
 	"github.com/shirou/gopsutil/v4": "apix-2",
+	"github.com/speakeasy-api/openapi-overlay": "apix-2",
 	"github.com/spf13/afero": "apix-2",
 	"github.com/spf13/cobra": "apix-2",
 	"github.com/spf13/pflag": "apix-2",

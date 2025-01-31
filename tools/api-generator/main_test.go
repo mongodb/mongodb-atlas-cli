@@ -17,12 +17,13 @@ package main
 import (
 	"bytes"
 	"context"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
-	"github.com/stretchr/testify/require"
 )
 
 func testSpec(t *testing.T, name, specPath string) {
@@ -31,20 +32,28 @@ func testSpec(t *testing.T, name, specPath string) {
 
 	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
-		t.Errorf("failed to load '%s', error: %s", specPath, err)
-		t.FailNow()
+		t.Fatalf("failed to load '%s', error: %s", specPath, err)
 	}
 	defer specFile.Close()
 
+	overlayPath := specPath + ".overlay.yaml"
+	var overlays []io.Reader
+	if _, err = os.Stat(overlayPath); err == nil {
+		overlayFile, err := os.OpenFile(overlayPath, os.O_RDONLY, os.ModePerm)
+		if err != nil {
+			t.Fatalf("failed to load '%s', error: %s", overlayPath, err)
+		}
+		defer overlayFile.Close()
+		overlays = []io.Reader{overlayFile}
+	}
+
 	buf := &bytes.Buffer{}
-	if err := convertSpecToAPICommands(context.Background(), specFile, buf); err != nil {
-		t.Errorf("failed to convert spec into commmands, error: %s", err)
-		t.FailNow()
+	if err := convertSpecToAPICommands(context.Background(), specFile, overlays, buf); err != nil {
+		t.Fatalf("failed to convert spec into commmands, error: %s", err)
 	}
 
 	if err := snapshotter.SnapshotWithName(name, buf.String()); err != nil {
-		t.Errorf("unexpected result %s", err)
-		t.FailNow()
+		t.Fatalf("unexpected result %s", err)
 	}
 }
 
@@ -52,10 +61,15 @@ func testSpec(t *testing.T, name, specPath string) {
 func TestSnapshots(t *testing.T) {
 	const FixtureDirectory = "./fixtures/"
 	files, err := os.ReadDir(FixtureDirectory)
-	require.NoError(t, err, "failed to load fixtures")
+	if err != nil {
+		t.Fatalf("failed to load fixtures: %s", err)
+	}
 
 	for _, file := range files {
 		fileName := file.Name()
+		if strings.HasSuffix(fileName, ".overlay.yaml") {
+			continue
+		}
 		fullPath := filepath.Join(FixtureDirectory, fileName)
 		t.Run(fileName, func(t *testing.T) {
 			testSpec(t, fileName, fullPath)

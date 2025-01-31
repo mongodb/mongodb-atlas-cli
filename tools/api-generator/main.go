@@ -22,29 +22,37 @@ import (
 	"go/format"
 	"io"
 	"os"
+	"path/filepath"
+	"strings"
 	"text/template"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/speakeasy-api/openapi-overlay/pkg/overlay"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 )
 
 //go:embed commands.go.tmpl
 var templateContent string
 
 func main() {
-	var specPath string
+	var (
+		specPath    string
+		overlayPath string
+	)
 
 	var rootCmd = &cobra.Command{
 		Use:   "api-generator",
 		Short: "CLI which generates api command definitions from a OpenAPI spec",
 		RunE: func(command *cobra.Command, _ []string) error {
-			return run(command.Context(), specPath, command.OutOrStdout())
+			return run(command.Context(), specPath, overlayPath, command.OutOrStdout())
 		},
 	}
 
 	rootCmd.Flags().StringVar(&specPath, "spec", "", "Path to spec file")
+	rootCmd.Flags().StringVar(&overlayPath, "overlay", "", "Path to overlay folder")
 	_ = rootCmd.MarkFlagRequired("spec")
 	_ = rootCmd.MarkFlagFilename("spec")
 
@@ -54,7 +62,7 @@ func main() {
 	}
 }
 
-func run(ctx context.Context, specPath string, w io.Writer) error {
+func run(ctx context.Context, specPath, overlayPath string, w io.Writer) error {
 	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
 		return err
@@ -62,11 +70,76 @@ func run(ctx context.Context, specPath string, w io.Writer) error {
 
 	defer specFile.Close()
 
-	return convertSpecToAPICommands(ctx, specFile, w)
+	files, err := os.ReadDir(overlayPath)
+	if err != nil {
+		return err
+	}
+
+	overlayFiles := make([]io.Reader, 0, len(files))
+
+	for _, file := range files {
+		if !strings.HasSuffix(file.Name(), ".yaml") || !strings.HasSuffix(file.Name(), ".yml") {
+			continue
+		}
+
+		fileName := filepath.Join(overlayPath, file.Name())
+
+		overlayFile, err := os.OpenFile(fileName, os.O_RDONLY, os.ModePerm)
+		if err != nil {
+			return err
+		}
+
+		defer overlayFile.Close() //nolint // required
+
+		overlayFiles = append(overlayFiles, overlayFile)
+	}
+
+	return convertSpecToAPICommands(ctx, specFile, overlayFiles, w)
 }
 
-func convertSpecToAPICommands(ctx context.Context, r io.Reader, w io.Writer) error {
-	spec, err := loadSpec(r)
+func applyOverlays(r io.Reader, overlayFiles []io.Reader) (io.Reader, error) {
+	if len(overlayFiles) == 0 {
+		return r, nil
+	}
+
+	var spec yaml.Node
+	err := yaml.NewDecoder(r).Decode(&spec)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, overlayFile := range overlayFiles {
+		var o overlay.Overlay
+		dec := yaml.NewDecoder(overlayFile)
+
+		if err := dec.Decode(&o); err != nil {
+			return nil, err
+		}
+
+		if err := o.Validate(); err != nil {
+			return nil, err
+		}
+
+		if err = o.ApplyTo(&spec); err != nil {
+			return nil, err
+		}
+	}
+
+	buf, err := yaml.Marshal(&spec)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes.NewBuffer(buf), nil
+}
+
+func convertSpecToAPICommands(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error {
+	overlaySpec, err := applyOverlays(r, overlayFiles)
+	if err != nil {
+		return fmt.Errorf("failed to apply overlays, error: %w", err)
+	}
+
+	spec, err := loadSpec(overlaySpec)
 	if err != nil {
 		return fmt.Errorf("failed to load spec, error: %w", err)
 	}

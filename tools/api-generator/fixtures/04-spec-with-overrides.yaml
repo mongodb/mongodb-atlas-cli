@@ -150,14 +150,18 @@ paths:
   /api/atlas/v2/groups/{groupId}/clusters:
     post:
       description: Creates one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
-      x-xgen-cli-override-description: OVERRIDDEN
+      x-xgen-atlascli:
+        override:
+          description: OVERRIDDEN
+          operationId: createClusterX
       operationId: createCluster
-      x-xgen-cli-override-operationId: createClusterX
       parameters:
         - $ref: '#/components/parameters/envelope'
         - $ref: '#/components/parameters/groupId'
-          x-xgen-cli-override-description: OVERRIDDEN
-          x-xgen-cli-override-name: groupIdX
+          x-xgen-atlascli:
+            override:
+              description: OVERRIDDEN
+              name: groupIdX
         - $ref: '#/components/parameters/pretty'
       requestBody:
         content:
@@ -365,8 +369,10 @@ components:
         example: false
         type: boolean
     groupId:
-      x-xgen-cli-override-description: OVERRRIDEN
-      x-xgen-cli-override-name: groupIdX
+      x-xgen-atlascli:
+        override:
+          description: OVERRRIDEN
+          name: groupIdX
       description: |-
         Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
 

@@ -18,7 +18,7 @@ package main
 
 import "testing"
 
-func TestMain(t *testing.T) {
+func TestBuild(t *testing.T) {
 	t.Setenv("DO_NOT_TRACK", "1")
 	main()
 }

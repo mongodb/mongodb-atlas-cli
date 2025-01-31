@@ -52,6 +52,13 @@ type Install struct {
 	projectName                  string
 	importResources              bool
 	atlasGov                     bool
+	configOnly                   bool
+}
+
+func (i *Install) WithConfigOnly(configOnly bool) *Install {
+	i.configOnly = configOnly
+
+	return i
 }
 
 func (i *Install) WithNamespace(namespace string) *Install {
@@ -113,6 +120,7 @@ func (i *Install) Run(ctx context.Context, orgID string) error {
 		ResourceDeletionProtectionEnabled:    i.featureDeletionProtection,
 		SubResourceDeletionProtectionEnabled: i.featureSubDeletionProtection,
 		AtlasGov:                             i.atlasGov,
+		ConfigOnly:                           i.configOnly,
 	}); err != nil {
 		return err
 	}

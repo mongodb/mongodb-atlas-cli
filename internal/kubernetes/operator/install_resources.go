@@ -50,6 +50,7 @@ type InstallConfig struct {
 	ResourceDeletionProtectionEnabled    bool
 	SubResourceDeletionProtectionEnabled bool
 	AtlasGov                             bool
+	ConfigOnly                           bool
 }
 
 type Installer interface {
@@ -143,6 +144,9 @@ func (ir *InstallResources) handleKind(ctx context.Context, installConfig *Insta
 	case "ClusterRoleBinding":
 		return ir.addClusterRoleBinding(ctx, config, installConfig.Namespace)
 	case "Deployment":
+		if installConfig.ConfigOnly {
+			return nil
+		}
 		return ir.addDeployment(ctx, config, installConfig)
 	}
 	return nil

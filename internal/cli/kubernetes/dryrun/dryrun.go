@@ -26,6 +26,8 @@ import (
 
 var ErrUnsupportedOperatorVersionFmt = "version %q is not supported. Supported versions: %v"
 
+const defaultTimeoutSec = 120
+
 type Opts struct {
 	cli.OrgOpts
 	cli.OutputOpts
@@ -34,6 +36,7 @@ type Opts struct {
 	targetNamespace string
 	watchNamespaces []string
 	waitForJob      bool
+	waitTimeout     int64
 }
 
 func (opts *Opts) ValidateTargetNamespace() error {
@@ -51,10 +54,12 @@ func (opts *Opts) ValidateOperatorVersion() error {
 }
 
 func (opts *Opts) Run() error {
-	worker := NewWorker(opts.targetNamespace,
-		opts.operatorVersion,
-		strings.Join(opts.watchNamespaces, ","),
-		opts.waitForJob)
+	worker := NewWorker().
+		WithTargetNamespace(opts.targetNamespace).
+		WithWatchNamespaces(strings.Join(opts.watchNamespaces, ",")).
+		WithOperatorVersion(opts.operatorVersion).
+		WithWaitForCompletion(opts.waitForJob).
+		WithWaitTimeoutSec(opts.waitTimeout)
 	return worker.Run()
 }
 
@@ -89,5 +94,6 @@ TODO: ask Dan about the proper description of the dry-run mode.
 	cmd.Flags().StringSliceVar(&opts.watchNamespaces, flag.OperatorWatchNamespaces, []string{}, usage.OperatorWatchNamespace)
 	cmd.Flags().StringVar(&opts.operatorVersion, flag.OperatorVersion, features.LatestOperatorMajorVersion, usage.OperatorVersion)
 	cmd.Flags().BoolVar(&opts.waitForJob, flag.EnableWatch, false, usage.EnableWatch)
+	cmd.Flags().Int64Var(&opts.waitTimeout, flag.WatchTimeout, defaultTimeoutSec, usage.WatchTimeout)
 	return cmd
 }

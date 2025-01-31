@@ -14,7 +14,6 @@ package dryrun
 
 import (
 	"context"
-	"crypto/md5"
 	"fmt"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	batchv1 "k8s.io/api/batch/v1"
@@ -29,18 +28,38 @@ import (
 type Worker struct {
 	targetNamespace string
 	watchNamespaces string
-	client          client.Client
 	wait            bool
 	akoVersion      string
+	waitSec         int64
 }
 
-func NewWorker(targetNamespace, watchNamespaces, operatorVersion string, waitForCompletion bool) *Worker {
-	return &Worker{
-		targetNamespace: targetNamespace,
-		watchNamespaces: watchNamespaces,
-		akoVersion:      operatorVersion,
-		wait:            waitForCompletion,
-	}
+func NewWorker() *Worker {
+	return &Worker{}
+}
+
+func (r *Worker) WithTargetNamespace(targetNamespace string) *Worker {
+	r.targetNamespace = targetNamespace
+	return r
+}
+
+func (r *Worker) WithWatchNamespaces(watchNamespaces string) *Worker {
+	r.watchNamespaces = watchNamespaces
+	return r
+}
+
+func (r *Worker) WithOperatorVersion(operatorVersion string) *Worker {
+	r.akoVersion = operatorVersion
+	return r
+}
+
+func (r *Worker) WithWaitForCompletion(waitForCompletion bool) *Worker {
+	r.wait = waitForCompletion
+	return r
+}
+
+func (r *Worker) WithWaitTimeoutSec(waitSec int64) *Worker {
+	r.waitSec = waitSec
+	return r
 }
 
 func (r *Worker) Run() error {
@@ -60,8 +79,8 @@ func (r *Worker) Run() error {
 			APIVersion: "batch/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName("AKODryRun", resources.AtlasNameToKubernetesName()),
-			Namespace: r.targetNamespace,
+			GenerateName: resources.NormalizeAtlasName("ako-dry-run-", resources.AtlasNameToKubernetesName()),
+			Namespace:    r.targetNamespace,
 		},
 		Spec: batchv1.JobSpec{
 			BackoffLimit: makePtr[int32](1),
@@ -71,12 +90,12 @@ func (r *Worker) Run() error {
 					RestartPolicy:      corev1.RestartPolicyNever,
 					Containers: []corev1.Container{
 						{
-							Name: "ako-dry-run-" + newRandomUUID(),
+							Name: "ako-dry-run",
 							//Image: fmt.Sprintf("quay.io/mongodb/atlas-kubernetes-operator:%s", r.akoVersion),
 							Image:   "docker.io/ikarpukhin/mongodb-atlas-kubernetes:dry-run",
 							Command: []string{"/manager"},
 							Args: []string{
-								"--atlas-domain=https://cloud.mongodb.com/",
+								"--atlas-domain=https://cloud-qa.mongodb.com/",
 								"--log-level=info",
 								"--log-encoder=json",
 								"--dry-run",
@@ -128,7 +147,7 @@ func (r *Worker) Run() error {
 		return nil
 	}
 
-	ctx, timeoutF := context.WithTimeout(context.Background(), 2*time.Minute)
+	ctx, timeoutF := context.WithTimeout(context.Background(), time.Duration(r.waitSec)*time.Second)
 	defer timeoutF()
 
 	if err := waitForJob(ctx, c, jb); err != nil {
@@ -145,7 +164,7 @@ func waitForJob(ctx context.Context, c client.Client, job *batchv1.Job) error {
 	for {
 		select {
 		case <-ctx.Done():
-			return fmt.Errorf("job did not complete within the expected time")
+			return fmt.Errorf("timeout: job did not complete within the expected time: %w", ctx.Err())
 		default:
 			jb := &batchv1.Job{}
 			if err := c.Get(ctx, client.ObjectKey{Name: job.Name, Namespace: job.Namespace}, jb); err != nil {
@@ -169,8 +188,4 @@ func waitForJob(ctx context.Context, c client.Client, job *batchv1.Job) error {
 
 func makePtr[T any](v T) *T {
 	return &v
-}
-
-func newRandomUUID() string {
-	return fmt.Sprintf("%x", md5.Sum([]byte(time.Now().Format(time.RFC3339Nano))))[:6]
 }

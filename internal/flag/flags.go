@@ -254,6 +254,7 @@ const (
 	OperatorImport                            = "import"                                    // OperatorImport flag
 	OperatorResourceDeletionProtection        = "resourceDeletionProtection"                // OperatorResourceDeletionProtection flag
 	OperatorSubResourceDeletionProtection     = "subresourceDeletionProtection"             // Operator OperatorSubResourceDeletionProtection flag
+	OperatorConfigOnly                        = "configOnly"                                // OperatorConfigOnly config flag
 	OperatorAtlasGov                          = "atlasGov"                                  // OperatorAtlasGov flag
 	KubernetesClusterConfig                   = "kubeconfig"                                // Kubeconfig flag
 	KubernetesClusterContext                  = "kubeContext"                               // KubeContext flag

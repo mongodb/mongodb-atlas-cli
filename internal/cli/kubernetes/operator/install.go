@@ -52,6 +52,7 @@ type InstallOpts struct {
 	KubeContext                  string
 	featureDeletionProtection    bool
 	featureSubDeletionProtection bool
+	configOnly                   bool
 }
 
 func (opts *InstallOpts) defaults() error {
@@ -136,6 +137,7 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 		WithResourceDeletionProtection(opts.featureDeletionProtection).
 		WithSubResourceDeletionProtection(opts.featureSubDeletionProtection).
 		WithAtlasGov(opts.atlasGov).
+		WithConfigOnly(opts.configOnly).
 		Run(ctx, opts.OrgID)
 
 	if err != nil {
@@ -210,6 +212,7 @@ The key is scoped to the project when you specify the --projectName option and t
 	flags.StringVar(&opts.KubeContext, flag.KubernetesClusterContext, "", usage.KubernetesClusterContext)
 	flags.BoolVar(&opts.featureDeletionProtection, flag.OperatorResourceDeletionProtection, true, usage.OperatorResourceDeletionProtection)
 	flags.BoolVar(&opts.featureSubDeletionProtection, flag.OperatorSubResourceDeletionProtection, true, usage.OperatorSubResourceDeletionProtection)
+	flags.BoolVar(&opts.configOnly, flag.OperatorConfigOnly, false, usage.OperatorConfigOnly)
 
 	return cmd
 }

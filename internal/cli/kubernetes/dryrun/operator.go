@@ -15,6 +15,8 @@ package dryrun
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -22,8 +24,12 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
-	"time"
 )
+
+const repeatInterval = 5 * time.Second
+const liveProbePort = 8081
+const initialDelaySeconds = 15
+const periodSeconds = 20
 
 type Worker struct {
 	targetNamespace string
@@ -90,9 +96,9 @@ func (r *Worker) Run() error {
 					RestartPolicy:      corev1.RestartPolicyNever,
 					Containers: []corev1.Container{
 						{
-							Name: "ako-dry-run",
-							//Image: fmt.Sprintf("quay.io/mongodb/atlas-kubernetes-operator:%s", r.akoVersion),
-							Image:   "docker.io/ikarpukhin/mongodb-atlas-kubernetes:dry-run",
+							Name:  "ako-dry-run",
+							Image: "quay.io/mongodb/atlas-kubernetes-operator:" + r.akoVersion,
+							//Image:   "docker.io/ikarpukhin/mongodb-atlas-kubernetes:dry-run",
 							Command: []string{"/manager"},
 							Args: []string{
 								"--atlas-domain=https://cloud-qa.mongodb.com/",
@@ -122,11 +128,11 @@ func (r *Worker) Run() error {
 								ProbeHandler: corev1.ProbeHandler{
 									HTTPGet: &corev1.HTTPGetAction{
 										Path: "/healthz",
-										Port: intstr.IntOrString{IntVal: 8081},
+										Port: intstr.IntOrString{IntVal: liveProbePort},
 									},
 								},
-								InitialDelaySeconds: 15,
-								PeriodSeconds:       20,
+								InitialDelaySeconds: initialDelaySeconds,
+								PeriodSeconds:       periodSeconds,
 							},
 							ImagePullPolicy: "Always",
 						},
@@ -179,7 +185,7 @@ func waitForJob(ctx context.Context, c client.Client, job *batchv1.Job) error {
 				return fmt.Errorf("job failed with conditions: %+v", jb.Status.Conditions)
 			}
 
-			time.Sleep(5 * time.Second)
+			time.Sleep(repeatInterval)
 			attempts++
 			fmt.Printf("Waiting for job to complete... Attempt #%d\r\n", attempts)
 		}

@@ -14,6 +14,8 @@ package dryrun
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -21,7 +23,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/util/validation"
-	"strings"
 )
 
 var ErrUnsupportedOperatorVersionFmt = "version %q is not supported. Supported versions: %v"
@@ -63,7 +64,7 @@ func (opts *Opts) Run() error {
 	return worker.Run()
 }
 
-// Builder builds a cobra.Command for the Kubernetes dryrun installation
+// Builder builds a cobra.Command for the Kubernetes dryrun installation.
 func Builder() *cobra.Command {
 	const use = "dry-run"
 
@@ -78,7 +79,7 @@ func Builder() *cobra.Command {
 
 TODO: ask Dan about the proper description of the dry-run mode.
 `,
-		PreRunE: func(cmd *cobra.Command, _ []string) error {
+		PreRunE: func(_ *cobra.Command, _ []string) error {
 			return opts.OrgOpts.PreRunE(
 				opts.ValidateTargetNamespace,
 				opts.ValidateOperatorVersion,

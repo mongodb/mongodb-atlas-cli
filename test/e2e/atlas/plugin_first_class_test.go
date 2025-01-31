@@ -31,7 +31,7 @@ func TestPluginKubernetes(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("should install K8s plugin", func(t *testing.T) {
+	t.Run("should install kubernetes plugin", func(t *testing.T) {
 		removeFirstClassPlugin(t, "atlas-cli-plugin-kubernetes", cliPath)
 
 		cmd := exec.Command(cliPath,

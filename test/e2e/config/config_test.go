@@ -101,7 +101,7 @@ func TestConfig(t *testing.T) {
 		if _, err = c.ExpectString("Default Project ID:"); err != nil {
 			t.Fatal(err)
 		}
-		if _, err = c.SendLine("5e429f2e06822c6eac4d59c9"); err != nil {
+		if _, err = c.SendLine("test_private"); err != nil {
 			t.Fatalf("SendLine() = %v", err)
 		}
 		if _, err = c.ExpectString("Default Output Format"); err != nil {

@@ -29,13 +29,13 @@ jobs:
           mkdir "$XDG_CONFIG_HOME/atlascli"
           cat <<EOF > "$XDG_CONFIG_HOME/atlascli/config.toml"
           [e2e]
-            org_id = "5e429e7706822c6eac4d5971"
-            public_api_key = "AAUMGJXA"
+            org_id = "test_id"
+            public_api_key = "test_pub"
             service = "cloud"
           EOF
       - run: make e2e-test
         env:
-          E2E_TAGS: atlas,config
+          E2E_TAGS: config
       - name: Test Summary
         id: test_summary
         uses: test-summary/action@v2.4

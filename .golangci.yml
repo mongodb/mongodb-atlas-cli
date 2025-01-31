@@ -17,30 +17,6 @@ linters-settings:
         alias: atlas
       - pkg: go.mongodb.org/atlas/auth
         alias: atlasauth
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api
-        alias: akoapi
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1
-        alias: akov2
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/common
-        alias: akov2common
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/provider
-        alias: akov2provider
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/status
-        alias: akov2status
-      - pkg: github.com/mongodb/mongodb-atlas-kubernetes/v2/api/v1/project
-        alias: akov2project
-      - pkg: k8s.io/apimachinery/pkg/apis/meta/v1
-        alias: metav1
-      - pkg: k8s.io/api/apps/v1
-        alias: appsv1
-      - pkg: k8s.io/api/core/v1
-        alias: corev1
-      - pkg: k8s.io/api/rbac/v1
-        alias: rbacv1
-      - pkg: k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1
-        alias: apiextensionsv1
-      - pkg: k8s.io/apiserver/pkg/storage/names
-        alias: k8snames
       - pkg: github.com/AlecAivazis/survey/v2/core
         alias: survey
       - pkg: github.com/creack/pty

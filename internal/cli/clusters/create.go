@@ -358,6 +358,8 @@ func CreateBuilder() *cobra.Command {
 		Long: `To get started quickly, specify a name for your cluster, a cloud provider, and a region to deploy a three-member replica set with the latest MongoDB server version.
 For full control of your deployment, or to create multi-cloud clusters, provide a JSON configuration file with the --file flag.
 
+Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M5, a FLEX tier will be created instead.
+
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: `  # Deploy a free cluster named myCluster for the project with the ID 5e2211c17a3e5a48f5497de3:
   atlas cluster create myCluster --projectId 5e2211c17a3e5a48f5497de3 --provider AWS --region US_EAST_1 --tier M0

@@ -128,12 +128,10 @@ func buildDescription(operation *openapi3.Operation) (string, error) {
 	inputDescription := operation.Description
 	overridden := false
 
-	if extensions, okExtensions := operation.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
-		if overrides, okOverrides := extensions["override"].(map[string]any); okOverrides && overrides != nil {
-			if overriddenDescription, ok := overrides["description"].(string); ok && overriddenDescription != "" {
-				inputDescription = overriddenDescription
-				overridden = true
-			}
+	if overrides := extractOverrides(operation.Extensions); overrides != nil {
+		if overriddenDescription, ok := overrides["description"].(string); ok && overriddenDescription != "" {
+			inputDescription = overriddenDescription
+			overridden = true
 		}
 	}
 

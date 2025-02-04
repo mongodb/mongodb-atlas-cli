@@ -144,7 +144,7 @@ jobs:
             --tag ${{ env.IMAGE_REPOSITORY }}:${{ env.LATEST_VERSION }}-${{ env.DATE }} \
             ${{ env.STAGING_IMAGE_REPOSITORY }}:latest
       - name: Login to Quay
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
         with:
           registry: "${{ env.QUAY }}"
           username: "${{ secrets.QUAY_USER }}"

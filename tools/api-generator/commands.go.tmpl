@@ -28,7 +28,7 @@ var Commands = GroupedAndSortedCommands{
 		{{- range .Commands }}
 			{
 				OperationID: `{{ .OperationID }}`,
-				Aliases: {{if .Aliases}}{{ .Aliases }}{{else}}nil{{end}},
+				Aliases: {{if not .Aliases}} nil {{else}} []string{ {{ range $i, $alias := .Aliases }}{{if $i}},{{end}}`{{ $alias }}`{{end}} } {{end}},
 				Description: `{{ .Description }}`,
 				RequestParameters: RequestParameters{
 					URL: `{{ .RequestParameters.URL }}`,

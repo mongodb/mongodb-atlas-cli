@@ -15,46 +15,45 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
-	"github.com/spf13/afero"
-	"github.com/stretchr/testify/require"
 )
 
 func testSpec(t *testing.T, name, specPath string) {
 	t.Helper()
 	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".snapshot"))
 
-	realFs := afero.NewOsFs()
-
-	specBytes, err := afero.ReadFile(realFs, specPath)
+	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
-		t.Errorf("failed to load '%s', error: %s", specPath, err)
-		t.FailNow()
+		t.Fatalf("failed to load '%s', error: %s", specPath, err)
+	}
+	defer specFile.Close()
+
+	overlayPath := specPath + ".overlay.yaml"
+	var overlays []io.Reader
+	if _, err = os.Stat(overlayPath); err == nil {
+		overlayFile, err := os.OpenFile(overlayPath, os.O_RDONLY, os.ModePerm)
+		if err != nil {
+			t.Fatalf("failed to load '%s', error: %s", overlayPath, err)
+		}
+		defer overlayFile.Close()
+		overlays = []io.Reader{overlayFile}
 	}
 
-	fs := afero.NewMemMapFs()
-	_ = afero.WriteFile(fs, "spec.yml", specBytes, os.ModeType)
-
-	if err := convertSpecToAPICommands(context.Background(), fs, "spec.yml", "commands.go"); err != nil {
-		t.Errorf("failed to convert spec into commmands, error: %s", err)
-		t.FailNow()
+	buf := &bytes.Buffer{}
+	if err := convertSpecToAPICommands(context.Background(), specFile, overlays, buf); err != nil {
+		t.Fatalf("failed to convert spec into commmands, error: %s", err)
 	}
 
-	resultBytes, err := afero.ReadFile(fs, "commands.go")
-	if err != nil {
-		t.Errorf("failed to read result commands file, error: %s", err)
-		t.FailNow()
-	}
-
-	resultString := string(resultBytes)
-	if err := snapshotter.SnapshotWithName(name, resultString); err != nil {
-		t.Errorf("unexpected result %s", err)
-		t.FailNow()
+	if err := snapshotter.SnapshotWithName(name, buf.String()); err != nil {
+		t.Fatalf("unexpected result %s", err)
 	}
 }
 
@@ -62,10 +61,15 @@ func testSpec(t *testing.T, name, specPath string) {
 func TestSnapshots(t *testing.T) {
 	const FixtureDirectory = "./fixtures/"
 	files, err := os.ReadDir(FixtureDirectory)
-	require.NoError(t, err, "failed to load fixtures")
+	if err != nil {
+		t.Fatalf("failed to load fixtures: %s", err)
+	}
 
 	for _, file := range files {
 		fileName := file.Name()
+		if strings.HasSuffix(fileName, ".overlay.yaml") {
+			continue
+		}
 		fullPath := filepath.Join(FixtureDirectory, fileName)
 		t.Run(fileName, func(t *testing.T) {
 			testSpec(t, fileName, fullPath)

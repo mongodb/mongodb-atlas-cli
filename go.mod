@@ -36,6 +36,7 @@ require (
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
 	github.com/shirou/gopsutil/v4 v4.25.1
+	github.com/speakeasy-api/openapi-overlay v0.10.1
 	github.com/spf13/afero v1.12.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.6
@@ -70,8 +71,11 @@ require (
 )
 
 require (
+	github.com/dprotaso/go-yit v0.0.0-20191028211022-135eb7262960 // indirect
 	github.com/oasdiff/yaml v0.0.0-20241210131133-6b86fb107d80 // indirect
 	github.com/oasdiff/yaml3 v0.0.0-20241210130736-a94c01f36349 // indirect
+	github.com/speakeasy-api/jsonpath v0.6.0 // indirect
+	github.com/vmware-labs/yaml-jsonpath v0.3.2 // indirect
 )
 
 require (

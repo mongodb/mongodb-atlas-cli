@@ -78,7 +78,7 @@ func run(ctx context.Context, specPath, overlayPath string, w io.Writer) error {
 	overlayFiles := make([]io.Reader, 0, len(files))
 
 	for _, file := range files {
-		if !strings.HasSuffix(file.Name(), ".yaml") || !strings.HasSuffix(file.Name(), ".yml") {
+		if !strings.HasSuffix(file.Name(), ".yaml") && !strings.HasSuffix(file.Name(), ".yml") {
 			continue
 		}
 

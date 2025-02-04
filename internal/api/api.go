@@ -30,6 +30,7 @@ type Group struct {
 
 type Command struct {
 	OperationID       string
+	Aliases           []string
 	Description       string
 	RequestParameters RequestParameters
 	Versions          []Version
@@ -50,6 +51,7 @@ type Version struct {
 
 type Parameter struct {
 	Name        string
+	Short       string
 	Description string
 	Required    bool
 	Type        ParameterType

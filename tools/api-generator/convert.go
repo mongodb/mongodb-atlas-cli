@@ -104,8 +104,11 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 		}
 	}
 
+	var aliases []string
+
 	command := api.Command{
 		OperationID: operationID,
+		Aliases:     aliases,
 		Description: description,
 		RequestParameters: api.RequestParameters{
 			URL:             path,
@@ -169,10 +172,11 @@ func extractOverrides(ext map[string]any) map[string]any {
 	return nil
 }
 
-func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (string, string) {
+func extractParametersNameDescriptionShort(parameterRef *openapi3.ParameterRef) (string, string, string) {
 	parameter := parameterRef.Value
 	parameterName := parameter.Name
 	parameterDescription := parameter.Description
+	parameterShort := ""
 
 	if overrides := extractOverrides(parameterRef.Extensions); overrides != nil {
 		if overriddenDescription, ok := overrides["description"].(string); ok && overriddenDescription != "" {
@@ -190,7 +194,7 @@ func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (stri
 		}
 	}
 
-	return parameterName, parameterDescription
+	return parameterName, parameterDescription, parameterShort
 }
 
 // Extract and categorize parameters.
@@ -201,7 +205,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 
 	for _, parameterRef := range parameters {
 		parameter := parameterRef.Value
-		parameterName, parameterDescription := extractParametersNameDescription(parameterRef)
+		parameterName, parameterDescription, parameterShort := extractParametersNameDescriptionShort(parameterRef)
 
 		// Parameters are translated to flags, we don't want duplicates
 		// Duplicates should be resolved by customization, in case they ever appeared
@@ -221,6 +225,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 
 		apiParameter := api.Parameter{
 			Name:        parameterName,
+			Short:       parameterShort,
 			Description: description,
 			Required:    parameter.Required,
 			Type:        *parameterType,

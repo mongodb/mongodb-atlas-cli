@@ -38,7 +38,7 @@ jobs:
           E2E_TAGS: config
       - name: Test Summary
         id: test_summary
-        uses: test-summary/action@v2.4
+        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
         with:
           paths: e2e-tests.xml
   brew:
@@ -64,6 +64,6 @@ jobs:
           E2E_TAGS: brew
       - name: Test Summary
         id: test_summary
-        uses: test-summary/action@v2.4
+        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
         with:
           paths: e2e-tests.xml

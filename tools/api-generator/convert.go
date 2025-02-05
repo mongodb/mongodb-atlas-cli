@@ -97,15 +97,26 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 	}
 
 	operationID := operation.OperationID
-
 	if overrides := extractOverrides(operation.Extensions); overrides != nil {
 		if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
 			operationID = overriddenOperationID
 		}
 	}
 
+	var aliases []string
+	if extensions, okExtensions := operation.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if extAliases, okExtAliases := extensions["command-aliases"].([]any); okExtAliases && extAliases != nil {
+			for _, alias := range extAliases {
+				if sAlias, ok := alias.(string); ok && sAlias != "" {
+					aliases = append(aliases, sAlias)
+				}
+			}
+		}
+	}
+
 	command := api.Command{
 		OperationID: operationID,
+		Aliases:     aliases,
 		Description: description,
 		RequestParameters: api.RequestParameters{
 			URL:             path,
@@ -169,6 +180,23 @@ func extractOverrides(ext map[string]any) map[string]any {
 	return nil
 }
 
+func extractParameterShort(parameterRef *openapi3.ParameterRef) string {
+	parameter := parameterRef.Value
+	parameterShort := ""
+
+	if extensions, okExtensions := parameterRef.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if flagShort, okFlagShort := extensions["flag-short"].(string); okFlagShort {
+			parameterShort = flagShort
+		}
+	} else if extensions, okExtensions := parameter.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if flagShort, okFlagShort := extensions["flag-short"].(string); okFlagShort {
+			parameterShort = flagShort
+		}
+	}
+
+	return parameterShort
+}
+
 func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (string, string) {
 	parameter := parameterRef.Value
 	parameterName := parameter.Name
@@ -202,6 +230,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 	for _, parameterRef := range parameters {
 		parameter := parameterRef.Value
 		parameterName, parameterDescription := extractParametersNameDescription(parameterRef)
+		parameterShort := extractParameterShort(parameterRef)
 
 		// Parameters are translated to flags, we don't want duplicates
 		// Duplicates should be resolved by customization, in case they ever appeared
@@ -221,6 +250,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 
 		apiParameter := api.Parameter{
 			Name:        parameterName,
+			Short:       parameterShort,
 			Description: description,
 			Required:    parameter.Required,
 			Type:        *parameterType,

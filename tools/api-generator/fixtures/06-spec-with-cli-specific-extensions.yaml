@@ -31,6 +31,50 @@ tags:
     name: Clusters
 paths:
   /api/atlas/v2/groups/{groupId}/clusters:
+    get:
+      description: Returns the details for all clusters in the specific project to which you have access. Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting API Key must have the Project Read Only role. This feature is not  available for serverless clusters.
+      operationId: listClusters
+      x-xgen-atlascli:
+        skip: true
+      parameters:
+        - $ref: '#/components/parameters/envelope'
+        - $ref: '#/components/parameters/groupId'
+        - $ref: '#/components/parameters/includeCount'
+        - $ref: '#/components/parameters/itemsPerPage'
+        - $ref: '#/components/parameters/pageNum'
+        - $ref: '#/components/parameters/pretty'
+        - description: Flag that indicates whether to return Clusters with retain backups.
+          in: query
+          name: includeDeletedWithRetainedBackups
+          schema:
+            default: false
+            type: boolean
+      responses:
+        '200':
+          content:
+            application/vnd.atlas.2023-01-01+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLegacyClusterView'
+              x-sunset: '2025-06-01'
+              x-xgen-version: '2023-01-01'
+            application/vnd.atlas.2023-02-01+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAdvancedClusterDescriptionView'
+              x-sunset: '2026-03-01'
+              x-xgen-version: '2023-02-01'
+            application/vnd.atlas.2024-08-05+json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClusterDescription20240805'
+              x-xgen-version: '2024-08-05'
+          description: OK
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '500':
+          $ref: '#/components/responses/internalServerError'
+      summary: Return All Clusters in One Project
+      tags:
+        - Clusters
+      x-xgen-owner-team: Atlas Dedicated
     post:
       description: Creates one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
       x-xgen-atlascli:
@@ -263,6 +307,33 @@ components:
         minLength: 24
         pattern: ^([a-f0-9]{24})$
         type: string
+    includeCount:
+      description: Flag that indicates whether the response returns the total number of items (**totalCount**) in the response.
+      in: query
+      name: includeCount
+      schema:
+        default: true
+        example: true
+        type: boolean
+    itemsPerPage:
+      description: Number of items that the response returns per page.
+      in: query
+      name: itemsPerPage
+      schema:
+        default: 100
+        example: 100
+        maximum: 500
+        minimum: 1
+        type: integer
+    pageNum:
+      description: Number of the page that displays the current set of the total objects that the response returns.
+      in: query
+      name: pageNum
+      schema:
+        default: 1
+        example: 1
+        minimum: 1
+        type: integer
     pretty:
       description: Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
       in: query
@@ -6251,6 +6322,78 @@ components:
           type: array
           uniqueItems: true
       readOnly: true
+      type: object
+    PaginatedAdvancedClusterDescriptionView:
+      properties:
+        links:
+          description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+          externalDocs:
+            description: Web Linking Specification (RFC 5988)
+            url: https://datatracker.ietf.org/doc/html/rfc5988
+          items:
+            $ref: '#/components/schemas/Link'
+          readOnly: true
+          type: array
+        results:
+          description: List of returned documents that MongoDB Cloud provides when completing this request.
+          items:
+            $ref: '#/components/schemas/AdvancedClusterDescription'
+          readOnly: true
+          type: array
+        totalCount:
+          description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`.
+          format: int32
+          minimum: 0
+          readOnly: true
+          type: integer
+      type: object
+    PaginatedClusterDescription20240805:
+      properties:
+        links:
+          description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+          externalDocs:
+            description: Web Linking Specification (RFC 5988)
+            url: https://datatracker.ietf.org/doc/html/rfc5988
+          items:
+            $ref: '#/components/schemas/Link'
+          readOnly: true
+          type: array
+        results:
+          description: List of returned documents that MongoDB Cloud provides when completing this request.
+          items:
+            $ref: '#/components/schemas/ClusterDescription20240805'
+          readOnly: true
+          type: array
+        totalCount:
+          description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`.
+          format: int32
+          minimum: 0
+          readOnly: true
+          type: integer
+      type: object
+    PaginatedLegacyClusterView:
+      properties:
+        links:
+          description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+          externalDocs:
+            description: Web Linking Specification (RFC 5988)
+            url: https://datatracker.ietf.org/doc/html/rfc5988
+          items:
+            $ref: '#/components/schemas/Link'
+          readOnly: true
+          type: array
+        results:
+          description: List of returned documents that MongoDB Cloud provides when completing this request.
+          items:
+            $ref: '#/components/schemas/LegacyAtlasCluster'
+          readOnly: true
+          type: array
+        totalCount:
+          description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`.
+          format: int32
+          minimum: 0
+          readOnly: true
+          type: integer
       type: object
     PeriodicCpsSnapshotSource:
       allOf:

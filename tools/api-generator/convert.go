@@ -38,6 +38,9 @@ func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert operation to command: %w", err)
 			}
+			if command == nil {
+				continue
+			}
 
 			if len(operation.Tags) != 1 {
 				return nil, fmt.Errorf("expect every operation to have exactly 1 tag, got: %v", len(operation.Tags))
@@ -75,7 +78,40 @@ func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 	return sortedGroups, nil
 }
 
+func extractExtensionsFromOperation(operation *openapi3.Operation) (bool, string, []string) {
+	skip := false
+	operationID := operation.OperationID
+	var aliases []string
+
+	if extensions, okExtensions := operation.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if extSkip, okSkip := extensions["skip"].(bool); okSkip && extSkip {
+			skip = extSkip
+		}
+
+		if extAliases, okExtAliases := extensions["command-aliases"].([]any); okExtAliases && extAliases != nil {
+			for _, alias := range extAliases {
+				if sAlias, ok := alias.(string); ok && sAlias != "" {
+					aliases = append(aliases, sAlias)
+				}
+			}
+		}
+
+		if overrides := extractOverrides(operation.Extensions); overrides != nil {
+			if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
+				operationID = overriddenOperationID
+			}
+		}
+	}
+
+	return skip, operationID, aliases
+}
+
 func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.Command, error) {
+	skip, operationID, aliases := extractExtensionsFromOperation(operation)
+	if skip {
+		return nil, nil
+	}
+
 	httpVerb, err := api.ToHTTPVerb(verb)
 	if err != nil {
 		return nil, err
@@ -94,24 +130,6 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 	description, err := buildDescription(operation)
 	if err != nil {
 		return nil, fmt.Errorf("failed to clean description: %w", err)
-	}
-
-	operationID := operation.OperationID
-	if overrides := extractOverrides(operation.Extensions); overrides != nil {
-		if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
-			operationID = overriddenOperationID
-		}
-	}
-
-	var aliases []string
-	if extensions, okExtensions := operation.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
-		if extAliases, okExtAliases := extensions["command-aliases"].([]any); okExtAliases && extAliases != nil {
-			for _, alias := range extAliases {
-				if sAlias, ok := alias.(string); ok && sAlias != "" {
-					aliases = append(aliases, sAlias)
-				}
-			}
-		}
 	}
 
 	command := api.Command{

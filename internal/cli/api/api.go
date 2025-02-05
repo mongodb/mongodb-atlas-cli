@@ -100,9 +100,10 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	}
 
 	cmd := &cobra.Command{
-		Use:   commandName,
-		Short: shortDescription,
-		Long:  longDescription,
+		Use:     commandName,
+		Aliases: command.Aliases,
+		Short:   shortDescription,
+		Long:    longDescription,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			// Go through all commands that have not been touched/modified by the user and try to populate them from the users profile
 			// Common usecases:
@@ -225,16 +226,8 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 
 func addParameters(cmd *cobra.Command, parameters []api.Parameter) error {
 	for _, parameter := range parameters {
-		if cmd.Flag(parameter.Name) != nil {
-			// this should never happen, the api command generation tool should cover this
-			return fmt.Errorf("there is already a parameter with that name, name='%s'", parameter.Name)
-		}
-
-		parameterFlag := parameterToPFlag(parameter)
-		cmd.Flags().AddFlag(parameterFlag)
-
-		if parameter.Required {
-			_ = cmd.MarkFlagRequired(parameterFlag.Name)
+		if err := addFlag(cmd, parameter); err != nil {
+			return err
 		}
 	}
 

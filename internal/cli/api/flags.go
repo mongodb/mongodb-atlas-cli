@@ -15,61 +15,60 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
-	"github.com/spf13/pflag"
+	"github.com/spf13/cobra"
 )
 
-func parameterToPFlag(parameter api.Parameter) *pflag.Flag {
+var (
+	errUnsupportedType   = errors.New("unsupported parameter type")
+	errFlagAlreadyExists = errors.New("parameter already exists")
+)
+
+func addFlag(cmd *cobra.Command, parameter api.Parameter) error {
 	name := parameter.Name
+
+	if cmd.Flag(name) != nil {
+		// this should never happen, the api command generation tool should cover this
+		return fmt.Errorf("%w: %s", errFlagAlreadyExists, name)
+	}
+
 	shortDescription := flagDescription(parameter.Description)
 
 	if parameter.Type.IsArray {
 		switch parameter.Type.Type {
 		case api.TypeString:
-			return createFlag(func(f *pflag.FlagSet) {
-				f.StringArray(name, make([]string, 0), shortDescription)
-			})
+			cmd.Flags().StringArrayP(name, parameter.Short, nil, shortDescription)
 		case api.TypeInt:
-			return createFlag(func(f *pflag.FlagSet) {
-				f.Int32Slice(name, make([]int32, 0), shortDescription)
-			})
+			cmd.Flags().Int32SliceP(name, parameter.Short, nil, shortDescription)
 		case api.TypeBool:
-			return createFlag(func(f *pflag.FlagSet) {
-				f.BoolSlice(name, make([]bool, 0), shortDescription)
-			})
+			cmd.Flags().BoolSliceP(name, parameter.Short, nil, shortDescription)
+		default:
+			return fmt.Errorf("%w: %s", errUnsupportedType, parameter.Type.Type)
 		}
 	} else {
 		switch parameter.Type.Type {
 		case api.TypeString:
-			return createFlag(func(f *pflag.FlagSet) {
-				f.String(name, "", shortDescription)
-			})
+			cmd.Flags().StringP(name, parameter.Short, "", shortDescription)
 		case api.TypeInt:
-			return createFlag(func(f *pflag.FlagSet) {
-				f.Int(name, 0, shortDescription)
-			})
+			cmd.Flags().IntP(name, parameter.Short, 0, shortDescription)
 		case api.TypeBool:
-			return createFlag(func(f *pflag.FlagSet) {
-				f.Bool(name, false, shortDescription)
-			})
+			cmd.Flags().BoolP(name, parameter.Short, false, shortDescription)
+		default:
+			return fmt.Errorf("%w: %s", errUnsupportedType, parameter.Type.Type)
 		}
 	}
 
-	// should never happen, can only happen if someone adds a new api.ParameterConcreteType
-	panic(fmt.Sprintf("unsupported parameter type: %s", parameter.Type.Type))
-}
+	if parameter.Required {
+		if err := cmd.MarkFlagRequired(name); err != nil {
+			return err
+		}
+	}
 
-func createFlag(factory func(f *pflag.FlagSet)) *pflag.Flag {
-	flagSet := pflag.NewFlagSet("temp", pflag.ContinueOnError)
-	factory(flagSet)
-	var output *pflag.Flag
-	flagSet.VisitAll(func(f *pflag.Flag) {
-		output = f
-	})
-	return output
+	return nil
 }
 
 func flagDescription(description string) string {

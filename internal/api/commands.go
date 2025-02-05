@@ -80,7 +80,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `toggleAwsCustomDns`,
@@ -139,7 +138,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -264,7 +262,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAccessLogsByHostname`,
@@ -383,7 +380,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -451,7 +447,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteAlertConfiguration`,
@@ -523,7 +518,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getAlertConfiguration`,
@@ -595,7 +589,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAlertConfigurationMatchersFieldNames`,
@@ -640,7 +633,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAlertConfigurations`,
@@ -732,7 +724,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAlertConfigurationsByAlertId`,
@@ -834,7 +825,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `toggleAlertConfiguration`,
@@ -909,7 +899,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateAlertConfiguration`,
@@ -984,7 +973,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -1069,7 +1057,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getAlert`,
@@ -1141,7 +1128,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAlerts`,
@@ -1243,7 +1229,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAlertsByAlertConfigurationId`,
@@ -1345,7 +1330,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -1427,7 +1411,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createAtlasSearchIndex`,
@@ -1496,7 +1479,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createAtlasSearchIndexDeprecated`,
@@ -1565,7 +1547,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteAtlasSearchDeployment`,
@@ -1641,7 +1622,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteAtlasSearchIndex`,
@@ -1720,7 +1700,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteAtlasSearchIndexByName`,
@@ -1819,7 +1798,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteAtlasSearchIndexDeprecated`,
@@ -1898,7 +1876,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getAtlasSearchDeployment`,
@@ -1974,7 +1951,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getAtlasSearchIndex`,
@@ -2053,7 +2029,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getAtlasSearchIndexByName`,
@@ -2152,7 +2127,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getAtlasSearchIndexDeprecated`,
@@ -2231,7 +2205,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAtlasSearchIndexes`,
@@ -2320,7 +2293,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAtlasSearchIndexesCluster`,
@@ -2389,7 +2361,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAtlasSearchIndexesDeprecated`,
@@ -2478,7 +2449,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateAtlasSearchDeployment`,
@@ -2554,7 +2524,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateAtlasSearchIndex`,
@@ -2633,7 +2602,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateAtlasSearchIndexByName`,
@@ -2732,7 +2700,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateAtlasSearchIndexDeprecated`,
@@ -2811,7 +2778,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -2876,7 +2842,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateAuditingConfiguration`,
@@ -2935,7 +2900,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -3020,7 +2984,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createBackupExportJob`,
@@ -3079,7 +3042,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createBackupRestoreJob`,
@@ -3151,7 +3113,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createExportBucket`,
@@ -3217,7 +3178,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createServerlessBackupRestoreJob`,
@@ -3286,7 +3246,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteAllBackupSchedules`,
@@ -3352,7 +3311,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteExportBucket`,
@@ -3411,7 +3369,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteReplicaSetBackup`,
@@ -3490,7 +3447,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteShardedClusterBackup`,
@@ -3569,7 +3525,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `disableDataProtectionSettings`,
@@ -3628,7 +3583,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getBackupExportJob`,
@@ -3697,7 +3651,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getBackupRestoreJob`,
@@ -3776,7 +3729,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getBackupSchedule`,
@@ -3852,7 +3804,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getDataProtectionSettings`,
@@ -3918,7 +3869,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getExportBucket`,
@@ -3984,7 +3934,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getReplicaSetBackup`,
@@ -4063,7 +4012,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getServerlessBackup`,
@@ -4132,7 +4080,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getServerlessBackupRestoreJob`,
@@ -4211,7 +4158,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getShardedClusterBackup`,
@@ -4290,7 +4236,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listBackupExportJobs`,
@@ -4389,7 +4334,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listBackupRestoreJobs`,
@@ -4488,7 +4432,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listExportBuckets`,
@@ -4584,7 +4527,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listReplicaSetBackups`,
@@ -4683,7 +4625,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listServerlessBackupRestoreJobs`,
@@ -4782,7 +4723,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listServerlessBackups`,
@@ -4881,7 +4821,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listShardedClusterBackups`,
@@ -4950,7 +4889,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `takeSnapshot`,
@@ -5022,7 +4960,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateBackupSchedule`,
@@ -5098,7 +5035,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateDataProtectionSettings`,
@@ -5174,7 +5110,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateSnapshotRetention`,
@@ -5253,7 +5188,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -5315,7 +5249,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createPushMigration`,
@@ -5390,7 +5323,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `cutoverMigration`,
@@ -5459,7 +5391,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteLinkToken`,
@@ -5505,7 +5436,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPushMigration`,
@@ -5574,7 +5504,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getValidationStatus`,
@@ -5633,7 +5562,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listSourceProjects`,
@@ -5689,7 +5617,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `validateMigration`,
@@ -5755,7 +5682,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -5830,7 +5756,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createCloudProviderAccessRole`,
@@ -5889,7 +5814,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deauthorizeCloudProviderAccessRole`,
@@ -5968,7 +5892,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getCloudProviderAccessRole`,
@@ -6037,7 +5960,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listCloudProviderAccessRoles`,
@@ -6096,7 +6018,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -6171,7 +6092,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getOutageSimulation`,
@@ -6240,7 +6160,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `startOutageSimulation`,
@@ -6309,7 +6228,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -6395,7 +6313,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteCluster`,
@@ -6481,7 +6398,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getCluster`,
@@ -6564,7 +6480,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getClusterAdvancedConfiguration`,
@@ -6640,7 +6555,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getClusterStatus`,
@@ -6709,7 +6623,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getSampleDatasetLoadStatus`,
@@ -6768,7 +6681,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `grantMongoDbEmployeeAccess`,
@@ -6837,7 +6749,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listCloudProviderRegions`,
@@ -6946,7 +6857,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listClusters`,
@@ -7059,7 +6969,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listClustersForAllProjects`,
@@ -7134,7 +7043,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `loadSampleDataset`,
@@ -7193,7 +7101,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `pinFeatureCompatibilityVersion`,
@@ -7262,7 +7169,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `revokeMongoDbEmployeeAccess`,
@@ -7331,7 +7237,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `testFailover`,
@@ -7407,7 +7312,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `unpinFeatureCompatibilityVersion`,
@@ -7476,7 +7380,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateCluster`,
@@ -7566,7 +7469,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateClusterAdvancedConfiguration`,
@@ -7642,7 +7544,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `upgradeSharedCluster`,
@@ -7701,7 +7602,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `upgradeSharedClusterToServerless`,
@@ -7760,7 +7660,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -7895,7 +7794,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getCollStatsLatencyNamespaceHostMeasurements`,
@@ -8014,7 +7912,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getCollStatsLatencyNamespaceMetrics`,
@@ -8063,7 +7960,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getCollStatsLatencyNamespacesForCluster`,
@@ -8162,7 +8058,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getCollStatsLatencyNamespacesForHost`,
@@ -8251,7 +8146,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPinnedNamespaces`,
@@ -8310,7 +8204,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `pinNamespacesPatch`,
@@ -8370,7 +8263,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `pinNamespacesPut`,
@@ -8430,7 +8322,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `unpinNamespaces`,
@@ -8489,7 +8380,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -8554,7 +8444,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteCustomDatabaseRole`,
@@ -8623,7 +8512,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getCustomDatabaseRole`,
@@ -8692,7 +8580,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listCustomDatabaseRoles`,
@@ -8751,7 +8638,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateCustomDatabaseRole`,
@@ -8820,7 +8706,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -8912,7 +8797,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createFederatedDatabase`,
@@ -8981,7 +8865,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createOneDataFederationQueryLimit`,
@@ -9058,7 +8941,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteDataFederationPrivateEndpoint`,
@@ -9127,7 +9009,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteFederatedDatabase`,
@@ -9196,7 +9077,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteOneDataFederationInstanceQueryLimit`,
@@ -9273,7 +9153,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `downloadFederatedDatabaseQueryLogs`,
@@ -9342,7 +9221,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getDataFederationPrivateEndpoint`,
@@ -9411,7 +9289,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getFederatedDatabase`,
@@ -9470,7 +9347,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listDataFederationPrivateEndpoints`,
@@ -9559,7 +9435,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listFederatedDatabases`,
@@ -9628,7 +9503,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `returnFederatedDatabaseQueryLimit`,
@@ -9715,7 +9589,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `returnFederatedDatabaseQueryLimits`,
@@ -9784,7 +9657,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateFederatedDatabase`,
@@ -9863,7 +9735,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -9918,7 +9789,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deletePipeline`,
@@ -9977,7 +9847,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deletePipelineRunDataset`,
@@ -10056,7 +9925,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPipeline`,
@@ -10125,7 +9993,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPipelineRun`,
@@ -10204,7 +10071,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPipelineRuns`,
@@ -10313,7 +10179,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPipelineSchedules`,
@@ -10382,7 +10247,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPipelineSnapshots`,
@@ -10491,7 +10355,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPipelines`,
@@ -10540,7 +10403,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `pausePipeline`,
@@ -10609,7 +10471,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `resumePipeline`,
@@ -10678,7 +10539,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `triggerSnapshotIngestion`,
@@ -10747,7 +10607,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updatePipeline`,
@@ -10806,7 +10665,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -10871,7 +10729,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteDatabaseUser`,
@@ -10963,7 +10820,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getDatabaseUser`,
@@ -11055,7 +10911,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listDatabaseUsers`,
@@ -11144,7 +10999,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateDatabaseUser`,
@@ -11236,7 +11090,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -11311,7 +11164,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getEncryptionAtRest`,
@@ -11373,7 +11225,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getEncryptionAtRestPrivateEndpoint`,
@@ -11452,7 +11303,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getEncryptionAtRestPrivateEndpointsForCloudProvider`,
@@ -11551,7 +11401,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `requestEncryptionAtRestPrivateEndpointDeletion`,
@@ -11630,7 +11479,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateEncryptionAtRest`,
@@ -11692,7 +11540,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -11777,7 +11624,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectEvent`,
@@ -11859,7 +11705,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listEventTypes`,
@@ -11934,7 +11779,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listOrganizationEvents`,
@@ -12066,7 +11910,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjectEvents`,
@@ -12224,7 +12067,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -12279,7 +12121,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createRoleMapping`,
@@ -12335,7 +12176,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteFederationApp`,
@@ -12370,7 +12210,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteIdentityProvider`,
@@ -12429,7 +12268,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteRoleMapping`,
@@ -12495,7 +12333,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getConnectedOrgConfig`,
@@ -12551,7 +12388,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getFederationSettings`,
@@ -12607,7 +12443,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getIdentityProvider`,
@@ -12670,7 +12505,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getIdentityProviderMetadata`,
@@ -12715,7 +12549,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getRoleMapping`,
@@ -12781,7 +12614,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listConnectedOrgConfigs`,
@@ -12847,7 +12679,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listIdentityProviders`,
@@ -12933,7 +12764,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listRoleMappings`,
@@ -12989,7 +12819,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `removeConnectedOrgConfig`,
@@ -13045,7 +12874,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `revokeJwksFromIdentityProvider`,
@@ -13104,7 +12932,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateConnectedOrgConfig`,
@@ -13172,7 +12999,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateIdentityProvider`,
@@ -13238,7 +13064,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateRoleMapping`,
@@ -13304,7 +13129,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -13369,7 +13193,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteFlexCluster`,
@@ -13438,7 +13261,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getFlexCluster`,
@@ -13507,7 +13329,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listFlexClusters`,
@@ -13596,7 +13417,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateFlexCluster`,
@@ -13665,7 +13485,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `upgradeFlexCluster`,
@@ -13724,7 +13543,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -13799,7 +13617,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getFlexBackupRestoreJob`,
@@ -13878,7 +13695,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listFlexBackupRestoreJobs`,
@@ -13977,7 +13793,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -14052,7 +13867,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getFlexBackup`,
@@ -14121,7 +13935,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listFlexBackups`,
@@ -14220,7 +14033,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -14310,7 +14122,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createManagedNamespace`,
@@ -14393,7 +14204,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteAllCustomZoneMappings`,
@@ -14476,7 +14286,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteManagedNamespace`,
@@ -14579,7 +14388,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getManagedNamespace`,
@@ -14662,7 +14470,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -14714,7 +14521,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `downloadInvoiceCsv`,
@@ -14781,7 +14587,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getCostExplorerQueryProcess`,
@@ -14838,7 +14643,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getInvoice`,
@@ -14906,7 +14710,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listInvoices`,
@@ -15053,7 +14856,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPendingInvoices`,
@@ -15109,7 +14911,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `queryLineItemsFromSingleInvoice`,
@@ -15185,7 +14986,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -15250,7 +15050,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getLdapConfiguration`,
@@ -15309,7 +15108,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getLdapConfigurationStatus`,
@@ -15378,7 +15176,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `saveLdapConfiguration`,
@@ -15440,7 +15237,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `verifyLdapConfiguration`,
@@ -15499,7 +15295,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -15574,7 +15369,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteLegacySnapshot`,
@@ -15653,7 +15447,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getLegacyBackupCheckpoint`,
@@ -15732,7 +15525,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getLegacyBackupRestoreJob`,
@@ -15814,7 +15606,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getLegacySnapshot`,
@@ -15893,7 +15684,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getLegacySnapshotSchedule`,
@@ -15965,7 +15755,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listLegacyBackupCheckpoints`,
@@ -16064,7 +15853,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listLegacyBackupRestoreJobs`,
@@ -16176,7 +15964,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listLegacySnapshots`,
@@ -16285,7 +16072,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateLegacySnapshotRetention`,
@@ -16364,7 +16150,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateLegacySnapshotSchedule`,
@@ -16436,7 +16221,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -16491,7 +16275,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getMaintenanceWindow`,
@@ -16550,7 +16333,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `resetMaintenanceWindow`,
@@ -16599,7 +16381,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `toggleMaintenanceAutoDefer`,
@@ -16648,7 +16429,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateMaintenanceWindow`,
@@ -16697,7 +16477,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -16775,7 +16554,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `addProjectRole`,
@@ -16847,7 +16625,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `addProjectUser`,
@@ -16916,7 +16693,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `addUserToTeam`,
@@ -16985,7 +16761,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createOrganizationUser`,
@@ -17044,7 +16819,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createUser`,
@@ -17095,7 +16869,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getOrganizationUser`,
@@ -17167,7 +16940,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectUser`,
@@ -17242,7 +17014,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getUser`,
@@ -17298,7 +17069,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getUserByUsername`,
@@ -17354,7 +17124,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `removeOrganizationRole`,
@@ -17426,7 +17195,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `removeProjectRole`,
@@ -17498,7 +17266,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `removeUserFromTeam`,
@@ -17567,7 +17334,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateOrganizationUser`,
@@ -17639,7 +17405,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -17714,7 +17479,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getDatabase`,
@@ -17793,7 +17557,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getDatabaseMeasurements`,
@@ -17922,7 +17685,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getDiskMeasurements`,
@@ -18068,7 +17830,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getHostLogs`,
@@ -18164,7 +17925,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getHostMeasurements`,
@@ -18303,7 +18063,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getIndexMetrics`,
@@ -18442,7 +18201,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getMeasurements`,
@@ -18551,7 +18309,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listAtlasProcesses`,
@@ -18640,7 +18397,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listDatabases`,
@@ -18739,7 +18495,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listDiskMeasurements`,
@@ -18808,7 +18563,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listDiskPartitions`,
@@ -18907,7 +18661,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listIndexMetrics`,
@@ -19036,7 +18789,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listMetricTypes`,
@@ -19095,7 +18847,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -19161,7 +18912,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createPeeringContainer`,
@@ -19220,7 +18970,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deletePeeringConnection`,
@@ -19289,7 +19038,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deletePeeringContainer`,
@@ -19358,7 +19106,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `disablePeering`,
@@ -19417,7 +19164,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPeeringConnection`,
@@ -19486,7 +19232,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPeeringContainer`,
@@ -19555,7 +19300,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPeeringConnections`,
@@ -19654,7 +19398,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPeeringContainerByCloudProvider`,
@@ -19753,7 +19496,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPeeringContainers`,
@@ -19842,7 +19584,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updatePeeringConnection`,
@@ -19911,7 +19652,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updatePeeringContainer`,
@@ -19980,7 +19720,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `verifyConnectViaPeeringOnlyModeForOneProject`,
@@ -20039,7 +19778,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -20114,7 +19852,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteOnlineArchive`,
@@ -20193,7 +19930,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `downloadOnlineArchiveQueryLogs`,
@@ -20282,7 +20018,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getOnlineArchive`,
@@ -20361,7 +20096,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listOnlineArchives`,
@@ -20460,7 +20194,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateOnlineArchive`,
@@ -20539,7 +20272,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -20621,7 +20353,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getOpenApiInfo`,
@@ -20663,7 +20394,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -20714,7 +20444,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createOrganizationInvitation`,
@@ -20770,7 +20499,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteOrganization`,
@@ -20824,7 +20552,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteOrganizationInvitation`,
@@ -20890,7 +20617,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getOrganization`,
@@ -20946,7 +20672,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getOrganizationInvitation`,
@@ -21002,7 +20727,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getOrganizationSettings`,
@@ -21058,7 +20782,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listOrganizationInvitations`,
@@ -21124,7 +20847,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listOrganizationProjects`,
@@ -21237,7 +20959,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listOrganizationUsers`,
@@ -21330,7 +21051,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listOrganizations`,
@@ -21415,7 +21135,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `removeOrganizationUser`,
@@ -21488,7 +21207,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateOrganization`,
@@ -21544,7 +21262,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateOrganizationInvitation`,
@@ -21600,7 +21317,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateOrganizationInvitationById`,
@@ -21666,7 +21382,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateOrganizationRoles`,
@@ -21732,7 +21447,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateOrganizationSettings`,
@@ -21788,7 +21502,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -21853,7 +21566,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `enableSlowOperationThresholding`,
@@ -21912,7 +21624,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getManagedSlowMs`,
@@ -21971,7 +21682,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getServerlessAutoIndexing`,
@@ -22040,7 +21750,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listClusterSuggestedIndexes`,
@@ -22143,7 +21852,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listDropIndexes`,
@@ -22191,7 +21899,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listSchemaAdvice`,
@@ -22239,7 +21946,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listSlowQueries`,
@@ -22362,7 +22068,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listSlowQueryNamespaces`,
@@ -22465,7 +22170,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listSuggestedIndexes`,
@@ -22628,7 +22332,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `setServerlessAutoIndexing`,
@@ -22697,7 +22400,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -22782,7 +22484,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createPrivateEndpointService`,
@@ -22841,7 +22542,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deletePrivateEndpoint`,
@@ -22930,7 +22630,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deletePrivateEndpointService`,
@@ -23009,7 +22708,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPrivateEndpoint`,
@@ -23098,7 +22796,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPrivateEndpointService`,
@@ -23177,7 +22874,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getRegionalizedPrivateEndpointSetting`,
@@ -23236,7 +22932,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPrivateEndpointServices`,
@@ -23305,7 +23000,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `toggleRegionalizedPrivateEndpointSetting`,
@@ -23364,7 +23058,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -23439,7 +23132,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createApiKey`,
@@ -23495,7 +23187,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createApiKeyAccessList`,
@@ -23591,7 +23282,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createProjectApiKey`,
@@ -23650,7 +23340,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteApiKey`,
@@ -23716,7 +23405,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteApiKeyAccessListEntry`,
@@ -23792,7 +23480,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getApiKey`,
@@ -23858,7 +23545,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getApiKeyAccessList`,
@@ -23934,7 +23620,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listApiKeyAccessListsEntries`,
@@ -24030,7 +23715,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listApiKeys`,
@@ -24116,7 +23800,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjectApiKeys`,
@@ -24205,7 +23888,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `removeProjectApiKey`,
@@ -24274,7 +23956,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateApiKey`,
@@ -24340,7 +24021,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateApiKeyRoles`,
@@ -24439,7 +24119,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -24534,7 +24213,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteProjectIpAccessList`,
@@ -24613,7 +24291,6 @@ which protocol (like TCP or UDP) the connection uses.`,
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectIpAccessListStatus`,
@@ -24682,7 +24359,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectIpList`,
@@ -24751,7 +24427,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjectIpAccessLists`,
@@ -24840,7 +24515,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -24906,7 +24580,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createProject`,
@@ -24961,7 +24634,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createProjectInvitation`,
@@ -25020,7 +24692,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteProject`,
@@ -25079,7 +24750,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteProjectInvitation`,
@@ -25138,7 +24808,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteProjectLimit`,
@@ -25224,7 +24893,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProject`,
@@ -25283,7 +24951,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectByName`,
@@ -25339,7 +25006,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectInvitation`,
@@ -25408,7 +25074,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectLimit`,
@@ -25494,7 +25159,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectLtsVersions`,
@@ -25603,7 +25267,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectSettings`,
@@ -25662,7 +25325,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjectInvitations`,
@@ -25731,7 +25393,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjectLimits`,
@@ -25790,7 +25451,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjectUsers`,
@@ -25909,7 +25569,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjects`,
@@ -25984,7 +25643,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `migrateProjectToAnotherOrg`,
@@ -26033,7 +25691,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `removeProjectUser`,
@@ -26109,7 +25766,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `returnAllIpAddresses`,
@@ -26168,7 +25824,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `setProjectLimit`,
@@ -26257,7 +25912,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateProject`,
@@ -26316,7 +25970,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateProjectInvitation`,
@@ -26375,7 +26028,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateProjectInvitationById`,
@@ -26434,7 +26086,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateProjectRoles`,
@@ -26503,7 +26154,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateProjectSettings`,
@@ -26562,7 +26212,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -26627,7 +26276,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deletePushBasedLogConfiguration`,
@@ -26686,7 +26334,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPushBasedLogConfiguration`,
@@ -26745,7 +26392,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updatePushBasedLogConfiguration`,
@@ -26804,7 +26450,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -26866,7 +26511,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteAtlasResourcePolicy`,
@@ -26932,7 +26576,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getAtlasResourcePolicies`,
@@ -26988,7 +26631,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getAtlasResourcePolicy`,
@@ -27054,7 +26696,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getResourcesNonCompliant`,
@@ -27110,7 +26751,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateAtlasResourcePolicy`,
@@ -27176,7 +26816,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `validateAtlasResourcePolicy`,
@@ -27232,7 +26871,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -27307,7 +26945,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -27358,7 +26995,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `returnAllControlPlaneIpAddresses`,
@@ -27393,7 +27029,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -27458,7 +27093,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteServerlessInstance`,
@@ -27527,7 +27161,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getServerlessInstance`,
@@ -27596,7 +27229,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listServerlessInstances`,
@@ -27685,7 +27317,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateServerlessInstance`,
@@ -27754,7 +27385,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -27822,7 +27452,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteServerlessPrivateEndpoint`,
@@ -27891,7 +27520,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getServerlessPrivateEndpoint`,
@@ -27960,7 +27588,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listServerlessPrivateEndpoints`,
@@ -28019,7 +27646,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateServerlessPrivateEndpoint`,
@@ -28088,7 +27714,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -28163,7 +27788,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createProjectServiceAccount`,
@@ -28222,7 +27846,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createProjectServiceAccountAccessList`,
@@ -28321,7 +27944,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createProjectServiceAccountSecret`,
@@ -28390,7 +28012,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createServiceAccount`,
@@ -28446,7 +28067,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createServiceAccountAccessList`,
@@ -28542,7 +28162,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createServiceAccountSecret`,
@@ -28608,7 +28227,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteProjectServiceAccount`,
@@ -28677,7 +28295,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteProjectServiceAccountAccessListEntry`,
@@ -28756,7 +28373,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteProjectServiceAccountSecret`,
@@ -28835,7 +28451,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteServiceAccount`,
@@ -28901,7 +28516,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteServiceAccountAccessListEntry`,
@@ -28977,7 +28591,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteServiceAccountSecret`,
@@ -29053,7 +28666,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getProjectServiceAccount`,
@@ -29122,7 +28734,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getServiceAccount`,
@@ -29188,7 +28799,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjectServiceAccountAccessList`,
@@ -29287,7 +28897,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjectServiceAccounts`,
@@ -29366,7 +28975,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listServiceAccountAccessList`,
@@ -29462,7 +29070,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listServiceAccountProjects`,
@@ -29548,7 +29155,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listServiceAccounts`,
@@ -29624,7 +29230,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateProjectServiceAccount`,
@@ -29693,7 +29298,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateServiceAccount`,
@@ -29759,7 +29363,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -29834,7 +29437,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getSharedClusterBackupRestoreJob`,
@@ -29913,7 +29515,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listSharedClusterBackupRestoreJobs`,
@@ -29982,7 +29583,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -30057,7 +29657,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getSharedClusterBackup`,
@@ -30136,7 +29735,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listSharedClusterBackups`,
@@ -30205,7 +29803,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -30270,7 +29867,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createPrivateLinkConnection`,
@@ -30329,7 +29925,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createStreamConnection`,
@@ -30398,7 +29993,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createStreamInstance`,
@@ -30457,7 +30051,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createStreamInstanceWithSampleConnections`,
@@ -30516,7 +30109,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createStreamProcessor`,
@@ -30585,7 +30177,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deletePrivateLinkConnection`,
@@ -30654,7 +30245,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteStreamConnection`,
@@ -30733,7 +30323,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteStreamInstance`,
@@ -30802,7 +30391,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteStreamProcessor`,
@@ -30881,7 +30469,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteVpcPeeringConnection`,
@@ -30940,7 +30527,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `downloadStreamTenantAuditLogs`,
@@ -31019,7 +30605,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getAccountDetails`,
@@ -31088,7 +30673,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getPrivateLinkConnection`,
@@ -31147,7 +30731,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getStreamConnection`,
@@ -31216,7 +30799,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getStreamInstance`,
@@ -31285,7 +30867,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getStreamProcessor`,
@@ -31364,7 +30945,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getVpcPeeringConnections`,
@@ -31453,7 +31033,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listPrivateLinkConnections`,
@@ -31532,7 +31111,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listStreamConnections`,
@@ -31621,7 +31199,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listStreamInstances`,
@@ -31700,7 +31277,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listStreamProcessors`,
@@ -31799,7 +31375,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `modifyStreamProcessor`,
@@ -31878,7 +31453,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `rejectVpcPeeringConnection`,
@@ -31937,7 +31511,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `startStreamProcessor`,
@@ -32016,7 +31589,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `stopStreamProcessor`,
@@ -32095,7 +31667,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateStreamConnection`,
@@ -32174,7 +31745,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateStreamInstance`,
@@ -32243,7 +31813,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -32308,7 +31877,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `addTeamUser`,
@@ -32374,7 +31942,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `createTeam`,
@@ -32430,7 +31997,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteTeam`,
@@ -32496,7 +32062,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getTeamById`,
@@ -32562,7 +32127,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getTeamByName`,
@@ -32628,7 +32192,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listOrganizationTeams`,
@@ -32714,7 +32277,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listProjectTeams`,
@@ -32803,7 +32365,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listTeamUsers`,
@@ -32896,7 +32457,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `removeProjectTeam`,
@@ -32955,7 +32515,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `removeTeamUser`,
@@ -33031,7 +32590,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `renameTeam`,
@@ -33097,7 +32655,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateTeamRoles`,
@@ -33166,7 +32723,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -33224,7 +32780,6 @@ For more information about flags, format of --file and examples, see: https://ww
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -33332,7 +32887,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `deleteThirdPartyIntegration`,
@@ -33401,7 +32955,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `getThirdPartyIntegration`,
@@ -33470,7 +33023,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listThirdPartyIntegrations`,
@@ -33559,7 +33111,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `updateThirdPartyIntegration`,
@@ -33658,7 +33209,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},
@@ -33739,7 +33289,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `disableCustomerManagedX509`,
@@ -33791,7 +33340,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 			{
 				OperationID: `listDatabaseUserCertificates`,
@@ -33890,7 +33438,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
-				Watcher: nil,
 			},
 		},
 	},

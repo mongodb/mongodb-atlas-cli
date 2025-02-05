@@ -101,6 +101,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: nil,
 			},
 			{
 				OperationID: `listClusters`,
@@ -215,6 +216,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: nil,
 			},
 		},
 	},

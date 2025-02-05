@@ -132,6 +132,17 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 		return nil, fmt.Errorf("failed to clean description: %w", err)
 	}
 
+	if overrides := extractOverrides(operation.Extensions); overrides != nil {
+		if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
+			operationID = overriddenOperationID
+		}
+	}
+
+	watcher, err := extractWatcherProperties(operation.Extensions)
+	if err != nil {
+		return nil, err
+	}
+
 	command := api.Command{
 		OperationID: operationID,
 		Aliases:     aliases,
@@ -143,6 +154,7 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 			Verb:            httpVerb,
 		},
 		Versions: versions,
+		Watcher:  watcher,
 	}
 
 	return &command, nil

@@ -34,6 +34,7 @@ type Command struct {
 	Description       string
 	RequestParameters RequestParameters
 	Versions          []Version
+	Watcher           *WatcherProperties
 }
 
 type RequestParameters struct {
@@ -89,4 +90,25 @@ func ToHTTPVerb(s string) (string, error) {
 	default:
 		return "", fmt.Errorf("invalid HTTP verb: %s", s)
 	}
+}
+
+type WatcherProperties struct {
+	Get    WatcherGetProperties
+	Expect *WatcherExpectProperties
+}
+
+type WatcherGetProperties struct {
+	OperationID string
+	Version     string
+	Params      map[string]string
+}
+
+type WatcherExpectProperties struct {
+	HTTPCode string
+	Match    *WatcherMatchProperties
+}
+
+type WatcherMatchProperties struct {
+	Path   string
+	Values []string
 }

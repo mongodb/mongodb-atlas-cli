@@ -973,6 +973,9 @@ components:
                         - GROUP_DATA_ACCESS_READ_ONLY
                         - GROUP_READ_ONLY
                         - GROUP_SEARCH_INDEX_EDITOR
+                        - GROUP_BACKUP_MANAGER
+                        - GROUP_OBSERVABILITY_VIEWER
+                        - GROUP_DATABASE_ACCESS_ADMIN
                     type: string
             required:
                 - groupRole
@@ -1507,7 +1510,10 @@ components:
             description: Alert settings allows to select which conditions trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -1554,7 +1560,10 @@ components:
                         $ref: '#/components/schemas/AlertsNotificationBase'
                     type: array
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -2685,7 +2694,10 @@ components:
         ApiSearchDeploymentRequestView:
             properties:
                 specs:
-                    description: List of settings that configure the Search Nodes for your cluster.
+                    description: |-
+                        List of settings that configure the Search Nodes for your cluster.
+
+                        **NOTE**: We accept a single configuration for all nodes currently.
                     items:
                         $ref: '#/components/schemas/ApiSearchDeploymentSpecView'
                     maxItems: 1
@@ -2713,7 +2725,7 @@ components:
                     readOnly: true
                     type: string
                 specs:
-                    description: List of settings that configure the Search Nodes for your cluster.
+                    description: List of settings that configure the Search Nodes for your cluster. The configuration will be returned for each region and shard.
                     items:
                         $ref: '#/components/schemas/ApiSearchDeploymentSpecView'
                     readOnly: true
@@ -2752,6 +2764,11 @@ components:
                         - S130_LOWCPU_NVME
                         - S135_LOWCPU_NVME
                         - S140_LOWCPU_NVME
+                        - S40_STORAGE_NVME
+                        - S50_STORAGE_NVME
+                        - S60_STORAGE_NVME
+                        - S80_STORAGE_NVME
+                        - S90_STORAGE_NVME
                     type: string
                 nodeCount:
                     description: Number of Search Nodes in the cluster.
@@ -3009,7 +3026,10 @@ components:
             description: App Services metric alert configuration allows to select which app service conditions and events trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -3055,7 +3075,10 @@ components:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -3282,7 +3305,10 @@ components:
             description: App Services metric alert configuration allows to select which app service metrics trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -3330,7 +3356,10 @@ components:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -6626,7 +6655,10 @@ components:
             description: Billing threshold alert configuration allows to select thresholds for bills and invoices which trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -6674,7 +6706,10 @@ components:
                 threshold:
                     $ref: '#/components/schemas/GreaterThanRawThreshold'
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -8147,7 +8182,10 @@ components:
             description: Cluster alert configuration allows to select which conditions of mongod cluster which trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -8193,7 +8231,10 @@ components:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -9782,7 +9823,10 @@ components:
             description: Cps Backup threshold alert configuration allows to select thresholds for conditions of CPS backup or oplogs anomalies which trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -9830,7 +9874,10 @@ components:
                 threshold:
                     $ref: '#/components/schemas/GreaterThanTimeThreshold'
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -9912,6 +9959,8 @@ components:
                             - GROUP_CLUSTER_MANAGER
                             - GROUP_SEARCH_INDEX_EDITOR
                             - GROUP_STREAM_PROCESSING_OWNER
+                            - GROUP_BACKUP_MANAGER
+                            - GROUP_OBSERVABILITY_VIEWER
                         type: string
                     minItems: 1
                     type: array
@@ -12020,10 +12069,7 @@ components:
                     nullable: true
                     type: string
                 region:
-                    description: |-
-                        Two-letter code that indicates which regional URL MongoDB uses to access the Datadog API.
-
-                        To learn more about Datadog's regions, see <a href="https://docs.datadoghq.com/getting_started/site/" target="_blank" rel="noopener noreferrer">Datadog Sites</a>.
+                    description: Two-letter code that indicates which regional URL MongoDB uses to access the Datadog API.
                     enum:
                         - US
                         - EU
@@ -12031,6 +12077,9 @@ components:
                         - US5
                         - AP1
                         - US1_FED
+                    externalDocs:
+                        description: Datadog regions
+                        url: https://docs.datadoghq.com/getting_started/site/
                     type: string
                 sendCollectionLatencyMetrics:
                     default: false
@@ -12065,10 +12114,7 @@ components:
                     type: string
                 datadogRegion:
                     default: US
-                    description: |-
-                        Datadog region that indicates which API Uniform Resource Locator (URL) to use. The resource requires this parameter when `"notifications.[n].typeName" : "DATADOG"`.
-
-                        To learn more about Datadog's regions, see <a href="https://docs.datadoghq.com/getting_started/site/" target="_blank" rel="noopener noreferrer">Datadog Sites</a>.
+                    description: 'Datadog region that indicates which API Uniform Resource Locator (URL) to use. The resource requires this parameter when `"notifications.[n].typeName" : "DATADOG"`.'
                     enum:
                         - US
                         - EU
@@ -12076,6 +12122,9 @@ components:
                         - US5
                         - AP1
                         - US1_FED
+                    externalDocs:
+                        description: Datadog regions
+                        url: https://docs.datadoghq.com/getting_started/site/
                     type: string
                 delayMin:
                     description: Number of minutes that MongoDB Cloud waits after detecting an alert condition before it sends out the first notification.
@@ -12193,7 +12242,10 @@ components:
             description: Other alerts which don't have extra details beside of basic one.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -12340,7 +12392,10 @@ components:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -12470,6 +12525,10 @@ components:
                         - enum:
                             - OUTSIDE_SERVERLESS_METRIC_THRESHOLD
                           title: Serverless Event Types
+                          type: string
+                        - enum:
+                            - OUTSIDE_FLEX_METRIC_THRESHOLD
+                          title: Flex Metric Event Types
                           type: string
                         - enum:
                             - JOINED_GROUP
@@ -12841,6 +12900,11 @@ components:
                             - INSIDE_SERVERLESS_METRIC_THRESHOLD
                             - OUTSIDE_SERVERLESS_METRIC_THRESHOLD
                           title: Serverless Event Types
+                          type: string
+                        - enum:
+                            - INSIDE_FLEX_METRIC_THRESHOLD
+                            - OUTSIDE_FLEX_METRIC_THRESHOLD
+                          title: Flex Metric Event Types
                           type: string
                         - enum:
                             - SETUP_SERVERLESS_INITIATED
@@ -14585,7 +14649,10 @@ components:
             description: Encryption key alert configuration allows to select thresholds  which trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -14633,7 +14700,10 @@ components:
                 threshold:
                     $ref: '#/components/schemas/GreaterThanDaysThresholdView'
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -14974,6 +15044,10 @@ components:
                     - SSH_KEY_NDS_HOST_ACCESS_ATTEMPT
                     - SSH_KEY_NDS_HOST_ACCESS_GRANTED
                     - HOST_SSH_SESSION_ENDED
+                    - HOST_X509_CERTIFICATE_CERTIFICATE_GENERATED_FOR_SUPPORT_ACCESS
+                    - PUSH_BASED_LOG_EXPORT_RESUMED
+                    - PUSH_BASED_LOG_EXPORT_STOPPED
+                    - PUSH_BASED_LOG_EXPORT_DROPPED_LOG
                   title: Host Event Types
                   type: string
                 - enum:
@@ -15200,6 +15274,11 @@ components:
                     - SSL_CERTIFICATE_ISSUED
                     - PROJECT_SCHEDULED_MAINTENANCE_OUTSIDE_OF_PROTECTED_HOURS
                     - CLUSTER_CANCELING_SHARD_DRAIN_REQUESTED
+                    - CLUSTER_MIGRATE_BACK_TO_AWS_MANAGED_IP_REQUESTED
+                    - CLUSTER_IP_MIGRATED_FIRST_ROUND
+                    - CLUSTER_IP_MIGRATED_SECOND_ROUND
+                    - CLUSTER_IP_MIGRATED_FINAL_ROUND
+                    - CLUSTER_IP_ROLLED_BACK
                   title: NDS Audit Types
                   type: string
                 - enum:
@@ -15343,6 +15422,11 @@ components:
                     - INSIDE_SERVERLESS_METRIC_THRESHOLD
                     - OUTSIDE_SERVERLESS_METRIC_THRESHOLD
                   title: Serverless Event Types
+                  type: string
+                - enum:
+                    - INSIDE_FLEX_METRIC_THRESHOLD
+                    - OUTSIDE_FLEX_METRIC_THRESHOLD
+                  title: Flex Metric Event Types
                   type: string
                 - enum:
                     - SETUP_SERVERLESS_INITIATED
@@ -17125,6 +17209,85 @@ components:
                     type: boolean
             title: Flex Cluster Description Update
             type: object
+        FlexClusterMetricThreshold:
+            description: Threshold for the metric that, when exceeded, triggers an alert. The metric threshold pertains to event types which reflects changes of measurements and metrics about the serverless database.
+            discriminator:
+                mapping:
+                    FLEX_AVG_COMMAND_EXECUTION_TIME: '#/components/schemas/TimeMetricThresholdView'
+                    FLEX_AVG_READ_EXECUTION_TIME: '#/components/schemas/TimeMetricThresholdView'
+                    FLEX_AVG_WRITE_EXECUTION_TIME: '#/components/schemas/TimeMetricThresholdView'
+                    FLEX_CONNECTIONS: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_CONNECTIONS_PERCENT: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_DATA_SIZE_TOTAL: '#/components/schemas/DataMetricThresholdView'
+                    FLEX_NETWORK_BYTES_IN: '#/components/schemas/DataMetricThresholdView'
+                    FLEX_NETWORK_BYTES_OUT: '#/components/schemas/DataMetricThresholdView'
+                    FLEX_NETWORK_NUM_REQUESTS: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_OPCOUNTER_CMD: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_OPCOUNTER_DELETE: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_OPCOUNTER_GETMORE: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_OPCOUNTER_INSERT: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_OPCOUNTER_QUERY: '#/components/schemas/RawMetricThresholdView'
+                    FLEX_OPCOUNTER_UPDATE: '#/components/schemas/RawMetricThresholdView'
+                propertyName: metricName
+            properties:
+                metricName:
+                    description: Human-readable label that identifies the metric against which MongoDB Cloud checks the configured **metricThreshold.threshold**.
+                    type: string
+                mode:
+                    description: MongoDB Cloud computes the current metric value as an average.
+                    enum:
+                        - AVERAGE
+                    type: string
+                operator:
+                    description: Comparison operator to apply when checking the current metric value.
+                    enum:
+                        - LESS_THAN
+                        - GREATER_THAN
+                    type: string
+                threshold:
+                    description: Value of metric that, when exceeded, triggers an alert.
+                    format: double
+                    type: number
+                units:
+                    description: Element used to express the quantity. This can be an element of time, storage capacity, and the like.
+                    enum:
+                        - bits
+                        - Kbits
+                        - Mbits
+                        - Gbits
+                        - bytes
+                        - KB
+                        - MB
+                        - GB
+                        - TB
+                        - PB
+                        - nsec
+                        - msec
+                        - sec
+                        - min
+                        - hours
+                        - million minutes
+                        - days
+                        - requests
+                        - 1000 requests
+                        - GB seconds
+                        - GB hours
+                        - GB days
+                        - RPU
+                        - thousand RPU
+                        - million RPU
+                        - WPU
+                        - thousand WPU
+                        - million WPU
+                        - count
+                        - thousand
+                        - million
+                        - billion
+                    type: string
+            required:
+                - metricName
+            title: Flex Cluster Metric Threshold
+            type: object
         FlexConnectionStrings20241113:
             description: Collection of Uniform Resource Locators that point to the MongoDB database.
             externalDocs:
@@ -17148,6 +17311,80 @@ components:
             readOnly: true
             title: Flex Cluster Connection Strings
             type: object
+        FlexMetricAlertConfigViewForNdsGroup:
+            description: Flex metric alert configuration allows to select which Flex database metrics trigger alerts and how users are notified.
+            properties:
+                created:
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
+                    format: date-time
+                    readOnly: true
+                    type: string
+                enabled:
+                    default: false
+                    description: Flag that indicates whether someone enabled this alert configuration for the specified project.
+                    type: boolean
+                eventTypeName:
+                    $ref: '#/components/schemas/FlexMetricEventTypeViewAlertable'
+                groupId:
+                    description: Unique 24-hexadecimal digit string that identifies the project that owns this alert configuration.
+                    example: 32b6e34b3d91647abb20e7b8
+                    maxLength: 24
+                    minLength: 24
+                    pattern: ^([a-f0-9]{24})$
+                    readOnly: true
+                    type: string
+                id:
+                    description: Unique 24-hexadecimal digit string that identifies this alert configuration.
+                    example: 32b6e34b3d91647abb20e7b8
+                    maxLength: 24
+                    minLength: 24
+                    pattern: ^([a-f0-9]{24})$
+                    readOnly: true
+                    type: string
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                matchers:
+                    description: Matching conditions for target resources.
+                    items:
+                        $ref: '#/components/schemas/AlertMatcher'
+                    type: array
+                metricThreshold:
+                    $ref: '#/components/schemas/FlexClusterMetricThreshold'
+                notifications:
+                    description: List that contains the targets that MongoDB Cloud sends notifications.
+                    items:
+                        $ref: '#/components/schemas/AlertsNotificationRootForGroup'
+                    type: array
+                updated:
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
+                    format: date-time
+                    readOnly: true
+                    type: string
+            required:
+                - eventTypeName
+                - notifications
+            title: Flex Alert Configuration
+            type: object
+        FlexMetricEventTypeViewAlertable:
+            description: Event type that triggers an alert.
+            enum:
+                - OUTSIDE_FLEX_METRIC_THRESHOLD
+            example: OUTSIDE_FLEX_METRIC_THRESHOLD
+            title: Flex Metric Event Types
+            type: string
         FlexProviderSettings20241113:
             description: Group of cloud provider settings that configure the provisioned MongoDB flex cluster.
             properties:
@@ -17833,7 +18070,10 @@ components:
         GreaterThanRawThresholdAlertConfigViewForNdsGroup:
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -17881,7 +18121,10 @@ components:
                 threshold:
                     $ref: '#/components/schemas/GreaterThanRawThreshold'
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -18045,6 +18288,7 @@ components:
                 - $ref: '#/components/schemas/ReplicaSetAlertConfigViewForNdsGroup'
                 - $ref: '#/components/schemas/ReplicaSetThresholdAlertConfigViewForNdsGroup'
                 - $ref: '#/components/schemas/ServerlessMetricAlertConfigViewForNdsGroup'
+                - $ref: '#/components/schemas/FlexMetricAlertConfigViewForNdsGroup'
                 - $ref: '#/components/schemas/StreamProcessorAlertConfigViewForNdsGroup'
             type: object
         GroupIPAddresses:
@@ -18410,6 +18654,9 @@ components:
                             - GROUP_DATA_ACCESS_READ_ONLY
                             - GROUP_READ_ONLY
                             - GROUP_SEARCH_INDEX_EDITOR
+                            - GROUP_BACKUP_MANAGER
+                            - GROUP_OBSERVABILITY_VIEWER
+                            - GROUP_DATABASE_ACCESS_ADMIN
                         type: string
                     type: array
                     uniqueItems: true
@@ -18456,6 +18703,8 @@ components:
                             - GROUP_CLUSTER_MANAGER
                             - GROUP_SEARCH_INDEX_EDITOR
                             - GROUP_STREAM_PROCESSING_OWNER
+                            - GROUP_BACKUP_MANAGER
+                            - GROUP_OBSERVABILITY_VIEWER
                         type: string
                     type: array
                     uniqueItems: true
@@ -18493,6 +18742,8 @@ components:
                             - GROUP_CLUSTER_MANAGER
                             - GROUP_SEARCH_INDEX_EDITOR
                             - GROUP_STREAM_PROCESSING_OWNER
+                            - GROUP_BACKUP_MANAGER
+                            - GROUP_OBSERVABILITY_VIEWER
                         type: string
                     type: array
                 secretExpiresAfterHours:
@@ -18521,6 +18772,8 @@ components:
                             - GROUP_CLUSTER_MANAGER
                             - GROUP_SEARCH_INDEX_EDITOR
                             - GROUP_STREAM_PROCESSING_OWNER
+                            - GROUP_BACKUP_MANAGER
+                            - GROUP_OBSERVABILITY_VIEWER
                         type: string
                     type: array
                     uniqueItems: true
@@ -18554,6 +18807,8 @@ components:
                             - GROUP_CLUSTER_MANAGER
                             - GROUP_SEARCH_INDEX_EDITOR
                             - GROUP_STREAM_PROCESSING_OWNER
+                            - GROUP_BACKUP_MANAGER
+                            - GROUP_OBSERVABILITY_VIEWER
                         type: string
                     type: array
             type: object
@@ -18609,6 +18864,9 @@ components:
                             - GROUP_DATA_ACCESS_READ_ONLY
                             - GROUP_READ_ONLY
                             - GROUP_SEARCH_INDEX_EDITOR
+                            - GROUP_BACKUP_MANAGER
+                            - GROUP_OBSERVABILITY_VIEWER
+                            - GROUP_DATABASE_ACCESS_ADMIN
                         type: string
                     minItems: 1
                     type: array
@@ -18661,6 +18919,9 @@ components:
                             - GROUP_DATA_ACCESS_READ_ONLY
                             - GROUP_READ_ONLY
                             - GROUP_SEARCH_INDEX_EDITOR
+                            - GROUP_BACKUP_MANAGER
+                            - GROUP_OBSERVABILITY_VIEWER
+                            - GROUP_DATABASE_ACCESS_ADMIN
                         type: string
                     readOnly: true
                     type: array
@@ -18751,7 +19012,10 @@ components:
             description: Host alert configuration allows to select which mongod host events trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -18797,7 +19061,10 @@ components:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -18948,6 +19215,10 @@ components:
                 - SSH_KEY_NDS_HOST_ACCESS_ATTEMPT
                 - SSH_KEY_NDS_HOST_ACCESS_GRANTED
                 - HOST_SSH_SESSION_ENDED
+                - HOST_X509_CERTIFICATE_CERTIFICATE_GENERATED_FOR_SUPPORT_ACCESS
+                - PUSH_BASED_LOG_EXPORT_RESUMED
+                - PUSH_BASED_LOG_EXPORT_STOPPED
+                - PUSH_BASED_LOG_EXPORT_DROPPED_LOG
             example: HOST_DOWN
             title: Host Event Types
             type: string
@@ -18961,6 +19232,8 @@ components:
                 - HOST_NOT_ENOUGH_DISK_SPACE
                 - SSH_KEY_NDS_HOST_ACCESS_REQUESTED
                 - SSH_KEY_NDS_HOST_ACCESS_REFRESHED
+                - PUSH_BASED_LOG_EXPORT_STOPPED
+                - PUSH_BASED_LOG_EXPORT_DROPPED_LOG
             example: HOST_DOWN
             title: Host Event Types
             type: string
@@ -19417,7 +19690,10 @@ components:
             description: Host metric alert configuration allows to select which mongod host metrics trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -19465,7 +19741,10 @@ components:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -21698,7 +21977,10 @@ components:
         LessThanTimeThresholdAlertConfigViewForNdsGroup:
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -21746,7 +22028,10 @@ components:
                 threshold:
                     $ref: '#/components/schemas/LessThanTimeThreshold'
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -22846,6 +23131,11 @@ components:
                 - SSL_CERTIFICATE_ISSUED
                 - PROJECT_SCHEDULED_MAINTENANCE_OUTSIDE_OF_PROTECTED_HOURS
                 - CLUSTER_CANCELING_SHARD_DRAIN_REQUESTED
+                - CLUSTER_MIGRATE_BACK_TO_AWS_MANAGED_IP_REQUESTED
+                - CLUSTER_IP_MIGRATED_FIRST_ROUND
+                - CLUSTER_IP_MIGRATED_SECOND_ROUND
+                - CLUSTER_IP_MIGRATED_FINAL_ROUND
+                - CLUSTER_IP_ROLLED_BACK
             example: CLUSTER_CREATED
             title: NDS Audit Types
             type: string
@@ -23423,7 +23713,10 @@ components:
             description: NDS X509 User Authentication alert configuration allows to select thresholds for expiration of client, CA certificates and CRL which trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -23471,7 +23764,10 @@ components:
                 threshold:
                     $ref: '#/components/schemas/LessThanDaysThresholdView'
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -27608,7 +27904,10 @@ components:
             description: Replica Set alert configuration allows to select which conditions of mongod replica set trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -27656,7 +27955,10 @@ components:
                 threshold:
                     $ref: '#/components/schemas/AlertsThresholdInteger'
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -27889,7 +28191,10 @@ components:
                 propertyName: eventTypeName
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -27937,7 +28242,10 @@ components:
                 threshold:
                     $ref: '#/components/schemas/AlertsThresholdInteger'
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -29506,7 +29814,10 @@ components:
             description: Serverless metric alert configuration allows to select which serverless database metrics trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -29554,7 +29865,10 @@ components:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -30282,7 +30596,10 @@ components:
             description: Host metric alert configuration allows to select which Atlas streams processors trigger alerts and how users are notified.
             properties:
                 created:
-                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when MongoDB Cloud created the alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -30328,7 +30645,10 @@ components:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
                 updated:
-                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the <a href="https://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="noopener noreferrer">ISO 8601</a> timestamp format in UTC.
+                    description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
                     format: date-time
                     readOnly: true
                     type: string
@@ -32865,6 +33185,8 @@ components:
                             - GROUP_STREAM_PROCESSING_OWNER
                             - GROUP_OWNER
                             - GROUP_READ_ONLY
+                            - GROUP_BACKUP_MANAGER
+                            - GROUP_OBSERVABILITY_VIEWER
                         type: string
                     type: array
                 userId:
@@ -33514,7 +33836,7 @@ components:
                         An optional field returned if your webhook is configured with a secret.
 
                         **NOTE**: When you view or edit the alert for a webhook notification, the secret appears completely redacted.
-                    example: '******'
+                    format: password
                     type: string
                 type:
                     description: Human-readable label that identifies the service to which you want to integrate with MongoDB Cloud. The value must match the third-party service integration type.
@@ -33567,10 +33889,13 @@ components:
 
                         Atlas returns this value if you set `"notifications.[n].typeName" :"WEBHOOK"` and either:
                         * You set `notification.[n].webhookSecret` to a non-empty string
-                        * You set a default webhookSecret either on the [Integrations](https://www.mongodb.com/docs/atlas/tutorial/third-party-service-integrations/#std-label-third-party-integrations) page, or with the [Integrations API](#tag/Third-Party-Service-Integrations/operation/createIntegration)
+                        * You set a default webhookSecret either on the Integrations page, or with the [Integrations API](#tag/Third-Party-Service-Integrations/operation/createIntegration)
 
                         **NOTE**: When you view or edit the alert for a webhook notification, the secret appears completely redacted.
-                    example: '******'
+                    externalDocs:
+                        description: Integrations page
+                        url: https://www.mongodb.com/docs/atlas/tutorial/third-party-service-integrations/#std-label-third-party-integrations
+                    format: password
                     type: string
                 webhookUrl:
                     description: |-
@@ -34307,7 +34632,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: b30dca0a1318cf8279cab906a13fd2bfa4889cea
+    x-xgen-sha: dbd1973c0decbff758de339089aa895945e8696c
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -34362,6 +34687,8 @@ paths:
             tags:
                 - Alert Configurations
             x-xgen-owner-team: CAP
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/clusters:
         get:
             description: Returns the details for all clusters in all projects to which you have access. Clusters contain a group of hosts that maintain the same data set. The response does not include multi-cloud clusters. To use this resource, the requesting API Key can have any cluster-level role.
@@ -34448,6 +34775,8 @@ paths:
             x-xgen-hidden-env:
                 envs: dev,qa,stage,prod
             x-xgen-owner-team: apix
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/federationSettings/{federationSettingsId}:
         delete:
             description: 'Deletes the federation settings instance and all associated data, including identity providers and domains. To use this resource, the requesting API Key must have the Organization Owner role in the last remaining connected organization. **Note**: requests to this resource will fail if there is more than one connected organization in the federation.'
@@ -35040,6 +35369,8 @@ paths:
             tags:
                 - Federated Authentication
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/federationSettings/{federationSettingsId}/identityProviders/{identityProviderId}/metadata.xml:
         get:
             description: Returns the metadata of one identity provider in the specified federation. To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations.
@@ -35263,6 +35594,8 @@ paths:
             tags:
                 - Projects
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/accessList:
         get:
             description: Returns all access list entries from the specified project's IP access list. Each entry in the project's IP access list contains either one IP address or one CIDR-notated block of IP addresses. MongoDB Cloud only allows client connections to the cluster from entries in the project's IP access list. To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. The `/groups/{GROUP-ID}/accessList` endpoint manages the database IP access list. This endpoint is distinct from the `orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist` endpoint, which manages the access list for MongoDB Cloud organizations.
@@ -35965,6 +36298,8 @@ paths:
             tags:
                 - Programmatic API Keys
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/apiKeys/{apiUserId}:
         delete:
             description: Removes one organization API key from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -36329,6 +36664,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/backup/exportBuckets/{exportBucketId}:
         delete:
             description: Deletes an Export Bucket. Auto export must be disabled on all clusters in this Project exporting to this Export Bucket before revoking access. To use this resource, the requesting API Key must have the Project Owner role.
@@ -36439,6 +36776,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/backupCompliancePolicy:
         delete:
             description: Disables the Backup Compliance Policy settings with the specified project. As a prerequisite, a support ticket needs to be file first, instructions in https://www.mongodb.com/docs/atlas/backup/cloud-backup/backup-compliance-policy/. To use this resource, the requesting API Key must have the Project Owner role.
@@ -36648,6 +36987,8 @@ paths:
             tags:
                 - Cloud Provider Access
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/cloudProviderAccess/{roleId}:
         get:
             description: Returns the access role with the specified id and with access to the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -37233,6 +37574,8 @@ paths:
             tags:
                 - Collection Level Metrics
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/{clusterView}/collStats/namespaces:
         get:
             description: Return the subset of namespaces from the given cluster sorted by highest total execution time (descending) within the given time window.
@@ -37278,6 +37621,8 @@ paths:
             tags:
                 - Collection Level Metrics
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/exports:
         get:
             description: Returns all Cloud Backup Snapshot Export Jobs associated with the specified Atlas cluster. To use this resource, the requesting API Key must have the Project Atlas Admin role.
@@ -37358,6 +37703,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/exports/{exportId}:
         get:
             description: Returns one Cloud Backup Snapshot Export Job associated with the specified Atlas cluster. To use this resource, the requesting API Key must have the Project Atlas Admin role.
@@ -37400,6 +37747,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/restoreJobs:
         get:
             description: Returns all cloud backup restore jobs for one cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -37484,6 +37833,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/restoreJobs/{restoreJobId}:
         delete:
             description: Cancels one cloud backup restore job of one cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -37569,6 +37920,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/schedule:
         delete:
             description: Removes all cloud backup schedules for the specified cluster. This schedule defines when MongoDB Cloud takes scheduled snapshots and how long it stores those snapshots. To use this resource, the requesting API Key must have the Project Atlas Admin role.
@@ -37697,6 +38050,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/snapshots:
         get:
             description: Returns all snapshots of one cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -37779,6 +38134,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/snapshots/{snapshotId}:
         delete:
             description: Removes the specified snapshot. To use this resource, the requesting API Key must have the Project Owner role.
@@ -37916,6 +38273,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/snapshots/shardedCluster/{snapshotId}:
         delete:
             description: Removes one snapshot of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -38001,6 +38360,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/snapshots/shardedClusters:
         get:
             description: Returns all snapshots of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -38036,6 +38397,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/download:
         post:
             description: Requests one snapshot for the specified shared cluster. This resource returns a `snapshotURL` that you can use to download the snapshot. This `snapshotURL` remains active for four hours after you make the request. To use this resource, the requesting API Key must have the Project Owner role.
@@ -38084,6 +38447,9 @@ paths:
             tags:
                 - Shared-Tier Snapshots
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/restore:
         post:
             description: Restores the specified cluster. MongoDB Cloud limits which clusters can be the target clusters of a restore. The target cluster can't use encryption at rest, run a major release MongoDB version different than the snapshot, or receive client requests during restores. MongoDB Cloud deletes all existing data on the target cluster prior to the restore operation. To use this resource, the requesting API Key must have the Project Owner role.
@@ -38130,6 +38496,9 @@ paths:
             tags:
                 - Shared-Tier Restore Jobs
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/restores:
         get:
             description: Returns all restore jobs for the specified M2 or M5 cluster. Restore jobs restore a cluster using a snapshot. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -38165,6 +38534,8 @@ paths:
             tags:
                 - Shared-Tier Restore Jobs
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/restores/{restoreId}:
         get:
             description: Returns the specified restore job. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -38209,6 +38580,8 @@ paths:
             tags:
                 - Shared-Tier Restore Jobs
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/snapshots:
         get:
             description: Returns details for all snapshots for the specified shared cluster. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -38244,6 +38617,8 @@ paths:
             tags:
                 - Shared-Tier Snapshots
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/snapshots/{snapshotId}:
         get:
             description: Returns details for one snapshot for the specified shared cluster. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -38288,6 +38663,8 @@ paths:
             tags:
                 - Shared-Tier Snapshots
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backupCheckpoints:
         get:
             deprecated: true
@@ -38506,6 +38883,8 @@ paths:
             tags:
                 - Collection Level Metrics
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/collStats/unpin:
         patch:
             description: Unpin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster
@@ -38549,6 +38928,9 @@ paths:
             tags:
                 - Collection Level Metrics
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/fts/indexes:
         post:
             deprecated: true
@@ -38598,6 +38980,8 @@ paths:
             tags:
                 - Atlas Search
             x-xgen-owner-team: Search Web Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/fts/indexes/{databaseName}/{collectionName}:
         get:
             deprecated: true
@@ -38650,6 +39034,8 @@ paths:
             tags:
                 - Atlas Search
             x-xgen-owner-team: Search Web Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/fts/indexes/{indexId}:
         delete:
             deprecated: true
@@ -38802,6 +39188,8 @@ paths:
             tags:
                 - Atlas Search
             x-xgen-owner-team: Search Web Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/globalWrites:
         get:
             description: Returns one managed namespace within the specified global cluster. A managed namespace identifies a collection using the database name, the dot separator, and the collection name. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -38955,6 +39343,9 @@ paths:
             tags:
                 - Global Clusters
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/globalWrites/managedNamespaces:
         delete:
             description: Removes one managed namespace within the specified global cluster. A managed namespace identifies a collection using the database name, the dot separator, and the collection name. Deleting a managed namespace does not remove the associated collection or data. To use this resource, the requesting API Key must have the Project Data Access Admin role.
@@ -39076,6 +39467,9 @@ paths:
             tags:
                 - Global Clusters
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/index:
         post:
             description: Creates an index on the cluster identified by its name in a rolling manner. Creating the index in this way allows index builds on one replica set member as a standalone at a time, starting with the secondary members. Creating indexes in this way requires at least one replica set election. To use this resource, the requesting API Key must have the Project Data Access Admin role.
@@ -39184,6 +39578,8 @@ paths:
             tags:
                 - Rolling Index
             x-xgen-owner-team: Developer Tools
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/onlineArchives:
         get:
             description: Returns details of all online archives. This archive stores data from one cluster within one project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -39488,6 +39884,8 @@ paths:
             tags:
                 - Online Archive
             x-xgen-owner-team: Atlas Online Archive II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/outageSimulation:
         delete:
             description: Ends a cluster outage simulation.
@@ -39646,6 +40044,8 @@ paths:
             x-xgen-hidden-env:
                 envs: stage,qa,prod
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/performanceAdvisor/schemaAdvice:
         get:
             description: Returns the schema suggestions that the Performance Advisor detects. The Performance Advisor provides holistic schema recommendations for your cluster by sampling documents in your most active collections and collections with slow-running queries. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -39681,6 +40081,8 @@ paths:
             x-xgen-hidden-env:
                 envs: stage,qa,prod
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/performanceAdvisor/suggestedIndexes:
         get:
             description: Returns the indexes that the Performance Advisor suggests. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -39753,6 +40155,8 @@ paths:
             tags:
                 - Performance Advisor
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/processArgs:
         get:
             description: Returns the advanced configuration details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. Advanced configuration details include the read/write concern, index and oplog limits, and other database settings. This feature isn't available for `M0` free clusters, `M2` and `M5` shared-tier clusters, flex clusters, or serverless clusters. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -39886,6 +40290,8 @@ paths:
             tags:
                 - Clusters
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/restoreJobs:
         get:
             deprecated: true
@@ -40213,6 +40619,8 @@ paths:
             tags:
                 - Atlas Search
             x-xgen-owner-team: Search Web Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/search/indexes:
         get:
             description: Returns all Atlas Search indexes on the specified cluster. Atlas Search indexes contain the indexed fields and the analyzers used to create the indexes. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
@@ -40305,6 +40713,8 @@ paths:
             tags:
                 - Atlas Search
             x-xgen-owner-team: Search Web Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/search/indexes/{databaseName}/{collectionName}:
         get:
             description: Returns all Atlas Search indexes on the specified collection. Atlas Search indexes contain the indexed fields and the analyzers used to create the indexes. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
@@ -40363,6 +40773,8 @@ paths:
             tags:
                 - Atlas Search
             x-xgen-owner-team: Search Web Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/search/indexes/{databaseName}/{collectionName}/{indexName}:
         delete:
             description: Removes one Atlas Search index that you identified with its database, collection, and name. To use this resource, the requesting API key must have the Project Data Access Admin role. This deletion is eventually consistent.
@@ -40538,6 +40950,8 @@ paths:
             tags:
                 - Atlas Search
             x-xgen-owner-team: Search Web Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/search/indexes/{indexId}:
         delete:
             description: Removes one Atlas Search index that you identified with its unique ID. To use this resource, the requesting API key must have the Project Data Access Admin role. This deletion is eventually consistent.
@@ -40692,6 +41106,8 @@ paths:
             tags:
                 - Atlas Search
             x-xgen-owner-team: Search Web Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/snapshotSchedule:
         get:
             deprecated: true
@@ -41035,6 +41451,8 @@ paths:
             tags:
                 - Clusters
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-109-custom-method-must-use-camel-case: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}:pinFeatureCompatibilityVersion:
         post:
             description: Pins the Feature Compatibility Version (FCV) to the current MongoDB version and sets the pin expiration date. If an FCV pin already exists for the cluster, calling this method will only update the expiration date of the existing pin and will not repin the FCV.
@@ -41120,6 +41538,8 @@ paths:
             tags:
                 - Clusters
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-109-custom-method-must-use-camel-case: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}:unpinFeatureCompatibilityVersion:
         post:
             description: Unpins the current fixed Feature Compatibility Version (FCV). This feature is not available for clusters on rapid release.
@@ -41236,6 +41656,8 @@ paths:
             tags:
                 - Monitoring and Logs
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/provider/regions:
         get:
             description: Returns the list of regions available for the specified cloud provider at the specified tier. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -41275,6 +41697,8 @@ paths:
             tags:
                 - Clusters
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/tenantUpgrade:
         post:
             description: Upgrades a shared-tier cluster to a dedicated cluster (M10+) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role. Each project supports up to 25 clusters.
@@ -41314,6 +41738,9 @@ paths:
             tags:
                 - Clusters
             x-xgen-owner-team: Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/clusters/tenantUpgradeToServerless:
         post:
             description: Upgrades a shared-tier cluster to a serverless instance in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.
@@ -41353,6 +41780,9 @@ paths:
             tags:
                 - Clusters
             x-xgen-owner-team: Atlas
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/collStats/metrics:
         get:
             description: Returns all available Coll Stats Latency metric names and their respective units for the specified project at the time of request.
@@ -41380,6 +41810,8 @@ paths:
             tags:
                 - Collection Level Metrics
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/containers:
         get:
             description: Returns details about all network peering containers in the specified project for the specified cloud provider. If you do not specify the cloud provider, MongoDB Cloud returns details about all network peering containers in the project for Amazon Web Services (AWS). To use this resource, the requesting API Key must have the Project Read Only role.
@@ -41606,6 +42038,8 @@ paths:
             tags:
                 - Network Peering
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/customDBRoles/roles:
         get:
             description: Returns all custom roles for the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -41633,7 +42067,7 @@ paths:
                 - Custom Database Roles
             x-xgen-owner-team: Atlas Dedicated
         post:
-            description: Creates one custom role in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+            description: Creates one custom role in the specified project. To use this resource, the requesting API Key must have the Project Owner role, Project Stream Processing Owner role, or the Project Database Access Admin role.
             operationId: createCustomDatabaseRole
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -41670,9 +42104,11 @@ paths:
             tags:
                 - Custom Database Roles
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/customDBRoles/roles/{roleName}:
         delete:
-            description: Removes one custom role from the specified project. You can't remove a custom role that would leave one or more child roles with no parent roles or actions. You also can't remove a custom role that would leave one or more database users without roles. To use this resource, the requesting API Key must have the Project Atlas Admin role.
+            description: Removes one custom role from the specified project. You can't remove a custom role that would leave one or more child roles with no parent roles or actions. You also can't remove a custom role that would leave one or more database users without roles. To use this resource, the requesting API Key must have the Project Owner role, Project Stream Processing Owner role, or the Project Database Access Admin role.
             operationId: deleteCustomDatabaseRole
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -41736,7 +42172,7 @@ paths:
                 - Custom Database Roles
             x-xgen-owner-team: Atlas Dedicated
         patch:
-            description: Updates one custom role in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+            description: Updates one custom role in the specified project. To use this resource, the requesting API Key must have the Project Owner role, the Project Stream Processing Owner role, or the Project Database Access Admin role.
             operationId: updateCustomDatabaseRole
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -41779,6 +42215,8 @@ paths:
             tags:
                 - Custom Database Roles
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/dataFederation:
         get:
             description: Returns the details of all federated database instances in the specified project. To use this resource, the requesting API Key must have the Project Read Only or higher role.
@@ -42226,7 +42664,7 @@ paths:
                 - Database Users
             x-xgen-owner-team: Atlas Dedicated
         post:
-            description: Creates one database user in the specified project. This MongoDB Cloud supports a maximum of 100 database users per project. If you require more than 100 database users on a project, contact [Support](https://cloud.mongodb.com/support). To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles.
+            description: Creates one database user in the specified project. This MongoDB Cloud supports a maximum of 100 database users per project. If you require more than 100 database users on a project, contact [Support](https://cloud.mongodb.com/support). To use this resource, the requesting API Key must have the Project Owner role, the Project Charts Admin role, Project Stream Processing Owner role, or the Project Database Access Admin role.
             operationId: createDatabaseUser
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -42356,7 +42794,7 @@ paths:
             x-xgen-owner-team: Atlas Dedicated
     /api/atlas/v2/groups/{groupId}/databaseUsers/{databaseName}/{username}:
         delete:
-            description: Removes one database user from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+            description: Removes one database user from the specified project. To use this resource, the requesting API Key must have the Project Owner role, the Project Stream Processing Owner role, or the Project Database Access Admin role.
             operationId: deleteDatabaseUser
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -42460,7 +42898,7 @@ paths:
                 - Database Users
             x-xgen-owner-team: Atlas Dedicated
         patch:
-            description: Updates one database user that belongs to the specified project. To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles.
+            description: Updates one database user that belongs to the specified project. To use this resource, the requesting API Key must have the Project Owner role, Project Charts Admin role, Project Stream Processing Owner role, or the Project Database Access Admin role.
             operationId: updateDatabaseUser
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -42523,6 +42961,8 @@ paths:
             tags:
                 - Database Users
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/databaseUsers/{username}/certs:
         get:
             description: Returns all unexpired X.509 certificates for the specified MongoDB user. This MongoDB user belongs to one project. Atlas manages these certificates and the MongoDB user. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -42613,7 +43053,7 @@ paths:
             x-xgen-owner-team: Atlas Dedicated
     /api/atlas/v2/groups/{groupId}/dbAccessHistory/clusters/{clusterName}:
         get:
-            description: Returns the access logs of one cluster identified by the cluster's name. Access logs contain a list of authentication requests made against your cluster. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role.
+            description: Returns the access logs of one cluster identified by the cluster's name. Access logs contain a list of authentication requests made against your cluster. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role or the Project Database Access Admin role.
             externalDocs:
                 description: Database Access History
                 url: https://docs.atlas.mongodb.com/access-tracking/
@@ -42681,9 +43121,11 @@ paths:
             tags:
                 - Access Tracking
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/dbAccessHistory/processes/{hostname}:
         get:
-            description: Returns the access logs of one cluster identified by the cluster's hostname. Access logs contain a list of authentication requests made against your clusters. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role.
+            description: Returns the access logs of one cluster identified by the cluster's hostname. Access logs contain a list of authentication requests made against your clusters. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role or the Project Database Access Admin role.
             externalDocs:
                 description: Database Access History
                 url: https://docs.atlas.mongodb.com/access-tracking/
@@ -42748,6 +43190,8 @@ paths:
             tags:
                 - Access Tracking
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/encryptionAtRest:
         get:
             description: |-
@@ -43327,6 +43771,9 @@ paths:
             tags:
                 - Flex Snapshots
             x-xgen-owner-team: Atlas Serverless II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/flexClusters/{name}/backup/restoreJobs:
         get:
             description: Returns all restore jobs for one flex cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -43410,6 +43857,8 @@ paths:
             tags:
                 - Flex Restore Jobs
             x-xgen-owner-team: Atlas Serverless II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/flexClusters/{name}/backup/restoreJobs/{restoreJobId}:
         get:
             description: Returns one restore job for one flex cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -43454,6 +43903,8 @@ paths:
             tags:
                 - Flex Restore Jobs
             x-xgen-owner-team: Atlas Serverless II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/flexClusters/{name}/backup/snapshots:
         get:
             description: Returns all snapshots of one flex cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -43492,6 +43943,8 @@ paths:
             tags:
                 - Flex Snapshots
             x-xgen-owner-team: Atlas Serverless II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/flexClusters/{name}/backup/snapshots/{snapshotId}:
         get:
             description: Returns one snapshot of one flex cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -43536,6 +43989,8 @@ paths:
             tags:
                 - Flex Snapshots
             x-xgen-owner-team: Atlas Serverless II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/flexClusters:tenantUpgrade:
         post:
             description: Upgrades a flex cluster to a dedicated cluster (M10+) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.
@@ -43601,6 +44056,8 @@ paths:
             tags:
                 - Monitoring and Logs
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/hosts/{processId}/fts/metrics/indexes/{databaseName}/{collectionName}/{indexName}/measurements:
         get:
             description: Returns the Atlas Search metrics data series within the provided time range for one namespace and index name on the specified process. You must have the Project Read Only or higher role to view the Atlas Search metric types.
@@ -43657,6 +44114,8 @@ paths:
             tags:
                 - Monitoring and Logs
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/hosts/{processId}/fts/metrics/indexes/{databaseName}/{collectionName}/measurements:
         get:
             description: Returns the Atlas Search index metrics within the specified time range for one namespace in the specified process.
@@ -43712,6 +44171,8 @@ paths:
             tags:
                 - Monitoring and Logs
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/hosts/{processId}/fts/metrics/measurements:
         get:
             description: Returns the Atlas Search hardware and status data series within the provided time range for one process in the specified project. You must have the Project Read Only or higher role to view the Atlas Search metric types.
@@ -43766,6 +44227,8 @@ paths:
             tags:
                 - Monitoring and Logs
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/integrations:
         get:
             description: Returns the settings that permit integrations with all configured third-party services. These settings apply to all databases managed in one MongoDB Cloud project. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role.
@@ -44597,6 +45060,8 @@ paths:
             tags:
                 - Cloud Migration Service
             x-xgen-owner-team: Atlas Migrations
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/liveMigrations/validate:
         post:
             description: Verifies whether the provided credentials, available disk space, MongoDB versions, and so on meet the requirements of the migration request. If the check passes, the migration can proceed. Your API Key must have the Organization Owner role to successfully call this resource.
@@ -44645,6 +45110,8 @@ paths:
             tags:
                 - Cloud Migration Service
             x-xgen-owner-team: Atlas Migrations
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/liveMigrations/validate/{validationId}:
         get:
             description: Return the status of one migration validation job. Your API Key must have the Organization Owner role to successfully call this resource.
@@ -44684,6 +45151,8 @@ paths:
             tags:
                 - Cloud Migration Service
             x-xgen-owner-team: Atlas Migrations
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/maintenanceWindow:
         delete:
             description: Resets the maintenance window for the specified project. To use this resource, the requesting API Key must have the Project Owner role. Urgent maintenance activities such as security patches can't wait for your chosen window. MongoDB Cloud starts those maintenance activities when needed. After you schedule maintenance for your cluster, you can't change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.
@@ -44784,6 +45253,9 @@ paths:
             tags:
                 - Maintenance Windows
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/maintenanceWindow/defer:
         post:
             description: Defers the maintenance window for the specified project. Urgent maintenance activities such as security patches can't wait for your chosen window. MongoDB Cloud starts those maintenance activities when needed. After you schedule maintenance for your cluster, you can't change your maintenance window until the current maintenance efforts complete. The maintenance procedure that MongoDB Cloud performs requires at least one replica set election during the maintenance window per replica set. Maintenance always begins as close to the scheduled hour as possible, but in-progress cluster updates or unexpected system issues could delay the start time. To use this resource, the requesting API Key must have the Project Owner role.
@@ -44807,6 +45279,9 @@ paths:
             tags:
                 - Maintenance Windows
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/managedSlowMs:
         get:
             description: Get whether the Managed Slow MS feature is enabled.
@@ -44855,6 +45330,9 @@ paths:
             tags:
                 - Performance Advisor
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/managedSlowMs/enable:
         post:
             description: Enables MongoDB Cloud to use its slow operation threshold for the specified project. The threshold determines which operations the Performance Advisor and Query Profiler considers slow. When enabled, MongoDB Cloud uses the average execution time for operations on your cluster to determine slow-running queries. As a result, the threshold is more pertinent to your cluster workload. The slow operation threshold is enabled by default for dedicated clusters (M10+). When disabled, MongoDB Cloud considers any operation that takes longer than 100 milliseconds to be slow. To use this resource, the requesting API Key must have the Project Owner role.
@@ -44879,6 +45357,9 @@ paths:
             tags:
                 - Performance Advisor
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/mongoDBVersions:
         get:
             description: Returns the MongoDB Long Term Support Major Versions available to new clusters in this project.
@@ -45444,6 +45925,8 @@ paths:
             tags:
                 - Data Lake Pipelines
             x-xgen-owner-team: Atlas Online Archive II
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}/resume:
         post:
             deprecated: true
@@ -45481,6 +45964,8 @@ paths:
             tags:
                 - Data Lake Pipelines
             x-xgen-owner-team: Atlas Online Archive II
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}/runs:
         get:
             deprecated: true
@@ -45665,6 +46150,8 @@ paths:
             tags:
                 - Data Lake Pipelines
             x-xgen-owner-team: Atlas Online Archive II
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/privateEndpoint/{cloudProvider}/endpointService:
         get:
             description: Returns the name, interfaces, and state of all private endpoint services for the specified cloud service provider. This cloud service provider manages the private endpoint service for the project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -45985,6 +46472,9 @@ paths:
             tags:
                 - Private Endpoint Services
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/privateEndpoint/regionalMode:
         get:
             description: Checks whether each region in the specified cloud service provider can create multiple private endpoints per region. The cloud service provider manages the private endpoint for the project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -46043,6 +46533,8 @@ paths:
             tags:
                 - Private Endpoint Services
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/privateEndpoint/serverless/instance/{instanceName}/endpoint:
         get:
             description: Returns all private endpoints for one serverless instance. You must have at least the Project Read Only role for the project to successfully call this resource.
@@ -46123,6 +46615,8 @@ paths:
             tags:
                 - Serverless Private Endpoints
             x-xgen-owner-team: Atlas Serverless II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/privateEndpoint/serverless/instance/{instanceName}/endpoint/{endpointId}:
         delete:
             description: Remove one private endpoint from one serverless instance. To use this resource, the requesting API Key must have the Project Owner role.
@@ -46254,6 +46748,8 @@ paths:
             tags:
                 - Serverless Private Endpoints
             x-xgen-owner-team: Atlas Serverless II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/privateIpMode:
         get:
             deprecated: true
@@ -46400,6 +46896,8 @@ paths:
             tags:
                 - Data Federation
             x-xgen-owner-team: Atlas Online Archive II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/privateNetworkSettings/endpointIds/{endpointId}:
         delete:
             description: Removes one private endpoint for Federated Database Instances and Online Archives in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -46471,6 +46969,8 @@ paths:
             tags:
                 - Data Federation
             x-xgen-owner-team: Atlas Online Archive II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/processes:
         get:
             description: Returns details of all processes for the specified project. A MongoDB process can be either a `mongod` or `mongos`. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -46597,6 +47097,8 @@ paths:
             tags:
                 - Collection Level Metrics
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/processes/{processId}/collStats/namespaces:
         get:
             description: Return the subset of namespaces from the given process ranked by highest total execution time (descending) within the given time window.
@@ -46624,6 +47126,8 @@ paths:
             tags:
                 - Collection Level Metrics
             x-xgen-owner-team: Intel I
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/processes/{processId}/databases:
         get:
             description: Returns the list of databases running on the specified host for the specified project. `M0` free clusters, `M2`, `M5`, and serverless clusters have some [operational limits](https://www.mongodb.com/docs/atlas/reference/free-shared-limitations/#operational-limitations). The MongoDB Cloud process must be a `mongod`. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -47164,9 +47668,11 @@ paths:
             tags:
                 - Performance Advisor
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/processes/{processId}/performanceAdvisor/slowQueryLogs:
         get:
-            description: Returns log lines for slow queries that the Performance Advisor and Query Profiler identified. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. MongoDB Cloud bases the threshold for slow queries on the average time of operations on your cluster. This enables workload-relevant recommendations. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
+            description: Returns log lines for slow queries that the Performance Advisor and Query Profiler identified. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. MongoDB Cloud bases the threshold for slow queries on the average time of operations on your cluster. This enables workload-relevant recommendations. To use this resource, the requesting API Key must have any Project Data Access role or the Project Observability Viewer role.
             operationId: listSlowQueries
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -47233,6 +47739,8 @@ paths:
             tags:
                 - Performance Advisor
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/processes/{processId}/performanceAdvisor/suggestedIndexes:
         get:
             description: Returns the indexes that the Performance Advisor suggests. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -47309,6 +47817,8 @@ paths:
             tags:
                 - Performance Advisor
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/pushBasedLogExport:
         delete:
             description: Disables the push-based log export feature by resetting the project level settings to its default configuration.
@@ -47646,6 +48156,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Private Cloud
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/serverless/{clusterName}/backup/restoreJobs/{restoreJobId}:
         get:
             description: Returns one restore job for one serverless instance from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -47690,6 +48202,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Private Cloud
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/serverless/{clusterName}/backup/snapshots:
         get:
             description: Returns all snapshots of one serverless instance from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -47728,6 +48242,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Private Cloud
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/serverless/{clusterName}/backup/snapshots/{snapshotId}:
         get:
             description: Returns one snapshot of one serverless instance from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -47772,6 +48288,8 @@ paths:
             tags:
                 - Cloud Backups
             x-xgen-owner-team: Backup - Private Cloud
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/serverless/{clusterName}/performanceAdvisor/autoIndexing:
         get:
             description: Get whether the Serverless Auto Indexing feature is enabled.
@@ -47842,6 +48360,8 @@ paths:
             tags:
                 - Performance Advisor
             x-xgen-owner-team: Intel II
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/serverless/{name}:
         delete:
             description: Removes one serverless instance from the specified project. The serverless instance must have termination protection disabled in order to be deleted. To use this resource, the requesting API Key must have the Project Owner role.
@@ -48210,6 +48730,8 @@ paths:
             tags:
                 - Service Accounts
             x-xgen-owner-team: apix
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}/accessList/{ipAddress}:
         delete:
             description: Removes the specified access list entry from the specified Service Account for the project. You can't remove the requesting IP address from the access list. Available as a preview feature.
@@ -48293,6 +48815,8 @@ paths:
             tags:
                 - Service Accounts
             x-xgen-owner-team: apix
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/serviceAccounts/{clientId}/secrets/{secretId}:
         delete:
             description: Deletes the specified Service Account secret. Available as a preview feature.
@@ -49203,6 +49727,34 @@ paths:
             tags:
                 - Streams
             x-xgen-owner-team: Atlas Streams
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+    /api/atlas/v2/groups/{groupId}/streams/activeVpcPeeringConnections:
+        get:
+            description: Returns a list of active incoming VPC Peering Connections.
+            operationId: getActiveVpcPeeringConnections
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/pageNum'
+                - $ref: '#/components/parameters/pretty'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2024-11-13+json:
+                            x-xgen-version: "2024-11-13"
+                    description: OK
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Returns all the active incoming VPC Peering Connections.
+            tags:
+                - Streams
+            x-xgen-owner-team: Atlas Streams
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/streams/privateLinkConnections:
         get:
             description: Returns all Private Link connections for the specified project.To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
@@ -49269,6 +49821,8 @@ paths:
             x-xgen-changelog:
                 "2024-10-02": The MongoDB Atlas Streams Processing Private Link API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-owner-team: Atlas Streams
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/streams/privateLinkConnections/{connectionId}:
         delete:
             description: Deletes one Private Link in the specified project. To use this resource, the requesting API Key must have the Project Owner or Project Stream Processing Owner role.
@@ -49337,6 +49891,8 @@ paths:
             x-xgen-changelog:
                 "2024-10-02": The MongoDB Atlas Streams Processing Private Link API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-owner-team: Atlas Streams
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections:
         get:
             description: Returns a list of incoming VPC Peering Connections.
@@ -49367,6 +49923,9 @@ paths:
             tags:
                 - Streams
             x-xgen-owner-team: Atlas Streams
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections/{id}:
         delete:
             description: Deletes an incoming VPC Peering connection.
@@ -49400,6 +49959,8 @@ paths:
             tags:
                 - Streams
             x-xgen-owner-team: Atlas Streams
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections/{id}:accept:
         post:
             description: Requests the acceptance of an incoming VPC Peering connection.
@@ -49440,6 +50001,8 @@ paths:
             tags:
                 - Streams
             x-xgen-owner-team: Atlas Streams
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections/{id}:reject:
         post:
             description: Requests the rejection of an incoming VPC Peering connection.
@@ -49473,6 +50036,8 @@ paths:
             tags:
                 - Streams
             x-xgen-owner-team: Atlas Streams
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/streams:withSampleConnections:
         post:
             description: Creates one stream instance in the specified project with sample connections. To use this resource the requesting API Key must have the Project Data Access Admin role, Project Owner role or Project Stream Processing Owner role.
@@ -49580,6 +50145,8 @@ paths:
             tags:
                 - Teams
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/teams/{teamId}:
         delete:
             description: Removes one team specified using its unique 24-hexadecimal digit identifier from the project specified using its unique 24-hexadecimal digit identifier. To use this resource, the requesting API Key must have the Project Owner role.
@@ -49752,6 +50319,9 @@ paths:
             tags:
                 - X.509 Authentication
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/userSecurity/ldap/userToDNMapping:
         delete:
             description: Removes the current LDAP Distinguished Name mapping captured in the ``userToDNMapping`` document from the LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -49776,6 +50346,9 @@ paths:
             tags:
                 - LDAP Configuration
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/userSecurity/ldap/verify:
         post:
             description: Verifies the LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -49809,6 +50382,8 @@ paths:
             tags:
                 - LDAP Configuration
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/userSecurity/ldap/verify/{requestId}:
         get:
             description: Returns the status of one request to verify one LDAP configuration for the specified project. To use this resource, the requesting API Key must have the Project Owner role.
@@ -49842,6 +50417,8 @@ paths:
             tags:
                 - LDAP Configuration
             x-xgen-owner-team: Atlas Dedicated
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/users:
         get:
             description: Returns details about all users in the specified project. Users belong to an organization. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -49865,12 +50442,6 @@ paths:
                   schema:
                     default: false
                     type: boolean
-                - description: Flag that indicates whether to filter the returned list by users organization membership status. If you exclude this parameter, this resource returns both pending and active users.
-                  in: query
-                  name: orgMembershipStatus
-                  schema:
-                    example: ACTIVE
-                    type: string
             responses:
                 "200":
                     content:
@@ -49879,6 +50450,12 @@ paths:
                                 $ref: '#/components/schemas/PaginatedAppUserView'
                             x-sunset: "2044-01-01"
                             x-xgen-version: "2023-01-01"
+                        application/vnd.atlas.2043-01-01+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedGroupUserView'
+                            x-xgen-hidden-env:
+                                envs: qa,stage,prod
+                            x-xgen-version: "2043-01-01"
                     description: OK
                 "401":
                     $ref: '#/components/responses/unauthorized'
@@ -49889,7 +50466,7 @@ paths:
                 - Projects
             x-xgen-owner-team: IAM
         post:
-            description: "Adds one MongoDB Cloud user to one project. To use this resource, the requesting API Key must have the Group User Admin role. \n- If the user has a pending invitation to join the project's organization, MongoDB Cloud modifies it and grants project access. \n- If the user doesn't have an invitation to join the organization, MongoDB Cloud sends a new invitation that grants the user organization and project access. \n- If the user is already active in the project's organization, MongoDB Cloud grants access to the project. \n"
+            description: "Adds one MongoDB Cloud user to one project. To use this resource, the requesting API Key must have the Project Owner role. \n- If the user has a pending invitation to join the project's organization, MongoDB Cloud modifies it and grants project access. \n- If the user doesn't have an invitation to join the organization, MongoDB Cloud sends a new invitation that grants the user organization and project access. \n- If the user is already active in the project's organization, MongoDB Cloud grants access to the project. \n"
             operationId: addProjectUser
             parameters:
                 - $ref: '#/components/parameters/envelope'
@@ -49972,7 +50549,7 @@ paths:
             x-xgen-owner-team: IAM
         get:
             description: |-
-                Returns information about the specified MongoDB Cloud user within the context of the specified project. To use this resource, the requesting API Key must have the Group Read Only role.
+                Returns information about the specified MongoDB Cloud user within the context of the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
                 **Note**: You can only use this resource to fetch information about MongoDB Cloud human users. To return information about an API Key, use the [Return One Organization API Key](#tag/Programmatic-API-Keys/operation/getApiKey) endpoint.
 
@@ -50059,6 +50636,8 @@ paths:
             tags:
                 - Projects
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/groups/{groupId}/users/{userId}:addRole:
         post:
             description: |-
@@ -50232,6 +50811,8 @@ paths:
             tags:
                 - Projects
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/openapi/info:
         get:
             description: This resource returns general information about the MongoDB Atlas Administration API OpenAPI Specification.
@@ -50261,6 +50842,8 @@ paths:
             x-xgen-hidden-env:
                 envs: qa,stage,prod
             x-xgen-owner-team: apix
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/orgs:
         get:
             description: Returns all organizations to which the requesting API Key has access. To use this resource, the requesting API Key must have the Organization Member role.
@@ -50826,6 +51409,8 @@ paths:
             tags:
                 - Invoices
             x-xgen-owner-team: Billing Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/billing/costExplorer/usage/{token}:
         get:
             description: Returns the usage details for a Cost Explorer query, if the query is finished and the data is ready to be viewed. If the data is not ready, a 'processing' response willindicate that another request should be sent later to view the data.
@@ -50868,6 +51453,8 @@ paths:
             tags:
                 - Invoices
             x-xgen-owner-team: Billing Platform
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/events:
         get:
             description: |-
@@ -51499,6 +52086,8 @@ paths:
             tags:
                 - Invoices
             x-xgen-owner-team: Payments
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/liveMigrations/availableProjects:
         get:
             description: Return all projects that you can migrate to the specified organization.
@@ -51527,6 +52116,8 @@ paths:
             tags:
                 - Cloud Migration Service
             x-xgen-owner-team: Atlas Migrations
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/liveMigrations/linkTokens:
         delete:
             description: Remove one organization link and its associated public API key. MongoDB Atlas uses the link-token for push live migrations only. Live migrations (push) let you securely push data from Cloud Manager or Ops Manager into MongoDB Atlas. Your API Key must have the Organization Owner role to successfully call this resource.
@@ -51584,6 +52175,9 @@ paths:
             tags:
                 - Cloud Migration Service
             x-xgen-owner-team: Atlas Migrations
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/nonCompliantResources:
         get:
             description: Return all non-compliant resources for an org.
@@ -52127,6 +52721,8 @@ paths:
             tags:
                 - Service Accounts
             x-xgen-owner-team: apix
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/accessList/{ipAddress}:
         delete:
             description: Removes the specified access list entry from the specified Service Account for the organization. You can't remove the requesting IP address from the access list. Available as a preview feature.
@@ -52246,6 +52842,8 @@ paths:
             tags:
                 - Service Accounts
             x-xgen-owner-team: apix
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/serviceAccounts/{clientId}/secrets/{secretId}:
         delete:
             description: Deletes the specified Service Account secret. Available as a preview feature.
@@ -52649,6 +53247,8 @@ paths:
             tags:
                 - Teams
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/teams/{teamId}/users/{userId}:
         delete:
             description: Removes one MongoDB Cloud user from the specified team. This team belongs to one organization. Teams enable you to grant project access roles to MongoDB Cloud users. To use this resource, the requesting API Key must have the Organization Owner role.
@@ -52835,6 +53435,8 @@ paths:
             tags:
                 - Teams
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/users:
         get:
             description: Returns details about the MongoDB Cloud users associated with the specified organization. Each MongoDB Cloud user returned must belong to the specified organization or to a project within the specified organization. To use this resource, the requesting API Key must have the Organization Member role.
@@ -52910,7 +53512,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create One MongoDB Cloud User in One Organization
+            summary: Add One MongoDB Cloud User to One Organization
             tags:
                 - MongoDB Cloud Users
             x-xgen-hidden-env:
@@ -52964,7 +53566,7 @@ paths:
             x-xgen-owner-team: IAM
         get:
             description: |-
-                Returns information about the specified MongoDB Cloud user within the context of the specified organization. To use this resource, the requesting API Key must have the Organization Read Only role.
+                Returns information about the specified MongoDB Cloud user within the context of the specified organization. To use this resource, the requesting API Key must have the Organization Member role.
 
                 **Note**: This resource can only be used to fetch information about MongoDB Cloud human users. To return information about an API Key, use the [Return One Organization API Key](#tag/Programmatic-API-Keys/operation/getApiKey) endpoint.
 
@@ -53103,6 +53705,8 @@ paths:
             tags:
                 - Organizations
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-104-resource-has-GET: API predates IPA validation
     /api/atlas/v2/orgs/{orgId}/users/{userId}:addRole:
         post:
             description: |-
@@ -53275,6 +53879,8 @@ paths:
                 allowDocsDiff: "false"
                 docsSource: mms
                 targetService: api-registry
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
     /api/atlas/v2/users:
         post:
             description: |-
@@ -53378,6 +53984,8 @@ paths:
             tags:
                 - MongoDB Cloud Users
             x-xgen-owner-team: IAM
+        x-xgen-IPA-exception:
+            xgen-IPA-102-path-alternate-resource-name-path-param: API predates IPA validation
 security:
     - DigestAuth: []
     - ServiceAccounts: []

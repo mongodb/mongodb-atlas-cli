@@ -286,10 +286,10 @@ func (g *GithubAsset) verifyAssetSignature(asset []byte, sigAssetID, pubKeyAsset
 	config := &packet.Config{}
 	_, err = openpgp.CheckArmoredDetachedSignature(key, bytes.NewReader(asset), sigRc, config)
 	if err != nil {
-		return err
+		return fmt.Errorf("signature verification unsuccessful: %w", err)
 	}
-	fmt.Println("PGP signature verification successful!")
 
+	fmt.Println("PGP signature verification successful!")
 	return nil
 }
 

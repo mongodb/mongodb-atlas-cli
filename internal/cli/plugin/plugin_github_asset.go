@@ -288,6 +288,7 @@ func (g *GithubAsset) verifyAssetSignature(asset []byte, sigAssetID, pubKeyAsset
 	if err != nil {
 		return err
 	}
+	fmt.Println("PGP signature verification successful!")
 
 	return nil
 }

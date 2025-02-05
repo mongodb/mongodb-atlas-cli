@@ -37,6 +37,18 @@ paths:
         override:
           description: OVERRIDDEN
           operationId: createClusterX
+        watcher:
+          get:
+            operation-id: getCluster
+            version: '2023-02-01'
+            params:
+              groupId: 'input:groupId'
+              clusterName: 'body:$.name'
+          expect:
+            http-code: 200
+            match:
+              path: $.stateName
+              values: IDLE
       operationId: createCluster
       parameters:
         - $ref: '#/components/parameters/envelope'

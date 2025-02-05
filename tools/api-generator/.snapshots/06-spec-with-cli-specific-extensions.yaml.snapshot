@@ -101,6 +101,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getCluster`,
+						Version:     ``,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: nil,
+				},
 			},
 		},
 	},

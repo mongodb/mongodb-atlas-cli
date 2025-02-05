@@ -21,7 +21,7 @@ import "net/http"
 var Commands = GroupedAndSortedCommands{
 	{
 		Name:        `Clusters`,
-		Description: ``,
+		Description: `Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.`,
 		Commands: []Command{
 			{
 				OperationID: `createCluster`,

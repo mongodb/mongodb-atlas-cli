@@ -15,6 +15,7 @@
 package plugin
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -29,8 +30,11 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/ProtonMail/go-crypto/openpgp"
+	"github.com/ProtonMail/go-crypto/openpgp/packet"
 	"github.com/google/go-github/v61/github"
 	"github.com/mholt/archives"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 )
 
@@ -43,7 +47,8 @@ var (
 )
 
 const (
-	latest = "latest"
+	latest    = "latest"
+	publicKey = "signature.asc"
 )
 
 type GithubAsset struct {
@@ -151,11 +156,11 @@ var contentTypePriority = map[string]int{
 	"application/zip":    3, // zip
 }
 
-func (g *GithubAsset) getID(assets []*github.ReleaseAsset) (int64, error) {
-	return g.getIDForOSArch(assets, runtime.GOOS, runtime.GOARCH)
+func (g *GithubAsset) getIDs(assets []*github.ReleaseAsset) (int64, int64, int64, error) {
+	return g.getIDsForOSArch(assets, runtime.GOOS, runtime.GOARCH)
 }
 
-func (g *GithubAsset) getIDForOSArch(assets []*github.ReleaseAsset, goos, goarch string) (int64, error) {
+func (g *GithubAsset) getIDsForOSArch(assets []*github.ReleaseAsset, goos, goarch string) (int64, int64, int64, error) {
 	// Get all possible architecture names for the current architecture
 	archNames := []string{goarch}
 	if aliases, ok := architectureAliases[goarch]; ok {
@@ -187,7 +192,7 @@ func (g *GithubAsset) getIDForOSArch(assets []*github.ReleaseAsset, goos, goarch
 	}
 
 	if len(archiveAssets) == 0 {
-		return 0, fmt.Errorf("no compatible asset found in %s for OS=%s, arch=%s (including aliases: %v)",
+		return 0, 0, 0, fmt.Errorf("no compatible asset found in %s for OS=%s, arch=%s (including aliases: %v)",
 			g.repository(), goos, goarch, archNames[1:])
 	}
 
@@ -195,18 +200,96 @@ func (g *GithubAsset) getIDForOSArch(assets []*github.ReleaseAsset, goos, goarch
 	slices.SortFunc(archiveAssets, func(a, b *github.ReleaseAsset) int {
 		return contentTypePriority[*a.ContentType] - contentTypePriority[*b.ContentType]
 	})
-
-	return *archiveAssets[0].ID, nil
+	name := strings.ToLower(*archiveAssets[0].Name)
+	signatureID, pubKeyID, err := getSignatureAssetandKeyID(name, assets)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+	return *archiveAssets[0].ID, signatureID, pubKeyID, nil
 }
 
-func (g *GithubAsset) getPluginAssetAsReadCloser(assetID int64) (io.ReadCloser, error) {
-	rc, _, err := g.ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, assetID, http.DefaultClient)
+func getSignatureAssetandKeyID(name string, assets []*github.ReleaseAsset) (int64, int64, error) {
+	var signatureAsset *github.ReleaseAsset
+	var pubKeyAsset *github.ReleaseAsset
 
+	for _, asset := range assets {
+		assetName := strings.ToLower(*asset.Name)
+
+		// Check if asset is a public key
+		if strings.Compare(assetName, publicKey) == 0 {
+			pubKeyAsset = asset
+			continue
+		}
+
+		// Check if asset is a signature
+		if strings.Contains(assetName, name+".sig") {
+			signatureAsset = asset
+		}
+	}
+
+	// If no signature package is found, provide warning
+	if signatureAsset == nil {
+		_, _ = log.Warningf("-- plugin warning: no corresponding signature asset found for package %s\n", name)
+		return 0, 0, nil
+	}
+
+	// If signature package exists but public key does not, return error
+	if pubKeyAsset == nil {
+		return 0, 0, fmt.Errorf("-- plugin warning: no public key '%s' found for signature verification", publicKey)
+	}
+
+	return *signatureAsset.ID, *pubKeyAsset.ID, nil
+}
+
+func (g *GithubAsset) getPluginAssetsAsReadCloser(assetID, sigAssetID, pubKeyAssetID int64) (io.ReadCloser, error) {
+	rc, _, err := g.ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, assetID, http.DefaultClient)
 	if err != nil {
 		return nil, fmt.Errorf("could not download asset with ID %d from %s", assetID, g.repository())
 	}
 
-	return rc, nil
+	asset, err := io.ReadAll(rc)
+	if err != nil {
+		return nil, errors.New("could not convert reader to bytes")
+	}
+
+	// Only do verification if IDs are not 0, i.e. when there is signature package available
+	if sigAssetID != 0 && pubKeyAssetID != 0 {
+		err = g.verifyAssetSignature(asset, sigAssetID, pubKeyAssetID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return io.NopCloser(bytes.NewReader(asset)), nil
+}
+
+// verifyAssetSignature verifies the asset signature.
+// Returns nil if signature check is successful.
+func (g *GithubAsset) verifyAssetSignature(asset []byte, sigAssetID, pubKeyAssetID int64) error {
+	sigRc, _, err := g.ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, sigAssetID, http.DefaultClient)
+	if err != nil {
+		return fmt.Errorf("could not download signature asset with ID %d from %s", sigAssetID, g.repository())
+	}
+	defer sigRc.Close()
+
+	keyRc, _, err := g.ghClient.Repositories.DownloadReleaseAsset(context.Background(), g.owner, g.name, pubKeyAssetID, http.DefaultClient)
+	if err != nil {
+		return fmt.Errorf("could not download public key asset with ID %d from %s", pubKeyAssetID, g.repository())
+	}
+	defer keyRc.Close()
+
+	key, err := openpgp.ReadArmoredKeyRing(keyRc)
+	if err != nil {
+		return err
+	}
+
+	config := &packet.Config{}
+	_, err = openpgp.CheckArmoredDetachedSignature(key, bytes.NewReader(asset), sigRc, config)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func parseGithubReleaseValues(arg string) (*GithubAsset, error) {

@@ -137,14 +137,14 @@ func (opts *UpdateOpts) updatePlugin(ctx context.Context, githubAssetRelease *Gi
 		return err
 	}
 
-	// find correct assetID using system requirements
-	assetID, err := githubAssetRelease.getID(assets)
+	// find correct assetID, signatureID and pubKeyID using system requirements
+	assetID, signatureID, pubKeyID, err := githubAssetRelease.getIDs(assets)
 	if err != nil {
 		return err
 	}
 
 	// download plugin asset archive file and save it as ReadCloser
-	rc, err := githubAssetRelease.getPluginAssetAsReadCloser(assetID)
+	rc, err := githubAssetRelease.getPluginAssetsAsReadCloser(assetID, signatureID, pubKeyID)
 	if err != nil {
 		return err
 	}

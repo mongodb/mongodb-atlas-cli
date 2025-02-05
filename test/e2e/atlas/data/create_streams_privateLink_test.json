@@ -1,0 +1,6 @@
+{
+  "provider": "Azure",
+  "region": "US_EAST_2",
+  "serviceEndpointId": "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace",
+  "dnsDomain": "test-namespace.servicebus.windows.net"
+}

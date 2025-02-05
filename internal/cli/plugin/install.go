@@ -80,14 +80,14 @@ func (opts *InstallOpts) Run(ctx context.Context) error {
 		return err
 	}
 
-	// find correct assetID using system requirements
-	assetID, err := opts.githubAsset.getID(assets)
+	// find correct assetID, signatureID and pubKeyID using system requirements
+	assetID, signatureID, pubKeyID, err := opts.githubAsset.getIDs(assets)
 	if err != nil {
 		return err
 	}
 
 	// download plugin asset archive file and save it as ReadCloser
-	rc, err := opts.githubAsset.getPluginAssetAsReadCloser(assetID)
+	rc, err := opts.githubAsset.getPluginAssetsAsReadCloser(assetID, signatureID, pubKeyID)
 	if err != nil {
 		return err
 	}

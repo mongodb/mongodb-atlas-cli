@@ -34,14 +34,16 @@ func Test_repository(t *testing.T) {
 	assert.Equal(t, opts.owner+"/"+opts.name, opts.repository())
 }
 
-func Test_getIDForOSArch(t *testing.T) {
+func Test_getIDsForOSArch(t *testing.T) {
 	tests := []struct {
-		name            string
-		pluginAssets    []*github.ReleaseAsset
-		expectedAssetID int64
-		expectError     bool
-		os              string
-		arch            string
+		name                string
+		pluginAssets        []*github.ReleaseAsset
+		expectedAssetID     int64
+		expectedSignatureID int64
+		expectedPubKeyID    int64
+		expectError         bool
+		os                  string
+		arch                string
 	}{
 		{
 			name: "Valid asset linux amd64",
@@ -51,11 +53,23 @@ func Test_getIDForOSArch(t *testing.T) {
 					Name:        github.String("plugin_linux_amd64.tar.gz"),
 					ContentType: github.String("application/gzip"),
 				},
+				{
+					ID:          github.Int64(2),
+					Name:        github.String("plugin_linux_amd64.tar.gz.sig"),
+					ContentType: github.String("application/pgp"),
+				},
+				{
+					ID:          github.Int64(3),
+					Name:        github.String("signature.asc"),
+					ContentType: github.String("application/text/plain"),
+				},
 			},
-			expectedAssetID: 1,
-			expectError:     false,
-			os:              "linux",
-			arch:            "amd64",
+			expectedAssetID:     1,
+			expectedSignatureID: 2,
+			expectedPubKeyID:    3,
+			expectError:         false,
+			os:                  "linux",
+			arch:                "amd64",
 		},
 		{
 			name: "Valid asset windows amd64",
@@ -65,11 +79,23 @@ func Test_getIDForOSArch(t *testing.T) {
 					Name:        github.String("plugin_windows_amd64.zip"),
 					ContentType: github.String("application/zip"),
 				},
+				{
+					ID:          github.Int64(3),
+					Name:        github.String("plugin_windows_amd64.zip.sig"),
+					ContentType: github.String("application/pgp"),
+				},
+				{
+					ID:          github.Int64(4),
+					Name:        github.String("signature.asc"),
+					ContentType: github.String("application/text/plain"),
+				},
 			},
-			expectedAssetID: 2,
-			expectError:     false,
-			os:              "windows",
-			arch:            "amd64",
+			expectedAssetID:     2,
+			expectedSignatureID: 3,
+			expectedPubKeyID:    4,
+			expectError:         false,
+			os:                  "windows",
+			arch:                "amd64",
 		},
 		{
 			name: "Valid asset darwin arm64",
@@ -79,11 +105,23 @@ func Test_getIDForOSArch(t *testing.T) {
 					Name:        github.String("plugin_darwin_arm64.tar.gz"),
 					ContentType: github.String("application/gzip"),
 				},
+				{
+					ID:          github.Int64(4),
+					Name:        github.String("plugin_darwin_arm64.tar.gz.sig"),
+					ContentType: github.String("application/pgp"),
+				},
+				{
+					ID:          github.Int64(5),
+					Name:        github.String("signature.asc"),
+					ContentType: github.String("application/text/plain"),
+				},
 			},
-			expectedAssetID: 3,
-			expectError:     false,
-			os:              "darwin",
-			arch:            "arm64",
+			expectedAssetID:     3,
+			expectedSignatureID: 4,
+			expectedPubKeyID:    5,
+			expectError:         false,
+			os:                  "darwin",
+			arch:                "arm64",
 		},
 		{
 			name: "Valid asset with x86_64 linux",
@@ -93,11 +131,23 @@ func Test_getIDForOSArch(t *testing.T) {
 					Name:        github.String("plugin_linux_x86_64.tar.gz"),
 					ContentType: github.String("application/gzip"),
 				},
+				{
+					ID:          github.Int64(5),
+					Name:        github.String("plugin_linux_x86_64.tar.gz.sig"),
+					ContentType: github.String("application/pgp"),
+				},
+				{
+					ID:          github.Int64(6),
+					Name:        github.String("signature.asc"),
+					ContentType: github.String("application/text/plain"),
+				},
 			},
-			expectedAssetID: 4,
-			expectError:     false,
-			os:              "linux",
-			arch:            "amd64",
+			expectedAssetID:     4,
+			expectedSignatureID: 5,
+			expectedPubKeyID:    6,
+			expectError:         false,
+			os:                  "linux",
+			arch:                "amd64",
 		},
 		{
 			name: "Valid asset with x86_64 darwin",
@@ -107,11 +157,23 @@ func Test_getIDForOSArch(t *testing.T) {
 					Name:        github.String("plugin_darwin_x86_64.tar.gz"),
 					ContentType: github.String("application/gzip"),
 				},
+				{
+					ID:          github.Int64(6),
+					Name:        github.String("plugin_darwin_x86_64.tar.gz.sig"),
+					ContentType: github.String("application/pgp"),
+				},
+				{
+					ID:          github.Int64(7),
+					Name:        github.String("signature.asc"),
+					ContentType: github.String("application/text/plain"),
+				},
 			},
-			expectedAssetID: 5,
-			expectError:     false,
-			os:              "darwin",
-			arch:            "amd64",
+			expectedAssetID:     5,
+			expectedSignatureID: 6,
+			expectedPubKeyID:    7,
+			expectError:         false,
+			os:                  "darwin",
+			arch:                "amd64",
 		},
 		{
 			name: "Valid asset with aarch64 linux",
@@ -121,11 +183,23 @@ func Test_getIDForOSArch(t *testing.T) {
 					Name:        github.String("plugin_linux_aarch64.tar.gz"),
 					ContentType: github.String("application/gzip"),
 				},
+				{
+					ID:          github.Int64(7),
+					Name:        github.String("plugin_linux_aarch64.tar.gz.sig"),
+					ContentType: github.String("application/pgp"),
+				},
+				{
+					ID:          github.Int64(8),
+					Name:        github.String("signature.asc"),
+					ContentType: github.String("application/text/plain"),
+				},
 			},
-			expectedAssetID: 6,
-			expectError:     false,
-			os:              "linux",
-			arch:            "arm64",
+			expectedAssetID:     6,
+			expectedSignatureID: 7,
+			expectedPubKeyID:    8,
+			expectError:         false,
+			os:                  "linux",
+			arch:                "arm64",
 		},
 		{
 			name: "Valid asset with aarch64 darwin",
@@ -135,11 +209,23 @@ func Test_getIDForOSArch(t *testing.T) {
 					Name:        github.String("plugin_darwin_aarch64.tar.gz"),
 					ContentType: github.String("application/gzip"),
 				},
+				{
+					ID:          github.Int64(8),
+					Name:        github.String("plugin_darwin_aarch64.tar.gz.sig"),
+					ContentType: github.String("application/pgp"),
+				},
+				{
+					ID:          github.Int64(9),
+					Name:        github.String("signature.asc"),
+					ContentType: github.String("application/text/plain"),
+				},
 			},
-			expectedAssetID: 7,
-			expectError:     false,
-			os:              "darwin",
-			arch:            "arm64",
+			expectedAssetID:     7,
+			expectedSignatureID: 8,
+			expectedPubKeyID:    9,
+			expectError:         false,
+			os:                  "darwin",
+			arch:                "arm64",
 		},
 		{
 			name: "No matching asset",
@@ -150,10 +236,12 @@ func Test_getIDForOSArch(t *testing.T) {
 					ContentType: github.String("application/gzip"),
 				},
 			},
-			expectedAssetID: 0,
-			expectError:     true,
-			os:              "linux",
-			arch:            "amd64",
+			expectedAssetID:     0,
+			expectedSignatureID: 0,
+			expectedPubKeyID:    0,
+			expectError:         true,
+			os:                  "linux",
+			arch:                "amd64",
 		},
 		{
 			name: "Non-gzip asset",
@@ -164,10 +252,12 @@ func Test_getIDForOSArch(t *testing.T) {
 					ContentType: github.String("application/json"),
 				},
 			},
-			expectedAssetID: 0,
-			expectError:     true,
-			os:              "linux",
-			arch:            "amd64",
+			expectedAssetID:     0,
+			expectedSignatureID: 0,
+			expectedPubKeyID:    0,
+			expectError:         true,
+			os:                  "linux",
+			arch:                "amd64",
 		},
 		{
 			name: "Zip asset",
@@ -177,11 +267,60 @@ func Test_getIDForOSArch(t *testing.T) {
 					Name:        github.String("plugin_linux_amd64.zip"),
 					ContentType: github.String("application/zip"),
 				},
+				{
+					ID:          github.Int64(11),
+					Name:        github.String("plugin_linux_amd64.zip.sig"),
+					ContentType: github.String("application/pgp"),
+				},
+				{
+					ID:          github.Int64(12),
+					Name:        github.String("signature.asc"),
+					ContentType: github.String("application/text/plain"),
+				},
 			},
-			expectedAssetID: 10,
-			expectError:     false,
-			os:              "linux",
-			arch:            "amd64",
+			expectedAssetID:     10,
+			expectedSignatureID: 11,
+			expectedPubKeyID:    12,
+			expectError:         false,
+			os:                  "linux",
+			arch:                "amd64",
+		},
+		{
+			name: "No signature file present",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(11),
+					Name:        github.String("plugin_linux_amd64.zip"),
+					ContentType: github.String("application/zip"),
+				},
+			},
+			expectedAssetID:     11,
+			expectedSignatureID: 0,
+			expectedPubKeyID:    0,
+			expectError:         false,
+			os:                  "linux",
+			arch:                "amd64",
+		},
+		{
+			name: "No valid public key present",
+			pluginAssets: []*github.ReleaseAsset{
+				{
+					ID:          github.Int64(12),
+					Name:        github.String("plugin_linux_amd64.zip"),
+					ContentType: github.String("application/zip"),
+				},
+				{
+					ID:          github.Int64(13),
+					Name:        github.String("plugin_linux_amd64.zip.sig"),
+					ContentType: github.String("application/pgp"),
+				},
+			},
+			expectedAssetID:     0,
+			expectedSignatureID: 0,
+			expectedPubKeyID:    0,
+			expectError:         true,
+			os:                  "linux",
+			arch:                "amd64",
 		},
 	}
 
@@ -189,12 +328,18 @@ func Test_getIDForOSArch(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			opts := &GithubAsset{}
 
-			assetID, err := opts.getIDForOSArch(tt.pluginAssets, tt.os, tt.arch)
+			assetID, signatureID, pubKeyID, err := opts.getIDsForOSArch(tt.pluginAssets, tt.os, tt.arch)
 			if (err != nil) != tt.expectError {
 				t.Errorf("expected error: %v, got: %v", tt.expectError, err)
 			}
 			if assetID != tt.expectedAssetID {
 				t.Errorf("expected asset ID: %d, got: %d", tt.expectedAssetID, assetID)
+			}
+			if signatureID != tt.expectedSignatureID {
+				t.Errorf("expected asset ID: %d, got: %d", tt.expectedSignatureID, signatureID)
+			}
+			if pubKeyID != tt.expectedPubKeyID {
+				t.Errorf("expected asset ID: %d, got: %d", tt.expectedPubKeyID, pubKeyID)
 			}
 		})
 	}

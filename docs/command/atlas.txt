@@ -69,7 +69,7 @@ Related Commands
 * :ref:`atlas-events` - Manage events for your organization or project.
 * :ref:`atlas-federatedAuthentication` - Manage Atlas Federated Authentication.
 * :ref:`atlas-integrations` - Configure third-party integrations for your Atlas project.
-* :ref:`atlas-kubernetes` - This command provides access to Kubernetes features within Atlas.
+* :ref:`atlas-kubernetes` - Manage Kubernetes resources.
 * :ref:`atlas-liveMigrations` - Manage a Live Migration to Atlas for your organization.
 * :ref:`atlas-logs` - Download host logs for your project.
 * :ref:`atlas-maintenanceWindows` - Manage Atlas maintenance windows.

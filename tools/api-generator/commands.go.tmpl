@@ -74,8 +74,8 @@ var Commands = GroupedAndSortedCommands{
 						},
 					},
 				{{- end }}
-				},
-				Watcher: {{if not .Watcher}} nil,{{else}}&WatcherProperties{
+				},{{if .Watcher}}
+				Watcher: &WatcherProperties{
 					Get: WatcherGetProperties{
 						OperationID: `{{ .Watcher.Get.OperationID }}`,
 						Version:     `{{ .Watcher.Get.Version }}`,

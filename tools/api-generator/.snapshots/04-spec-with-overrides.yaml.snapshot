@@ -103,7 +103,7 @@ var Commands = GroupedAndSortedCommands{
 							`orgId`: `123`,
 						},
 					},
-					Expect: WatcherExpectProperties{
+					Expect: &WatcherExpectProperties{
 						HTTPCode: ``,
 						Match: &WatcherMatchProperties{
 							Path: `$.stateName`,

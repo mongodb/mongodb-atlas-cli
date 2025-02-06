@@ -33,12 +33,11 @@ import (
 )
 
 const (
-	featureProcessArgs                = "processArgs"
-	featureBackupSchedule             = "backupRef"
-	featureServerlessPrivateEndpoints = "serverlessSpec.privateEndpoints"
-	featureGlobalDeployments          = "deploymentSpec.customZoneMapping"
-	DeletingState                     = "DELETING"
-	DeletedState                      = "DELETED"
+	featureProcessArgs       = "processArgs"
+	featureBackupSchedule    = "backupRef"
+	featureGlobalDeployments = "deploymentSpec.customZoneMapping"
+	DeletingState            = "DELETING"
+	DeletedState             = "DELETED"
 )
 
 type AtlasDeploymentResult struct {

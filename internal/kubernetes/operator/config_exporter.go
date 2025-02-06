@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"reflect"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/datafederation"
@@ -368,7 +369,7 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 
 func fetchClusterNames(clustersProvider store.AllClustersLister, projectID string) ([]string, []string, error) {
 	flexResult := make(map[string]struct{}, DefaultClustersCount)
-	flexClusters, err := clustersProvider.ListFlexClusters(nil)
+	flexClusters, err := clustersProvider.ListFlexClusters(&admin.ListFlexClustersApiParams{ItemsPerPage: pointer.Get(maxClusters)})
 	if err != nil {
 		return nil, nil, err
 	}

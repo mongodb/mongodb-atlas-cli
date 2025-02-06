@@ -18,7 +18,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"reflect"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/datafederation"
@@ -29,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/project"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/resources"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/kubernetes/operator/streamsprocessing"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 	"golang.org/x/exp/maps"

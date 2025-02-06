@@ -369,7 +369,12 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 
 func fetchClusterNames(clustersProvider store.AllClustersLister, projectID string) ([]string, []string, error) {
 	flexResult := make(map[string]struct{}, DefaultClustersCount)
-	flexClusters, err := clustersProvider.ListFlexClusters(&admin.ListFlexClustersApiParams{ItemsPerPage: pointer.Get(maxClusters)})
+	flexClusters, err := clustersProvider.ListFlexClusters(
+		&admin.ListFlexClustersApiParams{
+			GroupId:      projectID,
+			ItemsPerPage: pointer.Get(maxClusters),
+		},
+	)
 	if err != nil {
 		return nil, nil, err
 	}

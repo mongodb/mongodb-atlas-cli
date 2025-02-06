@@ -521,9 +521,7 @@ func TestBuildServerlessDeployments(t *testing.T) {
 			},
 		}
 
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints).Return(true)
-
-		got, err := BuildServerlessDeployments(clusterStore, featureValidator, projectID, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
+		got, err := BuildServerlessDeployments(clusterStore, projectID, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}
@@ -618,9 +616,7 @@ func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
 			},
 		}
 
-		featureValidator.EXPECT().FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints).Return(true)
-
-		got, err := BuildServerlessDeployments(clusterStore, featureValidator, projectName, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
+		got, err := BuildServerlessDeployments(clusterStore, projectName, projectName, clusterName, targetNamespace, dictionary, resourceVersion)
 		if err != nil {
 			t.Fatalf("%v", err)
 		}

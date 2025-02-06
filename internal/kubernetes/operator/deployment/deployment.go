@@ -479,7 +479,7 @@ func buildReplicationSpec(atlasRepSpec []atlasClustersPinned.ReplicationSpec) []
 	return result
 }
 
-func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, validator features.FeatureValidator, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*akov2.AtlasDeployment, error) {
+func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*akov2.AtlasDeployment, error) {
 	deployment, err := deploymentStore.GetServerlessInstance(projectID, clusterID)
 	if err != nil {
 		return nil, err
@@ -531,46 +531,7 @@ func BuildServerlessDeployments(deploymentStore store.OperatorClusterStore, vali
 		},
 	}
 
-	if validator.FeatureExist(features.ResourceAtlasDeployment, featureServerlessPrivateEndpoints) {
-		if deployment.ProviderSettings.BackingProviderName != "GCP" {
-			privateEndpoints, err := buildServerlessPrivateEndpoints(deploymentStore, projectID, deployment.GetName())
-			if err != nil {
-				return nil, err
-			}
-			atlasDeployment.Spec.ServerlessSpec.PrivateEndpoints = privateEndpoints
-		}
-	}
-
 	return atlasDeployment, nil
-}
-
-func buildServerlessPrivateEndpoints(deploymentStore store.ServerlessPrivateEndpointsLister, projectID, clusterName string) ([]akov2.ServerlessPrivateEndpoint, error) {
-	endpoints, err := deploymentStore.ServerlessPrivateEndpoints(projectID, clusterName)
-	if err != nil {
-		return nil, err
-	}
-
-	result := make([]akov2.ServerlessPrivateEndpoint, 0, len(endpoints))
-
-	for i := range endpoints {
-		endpoint := endpoints[i]
-
-		switch endpoint.GetProviderName() {
-		case "AWS":
-			result = append(result, akov2.ServerlessPrivateEndpoint{
-				Name:                     endpoint.GetComment(),
-				CloudProviderEndpointID:  endpoint.GetCloudProviderEndpointId(),
-				PrivateEndpointIPAddress: "",
-			})
-		case "AZURE":
-			result = append(result, akov2.ServerlessPrivateEndpoint{
-				Name:                     endpoint.GetComment(),
-				CloudProviderEndpointID:  endpoint.GetCloudProviderEndpointId(),
-				PrivateEndpointIPAddress: endpoint.GetPrivateEndpointIpAddress(),
-			})
-		}
-	}
-	return result, nil
 }
 
 func BuildFlexDeployments(deploymentStore store.OperatorClusterStore, projectID, projectName, clusterID, targetNamespace string, dictionary map[string]string, version string) (*akov2.AtlasDeployment, error) {

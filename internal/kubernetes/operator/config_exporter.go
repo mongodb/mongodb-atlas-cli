@@ -342,7 +342,7 @@ func (e *ConfigExporter) exportDeployments(projectName string) ([]runtime.Object
 		}
 
 		// Try serverless cluster next
-		serverlessCluster, err := deployment.BuildServerlessDeployments(e.dataProvider, e.featureValidator, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion)
+		serverlessCluster, err := deployment.BuildServerlessDeployments(e.dataProvider, e.projectID, projectName, deploymentName, e.targetNamespace, e.dictionaryForAtlasNames, e.operatorVersion)
 		if err == nil {
 			if serverlessCluster != nil {
 				result = append(result, serverlessCluster)

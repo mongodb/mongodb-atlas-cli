@@ -83,8 +83,8 @@ var Commands = GroupedAndSortedCommands{
 							`orgId`: `123`,
 						},
 					},
-					Expect: {{if not .Watcher.Expect }} nil,{{else}}&WatcherExpectProperties{
-						HTTPCode: `{{ .Watcher.Expect.HTTPCode }}`,
+					Expect: {{if not .Watcher.Expect }} nil,{{else}}&WatcherExpectProperties{ {{if ne .Watcher.Expect.HTTPCode 0}}
+						HTTPCode: {{ .Watcher.Expect.HTTPCode }},{{- end }}
 						Match: {{if not .Watcher.Expect.Match }} nil,{{else}}&WatcherMatchProperties{
 							Path: `{{ .Watcher.Expect.Match.Path }}`,
 							Values: []string{

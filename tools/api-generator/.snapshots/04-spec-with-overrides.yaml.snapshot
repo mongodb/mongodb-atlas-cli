@@ -104,7 +104,7 @@ var Commands = GroupedAndSortedCommands{
 						},
 					},
 					Expect: &WatcherExpectProperties{
-						HTTPCode: ``,
+						HTTPCode: 200,
 						Match: &WatcherMatchProperties{
 							Path: `$.stateName`,
 							Values: []string{

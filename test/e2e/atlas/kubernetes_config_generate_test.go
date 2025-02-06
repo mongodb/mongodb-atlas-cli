@@ -2298,7 +2298,7 @@ func TestKubernetesConfigGenerateFlexCluster(t *testing.T) {
 	g.tier = e2eSharedClusterTier
 	g.generateFlexCluster()
 
-	expectedDeployment := referenceFlex(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels)
+	expectedDeployment := referenceFlex(g.clusterName, "US_EAST_1", targetNamespace, g.projectName, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)

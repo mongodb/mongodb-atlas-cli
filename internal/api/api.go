@@ -104,7 +104,7 @@ type WatcherGetProperties struct {
 }
 
 type WatcherExpectProperties struct {
-	HTTPCode string
+	HTTPCode int
 	Match    *WatcherMatchProperties
 }
 

@@ -122,7 +122,7 @@ func TestNewWatcherExpectProperties(t *testing.T) {
 	}{
 		{
 			input: map[string]any{
-				"http-code": "200",
+				"http-code": 200,
 				"match": map[string]any{
 					"values": "IDLE",
 				},
@@ -132,7 +132,7 @@ func TestNewWatcherExpectProperties(t *testing.T) {
 		},
 		{
 			input: map[string]any{
-				"http-code": "200",
+				"http-code": 200,
 				"match": map[string]any{
 					"path": "$.stateName",
 				},
@@ -142,14 +142,14 @@ func TestNewWatcherExpectProperties(t *testing.T) {
 		},
 		{
 			input: map[string]any{
-				"http-code": "200",
+				"http-code": 200,
 				"match": map[string]any{
 					"path":   "$.stateName",
 					"values": "IDLE",
 				},
 			},
 			expectedOutput: &api.WatcherExpectProperties{
-				HTTPCode: "200",
+				HTTPCode: 200,
 				Match: &api.WatcherMatchProperties{
 					Path:   "$.stateName",
 					Values: []string{"IDLE"},
@@ -159,14 +159,14 @@ func TestNewWatcherExpectProperties(t *testing.T) {
 		},
 		{
 			input: map[string]any{
-				"http-code": "200",
+				"http-code": 200,
 				"match": map[string]any{
 					"path":   "$.stateName",
 					"values": "IDLE,IDLE2",
 				},
 			},
 			expectedOutput: &api.WatcherExpectProperties{
-				HTTPCode: "200",
+				HTTPCode: 200,
 				Match: &api.WatcherMatchProperties{
 					Path:   "$.stateName",
 					Values: []string{"IDLE", "IDLE2"},

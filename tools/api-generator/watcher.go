@@ -16,6 +16,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
@@ -105,7 +106,15 @@ func newWatcherGetProperties(ext map[string]any) (*api.WatcherGetProperties, err
 }
 
 func newWatcherExpectProperties(ext map[string]any) (*api.WatcherExpectProperties, error) {
-	httpCode, _ := ext["http-code"].(string)
+	httpCode := 0
+	if httpCodeValue, ok := ext["http-code"]; ok {
+		// ext["http-code"] is passed from the yaml converter
+		// the converter is entirely free to decide which integer type it returns, could be any numeric type
+		var err error
+		if httpCode, err = toInt(httpCodeValue); err != nil {
+			return nil, err
+		}
+	}
 
 	var match *api.WatcherMatchProperties
 	matchExt := extractObject(ext, "match")
@@ -157,9 +166,41 @@ func extractObject(ext map[string]any, name string) map[string]any {
 	return nil
 }
 
-/*
-func validateWatcherProperties(spec *openapi3.T, properties *api.WatcherProperties) error {
-	// TODO
-	return nil
+func toInt(value any) (int, error) {
+	switch v := value.(type) {
+	case int:
+		return v, nil
+	case int8:
+		return int(v), nil
+	case int16:
+		return int(v), nil
+	case int32:
+		return int(v), nil
+	case int64:
+		return int(v), nil
+	case uint:
+		//nolint:gosec
+		return int(v), nil
+	case uint8:
+		return int(v), nil
+	case uint16:
+		return int(v), nil
+	case uint32:
+		return int(v), nil
+	case uint64:
+		//nolint:gosec
+		return int(v), nil
+	case float32:
+		if float32(int(v)) != v {
+			return 0, fmt.Errorf("value %v has decimal places", v)
+		}
+		return int(v), nil
+	case float64:
+		if float64(int(v)) != v {
+			return 0, fmt.Errorf("value %v has decimal places", v)
+		}
+		return int(v), nil
+	default:
+		return 0, fmt.Errorf("value %v of type %T cannot be converted to int", value, value)
+	}
 }
-*/

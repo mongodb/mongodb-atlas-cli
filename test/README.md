@@ -195,7 +195,6 @@
 |                `streams instance log`                 |     Y     |   Y   |
 |                `streams privateLink`                  |           |       |
 |             `streams privateLink create`              |     Y     |   Y   |
-|                `streams instance log`                 |     Y     |   Y   |
 |                       `config`                        |           |       |
 |                     `completion`                      |     Y     |   Y   |
 |                    `config delete`                    |     Y     |   Y   |

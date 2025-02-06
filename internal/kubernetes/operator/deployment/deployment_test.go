@@ -440,21 +440,6 @@ func TestBuildServerlessDeployments(t *testing.T) {
 	dictionary := resources.AtlasNameToKubernetesName()
 
 	t.Run("Can import Serverless deployment", func(t *testing.T) {
-		speID := "TestPEId"
-		speCloudProviderEndpointID := "TestCloudProviderID"
-		speComment := "TestPEName"
-		spePrivateEndpointIPAddress := ""
-
-		spe := []atlasClustersPinned.ServerlessTenantEndpoint{
-			{
-				Id:                       &speID,
-				CloudProviderEndpointId:  &speCloudProviderEndpointID,
-				Comment:                  &speComment,
-				PrivateEndpointIpAddress: &spePrivateEndpointIPAddress,
-				ProviderName:             pointer.Get("AZURE"),
-			},
-		}
-
 		cluster := &atlasClustersPinned.ServerlessInstanceDescription{
 			Id:             pointer.Get("TestClusterID"),
 			GroupId:        pointer.Get("TestGroupID"),
@@ -473,7 +458,6 @@ func TestBuildServerlessDeployments(t *testing.T) {
 		}
 
 		clusterStore.EXPECT().GetServerlessInstance(projectID, clusterName).Return(cluster, nil)
-		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectID, clusterName).Return(spe, nil)
 
 		expected := &akov2.AtlasDeployment{
 			TypeMeta: metav1.TypeMeta{
@@ -501,13 +485,6 @@ func TestBuildServerlessDeployments(t *testing.T) {
 						BackingProviderName: cluster.ProviderSettings.BackingProviderName,
 						ProviderName:        akov2provider.ProviderName(cluster.ProviderSettings.GetProviderName()),
 						RegionName:          cluster.ProviderSettings.RegionName,
-					},
-					PrivateEndpoints: []akov2.ServerlessPrivateEndpoint{
-						{
-							Name:                     speComment,
-							CloudProviderEndpointID:  speCloudProviderEndpointID,
-							PrivateEndpointIPAddress: spePrivateEndpointIPAddress,
-						},
 					},
 				},
 				ProcessArgs: nil,
@@ -540,21 +517,6 @@ func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
 	dictionary := resources.AtlasNameToKubernetesName()
 
 	t.Run("Can import Serverless deployment", func(t *testing.T) {
-		speID := "TestPEId-1"
-		speCloudProviderEndpointID := "TestCloudProviderID-1"
-		speComment := "TestPEName-1"
-		spePrivateEndpointIPAddress := ""
-
-		spe := []atlasClustersPinned.ServerlessTenantEndpoint{
-			{
-				Id:                       &speID,
-				CloudProviderEndpointId:  &speCloudProviderEndpointID,
-				Comment:                  &speComment,
-				PrivateEndpointIpAddress: &spePrivateEndpointIPAddress,
-				ProviderName:             pointer.Get("AZURE"),
-			},
-		}
-
 		cluster := &atlasClustersPinned.ServerlessInstanceDescription{
 			Id:             pointer.Get("TestClusterID"),
 			GroupId:        pointer.Get("TestGroupID"),
@@ -573,7 +535,6 @@ func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
 		}
 
 		clusterStore.EXPECT().GetServerlessInstance(projectName, clusterName).Return(cluster, nil)
-		clusterStore.EXPECT().ServerlessPrivateEndpoints(projectName, clusterName).Return(spe, nil).Times(0)
 
 		expected := &akov2.AtlasDeployment{
 			TypeMeta: metav1.TypeMeta{

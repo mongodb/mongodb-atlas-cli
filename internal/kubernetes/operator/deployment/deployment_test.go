@@ -439,8 +439,6 @@ func TestBuildServerlessDeployments(t *testing.T) {
 	clusterStore := mocks.NewMockOperatorClusterStore(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
 
-	featureValidator := mocks.NewMockFeatureValidator(ctl)
-
 	t.Run("Can import Serverless deployment", func(t *testing.T) {
 		speID := "TestPEId"
 		speCloudProviderEndpointID := "TestCloudProviderID"
@@ -540,8 +538,6 @@ func TestBuildServerlessDeploymentsWithGCP(t *testing.T) {
 	ctl := gomock.NewController(t)
 	clusterStore := mocks.NewMockOperatorClusterStore(ctl)
 	dictionary := resources.AtlasNameToKubernetesName()
-
-	featureValidator := mocks.NewMockFeatureValidator(ctl)
 
 	t.Run("Can import Serverless deployment", func(t *testing.T) {
 		speID := "TestPEId-1"

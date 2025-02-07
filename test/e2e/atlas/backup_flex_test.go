@@ -87,8 +87,7 @@ func TestFlexBackup(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			clusterName,
-			"-o=json")
+			clusterName)
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 

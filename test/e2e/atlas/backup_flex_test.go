@@ -58,7 +58,7 @@ func TestFlexBackup(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &r), string(resp))
 		assert.NotEmpty(t, r)
 		snapshotID = r.GetResults()[0].GetId()
-		t.Log("snapshotID", snapshotID, "snapshotStatus", r.GetResults()[0].Status)
+		t.Log("snapshotID", snapshotID, "snapshotStatus", *r.GetResults()[0].Status)
 		require.NotEmpty(t, snapshotID)
 	})
 

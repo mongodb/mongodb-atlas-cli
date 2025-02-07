@@ -444,7 +444,7 @@ func (g *atlasE2ETestGenerator) generateFlexCluster() {
 	var err error
 	g.clusterName, err = deployFlexClusterForProject(g.projectID)
 	if err != nil {
-		g.t.Errorf("unexpected error deploying flex cluster: %v", err)
+		g.t.Fatalf("unexpected error deploying flex cluster: %v", err)
 	}
 	g.t.Logf("flexClusterName=%s", g.clusterName)
 

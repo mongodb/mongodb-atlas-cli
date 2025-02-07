@@ -47,6 +47,7 @@ type CommandRequest struct {
 
 type CommandResponse struct {
 	IsSuccess bool
+	HTTPCode  int
 	Output    io.ReadCloser
 }
 

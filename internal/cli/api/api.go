@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -95,6 +96,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	format := ""
 	outputFile := ""
 	version, err := defaultAPIVersion(command)
+	watch := false
 	if err != nil {
 		return nil, err
 	}
@@ -198,6 +200,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	}
 
 	// Common flags
+	addWatchFlagIfNeeded(cmd, command, &watch)
 	addVersionFlag(cmd, command, &version)
 
 	if needsFileFlag(command) {
@@ -373,6 +376,14 @@ func needsFileFlag(apiCommand api.Command) bool {
 	}
 
 	return false
+}
+
+func addWatchFlagIfNeeded(cmd *cobra.Command, apiCommand api.Command, watch *bool) {
+	if apiCommand.Watcher == nil || apiCommand.Watcher.Get.OperationID == "" {
+		return
+	}
+
+	cmd.Flags().BoolVarP(watch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
 }
 
 func addVersionFlag(cmd *cobra.Command, apiCommand api.Command, version *string) {

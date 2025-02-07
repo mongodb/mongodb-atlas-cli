@@ -115,6 +115,7 @@ func (e *Executor) ExecuteCommand(ctx context.Context, commandRequest CommandReq
 
 	//nolint: mnd // httpResponse.StatusCode >= StatusOK && httpResponse.StatusCode < StatusMultipleChoices makes this code harder to read
 	isSuccess := httpResponse.StatusCode >= 200 && httpResponse.StatusCode < 300
+	httpCode := httpResponse.StatusCode
 	output := httpResponse.Body
 
 	if isSuccess {
@@ -128,6 +129,7 @@ func (e *Executor) ExecuteCommand(ctx context.Context, commandRequest CommandReq
 
 	response := CommandResponse{
 		IsSuccess: isSuccess,
+		HTTPCode:  httpCode,
 		Output:    output,
 	}
 

@@ -48,7 +48,7 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	// Remaining validation will be done by the API
-	if privateLinkEndpoint.Provider == nil || len(*privateLinkEndpoint.Provider) == 0 {
+	if len(privateLinkEndpoint.GetProvider()) == 0 {
 		return errors.New("provider missing")
 	}
 

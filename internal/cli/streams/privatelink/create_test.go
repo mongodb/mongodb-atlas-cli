@@ -39,34 +39,47 @@ func TestCreateOpts_Run(t *testing.T) {
 		}
 	`
 
-	t.Run("should fail if no file is passed in", func(t *testing.T) {
-		createOpts := &CreateOpts{
-			fs: afero.NewMemMapFs(),
-		}
+	testCases := []struct {
+		name         string
+		fileContents string
+		wantErr      require.ErrorAssertionFunc
+	}{
+		{
+			name:         "no file passed in",
+			fileContents: "",
+			wantErr:      require.Error,
+		},
+		{
+			name: "file does not contain a provider",
+			fileContents: `
+				{
+					"region": "US_EAST_2",
+					"serviceEndpointId": "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace",
+					"dnsDomain": "test-namespace.servicebus.windows.net"
+				}
+			`,
+			wantErr: func(tt require.TestingT, err error, _ ...any) {
+				require.ErrorContains(tt, err, "provider missing")
+			},
+		},
+	}
 
-		err := createOpts.Run()
-		assert.Error(t, err)
-	})
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			fs := afero.NewMemMapFs()
 
-	t.Run("should fail if the file does not contain a provider", func(t *testing.T) {
-		fs := afero.NewMemMapFs()
-		fileContents := `
-			{
-				"region": "US_EAST_2",
-				"serviceEndpointId": "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace",
-				"dnsDomain": "test-namespace.servicebus.windows.net"
+			if len(tc.fileContents) > 0 {
+				require.NoError(t, afero.WriteFile(fs, fileName, []byte(tc.fileContents), 0600))
 			}
-		`
-		require.NoError(t, afero.WriteFile(fs, fileName, []byte(fileContents), 0600))
 
-		createOpts := &CreateOpts{
-			fs:       fs,
-			filename: fileName,
-		}
+			createOpts := &CreateOpts{
+				fs:       fs,
+				filename: fileName,
+			}
 
-		err := createOpts.Run()
-		assert.ErrorContains(t, err, "provider missing")
-	})
+			tc.wantErr(t, createOpts.Run())
+		})
+	}
 
 	t.Run("should call the store create privateLink method with the correct parameters", func(t *testing.T) {
 		fs := afero.NewMemMapFs()

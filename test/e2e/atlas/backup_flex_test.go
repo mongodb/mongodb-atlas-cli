@@ -58,7 +58,7 @@ func TestFlexBackup(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &r), string(resp))
 		assert.NotEmpty(t, r)
 		snapshotID = r.GetResults()[0].GetId()
-		t.Log("snapshotID", snapshotID)
+		t.Log("snapshotID", snapshotID, "snapshotStatus", *r.GetResults()[0].Status)
 		require.NotEmpty(t, snapshotID)
 	})
 
@@ -78,6 +78,20 @@ func TestFlexBackup(t *testing.T) {
 		var result atlasv2.FlexBackupSnapshot20241113
 		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
 		assert.Equal(t, snapshotID, result.GetId())
+	})
+
+	t.Run("Snapshot Watch", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			snapshotsEntity,
+			"watch",
+			snapshotID,
+			"--clusterName",
+			clusterName)
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+
+		require.NoError(t, err, string(resp))
 	})
 
 	var restoreJobID string

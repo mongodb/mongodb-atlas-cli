@@ -324,8 +324,6 @@ func defaultPrivateEndpoint(generator *atlasE2ETestGenerator, independent bool) 
 			ExternalProjectRef: &akov2.ExternalProjectReference{
 				ID: generator.projectID,
 			},
-		}
-		pe.Spec.ProjectDualReference = akov2.ProjectDualReference{
 			ConnectionSecret: &akoapi.LocalObjectReference{
 				Name: resources.NormalizeAtlasName(strings.ToLower(generator.projectName)+"-credentials", resources.AtlasNameToKubernetesName()),
 			},
@@ -1834,42 +1832,6 @@ func referenceAdvancedCluster(name, region, namespace, projectName string, label
 	}
 }
 
-func referenceServerless(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
-	dictionary := resources.AtlasNameToKubernetesName()
-	return &akov2.AtlasDeployment{
-		TypeMeta: metav1.TypeMeta{
-			Kind:       "AtlasDeployment",
-			APIVersion: "atlas.mongodb.com/v1",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      resources.NormalizeAtlasName(fmt.Sprintf("%s-%s", projectName, name), dictionary),
-			Namespace: namespace,
-			Labels:    labels,
-		},
-		Spec: akov2.AtlasDeploymentSpec{
-			ProjectDualReference: akov2.ProjectDualReference{
-				ProjectRef: &akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(projectName, dictionary),
-					Namespace: namespace,
-				},
-			},
-			ServerlessSpec: &akov2.ServerlessSpec{
-				Name: name,
-				ProviderSettings: &akov2.ServerlessProviderSettingsSpec{
-					BackingProviderName: string(akov2provider.ProviderAWS),
-					ProviderName:        akov2provider.ProviderServerless,
-					RegionName:          region,
-				},
-			},
-		},
-		Status: akov2status.AtlasDeploymentStatus{
-			Common: akoapi.Common{
-				Conditions: []akoapi.Condition{},
-			},
-		},
-	}
-}
-
 func referenceFlex(name, region, namespace, projectName string, labels map[string]string) *akov2.AtlasDeployment {
 	dictionary := resources.AtlasNameToKubernetesName()
 	return &akov2.AtlasDeployment{
@@ -2058,10 +2020,10 @@ func checkClustersData(t *testing.T, deployments []*akov2.AtlasDeployment, clust
 	assert.Len(t, deployments, len(clusterNames))
 	var entries []string
 	for _, deployment := range deployments {
-		if deployment.Spec.ServerlessSpec != nil {
-			if ok := slices.Contains(clusterNames, deployment.Spec.ServerlessSpec.Name); ok {
-				name := deployment.Spec.ServerlessSpec.Name
-				expectedDeployment := referenceServerless(name, region, namespace, projectName, expectedLabels)
+		if deployment.Spec.FlexSpec != nil {
+			if ok := slices.Contains(clusterNames, deployment.Spec.FlexSpec.Name); ok {
+				name := deployment.Spec.FlexSpec.Name
+				expectedDeployment := referenceFlex(name, region, namespace, projectName, expectedLabels)
 				assert.Equal(t, expectedDeployment, deployment)
 				entries = append(entries, name)
 			}
@@ -2087,7 +2049,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 	g.enableBackup = true
 	g.generateProject(fmt.Sprintf("kubernetes-%s", n))
 	g.generateCluster()
-	g.generateServerlessCluster()
+	g.generateFlexCluster()
 
 	expectedDeployment := referenceAdvancedCluster(g.clusterName, g.clusterRegion, targetNamespace, g.projectName, expectedLabels, g.mDBVer)
 	expectedBackupSchedule := referenceBackupSchedule(targetNamespace, g.projectName, g.clusterName, expectedLabels)
@@ -2178,7 +2140,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 			"--clusterName",
 			g.clusterName,
 			"--clusterName",
-			g.serverlessName,
+			g.flexName,
 			"--targetNamespace",
 			targetNamespace,
 			"--includeSecrets")
@@ -2198,7 +2160,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 
 		ds := atlasDeployments(objects)
 		require.Len(t, ds, 2)
-		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName, g.mDBVer)
+		checkClustersData(t, ds, []string{g.clusterName, g.flexName}, g.clusterRegion, targetNamespace, g.projectName, g.mDBVer)
 		secret, found := findSecret(objects)
 		require.True(t, found, "Secret is not found in results")
 		assert.Equal(t, targetNamespace, secret.Namespace)
@@ -2228,7 +2190,7 @@ func TestKubernetesConfigGenerate_ClustersWithBackup(t *testing.T) {
 		require.True(t, found, "AtlasProject is not found in results")
 		assert.Equal(t, targetNamespace, p.Namespace)
 		ds := atlasDeployments(objects)
-		checkClustersData(t, ds, []string{g.clusterName, g.serverlessName}, g.clusterRegion, targetNamespace, g.projectName, g.mDBVer)
+		checkClustersData(t, ds, []string{g.clusterName, g.flexName}, g.clusterRegion, targetNamespace, g.projectName, g.mDBVer)
 		secret, found := findSecret(objects)
 		require.True(t, found, "Secret is not found in results")
 		assert.Equal(t, targetNamespace, secret.Namespace)
@@ -2298,7 +2260,7 @@ func TestKubernetesConfigGenerateFlexCluster(t *testing.T) {
 	g.tier = e2eSharedClusterTier
 	g.generateFlexCluster()
 
-	expectedDeployment := referenceFlex(g.clusterName, "US_EAST_1", targetNamespace, g.projectName, expectedLabels)
+	expectedDeployment := referenceFlex(g.flexName, "US_EAST_1", targetNamespace, g.projectName, expectedLabels)
 
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)

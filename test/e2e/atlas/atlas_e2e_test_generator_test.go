@@ -40,7 +40,7 @@ type atlasE2ETestGenerator struct {
 	projectName          string
 	clusterName          string
 	clusterRegion        string
-	serverlessName       string
+	flexName             string
 	teamName             string
 	teamID               string
 	teamUser             string
@@ -413,27 +413,6 @@ func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
 	require.NoError(t, err, string(resp))
 }
 
-func (g *atlasE2ETestGenerator) generateServerlessCluster() {
-	g.t.Helper()
-
-	if g.projectID == "" {
-		g.t.Fatal("unexpected error: project must be generated")
-	}
-
-	var err error
-	g.serverlessName, err = deployServerlessInstanceForProject(g.projectID)
-	if err != nil {
-		g.t.Errorf("unexpected error deploying serverless instance: %v", err)
-	}
-	g.t.Logf("serverlessName=%s", g.serverlessName)
-
-	g.t.Cleanup(func() {
-		cliPath, err := e2e.AtlasCLIBin()
-		require.NoError(g.t, err)
-		deleteServerlessInstanceForProject(g.t, cliPath, g.projectID, g.serverlessName)
-	})
-}
-
 func (g *atlasE2ETestGenerator) generateFlexCluster() {
 	g.t.Helper()
 
@@ -442,14 +421,14 @@ func (g *atlasE2ETestGenerator) generateFlexCluster() {
 	}
 
 	var err error
-	g.clusterName, err = deployFlexClusterForProject(g.projectID)
+	g.flexName, err = deployFlexClusterForProject(g.projectID)
 	if err != nil {
 		g.t.Fatalf("unexpected error deploying flex cluster: %v", err)
 	}
-	g.t.Logf("flexClusterName=%s", g.clusterName)
+	g.t.Logf("flexClusterName=%s", g.flexName)
 
 	g.t.Cleanup(func() {
-		_ = deleteClusterForProject(g.projectID, g.clusterName)
+		_ = deleteClusterForProject(g.projectID, g.flexName)
 	})
 }
 

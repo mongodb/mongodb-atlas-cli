@@ -170,53 +170,6 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 	return o.String(), e.String(), err
 }
 
-func deployServerlessInstanceForProject(projectID string) (string, error) {
-	cliPath, err := e2e.AtlasCLIBin()
-	if err != nil {
-		return "", err
-	}
-	clusterName, err := RandClusterName()
-	if err != nil {
-		return "", err
-	}
-	tier := e2eTier()
-	region, err := newAvailableRegion(projectID, tier, e2eClusterProvider)
-	if err != nil {
-		return "", err
-	}
-	args := []string{
-		serverlessEntity,
-		"create",
-		clusterName,
-		"--region", region,
-		"--provider", e2eClusterProvider,
-	}
-
-	if projectID != "" {
-		args = append(args, "--projectId", projectID)
-	}
-	create := exec.Command(cliPath, args...)
-	create.Env = os.Environ()
-	if resp, err := e2e.RunAndGetStdOut(create); err != nil {
-		return "", fmt.Errorf("error creating serverless instance %w: %s", err, string(resp))
-	}
-
-	watchArgs := []string{
-		serverlessEntity,
-		"watch",
-		clusterName,
-	}
-	if projectID != "" {
-		watchArgs = append(watchArgs, "--projectId", projectID)
-	}
-	watch := exec.Command(cliPath, watchArgs...)
-	watch.Env = os.Environ()
-	if resp, err := e2e.RunAndGetStdOut(watch); err != nil {
-		return "", fmt.Errorf("error watching serverless instance %w: %s", err, string(resp))
-	}
-	return clusterName, nil
-}
-
 func deployFlexClusterForProject(projectID string) (string, error) {
 	cliPath, err := e2e.AtlasCLIBin()
 	if err != nil {

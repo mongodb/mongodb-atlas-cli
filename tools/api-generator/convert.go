@@ -20,6 +20,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
@@ -78,6 +79,16 @@ func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 	return sortedGroups, nil
 }
 
+func extractSunsetDate(operation *openapi3.Operation) *time.Time {
+	if sSunset, ok := operation.Extensions["x-sunset"].(string); ok && sSunset != "" {
+		if sunset, err := time.Parse("2006-01-02", sSunset); err == nil {
+			return &sunset
+		}
+	}
+
+	return nil
+}
+
 func extractExtensionsFromOperation(operation *openapi3.Operation) (bool, string, []string) {
 	skip := false
 	operationID := operation.OperationID
@@ -108,7 +119,8 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) (bool, string
 
 func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.Command, error) {
 	skip, operationID, aliases := extractExtensionsFromOperation(operation)
-	if skip {
+	sunset := extractSunsetDate(operation)
+	if skip || (sunset != nil && sunset.Before(time.Now())) {
 		return nil, nil
 	}
 

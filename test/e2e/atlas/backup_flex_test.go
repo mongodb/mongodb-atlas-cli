@@ -118,7 +118,9 @@ func TestFlexBackup(t *testing.T) {
 		var result atlasv2.FlexBackupRestoreJob20241113
 		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
 		restoreJobID = result.GetId()
-		t.Log("snapshotID", restoreJobID)
+		t.Log("restoreJobId", restoreJobID)
+		t.Log("Response:", string(resp))
+
 		require.NotEmpty(t, restoreJobID)
 	})
 

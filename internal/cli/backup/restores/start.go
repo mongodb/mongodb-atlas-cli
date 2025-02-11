@@ -166,7 +166,7 @@ func (opts *StartOpts) newIsFlexCluster() error {
 		return nil
 	}
 
-	if atlasClustersPinned.IsErrorCode(err, cannotUseFlexWithClusterApisErrorCode) {
+	if !atlasClustersPinned.IsErrorCode(err, cannotUseFlexWithClusterApisErrorCode) {
 		return err
 	}
 

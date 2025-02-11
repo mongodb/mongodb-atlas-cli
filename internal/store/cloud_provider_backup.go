@@ -38,6 +38,7 @@ type RestoreJobsDescriber interface {
 type RestoreJobsCreator interface {
 	CreateRestoreJobs(string, string, *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
 	CreateRestoreFlexClusterJobs(string, string, *atlasv2.FlexBackupRestoreJobCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error)
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
 type SnapshotsLister interface {

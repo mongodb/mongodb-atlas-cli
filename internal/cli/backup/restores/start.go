@@ -26,13 +26,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	"go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
 const (
-	automatedRestore   = "automated"
-	downloadRestore    = "download"
-	pointInTimeRestore = "pointInTime"
+	automatedRestore                      = "automated"
+	downloadRestore                       = "download"
+	pointInTimeRestore                    = "pointInTime"
+	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
 )
 
 type StartOpts struct {
@@ -42,10 +44,11 @@ type StartOpts struct {
 	clusterName           string
 	targetProjectID       string
 	targetClusterName     string
+	snapshotID            string
 	oplogTS               int
 	oplogInc              int
-	snapshotID            string
 	pointInTimeUTCSeconds int
+	isFlexCluster         bool
 	store                 store.RestoreJobsCreator
 }
 
@@ -60,23 +63,16 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 var startTemplate = "Restore job '{{.Id}}' successfully started\n"
 
 func (opts *StartOpts) Run() error {
-	r, err := opts.store.CreateRestoreFlexClusterJobs(opts.ConfigProjectID(), opts.clusterName, opts.newFlexBackupRestoreJobCreate())
-	if err == nil {
+	if opts.isFlexCluster {
+		r, err := opts.store.CreateRestoreFlexClusterJobs(opts.ConfigProjectID(), opts.clusterName, opts.newFlexBackupRestoreJobCreate())
+		if err != nil {
+			return commonerrors.Check(err)
+		}
 		return opts.Print(r)
-	}
-
-	apiError, ok := admin.AsError(err)
-	if !ok {
-		return commonerrors.Check(err)
-	}
-
-	if apiError.ErrorCode != cannotUseNotFlexWithFlexApisErrorCode && apiError.ErrorCode != featureUnsupported {
-		return commonerrors.Check(err)
 	}
 
 	request := opts.newCloudProviderSnapshotRestoreJob()
 	restoreJob, err := opts.store.CreateRestoreJobs(opts.ConfigProjectID(), opts.clusterName, request)
-
 	if err != nil {
 		return commonerrors.Check(err)
 	}
@@ -162,6 +158,22 @@ func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
 	return cmd.MarkFlagRequired(flag.TargetClusterName)
 }
 
+// newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster is a FlexCluster.
+func (opts *StartOpts) newIsFlexCluster() error {
+	_, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.clusterName)
+	if err == nil {
+		opts.isFlexCluster = false
+		return nil
+	}
+
+	if !atlasClustersPinned.IsErrorCode(err, cannotUseFlexWithClusterApisErrorCode) {
+		return err
+	}
+
+	opts.isFlexCluster = true
+	return nil
+}
+
 // StartBuilder builds a cobra.Command that can run as:
 // atlas backup(s) restore(s) job(s) start <automated|download|pointInTime>.
 func StartBuilder() *cobra.Command {
@@ -228,6 +240,7 @@ func StartBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
+				opts.newIsFlexCluster,
 				opts.InitOutput(cmd.OutOrStdout(), startTemplate),
 			)
 		},

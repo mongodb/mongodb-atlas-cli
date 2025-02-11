@@ -142,6 +142,21 @@ func (m *MockRestoreJobsCreator) EXPECT() *MockRestoreJobsCreatorMockRecorder {
 	return m.recorder
 }
 
+// AtlasCluster mocks base method.
+func (m *MockRestoreJobsCreator) AtlasCluster(arg0, arg1 string) (*admin.AdvancedClusterDescription, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AtlasCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin.AdvancedClusterDescription)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AtlasCluster indicates an expected call of AtlasCluster.
+func (mr *MockRestoreJobsCreatorMockRecorder) AtlasCluster(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasCluster", reflect.TypeOf((*MockRestoreJobsCreator)(nil).AtlasCluster), arg0, arg1)
+}
+
 // CreateRestoreFlexClusterJobs mocks base method.
 func (m *MockRestoreJobsCreator) CreateRestoreFlexClusterJobs(arg0, arg1 string, arg2 *admin0.FlexBackupRestoreJobCreate20241113) (*admin0.FlexBackupRestoreJob20241113, error) {
 	m.ctrl.T.Helper()

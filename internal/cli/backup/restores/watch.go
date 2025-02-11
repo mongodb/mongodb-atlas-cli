@@ -27,6 +27,8 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
+const deliveryTypeDownload = "download"
+
 type WatchOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
@@ -54,7 +56,19 @@ func (opts *WatchOpts) watcher() (any, bool, error) {
 		return nil, false, err
 	}
 
-	return nil, result.GetExpired() || result.GetCancelled() || result.GetFailed() || result.HasFinishedAt(), nil
+	return nil, stopWatcher(result), nil
+}
+
+func stopWatcher(result *atlasv2.DiskBackupSnapshotRestoreJob) bool {
+	if result.GetExpired() || result.GetCancelled() || result.GetFailed() || result.HasFinishedAt() {
+		return true
+	}
+
+	if result.GetDeliveryType() == deliveryTypeDownload && len(result.GetDeliveryUrl()) > 0 {
+		return true
+	}
+
+	return false
 }
 
 func (opts *WatchOpts) watcherFlexCluster() (any, bool, error) {

@@ -24,7 +24,7 @@ import (
 var commandRoles = strings.Join([]string{"Project Owner", "Project Stream Processing Owner"}, ", ")
 
 func Builder() *cobra.Command {
-	const use = "privateLink"
+	const use = "privateLinks"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),

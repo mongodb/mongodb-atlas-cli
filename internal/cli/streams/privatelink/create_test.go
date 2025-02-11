@@ -30,15 +30,6 @@ import (
 const fileName = "test-privateLink.json"
 
 func TestCreateOpts_Run(t *testing.T) {
-	validPrivateLinkConfigFileContents := `
-		{
-			"provider": "Azure",
-			"region": "US_EAST_2",
-			"serviceEndpointId": "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace",
-			"dnsDomain": "test-namespace.servicebus.windows.net"
-		}
-	`
-
 	testCases := []struct {
 		name         string
 		fileContents string
@@ -68,7 +59,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			fs := afero.NewMemMapFs()
 
-			if len(tc.fileContents) > 0 {
+			if tc.fileContents != "" {
 				require.NoError(t, afero.WriteFile(fs, fileName, []byte(tc.fileContents), 0600))
 			}
 
@@ -80,6 +71,15 @@ func TestCreateOpts_Run(t *testing.T) {
 			tc.wantErr(t, createOpts.Run())
 		})
 	}
+
+	validPrivateLinkConfigFileContents := `
+		{
+			"provider": "Azure",
+			"region": "US_EAST_2",
+			"serviceEndpointId": "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace",
+			"dnsDomain": "test-namespace.servicebus.windows.net"
+		}
+	`
 
 	t.Run("should call the store create privateLink method with the correct parameters", func(t *testing.T) {
 		fs := afero.NewMemMapFs()
@@ -94,16 +94,11 @@ func TestCreateOpts_Run(t *testing.T) {
 			filename: fileName,
 		}
 
-		expectedProvider := "Azure"
-		expectedRegion := "US_EAST_2"
-		expectedServiceEndpointID := "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace"
-		expectedDNSDomain := "test-namespace.servicebus.windows.net"
-
 		expected := atlasv2.NewStreamsPrivateLinkConnection()
-		expected.Provider = &expectedProvider
-		expected.Region = &expectedRegion
-		expected.ServiceEndpointId = &expectedServiceEndpointID
-		expected.DnsDomain = &expectedDNSDomain
+		expected.SetProvider("Azure")
+		expected.SetRegion("US_EAST_2")
+		expected.SetServiceEndpointId("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace")
+		expected.SetDnsDomain("test-namespace.servicebus.windows.net")
 
 		mockStore.
 			EXPECT().

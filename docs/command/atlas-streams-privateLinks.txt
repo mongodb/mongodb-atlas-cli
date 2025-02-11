@@ -1,8 +1,8 @@
-.. _atlas-streams-privateLink:
+.. _atlas-streams-privateLinks:
 
-=========================
-atlas streams privateLink
-=========================
+==========================
+atlas streams privateLinks
+==========================
 
 .. default-domain:: mongodb
 
@@ -30,7 +30,7 @@ Options
    * - -h, --help
      - 
      - false
-     - help for privateLink
+     - help for privateLinks
 
 Inherited Options
 -----------------
@@ -51,11 +51,11 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-streams-privateLink-create` - Creates a PrivateLink endpoint that can be used as an Atlas Stream Processor connection.
+* :ref:`atlas-streams-privateLinks-create` - Creates a PrivateLink endpoint that can be used as an Atlas Stream Processor connection.
 
 
 .. toctree::
    :titlesonly:
 
-   create </command/atlas-streams-privateLink-create>
+   create </command/atlas-streams-privateLinks-create>
 

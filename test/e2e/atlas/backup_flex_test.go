@@ -119,7 +119,6 @@ func TestFlexBackup(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
 		restoreJobID = result.GetId()
 		t.Log("restoreJobId", restoreJobID)
-		t.Log("Response:", string(resp))
 
 		require.NotEmpty(t, restoreJobID)
 	})

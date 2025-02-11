@@ -1,0 +1,104 @@
+overlay: 1.0.0
+info:
+  title: Add watchers
+  version: 1.0.0
+actions:
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: 2024-10-23
+            operation-id: getCluster
+            params:
+              clusterName: body:$.name
+              groupId: body:$.groupId
+          expect:
+            match:
+              path: $.stateName
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: 2024-10-23
+            operation-id: getCluster
+            params:
+              clusterName: input:clusterName
+              groupId: input:groupId
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].patch
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: 2024-10-23
+            operation-id: getCluster
+            params:
+              clusterName: input:clusterName
+              groupId: input:groupId
+          expect:
+            match:
+              path: $.stateName
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/search/deployment']['post','patch']
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: 2024-05-30
+            operation-id: getAtlasSearchDeployment
+            params:
+              clusterName: input:clusterName
+              groupId: input:groupId
+          expect:
+            match:
+              path: $.stateName
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/search/deployment'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: 2024-05-30
+            operation-id: getAtlasSearchDeployment
+            params:
+              clusterName: input:clusterName
+              groupId: input:groupId
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/backupCompliancePolicy']['put','delete']
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: 2023-10-01
+            operation-id: getDataProtectionSettings
+            params:
+              groupId: input:groupId
+          expect:
+            match:
+              path: $.state
+              values:
+                - ACTIVE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/userSecurity/ldap/verify'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: 2023-01-01
+            operation-id: getLdapConfigurationStatus
+            params:
+              groupId: input:groupId
+              requestId: body:$.requestId
+          expect:
+            match:
+              path: $.status
+              values:
+                - FAILED
+                - SUCCESS

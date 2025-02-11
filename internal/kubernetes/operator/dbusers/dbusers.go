@@ -116,7 +116,7 @@ func setReference(dbUser *akov2.AtlasDatabaseUser, independentResource bool, pro
 		}
 		return dbUser
 	}
-	dbUser.Spec.Project = &akov2common.ResourceRefNamespaced{
+	dbUser.Spec.ProjectRef = &akov2common.ResourceRefNamespaced{
 		Name:      projectName,
 		Namespace: namespace,
 	}

@@ -198,9 +198,11 @@ func TestBuildDBUsers(t *testing.T) {
 				},
 			},
 			Spec: akov2.AtlasDatabaseUserSpec{
-				Project: &akov2common.ResourceRefNamespaced{
-					Name:      resources.NormalizeAtlasName(projectName, dictionary),
-					Namespace: targetNamespace,
+				ProjectDualReference: akov2.ProjectDualReference{
+					ProjectRef: &akov2common.ResourceRefNamespaced{
+						Name:      resources.NormalizeAtlasName(projectName, dictionary),
+						Namespace: targetNamespace,
+					},
 				},
 				DatabaseName:    user.DatabaseName,
 				DeleteAfterDate: user.DeleteAfterDate.Format(timeFormatISO8601),

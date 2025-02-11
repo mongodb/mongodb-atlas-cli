@@ -24,6 +24,8 @@ jobs:
              ./tools/api-generator/spec.yaml
       - run:  make gen-api-commands
         if: steps.verify-changed-files.outputs.files_changed == 'true'
+      - run:  make gen-docs
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
       - name: Find JIRA ticket
         id: find
         if: steps.verify-changed-files.outputs.files_changed == 'true'

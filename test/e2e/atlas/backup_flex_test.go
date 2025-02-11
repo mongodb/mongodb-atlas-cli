@@ -96,7 +96,7 @@ func TestFlexBackup(t *testing.T) {
 
 	var restoreJobID string
 
-	t.Run("Restores Create", func(t *testing.T) {
+	t.Run("Restores Create - Automated", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -168,6 +168,47 @@ func TestFlexBackup(t *testing.T) {
 		var result atlasv2.FlexBackupRestoreJob20241113
 		require.NoError(t, json.Unmarshal(resp, &result))
 		assert.NotEmpty(t, result)
+	})
+
+	t.Run("Restores Create - Download", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			restoresEntity,
+			"start",
+			"download",
+			"--clusterName",
+			clusterName,
+			"--snapshotId",
+			snapshotID,
+			"--targetClusterName",
+			g.clusterName,
+			"--targetProjectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+
+		require.NoError(t, err, string(resp))
+		var result atlasv2.FlexBackupRestoreJob20241113
+		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
+		restoreJobID = result.GetId()
+		t.Log("snapshotID", restoreJobID)
+		require.NotEmpty(t, restoreJobID)
+	})
+
+	t.Run("Restores Watch - Download", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			restoresEntity,
+			"watch",
+			restoreJobID,
+			"--clusterName",
+			clusterName,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Delete flex cluster", func(t *testing.T) {

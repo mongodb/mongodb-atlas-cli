@@ -60,7 +60,7 @@ func NewExecutor(commandConverter CommandConverter, httpClient *http.Client, for
 }
 
 // Executor wired up to use the default profile and static functions on config.
-func NewDefaultExecutor() (*Executor, error) {
+func NewDefaultExecutor(formatter ResponseFormatter) (*Executor, error) {
 	profile := config.Default()
 
 	client := &http.Client{
@@ -72,8 +72,6 @@ func NewDefaultExecutor() (*Executor, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	formatter := NewFormatter()
 
 	return NewExecutor(
 		commandConverter,
@@ -117,15 +115,6 @@ func (e *Executor) ExecuteCommand(ctx context.Context, commandRequest CommandReq
 	isSuccess := httpResponse.StatusCode >= 200 && httpResponse.StatusCode < 300
 	httpCode := httpResponse.StatusCode
 	output := httpResponse.Body
-
-	if isSuccess {
-		formattedOutput, err := e.formatter.Format(commandRequest.Format, output)
-		if err != nil {
-			return nil, err
-		}
-
-		output = formattedOutput
-	}
 
 	response := CommandResponse{
 		IsSuccess: isSuccess,

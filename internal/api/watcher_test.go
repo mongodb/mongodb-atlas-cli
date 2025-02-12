@@ -1,3 +1,17 @@
+// Copyright 2025 MongoDB Inc
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package api
 
 import (
@@ -6,6 +20,8 @@ import (
 	"io"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestAnyToString(t *testing.T) {
@@ -460,6 +476,162 @@ func TestWatchInner(t *testing.T) {
 			// Check result
 			if result != tt.expectedCompleted {
 				t.Errorf("got result %v, want %v", result, tt.expectedCompleted)
+			}
+		})
+	}
+}
+
+func TestBuildRequestParameters(t *testing.T) {
+	// Test setup
+	validJSON := []byte(`{
+		"data": {
+			"id": "abc123",
+			"nested": {
+				"value": "def456"
+			},
+			"array": ["item1", "item2"]
+		}
+	}`)
+
+	invalidJSON := []byte(`{invalid json`)
+
+	tests := []struct {
+		name          string
+		requestParams map[string][]string
+		responseBody  []byte
+		watcherParams map[string]string
+		expected      map[string][]string
+		expectedError error
+	}{
+		{
+			name: "Success - All parameter types",
+			requestParams: map[string][]string{
+				"ProjectID": {"abcdef"},
+			},
+			responseBody: validJSON,
+			watcherParams: map[string]string{
+				"fromBody":   "body:$.data.id",
+				"fromInput":  "input:ProjectID",
+				"fromConst":  "const:fixed-value",
+				"fromNested": "body:$.data.nested.value",
+			},
+			expected: map[string][]string{
+				"fromBody":   {"abc123"},
+				"fromInput":  {"abcdef"},
+				"fromConst":  {"fixed-value"},
+				"fromNested": {"def456"},
+			},
+			expectedError: nil,
+		},
+		{
+			name:          "Error - Invalid parameter format (missing colon)",
+			requestParams: map[string][]string{},
+			responseBody:  validJSON,
+			watcherParams: map[string]string{
+				"invalid": "bodyno-colon",
+			},
+			expected:      nil,
+			expectedError: ErrWatcherFailedToBuildRequestParametersInvalidParameter,
+		},
+		{
+			name:          "Error - Invalid parameter function",
+			requestParams: map[string][]string{},
+			responseBody:  validJSON,
+			watcherParams: map[string]string{
+				"invalid": "unknown:value",
+			},
+			expected:      nil,
+			expectedError: ErrWatcherFailedToBuildRequestInvalidParameterOperation,
+		},
+		{
+			name:          "Error - Input parameter not found",
+			requestParams: map[string][]string{},
+			responseBody:  validJSON,
+			watcherParams: map[string]string{
+				"missing": "input:NonExistentParam",
+			},
+			expected:      nil,
+			expectedError: ErrWatcherFailedToBuildRequestInputParameterNotFound,
+		},
+		{
+			name:          "Error - Invalid JSONPath",
+			requestParams: map[string][]string{},
+			responseBody:  validJSON,
+			watcherParams: map[string]string{
+				"invalid": "body:$.invalid.path",
+			},
+			expected:      nil,
+			expectedError: ErrWatcherFailedToBuildRequestFailedToApplyJSONPath,
+		},
+		{
+			name: "Success - Empty response body with no body parameters",
+			requestParams: map[string][]string{
+				"ProjectID": {"abc123"},
+			},
+			responseBody: []byte{},
+			watcherParams: map[string]string{
+				"fromInput": "input:ProjectID",
+				"fromConst": "const:fixed-value",
+			},
+			expected: map[string][]string{
+				"fromInput": {"abc123"},
+				"fromConst": {"fixed-value"},
+			},
+			expectedError: nil,
+		},
+		{
+			name: "Success - Invalid JSON with no body parameters",
+			requestParams: map[string][]string{
+				"ProjectID": {"abc123"},
+			},
+			responseBody: invalidJSON,
+			watcherParams: map[string]string{
+				"fromInput": "input:ProjectID",
+				"fromConst": "const:fixed-value",
+			},
+			expected: map[string][]string{
+				"fromInput": {"abc123"},
+				"fromConst": {"fixed-value"},
+			},
+			expectedError: nil,
+		},
+		{
+			name:          "Error - Invalid JSON with body parameter",
+			requestParams: map[string][]string{},
+			responseBody:  invalidJSON,
+			watcherParams: map[string]string{
+				"fromBody": "body:$.data.id",
+			},
+			expected:      nil,
+			expectedError: ErrWatcherFailedToBuildRequestFailedToApplyJSONPath,
+		},
+		{
+			name: "Success - Multiple input values",
+			requestParams: map[string][]string{
+				"MultiValue": {"value1", "value2", "value3"},
+			},
+			responseBody: validJSON,
+			watcherParams: map[string]string{
+				"fromInput": "input:MultiValue",
+			},
+			expected: map[string][]string{
+				"fromInput": {"value1", "value2", "value3"},
+			},
+			expectedError: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			actual, actualErr := buildRequestParameters(tt.requestParams, tt.responseBody, tt.watcherParams)
+
+			// Check error
+			if tt.expectedError != nil {
+				require.Error(t, actualErr)
+				require.ErrorIs(t, actualErr, tt.expectedError)
+			} else {
+				require.NoError(t, actualErr)
+				require.Equal(t, tt.expected, actual)
 			}
 		})
 	}

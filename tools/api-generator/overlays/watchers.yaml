@@ -1,0 +1,443 @@
+overlay: 1.0.0
+info:
+  title: Add watchers
+  version: 1.0.0
+actions:
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-10-23"
+            operation-id: getCluster
+            params:
+              clusterName: body:$.name
+              groupId: body:$.groupId
+          expect:
+            match:
+              path: $.stateName
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-10-23"
+            operation-id: getCluster
+            params:
+              clusterName: input:clusterName
+              groupId: input:groupId
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].patch
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-10-23"
+            operation-id: getCluster
+            params:
+              clusterName: input:clusterName
+              groupId: input:groupId
+          expect:
+            match:
+              path: $.stateName
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/search/deployment']['post','patch']
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-05-30"
+            operation-id: getAtlasSearchDeployment
+            params:
+              clusterName: input:clusterName
+              groupId: input:groupId
+          expect:
+            match:
+              path: $.stateName
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/search/deployment'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-05-30"
+            operation-id: getAtlasSearchDeployment
+            params:
+              clusterName: input:clusterName
+              groupId: input:groupId
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/backupCompliancePolicy']['put','delete']
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-10-01"
+            operation-id: getDataProtectionSettings
+            params:
+              groupId: input:groupId
+          expect:
+            match:
+              path: $.state
+              values:
+                - ACTIVE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/userSecurity/ldap/verify'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getLdapConfigurationStatus
+            params:
+              groupId: input:groupId
+              requestId: body:$.requestId
+          expect:
+            match:
+              path: $.status
+              values:
+                - FAILED
+                - SUCCESS
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/serverless'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getFlexCluster
+            params:
+              groupId: input:groupId
+              name: body:$.name
+          expect:
+            match:
+              path: $.status
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/serverless/{name}'].patch
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getFlexCluster
+            params:
+              groupId: input:groupId
+              name: input:name
+          expect:
+            match:
+              path: $.status
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/serverless/{name}'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getFlexCluster
+            params:
+              groupId: input:groupId
+              name: input:name
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/snapshots'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getReplicaSetBackup
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              snapshotId: body:$.id
+          expect:
+            match:
+              path: $.status
+              values:
+                - completed
+                - failed
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/snapshots/{snapshotId}'].patch
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getReplicaSetBackup
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              snapshotId: input:snapshotId
+          expect:
+            match:
+              path: $.status
+              values:
+                - completed
+                - failed
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/snapshots/{snapshotId}'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getReplicaSetBackup
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              snapshotId: input:snapshotId
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/flexClusters'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-11-13"
+            operation-id: getFlexCluster
+            params:
+              name: body:$.name
+              groupId: body:$.groupId
+          expect:
+            match:
+              path: $.stateName
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/flexClusters'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-11-13"
+            operation-id: getFlexCluster
+            params:
+              name: body:$.name
+              groupId: input:groupId
+          expect:
+            match:
+              path: $.stateName
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/flexClusters/{name}'].patch
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-11-13"
+            operation-id: getFlexCluster
+            params:
+              name: input:name
+              groupId: input:groupId
+          expect:
+            match:
+              path: $.stateName
+              values:
+                - IDLE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/flexClusters/{name}'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-11-13"
+            operation-id: getFlexCluster
+            params:
+              name: input:name
+              groupId: input:groupId
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/flexClusters/{name}/backup/restoreJobs'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2024-11-13"
+            operation-id: getFlexBackupRestoreJob
+            params:
+              name: input:name
+              groupId: input:groupId
+              restoreJobId: body:$.id
+          expect:
+            match:
+              path: $.status
+              values:
+                - COMPLETED
+                - FAILED
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/privateEndpoint/endpointService'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getPrivateEndpointService
+            params:
+              cloudProvider: body:$.cloudProvider
+              groupId: input:groupId
+              endpointServiceId: body:$.id
+          expect:
+            match:
+              path: $.status
+              values:
+                - WAITING_FOR_USER
+                - FAILED
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/privateEndpoint/{cloudProvider}/endpointService/{endpointServiceId}'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getPrivateEndpointService
+            params:
+              cloudProvider: body:$.cloudProvider
+              groupId: input:groupId
+              endpointServiceId: body:$.id
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/pipelines'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getPipeline
+            params:
+              groupId: input:groupId
+              pipelineName: body:$.name
+          expect:
+            match:
+              path: $.state
+              values:
+                - ACTIVE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}'].patch
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getPipeline
+            params:
+              groupId: input:groupId
+              pipelineName: input:pipelineName
+          expect:
+            match:
+              path: $.state
+              values:
+                - ACTIVE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/pipelines/{pipelineName}'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getPipeline
+            params:
+              groupId: input:groupId
+              pipelineName: input:pipelineName
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/exports'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getBackupExportJob
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              exportId: body:$.id
+          expect:
+            match:
+              path: $.state
+              values:
+                - Successful
+                - Failed
+                - Cancelled
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/sampleDatasetLoad/{name}'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getSampleDatasetLoadStatus
+            params:
+              groupId: input:groupId
+              sampleDatasetId: body:$.id
+          expect:
+            match:
+              path: $.state
+              values:
+                - COMPLETED
+                - FAILED
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/onlineArchives'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getOnlineArchive
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              archiveId: body:$.id
+          expect:
+            match:
+              path: $.state
+              values:
+                - IDLE
+                - PAUSED
+                - ORPHANED
+                - DELETED
+                - ACTIVE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/onlineArchives/{archiveId}'].patch
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getOnlineArchive
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              archiveId: input:archiveId
+          expect:
+            match:
+              path: $.state
+              values:
+                - IDLE
+                - PAUSED
+                - ORPHANED
+                - DELETED
+                - ACTIVE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/onlineArchives/{archiveId}'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getOnlineArchive
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              archiveId: input:archiveId
+          expect:
+            http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/serverless/{clusterName}/backup/snapshots'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getServerlessBackup
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              snapshotId: body:$.id
+          expect:
+            match:
+              path: $.status
+              values:
+                - completed
+                - failed

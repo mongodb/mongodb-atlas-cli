@@ -4,7 +4,7 @@ on:
    - cron: 30 8 * * TUE
   workflow_dispatch:
 jobs:
-  update-sdk:
+  update-api:
     runs-on: ubuntu-latest
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1

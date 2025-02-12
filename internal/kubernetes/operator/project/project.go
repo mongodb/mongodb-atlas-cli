@@ -94,7 +94,7 @@ func BuildAtlasProject(br *AtlasProjectBuildRequest) (*AtlasProjectResult, error
 		Teams:   nil,
 	}
 
-	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureAccessLists) {
+	if br.Validator.FeatureExist(features.ResourceAtlasProject, featureAccessLists) && !br.Validator.IsResourceSupported(features.ResourceAtlasIPAccessList) {
 		ipAccessList, ferr := buildAccessLists(br.ProjectStore, br.ProjectID)
 		if ferr != nil {
 			return nil, ferr

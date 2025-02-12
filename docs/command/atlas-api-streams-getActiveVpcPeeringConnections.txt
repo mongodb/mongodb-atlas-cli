@@ -1,8 +1,8 @@
-.. _atlas-api-sharedTierRestoreJobs-listSharedClusterBackupRestoreJobs:
+.. _atlas-api-streams-getActiveVpcPeeringConnections:
 
-==================================================================
-atlas api sharedTierRestoreJobs listSharedClusterBackupRestoreJobs
-==================================================================
+================================================
+atlas api streams getActiveVpcPeeringConnections
+================================================
 
 .. default-domain:: mongodb
 
@@ -12,9 +12,9 @@ atlas api sharedTierRestoreJobs listSharedClusterBackupRestoreJobs
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all restore jobs for the specified M2 or M5 cluster.
+`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns a list of active incoming VPC Peering Connections.
 
-Restore jobs restore a cluster using a snapshot. To use this resource, the requesting API Key must have the Project Read Only role. This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the listFlexBackupRestoreJobs endpoint instead. This command is invoking the endpoint with OperationID: 'listSharedClusterBackupRestoreJobs'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Restore-Jobs/operation/listSharedClusterBackupRestoreJobs
+This command is invoking the endpoint with OperationID: 'getActiveVpcPeeringConnections'. For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getActiveVpcPeeringConnections
 
 Syntax
 ------
@@ -22,7 +22,7 @@ Syntax
 .. code-block::
    :caption: Command Syntax
 
-   atlas api sharedTierRestoreJobs listSharedClusterBackupRestoreJobs [options]
+   atlas api streams getActiveVpcPeeringConnections [options]
 
 .. Code end marker, please don't delete this comment
 
@@ -37,10 +37,6 @@ Options
      - Type
      - Required
      - Description
-   * - --clusterName
-     - string
-     - true
-     - human-readable label that identifies the cluster
    * - --envelope
      - 
      - false
@@ -52,7 +48,11 @@ Options
    * - -h, --help
      - 
      - false
-     - help for listSharedClusterBackupRestoreJobs
+     - help for getActiveVpcPeeringConnections
+   * - --itemsPerPage
+     - int
+     - false
+     - number of items that the response returns per page
    * - --output
      - string
      - false
@@ -61,6 +61,10 @@ Options
      - string
      - false
      - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)
+   * - --pageNum
+     - int
+     - false
+     - number of the page that displays the current set of the total objects that the response returns
    * - --pretty
      - 
      - false
@@ -68,7 +72,7 @@ Options
    * - --version
      - string
      - false
-     - api version to use when calling the api call [options: "2023-01-01"], defaults to the latest version or the profiles api_version config value if set This value defaults to "2023-01-01".
+     - api version to use when calling the api call [options: "2024-11-13"], defaults to the latest version or the profiles api_version config value if set This value defaults to "2024-11-13".
 
 Inherited Options
 -----------------

@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type GroupedAndSortedCommands []Group
@@ -46,6 +47,7 @@ type RequestParameters struct {
 
 type Version struct {
 	Version              string
+	Sunset               *time.Time
 	RequestContentType   string
 	ResponseContentTypes []string
 }

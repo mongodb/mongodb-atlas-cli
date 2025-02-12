@@ -597,15 +597,6 @@ func TestBuildAtlasProject(t *testing.T) {
 					ConnectionSecret: &akov2common.ResourceRefNamespaced{
 						Name: resources.NormalizeAtlasName(fmt.Sprintf(credSecretFormat, p.Name), dictionary),
 					},
-					ProjectIPAccessList: []akov2project.IPAccessList{
-						{
-							AwsSecurityGroup: ipAccessLists.GetResults()[0].GetAwsSecurityGroup(),
-							CIDRBlock:        ipAccessLists.GetResults()[0].GetCidrBlock(),
-							Comment:          ipAccessLists.GetResults()[0].GetComment(),
-							DeleteAfterDate:  ipAccessLists.GetResults()[0].GetDeleteAfterDate().String(),
-							IPAddress:        ipAccessLists.GetResults()[0].GetIpAddress(),
-						},
-					},
 					MaintenanceWindow: akov2project.MaintenanceWindow{
 						DayOfWeek: mw.DayOfWeek,
 						HourOfDay: mw.GetHourOfDay(),
@@ -711,7 +702,6 @@ func TestBuildAtlasProject(t *testing.T) {
 		projectStore := mocks.NewMockOperatorProjectStore(ctl)
 		featureValidator := mocks.NewMockFeatureValidator(ctl)
 		t.Run(name, func(t *testing.T) {
-			projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
 			projectStore.EXPECT().MaintenanceWindow(projectID).Return(mw, nil)
 			projectStore.EXPECT().Integrations(projectID).Return(thirdPartyIntegrations, nil)
 			projectStore.EXPECT().PeeringConnections(projectID, containerListOptionAWS).Return(peeringConnections, nil)
@@ -728,6 +718,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			projectStore.EXPECT().DescribeCompliancePolicy(projectID).Return(bcp, nil)
 			tt.privateEndpointMock(projectStore)
 			if !tt.independentResource {
+				projectStore.EXPECT().ProjectIPAccessLists(projectID, listOption).Return(ipAccessLists, nil)
 				projectStore.EXPECT().DatabaseRoles(projectID).Return(customRoles, nil)
 			}
 
@@ -746,6 +737,7 @@ func TestBuildAtlasProject(t *testing.T) {
 			featureValidator.EXPECT().FeatureExist(features.ResourceAtlasProject, featureBCP).Return(true)
 			featureValidator.EXPECT().IsResourceSupported(features.ResourceAtlasPrivateEndpoint).Return(tt.independentResource)
 			featureValidator.EXPECT().IsResourceSupported(features.ResourceAtlasCustomRole).Return(tt.independentResource)
+			featureValidator.EXPECT().IsResourceSupported(features.ResourceAtlasIPAccessList).Return(tt.independentResource)
 
 			projectResult, err := BuildAtlasProject(&AtlasProjectBuildRequest{
 				ProjectStore:    projectStore,

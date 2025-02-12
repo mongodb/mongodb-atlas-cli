@@ -276,6 +276,28 @@ func (e *ConfigExporter) exportProject() ([]runtime.Object, string, error) {
 		}
 	}
 
+	if e.featureValidator.IsResourceSupported(features.ResourceAtlasIPAccessList) {
+		ipAccessList, isEmpty, err := project.BuildIPAccessList(
+			e.dataProvider,
+			project.IPAccessListRequest{
+				ProjectName:         projectData.Project.Name,
+				ProjectID:           e.projectID,
+				TargetNamespace:     e.targetNamespace,
+				Version:             e.operatorVersion,
+				Credentials:         credentialsName,
+				IndependentResource: e.independentResources,
+				Dictionary:          e.dictionaryForAtlasNames,
+			},
+		)
+		if err != nil {
+			return nil, "", err
+		}
+
+		if !isEmpty {
+			r = append(r, ipAccessList)
+		}
+	}
+
 	// DB users
 	usersData, relatedSecrets, err := dbusers.BuildDBUsers(
 		e.dataProvider,

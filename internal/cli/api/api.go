@@ -15,6 +15,7 @@
 package api
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -27,6 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -35,6 +37,8 @@ var (
 	ErrFailedToSetUntouchedFlags         = errors.New("failed to set untouched flags")
 	ErrServerReturnedAnErrorResponseCode = errors.New("server returned an error response code")
 	ErrAPICommandsHasNoVersions          = errors.New("api command has no versions")
+	ErrFormattingOutput                  = errors.New("error formatting output")
+	ErrRunningWatcher                    = errors.New("error while running watcher")
 	BinaryOutputTypes                    = []string{"gzip"}
 )
 
@@ -95,6 +99,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	format := ""
 	outputFile := ""
 	version, err := defaultAPIVersion(command)
+	watch := false
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +156,8 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 
 			// Create a new executor
 			// This is the piece of code which knows how to execute api.Commands
-			executor, err := api.NewDefaultExecutor()
+			formatter := api.NewFormatter()
+			executor, err := api.NewDefaultExecutor(formatter)
 			if err != nil {
 				return err
 			}
@@ -173,6 +179,35 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 			// Properly free up result output
 			defer result.Output.Close()
 
+			// Output that will be send to stdout/file
+			responseOutput := result.Output
+
+			// Response body used for the watcher
+			var watchResponseBody []byte
+
+			// If the response was successful, handle --format
+			if result.IsSuccess {
+				// If we're watching, we need to cache the original output before formatting so we don't read twice from the same reader
+				// In case we're not watching the http output will be piped straight into the formatter, which should be a little more memory efficient
+				if watch {
+					responseBytes, err := io.ReadAll(result.Output)
+					if err != nil {
+						return errors.Join(errors.New("failed to read output"), err)
+					}
+					watchResponseBody = responseBytes
+
+					// Create a new reader for the formatter
+					responseOutput = io.NopCloser(bytes.NewReader(responseBytes))
+				}
+
+				formattedOutput, err := formatter.Format(format, responseOutput)
+				if err != nil {
+					return errors.Join(ErrFormattingOutput, err)
+				}
+
+				responseOutput = formattedOutput
+			}
+
 			// Determine where to write the
 			output, err := getOutputWriteCloser(outputFile)
 			if err != nil {
@@ -182,7 +217,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 			defer output.Close()
 
 			// Write the output
-			_, err = io.Copy(output, result.Output)
+			_, err = io.Copy(output, responseOutput)
 			if err != nil {
 				return err
 			}
@@ -193,11 +228,26 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 				return ErrServerReturnedAnErrorResponseCode
 			}
 
+			// In case watcher is set we wait for the watcher to succeed before we exit the program
+			if watch {
+				// Create a new watcher
+				watcher, err := NewWatcher(executor, commandRequest.Parameters, watchResponseBody, *command.Watcher)
+				if err != nil {
+					return err
+				}
+
+				// Wait until we're in the desired state or until an error occures when watching
+				if err := watcher.Wait(cmd.Context()); err != nil {
+					return errors.Join(ErrRunningWatcher, err)
+				}
+			}
+
 			return nil
 		},
 	}
 
 	// Common flags
+	addWatchFlagIfNeeded(cmd, command, &watch)
 	addVersionFlag(cmd, command, &version)
 
 	if needsFileFlag(command) {
@@ -373,6 +423,14 @@ func needsFileFlag(apiCommand api.Command) bool {
 	}
 
 	return false
+}
+
+func addWatchFlagIfNeeded(cmd *cobra.Command, apiCommand api.Command, watch *bool) {
+	if apiCommand.Watcher == nil || apiCommand.Watcher.Get.OperationID == "" {
+		return
+	}
+
+	cmd.Flags().BoolVarP(watch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
 }
 
 func addVersionFlag(cmd *cobra.Command, apiCommand api.Command, version *string) {

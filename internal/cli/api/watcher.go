@@ -16,6 +16,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"time"
 
@@ -62,10 +63,18 @@ func NewWatcher(executor api.CommandExecutor, requestParams map[string][]string,
 	}, nil
 }
 
-func (w *Watcher) Wait(ctx context.Context) error {
+func (w *Watcher) Wait(ctx context.Context, timeout time.Duration) error {
 	// Take care of the spinner if we're in terminal mode
 	w.startSpinner()
 	defer w.stopSpinner()
+
+	// If timeout is 0, use the original context without timeout
+	// Otherwise, create a new context with timeout
+	if timeout > 0 {
+		watchCtx, cancel := context.WithTimeout(ctx, timeout)
+		defer cancel()
+		ctx = watchCtx
+	}
 
 	// Keep calling WatchOne until one of the following events happens
 	// - watcher completes successfully
@@ -74,6 +83,10 @@ func (w *Watcher) Wait(ctx context.Context) error {
 	for {
 		select {
 		case <-ctx.Done():
+			// Handle both timeout and cancellation
+			if ctx.Err() == context.DeadlineExceeded {
+				return fmt.Errorf("watching operation timed out after %s", timeout)
+			}
 			return ctx.Err()
 		default:
 			done, err := w.apiWatcher.WatchOne(ctx)

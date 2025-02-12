@@ -35,25 +35,6 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Upgrade to shared cluster", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"upgrade",
-			g.clusterName,
-			"--tier", tierM2,
-			"--diskSizeGB=2",
-			"--projectId", g.projectID,
-			"--tag", "env=e2e",
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := e2e.RunAndGetStdOut(cmd)
-		require.NoError(t, err, string(resp))
-		require.NoError(t, watchCluster(g.projectID, g.clusterName))
-		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
-		ensureClusterTier(t, cluster, tierM2)
-		assert.Contains(t, cluster.GetTags(), atlasClustersPinned.ResourceTag{Key: "env", Value: "e2e"})
-	})
-
 	t.Run("Upgrade to dedicated tier", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,

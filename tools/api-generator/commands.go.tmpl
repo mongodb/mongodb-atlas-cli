@@ -28,6 +28,7 @@ var Commands = GroupedAndSortedCommands{
 		{{- range .Commands }}
 			{
 				OperationID: `{{ .OperationID }}`,
+				Aliases: {{if not .Aliases}} nil {{else}} []string{ {{ range $i, $alias := .Aliases }}{{if $i}},{{end}}`{{ $alias }}`{{end}} } {{end}},
 				Description: `{{ .Description }}`,
 				RequestParameters: RequestParameters{
 					URL: `{{ .RequestParameters.URL }}`,
@@ -36,6 +37,7 @@ var Commands = GroupedAndSortedCommands{
 						{
 							Name:        `{{ .Name }}`,
 							Description: `{{ .Description }}`,
+							Short:       `{{ .Short }}`,
 							Required:    {{ .Required }},
 							Type:        ParameterType{
 								IsArray:	{{ .Type.IsArray }},
@@ -49,6 +51,7 @@ var Commands = GroupedAndSortedCommands{
 						{
 							Name:        `{{ .Name }}`,
 							Description: `{{ .Description }}`,
+							Short:       `{{ .Short }}`,
 							Required:    {{ .Required }},
 							Type:        ParameterType{
 								IsArray:	{{ .Type.IsArray }},
@@ -71,7 +74,27 @@ var Commands = GroupedAndSortedCommands{
 						},
 					},
 				{{- end }}
-				},
+				},{{if .Watcher}}
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `{{ .Watcher.Get.OperationID }}`,
+						Version:     `{{ .Watcher.Get.Version }}`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: {{if not .Watcher.Expect }} nil,{{else}}&WatcherExpectProperties{ {{if ne .Watcher.Expect.HTTPCode 0}}
+						HTTPCode: {{ .Watcher.Expect.HTTPCode }},{{- end }}
+						Match: {{if not .Watcher.Expect.Match }} nil,{{else}}&WatcherMatchProperties{
+							Path: `{{ .Watcher.Expect.Match.Path }}`,
+							Values: []string{
+								{{- range .Watcher.Expect.Match.Values }}
+									`{{ . }}`,
+								{{- end }}
+							},
+						},{{end}}
+					},{{end}}
+				},{{end}}
 			},
 		{{- end }}
 		},

@@ -90,7 +90,7 @@ func SetBuilder() *cobra.Command {
 			"propertyNameDesc": "Property to set in the profile. Valid values for Atlas CLI are project_id, org_id, service, public_api_key, private_api_key, output, mongosh_path, skip_update_check, telemetry_enabled, access_token, and refresh_token.",
 			"valueDesc":        "Value for the property to set in the profile.",
 		},
-		ValidArgs: config.Properties(),
+		ValidArgs: config.AllProperties(),
 		RunE: func(_ *cobra.Command, args []string) error {
 			opts := &SetOpts{
 				store: config.Default(),

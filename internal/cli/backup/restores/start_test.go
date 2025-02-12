@@ -28,7 +28,6 @@ import (
 func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockRestoreJobsCreator(ctrl)
-
 	expected := &atlasv2.DiskBackupSnapshotRestoreJob{}
 
 	t.Run(automatedRestore, func(t *testing.T) {
@@ -38,20 +37,12 @@ func TestStart_Run(t *testing.T) {
 			clusterName:       "Cluster0",
 			targetClusterName: "Cluster1",
 			targetProjectID:   "1",
+			isFlexCluster:     false,
 		}
 
-		expectedError := &atlasv2.GenericOpenAPIError{}
-		expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
-
 		mockStore.
 			EXPECT().
-			CreateRestoreFlexClusterJobs(listOpts.ProjectID, "Cluster0", listOpts.newFlexBackupRestoreJobCreate()).
-			Return(nil, expectedError).
-			Times(1)
-
-		mockStore.
-			EXPECT().
-			CreateRestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.newCloudProviderSnapshotRestoreJob()).
+			CreateRestoreJobs(listOpts.ProjectID, listOpts.clusterName, listOpts.newCloudProviderSnapshotRestoreJob()).
 			Return(expected, nil).
 			Times(1)
 
@@ -65,12 +56,10 @@ func TestStart_Run(t *testing.T) {
 			clusterName:       "Cluster0",
 			targetClusterName: "Cluster1",
 			targetProjectID:   "1",
+			isFlexCluster:     true,
 		}
 
 		expectedFlex := &atlasv2.FlexBackupRestoreJob20241113{}
-		expectedError := &atlasv2.GenericOpenAPIError{}
-		expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
-
 		mockStore.
 			EXPECT().
 			CreateRestoreFlexClusterJobs(listOpts.ProjectID, "Cluster0", listOpts.newFlexBackupRestoreJobCreate()).
@@ -87,16 +76,8 @@ func TestStart_Run(t *testing.T) {
 			clusterName:       "Cluster0",
 			targetClusterName: "Cluster1",
 			targetProjectID:   "1",
+			isFlexCluster:     false,
 		}
-
-		expectedError := &atlasv2.GenericOpenAPIError{}
-		expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
-
-		mockStore.
-			EXPECT().
-			CreateRestoreFlexClusterJobs(listOpts.ProjectID, "Cluster0", listOpts.newFlexBackupRestoreJobCreate()).
-			Return(nil, expectedError).
-			Times(1)
 
 		mockStore.
 			EXPECT().
@@ -109,19 +90,11 @@ func TestStart_Run(t *testing.T) {
 
 	t.Run(downloadRestore, func(t *testing.T) {
 		listOpts := &StartOpts{
-			store:       mockStore,
-			method:      downloadRestore,
-			clusterName: "Cluster0",
+			store:         mockStore,
+			method:        downloadRestore,
+			clusterName:   "Cluster0",
+			isFlexCluster: false,
 		}
-
-		expectedError := &atlasv2.GenericOpenAPIError{}
-		expectedError.SetModel(atlasv2.ApiError{ErrorCode: cannotUseNotFlexWithFlexApisErrorCode})
-
-		mockStore.
-			EXPECT().
-			CreateRestoreFlexClusterJobs(listOpts.ProjectID, "Cluster0", listOpts.newFlexBackupRestoreJobCreate()).
-			Return(nil, expectedError).
-			Times(1)
 
 		mockStore.
 			EXPECT().

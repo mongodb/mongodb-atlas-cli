@@ -1,0 +1,23 @@
+overlay: 1.0.0
+info:
+  title: Fix up API description
+  version: 1.0.1
+actions:
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].post
+    update:
+      x-xgen-atlascli:
+        override:
+          description: OVERRIDDEN
+          operationId: createClusterX
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].post.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-atlascli:
+        override:
+          description: OVERRIDDEN
+          name: groupIdX
+  - target: $.components.parameters.groupId
+    update:
+      x-xgen-atlascli:
+        override:
+          description: OVERRIDDEN
+          name: groupIdX

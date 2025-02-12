@@ -18,17 +18,20 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
-	"errors"
 	"fmt"
 	"go/format"
+	"io"
 	"os"
+	"path/filepath"
+	"strings"
 	"text/template"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
-	"github.com/spf13/afero"
+	"github.com/speakeasy-api/openapi-overlay/pkg/overlay"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 )
 
 //go:embed commands.go.tmpl
@@ -36,31 +39,22 @@ var templateContent string
 
 func main() {
 	var (
-		specPath   string
-		outputPath string
+		specPath    string
+		overlayPath string
 	)
 
 	var rootCmd = &cobra.Command{
 		Use:   "api-generator",
 		Short: "CLI which generates api command definitions from a OpenAPI spec",
-		PreRunE: func(_ *cobra.Command, _ []string) error {
-			if specPath == "" {
-				return errors.New("--spec is a required flag")
-			}
-
-			if outputPath == "" {
-				return errors.New("--output is a required flag")
-			}
-
-			return nil
-		},
 		RunE: func(command *cobra.Command, _ []string) error {
-			return convertSpecToAPICommands(command.Context(), afero.NewOsFs(), specPath, outputPath)
+			return run(command.Context(), specPath, overlayPath, command.OutOrStdout())
 		},
 	}
 
-	rootCmd.PersistentFlags().StringVar(&specPath, "spec", "", "Path to spec file")
-	rootCmd.PersistentFlags().StringVar(&outputPath, "output", "", "Path to output file")
+	rootCmd.Flags().StringVar(&specPath, "spec", "", "Path to spec file")
+	rootCmd.Flags().StringVar(&overlayPath, "overlay", "", "Path to overlay folder")
+	_ = rootCmd.MarkFlagRequired("spec")
+	_ = rootCmd.MarkFlagFilename("spec")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -68,10 +62,86 @@ func main() {
 	}
 }
 
-func convertSpecToAPICommands(ctx context.Context, fs afero.Fs, specPath, outputPath string) error {
-	spec, err := loadSpec(fs, specPath)
+func run(ctx context.Context, specPath, overlayPath string, w io.Writer) error {
+	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
-		return fmt.Errorf("failed to load spec: '%s', error: %w", specPath, err)
+		return err
+	}
+
+	defer specFile.Close()
+
+	files, err := os.ReadDir(overlayPath)
+	if err != nil {
+		return err
+	}
+
+	overlayFiles := make([]io.Reader, 0, len(files))
+
+	for _, file := range files {
+		if !strings.HasSuffix(file.Name(), ".yaml") && !strings.HasSuffix(file.Name(), ".yml") {
+			continue
+		}
+
+		fileName := filepath.Join(overlayPath, file.Name())
+
+		overlayFile, err := os.OpenFile(fileName, os.O_RDONLY, os.ModePerm)
+		if err != nil {
+			return err
+		}
+
+		defer overlayFile.Close() //nolint // required
+
+		overlayFiles = append(overlayFiles, overlayFile)
+	}
+
+	return convertSpecToAPICommands(ctx, specFile, overlayFiles, w)
+}
+
+func applyOverlays(r io.Reader, overlayFiles []io.Reader) (io.Reader, error) {
+	if len(overlayFiles) == 0 {
+		return r, nil
+	}
+
+	var spec yaml.Node
+	err := yaml.NewDecoder(r).Decode(&spec)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, overlayFile := range overlayFiles {
+		var o overlay.Overlay
+		dec := yaml.NewDecoder(overlayFile)
+
+		if err := dec.Decode(&o); err != nil {
+			return nil, err
+		}
+
+		if err := o.Validate(); err != nil {
+			return nil, err
+		}
+
+		if err = o.ApplyTo(&spec); err != nil {
+			return nil, err
+		}
+	}
+
+	buf, err := yaml.Marshal(&spec)
+	if err != nil {
+		return nil, err
+	}
+
+	return bytes.NewBuffer(buf), nil
+}
+
+func convertSpecToAPICommands(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error {
+	overlaySpec, err := applyOverlays(r, overlayFiles)
+	if err != nil {
+		return fmt.Errorf("failed to apply overlays, error: %w", err)
+	}
+
+	spec, err := loadSpec(overlaySpec)
+	if err != nil {
+		return fmt.Errorf("failed to load spec, error: %w", err)
 	}
 
 	if err := spec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
@@ -83,24 +153,15 @@ func convertSpecToAPICommands(ctx context.Context, fs afero.Fs, specPath, output
 		return fmt.Errorf("failed convert spec to api commands: %w", err)
 	}
 
-	return writeCommands(fs, outputPath, commands)
+	return writeCommands(w, commands)
 }
 
-func loadSpec(fs afero.Fs, specPath string) (*openapi3.T, error) {
-	file, err := fs.Open(specPath)
-	if err != nil {
-		return nil, err
-	}
-
-	defer func() {
-		_ = file.Close()
-	}()
-
+func loadSpec(r io.Reader) (*openapi3.T, error) {
 	loader := openapi3.NewLoader()
-	return loader.LoadFromIoReader(file)
+	return loader.LoadFromIoReader(r)
 }
 
-func writeCommands(fs afero.Fs, outputPath string, data api.GroupedAndSortedCommands) error {
+func writeCommands(w io.Writer, data api.GroupedAndSortedCommands) error {
 	tmpl, err := template.New("commands.go.tmpl").Funcs(template.FuncMap{
 		"currentYear": func() int {
 			return time.Now().UTC().Year()
@@ -122,15 +183,6 @@ func writeCommands(fs afero.Fs, outputPath string, data api.GroupedAndSortedComm
 		return fmt.Errorf("failed to format generated code: %w", err)
 	}
 
-	// Write the formatted code to file
-	file, err := fs.Create(outputPath)
-	if err != nil {
-		return fmt.Errorf("failed to open output file %s, error: %w", outputPath, err)
-	}
-	defer func() {
-		_ = file.Close()
-	}()
-
-	_, err = file.Write(formatted)
+	_, err = w.Write(formatted)
 	return err
 }

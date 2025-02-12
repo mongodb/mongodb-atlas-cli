@@ -24,9 +24,12 @@ var Commands = GroupedAndSortedCommands{
 		Description: `Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.`,
 		Commands: []Command{
 			{
-				OperationID: `createClusterX`,
+				OperationID: `listClusters`,
 				Aliases:     nil,
-				Description: `OVERRIDDEN`,
+				Description: `Returns the details for all clusters in the specific project to which you have access. Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting API Key must have the Project Read Only role. This feature is not  available for serverless clusters.
+
+This command is invoking the endpoint with OperationID: 'listClusters'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/listClusters`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters`,
 					QueryParameters: []Parameter{
@@ -41,8 +44,48 @@ var Commands = GroupedAndSortedCommands{
 							},
 						},
 						{
+							Name:        `includeCount`,
+							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Short:       ``,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `itemsPerPage`,
+							Description: `Number of items that the response returns per page.`,
+							Short:       ``,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
+							Name:        `pageNum`,
+							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
+							Short:       ``,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Short:       ``,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `includeDeletedWithRetainedBackups`,
+							Description: `Flag that indicates whether to return Clusters with retain backups.`,
 							Short:       ``,
 							Required:    false,
 							Type: ParameterType{
@@ -53,63 +96,41 @@ var Commands = GroupedAndSortedCommands{
 					},
 					URLParameters: []Parameter{
 						{
-							Name:        `groupIdX`,
-							Description: `OVERRIDDEN`,
-							Short:       ``,
-							Required:    true,
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
 							},
 						},
 					},
-					Verb: http.MethodPost,
+					Verb: http.MethodGet,
 				},
 				Versions: []Version{
 					{
 						Version:            `2023-01-01`,
-						RequestContentType: `json`,
+						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
 						Version:            `2023-02-01`,
-						RequestContentType: `json`,
+						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
 						Version:            `2024-08-05`,
-						RequestContentType: `json`,
+						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
-						},
-					},
-					{
-						Version:            `2024-10-23`,
-						RequestContentType: `json`,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-				},
-				Watcher: &WatcherProperties{
-					Get: WatcherGetProperties{
-						OperationID: `getCluster`,
-						Version:     `2023-02-01`,
-						Params: map[string]string{
-							`orgId`: `123`,
-						},
-					},
-					Expect: &WatcherExpectProperties{
-						HTTPCode: 200,
-						Match: &WatcherMatchProperties{
-							Path: `$.stateName`,
-							Values: []string{
-								`IDLE`,
-							},
 						},
 					},
 				},

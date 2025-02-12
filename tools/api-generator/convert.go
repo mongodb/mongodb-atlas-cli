@@ -20,6 +20,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
@@ -37,6 +38,9 @@ func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 			command, err := operationToCommand(path, verb, operation)
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert operation to command: %w", err)
+			}
+			if command == nil {
+				continue
 			}
 
 			if len(operation.Tags) != 1 {
@@ -75,7 +79,51 @@ func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 	return sortedGroups, nil
 }
 
+func extractSunsetDate(operation *openapi3.Operation) *time.Time {
+	if sSunset, ok := operation.Extensions["x-sunset"].(string); ok && sSunset != "" {
+		if sunset, err := time.Parse("2006-01-02", sSunset); err == nil {
+			return &sunset
+		}
+	}
+
+	return nil
+}
+
+func extractExtensionsFromOperation(operation *openapi3.Operation) (bool, string, []string) {
+	skip := false
+	operationID := operation.OperationID
+	var aliases []string
+
+	if extensions, okExtensions := operation.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if extSkip, okSkip := extensions["skip"].(bool); okSkip && extSkip {
+			skip = extSkip
+		}
+
+		if extAliases, okExtAliases := extensions["command-aliases"].([]any); okExtAliases && extAliases != nil {
+			for _, alias := range extAliases {
+				if sAlias, ok := alias.(string); ok && sAlias != "" {
+					aliases = append(aliases, sAlias)
+				}
+			}
+		}
+
+		if overrides := extractOverrides(operation.Extensions); overrides != nil {
+			if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
+				operationID = overriddenOperationID
+			}
+		}
+	}
+
+	return skip, operationID, aliases
+}
+
 func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.Command, error) {
+	skip, operationID, aliases := extractExtensionsFromOperation(operation)
+	sunset := extractSunsetDate(operation)
+	if skip || (sunset != nil && sunset.Before(time.Now())) {
+		return nil, nil
+	}
+
 	httpVerb, err := api.ToHTTPVerb(verb)
 	if err != nil {
 		return nil, err
@@ -96,14 +144,20 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 		return nil, fmt.Errorf("failed to clean description: %w", err)
 	}
 
-	operationID := operation.OperationID
+	if overrides := extractOverrides(operation.Extensions); overrides != nil {
+		if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
+			operationID = overriddenOperationID
+		}
+	}
 
-	if overriddenOperationID, ok := operation.Extensions["x-xgen-cli-override-operationId"].(string); ok && overriddenOperationID != "" {
-		operationID = overriddenOperationID
+	watcher, err := extractWatcherProperties(operation.Extensions)
+	if err != nil {
+		return nil, err
 	}
 
 	command := api.Command{
 		OperationID: operationID,
+		Aliases:     aliases,
 		Description: description,
 		RequestParameters: api.RequestParameters{
 			URL:             path,
@@ -112,6 +166,7 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 			Verb:            httpVerb,
 		},
 		Versions: versions,
+		Watcher:  watcher,
 	}
 
 	return &command, nil
@@ -126,9 +181,11 @@ func buildDescription(operation *openapi3.Operation) (string, error) {
 	inputDescription := operation.Description
 	overridden := false
 
-	if overriddenDescription, ok := operation.Extensions["x-xgen-cli-override-description"].(string); ok && overriddenDescription != "" {
-		inputDescription = overriddenDescription
-		overridden = true
+	if overrides := extractOverrides(operation.Extensions); overrides != nil {
+		if overriddenDescription, ok := overrides["description"].(string); ok && overriddenDescription != "" {
+			inputDescription = overriddenDescription
+			overridden = true
+		}
 	}
 
 	// Get the original description and clean it up
@@ -156,6 +213,56 @@ type parameterSet struct {
 	url   []api.Parameter
 }
 
+func extractOverrides(ext map[string]any) map[string]any {
+	if extensions, okExtensions := ext["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if overrides, okOverrides := extensions["override"].(map[string]any); okOverrides && overrides != nil {
+			return overrides
+		}
+	}
+	return nil
+}
+
+func extractParameterShort(parameterRef *openapi3.ParameterRef) string {
+	parameter := parameterRef.Value
+	parameterShort := ""
+
+	if extensions, okExtensions := parameterRef.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if flagShort, okFlagShort := extensions["flag-short"].(string); okFlagShort {
+			parameterShort = flagShort
+		}
+	} else if extensions, okExtensions := parameter.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if flagShort, okFlagShort := extensions["flag-short"].(string); okFlagShort {
+			parameterShort = flagShort
+		}
+	}
+
+	return parameterShort
+}
+
+func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (string, string) {
+	parameter := parameterRef.Value
+	parameterName := parameter.Name
+	parameterDescription := parameter.Description
+
+	if overrides := extractOverrides(parameterRef.Extensions); overrides != nil {
+		if overriddenDescription, ok := overrides["description"].(string); ok && overriddenDescription != "" {
+			parameterDescription = overriddenDescription
+		}
+		if overriddenName, ok := overrides["name"].(string); ok && overriddenName != "" {
+			parameterName = overriddenName
+		}
+	} else if overrides := extractOverrides(parameter.Extensions); overrides != nil {
+		if overriddenDescription, ok := overrides["description"].(string); ok && overriddenDescription != "" {
+			parameterDescription = overriddenDescription
+		}
+		if overriddenName, ok := overrides["name"].(string); ok && overriddenName != "" {
+			parameterName = overriddenName
+		}
+	}
+
+	return parameterName, parameterDescription
+}
+
 // Extract and categorize parameters.
 func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 	parameterNames := make(map[string]struct{})
@@ -164,20 +271,8 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 
 	for _, parameterRef := range parameters {
 		parameter := parameterRef.Value
-		parameterName := parameter.Name
-		if overriddenName, ok := parameter.Extensions["x-xgen-cli-override-name"].(string); ok && overriddenName != "" {
-			parameterName = overriddenName
-		}
-		if overriddenName, ok := parameterRef.Extensions["x-xgen-cli-override-name"].(string); ok && overriddenName != "" {
-			parameterName = overriddenName
-		}
-		parameterDescription := parameter.Description
-		if overriddenDescription, ok := parameter.Extensions["x-xgen-cli-override-description"].(string); ok && overriddenDescription != "" {
-			parameterDescription = overriddenDescription
-		}
-		if overriddenDescription, ok := parameterRef.Extensions["x-xgen-cli-override-description"].(string); ok && overriddenDescription != "" {
-			parameterDescription = overriddenDescription
-		}
+		parameterName, parameterDescription := extractParametersNameDescription(parameterRef)
+		parameterShort := extractParameterShort(parameterRef)
 
 		// Parameters are translated to flags, we don't want duplicates
 		// Duplicates should be resolved by customization, in case they ever appeared
@@ -197,6 +292,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 
 		apiParameter := api.Parameter{
 			Name:        parameterName,
+			Short:       parameterShort,
 			Description: description,
 			Required:    parameter.Required,
 			Type:        *parameterType,

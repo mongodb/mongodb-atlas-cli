@@ -79,7 +79,7 @@ func TestRestores(t *testing.T) {
 		t.Log(string(resp))
 	})
 
-	t.Run("Restores Create", func(t *testing.T) {
+	t.Run("Restores Create - Automated", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -159,6 +159,45 @@ func TestRestores(t *testing.T) {
 		var result atlasv2.DiskBackupSnapshotRestoreJob
 		require.NoError(t, json.Unmarshal(resp, &result), string(resp))
 		assert.NotEmpty(t, result)
+	})
+
+	t.Run("Restores Create - Download", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			restoresEntity,
+			"start",
+			"download",
+			"--clusterName",
+			g.clusterName,
+			"--snapshotId",
+			snapshotID,
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+
+		require.NoError(t, err, string(resp))
+		var result atlasv2.DiskBackupSnapshotRestoreJob
+		require.NoError(t, json.Unmarshal(resp, &result))
+		restoreJobID = result.GetId()
+	})
+
+	t.Run("Restores Watch - Download", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			backupsEntity,
+			restoresEntity,
+			"watch",
+			restoreJobID,
+			"--clusterName",
+			g.clusterName,
+			"--projectId",
+			g.projectID,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+
+		require.NoError(t, err, string(resp))
 	})
 
 	t.Run("Delete snapshot", func(t *testing.T) {

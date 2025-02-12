@@ -103,17 +103,15 @@ addcopy: ## Add missing license to files
 	@scripts/add-copy.sh
 
 .PHONY: generate
-generate: gen-docs gen-mocks gen-code gen-api-commands ## Generate docs, mocks, code, api commands, all auto generated assets
+generate: gen-docs gen-mocks gen-api-commands ## Generate docs, mocks, code, api commands, all auto generated assets
 
-.PHONY: gen-code
-gen-code: ## Generate code
-	@echo "==> Generating code"
-	go run ./tools/cli-generator
+bin/api-generator:
+	go build -o ./bin/api-generator ./tools/api-generator
 
 .PHONY: gen-api-commands
-gen-api-commands: ## Generate api commands
+gen-api-commands: bin/api-generator ## Generate api commands
 	@echo "==> Generating api commands"
-	go run ./tools/api-generator --spec ./tools/api-generator/spec.yaml --output ./internal/api/commands.go
+	bin/api-generator --spec ./tools/api-generator/spec.yaml --overlay ./tools/api-generator/overlays > ./internal/api/commands.go
 
 .PHONY: otel
 otel: ## Generate code

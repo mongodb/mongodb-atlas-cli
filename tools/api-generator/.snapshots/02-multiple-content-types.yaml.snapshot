@@ -21,10 +21,11 @@ import "net/http"
 var Commands = GroupedAndSortedCommands{
 	{
 		Name:        `Clusters`,
-		Description: ``,
+		Description: `Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.`,
 		Commands: []Command{
 			{
 				OperationID: `createCluster`,
+				Aliases:     nil,
 				Description: `Creates one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
 
 This command is invoking the endpoint with OperationID: 'createCluster'.
@@ -35,6 +36,7 @@ For more information about flags, format of --file and examples, see: https://ww
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -44,6 +46,7 @@ For more information about flags, format of --file and examples, see: https://ww
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Short:       ``,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -58,6 +61,7 @@ For more information about flags, format of --file and examples, see: https://ww
 
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
 							Required: true,
 							Type: ParameterType{
 								IsArray: false,
@@ -100,6 +104,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 			{
 				OperationID: `listClusters`,
+				Aliases:     nil,
 				Description: `Returns the details for all clusters in the specific project to which you have access. Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting API Key must have the Project Read Only role. This feature is not  available for serverless clusters.
 
 This command is invoking the endpoint with OperationID: 'listClusters'.
@@ -110,6 +115,7 @@ For more information about flags, format of --file and examples, see: https://ww
 						{
 							Name:        `envelope`,
 							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -119,6 +125,7 @@ For more information about flags, format of --file and examples, see: https://ww
 						{
 							Name:        `includeCount`,
 							Description: `Flag that indicates whether the response returns the total number of items (totalCount) in the response.`,
+							Short:       ``,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -128,6 +135,7 @@ For more information about flags, format of --file and examples, see: https://ww
 						{
 							Name:        `itemsPerPage`,
 							Description: `Number of items that the response returns per page.`,
+							Short:       ``,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -137,6 +145,7 @@ For more information about flags, format of --file and examples, see: https://ww
 						{
 							Name:        `pageNum`,
 							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
+							Short:       ``,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -146,6 +155,7 @@ For more information about flags, format of --file and examples, see: https://ww
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Short:       ``,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -155,6 +165,7 @@ For more information about flags, format of --file and examples, see: https://ww
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
 							Description: `Flag that indicates whether to return Clusters with retain backups.`,
+							Short:       ``,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
@@ -169,6 +180,7 @@ For more information about flags, format of --file and examples, see: https://ww
 
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
 							Required: true,
 							Type: ParameterType{
 								IsArray: false,

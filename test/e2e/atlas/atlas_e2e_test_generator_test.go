@@ -45,6 +45,12 @@ type atlasE2ETestGenerator struct {
 	enableBackup  bool
 	firstProcess  *atlasv2.ApiHostViewAtlas
 	t             *testing.T
+	flexName      string
+	teamName      string
+	teamID        string
+	teamUser      string
+	dbUser        string
+	dataFedName   string
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -241,14 +247,14 @@ func (g *atlasE2ETestGenerator) generateFlexCluster() {
 	}
 
 	var err error
-	g.clusterName, err = deployFlexClusterForProject(g.projectID)
+	g.flexName, err = deployFlexClusterForProject(g.projectID)
 	if err != nil {
-		g.t.Errorf("unexpected error deploying flex cluster: %v", err)
+		g.t.Fatalf("unexpected error deploying flex cluster: %v", err)
 	}
-	g.t.Logf("flexClusterName=%s", g.clusterName)
+	g.t.Logf("flexClusterName=%s", g.flexName)
 
 	g.t.Cleanup(func() {
-		_ = deleteClusterForProject(g.projectID, g.clusterName)
+		_ = deleteClusterForProject(g.projectID, g.flexName)
 	})
 }
 

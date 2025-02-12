@@ -30,9 +30,11 @@ type Group struct {
 
 type Command struct {
 	OperationID       string
+	Aliases           []string
 	Description       string
 	RequestParameters RequestParameters
 	Versions          []Version
+	Watcher           *WatcherProperties
 }
 
 type RequestParameters struct {
@@ -50,6 +52,7 @@ type Version struct {
 
 type Parameter struct {
 	Name        string
+	Short       string
 	Description string
 	Required    bool
 	Type        ParameterType
@@ -87,4 +90,25 @@ func ToHTTPVerb(s string) (string, error) {
 	default:
 		return "", fmt.Errorf("invalid HTTP verb: %s", s)
 	}
+}
+
+type WatcherProperties struct {
+	Get    WatcherGetProperties
+	Expect *WatcherExpectProperties
+}
+
+type WatcherGetProperties struct {
+	OperationID string
+	Version     string
+	Params      map[string]string
+}
+
+type WatcherExpectProperties struct {
+	HTTPCode int
+	Match    *WatcherMatchProperties
+}
+
+type WatcherMatchProperties struct {
+	Path   string
+	Values []string
 }

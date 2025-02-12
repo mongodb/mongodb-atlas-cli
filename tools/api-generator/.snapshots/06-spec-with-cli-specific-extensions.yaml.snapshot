@@ -24,9 +24,12 @@ var Commands = GroupedAndSortedCommands{
 		Description: `Returns, adds, edits, and removes database deployments. Changes to cluster configurations can affect costs. This resource requires your Project ID.`,
 		Commands: []Command{
 			{
-				OperationID: `createClusterX`,
-				Aliases:     nil,
-				Description: `OVERRIDDEN`,
+				OperationID: `createCluster`,
+				Aliases:     []string{`createDatabase`, `createServer`},
+				Description: `Creates one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
+
+This command is invoking the endpoint with OperationID: 'createCluster'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters`,
 					QueryParameters: []Parameter{
@@ -53,10 +56,13 @@ var Commands = GroupedAndSortedCommands{
 					},
 					URLParameters: []Parameter{
 						{
-							Name:        `groupIdX`,
-							Description: `OVERRIDDEN`,
-							Short:       ``,
-							Required:    true,
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    `g`,
+							Required: true,
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
@@ -98,20 +104,12 @@ var Commands = GroupedAndSortedCommands{
 				Watcher: &WatcherProperties{
 					Get: WatcherGetProperties{
 						OperationID: `getCluster`,
-						Version:     `2023-02-01`,
+						Version:     ``,
 						Params: map[string]string{
 							`orgId`: `123`,
 						},
 					},
-					Expect: &WatcherExpectProperties{
-						HTTPCode: 200,
-						Match: &WatcherMatchProperties{
-							Path: `$.stateName`,
-							Values: []string{
-								`IDLE`,
-							},
-						},
-					},
+					Expect: nil,
 				},
 			},
 		},

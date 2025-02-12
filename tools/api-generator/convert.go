@@ -79,8 +79,8 @@ func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 	return sortedGroups, nil
 }
 
-func extractSunsetDate(operation *openapi3.Operation) *time.Time {
-	if sSunset, ok := operation.Extensions["x-sunset"].(string); ok && sSunset != "" {
+func extractSunsetDate(extensions map[string]any) *time.Time {
+	if sSunset, ok := extensions["x-sunset"].(string); ok && sSunset != "" {
 		if sunset, err := time.Parse("2006-01-02", sSunset); err == nil {
 			return &sunset
 		}
@@ -119,8 +119,7 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) (bool, string
 
 func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.Command, error) {
 	skip, operationID, aliases := extractExtensionsFromOperation(operation)
-	sunset := extractSunsetDate(operation)
-	if skip || (sunset != nil && sunset.Before(time.Now())) {
+	if skip {
 		return nil, nil
 	}
 
@@ -137,6 +136,10 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 	versions, err := buildVersions(operation)
 	if err != nil {
 		return nil, err
+	}
+
+	if len(versions) == 0 {
+		return nil, nil
 	}
 
 	description, err := buildDescription(operation)
@@ -328,6 +331,13 @@ func buildVersions(operation *openapi3.Operation) ([]api.Version, error) {
 		return nil, err
 	}
 
+	// filter sunsetted versions
+	for key, version := range versionsMap {
+		if version.Sunset != nil && time.Now().After(*version.Sunset) {
+			delete(versionsMap, key)
+		}
+	}
+
 	return sortVersions(versionsMap), nil
 }
 
@@ -343,8 +353,8 @@ func processResponses(responses *openapi3.Responses, versionsMap map[string]*api
 			continue
 		}
 
-		for versionedContentType := range responses.Value.Content {
-			if err := addContentTypeToVersion(versionedContentType, versionsMap, false); err != nil {
+		for versionedContentType, mediaType := range responses.Value.Content {
+			if err := addContentTypeToVersion(versionedContentType, versionsMap, false, extractSunsetDate(mediaType.Extensions)); err != nil {
 				return err
 			}
 		}
@@ -358,8 +368,8 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 		return nil
 	}
 
-	for versionedContentType := range requestBody.Value.Content {
-		if err := addContentTypeToVersion(versionedContentType, versionsMap, true); err != nil {
+	for versionedContentType, mediaType := range requestBody.Value.Content {
+		if err := addContentTypeToVersion(versionedContentType, versionsMap, true, extractSunsetDate(mediaType.Extensions)); err != nil {
 			return err
 		}
 	}
@@ -367,7 +377,7 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 }
 
 // Helper function to add content type to version map.
-func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.Version, isRequest bool) error {
+func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.Version, isRequest bool, sunset *time.Time) error {
 	version, contentType, err := extractVersionAndContentType(versionedContentType)
 	if err != nil {
 		return fmt.Errorf("unsupported version '%s' error: %w", versionedContentType, err)
@@ -376,7 +386,14 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 	if _, ok := versionsMap[version]; !ok {
 		versionsMap[version] = &api.Version{
 			Version:              version,
+			Sunset:               sunset,
 			ResponseContentTypes: []string{},
+		}
+	}
+
+	if sunset != nil {
+		if versionsMap[version].Sunset == nil || sunset.Before(*versionsMap[version].Sunset) {
+			versionsMap[version].Sunset = sunset
 		}
 	}
 

@@ -78,7 +78,7 @@ func NewWatcher(executor CommandExecutor, requestParams map[string][]string, res
 
 // Builds the request we're going to send over and over again until it returns what we expect
 //
-// - `allCommands`, array with all command definitions, realisticly this will always be the static `Commands` variable, but this allows easier unit testing
+// - `allCommands`, array with all command definitions, realistically this will always be the static `Commands` variable, but this allows easier unit testing
 // See `NewWatcher` for other parameter descriptions.
 func buildRequest(allCommands GroupedAndSortedCommands, requestParams map[string][]string, responseBody []byte, props WatcherProperties) (*CommandRequest, error) {
 	// Search for the command definition that we're expected to execute

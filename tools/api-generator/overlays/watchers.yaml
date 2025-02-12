@@ -337,3 +337,90 @@ actions:
               pipelineName: input:pipelineName
           expect:
             http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/exports'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getBackupExportJob
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              exportId: body:$.id
+          expect:
+            match:
+              path: $.state
+              values:
+                - Successful
+                - Failed
+                - Cancelled
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/sampleDatasetLoad/{name}'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getSampleDatasetLoadStatus
+            params:
+              groupId: input:groupId
+              sampleDatasetId: body:$.id
+          expect:
+            match:
+              path: $.state
+              values:
+                - COMPLETED
+                - FAILED
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/onlineArchives'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getOnlineArchive
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              archiveId: body:$.id
+          expect:
+            match:
+              path: $.state
+              values:
+                - IDLE
+                - PAUSED
+                - ORPHANED
+                - DELETED
+                - ACTIVE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/onlineArchives/{archiveId}'].patch
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getOnlineArchive
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              archiveId: input:archiveId
+          expect:
+            match:
+              path: $.state
+              values:
+                - IDLE
+                - PAUSED
+                - ORPHANED
+                - DELETED
+                - ACTIVE
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/onlineArchives/{archiveId}'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getOnlineArchive
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              archiveId: input:archiveId
+          expect:
+            http-code: 404

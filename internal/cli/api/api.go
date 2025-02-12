@@ -22,6 +22,7 @@ import (
 	"os"
 	"slices"
 	"strings"
+	"time"
 
 	"github.com/iancoleman/strcase"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
@@ -100,6 +101,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	outputFile := ""
 	version, err := defaultAPIVersion(command)
 	watch := false
+	watchTimeout := int64(0)
 	if err != nil {
 		return nil, err
 	}
@@ -237,7 +239,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 				}
 
 				// Wait until we're in the desired state or until an error occures when watching
-				if err := watcher.Wait(cmd.Context()); err != nil {
+				if err := watcher.Wait(cmd.Context(), time.Duration(watchTimeout)); err != nil {
 					return errors.Join(ErrRunningWatcher, err)
 				}
 			}
@@ -247,7 +249,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	}
 
 	// Common flags
-	addWatchFlagIfNeeded(cmd, command, &watch)
+	addWatchFlagIfNeeded(cmd, command, &watch, &watchTimeout)
 	addVersionFlag(cmd, command, &version)
 
 	if needsFileFlag(command) {
@@ -425,12 +427,13 @@ func needsFileFlag(apiCommand api.Command) bool {
 	return false
 }
 
-func addWatchFlagIfNeeded(cmd *cobra.Command, apiCommand api.Command, watch *bool) {
+func addWatchFlagIfNeeded(cmd *cobra.Command, apiCommand api.Command, watch *bool, watchTimeout *int64) {
 	if apiCommand.Watcher == nil || apiCommand.Watcher.Get.OperationID == "" {
 		return
 	}
 
 	cmd.Flags().BoolVarP(watch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatchDefault)
+	cmd.Flags().Int64Var(watchTimeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 }
 
 func addVersionFlag(cmd *cobra.Command, apiCommand api.Command, version *string) {

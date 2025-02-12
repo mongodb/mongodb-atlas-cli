@@ -21,7 +21,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,StreamsDownloader,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister,PrivateLinkCreator
+//go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,StreamsDownloader,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister,PrivateLinkCreator,PrivateLinkDescriber
 
 type StreamsLister interface {
 	ProjectStreams(*atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
@@ -69,6 +69,10 @@ type ConnectionUpdater interface {
 
 type PrivateLinkCreator interface {
 	CreatePrivateLinkEndpoint(projectID string, connection *atlasv2.StreamsPrivateLinkConnection) (*atlasv2.StreamsPrivateLinkConnection, error)
+}
+
+type PrivateLinkDescriber interface {
+	DescribePrivateLinkEndpoint(projectID, connectionID string) (*atlasv2.StreamsPrivateLinkConnection, error)
 }
 
 func (s *Store) ProjectStreams(opts *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
@@ -139,5 +143,10 @@ func (s *Store) DeleteConnection(projectID, tenantName, connectionName string) e
 
 func (s *Store) CreatePrivateLinkEndpoint(projectID string, connection *atlasv2.StreamsPrivateLinkConnection) (*atlasv2.StreamsPrivateLinkConnection, error) {
 	result, _, err := s.clientv2.StreamsApi.CreatePrivateLinkConnection(s.ctx, projectID, connection).Execute()
+	return result, err
+}
+
+func (s *Store) DescribePrivateLinkEndpoint(projectID, connectionID string) (*atlasv2.StreamsPrivateLinkConnection, error) {
+	result, _, err := s.clientv2.StreamsApi.GetPrivateLinkConnection(s.ctx, projectID, connectionID).Execute()
 	return result, err
 }

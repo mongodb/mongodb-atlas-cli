@@ -57,6 +57,7 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 	}
 
 	cacheDir = filepath.Join(cacheDir, config.AtlasCLI)
+	os.Setenv("--apix-telemetry-cache-file", cacheDir)
 
 	t := &tracker{
 		fs:               afero.NewOsFs(),
@@ -86,6 +87,7 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 
 func (t *tracker) defaultCommandOptions() []EventOpt {
 	return []EventOpt{
+		// withTrackerType(type of tracker -> cmd, plugin cmd, or prompt),
 		withCommandPath(t.cmd),
 		withHelpCommand(t.cmd, t.args),
 		withFlags(t.cmd),

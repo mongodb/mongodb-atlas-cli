@@ -20,6 +20,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strconv"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
@@ -142,6 +143,9 @@ type Plugin struct {
 
 func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 	p.setTelemetry()
+
+	// setup telem vars
+	os.Setenv("TELEMETRY_ENABLED", strconv.FormatBool(config.TelemetryEnabled()))
 
 	binaryPath := path.Join(p.PluginDirectoryPath, p.BinaryName)
 	// suppressing lint error flagging potential tainted input or cmd arguments

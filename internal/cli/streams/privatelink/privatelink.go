@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc
+// Copyright 2025 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,28 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package streams
+package privatelink
 
 import (
+	"strings"
+
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/streams/connection"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/streams/instance"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/streams/privatelink"
 	"github.com/spf13/cobra"
 )
 
+var commandRoles = strings.Join([]string{"Project Owner", "Project Stream Processing Owner"}, ", ")
+
 func Builder() *cobra.Command {
-	const use = "streams"
+	const use = "privateLinks"
 	cmd := &cobra.Command{
 		Use:     use,
 		Aliases: cli.GenerateAliases(use),
-		Short:   "Manage your Atlas Stream Processing deployments.",
-		Long:    "The streams command provides access to your Atlas Stream Processing configurations. You can create, edit, and delete streams, as well as change the connection registry.",
+		Short:   "Manage Atlas Stream Processing PrivateLink endpoints.",
+		Long:    `Create your Atlas Stream Processing PrivateLink endpoints`,
 	}
+
 	cmd.AddCommand(
-		instance.Builder(),
-		connection.Builder(),
-		privatelink.Builder(),
+		CreateBuilder(),
 	)
 
 	return cmd

@@ -148,7 +148,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `listAccessLogsByClusterName`,
 				Aliases:     nil,
-				Description: `Returns the access logs of one cluster identified by the cluster's name. Access logs contain a list of authentication requests made against your cluster. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role.
+				Description: `Returns the access logs of one cluster identified by the cluster's name. Access logs contain a list of authentication requests made against your cluster. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role or the Project Database Access Admin role.
 
 This command is invoking the endpoint with OperationID: 'listAccessLogsByClusterName'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Access-Tracking/operation/listAccessLogsByClusterName`,
@@ -266,7 +266,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `listAccessLogsByHostname`,
 				Aliases:     nil,
-				Description: `Returns the access logs of one cluster identified by the cluster's hostname. Access logs contain a list of authentication requests made against your clusters. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role.
+				Description: `Returns the access logs of one cluster identified by the cluster's hostname. Access logs contain a list of authentication requests made against your clusters. You can't use this feature on tenant-tier clusters (M0, M2, M5). To use this resource, the requesting API Key must have the Project Monitoring Admin role or the Project Database Access Admin role.
 
 This command is invoking the endpoint with OperationID: 'listAccessLogsByHostname'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Access-Tracking/operation/listAccessLogsByHostname`,
@@ -2910,7 +2910,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `cancelBackupRestoreJob`,
 				Aliases:     nil,
-				Description: `Cancels one cloud backup restore job of one cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Cancels one cloud backup restore job of one cluster from the specified project. To use this resource, the requesting API Key must have the Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'cancelBackupRestoreJob'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/cancelBackupRestoreJob`,
@@ -3049,7 +3049,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Description: `Restores one snapshot of one cluster from the specified project. Atlas takes on-demand snapshots immediately and scheduled snapshots at regular intervals. If an on-demand snapshot with a status of queued or inProgress exists, before taking another snapshot, wait until Atlas completes completes processing the previously taken on-demand snapshot.
 
 
-To use this resource, the requesting API Key must have the Project Owner role.
+To use this resource, the requesting API Key must have the Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'createBackupRestoreJob'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/createBackupRestoreJob`,
@@ -3184,6 +3184,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Restores one snapshot of one serverless instance from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
+
+This API can also be used on Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. This endpoint will be sunset in January 2026. Please use the createFlexBackupRestoreJob endpoint instead.
+
 This command is invoking the endpoint with OperationID: 'createServerlessBackupRestoreJob'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/createServerlessBackupRestoreJob`,
 				RequestParameters: RequestParameters{
@@ -3315,7 +3318,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `deleteExportBucket`,
 				Aliases:     nil,
-				Description: `Deletes an Export Bucket. Auto export must be disabled on all clusters in this Project exporting to this Export Bucket before revoking access. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Deletes an Export Bucket. Auto export must be disabled on all clusters in this Project exporting to this Export Bucket before revoking access. To use this resource, the requesting API Key must have the Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'deleteExportBucket'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/deleteExportBucket`,
@@ -3373,7 +3376,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `deleteReplicaSetBackup`,
 				Aliases:     nil,
-				Description: `Removes the specified snapshot. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Removes the specified snapshot. To use this resource, the requesting API Key must have the Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'deleteReplicaSetBackup'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/deleteReplicaSetBackup`,
@@ -3451,7 +3454,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `deleteShardedClusterBackup`,
 				Aliases:     nil,
-				Description: `Removes one snapshot of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Removes one snapshot of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'deleteShardedClusterBackup'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/deleteShardedClusterBackup`,
@@ -3655,7 +3658,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `getBackupRestoreJob`,
 				Aliases:     nil,
-				Description: `Returns one cloud backup restore job for one cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Returns one cloud backup restore job for one cluster from the specified project. To use this resource, the requesting API Key must have the Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'getBackupRestoreJob'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/getBackupRestoreJob`,
@@ -3938,7 +3941,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `getReplicaSetBackup`,
 				Aliases:     nil,
-				Description: `Returns one snapshot from the specified cluster. To use this resource, the requesting API Key must have the Project Read Only role.
+				Description: `Returns one snapshot from the specified cluster. To use this resource, the requesting API Key must have the Project Read Only role or Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'getReplicaSetBackup'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/getReplicaSetBackup`,
@@ -4018,6 +4021,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Returns one snapshot of one serverless instance from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
+
+This endpoint can also be used on Flex clusters that were created with the createServerlessInstance API or Flex clusters that were migrated from Serverless instances. This endpoint will be sunset in January 2026. Please use the getFlexBackup endpoint instead.
+
 This command is invoking the endpoint with OperationID: 'getServerlessBackup'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/getServerlessBackup`,
 				RequestParameters: RequestParameters{
@@ -4085,6 +4091,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `getServerlessBackupRestoreJob`,
 				Aliases:     nil,
 				Description: `Returns one restore job for one serverless instance from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+
+
+This API can also be used on Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. This endpoint will be sunset in January 2026. Please use the getFlexBackupRestoreJob endpoint instead.
 
 This command is invoking the endpoint with OperationID: 'getServerlessBackupRestoreJob'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/getServerlessBackupRestoreJob`,
@@ -4162,7 +4171,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `getShardedClusterBackup`,
 				Aliases:     nil,
-				Description: `Returns one snapshot of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
+				Description: `Returns one snapshot of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role or Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'getShardedClusterBackup'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/getShardedClusterBackup`,
@@ -4338,7 +4347,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `listBackupRestoreJobs`,
 				Aliases:     nil,
-				Description: `Returns all cloud backup restore jobs for one cluster from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Returns all cloud backup restore jobs for one cluster from the specified project. To use this resource, the requesting API Key must have the Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'listBackupRestoreJobs'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/listBackupRestoreJobs`,
@@ -4531,7 +4540,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `listReplicaSetBackups`,
 				Aliases:     nil,
-				Description: `Returns all snapshots of one cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
+				Description: `Returns all snapshots of one cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role or Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'listReplicaSetBackups'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/listReplicaSetBackups`,
@@ -4631,6 +4640,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Returns all restore jobs for one serverless instance from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
+
+This API can also be used on Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. This endpoint will be sunset in January 2026. Please use the listFlexBackupRestoreJobs endpoint instead.
+
 This command is invoking the endpoint with OperationID: 'listServerlessBackupRestoreJobs'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/listServerlessBackupRestoreJobs`,
 				RequestParameters: RequestParameters{
@@ -4729,6 +4741,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Returns all snapshots of one serverless instance from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
+
+This API can also be used on Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. This endpoint will be sunset in January 2026. Please use the listFlexBackups endpoint instead.
+
 This command is invoking the endpoint with OperationID: 'listServerlessBackups'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/listServerlessBackups`,
 				RequestParameters: RequestParameters{
@@ -4825,7 +4840,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `listShardedClusterBackups`,
 				Aliases:     nil,
-				Description: `Returns all snapshots of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
+				Description: `Returns all snapshots of one sharded cluster from the specified project. To use this resource, the requesting API Key must have the Project Read Only role or Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'listShardedClusterBackups'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/listShardedClusterBackups`,
@@ -4896,7 +4911,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Description: `Takes one on-demand snapshot for the specified cluster. Atlas takes on-demand snapshots immediately and scheduled snapshots at regular intervals. If an on-demand snapshot with a status of queued or inProgress exists, before taking another snapshot, wait until Atlas completes completes processing the previously taken on-demand snapshot.
 
 
-To use this resource, the requesting API Key must have the Project Owner role.
+To use this resource, the requesting API Key must have the Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'takeSnapshot'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/takeSnapshot`,
@@ -5096,13 +5111,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version:            `2023-01-01`,
-						RequestContentType: `json`,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-					{
 						Version:            `2023-10-01`,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
@@ -5114,7 +5122,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `updateSnapshotRetention`,
 				Aliases:     nil,
-				Description: `Changes the expiration date for one cloud backup snapshot for one cluster in the specified project.
+				Description: `Changes the expiration date for one cloud backup snapshot for one cluster in the specified project, the requesting API Key must have the Project Backup Manager role.
 
 This command is invoking the endpoint with OperationID: 'updateSnapshotRetention'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/updateSnapshotRetention`,
@@ -6240,6 +6248,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Creates one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
 
+
+Please note that using an instanceSize of M2 or M5 will create a Flex cluster instead. Support for the instanceSize of M2 or M5 will be discontinued in January 2026. We recommend using the createFlexCluster API for such configurations moving forward.
+
 This command is invoking the endpoint with OperationID: 'createCluster'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster`,
 				RequestParameters: RequestParameters{
@@ -6318,6 +6329,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `deleteCluster`,
 				Aliases:     nil,
 				Description: `Removes one cluster from the specified project. The cluster must have termination protection disabled in order to be deleted. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
+
+
+This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the deleteFlexCluster endpoint for Flex clusters instead.
 
 This command is invoking the endpoint with OperationID: 'deleteCluster'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/deleteCluster`,
@@ -6403,6 +6417,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `getCluster`,
 				Aliases:     nil,
 				Description: `Returns the details for one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting API Key must have the Project Read Only role. This feature is not available for serverless clusters.
+
+
+This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the getFlexCluster endpoint for Flex clusters instead.
 
 This command is invoking the endpoint with OperationID: 'getCluster'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getCluster`,
@@ -6862,6 +6879,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `listClusters`,
 				Aliases:     nil,
 				Description: `Returns the details for all clusters in the specific project to which you have access. Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting API Key must have the Project Read Only role. This feature is not  available for serverless clusters.
+
+
+This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the listFlexClusters endpoint for Flex clusters instead.
 
 This command is invoking the endpoint with OperationID: 'listClusters'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/listClusters`,
@@ -7548,70 +7568,15 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `upgradeSharedCluster`,
 				Aliases:     nil,
-				Description: `Upgrades a shared-tier cluster to a dedicated cluster (M10+) in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role. Each project supports up to 25 clusters.
+				Description: `Upgrades a shared-tier cluster to a Flex or Dedicated (M10+) cluster in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role. Each project supports up to 25 clusters.
+
+
+This endpoint can also be used to upgrade Flex clusters that were created using the createCluster API or former M2/M5 clusters that have been migrated to Flex clusters, using instanceSizeName to “M2” or “M5” until January 2026. This functionality will be available until January 2026, after which it will only be available for M0 clusters. Please use the upgradeFlexCluster endpoint instead.
 
 This command is invoking the endpoint with OperationID: 'upgradeSharedCluster'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/upgradeSharedCluster`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/tenantUpgrade`,
-					QueryParameters: []Parameter{
-						{
-							Name:        `envelope`,
-							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-							Short:       ``,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `bool`,
-							},
-						},
-						{
-							Name:        `pretty`,
-							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
-							Short:       ``,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `bool`,
-							},
-						},
-					},
-					URLParameters: []Parameter{
-						{
-							Name: `groupId`,
-							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
-
-
-NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
-							Short:    ``,
-							Required: true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
-					},
-					Verb: http.MethodPost,
-				},
-				Versions: []Version{
-					{
-						Version:            `2023-01-01`,
-						RequestContentType: `json`,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-				},
-			},
-			{
-				OperationID: `upgradeSharedClusterToServerless`,
-				Aliases:     nil,
-				Description: `Upgrades a shared-tier cluster to a serverless instance in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.
-
-This command is invoking the endpoint with OperationID: 'upgradeSharedClusterToServerless'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/upgradeSharedClusterToServerless`,
-				RequestParameters: RequestParameters{
-					URL: `/api/atlas/v2/groups/{groupId}/clusters/tenantUpgradeToServerless`,
 					QueryParameters: []Parameter{
 						{
 							Name:        `envelope`,
@@ -8390,7 +8355,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `createCustomDatabaseRole`,
 				Aliases:     nil,
-				Description: `Creates one custom role in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Creates one custom role in the specified project. To use this resource, the requesting API Key must have the Project Owner role, Project Stream Processing Owner role, or the Project Database Access Admin role.
 
 This command is invoking the endpoint with OperationID: 'createCustomDatabaseRole'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Custom-Database-Roles/operation/createCustomDatabaseRole`,
@@ -8448,7 +8413,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `deleteCustomDatabaseRole`,
 				Aliases:     nil,
-				Description: `Removes one custom role from the specified project. You can't remove a custom role that would leave one or more child roles with no parent roles or actions. You also can't remove a custom role that would leave one or more database users without roles. To use this resource, the requesting API Key must have the Project Atlas Admin role.
+				Description: `Removes one custom role from the specified project. You can't remove a custom role that would leave one or more child roles with no parent roles or actions. You also can't remove a custom role that would leave one or more database users without roles. To use this resource, the requesting API Key must have the Project Owner role, Project Stream Processing Owner role, or the Project Database Access Admin role.
 
 This command is invoking the endpoint with OperationID: 'deleteCustomDatabaseRole'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Custom-Database-Roles/operation/deleteCustomDatabaseRole`,
@@ -8642,7 +8607,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `updateCustomDatabaseRole`,
 				Aliases:     nil,
-				Description: `Updates one custom role in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Updates one custom role in the specified project. To use this resource, the requesting API Key must have the Project Owner role, the Project Stream Processing Owner role, or the Project Database Access Admin role.
 
 This command is invoking the endpoint with OperationID: 'updateCustomDatabaseRole'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Custom-Database-Roles/operation/updateCustomDatabaseRole`,
@@ -10675,7 +10640,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `createDatabaseUser`,
 				Aliases:     nil,
-				Description: `Creates one database user in the specified project. This MongoDB Cloud supports a maximum of 100 database users per project. If you require more than 100 database users on a project, contact Support. To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles.
+				Description: `Creates one database user in the specified project. This MongoDB Cloud supports a maximum of 100 database users per project. If you require more than 100 database users on a project, contact Support. To use this resource, the requesting API Key must have the Project Owner role, the Project Charts Admin role, Project Stream Processing Owner role, or the Project Database Access Admin role.
 
 This command is invoking the endpoint with OperationID: 'createDatabaseUser'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Database-Users/operation/createDatabaseUser`,
@@ -10733,7 +10698,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `deleteDatabaseUser`,
 				Aliases:     nil,
-				Description: `Removes one database user from the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Removes one database user from the specified project. To use this resource, the requesting API Key must have the Project Owner role, the Project Stream Processing Owner role, or the Project Database Access Admin role.
 
 This command is invoking the endpoint with OperationID: 'deleteDatabaseUser'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Database-Users/operation/deleteDatabaseUser`,
@@ -11003,7 +10968,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `updateDatabaseUser`,
 				Aliases:     nil,
-				Description: `Updates one database user that belongs to the specified project. To use this resource, the requesting API Key must have the Project Owner or Project Charts Admin roles.
+				Description: `Updates one database user that belongs to the specified project. To use this resource, the requesting API Key must have the Project Owner role, Project Charts Admin role, Project Stream Processing Owner role, or the Project Database Access Admin role.
 
 This command is invoking the endpoint with OperationID: 'updateDatabaseUser'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Database-Users/operation/updateDatabaseUser`,
@@ -12491,13 +12456,6 @@ For more information about flags, format of --file and examples, see: https://ww
 				},
 				Versions: []Version{
 					{
-						Version:            `2023-01-01`,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-					{
 						Version:            `2023-11-15`,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
@@ -13049,13 +13007,6 @@ For more information about flags, format of --file and examples, see: https://ww
 					Verb: http.MethodPatch,
 				},
 				Versions: []Version{
-					{
-						Version:            `2023-01-01`,
-						RequestContentType: `json`,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
 					{
 						Version:            `2023-11-15`,
 						RequestContentType: `json`,
@@ -16629,7 +16580,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `addProjectUser`,
 				Aliases:     nil,
-				Description: `Adds one MongoDB Cloud user to one project. To use this resource, the requesting API Key must have the Group User Admin role.
+				Description: `Adds one MongoDB Cloud user to one project. To use this resource, the requesting API Key must have the Project Owner role.
 
 
 
@@ -16873,7 +16824,7 @@ For more information about flags, format of --file and examples, see: https://ww
 			{
 				OperationID: `getOrganizationUser`,
 				Aliases:     nil,
-				Description: `Returns information about the specified MongoDB Cloud user within the context of the specified organization. To use this resource, the requesting API Key must have the Organization Read Only role.
+				Description: `Returns information about the specified MongoDB Cloud user within the context of the specified organization. To use this resource, the requesting API Key must have the Organization Member role.
 
 
 Note: This resource can only be used to fetch information about MongoDB Cloud human users. To return information about an API Key, use the Return One Organization API Key endpoint.
@@ -16944,7 +16895,7 @@ For more information about flags, format of --file and examples, see: https://ww
 			{
 				OperationID: `getProjectUser`,
 				Aliases:     nil,
-				Description: `Returns information about the specified MongoDB Cloud user within the context of the specified project. To use this resource, the requesting API Key must have the Group Read Only role.
+				Description: `Returns information about the specified MongoDB Cloud user within the context of the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
 
 Note: You can only use this resource to fetch information about MongoDB Cloud human users. To return information about an API Key, use the Return One Organization API Key endpoint.
@@ -18401,7 +18352,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `listDatabases`,
 				Aliases:     nil,
-				Description: `Returns the list of databases running on the specified host for the specified project. M0 free clusters, M2, M5, and serverless clusters have some operational limits. The MongoDB Cloud process must be a mongod. To use this resource, the requesting API Key must have the Project Read Only role.
+				Description: `Returns the list of databases running on the specified host for the specified project. M0 free clusters, M2, M5, serverless, and Flex clusters have some operational limits. The MongoDB Cloud process must be a mongod. To use this resource, the requesting API Key must have the Project Read Only role.
 
 This command is invoking the endpoint with OperationID: 'listDatabases'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs/operation/listDatabases`,
@@ -21686,7 +21637,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `getServerlessAutoIndexing`,
 				Aliases:     nil,
-				Description: `Get whether the Serverless Auto Indexing feature is enabled.
+				Description: `Get whether the Serverless Auto Indexing feature is enabled. This endpoint returns a value for Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. However, the value returned is not indicative of the Auto Indexing state as Auto Indexing is unavailable for Flex clusters. This endpoint will be sunset in January 2026.
 
 This command is invoking the endpoint with OperationID: 'getServerlessAutoIndexing'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/getServerlessAutoIndexing`,
@@ -21950,7 +21901,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `listSlowQueries`,
 				Aliases:     nil,
-				Description: `Returns log lines for slow queries that the Performance Advisor and Query Profiler identified. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. MongoDB Cloud bases the threshold for slow queries on the average time of operations on your cluster. This enables workload-relevant recommendations. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
+				Description: `Returns log lines for slow queries that the Performance Advisor and Query Profiler identified. The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. MongoDB Cloud bases the threshold for slow queries on the average time of operations on your cluster. This enables workload-relevant recommendations. To use this resource, the requesting API Key must have any Project Data Access role or the Project Observability Viewer role.
 
 This command is invoking the endpoint with OperationID: 'listSlowQueries'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/listSlowQueries`,
@@ -22336,7 +22287,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `setServerlessAutoIndexing`,
 				Aliases:     nil,
-				Description: `Set whether the Serverless Auto Indexing feature is enabled.
+				Description: `Set whether the Serverless Auto Indexing feature is enabled. This endpoint sets a value for Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. However, the value returned is not indicative of the Auto Indexing state as Auto Indexing is unavailable for Flex clusters. This endpoint will be sunset in January 2026.
 
 This command is invoking the endpoint with OperationID: 'setServerlessAutoIndexing'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/setServerlessAutoIndexing`,
@@ -25532,16 +25483,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								Type:    `bool`,
 							},
 						},
-						{
-							Name:        `orgMembershipStatus`,
-							Description: `Flag that indicates whether to filter the returned list by users organization membership status. If you exclude this parameter, this resource returns both pending and active users.`,
-							Short:       ``,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
 					},
 					URLParameters: []Parameter{
 						{
@@ -25563,6 +25504,13 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []Version{
 					{
 						Version:            `2023-01-01`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+					{
+						Version:            `2043-01-01`,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27039,7 +26987,10 @@ For more information about flags, format of --file and examples, see: https://ww
 			{
 				OperationID: `createServerlessInstance`,
 				Aliases:     nil,
-				Description: `Creates one serverless instance in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Update as of Feb 2025: This endpoint now creates a Flex cluster instead. This endpoint will no longer be supported starting January 2026. Continuous backups are not supported and serverlessContinuousBackupEnabled will not take effect. Please use the createFlexCluster endpoint instead.
+
+
+Creates one serverless instance in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
 This command is invoking the endpoint with OperationID: 'createServerlessInstance'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Instances/operation/createServerlessInstance`,
@@ -27098,6 +27049,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `deleteServerlessInstance`,
 				Aliases:     nil,
 				Description: `Removes one serverless instance from the specified project. The serverless instance must have termination protection disabled in order to be deleted. To use this resource, the requesting API Key must have the Project Owner role.
+
+
+This API can also be used on Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. This endpoint will be sunset in January 2026. Please use the deleteFlexCluster endpoint instead.
 
 This command is invoking the endpoint with OperationID: 'deleteServerlessInstance'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Instances/operation/deleteServerlessInstance`,
@@ -27167,6 +27121,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Returns details for one serverless instance in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
 
+
+This API can also be used on Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. Continuous backups are not supported and serverlessContinuousBackupEnabled will not take effect on these clusters. This endpoint will be sunset in January 2026. Please use the getFlexCluster endpoint instead.
+
 This command is invoking the endpoint with OperationID: 'getServerlessInstance'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Instances/operation/getServerlessInstance`,
 				RequestParameters: RequestParameters{
@@ -27234,6 +27191,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `listServerlessInstances`,
 				Aliases:     nil,
 				Description: `Returns details for all serverless instances in the specified project. To use this resource, the requesting API Key must have the Project Read Only role.
+
+
+This endpoint also lists Flex clusters that were created using the createServerlessInstance endpoint or former Serverless instances that have been migrated to Flex clusters, until January 2026 after which this endpoint will be sunset. Continuous backups are not supported and serverlessContinuousBackupEnabled will not take effect on these clusters. Please use the listFlexClusters endpoint instead.
 
 This command is invoking the endpoint with OperationID: 'listServerlessInstances'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Instances/operation/listServerlessInstances`,
@@ -27323,6 +27283,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Updates one serverless instance in the specified project. To use this resource, the requesting API Key must have the Project Owner role.
 
+
+This API can also be used on Flex clusters that were created with the createServerlessInstance endpoint or Flex clusters that were migrated from Serverless instances. This endpoint will be sunset in January 2026. Continuous backups are not supported and serverlessContinuousBackupEnabled will not take effect on these clusters. Please use the updateFlexCluster endpoint instead.
+
 This command is invoking the endpoint with OperationID: 'updateServerlessInstance'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Instances/operation/updateServerlessInstance`,
 				RequestParameters: RequestParameters{
@@ -27400,6 +27363,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 
 A new endpoint won't be immediately available after creation.  Read the steps in the linked tutorial for detailed guidance.
 
+
+This feature does not work for Flex clusters. To continue using Private Endpoints once Serverless is replaced by Flex, please use a Dedicated cluster instead.
+
 This command is invoking the endpoint with OperationID: 'createServerlessPrivateEndpoint'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Private-Endpoints/operation/createServerlessPrivateEndpoint`,
 				RequestParameters: RequestParameters{
@@ -27457,6 +27423,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `deleteServerlessPrivateEndpoint`,
 				Aliases:     nil,
 				Description: `Remove one private endpoint from one serverless instance. To use this resource, the requesting API Key must have the Project Owner role.
+
+
+This feature does not work for Flex clusters. To continue using Private Endpoints once Serverless is replaced by Flex, please use a Dedicated cluster instead.
 
 This command is invoking the endpoint with OperationID: 'deleteServerlessPrivateEndpoint'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Private-Endpoints/operation/deleteServerlessPrivateEndpoint`,
@@ -27526,6 +27495,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Return one private endpoint for one serverless instance. Identify this endpoint using its unique ID. You must have at least the Project Read Only role for the project to successfully call this resource.
 
+
+This feature does not work for Flex clusters. To continue using Private Endpoints once Serverless is replaced by Flex, please use a Dedicated cluster instead.
+
 This command is invoking the endpoint with OperationID: 'getServerlessPrivateEndpoint'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Private-Endpoints/operation/getServerlessPrivateEndpoint`,
 				RequestParameters: RequestParameters{
@@ -27594,6 +27566,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Returns all private endpoints for one serverless instance. You must have at least the Project Read Only role for the project to successfully call this resource.
 
+
+This feature does not work for Flex clusters. To continue using Private Endpoints once Serverless is replaced by Flex, please use a Dedicated cluster instead.
+
 This command is invoking the endpoint with OperationID: 'listServerlessPrivateEndpoints'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Private-Endpoints/operation/listServerlessPrivateEndpoints`,
 				RequestParameters: RequestParameters{
@@ -27651,6 +27626,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `updateServerlessPrivateEndpoint`,
 				Aliases:     nil,
 				Description: `Updates one private endpoint for one serverless instance. To use this resource, the requesting API Key must have the Project Owner role.
+
+
+This feature does not work for Flex clusters. To continue using Private Endpoints once Serverless is replaced by Flex, please use a Dedicated cluster instead.
 
 This command is invoking the endpoint with OperationID: 'updateServerlessPrivateEndpoint'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Private-Endpoints/operation/updateServerlessPrivateEndpoint`,
@@ -29373,7 +29351,10 @@ For more information about flags, format of --file and examples, see: https://ww
 			{
 				OperationID: `createSharedClusterBackupRestoreJob`,
 				Aliases:     nil,
-				Description: `Restores the specified cluster. MongoDB Cloud limits which clusters can be the target clusters of a restore. The target cluster can't use encryption at rest, run a major release MongoDB version different than the snapshot, or receive client requests during restores. MongoDB Cloud deletes all existing data on the target cluster prior to the restore operation. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Restores the specified M2 or M5 cluster. MongoDB Cloud limits which clusters can be the target clusters of a restore. The target cluster can't use encryption at rest, run a major release MongoDB version different than the snapshot, or receive client requests during restores. MongoDB Cloud deletes all existing data on the target cluster prior to the restore operation. To use this resource, the requesting API Key must have the Project Owner role.
+
+
+This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the createFlexBackupRestoreJob endpoint instead.
 
 This command is invoking the endpoint with OperationID: 'createSharedClusterBackupRestoreJob'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Restore-Jobs/operation/createSharedClusterBackupRestoreJob`,
@@ -29441,7 +29422,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `getSharedClusterBackupRestoreJob`,
 				Aliases:     nil,
-				Description: `Returns the specified restore job. To use this resource, the requesting API Key must have the Project Read Only role.
+				Description: `Returns the specified restore job for the specified M2 or M5 cluster. To use this resource, the requesting API Key must have the Project Read Only role.
+
+
+This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the getFlexBackupRestoreJob endpoint instead.
 
 This command is invoking the endpoint with OperationID: 'getSharedClusterBackupRestoreJob'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Restore-Jobs/operation/getSharedClusterBackupRestoreJob`,
@@ -29521,6 +29505,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Returns all restore jobs for the specified M2 or M5 cluster. Restore jobs restore a cluster using a snapshot. To use this resource, the requesting API Key must have the Project Read Only role.
 
+
+This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the listFlexBackupRestoreJobs endpoint instead.
+
 This command is invoking the endpoint with OperationID: 'listSharedClusterBackupRestoreJobs'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Restore-Jobs/operation/listSharedClusterBackupRestoreJobs`,
 				RequestParameters: RequestParameters{
@@ -29595,6 +29582,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Aliases:     nil,
 				Description: `Requests one snapshot for the specified shared cluster. This resource returns a snapshotURL that you can use to download the snapshot. This snapshotURL remains active for four hours after you make the request. To use this resource, the requesting API Key must have the Project Owner role.
 
+
+This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the downloadFlexBackup endpoint instead.
+
 This command is invoking the endpoint with OperationID: 'downloadSharedClusterBackup'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Snapshots/operation/downloadSharedClusterBackup`,
 				RequestParameters: RequestParameters{
@@ -29662,6 +29652,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `getSharedClusterBackup`,
 				Aliases:     nil,
 				Description: `Returns details for one snapshot for the specified shared cluster. To use this resource, the requesting API Key must have the Project Read Only role.
+
+
+This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026, after which this endpoint will be sunset. Please use the getFlexBackup endpoint instead.
 
 This command is invoking the endpoint with OperationID: 'getSharedClusterBackup'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Snapshots/operation/getSharedClusterBackup`,
@@ -29740,6 +29733,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				OperationID: `listSharedClusterBackups`,
 				Aliases:     nil,
 				Description: `Returns details for all snapshots for the specified shared cluster. To use this resource, the requesting API Key must have the Project Read Only role.
+
+
+This API also works for Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters, until January 2026, after which this endpoint will be sunset. Please use the listFlexBackups endpoint instead.
 
 This command is invoking the endpoint with OperationID: 'listSharedClusterBackups'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Snapshots/operation/listSharedClusterBackups`,
@@ -30644,6 +30640,84 @@ For more information about flags, format of --file and examples, see: https://ww
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+						},
+					},
+					URLParameters: []Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []Version{
+					{
+						Version:            `2024-11-13`,
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `getActiveVpcPeeringConnections`,
+				Aliases:     nil,
+				Description: `Returns a list of active incoming VPC Peering Connections.
+
+This command is invoking the endpoint with OperationID: 'getActiveVpcPeeringConnections'.
+For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getActiveVpcPeeringConnections`,
+				RequestParameters: RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streams/activeVpcPeeringConnections`,
+					QueryParameters: []Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `itemsPerPage`,
+							Description: `Number of items that the response returns per page.`,
+							Short:       ``,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
+							Name:        `pageNum`,
+							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
+							Short:       ``,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
+							Name:        `pretty`,
+							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
+							Short:       ``,
+							Required:    false,
+							Type: ParameterType{
+								IsArray: false,
+								Type:    `bool`,
 							},
 						},
 					},

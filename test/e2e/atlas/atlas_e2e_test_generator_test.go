@@ -46,11 +46,6 @@ type atlasE2ETestGenerator struct {
 	firstProcess  *atlasv2.ApiHostViewAtlas
 	t             *testing.T
 	flexName      string
-	teamName      string
-	teamID        string
-	teamUser      string
-	dbUser        string
-	dataFedName   string
 }
 
 // Log formats its arguments using default formatting, analogous to Println,

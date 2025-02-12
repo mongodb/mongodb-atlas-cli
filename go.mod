@@ -62,8 +62,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require github.com/onsi/gomega v1.35.1 // indirect
-
 require (
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect

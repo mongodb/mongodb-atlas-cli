@@ -389,6 +389,12 @@ func withSignal(s string) EventOpt {
 	}
 }
 
+func withEventType(s string) EventOpt {
+	return func(event Event) {
+		event.Properties["eventType"] = s
+	}
+}
+
 func withUserAgent() EventOpt {
 	return func(event Event) {
 		event.Properties["UserAgent"] = config.UserAgent

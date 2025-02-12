@@ -36,6 +36,11 @@ const (
 	defaultMaxCacheFileSize = 500_000 // 500KB
 )
 
+const (
+	cmdEventType    = "cmd"
+	promptEventType = "prompt"
+)
+
 type tracker struct {
 	fs               afero.Fs
 	maxCacheFileSize int64
@@ -86,6 +91,7 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 
 func (t *tracker) defaultCommandOptions() []EventOpt {
 	return []EventOpt{
+		withEventType(cmdEventType),
 		withCommandPath(t.cmd),
 		withHelpCommand(t.cmd, t.args),
 		withFlags(t.cmd),
@@ -250,6 +256,7 @@ func castString(i any) string {
 
 func (t *tracker) trackSurvey(p survey.Prompt, response any, e error) error {
 	o := t.defaultCommandOptions()
+	o = append(o, withEventType(promptEventType))
 
 	if e != nil {
 		o = append(o, withError(e))

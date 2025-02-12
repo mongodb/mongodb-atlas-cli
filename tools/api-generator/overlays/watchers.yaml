@@ -424,3 +424,20 @@ actions:
               archiveId: input:archiveId
           expect:
             http-code: 404
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/serverless/{clusterName}/backup/snapshots'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getServerlessBackup
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+              snapshotId: body:$.id
+          expect:
+            match:
+              path: $.status
+              values:
+                - completed
+                - failed

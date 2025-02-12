@@ -5111,13 +5111,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []Version{
 					{
-						Version:            `2023-01-01`,
-						RequestContentType: `json`,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-					{
 						Version:            `2023-10-01`,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
@@ -7584,67 +7577,6 @@ This command is invoking the endpoint with OperationID: 'upgradeSharedCluster'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/upgradeSharedCluster`,
 				RequestParameters: RequestParameters{
 					URL: `/api/atlas/v2/groups/{groupId}/clusters/tenantUpgrade`,
-					QueryParameters: []Parameter{
-						{
-							Name:        `envelope`,
-							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-							Short:       ``,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `bool`,
-							},
-						},
-						{
-							Name:        `pretty`,
-							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
-							Short:       ``,
-							Required:    false,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `bool`,
-							},
-						},
-					},
-					URLParameters: []Parameter{
-						{
-							Name: `groupId`,
-							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
-
-
-NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
-							Short:    ``,
-							Required: true,
-							Type: ParameterType{
-								IsArray: false,
-								Type:    `string`,
-							},
-						},
-					},
-					Verb: http.MethodPost,
-				},
-				Versions: []Version{
-					{
-						Version:            `2023-01-01`,
-						RequestContentType: `json`,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-				},
-			},
-			{
-				OperationID: `upgradeSharedClusterToServerless`,
-				Aliases:     nil,
-				Description: `This endpoint has been deprecated as of February 2025 as we no longer support the creation of new serverless instances. Please use the upgradeFlexCluster endpoint to upgrade Flex clusters.
-
-
-Upgrades a shared-tier cluster to a serverless instance in the specified project. To use this resource, the requesting API key must have the Project Cluster Manager role.
-
-This command is invoking the endpoint with OperationID: 'upgradeSharedClusterToServerless'.
-For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/upgradeSharedClusterToServerless`,
-				RequestParameters: RequestParameters{
-					URL: `/api/atlas/v2/groups/{groupId}/clusters/tenantUpgradeToServerless`,
 					QueryParameters: []Parameter{
 						{
 							Name:        `envelope`,
@@ -12524,13 +12456,6 @@ For more information about flags, format of --file and examples, see: https://ww
 				},
 				Versions: []Version{
 					{
-						Version:            `2023-01-01`,
-						RequestContentType: ``,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
-					{
 						Version:            `2023-11-15`,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
@@ -13082,13 +13007,6 @@ For more information about flags, format of --file and examples, see: https://ww
 					Verb: http.MethodPatch,
 				},
 				Versions: []Version{
-					{
-						Version:            `2023-01-01`,
-						RequestContentType: `json`,
-						ResponseContentTypes: []string{
-							`json`,
-						},
-					},
 					{
 						Version:            `2023-11-15`,
 						RequestContentType: `json`,

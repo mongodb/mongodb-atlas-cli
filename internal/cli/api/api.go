@@ -187,8 +187,6 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 
 			// If the response was successful, handle --format
 			if result.IsSuccess {
-				// output := result.Output
-
 				// If we're watching, we need to cache the original output before formatting so we don't read twice from the same reader
 				// In case we're not watching the http output will be piped straight into the formatter, which should be a little more memory efficient
 				if watch {

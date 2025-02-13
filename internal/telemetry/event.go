@@ -391,7 +391,7 @@ func withSignal(s string) EventOpt {
 
 func withEventType(s string) EventOpt {
 	return func(event Event) {
-		event.Properties["eventType"] = s
+		event.Properties["cli_event_type"] = s
 	}
 }
 

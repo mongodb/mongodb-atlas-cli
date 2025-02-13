@@ -31,7 +31,6 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/ProtonMail/go-crypto/openpgp"
-	"github.com/ProtonMail/go-crypto/openpgp/packet"
 	"github.com/google/go-github/v61/github"
 	"github.com/mholt/archives"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
@@ -283,8 +282,7 @@ func (g *GithubAsset) verifyAssetSignature(asset []byte, sigAssetID, pubKeyAsset
 		return err
 	}
 
-	config := &packet.Config{}
-	_, err = openpgp.CheckArmoredDetachedSignature(key, bytes.NewReader(asset), sigRc, config)
+	_, err = openpgp.CheckArmoredDetachedSignature(key, bytes.NewReader(asset), sigRc, nil)
 	if err != nil {
 		return fmt.Errorf("signature verification unsuccessful: %w", err)
 	}
@@ -293,19 +291,15 @@ func (g *GithubAsset) verifyAssetSignature(asset []byte, sigAssetID, pubKeyAsset
 	return nil
 }
 
-func parseGithubReleaseValues(arg string) (*GithubAsset, error) {
-	regexPattern := `^((https?://(www\.)?)?github\.com/)?(?P<owner>[\w.\-]+)/(?P<name>[\w.\-]+)/?(@(?P<version>.+))?$`
-	regex, err := regexp.Compile(regexPattern)
-	if err != nil {
-		return nil, fmt.Errorf("error compiling regex: %w", err)
-	}
+var ghReleaseReg = regexp.MustCompile(`^((https?://(www\.)?)?github\.com/)?(?P<owner>[\w.\-]+)/(?P<name>[\w.\-]+)/?(@(?P<version>.+))?$`)
 
-	matches := regex.FindStringSubmatch(arg)
+func parseGithubReleaseValues(arg string) (*GithubAsset, error) {
+	matches := ghReleaseReg.FindStringSubmatch(arg)
 	if matches == nil {
 		return nil, errGithubParametersInvalid
 	}
 
-	names := regex.SubexpNames()
+	names := ghReleaseReg.SubexpNames()
 	groupMap := make(map[string]string)
 	for i, match := range matches {
 		if i == 0 {

@@ -210,7 +210,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
-      - name: Generate docs
+      - name: Generate api commands
         run: make gen-api-commands > /dev/null
       - name: Check for uncommitted files
         run: |

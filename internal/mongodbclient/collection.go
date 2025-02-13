@@ -42,15 +42,15 @@ func (c *collection) Aggregate(ctx context.Context, pipeline any) (*mongo.Cursor
 }
 
 type SearchIndexDefinition struct {
-	IndexID        *string `bson:"id,omitempty"`
-	Database       *string
-	CollectionName *string
-	Name           *string `bson:"name,omitempty"`
-	Type           *string `bson:"type,omitempty"`
-	Status         *string `bson:"status,omitempty"`
-	Queryable      *bool   `bson:"queryable,omitempty"`
-	LastDefinition any     `bson:"lastDefinition,omitempty"`
-	LastVersion    *int    `bson:"lastVersion,omitempty"`
+	IndexID          *string `bson:"id,omitempty"`
+	Database         *string
+	CollectionName   *string
+	Name             *string `bson:"name,omitempty"`
+	Type             *string `bson:"type,omitempty"`
+	Status           *string `bson:"status,omitempty"`
+	Queryable        *bool   `bson:"queryable,omitempty"`
+	LatestDefinition any     `bson:"latestDefinition,omitempty"`
+	LatestVersion    *int    `bson:"latestVersion,omitempty"`
 }
 
 func (c *collection) CreateSearchIndex(ctx context.Context, name, indexType string, definition any) (*SearchIndexDefinition, error) {

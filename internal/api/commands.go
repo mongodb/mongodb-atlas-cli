@@ -1648,7 +1648,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					Expect: &WatcherExpectProperties{
-						HTTPCode: 404,
+						HTTPCode: 404, //nolint
 						Match:    nil,
 					},
 				},
@@ -3525,7 +3525,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					Expect: &WatcherExpectProperties{
-						HTTPCode: 404,
+						HTTPCode: 404, //nolint
 						Match:    nil,
 					},
 				},
@@ -6587,7 +6587,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					Expect: &WatcherExpectProperties{
-						HTTPCode: 404,
+						HTTPCode: 404, //nolint
 						Match:    nil,
 					},
 				},
@@ -10052,7 +10052,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					Expect: &WatcherExpectProperties{
-						HTTPCode: 404,
+						HTTPCode: 404, //nolint
 						Match:    nil,
 					},
 				},
@@ -13500,7 +13500,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					Expect: &WatcherExpectProperties{
-						HTTPCode: 404,
+						HTTPCode: 404, //nolint
 						Match:    nil,
 					},
 				},
@@ -20256,7 +20256,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					Expect: &WatcherExpectProperties{
-						HTTPCode: 404,
+						HTTPCode: 404, //nolint
 						Match:    nil,
 					},
 				},
@@ -23086,7 +23086,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					Expect: &WatcherExpectProperties{
-						HTTPCode: 404,
+						HTTPCode: 404, //nolint
 						Match:    nil,
 					},
 				},
@@ -27572,7 +27572,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					Expect: &WatcherExpectProperties{
-						HTTPCode: 404,
+						HTTPCode: 404, //nolint
 						Match:    nil,
 					},
 				},

@@ -196,6 +196,7 @@ func TestStreams(t *testing.T) {
 	})
 
 	// Endpoints
+	var endpointID string
 	t.Run("Creating a streams privateLink endpoint", func(t *testing.T) {
 		streamsCmd := exec.Command(cliPath,
 			"streams",
@@ -216,10 +217,39 @@ func TestStreams(t *testing.T) {
 		req.NoError(json.Unmarshal(streamsResp, &privateLinkEndpoint))
 
 		a := assert.New(t)
-		a.Equal("Azure", *privateLinkEndpoint.Provider)
-		a.Equal("US_EAST_2", *privateLinkEndpoint.Region)
-		a.Equal("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace", *privateLinkEndpoint.ServiceEndpointId)
-		a.Equal("test-namespace.servicebus.windows.net", *privateLinkEndpoint.DnsDomain)
+		a.Equal("Azure", privateLinkEndpoint.GetProvider())
+		a.Equal("US_EAST_2", privateLinkEndpoint.GetRegion())
+		a.Equal("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace", privateLinkEndpoint.GetServiceEndpointId())
+		a.Equal("test-namespace.servicebus.windows.net", privateLinkEndpoint.GetDnsDomain())
+
+		// Assign the endpoint ID so that it can be used in subsequent tests
+		endpointID = privateLinkEndpoint.GetId()
+	})
+
+	t.Run("Describing a streams privateLink endpoint", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"privateLink",
+			"describe",
+			endpointID,
+			"-o=json",
+			"--projectId",
+			g.projectID,
+		)
+
+		streamsCmd.Env = os.Environ()
+		streamsResp, err := e2e.RunAndGetStdOut(streamsCmd)
+		req.NoError(err, string(streamsResp))
+
+		var privateLinkEndpoint atlasv2.StreamsPrivateLinkConnection
+		req.NoError(json.Unmarshal(streamsResp, &privateLinkEndpoint))
+
+		a := assert.New(t)
+		a.Equal(endpointID, privateLinkEndpoint.GetId())
+		a.Equal("AZURE", privateLinkEndpoint.GetProvider())
+		a.Equal("US_EAST_2", privateLinkEndpoint.GetRegion())
+		a.Equal("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace", privateLinkEndpoint.GetServiceEndpointId())
+		a.Equal("test-namespace.servicebus.windows.net", privateLinkEndpoint.GetDnsDomain())
 	})
 
 	// Connections

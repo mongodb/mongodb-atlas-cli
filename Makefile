@@ -81,7 +81,7 @@ fmt-all: ### Format all go files with goimports and gofmt
 	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec goimports -l -w "{}" \;
 
 .PHONY: test
-test: unit-test fuzz-normalizer-test
+test: unit-test
 
 .PHONY: lint
 lint: ## Run linter
@@ -143,11 +143,6 @@ e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
 	GOCOVERDIR=$(GOCOVERDIR) $(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
-
-.PHONY: fuzz-normalizer-test
-fuzz-normalizer-test: ## Run fuzz test
-	@echo "==> Running fuzz test..."
-	$(TEST_CMD) -fuzz=Fuzz -fuzztime 50s --tags="$(UNIT_TAGS)" -race ./internal/kubernetes/operator/resources
 
 .PHONY: unit-test
 unit-test: ## Run unit-tests

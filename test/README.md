@@ -276,7 +276,5 @@
 |                `completion powershell`                |     Y     |   Y   |
 |                        `setup`                        |     Y     |   Y   |
 |                      `register`                       |     N     |   Y   |
-|             `kubernetes config generate`              |     Y     |   Y   |
-|               `kubernetes config apply`               |     Y     |   Y   |
-|             `kubernetes operator install`             |     Y     |   Y   |
+|                     `kubernetes`                      |     Y     |   Y   |
 | `federatedAuthentication federationSettings describe` |     Y     |   Y   |

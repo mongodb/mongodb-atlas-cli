@@ -248,17 +248,6 @@ const (
 	UseOrgAndGroupNamesInExportPrefix         = "useOrgAndGroupNamesInExportPrefix"         // UseOrgAndGroupNamesInExportPrefix flag
 	NoUseOrgAndGroupNamesInExportPrefix       = "noUseOrgAndGroupNamesInExportPrefix"       // NoUseOrgAndGroupNamesInExportPrefix flag
 	BackupPolicy                              = "policy"                                    // BackupPolicy flag
-	OperatorIncludeSecrets                    = "includeSecrets"                            // OperatorIncludeSecrets flag
-	OperatorTargetNamespace                   = "targetNamespace"                           // OperatorTargetNamespace flag
-	OperatorWatchNamespace                    = "watchNamespace"                            // OperatorTargetNamespace flag
-	OperatorVersion                           = "operatorVersion"                           // OperatorVersion flag
-	OperatorProjectName                       = "projectName"                               // OperatorProjectName flag
-	OperatorImport                            = "import"                                    // OperatorImport flag
-	OperatorResourceDeletionProtection        = "resourceDeletionProtection"                // OperatorResourceDeletionProtection flag
-	OperatorSubResourceDeletionProtection     = "subresourceDeletionProtection"             // Operator OperatorSubResourceDeletionProtection flag
-	OperatorAtlasGov                          = "atlasGov"                                  // OperatorAtlasGov flag
-	KubernetesClusterConfig                   = "kubeconfig"                                // Kubeconfig flag
-	KubernetesClusterContext                  = "kubeContext"                               // KubeContext flag
 	ExportID                                  = "exportId"                                  // ExportID flag
 	Debug                                     = "debug"                                     // Debug flag to set debug log level
 	DebugShort                                = "D"                                         // DebugShort flag to set debug log level
@@ -328,6 +317,5 @@ const (
 	IdentityProviderID                        = "identityProviderId"                        // IdentityProviderId flag
 	AuditAuthorizationSuccess                 = "auditAuthorizationSuccess"                 // AuditAuthorizationSuccess flag
 	AuditFilter                               = "auditFilter"                               // AuditFilter flag
-	IndependentResources                      = "independentResources"                      // IndependentResources flag
 	InitDB                                    = "initdb"                                    // InitDB flag
 )

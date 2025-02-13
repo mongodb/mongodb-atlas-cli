@@ -1,4 +1,4 @@
-// Copyright 2024 MongoDB Inc
+// Copyright 2025 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ const (
 )
 
 // uncomment example plugin to test first class plugin feature.
-var firstClassPlugins = []*FirstClassPlugin{
+var FirstClassPlugins = []*FirstClassPlugin{
 	// {
 	// 	Name: "atlas-cli-first-class-plugin-example",
 	// 	Github: &Github{
@@ -42,6 +42,19 @@ var firstClassPlugins = []*FirstClassPlugin{
 	// 		},
 	// 	},
 	// },
+	{
+		Name: "atlas-cli-plugin-kubernetes",
+		Github: &Github{
+			Owner: "mongodb",
+			Name:  "atlas-cli-plugin-kubernetes",
+		},
+		Commands: []*Command{
+			{
+				Name:        "kubernetes",
+				Description: "Manage Kubernetes resources.",
+			},
+		},
+	},
 }
 
 type Command struct {
@@ -130,7 +143,7 @@ func (fcp *FirstClassPlugin) getCommands() []*cobra.Command {
 func getFirstClassPluginCommands(plugins []*plugin.Plugin) []*cobra.Command {
 	var commands []*cobra.Command
 	// create cobra commands to install first class plugins when their commands are run
-	for _, firstClassPlugin := range firstClassPlugins {
+	for _, firstClassPlugin := range FirstClassPlugins {
 		if firstClassPlugin.isAlreadyInstalled(plugins) {
 			continue
 		}

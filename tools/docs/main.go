@@ -1,4 +1,4 @@
-// Copyright 2022 MongoDB Inc
+// Copyright 2025 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ func main() {
 	atlasBuilder := root.Builder()
 
 	for _, cmd := range atlasBuilder.Commands() {
-		if plugin.IsPluginCmd(cmd) || pluginCmd.IsFirstClassPluginCmd(cmd) {
+		if plugin.IsPluginCmd(cmd) && !isFirstClassPlugin(cmd) {
 			atlasBuilder.RemoveCommand(cmd)
 		}
 	}
@@ -81,4 +81,32 @@ func main() {
 	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command"); err != nil {
 		log.Fatal(err)
 	}
+
+	firstClassPaths := make([]string, 0, len(pluginCmd.FirstClassPlugins))
+	for _, fcp := range pluginCmd.FirstClassPlugins {
+		cmd := fcp.Commands
+		for _, c := range cmd {
+			filePath := "./docs/command/atlas-" + c.Name + ".txt"
+			firstClassPaths = append(firstClassPaths, filePath)
+		}
+	}
+
+	for _, filePath := range firstClassPaths {
+		err := os.Remove(filePath)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func isFirstClassPlugin(command *cobra.Command) bool {
+	for _, fcp := range pluginCmd.FirstClassPlugins {
+		cmd := fcp.Commands
+		for _, c := range cmd {
+			if command.Name() == c.Name {
+				return true
+			}
+		}
+	}
+	return false
 }

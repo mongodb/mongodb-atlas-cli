@@ -48,7 +48,8 @@ paths:
             http-code: 200
             match:
               path: $.stateName
-              values: IDLE
+              values:
+                - IDLE
       operationId: createCluster
       parameters:
         - $ref: '#/components/parameters/envelope'

@@ -198,6 +198,33 @@ jobs:
             echo "Try running: make gen-docs"
             exit 1
           fi
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+      - name: Generate api commands
+        run: make gen-api-commands > /dev/null
+      - name: Check for uncommitted files
+        run: |
+          export FILES=
+          FILES=$(git ls-files -o -m --directory --exclude-standard --no-empty-directory)
+          export LINES=
+          LINES=$(echo "$FILES" | awk 'NF' | wc -l)
+          if [ "$LINES" -ne 0 ]; then
+            echo "Detected files that need to be committed:"
+            echo "${FILES//^/ }"
+            echo ""
+            echo "Try running: make gen-api-commands"
+            exit 1
+          fi
   actionlint:
     runs-on: ubuntu-latest
     steps:

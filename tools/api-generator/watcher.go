@@ -17,7 +17,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 )
@@ -142,14 +141,16 @@ func newWatcherMatchProperties(ext map[string]any) (*api.WatcherMatchProperties,
 		return nil, ErrWatcherMatchPropertiesPathIsMissing
 	}
 
-	valuesString, valuesOk := ext["values"].(string)
-	if valuesString == "" || !valuesOk {
+	valuesAny, valuesOk := ext["values"].([]any)
+	if !valuesOk || valuesAny == nil {
 		return nil, ErrWatcherMatchPropertiesValuesAreMissing
 	}
 
-	values := strings.Split(valuesString, ",")
-	for i, value := range values {
-		values[i] = strings.TrimSpace(value)
+	values := make([]string, 0, len(valuesAny))
+	for _, value := range valuesAny {
+		if stringValue, ok := value.(string); ok {
+			values = append(values, stringValue)
+		}
 	}
 
 	return &api.WatcherMatchProperties{

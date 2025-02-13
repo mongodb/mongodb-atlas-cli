@@ -1411,6 +1411,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getAtlasSearchDeployment`,
+						Version:     `2024-05-30`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.stateName`,
+							Values: []string{
+								`IDLE`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `createAtlasSearchIndex`,
@@ -1620,6 +1637,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getAtlasSearchDeployment`,
+						Version:     `2024-05-30`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						HTTPCode: 404, //nolint
+						Match:    nil,
 					},
 				},
 			},
@@ -2524,6 +2554,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getAtlasSearchDeployment`,
+						Version:     `2024-05-30`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.stateName`,
+							Values: []string{
+								`IDLE`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `updateAtlasSearchIndex`,
@@ -3042,6 +3089,25 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getBackupExportJob`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.state`,
+							Values: []string{
+								`Successful`,
+								`Failed`,
+								`Cancelled`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `createBackupRestoreJob`,
@@ -3450,6 +3516,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getReplicaSetBackup`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						HTTPCode: 404, //nolint
+						Match:    nil,
+					},
+				},
 			},
 			{
 				OperationID: `deleteShardedClusterBackup`,
@@ -3583,6 +3662,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
+						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getDataProtectionSettings`,
+						Version:     `2023-10-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.state`,
+							Values: []string{
+								`ACTIVE`,
+							},
 						},
 					},
 				},
@@ -4975,6 +5071,24 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getReplicaSetBackup`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.status`,
+							Values: []string{
+								`completed`,
+								`failed`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `updateBackupSchedule`,
@@ -5118,6 +5232,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getDataProtectionSettings`,
+						Version:     `2023-10-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.state`,
+							Values: []string{
+								`ACTIVE`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `updateSnapshotRetention`,
@@ -5193,6 +5324,24 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
+						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getReplicaSetBackup`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.status`,
+							Values: []string{
+								`completed`,
+								`failed`,
+							},
 						},
 					},
 				},
@@ -6324,6 +6473,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getCluster`,
+						Version:     `2024-10-23`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.stateName`,
+							Values: []string{
+								`IDLE`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `deleteCluster`,
@@ -6410,6 +6576,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getCluster`,
+						Version:     `2024-10-23`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						HTTPCode: 404, //nolint
+						Match:    nil,
 					},
 				},
 			},
@@ -7121,6 +7300,24 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getSampleDatasetLoadStatus`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.state`,
+							Values: []string{
+								`COMPLETED`,
+								`FAILED`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `pinFeatureCompatibilityVersion`,
@@ -7486,6 +7683,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
+						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getCluster`,
+						Version:     `2024-10-23`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.stateName`,
+							Values: []string{
+								`IDLE`,
+							},
 						},
 					},
 				},
@@ -9754,6 +9968,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getPipeline`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.state`,
+							Values: []string{
+								`ACTIVE`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `deletePipeline`,
@@ -9810,6 +10041,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getPipeline`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						HTTPCode: 404, //nolint
+						Match:    nil,
 					},
 				},
 			},
@@ -10627,6 +10871,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
+						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getPipeline`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.state`,
+							Values: []string{
+								`ACTIVE`,
+							},
 						},
 					},
 				},
@@ -13144,6 +13405,24 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getFlexCluster`,
+						Version:     `2024-11-13`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.stateName`,
+							Values: []string{
+								`IDLE`,
+								`IDLE`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `deleteFlexCluster`,
@@ -13210,6 +13489,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getFlexCluster`,
+						Version:     `2024-11-13`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						HTTPCode: 404, //nolint
+						Match:    nil,
 					},
 				},
 			},
@@ -13436,6 +13728,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getFlexCluster`,
+						Version:     `2024-11-13`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.stateName`,
+							Values: []string{
+								`IDLE`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `upgradeFlexCluster`,
@@ -13565,6 +13874,24 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
+						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getFlexBackupRestoreJob`,
+						Version:     `2024-11-13`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.status`,
+							Values: []string{
+								`COMPLETED`,
+								`FAILED`,
+							},
 						},
 					},
 				},
@@ -15243,6 +15570,24 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
+						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getLdapConfigurationStatus`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.status`,
+							Values: []string{
+								`FAILED`,
+								`SUCCESS`,
+							},
 						},
 					},
 				},
@@ -19803,6 +20148,27 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getOnlineArchive`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.state`,
+							Values: []string{
+								`IDLE`,
+								`PAUSED`,
+								`ORPHANED`,
+								`DELETED`,
+								`ACTIVE`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `deleteOnlineArchive`,
@@ -19879,6 +20245,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getOnlineArchive`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						HTTPCode: 404, //nolint
+						Match:    nil,
 					},
 				},
 			},
@@ -20220,6 +20599,27 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
+						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getOnlineArchive`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.state`,
+							Values: []string{
+								`IDLE`,
+								`PAUSED`,
+								`ORPHANED`,
+								`DELETED`,
+								`ACTIVE`,
+							},
 						},
 					},
 				},
@@ -22493,6 +22893,24 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getPrivateEndpointService`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.status`,
+							Values: []string{
+								`WAITING_FOR_USER`,
+								`FAILED`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `deletePrivateEndpoint`,
@@ -22657,6 +23075,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getPrivateEndpointService`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						HTTPCode: 404, //nolint
+						Match:    nil,
 					},
 				},
 			},
@@ -27044,6 +27475,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getFlexCluster`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.status`,
+							Values: []string{
+								`IDLE`,
+							},
+						},
+					},
+				},
 			},
 			{
 				OperationID: `deleteServerlessInstance`,
@@ -27113,6 +27561,19 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getFlexCluster`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						HTTPCode: 404, //nolint
+						Match:    nil,
 					},
 				},
 			},
@@ -27345,6 +27806,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
+						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getFlexCluster`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`orgId`: `123`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.status`,
+							Values: []string{
+								`IDLE`,
+							},
 						},
 					},
 				},

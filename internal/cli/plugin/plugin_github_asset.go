@@ -87,7 +87,7 @@ func (g *GithubAsset) getReleaseAssets() ([]*github.ReleaseAsset, error) {
 		})
 
 		if err != nil {
-			return nil, fmt.Errorf("could not fetch releases for %s, access to GitHub is required, see <placeholder> %w", g.repository(), err)
+			return nil, fmt.Errorf("could not fetch releases for %s, access to GitHub is required, %w", g.repository(), err)
 		}
 
 		// get the latest release that doesn't have prerelease info or metadata in the version tag

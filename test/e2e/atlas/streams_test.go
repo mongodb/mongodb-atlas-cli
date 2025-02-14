@@ -271,7 +271,7 @@ func TestStreams(t *testing.T) {
 
 		a := assert.New(t)
 		a.Len(privateLinkEndpoints.GetResults(), 1)
-		a.Equal("Azure", privateLinkEndpoints.GetResults()[0].GetProvider())
+		a.Equal("AZURE", privateLinkEndpoints.GetResults()[0].GetProvider())
 		a.Equal("US_EAST_2", privateLinkEndpoints.GetResults()[0].GetRegion())
 		a.Equal("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace", privateLinkEndpoints.GetResults()[0].GetServiceEndpointId())
 		a.Equal("test-namespace.servicebus.windows.net", privateLinkEndpoints.GetResults()[0].GetDnsDomain())

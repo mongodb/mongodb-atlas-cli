@@ -252,6 +252,31 @@ func TestStreams(t *testing.T) {
 		a.Equal("test-namespace.servicebus.windows.net", privateLinkEndpoint.GetDnsDomain())
 	})
 
+	t.Run("List all streams privateLink endpoints", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"privateLinks",
+			"list",
+			"-o=json",
+			"--projectId",
+			g.projectID,
+		)
+
+		streamsCmd.Env = os.Environ()
+		streamsResp, err := e2e.RunAndGetStdOut(streamsCmd)
+		req.NoError(err, string(streamsResp))
+
+		var privateLinkEndpoints atlasv2.PaginatedApiStreamsPrivateLink
+		req.NoError(json.Unmarshal(streamsResp, &privateLinkEndpoints))
+
+		a := assert.New(t)
+		a.Len(privateLinkEndpoints.GetResults(), 1)
+		a.Equal("Azure", privateLinkEndpoints.GetResults()[0].GetProvider())
+		a.Equal("US_EAST_2", privateLinkEndpoints.GetResults()[0].GetRegion())
+		a.Equal("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace", privateLinkEndpoints.GetResults()[0].GetServiceEndpointId())
+		a.Equal("test-namespace.servicebus.windows.net", privateLinkEndpoints.GetResults()[0].GetDnsDomain())
+	})
+
 	// Connections
 	t.Run("Creating a streams connection", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

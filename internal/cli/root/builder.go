@@ -173,6 +173,7 @@ Use the --help flag with any command for more info on that command.`,
 
 			return nil
 		},
+		// PersistentPostRun only runs if the command is successful
 		PersistentPostRun: func(cmd *cobra.Command, _ []string) {
 			// we don't run the release alert feature on the completion command
 			if strings.HasPrefix(cmd.CommandPath(), fmt.Sprintf("%s %s", atlas, "completion")) {

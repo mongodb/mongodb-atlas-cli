@@ -61,6 +61,13 @@ func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 		}
 	}
 
+	// Validate that the defined watchers:
+	// - are pointing to existing commands+version combos
+	// - are using parameters correctly
+	if err := validateAllWatchers(groups); err != nil {
+		return nil, err
+	}
+
 	// Sort commands inside of groups
 	sortedGroups := make([]api.Group, 0, len(groups))
 	for _, group := range groups {

@@ -80,7 +80,9 @@ var Commands = GroupedAndSortedCommands{
 						OperationID: `{{ .Watcher.Get.OperationID }}`,
 						Version:     `{{ .Watcher.Get.Version }}`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							{{- range $k, $v := .Watcher.Get.Params }}
+							`{{ $k }}`: `{{ $v }}`,
+							{{- end }}
 						},
 					},
 					Expect: {{if not .Watcher.Expect }} nil,{{else}}&WatcherExpectProperties{ {{if ne .Watcher.Expect.HTTPCode 0}}

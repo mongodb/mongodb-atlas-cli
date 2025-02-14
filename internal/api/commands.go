@@ -1416,7 +1416,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getAtlasSearchDeployment`,
 						Version:     `2024-05-30`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -1644,7 +1645,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getAtlasSearchDeployment`,
 						Version:     `2024-05-30`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -2559,7 +2561,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getAtlasSearchDeployment`,
 						Version:     `2024-05-30`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -3094,7 +3097,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getBackupExportJob`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `input:clusterName`,
+							`exportId`:    `body:$.id`,
+							`groupId`:     `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -3521,7 +3526,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getReplicaSetBackup`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
+							`snapshotId`:  `input:snapshotId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -3670,7 +3677,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getDataProtectionSettings`,
 						Version:     `2023-10-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`: `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -5076,7 +5083,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getReplicaSetBackup`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
+							`snapshotId`:  `body:$.id`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -5237,7 +5246,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getDataProtectionSettings`,
 						Version:     `2023-10-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`: `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -5332,7 +5341,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getReplicaSetBackup`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
+							`snapshotId`:  `input:snapshotId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -6476,9 +6487,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &WatcherProperties{
 					Get: WatcherGetProperties{
 						OperationID: `getCluster`,
-						Version:     `2024-10-23`,
+						Version:     `2024-08-05`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `body:$.name`,
+							`groupId`:     `body:$.groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -6581,9 +6593,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &WatcherProperties{
 					Get: WatcherGetProperties{
 						OperationID: `getCluster`,
-						Version:     `2024-10-23`,
+						Version:     `2024-08-05`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -7305,7 +7318,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getSampleDatasetLoadStatus`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`:         `input:groupId`,
+							`sampleDatasetId`: `body:$.id`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -7689,9 +7703,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &WatcherProperties{
 					Get: WatcherGetProperties{
 						OperationID: `getCluster`,
-						Version:     `2024-10-23`,
+						Version:     `2024-08-05`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -9973,7 +9988,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getPipeline`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`:      `input:groupId`,
+							`pipelineName`: `body:$.name`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -10048,7 +10064,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getPipeline`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`:      `input:groupId`,
+							`pipelineName`: `input:pipelineName`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -10879,7 +10896,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getPipeline`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`:      `input:groupId`,
+							`pipelineName`: `input:pipelineName`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -13410,7 +13428,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getFlexCluster`,
 						Version:     `2024-11-13`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`: `input:groupId`,
+							`name`:    `body:$.name`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -13496,7 +13515,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getFlexCluster`,
 						Version:     `2024-11-13`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`: `input:groupId`,
+							`name`:    `input:name`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -13733,7 +13753,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getFlexCluster`,
 						Version:     `2024-11-13`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`: `input:groupId`,
+							`name`:    `input:name`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -13882,7 +13903,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getFlexBackupRestoreJob`,
 						Version:     `2024-11-13`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`:      `input:groupId`,
+							`name`:         `input:name`,
+							`restoreJobId`: `body:$.id`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -15578,7 +15601,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getLdapConfigurationStatus`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`:   `input:groupId`,
+							`requestId`: `body:$.requestId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -20153,7 +20177,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getOnlineArchive`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`archiveId`:   `body:$.id`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -20252,7 +20278,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getOnlineArchive`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`archiveId`:   `input:archiveId`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -20607,7 +20635,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getOnlineArchive`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`archiveId`:   `input:archiveId`,
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -22898,7 +22928,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getPrivateEndpointService`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`cloudProvider`:     `body:$.cloudProvider`,
+							`endpointServiceId`: `body:$.id`,
+							`groupId`:           `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -23082,7 +23114,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						OperationID: `getPrivateEndpointService`,
 						Version:     `2023-01-01`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`cloudProvider`:     `body:$.cloudProvider`,
+							`endpointServiceId`: `body:$.id`,
+							`groupId`:           `input:groupId`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -27478,9 +27512,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &WatcherProperties{
 					Get: WatcherGetProperties{
 						OperationID: `getFlexCluster`,
-						Version:     `2023-01-01`,
+						Version:     `2024-11-13`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`: `input:groupId`,
+							`name`:    `body:$.name`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -27566,9 +27601,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &WatcherProperties{
 					Get: WatcherGetProperties{
 						OperationID: `getFlexCluster`,
-						Version:     `2023-01-01`,
+						Version:     `2024-11-13`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`: `input:groupId`,
+							`name`:    `input:name`,
 						},
 					},
 					Expect: &WatcherExpectProperties{
@@ -27812,9 +27848,10 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &WatcherProperties{
 					Get: WatcherGetProperties{
 						OperationID: `getFlexCluster`,
-						Version:     `2023-01-01`,
+						Version:     `2024-11-13`,
 						Params: map[string]string{
-							`orgId`: `123`,
+							`groupId`: `input:groupId`,
+							`name`:    `input:name`,
 						},
 					},
 					Expect: &WatcherExpectProperties{

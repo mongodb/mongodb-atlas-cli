@@ -152,7 +152,15 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 	execCmd.Stdout = cmd.OutOrStdout()
 	execCmd.Stderr = cmd.OutOrStderr()
 	execCmd.Env = os.Environ()
-	return execCmd.Run()
+	if err := execCmd.Run(); err != nil {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
+			cmd.SilenceErrors = true
+			_, _ = log.Debugf("Silenced error: %v", exitErr)
+		}
+		return err
+	}
+	return nil
 }
 
 func (p *Plugin) Uninstall() error {

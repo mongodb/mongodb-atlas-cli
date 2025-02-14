@@ -17,7 +17,6 @@
 package events
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -87,5 +86,5 @@ func Test_projectListOpts_Run_WithInvalidDate(t *testing.T) {
 	if err == nil {
 		t.Fatal("Run() expected error")
 	}
-	assert.True(t, strings.Contains(err.Error(), "parsing time"))
+	assert.Contains(t, err.Error(), "parsing time")
 }

@@ -16,7 +16,6 @@ package telemetry
 
 import (
 	"errors"
-	"os"
 	"path"
 	"path/filepath"
 	"testing"
@@ -63,8 +62,7 @@ func TestTrackCommandWithError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
 
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
-	require.NoError(t, err)
+	cacheDir := t.TempDir()
 
 	cmd := &cobra.Command{
 		Use: "test-command",
@@ -90,7 +88,7 @@ func TestTrackCommandWithError(t *testing.T) {
 		Return(nil).
 		Times(1)
 
-	err = tr.trackCommand(TrackOptions{
+	err := tr.trackCommand(TrackOptions{
 		Err: errCmd,
 	})
 	require.NoError(t, err)
@@ -100,8 +98,7 @@ func TestTrackCommandWithSendError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockEventsSender(ctrl)
 
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
-	require.NoError(t, err)
+	cacheDir := t.TempDir()
 
 	cmd := &cobra.Command{
 		Use: "test-command",
@@ -127,7 +124,7 @@ func TestTrackCommandWithSendError(t *testing.T) {
 		Return(errors.New("test send error")).
 		Times(1)
 
-	err = tr.trackCommand(TrackOptions{
+	err := tr.trackCommand(TrackOptions{
 		Err: errCmd,
 	})
 	require.NoError(t, err)
@@ -144,8 +141,7 @@ func TestTrackCommandWithSendError(t *testing.T) {
 }
 
 func TestSave(t *testing.T) {
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
-	require.NoError(t, err)
+	cacheDir := t.TempDir()
 
 	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
@@ -175,8 +171,7 @@ func TestSave(t *testing.T) {
 }
 
 func TestSaveOverMaxCacheFileSize(t *testing.T) {
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
-	require.NoError(t, err)
+	cacheDir := t.TempDir()
 
 	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
@@ -200,8 +195,7 @@ func TestSaveOverMaxCacheFileSize(t *testing.T) {
 }
 
 func TestOpenCacheFile(t *testing.T) {
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
-	require.NoError(t, err)
+	cacheDir := t.TempDir()
 
 	tr := &tracker{
 		fs:               afero.NewMemMapFs(),
@@ -209,7 +203,7 @@ func TestOpenCacheFile(t *testing.T) {
 		cacheDir:         cacheDir,
 	}
 
-	_, err = tr.openCacheFile()
+	_, err := tr.openCacheFile()
 	require.NoError(t, err)
 	// Verify that the file exists
 	filename := path.Join(cacheDir, cacheFilename)
@@ -224,8 +218,7 @@ func TestOpenCacheFile(t *testing.T) {
 }
 
 func TestTrackSurvey(t *testing.T) {
-	cacheDir, err := os.MkdirTemp(os.TempDir(), config.AtlasCLI+"*")
-	require.NoError(t, err)
+	cacheDir := t.TempDir()
 
 	cmd := &cobra.Command{
 		Use: "test-command",
@@ -243,7 +236,7 @@ func TestTrackSurvey(t *testing.T) {
 	}
 
 	response := true
-	err = tr.trackSurvey(
+	err := tr.trackSurvey(
 		&survey.Confirm{Message: "test"},
 		&response,
 		nil,

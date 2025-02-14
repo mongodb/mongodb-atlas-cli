@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -52,7 +51,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 	dbUserPassword := dbUserUsername + "~PwD"
 
 	var client *mongo.Client
-	ctx := context.Background()
+	ctx := t.Context()
 
 	t.Run("Setup", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

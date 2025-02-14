@@ -17,7 +17,6 @@ package atlas_test
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -120,7 +119,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 		assert.Equal(t, "IDLE", cols[3])
 	})
 
-	ctx := context.Background()
+	ctx := t.Context()
 	const localFile = "sampledata.archive"
 	var connectionString string
 

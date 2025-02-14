@@ -205,3 +205,107 @@ func toInt(value any) (int, error) {
 		return 0, fmt.Errorf("value %v of type %T cannot be converted to int", value, value)
 	}
 }
+
+func validateAllWatchers(allCommands map[string]*api.Group) error {
+	var errs []error
+
+	for _, group := range allCommands {
+		for _, command := range group.Commands {
+			if err := validateWatchersForCommand(allCommands, command); err != nil {
+				errs = append(errs, err)
+			}
+		}
+	}
+
+	// If no errors occurred, return nil
+	if len(errs) == 0 {
+		return nil
+	}
+
+	// Join all errors into a single error
+	return errors.Join(errs...)
+}
+
+func validateWatchersForCommand(allCommands map[string]*api.Group, command api.Command) error {
+	watcher := command.Watcher
+	if watcher == nil {
+		return nil
+	}
+
+	baseErr := fmt.Errorf("watcher for operationID='%s' is invalid", command.OperationID)
+
+	// ensure the OperationID is not empty
+	operationID := watcher.Get.OperationID
+	if operationID == "" {
+		return fmt.Errorf("%w: the watcher get operation operationID is empty", baseErr)
+	}
+
+	// ensure the command the watcher defines exists
+	var getWatcherCommand *api.Command
+	for _, group := range allCommands {
+		for _, command := range group.Commands {
+			if command.OperationID == operationID {
+				getWatcherCommand = &command
+			}
+		}
+	}
+
+	if getWatcherCommand == nil {
+		return fmt.Errorf("%w: the watcher get operation with operationID '%s' was not found", baseErr, operationID)
+	}
+
+	// ensure the version exists
+	versionFound := false
+	for _, apiVersion := range getWatcherCommand.Versions {
+		if apiVersion.Version == watcher.Get.Version {
+			versionFound = true
+		}
+	}
+
+	if !versionFound {
+		return fmt.Errorf("%w: the watcher get operation with operationID '%s' was found, but the version '%s' was not found", baseErr, operationID, watcher.Get.Version)
+	}
+
+	// verify that all the parameters exist, and that required parameters are set
+	// make 2 sets we'll fill up with parameters from getWatcherCommand
+	parameterNames := make(map[string]struct{})
+	requiredParameterNames := make(map[string]struct{})
+
+	addParameters := func(p []api.Parameter) {
+		for _, parameter := range p {
+			parameterNames[parameter.Name] = struct{}{}
+
+			if parameter.Required {
+				requiredParameterNames[parameter.Name] = struct{}{}
+			}
+		}
+	}
+
+	addParameters(getWatcherCommand.RequestParameters.QueryParameters)
+	addParameters(getWatcherCommand.RequestParameters.URLParameters)
+
+	// 1. verify that all parameters used exist
+	// 2. remove items from requiredParameterNames, set should be empty after this for loop
+	for parameterName := range watcher.Get.Params {
+		if _, valid := parameterNames[parameterName]; !valid {
+			return fmt.Errorf("%w: invalid parameter was provided, parameter does not exist: '%s'", baseErr, parameterName)
+		}
+
+		delete(requiredParameterNames, parameterName)
+	}
+
+	if len(requiredParameterNames) > 0 {
+		missingRequiredParameters := ""
+		for name := range requiredParameterNames {
+			if missingRequiredParameters != "" {
+				missingRequiredParameters = missingRequiredParameters + ", "
+			}
+
+			missingRequiredParameters = missingRequiredParameters + name
+		}
+
+		return fmt.Errorf("%w: some required parameter(s) are missing: '%s'", baseErr, missingRequiredParameters)
+	}
+
+	return nil
+}

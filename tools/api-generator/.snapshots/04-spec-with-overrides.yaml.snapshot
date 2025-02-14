@@ -95,24 +95,6 @@ var Commands = GroupedAndSortedCommands{
 						},
 					},
 				},
-				Watcher: &WatcherProperties{
-					Get: WatcherGetProperties{
-						OperationID: `getCluster`,
-						Version:     `2023-02-01`,
-						Params: map[string]string{
-							`orgId`: `123`,
-						},
-					},
-					Expect: &WatcherExpectProperties{
-						HTTPCode: 200, //nolint
-						Match: &WatcherMatchProperties{
-							Path: `$.stateName`,
-							Values: []string{
-								`IDLE`,
-							},
-						},
-					},
-				},
 			},
 		},
 	},

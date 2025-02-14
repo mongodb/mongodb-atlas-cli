@@ -8,7 +8,7 @@ actions:
       x-xgen-atlascli:
         watcher:
           get:
-            version: "2024-10-23"
+            version: "2024-08-05"
             operation-id: getCluster
             params:
               clusterName: body:$.name
@@ -23,7 +23,7 @@ actions:
       x-xgen-atlascli:
         watcher:
           get:
-            version: "2024-10-23"
+            version: "2024-08-05"
             operation-id: getCluster
             params:
               clusterName: input:clusterName
@@ -35,7 +35,7 @@ actions:
       x-xgen-atlascli:
         watcher:
           get:
-            version: "2024-10-23"
+            version: "2024-08-05"
             operation-id: getCluster
             params:
               clusterName: input:clusterName
@@ -107,7 +107,7 @@ actions:
       x-xgen-atlascli:
         watcher:
           get:
-            version: "2023-01-01"
+            version: "2024-11-13"
             operation-id: getFlexCluster
             params:
               groupId: input:groupId
@@ -122,7 +122,7 @@ actions:
       x-xgen-atlascli:
         watcher:
           get:
-            version: "2023-01-01"
+            version: "2024-11-13"
             operation-id: getFlexCluster
             params:
               groupId: input:groupId
@@ -137,7 +137,7 @@ actions:
       x-xgen-atlascli:
         watcher:
           get:
-            version: "2023-01-01"
+            version: "2024-11-13"
             operation-id: getFlexCluster
             params:
               groupId: input:groupId

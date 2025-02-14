@@ -81,9 +81,6 @@ paths:
         command-aliases:
           - createDatabase
           - createServer
-        watcher:
-          get:
-            operation-id: getCluster
       operationId: createCluster
       parameters:
         - $ref: '#/components/parameters/envelope'

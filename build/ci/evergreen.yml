@@ -1127,26 +1127,27 @@ tasks:
           MCLI_SERVICE: cloud
           E2E_TAGS: atlas,networking
   # datafederation requires cloud provider role authentication and an s3 bucket created
-  - name: atlas_datafederation_db_e2e
-    tags: ["e2e","datafederation","atlas"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,datafederation,db
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+# Task will be re-enabled in CLOUDP-300809
+#  - name: atlas_datafederation_db_e2e
+#    tags: ["e2e","datafederation","atlas"]
+#    must_have_test_results: true
+#    depends_on:
+#      - name: compile
+#        variant: "code_health"
+#        patch_optional: true
+#    commands:
+#      - func: "install gotestsum"
+#      - func: "e2e test"
+#        vars:
+#          MCLI_ORG_ID: ${atlas_org_id}
+#          MCLI_PROJECT_ID: ${atlas_project_id}
+#          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+#          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+#          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+#          MCLI_SERVICE: cloud
+#          E2E_TAGS: atlas,datafederation,db
+#          E2E_TEST_BUCKET: ${e2e_test_bucket}
+#          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # datafederation requires cloud provider role authentication and an s3 bucket created
   - name: atlas_datafederation_privatenetwork_e2e
     tags: ["e2e","datafederation","atlas"]
@@ -1168,27 +1169,28 @@ tasks:
           E2E_TAGS: atlas,datafederation,privatenetwork
           E2E_TEST_BUCKET: ${e2e_test_bucket}
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-  # datafederation requires cloud provider role authentication and an s3 bucket created
-  - name: atlas_datafederation_querylimits_e2e
-    tags: ["e2e","datafederation","atlas"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,datafederation,querylimits
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+# datafederation requires cloud provider role authentication and an s3 bucket created
+# Task will be re-enabled in CLOUDP-300809
+#  - name: atlas_datafederation_querylimits_e2e
+#    tags: ["e2e","datafederation","atlas"]
+#    must_have_test_results: true
+#    depends_on:
+#      - name: compile
+#        variant: "code_health"
+#        patch_optional: true
+#    commands:
+#      - func: "install gotestsum"
+#      - func: "e2e test"
+#        vars:
+#          MCLI_ORG_ID: ${atlas_org_id}
+#          MCLI_PROJECT_ID: ${atlas_project_id}
+#          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+#          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+#          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+#          MCLI_SERVICE: cloud
+#          E2E_TAGS: atlas,datafederation,querylimits
+#          E2E_TEST_BUCKET: ${e2e_test_bucket}
+#          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
   # IAM commands tests with an Atlas profile
   - name: atlas_iam_e2e
     tags: ["e2e","generic","atlas"]
@@ -1347,46 +1349,49 @@ tasks:
           E2E_TAGS: atlas,backup,schedule
           E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
           E2E_TEST_BUCKET: ${e2e_test_bucket}
-  - name: atlas_backups_exports_buckets_e2e
-    tags: [ "e2e","backup","atlas" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,exports,buckets
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
-  - name: atlas_backups_exports_jobs_e2e
-    tags: [ "e2e","backup","atlas" ]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MCLI_ORG_ID: ${atlas_org_id}
-          MCLI_PROJECT_ID: ${atlas_project_id}
-          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MCLI_SERVICE: cloud
-          E2E_TAGS: atlas,backup,exports,jobs
-          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
-          E2E_TEST_BUCKET: ${e2e_test_bucket}
+# Task will be re-enabled in CLOUDP-300809
+#  - name: atlas_backups_exports_buckets_e2e
+#    tags: [ "e2e","backup","atlas" ]
+#    must_have_test_results: true
+#    depends_on:
+#      - name: compile
+#        variant: "code_health"
+#        patch_optional: true
+#    commands:
+#      - func: "install gotestsum"
+#      - func: "e2e test"
+#        vars:
+#          MCLI_ORG_ID: ${atlas_org_id}
+#          MCLI_PROJECT_ID: ${atlas_project_id}
+#          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+#          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+#          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+#          MCLI_SERVICE: cloud
+#          E2E_TAGS: atlas,backup,exports,buckets
+#          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+#          E2E_TEST_BUCKET: ${e2e_test_bucket}
+
+# Task will be re-enabled in CLOUDP-300809
+#  - name: atlas_backups_exports_jobs_e2e
+#    tags: [ "e2e","backup","atlas" ]
+#    must_have_test_results: true
+#    depends_on:
+#      - name: compile
+#        variant: "code_health"
+#        patch_optional: true
+#    commands:
+#      - func: "install gotestsum"
+#      - func: "e2e test"
+#        vars:
+#          MCLI_ORG_ID: ${atlas_org_id}
+#          MCLI_PROJECT_ID: ${atlas_project_id}
+#          MCLI_PRIVATE_API_KEY: ${atlas_private_api_key}
+#          MCLI_PUBLIC_API_KEY: ${atlas_public_api_key}
+#          MCLI_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+#          MCLI_SERVICE: cloud
+#          E2E_TAGS: atlas,backup,exports,jobs
+#          E2E_CLOUD_ROLE_ID: ${e2e_cloud_role_id}
+#          E2E_TEST_BUCKET: ${e2e_test_bucket}
   - name: atlas_backups_flex_e2e
     tags: [ "e2e","backup","atlas" ]
     must_have_test_results: true

@@ -153,9 +153,10 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 	execCmd.Stderr = cmd.OutOrStderr()
 	execCmd.Env = os.Environ()
 	if err := execCmd.Run(); err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok {
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) {
 			cmd.SilenceErrors = true
-			log.Debugf("Silenced error: %v", exitErr)
+			_, _ = log.Debugf("Silenced error: %v", exitErr)
 		}
 		return err
 	}

@@ -226,6 +226,7 @@ func validateAllWatchers(allCommands map[string]*api.Group) error {
 	return errors.Join(errs...)
 }
 
+//nolint:gocyclo
 func validateWatchersForCommand(allCommands map[string]*api.Group, command api.Command) error {
 	watcher := command.Watcher
 	if watcher == nil {
@@ -298,10 +299,10 @@ func validateWatchersForCommand(allCommands map[string]*api.Group, command api.C
 		missingRequiredParameters := ""
 		for name := range requiredParameterNames {
 			if missingRequiredParameters != "" {
-				missingRequiredParameters = missingRequiredParameters + ", "
+				missingRequiredParameters += ", "
 			}
 
-			missingRequiredParameters = missingRequiredParameters + name
+			missingRequiredParameters += name
 		}
 
 		return fmt.Errorf("%w: some required parameter(s) are missing: '%s'", baseErr, missingRequiredParameters)

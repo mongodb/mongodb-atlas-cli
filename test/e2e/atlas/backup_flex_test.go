@@ -107,7 +107,7 @@ func TestFlexBackup(t *testing.T) {
 			"--snapshotId",
 			snapshotID,
 			"--targetClusterName",
-			g.clusterName,
+			g.flexName,
 			"--targetProjectId",
 			g.projectID,
 			"-o=json")
@@ -182,7 +182,7 @@ func TestFlexBackup(t *testing.T) {
 			"--snapshotId",
 			snapshotID,
 			"--targetClusterName",
-			g.clusterName,
+			g.flexName,
 			"--targetProjectId",
 			g.projectID,
 			"-o=json")
@@ -216,14 +216,14 @@ func TestFlexBackup(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",
-			g.clusterName,
+			g.flexName,
 			"--force",
 			"--watch")
 		cmd.Env = os.Environ()
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", g.clusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", g.flexName)
 		assert.Equal(t, expected, string(resp))
 	})
 }

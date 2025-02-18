@@ -18,6 +18,7 @@ package deployments
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -29,7 +30,7 @@ import (
 func TestDelete_Run_Atlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockAtlasStore := mocks.NewMockClusterDeleter(ctrl)
-	ctx := t.Context()
+	ctx := context.Background()
 
 	deploymentsTest := fixture.NewMockAtlasDeploymentOpts(ctrl, "atlasDeployment")
 
@@ -64,7 +65,7 @@ func TestDelete_Run_Atlas(t *testing.T) {
 
 func TestDelete_Run_Local(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "testDeployment")

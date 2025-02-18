@@ -18,6 +18,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -41,7 +42,7 @@ func Test_logoutOpts_Run(t *testing.T) {
 			Confirm: true,
 		},
 	}
-	ctx := t.Context()
+	ctx := context.TODO()
 	mockFlow.
 		EXPECT().
 		RevokeToken(ctx, gomock.Any(), gomock.Any()).
@@ -71,7 +72,7 @@ func Test_logoutOpts_Run_Keep(t *testing.T) {
 		},
 		keepConfig: true,
 	}
-	ctx := t.Context()
+	ctx := context.TODO()
 	mockFlow.
 		EXPECT().
 		RevokeToken(ctx, gomock.Any(), gomock.Any()).

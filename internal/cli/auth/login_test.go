@@ -18,6 +18,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"testing"
@@ -88,7 +89,7 @@ func Test_loginOpts_Run(t *testing.T) {
 		ExpiresIn:       300,
 		Interval:        10,
 	}
-	ctx := t.Context()
+	ctx := context.TODO()
 	mockFlow.
 		EXPECT().
 		RequestCode(ctx).

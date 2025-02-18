@@ -18,6 +18,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -36,7 +37,7 @@ func Test_registerOpts_Run(t *testing.T) {
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	buf := new(bytes.Buffer)
-	ctx := t.Context()
+	ctx := context.TODO()
 
 	opts := &RegisterOpts{}
 	opts.NoBrowser = true

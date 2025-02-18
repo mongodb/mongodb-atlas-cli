@@ -17,6 +17,7 @@
 package indexes
 
 import (
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -34,7 +35,7 @@ func TestDelete_RunLocal(t *testing.T) {
 	mockStore := mocks.NewMockSearchIndexDeleter(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
 	mockColl := mocks.NewMockCollection(ctrl)
-	ctx := t.Context()
+	ctx := context.Background()
 
 	expectedIndexName := "default"
 	const (
@@ -129,7 +130,7 @@ func TestDelete_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockStore := mocks.NewMockSearchIndexDeleter(ctrl)
-	ctx := t.Context()
+	ctx := context.Background()
 
 	const (
 		expectedLocalDeployment = "localDeployment1"

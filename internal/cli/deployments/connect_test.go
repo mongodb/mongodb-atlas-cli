@@ -18,6 +18,7 @@ package deployments
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -37,7 +38,7 @@ const (
 
 func TestRun_ConnectLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
 	deploymenTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
@@ -86,7 +87,7 @@ func TestRun_ConnectLocal(t *testing.T) {
 
 func TestRun_ConnectAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
 	mockAtlasClusterDescriberStarter := mocks.NewMockClusterDescriberStarter(ctrl)

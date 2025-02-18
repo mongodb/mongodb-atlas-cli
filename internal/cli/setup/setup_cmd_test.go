@@ -18,6 +18,7 @@ package setup
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -35,7 +36,7 @@ import (
 func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-	ctx := t.Context()
+	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{}
@@ -56,7 +57,7 @@ func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 func Test_setupOpts_RunSkipRegister(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-	ctx := t.Context()
+	ctx := context.TODO()
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{

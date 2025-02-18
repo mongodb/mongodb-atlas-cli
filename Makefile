@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-GOLANGCI_VERSION=v1.64.5
+GOLANGCI_VERSION=v1.61.0
 COVERAGE?=coverage.out
 GOCOVERDIR?=$(abspath cov)
 

@@ -18,6 +18,7 @@ package deployments
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"testing"
 
@@ -33,7 +34,7 @@ import (
 
 func TestStart_RunLocal_PausedContainers(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 
@@ -65,7 +66,7 @@ func TestStart_RunLocal_PausedContainers(t *testing.T) {
 
 func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 
@@ -98,7 +99,7 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 func TestStart_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterStarter(ctrl)
-	ctx := t.Context()
+	ctx := context.Background()
 	const deploymentName = "atlasCluster1"
 
 	deploymentsTest := fixture.NewMockAtlasDeploymentOpts(ctrl, deploymentName)

@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20241113004/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20241113005/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 

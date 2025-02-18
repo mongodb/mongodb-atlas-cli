@@ -86,5 +86,5 @@ func Test_projectListOpts_Run_WithInvalidDate(t *testing.T) {
 	if err == nil {
 		t.Fatal("Run() expected error")
 	}
-	assert.Contains(t, err.Error(), "parsing time")
+	assert.ErrorContains(t, err, "parsing time")
 }

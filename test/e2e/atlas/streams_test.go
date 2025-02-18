@@ -277,6 +277,25 @@ func TestStreams(t *testing.T) {
 		a.Equal("test-namespace.servicebus.windows.net", privateLinkEndpoints.GetResults()[0].GetDnsDomain())
 	})
 
+	t.Run("Deleting a streams privateLink endpoint", func(t *testing.T) {
+		streamsCmd := exec.Command(cliPath,
+			"streams",
+			"privateLink",
+			"delete",
+			endpointID,
+			"--force",
+			"--projectId",
+			g.projectID,
+		)
+
+		streamsCmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(streamsCmd)
+		require.NoError(t, err, string(resp))
+
+		expected := fmt.Sprintf("Atlas Stream Processing PrivateLink endpoint '%s' deleted.\n", endpointID)
+		assert.Equal(t, expected, string(resp))
+	})
+
 	// Connections
 	t.Run("Creating a streams connection", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

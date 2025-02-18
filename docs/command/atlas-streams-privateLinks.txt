@@ -52,6 +52,7 @@ Related Commands
 ----------------
 
 * :ref:`atlas-streams-privateLinks-create` - Creates a PrivateLink endpoint that can be used as an Atlas Stream Processor connection.
+* :ref:`atlas-streams-privateLinks-delete` - Deletes an Atlas Stream Processing PrivateLink endpoint.
 * :ref:`atlas-streams-privateLinks-describe` - Describes a PrivateLink endpoint that can be used as an Atlas Stream Processor connection.
 * :ref:`atlas-streams-privateLinks-list` - Lists the PrivateLink endpoints in the project that can be used as Atlas Stream Processor connections.
 
@@ -60,6 +61,7 @@ Related Commands
    :titlesonly:
 
    create </command/atlas-streams-privateLinks-create>
+   delete </command/atlas-streams-privateLinks-delete>
    describe </command/atlas-streams-privateLinks-describe>
    list </command/atlas-streams-privateLinks-list>
 

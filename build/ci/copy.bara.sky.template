@@ -46,7 +46,7 @@ core.workflow(
         integrates = [],
     ),
     origin_files = glob(["docs/command/**"]),
-    destination_files = glob(["source/command/**"], exclude=["source/command/atlas-api", "source/includes/command/atlas-kubernetes**"]),
+    destination_files = glob(["source/command/**"], exclude=["source/command/atlas-api", "source/command/atlas-kubernetes**"]),
     authoring = authoring.pass_thru(author),
     transformations = [
         core.move("docs/command", "source/command"),

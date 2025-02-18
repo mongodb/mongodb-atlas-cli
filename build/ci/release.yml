@@ -279,7 +279,6 @@ functions:
           - ${workdir}/copybara
   "run-copybara":
     - command: shell.exec
-      params:
         <<: *go_options
         env:
           <<: *go_env
@@ -533,7 +532,7 @@ buildvariants:
             variant: release_atlascli_msi
   - name: copybara
     display_name: "Copybara"
-    git_tag_only: true
+    git_tag_only: false
     run_on:
       - ubuntu2404-small
     expansions:

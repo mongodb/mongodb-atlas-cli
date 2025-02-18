@@ -123,19 +123,19 @@ func TestWithAuthentication(t *testing.T) {
 }
 
 func TestWithContext(t *testing.T) {
-	c, err := New(Service(config.CloudService), WithContext(t.Context()))
+	c, err := New(Service(config.CloudService))
 	if err != nil {
 		t.Fatalf("New() unexpected error: %v", err)
 	}
 
-	if c.ctx != t.Context() {
-		t.Errorf("New() got %v; expected %v", c.ctx, t.Context())
+	if c.ctx != context.Background() {
+		t.Errorf("New() got %v; expected %v", c.ctx, context.Background())
 	}
 
 	type myCustomType string
 	var k, v myCustomType = "custom key", "custom value"
 
-	ctx := context.WithValue(t.Context(), k, v)
+	ctx := context.WithValue(context.Background(), k, v)
 
 	c, err = New(Service(config.CloudService), WithContext(ctx))
 	if err != nil {

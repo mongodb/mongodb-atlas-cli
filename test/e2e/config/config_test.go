@@ -42,7 +42,6 @@ func TestConfig(t *testing.T) {
 		key := os.Getenv("MCLI_PRIVATE_API_KEY")
 		_ = os.Unsetenv("MCLI_PRIVATE_API_KEY")
 		t.Cleanup(func() {
-			//nolint:usetesting
 			_ = os.Setenv("MCLI_PRIVATE_API_KEY", key)
 		})
 		pty, tty, err := pseudotty.Open()

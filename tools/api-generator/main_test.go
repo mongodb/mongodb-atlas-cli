@@ -16,6 +16,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"io"
 	"os"
 	"path/filepath"
@@ -47,7 +48,7 @@ func testSpec(t *testing.T, name, specPath string) {
 	}
 
 	buf := &bytes.Buffer{}
-	if err := convertSpecToAPICommands(t.Context(), specFile, overlays, buf); err != nil {
+	if err := convertSpecToAPICommands(context.Background(), specFile, overlays, buf); err != nil {
 		t.Fatalf("failed to convert spec into commmands, error: %s", err)
 	}
 

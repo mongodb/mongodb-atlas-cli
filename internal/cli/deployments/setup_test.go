@@ -18,6 +18,7 @@ package deployments
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"testing"
 
@@ -54,7 +55,7 @@ func TestSetupOpts_PostRun(t *testing.T) {
 // Happy path. No containers exist.
 func TestSetupOpts_LocalDev_HappyPathClean(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 	buf := new(bytes.Buffer)
 
@@ -119,7 +120,7 @@ func TestSetupOpts_LocalDev_HappyPathClean(t *testing.T) {
 // Happy path. Image exists, image update fails. No containers exist.
 func TestSetupOpts_LocalDev_HappyPathOfflinePull(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 	buf := new(bytes.Buffer)
 
@@ -187,7 +188,7 @@ func TestSetupOpts_LocalDev_HappyPathOfflinePull(t *testing.T) {
 // Unhappy path. Image does not exist, image update fails. No containers exist.
 func TestSetupOpts_LocalDev_UnhappyPathOfflinePull(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 	buf := new(bytes.Buffer)
 
@@ -228,7 +229,7 @@ func TestSetupOpts_LocalDev_UnhappyPathOfflinePull(t *testing.T) {
 // Happy path, image is already downloaded. Containers exist.
 func TestSetupOpts_LocalDev_HappyPathEverythingAlreadyExists(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 	buf := new(bytes.Buffer)
 
@@ -262,7 +263,7 @@ func TestSetupOpts_LocalDev_HappyPathEverythingAlreadyExists(t *testing.T) {
 
 func TestSetupOpts_LocalDev_RemoveUnhealthyDeployment(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := t.Context()
+	ctx := context.Background()
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 	buf := new(bytes.Buffer)
 

@@ -458,9 +458,9 @@ tasks:
         vars:
           file: windows_post_package_test
   - name: copybara
-    depends_on:
-      - name: package_goreleaser
-        variant: release_atlascli_github
+    # depends_on:
+    #   - name: package_goreleaser
+    #     variant: release_atlascli_github
     commands:
       - func: "build-copybara"
       - command: github.generate_token

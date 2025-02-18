@@ -279,6 +279,7 @@ functions:
           - ${workdir}/copybara
   "run-copybara":
     - command: shell.exec
+      params:
         <<: *go_options
         env:
           <<: *go_env

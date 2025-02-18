@@ -21,8 +21,8 @@ include:
 
 variables:
   - &go_linux_version
-      go_root: "/opt/golang/go1.23"
-      go_bin: "/opt/golang/go1.23/bin"
+      go_root: "/opt/golang/go1.24"
+      go_bin: "/opt/golang/go1.24/bin"
       go_base_path: ""
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}

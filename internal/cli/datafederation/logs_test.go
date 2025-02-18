@@ -36,7 +36,7 @@ func TestLogOpts_Run(t *testing.T) {
 
 	const contents = "expected"
 
-	file, err := os.CreateTemp("", "")
+	file, err := os.CreateTemp(t.TempDir(), "")
 	if err != nil {
 		require.NoError(t, err)
 	}

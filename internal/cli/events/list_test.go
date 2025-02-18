@@ -17,7 +17,6 @@
 package events
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -124,7 +123,7 @@ func TestList_Run(t *testing.T) {
 		if err == nil {
 			t.Fatal("Run() expected an error, but got none")
 		}
-		assert.True(t, strings.Contains(err.Error(), "parsing time"))
+		assert.ErrorContains(t, err, "parsing time")
 	})
 	t.Run("for an project with invalid dates", func(t *testing.T) {
 		listOpts := &ListOpts{
@@ -140,7 +139,7 @@ func TestList_Run(t *testing.T) {
 		if err == nil {
 			t.Fatal("Run() expected an error, but got none")
 		}
-		assert.True(t, strings.Contains(err.Error(), "parsing time"))
+		assert.ErrorContains(t, err, "parsing time")
 	})
 }
 
@@ -158,6 +157,6 @@ func TestParseDate(t *testing.T) {
 		if err == nil {
 			t.Fatalf("expected error from parseDate() but got none")
 		}
-		assert.True(t, strings.Contains(err.Error(), "parsing time"))
+		assert.ErrorContains(t, err, "parsing time")
 	})
 }

@@ -45,7 +45,6 @@ type atlasE2ETestGenerator struct {
 	enableBackup  bool
 	firstProcess  *atlasv2.ApiHostViewAtlas
 	t             *testing.T
-	flexName      string
 }
 
 // Log formats its arguments using default formatting, analogous to Println,

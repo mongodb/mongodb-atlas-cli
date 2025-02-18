@@ -139,16 +139,9 @@ jobs:
             echo "|        | Difference | ${diff}% |"
           } > comment.md
           cat "comment.md" >> "$GITHUB_STEP_SUMMARY"
-      - name: set Apix Bot token
-        id: app-token
-        uses: mongodb/apix-action/token@v5
-        with:
-          app-id: ${{ secrets.APIXBOT_APP_ID }}
-          private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - name: Comment PR
         uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728
         with:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           recreate: true
           path: comment.md
       - name: Check coverage threshold

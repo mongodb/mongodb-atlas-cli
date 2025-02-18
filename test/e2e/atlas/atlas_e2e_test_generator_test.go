@@ -242,14 +242,14 @@ func (g *atlasE2ETestGenerator) generateFlexCluster() {
 	}
 
 	var err error
-	g.flexName, err = deployFlexClusterForProject(g.projectID)
+	g.clusterName, err = deployFlexClusterForProject(g.projectID)
 	if err != nil {
 		g.t.Fatalf("unexpected error deploying flex cluster: %v", err)
 	}
-	g.t.Logf("flexClusterName=%s", g.flexName)
+	g.t.Logf("flexClusterName=%s", g.clusterName)
 
 	g.t.Cleanup(func() {
-		_ = deleteClusterForProject(g.projectID, g.flexName)
+		_ = deleteClusterForProject(g.projectID, g.clusterName)
 	})
 }
 

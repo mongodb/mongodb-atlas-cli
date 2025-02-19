@@ -17,49 +17,34 @@
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Create JIRA ticket
+        uses: mongodb/apix-action/create-jira@v6
         id: create
-        shell: bash
-        env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_URL: ${{ github.event.issue.html_url }}
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-          JIRA_ASSIGNEE: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
-        run: |
-          json_response=$(curl --request POST \
-            --url 'https://jira.mongodb.org/rest/api/2/issue' \
-            --header 'Authorization: Bearer '"${JIRA_API_TOKEN}" \
-            --header 'Accept: application/json' \
-            --header 'Content-Type: application/json' \
-            --data '{
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          summary: "HELP: GitHub Issue n. ${{ github.event.issue.number }}"
+          issuetype: Story
+          description: "This ticket tracks the following GitHub issue: ${{ github.event.issue.html_url }}."
+          components: AtlasCLI
+          assignee: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
+          extra-data: |
+            {
               "fields": {
-                  "project": {
-                      "id": "10984"
-                  },
-                  "summary": "HELP: GitHub Issue n. '"${ISSUE_NUMBER}"'",
-                  "issuetype": {
-                      "id": "12"
-                  },
-                  "customfield_12751": [{
-                          "id": "14562"
-                  }],
-                  "description": "This ticket tracks the following GitHub issue: '"${ISSUE_URL}"'.",
-                  "components": [
-                      {
-                          "id": "30450"
-                      }
-                  ],
-                  "assignee": {
-                    "name": "'"${JIRA_ASSIGNEE}"'"
+                "fixVersions": [
+                  {
+                    "id": "41805"
                   }
+                ],
+                "customfield_12751": [
+                  {
+                    "id": "22223"
+                  }
+                ],
+                "customfield_10257": {
+                  "id": "11861"
+                }
               }
-            }')
-  
-          echo "Response: ${json_response}"
-  
-          JIRA_TICKET_ID=$(echo "${json_response}" | jq -r '.key')
-  
-          echo "The following JIRA ticket has been created: ${JIRA_TICKET_ID}"
-          echo "jira-ticket-id=${JIRA_TICKET_ID}" >> "${GITHUB_OUTPUT}"
+            }
       - name: Add comment
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043
         with:

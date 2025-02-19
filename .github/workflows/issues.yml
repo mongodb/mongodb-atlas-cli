@@ -22,7 +22,7 @@
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           project-key: CLOUDP
-          summary: "HELP: GitHub Issue n. ${{ github.event.issue.html_url }}"
+          summary: "HELP: GitHub Issue n. ${{ github.event.issue.number }}"
           issuetype: Story
           description: "This ticket tracks the following GitHub issue: ${{ github.event.issue.html_url }}."
           components: AtlasCLI

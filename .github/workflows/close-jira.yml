@@ -1,0 +1,32 @@
+name: Auto Close Jira
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  close-jira:
+    name: close jira
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'auto_close_jira')
+    steps:
+      - name: set jira key (branch name)
+        if: ${{ startsWith(github.event.pull_request.head.ref, 'CLOUDP') }}
+        env:
+          REF: github.event.pull_request.head.ref
+        run: echo "JIRA_KEY=$REF" >> "$GITHUB_ENV"
+      - name: set jira key (comment)
+        if: ${{ !startsWith(github.event.pull_request.head.ref, 'CLOUDP') }}
+        env:
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          JIRA_KEY=$(gh pr view "$URL" --comments | grep 'was created for internal tracking' | grep -oE 'CLOUDP-[0-9]+' | head -1)  
+          echo "JIRA_KEY=$JIRA_KEY" >> "$GITHUB_ENV"
+      - name: Close JIRA ticket
+        uses: mongodb/apix-action/transition-jira@v6
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          issue-key: ${{ env.JIRA_KEY }}
+          transition-id: 1381 # Resolved
+          resolution: Fixed

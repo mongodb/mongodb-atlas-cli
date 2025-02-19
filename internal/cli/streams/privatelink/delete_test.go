@@ -72,4 +72,26 @@ func TestDeleteOpts_Run(t *testing.T) {
 
 		require.NoError(t, err)
 	})
+
+	t.Run("should not call delete if confirm is false", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		mockStore := mocks.NewMockPrivateLinkDeleter(ctrl)
+
+		deleteOpts := &DeleteOpts{
+			DeleteOpts: &cli.DeleteOpts{
+				Entry:   "another-connection-id",
+				Confirm: false,
+			},
+			store: mockStore,
+		}
+
+		mockStore.
+			EXPECT().
+			DeletePrivateLinkEndpoint(gomock.Any(), gomock.Any()).
+			Times(0)
+
+		err := deleteOpts.Run()
+
+		require.NoError(t, err)
+	})
 }

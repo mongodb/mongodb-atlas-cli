@@ -79,7 +79,8 @@ func getTestCommands(t *testing.T) []*cobra.Command {
 	t.Helper()
 	return []*cobra.Command{
 		{
-			Use: "testcommand1",
+			Use:     "testcommand1",
+			Aliases: []string{"testcommand1alias"},
 			Annotations: map[string]string{
 				sourceType:       "plugin",
 				sourcePluginName: "testplugin1",
@@ -159,7 +160,9 @@ func Test_createExistingCommandsSet(t *testing.T) {
 	existingCommandsSet := createExistingCommandsSet(getTestCommands(t))
 
 	require.True(t, existingCommandsSet.Contains("testcommand1"))
+	require.True(t, existingCommandsSet.Contains("testcommand1alias"))
 	require.True(t, existingCommandsSet.Contains("testcommand2"))
+	require.False(t, existingCommandsSet.Contains("testcommand2alias"))
 	require.True(t, existingCommandsSet.Contains("testcommand3"))
 	require.False(t, existingCommandsSet.Contains("testcommand4"))
 }

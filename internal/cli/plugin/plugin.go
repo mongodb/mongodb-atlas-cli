@@ -59,6 +59,9 @@ func createExistingCommandsSet(existingCommands []*cobra.Command) set.Set[string
 	existingCommandsSet := set.NewSet[string]()
 	for _, cmd := range existingCommands {
 		existingCommandsSet.Add(cmd.Name())
+		for _, alias := range cmd.Aliases {
+			existingCommandsSet.Add(alias)
+		}
 	}
 
 	return existingCommandsSet

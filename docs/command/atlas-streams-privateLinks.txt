@@ -52,10 +52,12 @@ Related Commands
 ----------------
 
 * :ref:`atlas-streams-privateLinks-create` - Creates a PrivateLink endpoint that can be used as an Atlas Stream Processor connection.
+* :ref:`atlas-streams-privateLinks-describe` - Describes a PrivateLink endpoint that can be used as an Atlas Stream Processor connection.
 
 
 .. toctree::
    :titlesonly:
 
    create </command/atlas-streams-privateLinks-create>
+   describe </command/atlas-streams-privateLinks-describe>
 

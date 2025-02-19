@@ -21,6 +21,13 @@
         uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 2
+      - name: set Apix Bot token
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        id: app-token
+        uses: mongodb/apix-action/token@d74254f04d46b8e94ef22248607d47225c8a171a
+        with:
+          app-id: ${{ secrets.APIXBOT_APP_ID }}
+          private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - name: Find JIRA team
         id: find
         run: |

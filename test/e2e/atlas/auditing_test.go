@@ -63,7 +63,7 @@ func TestAuditing(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &setting), string(resp))
 		assert.True(t, *setting.Enabled)
 		assert.True(t, *setting.AuditAuthorizationSuccess)
-		assert.Equal(t, "{\"atype\": \"authenticate\"}", *setting.AuditFilter)
+		assert.JSONEq(t, "{\"atype\": \"authenticate\"}", *setting.AuditFilter)
 	})
 
 	t.Run("Update via file", func(t *testing.T) {

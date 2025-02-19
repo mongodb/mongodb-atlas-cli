@@ -18,7 +18,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113004/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20241113005/admin"
 )
 
 const (
@@ -151,11 +151,11 @@ func (opts *ConfigOpts) newNotification() *atlasv2.AlertsNotificationRootForGrou
 	return out
 }
 
-func (opts *ConfigOpts) newMetricThreshold() *atlasv2.ServerlessMetricThreshold {
+func (opts *ConfigOpts) newMetricThreshold() *atlasv2.FlexClusterMetricThreshold {
 	operator := strings.ToUpper(opts.metricThresholdOperator)
 	mode := strings.ToUpper(opts.metricThresholdMode)
 	units := strings.ToUpper(opts.metricThresholdUnits)
-	result := &atlasv2.ServerlessMetricThreshold{
+	result := &atlasv2.FlexClusterMetricThreshold{
 		MetricName: strings.ToUpper(opts.metricThresholdMetricName),
 		Operator:   &operator,
 		Threshold:  &opts.metricThresholdThreshold,

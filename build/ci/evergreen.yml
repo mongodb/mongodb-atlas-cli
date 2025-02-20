@@ -460,6 +460,19 @@ functions:
         permissions: public-read
         content_type: ${content_type|application/octet-stream}
         display_name: internal-bucket
+  "install azure cli":
+    - command: shell.exec
+      type: setup
+      params:
+        <<: *go_options
+        shell: bash
+        script: |
+          set -e
+          sudo dnf clean all
+          sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+          sudo dnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm
+          sudo dnf install -y azure-cli
+          az --version
   "ssh-ready":
     - command: shell.exec
       params:
@@ -1724,6 +1737,7 @@ task_groups:
       - func: "set-expansions"
       - func: "vendor deps"
       - func: "install terraform"
+      - func: "install azure cli"
       - func: "terraform init"
     teardown_task:
       - func: "copy from remote"

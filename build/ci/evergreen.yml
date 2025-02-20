@@ -1752,8 +1752,8 @@ task_groups:
       - func: "set-expansions"
       - func: "vendor deps"
       - func: "install terraform"
-      - func: "install azure cli"
-      - func: "login azure cli"
+      # - func: "install azure cli"
+      # - func: "login azure cli"
       - func: "terraform init"
     teardown_task:
       - func: "copy from remote"

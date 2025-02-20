@@ -7,7 +7,8 @@
 
   permissions: 
     pull-requests: write
-    contents: read
+    contents: write
+    repository-projects: read
   jobs:
     jira_task:
       name: Create Jira issue
@@ -73,7 +74,7 @@
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            The ticket [${{ steps.create.outputs.jira-ticket-id }}](https://jira.mongodb.org/browse/${{ steps.create.outputs.jira-ticket-id }}) was created for internal tracking.
+            The ticket [${{ steps.create.outputs.issue-key }}](https://jira.mongodb.org/browse/${{ steps.create.outputs.issue-key }}) was created for internal tracking.
 
             Note: Jira ticket will be closed automatically when this PR is merged.
       - name: Add auto_close_jira label

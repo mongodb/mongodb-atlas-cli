@@ -473,6 +473,21 @@ functions:
           sudo dnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm
           sudo dnf install -y azure-cli
           az --version
+  "login azure cli":
+    - command: subprocess.exec
+      type: setup
+      params:
+        <<: *go_options
+        binary: az
+        args:
+          - login
+          - --service-principal
+          - -u
+          - ${azure_app_id}
+          - -p
+          - ${azure_password}
+          - --tenant
+          - ${azure_tenant}
   "ssh-ready":
     - command: shell.exec
       params:
@@ -1738,6 +1753,7 @@ task_groups:
       - func: "vendor deps"
       - func: "install terraform"
       - func: "install azure cli"
+      - func: "login azure cli"
       - func: "terraform init"
     teardown_task:
       - func: "copy from remote"

@@ -197,6 +197,7 @@
 |             `streams privateLink create`              |     Y     |   Y   |
 |              `streams privateLink list`               |     Y     |   Y   |
 |            `streams privateLink describe`             |     Y     |   Y   |
+|             `streams privateLink delete`              |     Y     |   Y   |
 |                       `config`                        |           |       |
 |                     `completion`                      |     Y     |   Y   |
 |                    `config delete`                    |     Y     |   Y   |

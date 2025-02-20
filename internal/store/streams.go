@@ -21,7 +21,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20241113005/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,StreamsDownloader,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister,PrivateLinkCreator,PrivateLinkLister,PrivateLinkDescriber
+//go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,StreamsDownloader,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister,PrivateLinkCreator,PrivateLinkLister,PrivateLinkDescriber,PrivateLinkDeleter
 
 type StreamsLister interface {
 	ProjectStreams(*atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
@@ -77,6 +77,10 @@ type PrivateLinkLister interface {
 
 type PrivateLinkDescriber interface {
 	DescribePrivateLinkEndpoint(projectID, connectionID string) (*atlasv2.StreamsPrivateLinkConnection, error)
+}
+
+type PrivateLinkDeleter interface {
+	DeletePrivateLinkEndpoint(projectID, connectionID string) error
 }
 
 func (s *Store) ProjectStreams(opts *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
@@ -158,4 +162,9 @@ func (s *Store) ListPrivateLinkEndpoints(projectID string) (*atlasv2.PaginatedAp
 func (s *Store) DescribePrivateLinkEndpoint(projectID, connectionID string) (*atlasv2.StreamsPrivateLinkConnection, error) {
 	result, _, err := s.clientv2.StreamsApi.GetPrivateLinkConnection(s.ctx, projectID, connectionID).Execute()
 	return result, err
+}
+
+func (s *Store) DeletePrivateLinkEndpoint(projectID, connectionID string) error {
+	_, _, err := s.clientv2.StreamsApi.DeletePrivateLinkConnection(s.ctx, projectID, connectionID).Execute()
+	return err
 }

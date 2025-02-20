@@ -7,7 +7,8 @@
 
   permissions: 
     pull-requests: write
-    contents: read
+    contents: write
+    repository-projects: read
   jobs:
     jira_task:
       name: Create Jira issue

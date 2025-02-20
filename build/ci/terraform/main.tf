@@ -133,7 +133,7 @@ SETTINGS
 }
 
 locals {
-  ssh_pub_key = trimspace(file(var.certificate_path))
+  ssh_pub_key = chomp(trimspace(file(var.certificate_path)))
 }
 
 data "azurerm_public_ip" "ip" {

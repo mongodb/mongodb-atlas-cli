@@ -1631,26 +1631,26 @@ tasks:
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "copy to remote"
         vars:
           local_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
           remote_dir: C:\\Users\\atlascli\\win_test.ps1
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "copy to remote"
         vars:
           local_dir: src/github.com/mongodb/mongodb-atlas-cli/vendor.tar.gz
           remote_dir: C:\\Users\\atlascli\\vendor.tar.gz
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "ssh"
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
           cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
   - name: atlas_deployments_windows_10
     tags: ["e2e","deployments","windows"]

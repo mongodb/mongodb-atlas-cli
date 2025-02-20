@@ -22,6 +22,11 @@ variable "image_id" {
   default = "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/atlascli-win11-image"
 }
 
+variable "certificate_path" {
+  type = string
+  default = "~/.ssh/id_rsa.pub"
+}
+
 resource "azurerm_resource_group" "atlascli_vm_rg" {
   name     = "atlascli-resources"
   location = "East US"
@@ -49,7 +54,7 @@ resource "azurerm_network_interface" "atlascli_vm_nic" {
   ip_configuration {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.atlascli_vm_subnet.id
-    private_ip_address_allocation = "Static"
+    private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.atlascli_vm_pip.id
   }
 }
@@ -128,7 +133,7 @@ SETTINGS
 }
 
 locals {
-  ssh_pub_key = trimspace(file("./id_rsa.pub"))
+  ssh_pub_key = trimspace(file(var.certificate_path))
 }
 
 data "azurerm_public_ip" "ip" {

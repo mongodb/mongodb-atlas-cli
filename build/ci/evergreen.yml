@@ -403,6 +403,7 @@ functions:
           - -auto-approve
           - -var
           - "image_id=/subscriptions/${azure_subscription_id}/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/${image}"
+          - "certificate_path={certificate_path}"
     - command: s3.put
       params:
         aws_key: ${aws_key}
@@ -1650,6 +1651,7 @@ tasks:
       - func: "terraform apply"
         vars:
           image: atlascli-win11-image
+          certificate_path: ./id_rsa
       - func: "ssh-ready"
         vars:
           host: ${public_ip_address}
@@ -1683,6 +1685,7 @@ tasks:
       - func: "terraform apply"
         vars:
           image: atlascli-win10-image
+          certificate_path: ./id_rsa
       - func: "ssh-ready"
         vars:
           host: ${public_ip_address}

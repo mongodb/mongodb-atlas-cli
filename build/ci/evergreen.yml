@@ -398,6 +398,7 @@ functions:
           ARM_CLIENT_SECRET: ${azure_password}
           ARM_TENANT_ID: ${azure_tenant}
           ARM_SUBSCRIPTION_ID: ${azure_subscription_id}
+          TF_LOG: TRACE
         args:
           - apply
           - -auto-approve

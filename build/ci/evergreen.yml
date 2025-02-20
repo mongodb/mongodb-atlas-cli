@@ -329,7 +329,7 @@ functions:
         shell: bash
         env:
           <<: *go_env
-          TERRAFORM_VERSION: 1.10.5
+          TERRAFORM_VERSION: 1.5.7
         script: |
           set -Eeou pipefail
           curl -sLo terraform.zip "https://releases.hashicorp.com/terraform/$TERRAFORM_VERSION/terraform_$(echo $TERRAFORM_VERSION)_linux_amd64.zip"

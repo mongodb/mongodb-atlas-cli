@@ -122,7 +122,7 @@ SETTINGS
 }
 
 locals {
-  ssh_pub_key = trimspace(file("~/.ssh/id_rsa.pub"))
+  ssh_pub_key = trimspace(file("./id_rsa.pub"))
 }
 
 data "azurerm_public_ip" "ip" {

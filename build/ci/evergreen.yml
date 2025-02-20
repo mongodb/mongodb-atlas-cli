@@ -340,6 +340,18 @@ functions:
       params:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
+        binary: ssh-keygen
+        args:
+          - -t
+          - rsa
+          - -f
+          - id_rsa
+          - -P
+          - ""
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
         binary: terraform
         env:
           ARM_CLIENT_ID: ${azure_app_id}

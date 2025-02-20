@@ -93,7 +93,7 @@ resource "azurerm_public_ip" "atlascli_vm_pip" {
   name                = "atlascli-pip"
   location            = azurerm_resource_group.atlascli_vm_rg.location
   resource_group_name = azurerm_resource_group.atlascli_vm_rg.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "azurerm_windows_virtual_machine" "atlascli_vm" {

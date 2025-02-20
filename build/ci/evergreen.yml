@@ -336,18 +336,13 @@ functions:
           unzip terraform.zip
           rm terraform.zip LICENSE.txt
   "terraform init":
-    - command: subprocess.exec
+    - command: shell.exec
       params:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
-        binary: ssh-keygen
-        args:
-          - -t
-          - rsa
-          - -f
-          - id_rsa
-          - -P
-          - ""
+        shell: bash
+        script: |
+          ssh-keygen -t rsa -f id_rsa -P ""
     - command: subprocess.exec
       params:
         <<: *go_options

@@ -401,8 +401,8 @@ functions:
           - ForwardAgent=yes
           - -o
           - IdentitiesOnly=yes
-          - -i
           - -vvv
+          - -i
           - ${identity_file}
           - "${user}@${host}"
           - ${cmd}

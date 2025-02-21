@@ -397,7 +397,12 @@ functions:
         args:
           - -o
           - StrictHostKeyChecking=no
-          - -i "${identity_file}"
+          - -o
+          - ForwardAgent=yes
+          - -o
+          - IdentitiesOnly=yes
+          - -i
+          - ${identity_file}
           - "${user}@${host}"
           - ${cmd}
   "terraform apply":

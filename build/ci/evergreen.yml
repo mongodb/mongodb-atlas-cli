@@ -329,7 +329,7 @@ functions:
         shell: bash
         env:
           <<: *go_env
-          TERRAFORM_VERSION: 1.5.7
+          TERRAFORM_VERSION: 1.10.5
         script: |
           set -Eeou pipefail
           curl -sLo terraform.zip "https://releases.hashicorp.com/terraform/$TERRAFORM_VERSION/terraform_$(echo $TERRAFORM_VERSION)_linux_amd64.zip"
@@ -1737,14 +1737,14 @@ task_groups:
     teardown_task:
       - func: "copy from remote"
         vars:
-          local_dir: src/github.com/mongodb/mongodb-atlas-cli/e2e-tests.xml
+          local_dir: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/e2e-tests.xml
           remote_dir: C:\\Users\\atlascli\\mongodb-atlas-cli\\e2e-tests.xml
           user: atlascli
           host: ${public_ip_address}
           identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - command: attach.xunit_results
         params:
-          files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
+          files: ["${workdir}/src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
       - command: subprocess.exec
         params:
           <<: *go_options

@@ -1653,7 +1653,7 @@ tasks:
       - func: "terraform apply"
         vars:
           image: atlascli-win11-image
-          certificate_path: ./id_rsa
+          certificate_path: ./id_rsa.pub
       - func: "ssh-ready"
         vars:
           host: ${public_ip_address}

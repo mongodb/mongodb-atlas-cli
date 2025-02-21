@@ -126,9 +126,9 @@ resource "azurerm_virtual_machine_extension" "atlascli_vm_extension" {
   auto_upgrade_minor_version  = true
 
   settings = <<SETTINGS
- {
+{
   "commandToExecute": "powershell.exe -Command \"$keyPath = $env:ProgramData + '\\ssh\\administrators_authorized_keys'; Add-Content -Force -Path $keyPath -Value '${local.ssh_pub_key}'; icacls.exe $keyPath /inheritance:r /grant 'Administrators:F' /grant 'SYSTEM:F'\""
- }
+}
 SETTINGS
 }
 
@@ -144,8 +144,4 @@ data "azurerm_public_ip" "ip" {
 
 output "public_ip_address" {
   value      = data.azurerm_public_ip.ip.ip_address
-}
-
-output "key" {
-  value      = local.ssh_pub_key
 }

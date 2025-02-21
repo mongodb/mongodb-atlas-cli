@@ -358,6 +358,7 @@ functions:
   "copy to remote":
     - command: subprocess.exec
       params:
+        <<: *go_options
         binary: scp
         args:
           - -o
@@ -369,6 +370,7 @@ functions:
   "copy from remote":
     - command: subprocess.exec
       params:
+        <<: *go_options
         binary: scp
         args:
           - -o
@@ -380,6 +382,7 @@ functions:
   "ssh":
     - command: subprocess.exec
       params:
+        <<: *go_options
         binary: ssh
         args:
           - -o
@@ -448,6 +451,7 @@ functions:
   "ssh-ready":
     - command: shell.exec
       params:
+        <<: *go_options
         exec_as_string: true
         script: |
           attempts=0

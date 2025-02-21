@@ -405,22 +405,16 @@ functions:
           - "image_id=/subscriptions/${azure_subscription_id}/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/${image}"
           - -var
           - "certificate_path=${certificate_path}"
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/terraform.tfstate
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/octet-stream}
-        display_name: internal-bucket terraform.tfstate
     - command: shell.exec
       params:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
         shell: bash
+        env:
+          ARM_CLIENT_ID: ${azure_app_id}
+          ARM_CLIENT_SECRET: ${azure_password}
+          ARM_TENANT_ID: ${azure_tenant}
+          ARM_SUBSCRIPTION_ID: ${azure_subscription_id}
         script: |
           set -Eeou pipefail
           echo "public_ip_address: $(terraform output -json | jq -r '.public_ip_address.value')" > expansions.yaml
@@ -451,45 +445,6 @@ functions:
           - apply
           - -destroy
           - -auto-approve
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/terraform.tfstate
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/octet-stream}
-        display_name: internal-bucket
-  "install azure cli":
-    - command: shell.exec
-      type: setup
-      params:
-        <<: *go_options
-        shell: bash
-        script: |
-          set -e
-          sudo dnf clean all
-          sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-          sudo dnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm
-          sudo dnf install -y azure-cli
-          az --version
-  "login azure cli":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        binary: az
-        args:
-          - login
-          - --service-principal
-          - -u
-          - ${azure_app_id}
-          - -p
-          - ${azure_password}
-          - --tenant
-          - ${azure_tenant}
   "ssh-ready":
     - command: shell.exec
       params:
@@ -1756,8 +1711,6 @@ task_groups:
       - func: "set-expansions"
       - func: "vendor deps"
       - func: "install terraform"
-      # - func: "install azure cli"
-      # - func: "login azure cli"
       - func: "terraform init"
     teardown_task:
       - func: "copy from remote"

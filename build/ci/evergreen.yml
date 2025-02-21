@@ -363,7 +363,12 @@ functions:
         args:
           - -o
           - StrictHostKeyChecking=no
-          - -i "${identity_file}"
+          - -o
+          - ForwardAgent=yes
+          - -o
+          - IdentitiesOnly=yes
+          - -i
+          - ${identity_file}
           - -r
           - "${local_dir}"
           - "${user}@${host}:${remote_dir}"
@@ -375,7 +380,12 @@ functions:
         args:
           - -o
           - StrictHostKeyChecking=no
-          - -i "${identity_file}"
+          - -o
+          - ForwardAgent=yes
+          - -o
+          - IdentitiesOnly=yes
+          - -i
+          - ${identity_file}
           - -r
           - "${user}@${host}:${remote_dir}"
           - "${local_dir}"
@@ -1737,7 +1747,7 @@ task_groups:
           remote_dir: C:\\Users\\atlascli\\mongodb-atlas-cli\\e2e-tests.xml
           user: atlascli
           host: ${public_ip_address}
-          identity_file: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - command: attach.xunit_results
         params:
           files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]

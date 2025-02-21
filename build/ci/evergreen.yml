@@ -401,7 +401,6 @@ functions:
           - ForwardAgent=yes
           - -o
           - IdentitiesOnly=yes
-          - -vvv
           - -i
           - ${identity_file}
           - "${user}@${host}"

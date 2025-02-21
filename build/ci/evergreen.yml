@@ -402,6 +402,7 @@ functions:
           - -o
           - IdentitiesOnly=yes
           - -i
+          - -vvv
           - ${identity_file}
           - "${user}@${host}"
           - ${cmd}
@@ -1625,12 +1626,6 @@ tasks:
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
-      - command: shell.exec
-        params:
-          <<: *go_options
-          script: |
-            echo "*** DEBUG TASK ***"
-            ls -la ./build/ci/terraform
       - func: "terraform apply"
         vars:
           image: atlascli-win11-image
@@ -1739,12 +1734,6 @@ task_groups:
       - func: "vendor deps"
       - func: "install terraform"
       - func: "terraform init"
-      - command: shell.exec
-        params:
-          <<: *go_options
-          script: |
-            echo "*** DEBUG GROUP ***"
-            ls -la ./build/ci/terraform
     teardown_task:
       - func: "copy from remote"
         vars:

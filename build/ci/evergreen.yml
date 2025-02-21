@@ -448,6 +448,8 @@ functions:
           - apply
           - -destroy
           - -auto-approve
+          - -var
+          - "certificate_path=${certificate_path}"
   "ssh-ready":
     - command: shell.exec
       params:
@@ -1735,6 +1737,8 @@ task_groups:
             - -rf
             - vendor.tar.gz
       - func: "terraform destroy"
+        vars:
+          certificate_path: ./id_rsa
     tasks:
       - .e2e .deployments .windows
 buildvariants:

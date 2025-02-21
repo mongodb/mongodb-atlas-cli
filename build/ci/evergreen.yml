@@ -1765,7 +1765,7 @@ task_groups:
             - vendor.tar.gz
       - func: "terraform destroy"
         vars:
-          certificate_path: ./id_rsa
+          certificate_path: ./id_rsa.pub
     tasks:
       - .e2e .deployments .windows
 buildvariants:

@@ -1611,7 +1611,7 @@ tasks:
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
       - command: shell.exec
-        with:
+        params:
           <<: *go_options
           script: |
             echo "*** DEBUG TASK ***"
@@ -1725,7 +1725,7 @@ task_groups:
       - func: "install terraform"
       - func: "terraform init"
       - command: shell.exec
-        with:
+        params:
           <<: *go_options
           script: |
             echo "*** DEBUG GROUP ***"

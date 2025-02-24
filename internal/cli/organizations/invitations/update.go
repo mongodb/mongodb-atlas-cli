@@ -126,6 +126,7 @@ func UpdateBuilder() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.InvitationFile)
 	cmd.Flags().StringVar(&opts.username, flag.Email, "", usage.Email)
 	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.OrgRole+usage.UpdateWarning)
 	opts.AddOrgOptFlags(cmd)

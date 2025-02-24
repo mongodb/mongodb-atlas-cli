@@ -400,6 +400,6 @@ dbName and collection are required only for built-in roles.`
 	IdentityProviderID         = "Unique identifier of the identity provider."
 	ConnectedOrgConfigFilename = "Path to a JSON configuration file that defines connected orgs configurations. Note: Unsupported fields in the JSON file are ignored. To learn more about connected org configuration file format, see the request body in https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/updateConnectedOrgConfig."
 	AuditFilter                = "JSON document that specifies which events to record. Escape any characters that may prevent parsing, such as single or double quotes, using a backslash (\\)."
-	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. Note: Unsupported fields in the JSON file are ignored. To learn more about invitation configuration files for the Atlas CLI, see https://XXX."
+	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. Note: Unsupported fields in the JSON file are ignored."
 	InitDB                     = "Flag that uses a folder to be mapped into LOCAL deployment for initialization"
 )

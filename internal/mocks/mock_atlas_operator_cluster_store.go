@@ -10,7 +10,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20241113005/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
 
 // MockOperatorClusterStore is a mock of OperatorClusterStore interface.

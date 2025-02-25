@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
 
 type AutoCompleteOpts struct {

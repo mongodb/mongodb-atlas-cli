@@ -90,7 +90,7 @@ To view possible values for the ID argument, run atlas organizations apiKeys lis
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.ProjectAPIKeyRoles)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.AddProjectAPIKeyRoles)
 
 	opts.AddProjectOptsFlags(cmd)
 

@@ -1,0 +1,14 @@
+
+{
+    "db": "sample_airbnb",
+    "collection": "accounts",
+    "keys": [
+        {
+            "property_type": "1",
+            "test_field": "1"
+        }
+    ],
+    "options": {
+        "unique": true
+    }
+}

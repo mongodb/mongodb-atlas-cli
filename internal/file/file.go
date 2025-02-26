@@ -15,12 +15,15 @@
 package file
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"path/filepath"
 	"slices"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/spf13/afero"
 	"gopkg.in/yaml.v3"
 )
@@ -70,11 +73,11 @@ func Load(fs afero.Fs, filename string, out any) error {
 	}
 	switch t {
 	case yamlName, ymlName:
-		if err := yaml.Unmarshal(file, out); err != nil {
+		if err := decodePrintWarning(file, out, yaml.NewDecoder, func(d *yaml.Decoder) { d.KnownFields(true) }); err != nil {
 			return err
 		}
 	case jsonName:
-		if err := json.Unmarshal(file, out); err != nil {
+		if err := decodePrintWarning(file, out, json.NewDecoder, func(d *json.Decoder) { d.DisallowUnknownFields() }); err != nil {
 			return err
 		}
 	}
@@ -111,4 +114,39 @@ func Save(fs afero.Fs, filePath string, data any) error {
 	}
 
 	return afero.WriteFile(fs, filePath, content, filePermission)
+}
+
+type Decoder interface {
+	Decode(v any) error
+}
+
+func decodePrintWarning[T Decoder](file []byte, out any, createDecoder func(io.Reader) T, setStrictSettings func(T)) error {
+	warning, err := decodeWithWarning(file, out, createDecoder, setStrictSettings)
+	if warning != "" {
+		_, _ = log.Warningln(warning)
+	}
+
+	return err
+}
+
+func decodeWithWarning[T Decoder](file []byte, out any, createDecoder func(io.Reader) T, setStrictSettings func(T)) (string, error) {
+	// Try to decode with strict decoding
+	scrictDecoder := createDecoder(bytes.NewReader(file))
+	setStrictSettings(scrictDecoder)
+	strictDecodeErr := scrictDecoder.Decode(out)
+	if strictDecodeErr == nil {
+		return "", nil
+	}
+
+	// Since we're here it means we have
+	// - an unknown field
+	// - the file is invalid
+	decoder := createDecoder(bytes.NewReader(file))
+	err := decoder.Decode(out)
+	if err != nil {
+		return "", err
+	}
+
+	// If we succeed to decode now, we return a warning
+	return strictDecodeErr.Error(), nil
 }

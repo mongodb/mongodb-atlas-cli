@@ -128,6 +128,21 @@ func TestClustersFile(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
+	t.Run("Create index with unknown fields", func(t *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			indexEntity,
+			"create",
+			"--clusterName", clusterFileName,
+			"--file=data/create_index_test-unknown-fields.json",
+			"--projectId", g.projectID,
+		)
+
+		cmd.Env = os.Environ()
+		resp, _ := cmd.CombinedOutput()
+		assert.Contains(t, string(resp), `json: unknown field "unique"`)
+	})
+
 	t.Run("Update via file", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,

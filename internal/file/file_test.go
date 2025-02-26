@@ -17,6 +17,7 @@
 package file
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -90,5 +91,59 @@ func TestSave(t *testing.T) {
 
 		yamlData, _ := yaml.Marshal(&tYaml)
 		require.NoError(t, Save(appFS, yamlFileName, yamlData))
+	})
+}
+
+func TestDecodePrintWarning(t *testing.T) {
+	type Foo struct {
+		Bar bool
+	}
+
+	t.Run("decode json with unknown fields", func(t *testing.T) {
+		foo := &Foo{}
+		warning, err := decodeWithWarning([]byte(`{"Bar":true,"Baz":false}`), foo, json.NewDecoder, func(d *json.Decoder) { d.DisallowUnknownFields() })
+		require.NoError(t, err)
+		require.Equal(t, `json: unknown field "Baz"`, warning)
+		require.Equal(t, &Foo{Bar: true}, foo)
+	})
+
+	t.Run("decode json with only known fields", func(t *testing.T) {
+		foo := &Foo{}
+		warning, err := decodeWithWarning([]byte(`{"Bar":true}`), foo, json.NewDecoder, func(d *json.Decoder) { d.DisallowUnknownFields() })
+		require.NoError(t, err)
+		require.Equal(t, "", warning)
+		require.Equal(t, &Foo{Bar: true}, foo)
+	})
+
+	t.Run("decode invalid json", func(t *testing.T) {
+		foo := &Foo{}
+		warning, err := decodeWithWarning([]byte(`{"Bar"`), foo, json.NewDecoder, func(d *json.Decoder) { d.DisallowUnknownFields() })
+		require.Error(t, err)
+		require.Equal(t, "", warning)
+		require.Equal(t, &Foo{}, foo)
+	})
+
+	t.Run("decode yaml with unknown fields", func(t *testing.T) {
+		foo := &Foo{}
+		warning, err := decodeWithWarning([]byte("bar: true\nbaz: false"), foo, yaml.NewDecoder, func(d *yaml.Decoder) { d.KnownFields(true) })
+		require.NoError(t, err)
+		require.Contains(t, warning, `field baz not found in type file.Foo`)
+		require.Equal(t, &Foo{Bar: true}, foo)
+	})
+
+	t.Run("decode yaml with only known fields", func(t *testing.T) {
+		foo := &Foo{}
+		warning, err := decodeWithWarning([]byte(`bar: true`), foo, yaml.NewDecoder, func(d *yaml.Decoder) { d.KnownFields(true) })
+		require.NoError(t, err)
+		require.Equal(t, "", warning)
+		require.Equal(t, &Foo{Bar: true}, foo)
+	})
+
+	t.Run("decode invalid yaml", func(t *testing.T) {
+		foo := &Foo{}
+		warning, err := decodeWithWarning([]byte("bar"), foo, yaml.NewDecoder, func(d *yaml.Decoder) { d.KnownFields(true) })
+		require.Error(t, err)
+		require.Equal(t, "", warning)
+		require.Equal(t, &Foo{}, foo)
 	})
 }

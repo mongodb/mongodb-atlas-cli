@@ -2,7 +2,7 @@
 
 GOLANGCI_VERSION=v1.61.0
 COVERAGE?=coverage.out
-GOCOVERDIR?=$(abspath cov)
+export GOCOVERDIR?=$(abspath cov)
 
 GIT_SHA?=$(shell git rev-parse HEAD)
 
@@ -142,7 +142,7 @@ build-debug: ## Generate a binary in ./bin for debugging atlascli
 e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
-	GOCOVERDIR=$(GOCOVERDIR) $(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
+	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
 
 .PHONY: unit-test
 unit-test: ## Run unit-tests

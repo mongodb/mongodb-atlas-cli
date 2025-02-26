@@ -329,50 +329,80 @@ functions:
         shell: bash
         env:
           <<: *go_env
-          TERRAFORM_VERSION: 1.9.4
+          TERRAFORM_VERSION: 1.10.5
         script: |
           set -Eeou pipefail
           curl -sLo terraform.zip "https://releases.hashicorp.com/terraform/$TERRAFORM_VERSION/terraform_$(echo $TERRAFORM_VERSION)_linux_amd64.zip"
           unzip terraform.zip
           rm terraform.zip LICENSE.txt
   "terraform init":
+    - command: shell.exec
+      params:
+        <<: *go_options
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
+        shell: bash
+        script: |
+          ssh-keygen -t rsa -f id_rsa -P ""
     - command: subprocess.exec
       params:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
         binary: terraform
+        env:
+          ARM_CLIENT_ID: ${azure_app_id}
+          ARM_CLIENT_SECRET: ${azure_password}
+          ARM_TENANT_ID: ${azure_tenant}
+          ARM_SUBSCRIPTION_ID: ${azure_subscription_id}
         args:
           - init
   "copy to remote":
     - command: subprocess.exec
       params:
+        <<: *go_options
         binary: scp
         args:
           - -o
           - StrictHostKeyChecking=no
-          - -i "${identity_file}"
+          - -o
+          - ForwardAgent=yes
+          - -o
+          - IdentitiesOnly=yes
+          - -i
+          - ${identity_file}
           - -r
           - "${local_dir}"
           - "${user}@${host}:${remote_dir}"
   "copy from remote":
     - command: subprocess.exec
       params:
+        <<: *go_options
         binary: scp
         args:
           - -o
           - StrictHostKeyChecking=no
-          - -i "${identity_file}"
+          - -o
+          - ForwardAgent=yes
+          - -o
+          - IdentitiesOnly=yes
+          - -i
+          - ${identity_file}
           - -r
           - "${user}@${host}:${remote_dir}"
           - "${local_dir}"
   "ssh":
     - command: subprocess.exec
       params:
+        <<: *go_options
         binary: ssh
         args:
           - -o
           - StrictHostKeyChecking=no
-          - -i "${identity_file}"
+          - -o
+          - ForwardAgent=yes
+          - -o
+          - IdentitiesOnly=yes
+          - -i
+          - ${identity_file}
           - "${user}@${host}"
           - ${cmd}
   "terraform apply":
@@ -381,27 +411,28 @@ functions:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
         binary: terraform
+        env:
+          ARM_CLIENT_ID: ${azure_app_id}
+          ARM_CLIENT_SECRET: ${azure_password}
+          ARM_TENANT_ID: ${azure_tenant}
+          ARM_SUBSCRIPTION_ID: ${azure_subscription_id}
         args:
           - apply
           - -auto-approve
           - -var
           - "image_id=/subscriptions/${azure_subscription_id}/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/${image}"
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/terraform.tfstate
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/octet-stream}
-        display_name: internal-bucket terraform.tfstate
+          - -var
+          - "certificate_path=${certificate_path}"
     - command: shell.exec
       params:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
         shell: bash
+        env:
+          ARM_CLIENT_ID: ${azure_app_id}
+          ARM_CLIENT_SECRET: ${azure_password}
+          ARM_TENANT_ID: ${azure_tenant}
+          ARM_SUBSCRIPTION_ID: ${azure_subscription_id}
         script: |
           set -Eeou pipefail
           echo "public_ip_address: $(terraform output -json | jq -r '.public_ip_address.value')" > expansions.yaml
@@ -423,52 +454,21 @@ functions:
         <<: *go_options
         working_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform
         binary: terraform
+        env:
+          ARM_CLIENT_ID: ${azure_app_id}
+          ARM_CLIENT_SECRET: ${azure_password}
+          ARM_TENANT_ID: ${azure_tenant}
+          ARM_SUBSCRIPTION_ID: ${azure_subscription_id}
         args:
           - apply
           - -destroy
           - -auto-approve
-    - command: s3.put
-      params:
-        aws_key: ${aws_key}
-        aws_secret: ${aws_secret}
-        local_files_include_filter:
-          - src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/terraform.tfstate
-        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/${task_type}/
-        bucket: mongodb-mongocli-build
-        permissions: public-read
-        content_type: ${content_type|application/octet-stream}
-        display_name: internal-bucket
-  "install azure cli":
-    - command: shell.exec
-      type: setup
-      params:
-        <<: *go_options
-        shell: bash
-        script: |
-          set -e
-          sudo dnf clean all
-          sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-          sudo dnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm
-          sudo dnf install -y azure-cli
-          az --version
-  "login azure cli":
-    - command: subprocess.exec
-      type: setup
-      params:
-        <<: *go_options
-        binary: az
-        args:
-          - login
-          - --service-principal
-          - -u
-          - ${azure_app_id}
-          - -p
-          - ${azure_password}
-          - --tenant
-          - ${azure_tenant}
+          - -var
+          - "certificate_path=${certificate_path}"
   "ssh-ready":
     - command: shell.exec
       params:
+        <<: *go_options
         exec_as_string: true
         script: |
           attempts=0
@@ -1628,30 +1628,31 @@ tasks:
       - func: "terraform apply"
         vars:
           image: atlascli-win11-image
+          certificate_path: ./id_rsa.pub
       - func: "ssh-ready"
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "copy to remote"
         vars:
-          local_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
+          local_dir: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
           remote_dir: C:\\Users\\atlascli\\win_test.ps1
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "copy to remote"
         vars:
-          local_dir: src/github.com/mongodb/mongodb-atlas-cli/vendor.tar.gz
+          local_dir: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/vendor.tar.gz
           remote_dir: C:\\Users\\atlascli\\vendor.tar.gz
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "ssh"
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
           cmd: "powershell -NonInteractive -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
   - name: atlas_deployments_windows_10
     tags: ["e2e","deployments","windows"]
@@ -1661,30 +1662,31 @@ tasks:
       - func: "terraform apply"
         vars:
           image: atlascli-win10-image
+          certificate_path: ./id_rsa.pub
       - func: "ssh-ready"
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "copy to remote"
         vars:
           local_dir: src/github.com/mongodb/mongodb-atlas-cli/build/ci/win_test.ps1
           remote_dir: C:\\Users\\atlascli\\win_test.ps1
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "copy to remote"
         vars:
-          local_dir: src/github.com/mongodb/mongodb-atlas-cli/vendor.tar.gz
+          local_dir: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/vendor.tar.gz
           remote_dir: C:\\Users\\atlascli\\vendor.tar.gz
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - func: "ssh"
         vars:
           host: ${public_ip_address}
           user: atlascli
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
           cmd: "powershell -ExecutionPolicy Bypass -File C:\\Users\\atlascli\\win_test.ps1 -goproxy ${go_proxy} -revision ${github_commit}"
   - name: coverage
     tags: ["coverage"]
@@ -1730,20 +1732,18 @@ task_groups:
       - func: "set-expansions"
       - func: "vendor deps"
       - func: "install terraform"
-      - func: "install azure cli"
-      - func: "login azure cli"
       - func: "terraform init"
     teardown_task:
       - func: "copy from remote"
         vars:
-          local_dir: src/github.com/mongodb/mongodb-atlas-cli/e2e-tests.xml
+          local_dir: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/e2e-tests.xml
           remote_dir: C:\\Users\\atlascli\\mongodb-atlas-cli\\e2e-tests.xml
           user: atlascli
           host: ${public_ip_address}
-          identity_file: ${home}/.ssh/id_rsa
+          identity_file: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/terraform/id_rsa
       - command: attach.xunit_results
         params:
-          files: ["src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
+          files: ["${workdir}/src/github.com/mongodb/mongodb-atlas-cli/*.xml"]
       - command: subprocess.exec
         params:
           <<: *go_options
@@ -1752,6 +1752,8 @@ task_groups:
             - -rf
             - vendor.tar.gz
       - func: "terraform destroy"
+        vars:
+          certificate_path: ./id_rsa.pub
     tasks:
       - .e2e .deployments .windows
 buildvariants:

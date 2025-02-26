@@ -3,6 +3,12 @@ provider "azurerm" {
 }
 
 terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "4.19.0"
+    }
+  }
   backend "azurerm" {
     resource_group_name  = "atlascli-image-resources"
     storage_account_name = "atlascliterraform"
@@ -14,6 +20,11 @@ terraform {
 variable "image_id" {
   type = string
   default = "/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/atlascli-win11-image"
+}
+
+variable "certificate_path" {
+  type = string
+  default = "~/.ssh/id_rsa.pub"
 }
 
 resource "azurerm_resource_group" "atlascli_vm_rg" {
@@ -87,7 +98,7 @@ resource "azurerm_public_ip" "atlascli_vm_pip" {
   name                = "atlascli-pip"
   location            = azurerm_resource_group.atlascli_vm_rg.location
   resource_group_name = azurerm_resource_group.atlascli_vm_rg.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "azurerm_windows_virtual_machine" "atlascli_vm" {
@@ -115,14 +126,14 @@ resource "azurerm_virtual_machine_extension" "atlascli_vm_extension" {
   auto_upgrade_minor_version  = true
 
   settings = <<SETTINGS
- {
+{
   "commandToExecute": "powershell.exe -Command \"$keyPath = $env:ProgramData + '\\ssh\\administrators_authorized_keys'; Add-Content -Force -Path $keyPath -Value '${local.ssh_pub_key}'; icacls.exe $keyPath /inheritance:r /grant 'Administrators:F' /grant 'SYSTEM:F'\""
- }
+}
 SETTINGS
 }
 
 locals {
-  ssh_pub_key = trimspace(file("~/.ssh/id_rsa.pub"))
+  ssh_pub_key = trimspace(file(var.certificate_path))
 }
 
 data "azurerm_public_ip" "ip" {

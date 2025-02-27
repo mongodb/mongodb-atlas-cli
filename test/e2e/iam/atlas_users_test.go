@@ -48,7 +48,7 @@ func TestAtlasUsers(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var users atlasv2.PaginatedApiAppUser
+		var users atlasv2.PaginatedGroupUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 		require.NotEmpty(t, users.Results)
 		username = users.GetResults()[0].GetUsername()

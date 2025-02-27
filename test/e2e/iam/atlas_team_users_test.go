@@ -87,7 +87,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var teams atlasv2.PaginatedApiAppUser
+		var teams atlasv2.PaginatedOrgGroup
 		require.NoError(t, json.Unmarshal(resp, &teams))
 		a.NotEmpty(teams.Results)
 	})
@@ -105,7 +105,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var teams []atlasv2.CloudAppUser
+		var teams []atlasv2.PaginatedOrgGroup
 		require.NoError(t, json.Unmarshal(resp, &teams))
 		a.NotEmpty(teams)
 	})

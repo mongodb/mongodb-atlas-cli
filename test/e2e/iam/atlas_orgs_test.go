@@ -74,7 +74,7 @@ func TestAtlasOrgs(t *testing.T) {
 		cmd.Env = os.Environ()
 		resp, err2 := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
-		var users admin.PaginatedApiAppUser
+		var users admin.PaginatedOrgUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
 		assert.NotEmpty(t, users.GetResults())
 		userID = users.GetResults()[0].GetId()

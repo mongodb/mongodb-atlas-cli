@@ -129,6 +129,8 @@ func TestClustersFile(t *testing.T) {
 	})
 
 	t.Run("Create index with unknown fields", func(t *testing.T) {
+		var stdErr bytes.Buffer
+
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			indexEntity,
@@ -139,8 +141,9 @@ func TestClustersFile(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, _ := cmd.CombinedOutput()
-		assert.Contains(t, string(resp), `json: unknown field "unique"`)
+		cmd.Stderr = &stdErr
+		_ = cmd.Run()
+		assert.Contains(t, stdErr.String(), `json: unknown field "unique"`)
 	})
 
 	t.Run("Update via file", func(t *testing.T) {

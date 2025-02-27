@@ -26,11 +26,11 @@ type UserCreator interface {
 }
 
 type UserLister interface {
-	OrganizationUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error)
+	OrganizationUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedOrgUser, error)
 }
 
 type TeamUserLister interface {
-	TeamUsers(string, string) (*atlasv2.PaginatedAppUser, error)
+	TeamUsers(string, string) (*atlasv2.PaginatedOrgUser, error)
 }
 
 type UserDescriber interface {
@@ -57,8 +57,8 @@ func (s *Store) UserByName(username string) (*atlasv2.CloudAppUser, error) {
 }
 
 // OrganizationUsers encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (*atlasv2.PaginatedAppUser, error) {
-	res := s.clientv2.OrganizationsApi.ListOrganizationUsers(s.ctx, organizationID)
+func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (*atlasv2.PaginatedOrgUser, error) {
+	res := s.clientv2.MongoDBCloudUsersApi.ListOrganizationUsers(s.ctx, organizationID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
@@ -67,7 +67,7 @@ func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions
 }
 
 // TeamUsers encapsulates the logic to manage different cloud providers.
-func (s *Store) TeamUsers(orgID, teamID string) (*atlasv2.PaginatedAppUser, error) {
-	result, _, err := s.clientv2.TeamsApi.ListTeamUsers(s.ctx, orgID, teamID).Execute()
+func (s *Store) TeamUsers(orgID, teamID string) (*atlasv2.PaginatedOrgUser, error) {
+	result, _, err := s.clientv2.MongoDBCloudUsersApi.ListTeamUsers(s.ctx, orgID, teamID).Execute()
 	return result, err
 }

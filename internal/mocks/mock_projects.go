@@ -240,10 +240,10 @@ func (m *MockProjectUsersLister) EXPECT() *MockProjectUsersListerMockRecorder {
 }
 
 // ProjectUsers mocks base method.
-func (m *MockProjectUsersLister) ProjectUsers(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedAppUser, error) {
+func (m *MockProjectUsersLister) ProjectUsers(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedGroupUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectUsers", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedAppUser)
+	ret0, _ := ret[0].(*admin.PaginatedGroupUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

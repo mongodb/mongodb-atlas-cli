@@ -160,7 +160,7 @@ func OrgNUser(n int) (username, userID string, err error) {
 		return "", "", fmt.Errorf("error loading org users: %w (%s)", err, string(resp))
 	}
 
-	var users atlasv2.PaginatedAppUser
+	var users atlasv2.PaginatedOrgUser
 	if err := json.Unmarshal(resp, &users); err != nil {
 		return "", "", err
 	}

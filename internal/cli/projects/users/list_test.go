@@ -29,8 +29,8 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockProjectUsersLister(ctrl)
 
-	expected := atlasv2.PaginatedAppUser{
-		Results: &[]atlasv2.CloudAppUser{
+	expected := atlasv2.PaginatedGroupUser{
+		Results: &[]atlasv2.GroupUserResponse{
 			{
 				Username: "Test",
 			},
@@ -53,5 +53,5 @@ func TestList_Run(t *testing.T) {
 }
 
 func TestListTemplate(t *testing.T) {
-	test.VerifyOutputTemplate(t, listTemplate, atlasv2.PaginatedAppUser{})
+	test.VerifyOutputTemplate(t, listTemplate, atlasv2.PaginatedOrgUser{})
 }

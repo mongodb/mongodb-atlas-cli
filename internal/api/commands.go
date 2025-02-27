@@ -1987,7 +1987,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `getAtlasSearchIndex`,
 				Aliases:     nil,
-				Description: `Returns one Atlas Search index in the specified project. You identify this index using its unique ID. Atlas Search index contains the indexed fields and the analyzers used to create the index. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
+				Description: `Returns one Atlas Search index that you identified with its unique ID. Atlas Search index contains the indexed fields and the analyzers used to create the index. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
+
 
 This command is invoking the endpoint with OperationID: 'getAtlasSearchIndex'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/getAtlasSearchIndex`,
@@ -2065,7 +2066,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `getAtlasSearchIndexByName`,
 				Aliases:     nil,
-				Description: `Returns one Atlas Search index in the specified project. You identify this index using its database, collection and name. Atlas Search index contains the indexed fields and the analyzers used to create the index. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
+				Description: `Returns one Atlas Search index that you identified with its database, collection name, and index name. Atlas Search index contains the indexed fields and the analyzers used to create the index. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
+
 
 This command is invoking the endpoint with OperationID: 'getAtlasSearchIndexByName'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/getAtlasSearchIndexByName`,
@@ -5262,7 +5264,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `updateSnapshotRetention`,
 				Aliases:     nil,
-				Description: `Changes the expiration date for one cloud backup snapshot for one cluster in the specified project, the requesting API Key must have the Project Backup Manager role.
+				Description: `Changes the expiration date for one cloud backup snapshot for one cluster in the specified project. The requesting API Key must have the Project Backup Manager role.
+
 
 This command is invoking the endpoint with OperationID: 'updateSnapshotRetention'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/updateSnapshotRetention`,
@@ -8402,7 +8405,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `pinNamespacesPatch`,
 				Aliases:     nil,
-				Description: `Add provided list of namespaces to existing pinned namespaces list for collection-level latency metrics collection for the given Group and Cluster
+				Description: `Add provided list of namespaces to existing pinned namespaces list for collection-level latency metrics collection for the given Group and Cluster.
+
 
 This command is invoking the endpoint with OperationID: 'pinNamespacesPatch'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Collection-Level-Metrics/operation/pinNamespacesPatch`,
@@ -21647,7 +21651,8 @@ For more information about flags, format of --file and examples, see: https://ww
 			{
 				OperationID: `updateOrganizationInvitation`,
 				Aliases:     nil,
-				Description: `Updates the details of one pending invitation to the specified organization. To specify which invitation, provide the username of the invited user. To use this resource, the requesting API Key must have the Organization Owner role.
+				Description: `Updates the details of one pending invitation, identified by the username of the invited user, to the specified organization. To use this resource, the requesting API Key must have the Organization Owner role.
+
 
 This command is invoking the endpoint with OperationID: 'updateOrganizationInvitation'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Organizations/operation/updateOrganizationInvitation`,
@@ -21702,7 +21707,8 @@ For more information about flags, format of --file and examples, see: https://ww
 			{
 				OperationID: `updateOrganizationInvitationById`,
 				Aliases:     nil,
-				Description: `Updates the details of one pending invitation to the specified organization. To specify which invitation, provide the unique identification string for that invitation. Use the Return All Organization Invitations endpoint to retrieve IDs for all pending organization invitations. To use this resource, the requesting API Key must have the Organization Owner role.
+				Description: `Updates the details of one pending invitation, identified by its unique ID, to the specified organization. Use the Return All Organization Invitations endpoint to retrieve IDs for all pending organization invitations. To use this resource, the requesting API Key must have the Organization Owner role.
+
 
 This command is invoking the endpoint with OperationID: 'updateOrganizationInvitationById'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Organizations/operation/updateOrganizationInvitationById`,
@@ -25371,7 +25377,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `getProjectByName`,
 				Aliases:     nil,
-				Description: `Returns details about the specified project. Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, tags, and alert settings. To use this resource, the requesting API Key must have the Project Read Only role.
+				Description: `Returns details about the project identified by its name. Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, tags, and alert settings. To use this resource, the requesting API Key must have the Project Read Only role.
+
 
 This command is invoking the endpoint with OperationID: 'getProjectByName'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/getProjectByName`,
@@ -26387,7 +26394,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `updateProjectInvitation`,
 				Aliases:     nil,
-				Description: `Updates the details of one pending invitation to the specified project. To specify which invitation to update, provide the username of the invited user. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Updates the details of one pending invitation, identified by the username of the invited user, to the specified project. To use this resource, the requesting API Key must have the Project Owner role.
+
 
 This command is invoking the endpoint with OperationID: 'updateProjectInvitation'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/updateProjectInvitation`,
@@ -26445,7 +26453,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `updateProjectInvitationById`,
 				Aliases:     nil,
-				Description: `Updates the details of one pending invitation to the specified project. To specify which invitation to update, provide the unique identification string for that invitation. Use the Return All Project Invitations endpoint to retrieve IDs for all pending project invitations. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Updates the details of one pending invitation, identified by its unique ID, to the specified project. Use the Return All Project Invitations endpoint to retrieve IDs for all pending project invitations. To use this resource, the requesting API Key must have the Project Owner role.
+
 
 This command is invoking the endpoint with OperationID: 'updateProjectInvitationById'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/updateProjectInvitationById`,
@@ -31626,7 +31635,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `listPrivateLinkConnections`,
 				Aliases:     nil,
-				Description: `Returns all Private Link connections for the specified project.To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
+				Description: `Returns all Private Link connections for the specified project. To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
+
 
 This command is invoking the endpoint with OperationID: 'listPrivateLinkConnections'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listPrivateLinkConnections`,
@@ -31704,7 +31714,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `listStreamConnections`,
 				Aliases:     nil,
-				Description: `Returns all connections of the stream instance for the specified project.To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
+				Description: `Returns all connections of the stream instance for the specified project. To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
+
 
 This command is invoking the endpoint with OperationID: 'listStreamConnections'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listStreamConnections`,
@@ -32412,7 +32423,8 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `addAllTeamsToProject`,
 				Aliases:     nil,
-				Description: `Adds one team to the specified project. All members of the team share the same project access. MongoDB Cloud limits the number of users to a maximum of 100 teams per project and a maximum of 250 teams per organization. To use this resource, the requesting API Key must have the Project Owner role.
+				Description: `Adds one or more teams to the specified project. All members of the team share the same project access. MongoDB Cloud limits the number of users to a maximum of 100 teams per project and a maximum of 250 teams per organization. To use this resource, the requesting API Key must have the Project Owner role.
+
 
 This command is invoking the endpoint with OperationID: 'addAllTeamsToProject'.
 For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Teams/operation/addAllTeamsToProject`,

@@ -45,7 +45,13 @@ func TestSplitShortAndLongDescription(t *testing.T) {
 			name:        "multiple sentences with spaces",
 			description: "First sentence.   Second sentence.    Third sentence.",
 			wantShort:   "First sentence.",
-			wantLong:    "Second sentence. Third sentence.",
+			wantLong:    "Second sentence.    Third sentence.",
+		},
+		{
+			name:        "multiple sentences with spaces and new lines",
+			description: "First sentence.   Second sentence.    Third sentence.  \n Forth sentence.   ",
+			wantShort:   "First sentence.",
+			wantLong:    "Second sentence.    Third sentence.  \n Forth sentence.",
 		},
 		{
 			name:        "sentence without period",

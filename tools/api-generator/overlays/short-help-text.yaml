@@ -9,105 +9,69 @@ actions:
         override:
           description: |
             Returns one Atlas Search index that you identified with its unique ID. Atlas Search index contains the indexed fields and the analyzers used to create the index. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
-            
-            This command is invoking the endpoint with OperationID: 'getAtlasSearchIndex'. 
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/getAtlasSearchIndex
   - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/search/indexes/{databaseName}/{collectionName}/{indexName}'].get
     update:
       x-xgen-atlascli:
         override:
           description: |
             Returns one Atlas Search index that you identified with its database, collection name, and index name. Atlas Search index contains the indexed fields and the analyzers used to create the index. To use this resource, the requesting API Key must have the Project Data Access Read Write role.
-            
-            This command is invoking the endpoint with OperationID: 'getAtlasSearchIndexByName'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/getAtlasSearchIndexByName
   - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/snapshots/{snapshotId}'].patch
     update:
       x-xgen-atlascli:
         override:
           description: |
             Changes the expiration date for one cloud backup snapshot for one cluster in the specified project. The requesting API Key must have the Project Backup Manager role.
-
-            This command is invoking the endpoint with OperationID: 'updateSnapshotRetention'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/updateSnapshotRetention
   - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/collStats/pinned'].patch
     update:
       x-xgen-atlascli:
         override:
           description: |
             Add provided list of namespaces to existing pinned namespaces list for collection-level latency metrics collection for the given Group and Cluster.
-
-            This command is invoking the endpoint with OperationID: 'pinNamespacesPatch'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Collection-Level-Metrics/operation/pinNamespacesPatch
   - target: $.paths['/api/atlas/v2/orgs/{orgId}/invites'].patch
     update:
       x-xgen-atlascli:
         override:
           description: |
             Updates the details of one pending invitation, identified by the username of the invited user, to the specified organization. To use this resource, the requesting API Key must have the Organization Owner role.
-
-            This command is invoking the endpoint with OperationID: 'updateOrganizationInvitation'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Organizations/operation/updateOrganizationInvitation
   - target: $.paths['/api/atlas/v2/orgs/{orgId}/invites/{invitationId}'].patch
     update:
       x-xgen-atlascli:
         override:
           description: |
             Updates the details of one pending invitation, identified by its unique ID, to the specified organization. Use the Return All Organization Invitations endpoint to retrieve IDs for all pending organization invitations. To use this resource, the requesting API Key must have the Organization Owner role.
-
-            This command is invoking the endpoint with OperationID: 'updateOrganizationInvitationById'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Organizations/operation/updateOrganizationInvitationById
   - target: $.paths['/api/atlas/v2/groups/byName/{groupName}'].get
     update:
       x-xgen-atlascli:
         override:
           description: |
             Returns details about the project identified by its name. Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, tags, and alert settings. To use this resource, the requesting API Key must have the Project Read Only role.
-
-            This command is invoking the endpoint with OperationID: 'getProjectByName'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/getProjectByName
   - target: $.paths['/api/atlas/v2/groups/{groupId}/invites'].patch
     update:
       x-xgen-atlascli:
         override:
           description: |
             Updates the details of one pending invitation, identified by the username of the invited user, to the specified project. To use this resource, the requesting API Key must have the Project Owner role.
-
-            This command is invoking the endpoint with OperationID: 'updateProjectInvitation'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/updateProjectInvitation
   - target: $.paths['/api/atlas/v2/groups/{groupId}/invites/{invitationId}'].patch
     update:
       x-xgen-atlascli:
         override:
           description: |
             Updates the details of one pending invitation, identified by its unique ID, to the specified project. Use the Return All Project Invitations endpoint to retrieve IDs for all pending project invitations. To use this resource, the requesting API Key must have the Project Owner role.
-
-            This command is invoking the endpoint with OperationID: 'updateProjectInvitationById'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/updateProjectInvitationById
   - target: $.paths['/api/atlas/v2/groups/{groupId}/streams/privateLinkConnections'].get
     update:
       x-xgen-atlascli:
         override:
           description: |
             Returns all Private Link connections for the specified project. To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
-
-            This command is invoking the endpoint with OperationID: 'listPrivateLinkConnections'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listPrivateLinkConnections
   - target: $.paths['/api/atlas/v2/groups/{groupId}/streams/{tenantName}/connections'].get
     update:
       x-xgen-atlascli:
         override:
           description: |
             Returns all connections of the stream instance for the specified project. To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
-
-            This command is invoking the endpoint with OperationID: 'listStreamConnections'.
-            For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listStreamConnections
   - target: $.paths['/api/atlas/v2/groups/{groupId}/teams'].post
     update:
       x-xgen-atlascli:
         override:
           description: |
               Adds one or more teams to the specified project. All members of the team share the same project access. MongoDB Cloud limits the number of users to a maximum of 100 teams per project and a maximum of 250 teams per organization. To use this resource, the requesting API Key must have the Project Owner role.
-
-              This command is invoking the endpoint with OperationID: 'addAllTeamsToProject'.
-              For more information about flags, format of --file and examples, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Teams/operation/addAllTeamsToProject

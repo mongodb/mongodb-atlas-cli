@@ -95,7 +95,7 @@ To view possible values for the apiKeyId argument, run atlas organizations apiKe
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.APIKeyRoles+usage.UpdateWarning)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.UpdateAPIKeyRoles+usage.UpdateWarning)
 	cmd.Flags().StringVar(&opts.desc, flag.Description, "", usage.APIKeyDescription)
 
 	opts.AddOrgOptFlags(cmd)

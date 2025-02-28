@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	admin "go.mongodb.org/atlas-sdk/v20241113005/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250219001/admin"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -127,10 +127,10 @@ func (m *MockUserLister) EXPECT() *MockUserListerMockRecorder {
 }
 
 // OrganizationUsers mocks base method.
-func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedAppUser, error) {
+func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedOrgUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationUsers", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedAppUser)
+	ret0, _ := ret[0].(*admin.PaginatedOrgUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -165,10 +165,10 @@ func (m *MockTeamUserLister) EXPECT() *MockTeamUserListerMockRecorder {
 }
 
 // TeamUsers mocks base method.
-func (m *MockTeamUserLister) TeamUsers(arg0, arg1 string) (*admin.PaginatedAppUser, error) {
+func (m *MockTeamUserLister) TeamUsers(arg0, arg1 string) (*admin.PaginatedOrgUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TeamUsers", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedAppUser)
+	ret0, _ := ret[0].(*admin.PaginatedOrgUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

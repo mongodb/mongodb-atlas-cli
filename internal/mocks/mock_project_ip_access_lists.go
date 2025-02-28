@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	admin "go.mongodb.org/atlas-sdk/v20241113005/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
 
 // MockProjectIPAccessListDescriber is a mock of ProjectIPAccessListDescriber interface.

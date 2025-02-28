@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
 
 const testJSON = `{"Specs":[{"instanceSize": "S20_HIGHCPU_NVME", "nodeCount": 2}, {"instanceSize": "S110_LOWCPU_NVME", "nodeCount": 42}]}`

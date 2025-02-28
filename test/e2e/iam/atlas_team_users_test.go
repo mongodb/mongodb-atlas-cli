@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
 
 func TestAtlasTeamUsers(t *testing.T) {
@@ -87,7 +87,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var teams atlasv2.PaginatedApiAppUser
+		var teams atlasv2.PaginatedOrgGroup
 		require.NoError(t, json.Unmarshal(resp, &teams))
 		a.NotEmpty(teams.Results)
 	})
@@ -105,7 +105,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		resp, err := e2e.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
-		var teams []atlasv2.CloudAppUser
+		var teams []atlasv2.PaginatedOrgGroup
 		require.NoError(t, json.Unmarshal(resp, &teams))
 		a.NotEmpty(teams)
 	})

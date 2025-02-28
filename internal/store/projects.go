@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20241113005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectLister,ProjectCreator,ProjectUpdater,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter,OrgProjectLister,ProjectMDBVersionLister
@@ -47,7 +47,7 @@ type ProjectDescriber interface {
 }
 
 type ProjectUsersLister interface {
-	ProjectUsers(string, *ListOptions) (*atlasv2.PaginatedAppUser, error)
+	ProjectUsers(string, *ListOptions) (*atlasv2.PaginatedGroupUser, error)
 }
 
 type ProjectUserDeleter interface {
@@ -120,8 +120,8 @@ func (s *Store) DeleteProject(projectID string) error {
 }
 
 // ProjectUsers lists all IAM users in a project.
-func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedAppUser, error) {
-	res := s.clientv2.ProjectsApi.ListProjectUsers(s.ctx, projectID)
+func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.PaginatedGroupUser, error) {
+	res := s.clientv2.MongoDBCloudUsersApi.ListProjectUsers(s.ctx, projectID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
 	}
@@ -131,7 +131,7 @@ func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.Pagi
 
 // DeleteUserFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
-	_, err := s.clientv2.ProjectsApi.RemoveProjectUser(s.ctx, projectID, userID).Execute()
+	_, _, err := s.clientv2.MongoDBCloudUsersApi.RemoveProjectUser(s.ctx, projectID, userID).Execute()
 	return err
 }
 

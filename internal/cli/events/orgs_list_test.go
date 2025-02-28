@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
-	"go.mongodb.org/atlas-sdk/v20241113005/admin"
+	"go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
 
 func Test_orgListOpts_Run(t *testing.T) {

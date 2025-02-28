@@ -9,7 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	admin "go.mongodb.org/atlas-sdk/v20241113005/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
 
 // MockProjectLister is a mock of ProjectLister interface.
@@ -240,10 +240,10 @@ func (m *MockProjectUsersLister) EXPECT() *MockProjectUsersListerMockRecorder {
 }
 
 // ProjectUsers mocks base method.
-func (m *MockProjectUsersLister) ProjectUsers(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedAppUser, error) {
+func (m *MockProjectUsersLister) ProjectUsers(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedGroupUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectUsers", arg0, arg1)
-	ret0, _ := ret[0].(*admin.PaginatedAppUser)
+	ret0, _ := ret[0].(*admin.PaginatedGroupUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

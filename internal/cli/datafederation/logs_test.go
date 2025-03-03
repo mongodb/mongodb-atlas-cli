@@ -20,7 +20,7 @@ package datafederation
 
 import (
 	"io"
-	"os"
+	"strings"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -34,24 +34,12 @@ func TestLogOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockDataFederationLogDownloader(ctrl)
 
-	const contents = "expected"
-
-	file, err := os.CreateTemp(t.TempDir(), "")
-	if err != nil {
-		require.NoError(t, err)
-	}
-	filename := file.Name()
-	defer os.Remove(filename)
-	_, _ = file.WriteString(contents)
-	_ = file.Close()
-
-	expected, _ := os.Open(filename)
-	defer expected.Close()
-
-	const outFilename = "logs.gz"
+	const (
+		contents    = "expected"
+		outFilename = "logs.gz"
+	)
 
 	fs := afero.NewMemMapFs()
-
 	opts := &LogOpts{
 		store: mockStore,
 		DownloaderOpts: cli.DownloaderOpts{
@@ -63,15 +51,15 @@ func TestLogOpts_Run(t *testing.T) {
 	mockStore.
 		EXPECT().
 		DataFederationLogs(opts.ProjectID, opts.id, int64(0), int64(0)).
-		Return(expected, nil).
+		Return(io.NopCloser(strings.NewReader(contents)), nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.Run())
 
 	of, _ := fs.Open(outFilename)
-	defer of.Close()
+	t.Cleanup(func() {
+		require.NoError(t, of.Close())
+	})
 	b, _ := io.ReadAll(of)
 	require.Equal(t, contents, string(b))
 }

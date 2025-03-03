@@ -547,7 +547,7 @@ func RandEntityWithRevision(entity string) (string, error) {
 
 func MongoDBMajorVersion() (string, error) {
 	atlasClient := mongodbatlas.NewClient(nil)
-	atlasURL := os.Getenv("MCLI_OPS_MANAGER_URL")
+	atlasURL := os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL")
 	baseURL, err := url.Parse(atlasURL)
 	if err != nil {
 		return "", err
@@ -577,7 +577,7 @@ func getIntegrationType(val atlasv2.ThirdPartyIntegration) string {
 }
 
 func IsGov() bool {
-	return os.Getenv("MCLI_SERVICE") == "cloudgov"
+	return os.Getenv("MONGODB_ATLAS_SERVICE") == "cloudgov"
 }
 
 func createProject(projectName string) (string, error) {
@@ -1017,7 +1017,7 @@ func getFedSettingsID(t *testing.T, cliPath string) string {
 		"describe",
 		"-o=json",
 	}
-	if orgID, set := os.LookupEnv("MCLI_ORG_ID"); set {
+	if orgID, set := os.LookupEnv("MONGODB_ATLAS_ORG_ID"); set {
 		args = append(args, "--orgId", orgID)
 	}
 	cmd := exec.Command(cliPath, args...)

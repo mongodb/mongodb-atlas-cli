@@ -52,7 +52,7 @@ func TestCleanup(t *testing.T) {
 		"--limit=500",
 		"-o=json",
 	}
-	if orgID, set := os.LookupEnv("MCLI_ORG_ID"); set {
+	if orgID, set := os.LookupEnv("MONGODB_ATLAS_ORG_ID"); set {
 		args = append(args, "--orgId", orgID)
 	}
 	cmd := exec.Command(cliPath, args...)
@@ -64,8 +64,8 @@ func TestCleanup(t *testing.T) {
 	t.Logf("projects:\n%s\n", resp)
 	for _, project := range projects.GetResults() {
 		projectID := project.GetId()
-		if projectID == os.Getenv("MCLI_PROJECT_ID") {
-			// we have to cleanup data federations from default project
+		if projectID == os.Getenv("MONGODB_ATLAS_PROJECT_ID") {
+			// we have to clean up data federations from default project
 			// as this is the only project configured for data federation
 			// (has a configured awsRoleId)
 			t.Run("delete data federations", func(t *testing.T) {

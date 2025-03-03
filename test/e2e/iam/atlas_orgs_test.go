@@ -116,11 +116,11 @@ func TestAtlasOrgs(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		t.Skip("Skipping delete org e2e test, exceeded max number of linked orgs. Will re-enable post cleanup")
-		if os.Getenv("MCLI_SERVICE") == "cloudgov" {
+		if os.Getenv("MONGODB_ATLAS_SERVICE") == "cloudgov" {
 			t.Skip("not available for gov")
 		}
-		t.Setenv("MCLI_PUBLIC_API_KEY", publicAPIKey)
-		t.Setenv("MCLI_PRIVATE_API_KEY", privateAPIKey)
+		t.Setenv("MONGODB_ATLAS_PUBLIC_API_KEY", publicAPIKey)
+		t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", privateAPIKey)
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			"delete",

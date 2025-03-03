@@ -304,6 +304,9 @@ components:
       in: path
       name: groupId
       required: true
+      x-xgen-atlascli:
+        aliases: 
+          - extraProjectIdFlag
       schema:
         example: 32b6e34b3d91647abb20e7b8
         maxLength: 24
@@ -341,6 +344,10 @@ components:
       description: Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
       in: query
       name: pretty
+      x-xgen-atlascli:
+        flag-short: p
+        aliases: 
+          - beautiful
       schema:
         default: false
         example: false

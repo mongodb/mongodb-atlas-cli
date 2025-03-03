@@ -243,23 +243,6 @@ func extractOverrides(ext map[string]any) map[string]any {
 	return nil
 }
 
-func extractParameterShort(parameterRef *openapi3.ParameterRef) string {
-	parameter := parameterRef.Value
-	parameterShort := ""
-
-	if extensions, okExtensions := parameterRef.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
-		if flagShort, okFlagShort := extensions["flag-short"].(string); okFlagShort {
-			parameterShort = flagShort
-		}
-	} else if extensions, okExtensions := parameter.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
-		if flagShort, okFlagShort := extensions["flag-short"].(string); okFlagShort {
-			parameterShort = flagShort
-		}
-	}
-
-	return parameterShort
-}
-
 func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (string, string) {
 	parameter := parameterRef.Value
 	parameterName := parameter.Name
@@ -286,19 +269,40 @@ func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (stri
 
 type parameterExtensions struct {
 	aliases []string
+	short   string
 }
 
 func extractParameterExtensions(parameterRef *openapi3.ParameterRef) parameterExtensions {
-	ext := parameterExtensions{aliases: []string{}}
+	ext := parameterExtensions{
+		aliases: []string{},
+		short:   "",
+	}
 
-	if extensions, okExtensions := parameterRef.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
-		if rawParameterAliases, ok := extensions["aliases"].([]any); ok && rawParameterAliases != nil {
-			for _, rawParameterAlias := range rawParameterAliases {
-				if parameterAlias, ok := rawParameterAlias.(string); ok {
-					ext.aliases = append(ext.aliases, parameterAlias)
+	getExtensionValues := func(extensionsMap map[string]any) {
+		if extensionsMap == nil {
+			return
+		}
+
+		if extensions, okExtensions := extensionsMap["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+			if rawParameterAliases, ok := extensions["aliases"].([]any); ok && rawParameterAliases != nil {
+				for _, rawParameterAlias := range rawParameterAliases {
+					if parameterAlias, ok := rawParameterAlias.(string); ok {
+						ext.aliases = append(ext.aliases, parameterAlias)
+					}
 				}
 			}
+
+			if flagShort, okFlagShort := extensions["flag-short"].(string); okFlagShort && ext.short == "" {
+				ext.short = flagShort
+			}
 		}
+	}
+
+	getExtensionValues(parameterRef.Extensions)
+
+	value := parameterRef.Value
+	if value != nil {
+		getExtensionValues(value.Extensions)
 	}
 
 	return ext
@@ -313,10 +317,10 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 	for _, parameterRef := range parameters {
 		parameter := parameterRef.Value
 		parameterName, parameterDescription := extractParametersNameDescription(parameterRef)
-		parameterShort := extractParameterShort(parameterRef)
 
 		parameterExtensions := extractParameterExtensions(parameterRef)
 		aliases := parameterExtensions.aliases
+		parameterShort := parameterExtensions.short
 
 		// Parameters are translated to flags, we don't want duplicates
 		// Duplicates should be resolved by customization, in case they ever appeared

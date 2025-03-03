@@ -47,13 +47,13 @@ For more information about flags, format of --file and examples, see: https://ww
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
-							Short:       ``,
+							Short:       `p`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
+							Aliases: []string{`beautiful`},
 						},
 					},
 					URLParameters: []Parameter{
@@ -69,7 +69,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{`projectId`, `gId`},
+							Aliases: []string{`projectId`, `gId`, `extraProjectIdFlag`},
 						},
 					},
 					Verb: http.MethodPost,

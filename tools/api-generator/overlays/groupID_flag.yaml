@@ -3,7 +3,7 @@ info:
   title: Configure groupId flag
   version: 1.0.0
 actions:
-  - target: $.paths.*.*.parameters[?(@['$ref']=='#/components/parameters/groupId')]
+  - target: $.components.parameters.groupId
     update:
       x-xgen-atlascli:
         aliases: 

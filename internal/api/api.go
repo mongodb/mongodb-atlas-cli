@@ -54,6 +54,7 @@ type Version struct {
 
 type Parameter struct {
 	Name        string
+	Aliases     []string
 	Short       string
 	Description string
 	Required    bool

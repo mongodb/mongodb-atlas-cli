@@ -42,6 +42,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -52,6 +53,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -67,6 +69,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -100,6 +103,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -110,6 +114,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -125,6 +130,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -164,6 +170,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -174,6 +181,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `authResult`,
@@ -184,6 +192,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -194,6 +203,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `ipAddress`,
@@ -204,6 +214,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `nLogs`,
@@ -214,6 +225,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -224,6 +236,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -239,6 +252,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -249,6 +263,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -282,6 +297,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -292,6 +308,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `authResult`,
@@ -302,6 +319,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -312,6 +330,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `ipAddress`,
@@ -322,6 +341,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `nLogs`,
@@ -332,6 +352,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -342,6 +363,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -357,6 +379,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `hostname`,
@@ -367,6 +390,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -409,6 +433,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -419,6 +444,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -434,6 +460,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -470,6 +497,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -480,6 +508,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -495,6 +524,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `alertConfigId`,
@@ -505,6 +535,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -541,6 +572,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -551,6 +583,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -566,6 +599,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `alertConfigId`,
@@ -576,6 +610,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -609,6 +644,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -619,6 +655,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -656,6 +693,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -666,6 +704,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -676,6 +715,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -686,6 +726,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -696,6 +737,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -711,6 +753,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -747,6 +790,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -757,6 +801,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -767,6 +812,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -777,6 +823,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -787,6 +834,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -802,6 +850,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `alertId`,
@@ -812,6 +861,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -851,6 +901,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -861,6 +912,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -876,6 +928,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `alertConfigId`,
@@ -886,6 +939,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -925,6 +979,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -935,6 +990,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -950,6 +1006,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `alertConfigId`,
@@ -960,6 +1017,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPut,
@@ -1002,6 +1060,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1012,6 +1071,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1027,6 +1087,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `alertId`,
@@ -1037,6 +1098,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -1080,6 +1142,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1090,6 +1153,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1105,6 +1169,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `alertId`,
@@ -1115,6 +1180,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1151,6 +1217,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -1161,6 +1228,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -1171,6 +1239,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -1181,6 +1250,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1191,6 +1261,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `status`,
@@ -1201,6 +1272,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1216,6 +1288,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1252,6 +1325,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -1262,6 +1336,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -1272,6 +1347,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -1282,6 +1358,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1292,6 +1369,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1307,6 +1385,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `alertConfigId`,
@@ -1317,6 +1396,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1356,6 +1436,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1366,6 +1447,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1381,6 +1463,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -1391,6 +1474,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -1449,6 +1533,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1459,6 +1544,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1474,6 +1560,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -1484,6 +1571,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -1517,6 +1605,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1527,6 +1616,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1542,6 +1632,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -1552,6 +1643,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -1585,6 +1677,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1595,6 +1688,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1610,6 +1704,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -1620,6 +1715,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1674,6 +1770,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1684,6 +1781,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1699,6 +1797,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -1709,6 +1808,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexId`,
@@ -1719,6 +1819,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1752,6 +1853,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1762,6 +1864,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1777,6 +1880,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -1787,6 +1891,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -1797,6 +1902,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -1807,6 +1913,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexName`,
@@ -1817,6 +1924,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1850,6 +1958,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1860,6 +1969,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1875,6 +1985,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -1885,6 +1996,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexId`,
@@ -1895,6 +2007,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1928,6 +2041,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1938,6 +2052,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1953,6 +2068,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -1963,6 +2079,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2003,6 +2120,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2013,6 +2131,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2028,6 +2147,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2038,6 +2158,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexId`,
@@ -2048,6 +2169,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2081,6 +2203,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2091,6 +2214,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2106,6 +2230,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2116,6 +2241,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -2126,6 +2252,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -2136,6 +2263,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexName`,
@@ -2146,6 +2274,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2179,6 +2308,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2189,6 +2319,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2204,6 +2335,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2214,6 +2346,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexId`,
@@ -2224,6 +2357,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2257,6 +2391,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2267,6 +2402,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2282,6 +2418,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2292,6 +2429,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -2302,6 +2440,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -2312,6 +2451,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2345,6 +2485,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2355,6 +2496,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2370,6 +2512,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2380,6 +2523,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2413,6 +2557,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2423,6 +2568,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2438,6 +2584,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2448,6 +2595,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -2458,6 +2606,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -2468,6 +2617,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2501,6 +2651,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2511,6 +2662,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2526,6 +2678,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2536,6 +2689,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2594,6 +2748,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2604,6 +2759,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2619,6 +2775,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2629,6 +2786,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexId`,
@@ -2639,6 +2797,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2672,6 +2831,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2682,6 +2842,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2697,6 +2858,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2707,6 +2869,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -2717,6 +2880,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -2727,6 +2891,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexName`,
@@ -2737,6 +2902,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2770,6 +2936,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2780,6 +2947,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2795,6 +2963,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -2805,6 +2974,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexId`,
@@ -2815,6 +2985,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2854,6 +3025,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2864,6 +3036,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2879,6 +3052,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2912,6 +3086,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2922,6 +3097,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2937,6 +3113,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2976,6 +3153,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2986,6 +3164,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3001,6 +3180,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3011,6 +3191,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `restoreJobId`,
@@ -3021,6 +3202,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3054,6 +3236,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3069,6 +3252,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3079,6 +3263,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -3136,6 +3321,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3146,6 +3332,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3161,6 +3348,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3171,6 +3359,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -3204,6 +3393,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3214,6 +3404,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3229,6 +3420,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -3272,6 +3464,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3282,6 +3475,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3297,6 +3491,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3307,6 +3502,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -3340,6 +3536,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3355,6 +3552,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3365,6 +3563,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3405,6 +3604,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3420,6 +3620,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `exportBucketId`,
@@ -3430,6 +3631,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3463,6 +3665,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3473,6 +3676,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3488,6 +3692,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3498,6 +3703,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -3508,6 +3714,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3556,6 +3763,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3566,6 +3774,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3581,6 +3790,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3591,6 +3801,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -3601,6 +3812,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3634,6 +3846,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3644,6 +3857,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3659,6 +3873,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3709,6 +3924,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3724,6 +3940,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3734,6 +3951,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `exportId`,
@@ -3744,6 +3962,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3777,6 +3996,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3787,6 +4007,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3802,6 +4023,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3812,6 +4034,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `restoreJobId`,
@@ -3822,6 +4045,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3855,6 +4079,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3865,6 +4090,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3880,6 +4106,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -3890,6 +4117,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3930,6 +4158,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3940,6 +4169,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3955,6 +4185,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -3995,6 +4226,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4010,6 +4242,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `exportBucketId`,
@@ -4020,6 +4253,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4060,6 +4294,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4070,6 +4305,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4085,6 +4321,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4095,6 +4332,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -4105,6 +4343,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4141,6 +4380,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4156,6 +4396,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4166,6 +4407,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -4176,6 +4418,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4212,6 +4455,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4222,6 +4466,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4237,6 +4482,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4247,6 +4493,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `restoreJobId`,
@@ -4257,6 +4504,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4290,6 +4538,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4300,6 +4549,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4315,6 +4565,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4325,6 +4576,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -4335,6 +4587,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4368,6 +4621,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4378,6 +4632,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4388,6 +4643,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4398,6 +4654,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4408,6 +4665,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4423,6 +4681,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4433,6 +4692,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4466,6 +4726,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4476,6 +4737,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4486,6 +4748,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4496,6 +4759,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4506,6 +4770,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4521,6 +4786,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4531,6 +4797,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4564,6 +4831,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4574,6 +4842,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4584,6 +4853,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4594,6 +4864,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4604,6 +4875,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4619,6 +4891,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4659,6 +4932,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4669,6 +4943,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4679,6 +4954,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4689,6 +4965,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4699,6 +4976,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4714,6 +4992,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4724,6 +5003,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4760,6 +5040,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4770,6 +5051,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4780,6 +5062,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4790,6 +5073,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4800,6 +5084,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4815,6 +5100,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4825,6 +5111,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4861,6 +5148,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4871,6 +5159,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4881,6 +5170,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4891,6 +5181,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4901,6 +5192,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4916,6 +5208,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4926,6 +5219,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4959,6 +5253,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4969,6 +5264,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4984,6 +5280,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -4994,6 +5291,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5030,6 +5328,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5040,6 +5339,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5055,6 +5355,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -5065,6 +5366,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5118,6 +5420,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5128,6 +5431,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5143,6 +5447,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -5153,6 +5458,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5193,6 +5499,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `overwriteBackupPolicies`,
@@ -5203,6 +5510,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5213,6 +5521,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5228,6 +5537,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPut,
@@ -5278,6 +5588,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5288,6 +5599,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5303,6 +5615,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -5313,6 +5626,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -5323,6 +5637,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5382,6 +5697,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5392,6 +5708,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5404,6 +5721,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5446,6 +5764,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5456,6 +5775,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5471,6 +5791,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5511,6 +5832,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5521,6 +5843,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5536,6 +5859,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `liveMigrationId`,
@@ -5546,6 +5870,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPut,
@@ -5579,6 +5904,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5591,6 +5917,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -5624,6 +5951,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5634,6 +5962,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5649,6 +5978,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `liveMigrationId`,
@@ -5659,6 +5989,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5692,6 +6023,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5707,6 +6039,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `validationId`,
@@ -5717,6 +6050,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5750,6 +6084,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5760,6 +6095,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5772,6 +6108,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -5805,6 +6142,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5815,6 +6153,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5830,6 +6169,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5876,6 +6216,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5886,6 +6227,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5901,6 +6243,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `roleId`,
@@ -5911,6 +6254,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5944,6 +6288,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5954,6 +6299,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5969,6 +6315,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -6002,6 +6349,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6012,6 +6360,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6027,6 +6376,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -6037,6 +6387,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `roleId`,
@@ -6047,6 +6398,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6080,6 +6432,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6090,6 +6443,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6105,6 +6459,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `roleId`,
@@ -6115,6 +6470,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6148,6 +6504,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6158,6 +6515,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6173,6 +6531,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6212,6 +6571,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6222,6 +6582,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6237,6 +6598,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -6247,6 +6609,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6280,6 +6643,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6290,6 +6654,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6305,6 +6670,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -6315,6 +6681,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6348,6 +6715,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6358,6 +6726,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6373,6 +6742,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -6383,6 +6753,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -6425,6 +6796,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6435,6 +6807,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6450,6 +6823,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -6525,6 +6899,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6535,6 +6910,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `retainBackups`,
@@ -6545,6 +6921,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6560,6 +6937,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -6570,6 +6948,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6627,6 +7006,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6637,6 +7017,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6652,6 +7033,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -6662,6 +7044,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6709,6 +7092,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6719,6 +7103,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6734,6 +7119,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -6744,6 +7130,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6784,6 +7171,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6794,6 +7182,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6809,6 +7198,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -6819,6 +7209,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6852,6 +7243,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6867,6 +7259,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `sampleDatasetId`,
@@ -6877,6 +7270,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6910,6 +7304,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6920,6 +7315,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6935,6 +7331,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -6945,6 +7342,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -6978,6 +7376,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -6988,6 +7387,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -6998,6 +7398,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -7008,6 +7409,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7018,6 +7420,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `providers`,
@@ -7028,6 +7431,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `tier`,
@@ -7038,6 +7442,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7053,6 +7458,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7089,6 +7495,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -7099,6 +7506,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -7109,6 +7517,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -7119,6 +7528,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7129,6 +7539,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
@@ -7139,6 +7550,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7154,6 +7566,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7201,6 +7614,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -7211,6 +7625,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -7221,6 +7636,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -7231,6 +7647,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7241,6 +7658,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -7275,6 +7693,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7290,6 +7709,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -7300,6 +7720,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7352,6 +7773,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7362,6 +7784,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7377,6 +7800,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -7387,6 +7811,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7420,6 +7845,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7430,6 +7856,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7445,6 +7872,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -7455,6 +7883,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7488,6 +7917,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7498,6 +7928,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7513,6 +7944,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -7523,6 +7955,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7563,6 +7996,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7573,6 +8007,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7588,6 +8023,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -7598,6 +8034,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7631,6 +8068,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7641,6 +8079,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7656,6 +8095,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -7666,6 +8106,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -7738,6 +8179,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7748,6 +8190,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7763,6 +8206,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -7773,6 +8217,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -7816,6 +8261,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7826,6 +8272,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7841,6 +8288,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -7880,6 +8328,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -7890,6 +8339,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -7900,6 +8350,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -7910,6 +8361,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -7920,6 +8372,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7935,6 +8388,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -7945,6 +8399,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clusterView`,
@@ -7955,6 +8410,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -7965,6 +8421,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -7975,6 +8432,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8008,6 +8466,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -8018,6 +8477,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -8028,6 +8488,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -8038,6 +8499,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -8048,6 +8510,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8063,6 +8526,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -8073,6 +8537,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -8083,6 +8548,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -8093,6 +8559,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8126,6 +8593,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8141,6 +8609,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8174,6 +8643,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -8184,6 +8654,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -8194,6 +8665,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -8204,6 +8676,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8219,6 +8692,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -8229,6 +8703,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clusterView`,
@@ -8239,6 +8714,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8272,6 +8748,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -8282,6 +8759,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -8292,6 +8770,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -8302,6 +8781,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8317,6 +8797,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -8327,6 +8808,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8360,6 +8842,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8375,6 +8858,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -8385,6 +8869,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8418,6 +8903,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8433,6 +8919,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -8443,6 +8930,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8477,6 +8965,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8492,6 +8981,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -8502,6 +8992,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPut,
@@ -8536,6 +9027,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8551,6 +9043,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -8561,6 +9054,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8600,6 +9094,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8610,6 +9105,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8625,6 +9121,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -8658,6 +9155,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8668,6 +9166,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8683,6 +9182,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `roleName`,
@@ -8693,6 +9193,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -8726,6 +9227,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8736,6 +9238,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8751,6 +9254,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `roleName`,
@@ -8761,6 +9265,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8794,6 +9299,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8804,6 +9310,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8819,6 +9326,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8852,6 +9360,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8862,6 +9371,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8877,6 +9387,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `roleName`,
@@ -8887,6 +9398,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8953,6 +9465,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8963,6 +9476,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8978,6 +9492,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -9011,6 +9526,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9021,6 +9537,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `skipRoleValidation`,
@@ -9031,6 +9548,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9046,6 +9564,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -9079,6 +9598,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9094,6 +9614,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -9104,6 +9625,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `limitName`,
@@ -9122,6 +9644,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -9155,6 +9678,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9165,6 +9689,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9180,6 +9705,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `endpointId`,
@@ -9190,6 +9716,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9223,6 +9750,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9233,6 +9761,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9248,6 +9777,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -9258,6 +9788,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9291,6 +9822,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9306,6 +9838,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -9316,6 +9849,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `limitName`,
@@ -9334,6 +9868,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9367,6 +9902,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `startDate`,
@@ -9377,6 +9913,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9392,6 +9929,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -9402,6 +9940,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9435,6 +9974,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9445,6 +9985,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9460,6 +10001,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `endpointId`,
@@ -9470,6 +10012,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9503,6 +10046,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9518,6 +10062,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -9528,6 +10073,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9561,6 +10107,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -9571,6 +10118,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -9581,6 +10129,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -9591,6 +10140,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9601,6 +10151,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9616,6 +10167,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9649,6 +10201,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9659,6 +10212,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `type`,
@@ -9669,6 +10223,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9684,6 +10239,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9717,6 +10273,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9727,6 +10284,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9742,6 +10300,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -9752,6 +10311,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `limitName`,
@@ -9770,6 +10330,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9803,6 +10364,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9813,6 +10375,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9828,6 +10391,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -9838,6 +10402,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9871,6 +10436,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9881,6 +10447,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `skipRoleValidation`,
@@ -9891,6 +10458,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9906,6 +10474,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -9916,6 +10485,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -9955,6 +10525,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9970,6 +10541,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10021,6 +10593,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10036,6 +10609,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10046,6 +10620,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -10093,6 +10668,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10103,6 +10679,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10118,6 +10695,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10128,6 +10706,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pipelineRunId`,
@@ -10138,6 +10717,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -10171,6 +10751,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10181,6 +10762,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10196,6 +10778,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10206,6 +10789,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10239,6 +10823,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10249,6 +10834,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10264,6 +10850,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10274,6 +10861,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pipelineRunId`,
@@ -10284,6 +10872,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10317,6 +10906,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -10327,6 +10917,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -10337,6 +10928,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -10347,6 +10939,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10357,6 +10950,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `createdBefore`,
@@ -10367,6 +10961,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10382,6 +10977,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10392,6 +10988,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10425,6 +11022,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10435,6 +11033,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10450,6 +11049,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10460,6 +11060,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10493,6 +11094,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -10503,6 +11105,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -10513,6 +11116,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -10523,6 +11127,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10533,6 +11138,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `completedAfter`,
@@ -10543,6 +11149,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10558,6 +11165,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10568,6 +11176,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10601,6 +11210,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10616,6 +11226,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10649,6 +11260,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10659,6 +11271,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10674,6 +11287,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10684,6 +11298,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10717,6 +11332,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10727,6 +11343,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10742,6 +11359,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10752,6 +11370,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10785,6 +11404,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10795,6 +11415,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10810,6 +11431,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10820,6 +11442,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10853,6 +11476,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10868,6 +11492,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10878,6 +11503,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -10935,6 +11561,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10945,6 +11572,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10960,6 +11588,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -10993,6 +11622,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11003,6 +11633,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11018,6 +11649,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `databaseName`,
@@ -11028,6 +11660,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `username`,
@@ -11051,6 +11684,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -11084,6 +11718,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11094,6 +11729,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11109,6 +11745,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `databaseName`,
@@ -11119,6 +11756,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `username`,
@@ -11142,6 +11780,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11175,6 +11814,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -11185,6 +11825,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11195,6 +11836,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -11205,6 +11847,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11215,6 +11858,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11230,6 +11874,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11263,6 +11908,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11273,6 +11919,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11288,6 +11935,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `databaseName`,
@@ -11298,6 +11946,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `username`,
@@ -11321,6 +11970,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -11360,6 +12010,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11370,6 +12021,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11385,6 +12037,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11395,6 +12048,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -11431,6 +12085,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11441,6 +12096,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11456,6 +12112,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11489,6 +12146,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11499,6 +12157,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11514,6 +12173,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11524,6 +12184,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointId`,
@@ -11534,6 +12195,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11567,6 +12229,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11577,6 +12240,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -11587,6 +12251,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11597,6 +12262,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -11607,6 +12273,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11622,6 +12289,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11632,6 +12300,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11665,6 +12334,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11675,6 +12345,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11690,6 +12361,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11700,6 +12372,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointId`,
@@ -11710,6 +12383,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -11746,6 +12420,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11756,6 +12431,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11771,6 +12447,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -11813,6 +12490,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11823,6 +12501,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeRaw`,
@@ -11833,6 +12512,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11845,6 +12525,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `eventId`,
@@ -11855,6 +12536,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11891,6 +12573,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11901,6 +12584,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeRaw`,
@@ -11911,6 +12595,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11926,6 +12611,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `eventId`,
@@ -11936,6 +12622,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11969,6 +12656,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -11979,6 +12667,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11989,6 +12678,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -11999,6 +12689,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12009,6 +12700,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -12046,6 +12738,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -12056,6 +12749,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12066,6 +12760,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -12076,6 +12771,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12086,6 +12782,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `eventType`,
@@ -12099,6 +12796,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeRaw`,
@@ -12109,6 +12807,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `maxDate`,
@@ -12119,6 +12818,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `minDate`,
@@ -12129,6 +12829,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12141,6 +12842,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12177,6 +12879,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -12187,6 +12890,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12197,6 +12901,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -12207,6 +12912,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12217,6 +12923,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clusterNames`,
@@ -12227,6 +12934,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `eventType`,
@@ -12240,6 +12948,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `excludedEventType`,
@@ -12253,6 +12962,7 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeRaw`,
@@ -12263,6 +12973,7 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `maxDate`,
@@ -12273,6 +12984,7 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `minDate`,
@@ -12283,6 +12995,7 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12298,6 +13011,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12340,6 +13054,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12352,6 +13067,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -12385,6 +13101,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12397,6 +13114,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -12407,6 +13125,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -12441,6 +13160,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12477,6 +13197,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12489,6 +13210,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `identityProviderId`,
@@ -12499,6 +13221,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12532,6 +13255,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12544,6 +13268,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `id`,
@@ -12554,6 +13279,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -12564,6 +13290,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12597,6 +13324,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12609,6 +13337,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -12619,6 +13348,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12652,6 +13382,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12662,6 +13393,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12674,6 +13406,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12707,6 +13440,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12719,6 +13453,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `identityProviderId`,
@@ -12729,6 +13464,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12763,6 +13499,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `identityProviderId`,
@@ -12773,6 +13510,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12806,6 +13544,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12818,6 +13557,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `id`,
@@ -12828,6 +13568,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -12838,6 +13579,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12871,6 +13613,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12881,6 +13624,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -12891,6 +13635,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12903,6 +13648,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -12936,6 +13682,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12946,6 +13693,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -12956,6 +13704,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `protocol`,
@@ -12966,6 +13715,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `idpType`,
@@ -12976,6 +13726,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12988,6 +13739,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13021,6 +13773,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13033,6 +13786,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -13043,6 +13797,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13076,6 +13831,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13088,6 +13844,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -13098,6 +13855,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13134,6 +13892,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13146,6 +13905,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `identityProviderId`,
@@ -13156,6 +13916,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13201,6 +13962,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13213,6 +13975,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -13223,6 +13986,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13259,6 +14023,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13271,6 +14036,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `identityProviderId`,
@@ -13281,6 +14047,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13314,6 +14081,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13326,6 +14094,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `id`,
@@ -13336,6 +14105,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -13346,6 +14116,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPut,
@@ -13385,6 +14156,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -13395,6 +14167,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13410,6 +14183,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -13462,6 +14236,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -13472,6 +14247,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13487,6 +14263,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -13497,6 +14274,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13544,6 +14322,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -13554,6 +14333,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13569,6 +14349,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -13579,6 +14360,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13612,6 +14394,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -13622,6 +14405,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -13632,6 +14416,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -13642,6 +14427,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -13652,6 +14438,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13667,6 +14454,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13700,6 +14488,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -13710,6 +14499,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13725,6 +14515,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -13735,6 +14526,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13786,6 +14578,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -13796,6 +14589,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13811,6 +14605,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -13850,6 +14645,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -13860,6 +14656,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13875,6 +14672,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -13885,6 +14683,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -13938,6 +14737,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -13948,6 +14748,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13963,6 +14764,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -13973,6 +14775,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `restoreJobId`,
@@ -13983,6 +14786,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14016,6 +14820,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -14026,6 +14831,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -14036,6 +14842,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -14046,6 +14853,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14056,6 +14864,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14071,6 +14880,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -14081,6 +14891,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14120,6 +14931,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14130,6 +14942,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14142,6 +14955,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -14155,6 +14969,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14188,6 +15003,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14203,6 +15019,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -14213,6 +15030,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -14223,6 +15041,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14256,6 +15075,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14266,6 +15086,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -14276,6 +15097,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -14286,6 +15108,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -14296,6 +15119,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14311,6 +15135,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -14321,6 +15146,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14361,6 +15187,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14371,6 +15198,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14386,6 +15214,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -14396,6 +15225,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14443,6 +15273,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14453,6 +15284,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14468,6 +15300,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -14478,6 +15311,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14525,6 +15359,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14535,6 +15370,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14550,6 +15386,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -14560,6 +15397,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14607,6 +15445,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14617,6 +15456,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `db`,
@@ -14627,6 +15467,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collection`,
@@ -14637,6 +15478,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14649,6 +15491,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -14662,6 +15505,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14709,6 +15553,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14719,6 +15564,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14734,6 +15580,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -14744,6 +15591,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14797,6 +15645,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14809,6 +15658,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14843,6 +15693,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14853,6 +15704,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14865,6 +15717,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `invoiceId`,
@@ -14875,6 +15728,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14908,6 +15762,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14920,6 +15775,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `token`,
@@ -14930,6 +15786,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -14965,6 +15822,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14975,6 +15833,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14987,6 +15846,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `invoiceId`,
@@ -14997,6 +15857,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15032,6 +15893,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -15042,6 +15904,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -15052,6 +15915,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -15062,6 +15926,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15072,6 +15937,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `viewLinkedInvoices`,
@@ -15082,6 +15948,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `statusNames`,
@@ -15092,6 +15959,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `fromDate`,
@@ -15102,6 +15970,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `toDate`,
@@ -15112,6 +15981,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `sortBy`,
@@ -15122,6 +15992,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orderBy`,
@@ -15132,6 +16003,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15144,6 +16016,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15177,6 +16050,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15187,6 +16061,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15199,6 +16074,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15232,6 +16108,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -15242,6 +16119,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -15252,6 +16130,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15264,6 +16143,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `invoiceId`,
@@ -15274,6 +16154,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15313,6 +16194,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15323,6 +16205,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15338,6 +16221,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15371,6 +16255,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15381,6 +16266,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15396,6 +16282,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15429,6 +16316,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15439,6 +16327,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15454,6 +16343,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `requestId`,
@@ -15464,6 +16354,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15500,6 +16391,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15510,6 +16402,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15525,6 +16418,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -15558,6 +16452,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15568,6 +16463,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15583,6 +16479,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -15641,6 +16538,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15651,6 +16549,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15666,6 +16565,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -15676,6 +16576,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -15709,6 +16610,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15719,6 +16621,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15734,6 +16637,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -15744,6 +16648,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -15754,6 +16659,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15787,6 +16693,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15797,6 +16704,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15812,6 +16720,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `checkpointId`,
@@ -15822,6 +16731,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clusterName`,
@@ -15832,6 +16742,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15868,6 +16779,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15878,6 +16790,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15893,6 +16806,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -15903,6 +16817,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `jobId`,
@@ -15913,6 +16828,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15946,6 +16862,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15956,6 +16873,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15971,6 +16889,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -15981,6 +16900,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -15991,6 +16911,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16027,6 +16948,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16037,6 +16959,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16052,6 +16975,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -16062,6 +16986,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16095,6 +17020,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -16105,6 +17031,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -16115,6 +17042,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -16125,6 +17053,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16135,6 +17064,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16150,6 +17080,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -16160,6 +17091,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16196,6 +17128,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -16206,6 +17139,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -16216,6 +17150,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -16226,6 +17161,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16236,6 +17172,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `batchId`,
@@ -16246,6 +17183,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16261,6 +17199,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -16271,6 +17210,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16304,6 +17244,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -16314,6 +17255,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -16324,6 +17266,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -16334,6 +17277,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16344,6 +17288,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `completed`,
@@ -16354,6 +17299,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16369,6 +17315,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -16379,6 +17326,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16412,6 +17360,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16422,6 +17371,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16437,6 +17387,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -16447,6 +17398,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -16457,6 +17409,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16493,6 +17446,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16503,6 +17457,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16518,6 +17473,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -16528,6 +17484,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16567,6 +17524,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16582,6 +17540,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -16615,6 +17574,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16625,6 +17585,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16640,6 +17601,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16673,6 +17635,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16688,6 +17651,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -16721,6 +17685,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16736,6 +17701,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -16769,6 +17735,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16784,6 +17751,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16829,6 +17797,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16839,6 +17808,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16851,6 +17821,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `userId`,
@@ -16861,6 +17832,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -16897,6 +17869,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16907,6 +17880,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16922,6 +17896,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `userId`,
@@ -16932,6 +17907,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -16975,6 +17951,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16985,6 +17962,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17000,6 +17978,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17036,6 +18015,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17046,6 +18026,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17058,6 +18039,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `teamId`,
@@ -17068,6 +18050,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17104,6 +18087,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17114,6 +18098,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17126,6 +18111,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17165,6 +18151,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17175,6 +18162,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -17215,6 +18203,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17225,6 +18214,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17237,6 +18227,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `userId`,
@@ -17247,6 +18238,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17286,6 +18278,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17296,6 +18289,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17311,6 +18305,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `userId`,
@@ -17321,6 +18316,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17354,6 +18350,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17364,6 +18361,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17376,6 +18374,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17409,6 +18408,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17419,6 +18419,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17431,6 +18432,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17470,6 +18472,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17480,6 +18483,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17492,6 +18496,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `userId`,
@@ -17502,6 +18507,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17538,6 +18544,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17548,6 +18555,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17563,6 +18571,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `userId`,
@@ -17573,6 +18582,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17609,6 +18619,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17619,6 +18630,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17631,6 +18643,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `teamId`,
@@ -17641,6 +18654,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17680,6 +18694,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17690,6 +18705,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17702,6 +18718,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `userId`,
@@ -17712,6 +18729,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -17751,6 +18769,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17761,6 +18780,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17776,6 +18796,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -17786,6 +18807,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17819,6 +18841,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17829,6 +18852,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17844,6 +18868,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `databaseName`,
@@ -17854,6 +18879,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `processId`,
@@ -17864,6 +18890,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -17897,6 +18924,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17907,6 +18935,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `m`,
@@ -17917,6 +18946,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `granularity`,
@@ -17927,6 +18957,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -17937,6 +18968,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -17947,6 +18979,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -17957,6 +18990,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17972,6 +19006,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `databaseName`,
@@ -17982,6 +19017,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `processId`,
@@ -17992,6 +19028,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18042,6 +19079,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18052,6 +19090,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `m`,
@@ -18062,6 +19101,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `granularity`,
@@ -18072,6 +19112,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -18082,6 +19123,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -18092,6 +19134,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -18102,6 +19145,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18117,6 +19161,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `partitionName`,
@@ -18127,6 +19172,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `processId`,
@@ -18137,6 +19183,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18170,6 +19217,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endDate`,
@@ -18180,6 +19228,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `startDate`,
@@ -18190,6 +19239,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18205,6 +19255,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `hostName`,
@@ -18215,6 +19266,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `logName`,
@@ -18225,6 +19277,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18285,6 +19338,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18295,6 +19349,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `m`,
@@ -18305,6 +19360,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -18315,6 +19371,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `granularity`,
@@ -18325,6 +19382,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -18335,6 +19393,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -18345,6 +19404,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18360,6 +19420,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -18370,6 +19431,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18403,6 +19465,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -18413,6 +19476,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -18423,6 +19487,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -18433,6 +19498,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -18443,6 +19509,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -18453,6 +19520,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18465,6 +19533,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `indexName`,
@@ -18475,6 +19544,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -18485,6 +19555,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -18495,6 +19566,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -18508,6 +19580,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18541,6 +19614,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -18551,6 +19625,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -18561,6 +19636,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -18571,6 +19647,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -18581,6 +19658,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -18591,6 +19669,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18603,6 +19682,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -18616,6 +19696,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18649,6 +19730,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -18659,6 +19741,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -18669,6 +19752,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -18679,6 +19763,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18689,6 +19774,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18704,6 +19790,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18737,6 +19824,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -18747,6 +19835,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -18757,6 +19846,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -18767,6 +19857,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18777,6 +19868,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18792,6 +19884,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -18802,6 +19895,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18835,6 +19929,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18847,6 +19942,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -18860,6 +19956,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -18870,6 +19967,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18903,6 +20001,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -18913,6 +20012,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -18923,6 +20023,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -18933,6 +20034,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18943,6 +20045,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18958,6 +20061,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -18968,6 +20072,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19001,6 +20106,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -19011,6 +20117,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -19021,6 +20128,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -19031,6 +20139,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -19041,6 +20150,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -19051,6 +20161,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19063,6 +20174,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -19073,6 +20185,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -19083,6 +20196,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -19096,6 +20210,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19129,6 +20244,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19141,6 +20257,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -19154,6 +20271,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19194,6 +20312,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19204,6 +20323,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19219,6 +20339,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19252,6 +20373,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19262,6 +20384,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19277,6 +20400,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19310,6 +20434,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19320,6 +20445,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19335,6 +20461,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `peerId`,
@@ -19345,6 +20472,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -19378,6 +20506,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19388,6 +20517,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19403,6 +20533,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `containerId`,
@@ -19413,6 +20544,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -19446,6 +20578,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19456,6 +20589,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19471,6 +20605,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -19504,6 +20639,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19514,6 +20650,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19529,6 +20666,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `peerId`,
@@ -19539,6 +20677,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19572,6 +20711,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19582,6 +20722,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19597,6 +20738,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `containerId`,
@@ -19607,6 +20749,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19640,6 +20783,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -19650,6 +20794,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -19660,6 +20805,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -19670,6 +20816,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19680,6 +20827,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `providerName`,
@@ -19690,6 +20838,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19705,6 +20854,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19738,6 +20888,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -19748,6 +20899,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -19758,6 +20910,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -19768,6 +20921,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19778,6 +20932,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `providerName`,
@@ -19788,6 +20943,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19803,6 +20959,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19836,6 +20993,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -19846,6 +21004,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -19856,6 +21015,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -19866,6 +21026,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19876,6 +21037,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19891,6 +21053,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19924,6 +21087,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19934,6 +21098,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19949,6 +21114,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `peerId`,
@@ -19959,6 +21125,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -19992,6 +21159,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20002,6 +21170,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20017,6 +21186,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `containerId`,
@@ -20027,6 +21197,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -20060,6 +21231,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20070,6 +21242,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20085,6 +21258,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20124,6 +21298,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20134,6 +21309,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20149,6 +21325,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -20159,6 +21336,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -20215,6 +21393,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20225,6 +21404,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20240,6 +21420,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `archiveId`,
@@ -20250,6 +21431,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clusterName`,
@@ -20260,6 +21442,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -20308,6 +21491,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `startDate`,
@@ -20318,6 +21502,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endDate`,
@@ -20328,6 +21513,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `archiveOnly`,
@@ -20338,6 +21524,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20353,6 +21540,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -20363,6 +21551,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20396,6 +21585,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20406,6 +21596,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20421,6 +21612,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `archiveId`,
@@ -20431,6 +21623,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clusterName`,
@@ -20441,6 +21634,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20474,6 +21668,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -20484,6 +21679,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -20494,6 +21690,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -20504,6 +21701,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20514,6 +21712,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20529,6 +21728,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -20539,6 +21739,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20572,6 +21773,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20582,6 +21784,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20597,6 +21800,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `archiveId`,
@@ -20607,6 +21811,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clusterName`,
@@ -20617,6 +21822,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -20679,6 +21885,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -20689,6 +21896,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -20699,6 +21907,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20709,6 +21918,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `env`,
@@ -20719,6 +21929,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -20754,6 +21965,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -20801,6 +22013,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20811,6 +22024,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -20845,6 +22059,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20855,6 +22070,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20867,6 +22083,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -20908,6 +22125,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20920,6 +22138,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -20953,6 +22172,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20963,6 +22183,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20975,6 +22196,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `invitationId`,
@@ -20985,6 +22207,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -21018,6 +22241,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21028,6 +22252,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21040,6 +22265,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -21073,6 +22299,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21085,6 +22312,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `invitationId`,
@@ -21095,6 +22323,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -21128,6 +22357,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21138,6 +22368,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21150,6 +22381,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -21183,6 +22415,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21193,6 +22426,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `username`,
@@ -21203,6 +22437,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21215,6 +22450,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -21265,6 +22501,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -21275,6 +22512,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21285,6 +22523,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -21295,6 +22534,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21305,6 +22545,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `name`,
@@ -21315,6 +22556,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21327,6 +22569,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -21360,6 +22603,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21370,6 +22614,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -21380,6 +22625,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21390,6 +22636,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -21400,6 +22647,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21412,6 +22660,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -21452,6 +22701,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -21462,6 +22712,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21472,6 +22723,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -21482,6 +22734,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21492,6 +22745,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `name`,
@@ -21502,6 +22756,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -21536,6 +22791,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21546,6 +22802,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21558,6 +22815,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `userId`,
@@ -21568,6 +22826,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -21608,6 +22867,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21618,6 +22878,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21630,6 +22891,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21663,6 +22925,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21673,6 +22936,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21685,6 +22949,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21718,6 +22983,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21728,6 +22994,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21740,6 +23007,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `invitationId`,
@@ -21750,6 +23018,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21783,6 +23052,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -21793,6 +23063,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21805,6 +23076,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `userId`,
@@ -21815,6 +23087,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPut,
@@ -21848,6 +23121,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21858,6 +23132,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21870,6 +23145,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21909,6 +23185,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21919,6 +23196,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21934,6 +23212,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -21967,6 +23246,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21977,6 +23257,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21992,6 +23273,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -22025,6 +23307,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22035,6 +23318,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22050,6 +23334,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -22083,6 +23368,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22093,6 +23379,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22108,6 +23395,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -22118,6 +23406,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -22151,6 +23440,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `namespaces`,
@@ -22161,6 +23451,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `since`,
@@ -22178,6 +23469,7 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `until`,
@@ -22195,6 +23487,7 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22210,6 +23503,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -22220,6 +23514,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -22257,6 +23552,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -22267,6 +23563,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -22304,6 +23601,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -22314,6 +23612,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -22347,6 +23646,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22357,6 +23657,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `duration`,
@@ -22374,6 +23675,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `namespaces`,
@@ -22384,6 +23686,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `nLogs`,
@@ -22394,6 +23697,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `since`,
@@ -22411,6 +23715,7 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22426,6 +23731,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -22436,6 +23742,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -22469,6 +23776,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22479,6 +23787,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `duration`,
@@ -22496,6 +23805,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `since`,
@@ -22513,6 +23823,7 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22528,6 +23839,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -22538,6 +23850,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -22571,6 +23884,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -22581,6 +23895,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -22591,6 +23906,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -22601,6 +23917,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22611,6 +23928,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `duration`,
@@ -22628,6 +23946,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `namespaces`,
@@ -22638,6 +23957,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `nExamples`,
@@ -22648,6 +23968,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `nIndexes`,
@@ -22658,6 +23979,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `since`,
@@ -22675,6 +23997,7 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22690,6 +24013,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `processId`,
@@ -22700,6 +24024,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -22733,6 +24058,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22743,6 +24069,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22758,6 +24085,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -22768,6 +24096,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -22807,6 +24136,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22817,6 +24147,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22832,6 +24163,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -22842,6 +24174,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -22852,6 +24185,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -22885,6 +24219,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22895,6 +24230,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22910,6 +24246,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -22963,6 +24300,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22973,6 +24311,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22988,6 +24327,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -22998,6 +24338,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointId`,
@@ -23008,6 +24349,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -23018,6 +24360,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -23051,6 +24394,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23061,6 +24405,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23076,6 +24421,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -23086,6 +24432,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -23096,6 +24443,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -23144,6 +24492,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23154,6 +24503,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23169,6 +24519,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -23179,6 +24530,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointId`,
@@ -23189,6 +24541,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -23199,6 +24552,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -23232,6 +24586,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23242,6 +24597,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23257,6 +24613,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -23267,6 +24624,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -23277,6 +24635,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -23310,6 +24669,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23320,6 +24680,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23335,6 +24696,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -23368,6 +24730,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23378,6 +24741,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23393,6 +24757,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -23403,6 +24768,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -23436,6 +24802,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23446,6 +24813,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23461,6 +24829,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -23500,6 +24869,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23510,6 +24880,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23525,6 +24896,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `apiUserId`,
@@ -23535,6 +24907,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -23568,6 +24941,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23578,6 +24952,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23590,6 +24965,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -23623,6 +24999,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -23633,6 +25010,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -23643,6 +25021,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -23653,6 +25032,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23663,6 +25043,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23675,6 +25056,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `apiUserId`,
@@ -23685,6 +25067,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -23718,6 +25101,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23728,6 +25112,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23743,6 +25128,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -23776,6 +25162,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23786,6 +25173,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23798,6 +25186,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `apiUserId`,
@@ -23808,6 +25197,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -23841,6 +25231,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23851,6 +25242,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23863,6 +25255,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `apiUserId`,
@@ -23873,6 +25266,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `ipAddress`,
@@ -23883,6 +25277,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -23916,6 +25311,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23926,6 +25322,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23938,6 +25335,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `apiUserId`,
@@ -23948,6 +25346,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -23981,6 +25380,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23991,6 +25391,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24003,6 +25404,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `ipAddress`,
@@ -24013,6 +25415,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `apiUserId`,
@@ -24023,6 +25426,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -24056,6 +25460,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -24066,6 +25471,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24076,6 +25482,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -24086,6 +25493,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24096,6 +25504,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24108,6 +25517,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `apiUserId`,
@@ -24118,6 +25528,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -24151,6 +25562,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -24161,6 +25573,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24171,6 +25584,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -24181,6 +25595,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24191,6 +25606,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24203,6 +25619,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -24236,6 +25653,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -24246,6 +25664,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24256,6 +25675,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -24266,6 +25686,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24276,6 +25697,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24291,6 +25713,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -24324,6 +25747,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24334,6 +25758,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24349,6 +25774,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `apiUserId`,
@@ -24359,6 +25785,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -24392,6 +25819,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24402,6 +25830,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24414,6 +25843,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `apiUserId`,
@@ -24424,6 +25854,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -24457,6 +25888,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24467,6 +25899,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -24477,6 +25910,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24487,6 +25921,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -24497,6 +25932,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24512,6 +25948,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `apiUserId`,
@@ -24522,6 +25959,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -24561,6 +25999,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -24571,6 +26010,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24581,6 +26021,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -24591,6 +26032,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24601,6 +26043,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24616,6 +26059,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -24649,6 +26093,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24659,6 +26104,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24674,6 +26120,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name: `entryValue`,
@@ -24694,6 +26141,7 @@ which protocol (like TCP or UDP) the connection uses.`,
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -24727,6 +26175,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24737,6 +26186,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24752,6 +26202,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `entryValue`,
@@ -24762,6 +26213,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -24795,6 +26247,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24805,6 +26258,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24820,6 +26274,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `entryValue`,
@@ -24830,6 +26285,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -24863,6 +26319,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -24873,6 +26330,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24883,6 +26341,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -24893,6 +26352,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24903,6 +26363,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24918,6 +26379,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -24957,6 +26419,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -24967,6 +26430,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24982,6 +26446,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -25016,6 +26481,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25026,6 +26492,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `projectOwnerId`,
@@ -25036,6 +26503,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -25070,6 +26538,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -25080,6 +26549,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25095,6 +26565,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -25128,6 +26599,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25138,6 +26610,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25153,6 +26626,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25186,6 +26660,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25201,6 +26676,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `invitationId`,
@@ -25211,6 +26687,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25244,6 +26721,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25254,6 +26732,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25283,6 +26762,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -25296,6 +26776,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25329,6 +26810,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25339,6 +26821,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25354,6 +26837,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -25387,6 +26871,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25397,6 +26882,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25409,6 +26895,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -25442,6 +26929,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25452,6 +26940,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25467,6 +26956,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `invitationId`,
@@ -25477,6 +26967,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -25510,6 +27001,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25520,6 +27012,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25549,6 +27042,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -25562,6 +27056,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -25595,6 +27090,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25605,6 +27101,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -25615,6 +27112,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `instanceSize`,
@@ -25625,6 +27123,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `defaultStatus`,
@@ -25635,6 +27134,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25645,6 +27145,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -25655,6 +27156,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25670,6 +27172,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -25703,6 +27206,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25713,6 +27217,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25728,6 +27233,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -25761,6 +27267,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25771,6 +27278,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `username`,
@@ -25781,6 +27289,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25796,6 +27305,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -25829,6 +27339,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25839,6 +27350,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25854,6 +27366,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -25887,6 +27400,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -25897,6 +27411,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25907,6 +27422,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -25917,6 +27433,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25927,6 +27444,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `flattenTeams`,
@@ -25937,6 +27455,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeOrgUsers`,
@@ -25947,6 +27466,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25962,6 +27482,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -26002,6 +27523,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -26012,6 +27534,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -26022,6 +27545,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -26032,6 +27556,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26042,6 +27567,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -26076,6 +27602,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26091,6 +27618,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -26124,6 +27652,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26134,6 +27663,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26149,6 +27679,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `userId`,
@@ -26159,6 +27690,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -26199,6 +27731,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26209,6 +27742,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26224,6 +27758,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -26260,6 +27795,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26270,6 +27806,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26299,6 +27836,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -26312,6 +27850,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26345,6 +27884,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26355,6 +27895,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26370,6 +27911,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26403,6 +27945,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26413,6 +27956,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26428,6 +27972,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26461,6 +28006,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26476,6 +28022,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `invitationId`,
@@ -26486,6 +28033,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26519,6 +28067,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -26529,6 +28078,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26544,6 +28094,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `userId`,
@@ -26554,6 +28105,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPut,
@@ -26587,6 +28139,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26597,6 +28150,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26612,6 +28166,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26651,6 +28206,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26661,6 +28217,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26676,6 +28233,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -26709,6 +28267,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26719,6 +28278,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26734,6 +28294,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -26767,6 +28328,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26777,6 +28339,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26792,6 +28355,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -26825,6 +28389,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26835,6 +28400,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26850,6 +28416,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26889,6 +28456,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26899,6 +28467,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26911,6 +28480,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -26944,6 +28514,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26954,6 +28525,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26966,6 +28538,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `resourcePolicyId`,
@@ -26976,6 +28549,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -27009,6 +28583,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27019,6 +28594,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27031,6 +28607,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -27064,6 +28641,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27074,6 +28652,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27086,6 +28665,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `resourcePolicyId`,
@@ -27096,6 +28676,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -27129,6 +28710,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27139,6 +28721,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27151,6 +28734,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -27184,6 +28768,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27194,6 +28779,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27206,6 +28792,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `resourcePolicyId`,
@@ -27216,6 +28803,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -27249,6 +28837,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27259,6 +28848,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27271,6 +28861,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -27310,6 +28901,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27320,6 +28912,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27335,6 +28928,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -27345,6 +28939,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -27384,6 +28979,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27394,6 +28990,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -27428,6 +29025,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -27471,6 +29069,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27481,6 +29080,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27496,6 +29096,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -27550,6 +29151,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27560,6 +29162,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27575,6 +29178,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -27585,6 +29189,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -27635,6 +29240,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27645,6 +29251,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27660,6 +29267,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -27670,6 +29278,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -27706,6 +29315,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -27716,6 +29326,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -27726,6 +29337,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -27736,6 +29348,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27746,6 +29359,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27761,6 +29375,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -27797,6 +29412,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27807,6 +29423,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27822,6 +29439,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `name`,
@@ -27832,6 +29450,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -27895,6 +29514,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27910,6 +29530,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `instanceName`,
@@ -27920,6 +29541,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -27956,6 +29578,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27971,6 +29594,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `instanceName`,
@@ -27981,6 +29605,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointId`,
@@ -27991,6 +29616,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28027,6 +29653,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28042,6 +29669,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `instanceName`,
@@ -28052,6 +29680,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointId`,
@@ -28062,6 +29691,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -28098,6 +29728,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28113,6 +29744,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `instanceName`,
@@ -28123,6 +29755,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -28159,6 +29792,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28174,6 +29808,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `instanceName`,
@@ -28184,6 +29819,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endpointId`,
@@ -28194,6 +29830,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -28233,6 +29870,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28243,6 +29881,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28255,6 +29894,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -28268,6 +29908,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -28301,6 +29942,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28311,6 +29953,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28326,6 +29969,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -28359,6 +30003,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -28369,6 +30014,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -28379,6 +30025,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -28389,6 +30036,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28399,6 +30047,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28414,6 +30063,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clientId`,
@@ -28424,6 +30074,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -28457,6 +30108,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28467,6 +30119,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28482,6 +30135,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clientId`,
@@ -28492,6 +30146,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -28525,6 +30180,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28535,6 +30191,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28547,6 +30204,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -28580,6 +30238,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -28590,6 +30249,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -28600,6 +30260,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -28610,6 +30271,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28620,6 +30282,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28632,6 +30295,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clientId`,
@@ -28642,6 +30306,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -28675,6 +30340,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28685,6 +30351,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28697,6 +30364,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clientId`,
@@ -28707,6 +30375,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -28740,6 +30409,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28750,6 +30420,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28762,6 +30433,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -28775,6 +30447,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28808,6 +30481,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28818,6 +30492,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28833,6 +30508,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clientId`,
@@ -28843,6 +30519,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `ipAddress`,
@@ -28853,6 +30530,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28886,6 +30564,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28896,6 +30575,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28908,6 +30588,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `secretId`,
@@ -28918,6 +30599,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -28931,6 +30613,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28964,6 +30647,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28974,6 +30658,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28986,6 +30671,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -28996,6 +30682,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -29029,6 +30716,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29039,6 +30727,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29051,6 +30740,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clientId`,
@@ -29061,6 +30751,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `ipAddress`,
@@ -29071,6 +30762,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -29104,6 +30796,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29114,6 +30807,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29126,6 +30820,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `secretId`,
@@ -29136,6 +30831,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -29146,6 +30842,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -29179,6 +30876,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29189,6 +30887,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29204,6 +30903,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clientId`,
@@ -29214,6 +30914,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -29247,6 +30948,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29257,6 +30959,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29269,6 +30972,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clientId`,
@@ -29279,6 +30983,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -29312,6 +31017,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -29322,6 +31028,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -29332,6 +31039,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -29342,6 +31050,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29352,6 +31061,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29367,6 +31077,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clientId`,
@@ -29377,6 +31088,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -29410,6 +31122,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -29420,6 +31133,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29430,6 +31144,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -29440,6 +31155,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29455,6 +31171,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -29488,6 +31205,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -29498,6 +31216,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -29508,6 +31227,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -29518,6 +31238,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29528,6 +31249,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29540,6 +31262,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clientId`,
@@ -29550,6 +31273,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -29583,6 +31307,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -29593,6 +31318,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29603,6 +31329,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -29613,6 +31340,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29625,6 +31353,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clientId`,
@@ -29635,6 +31364,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -29668,6 +31398,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -29678,6 +31409,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29688,6 +31420,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -29698,6 +31431,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29710,6 +31444,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -29743,6 +31478,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29753,6 +31489,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29765,6 +31502,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -29778,6 +31516,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -29811,6 +31550,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29821,6 +31561,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29833,6 +31574,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `orgId`,
@@ -29843,6 +31585,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -29885,6 +31628,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29895,6 +31639,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29907,6 +31652,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -29920,6 +31666,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -29956,6 +31703,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29966,6 +31714,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29978,6 +31727,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -29991,6 +31741,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `restoreId`,
@@ -30001,6 +31752,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -30037,6 +31789,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30047,6 +31800,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30059,6 +31813,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -30072,6 +31827,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -30114,6 +31870,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30124,6 +31881,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30136,6 +31894,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -30149,6 +31908,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30185,6 +31945,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30195,6 +31956,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30210,6 +31972,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -30220,6 +31983,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `snapshotId`,
@@ -30230,6 +31994,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -30266,6 +32031,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30276,6 +32042,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30291,6 +32058,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `clusterName`,
@@ -30301,6 +32069,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -30340,6 +32109,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30355,6 +32125,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `id`,
@@ -30365,6 +32136,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30398,6 +32170,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30408,6 +32181,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30423,6 +32197,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30456,6 +32231,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30466,6 +32242,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30481,6 +32258,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -30491,6 +32269,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30524,6 +32303,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30534,6 +32314,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30549,6 +32330,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30582,6 +32364,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30592,6 +32375,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30607,6 +32391,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30640,6 +32425,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30650,6 +32436,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30665,6 +32452,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -30675,6 +32463,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30708,6 +32497,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30718,6 +32508,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30733,6 +32524,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `connectionId`,
@@ -30743,6 +32535,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30776,6 +32569,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30786,6 +32580,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30801,6 +32596,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -30811,6 +32607,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `connectionName`,
@@ -30821,6 +32618,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30854,6 +32652,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30864,6 +32663,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30879,6 +32679,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -30889,6 +32690,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30922,6 +32724,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30932,6 +32735,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30947,6 +32751,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -30957,6 +32762,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `processorName`,
@@ -30967,6 +32773,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -31000,6 +32807,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31015,6 +32823,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `id`,
@@ -31025,6 +32834,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -31058,6 +32868,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `endDate`,
@@ -31068,6 +32879,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `startDate`,
@@ -31078,6 +32890,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31093,6 +32906,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -31103,6 +32917,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31136,6 +32951,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -31146,6 +32962,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `regionName`,
@@ -31156,6 +32973,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31171,6 +32989,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31204,6 +33023,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31214,6 +33034,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31224,6 +33045,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31234,6 +33056,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31249,6 +33072,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31282,6 +33106,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31297,6 +33122,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `connectionId`,
@@ -31307,6 +33133,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31340,6 +33167,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31355,6 +33183,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -31365,6 +33194,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `connectionName`,
@@ -31375,6 +33205,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31408,6 +33239,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeConnections`,
@@ -31418,6 +33250,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31433,6 +33266,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -31443,6 +33277,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31476,6 +33311,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31486,6 +33322,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31501,6 +33338,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -31511,6 +33349,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `processorName`,
@@ -31521,6 +33360,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31554,6 +33394,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -31564,6 +33405,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31574,6 +33416,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31584,6 +33427,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31594,6 +33438,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31609,6 +33454,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31642,6 +33488,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31652,6 +33499,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31662,6 +33510,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31672,6 +33521,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31687,6 +33537,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31720,6 +33571,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31730,6 +33582,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31740,6 +33593,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31750,6 +33604,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31765,6 +33620,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -31775,6 +33631,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31808,6 +33665,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31818,6 +33676,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31828,6 +33687,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31838,6 +33698,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31853,6 +33714,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31886,6 +33748,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31896,6 +33759,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31906,6 +33770,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31916,6 +33781,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -31926,6 +33792,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31941,6 +33808,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -31951,6 +33819,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31984,6 +33853,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31994,6 +33864,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32009,6 +33880,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -32019,6 +33891,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `processorName`,
@@ -32029,6 +33902,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -32062,6 +33936,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32077,6 +33952,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `id`,
@@ -32087,6 +33963,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -32120,6 +33997,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32130,6 +34008,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32145,6 +34024,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -32155,6 +34035,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `processorName`,
@@ -32165,6 +34046,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -32198,6 +34080,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32208,6 +34091,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32223,6 +34107,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -32233,6 +34118,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `processorName`,
@@ -32243,6 +34129,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -32276,6 +34163,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32286,6 +34174,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32301,6 +34190,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -32311,6 +34201,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `connectionName`,
@@ -32321,6 +34212,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -32354,6 +34246,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32364,6 +34257,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32379,6 +34273,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `tenantName`,
@@ -32389,6 +34284,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -32428,6 +34324,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32438,6 +34335,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32453,6 +34351,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -32486,6 +34385,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32496,6 +34396,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32508,6 +34409,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `teamId`,
@@ -32518,6 +34420,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -32551,6 +34454,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32561,6 +34465,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32573,6 +34478,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -32606,6 +34512,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32616,6 +34523,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32628,6 +34536,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `teamId`,
@@ -32638,6 +34547,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -32671,6 +34581,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32681,6 +34592,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32693,6 +34605,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `teamId`,
@@ -32703,6 +34616,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -32736,6 +34650,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32746,6 +34661,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32758,6 +34674,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `teamName`,
@@ -32768,6 +34685,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -32801,6 +34719,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -32811,6 +34730,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -32821,6 +34741,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -32831,6 +34752,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32841,6 +34763,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32853,6 +34776,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -32886,6 +34810,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32896,6 +34821,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -32906,6 +34832,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -32916,6 +34843,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -32926,6 +34854,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32941,6 +34870,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -32974,6 +34904,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -32984,6 +34915,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -32994,6 +34926,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33004,6 +34937,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33016,6 +34950,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `teamId`,
@@ -33026,6 +34961,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -33066,6 +35002,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33081,6 +35018,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `teamId`,
@@ -33091,6 +35029,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -33124,6 +35063,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33134,6 +35074,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33146,6 +35087,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `teamId`,
@@ -33156,6 +35098,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `userId`,
@@ -33166,6 +35109,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -33199,6 +35143,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33209,6 +35154,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33221,6 +35167,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `teamId`,
@@ -33231,6 +35178,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -33264,6 +35212,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33274,6 +35223,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33289,6 +35239,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `teamId`,
@@ -33299,6 +35250,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -33338,6 +35290,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `additionalInfo`,
@@ -33348,6 +35301,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -33398,6 +35352,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -33408,6 +35363,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33418,6 +35374,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33428,6 +35385,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33438,6 +35396,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33450,6 +35409,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -33463,6 +35423,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPost,
@@ -33496,6 +35457,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33506,6 +35468,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33518,6 +35481,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -33531,6 +35495,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -33564,6 +35529,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33574,6 +35540,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33589,6 +35556,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `integrationType`,
@@ -33599,6 +35567,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,
@@ -33632,6 +35601,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -33642,6 +35612,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33652,6 +35623,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33662,6 +35634,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33672,6 +35645,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33687,6 +35661,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodGet,
@@ -33720,6 +35695,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -33730,6 +35706,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33740,6 +35717,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33750,6 +35728,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33760,6 +35739,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33772,6 +35752,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name: `groupId`,
@@ -33785,6 +35766,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodPut,
@@ -33830,6 +35812,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33840,6 +35823,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33855,6 +35839,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `username`,
@@ -33865,6 +35850,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -33901,6 +35887,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33916,6 +35903,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -33949,6 +35937,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -33959,6 +35948,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33969,6 +35959,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33979,6 +35970,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33989,6 +35981,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34004,6 +35997,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{`projectId`},
 						},
 						{
 							Name:        `username`,
@@ -34014,6 +36008,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,

@@ -96,39 +96,50 @@ func extractSunsetDate(extensions map[string]any) *time.Time {
 	return nil
 }
 
-func extractExtensionsFromOperation(operation *openapi3.Operation) (bool, string, []string) {
-	skip := false
-	operationID := operation.OperationID
-	var aliases []string
+type operationExtensions struct {
+	skip             bool
+	operationID      string
+	operationAliases []string
+}
+
+func extractExtensionsFromOperation(operation *openapi3.Operation) operationExtensions {
+	ext := operationExtensions{
+		skip:             false,
+		operationID:      operation.OperationID,
+		operationAliases: []string{},
+	}
 
 	if extensions, okExtensions := operation.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
 		if extSkip, okSkip := extensions["skip"].(bool); okSkip && extSkip {
-			skip = extSkip
+			ext.skip = extSkip
 		}
 
 		if extAliases, okExtAliases := extensions["command-aliases"].([]any); okExtAliases && extAliases != nil {
 			for _, alias := range extAliases {
 				if sAlias, ok := alias.(string); ok && sAlias != "" {
-					aliases = append(aliases, sAlias)
+					ext.operationAliases = append(ext.operationAliases, sAlias)
 				}
 			}
 		}
 
 		if overrides := extractOverrides(operation.Extensions); overrides != nil {
 			if overriddenOperationID, ok := overrides["operationId"].(string); ok && overriddenOperationID != "" {
-				operationID = overriddenOperationID
+				ext.operationID = overriddenOperationID
 			}
 		}
 	}
 
-	return skip, operationID, aliases
+	return ext
 }
 
 func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.Command, error) {
-	skip, operationID, aliases := extractExtensionsFromOperation(operation)
-	if skip {
+	extensions := extractExtensionsFromOperation(operation)
+	if extensions.skip {
 		return nil, nil
 	}
+
+	operationID := extensions.operationID
+	aliases := extensions.operationAliases
 
 	httpVerb, err := api.ToHTTPVerb(verb)
 	if err != nil {
@@ -273,6 +284,26 @@ func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (stri
 	return parameterName, parameterDescription
 }
 
+type parameterExtensions struct {
+	aliases []string
+}
+
+func extractParameterExtensions(parameterRef *openapi3.ParameterRef) parameterExtensions {
+	ext := parameterExtensions{aliases: []string{}}
+
+	if extensions, okExtensions := parameterRef.Extensions["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if rawParameterAliases, ok := extensions["aliases"].([]any); ok && rawParameterAliases != nil {
+			for _, rawParameterAlias := range rawParameterAliases {
+				if parameterAlias, ok := rawParameterAlias.(string); ok {
+					ext.aliases = append(ext.aliases, parameterAlias)
+				}
+			}
+		}
+	}
+
+	return ext
+}
+
 // Extract and categorize parameters.
 func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 	parameterNames := make(map[string]struct{})
@@ -283,6 +314,9 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 		parameter := parameterRef.Value
 		parameterName, parameterDescription := extractParametersNameDescription(parameterRef)
 		parameterShort := extractParameterShort(parameterRef)
+
+		parameterExtensions := extractParameterExtensions(parameterRef)
+		aliases := parameterExtensions.aliases
 
 		// Parameters are translated to flags, we don't want duplicates
 		// Duplicates should be resolved by customization, in case they ever appeared
@@ -306,6 +340,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 			Description: description,
 			Required:    parameter.Required,
 			Type:        *parameterType,
+			Aliases:     aliases,
 		}
 
 		switch parameter.In {

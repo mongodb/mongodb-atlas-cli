@@ -43,6 +43,7 @@ var Commands = GroupedAndSortedCommands{
 								IsArray:	{{ .Type.IsArray }},
 								Type:		`{{ .Type.Type }}`,
 							},
+							Aliases: []string{ {{ range $i, $alias := .Aliases }}{{if $i}},{{end}}`{{ $alias }}`{{end}} },
 						},
 					{{- end }}
 					},
@@ -57,6 +58,7 @@ var Commands = GroupedAndSortedCommands{
 								IsArray:	{{ .Type.IsArray }},
 								Type:		`{{ .Type.Type }}`,
 							},
+							Aliases: []string{ {{ range $i, $alias := .Aliases }}{{if $i}},{{end}}`{{ $alias }}`{{end}} },
 						},
 					{{- end }}
 					},

@@ -42,6 +42,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -52,6 +53,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -67,6 +69,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -121,6 +124,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -131,6 +135,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -141,6 +146,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -151,6 +157,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -161,6 +168,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
@@ -171,6 +179,7 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -186,6 +195,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,

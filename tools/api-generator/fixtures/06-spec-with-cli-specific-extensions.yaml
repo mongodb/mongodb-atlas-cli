@@ -87,6 +87,9 @@ paths:
         - $ref: '#/components/parameters/groupId'
           x-xgen-atlascli:
             flag-short: g
+            aliases: 
+              - projectId
+              - gId
         - $ref: '#/components/parameters/pretty'
       requestBody:
         content:

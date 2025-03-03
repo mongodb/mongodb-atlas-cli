@@ -24,7 +24,6 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -205,7 +204,8 @@ func generateClusterFile(mdbVersion string) (string, error) {
 	}
 
 	templateFile := "data/create_cluster_test.json"
-	if service := os.Getenv("MONGODB_ATLAS_SERVICE"); service == config.CloudGovService {
+
+	if IsGov() {
 		templateFile = "data/create_cluster_gov_test.json"
 	}
 

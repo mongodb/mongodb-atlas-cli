@@ -30,13 +30,13 @@ type Opts struct {
 }
 
 type DownloadArchive struct {
-	PreviousReleasesLink string     `json:"previous_releases_link"`
-	ReleaseDate          time.Time  `json:"release_date"`
-	ReleaseNotesLink     string     `json:"release_notes_link"`
-	TutorialLink         string     `json:"tutorial_link"`
-	Version              string     `json:"version"`
-	ManualLink           string     `json:"manual_link"`
-	Platform             []Platform `json:"platform"`
+	PreviousReleasesLink string      `json:"previous_releases_link"`
+	ReleaseDate          time.Time   `json:"release_date"`
+	ReleaseNotesLink     string      `json:"release_notes_link"`
+	TutorialLink         string      `json:"tutorial_link"`
+	Version              string      `json:"version"`
+	ManualLink           string      `json:"manual_link"`
+	Platform             []*Platform `json:"platform"`
 }
 
 type Platform struct {
@@ -78,7 +78,7 @@ func newPlatform(version, arch, system, distro string, formats []string) *Platfo
 func main() {
 	cmd := Builder()
 	if err := cmd.Execute(); err != nil {
-		fmt.Printf("error encoding file: %v\n", err)
+		_, _ = fmt.Fprintf(os.Stderr, "error encoding file: %v\n", err)
 		os.Exit(1)
 	}
 }
@@ -96,16 +96,16 @@ func generateFile(name, version string) error {
 		PreviousReleasesLink: "https://github.com/mongodb/mongodb-atlas-cli/atlascli/releases",
 		ReleaseNotesLink:     "https://dochub.mongodb.org/core/atlas-cli-changelog",
 		TutorialLink:         "https://dochub.mongodb.org/core/install-atlas-cli",
-		Platform: []Platform{
-			*newPlatform(version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
-			*newPlatform(version, "arm64", "linux", "Linux (arm64)", []string{"tar.gz"}),
-			*newPlatform(version, "x86_64", "linux", "Debian 11, 12 / Ubuntu 20.04, 22.04, 24.04 (x86_64)", []string{"deb"}),
-			*newPlatform(version, "arm64", "linux", "Debian 11, 12 / Ubuntu 20.04, 22.04, 24.04 (arm64)", []string{"deb"}),
-			*newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 8, 9 / SUSE 12 + 15 / Amazon Linux 2, 2023 (x86_64)", []string{"rpm"}),
-			*newPlatform(version, "arm64", "linux", "Red Hat + CentOS 8, 9 / SUSE 12 + 15 / Amazon Linux 2, 2023 (arm64)", []string{"rpm"}),
-			*newPlatform(version, "x86_64", "windows", "Microsoft Windows", []string{"msi", "zip"}),
-			*newPlatform(version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),
-			*newPlatform(version, "arm64", "macos", "macOS (arm64)", []string{"zip"}),
+		Platform: []*Platform{
+			newPlatform(version, "x86_64", "linux", "Linux (x86_64)", []string{"tar.gz"}),
+			newPlatform(version, "arm64", "linux", "Linux (arm64)", []string{"tar.gz"}),
+			newPlatform(version, "x86_64", "linux", "Debian 11, 12 / Ubuntu 20.04, 22.04, 24.04 (x86_64)", []string{"deb"}),
+			newPlatform(version, "arm64", "linux", "Debian 11, 12 / Ubuntu 20.04, 22.04, 24.04 (arm64)", []string{"deb"}),
+			newPlatform(version, "x86_64", "linux", "Red Hat + CentOS 8, 9 / SUSE 12 + 15 / Amazon Linux 2023 (x86_64)", []string{"rpm"}),
+			newPlatform(version, "arm64", "linux", "Red Hat + CentOS 8, 9 / SUSE 12 + 15 / Amazon Linux 2023 (arm64)", []string{"rpm"}),
+			newPlatform(version, "x86_64", "windows", "Microsoft Windows", []string{"msi", "zip"}),
+			newPlatform(version, "x86_64", "macos", "macOS (x86_64)", []string{"zip"}),
+			newPlatform(version, "arm64", "macos", "macOS (arm64)", []string{"zip"}),
 		},
 	}
 	jsonEncoder := json.NewEncoder(feedFile)

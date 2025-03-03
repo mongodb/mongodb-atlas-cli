@@ -42,7 +42,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -53,7 +52,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -64,7 +62,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -75,7 +72,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -86,7 +82,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{

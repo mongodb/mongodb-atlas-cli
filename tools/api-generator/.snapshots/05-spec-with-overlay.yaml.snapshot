@@ -39,7 +39,6 @@ var Commands = GroupedAndSortedCommands{
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -50,7 +49,6 @@ var Commands = GroupedAndSortedCommands{
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{

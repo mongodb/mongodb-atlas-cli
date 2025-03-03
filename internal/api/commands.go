@@ -42,7 +42,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -53,7 +52,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -103,7 +101,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -114,7 +111,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -170,7 +166,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -181,7 +176,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `authResult`,
@@ -192,7 +186,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -203,7 +196,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `ipAddress`,
@@ -214,7 +206,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `nLogs`,
@@ -225,7 +216,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -236,7 +226,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -297,7 +286,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -308,7 +296,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `authResult`,
@@ -319,7 +306,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -330,7 +316,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `ipAddress`,
@@ -341,7 +326,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `nLogs`,
@@ -352,7 +336,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -363,7 +346,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -433,7 +415,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -444,7 +425,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -497,7 +477,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -508,7 +487,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -572,7 +550,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -583,7 +560,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -644,7 +620,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -655,7 +630,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -693,7 +667,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -704,7 +677,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -715,7 +687,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -726,7 +697,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -737,7 +707,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -790,7 +759,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -801,7 +769,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -812,7 +779,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -823,7 +789,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -834,7 +799,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -901,7 +865,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -912,7 +875,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -979,7 +941,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -990,7 +951,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1060,7 +1020,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1071,7 +1030,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1142,7 +1100,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1153,7 +1110,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1217,7 +1173,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -1228,7 +1183,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -1239,7 +1193,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -1250,7 +1203,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1261,7 +1213,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `status`,
@@ -1272,7 +1223,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1325,7 +1275,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -1336,7 +1285,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -1347,7 +1295,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -1358,7 +1305,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1369,7 +1315,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1436,7 +1381,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1447,7 +1391,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1533,7 +1476,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1544,7 +1486,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1605,7 +1546,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1616,7 +1556,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1677,7 +1616,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1688,7 +1626,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1770,7 +1707,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1781,7 +1717,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1853,7 +1788,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1864,7 +1798,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -1958,7 +1891,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -1969,7 +1901,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2041,7 +1972,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2052,7 +1982,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2120,7 +2049,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2131,7 +2059,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2203,7 +2130,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2214,7 +2140,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2308,7 +2233,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2319,7 +2243,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2391,7 +2314,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2402,7 +2324,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2485,7 +2406,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2496,7 +2416,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2557,7 +2476,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2568,7 +2486,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2651,7 +2568,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2662,7 +2578,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2748,7 +2663,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2759,7 +2673,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2831,7 +2744,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2842,7 +2754,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -2936,7 +2847,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -2947,7 +2857,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3025,7 +2934,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3036,7 +2944,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3086,7 +2993,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3097,7 +3003,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3153,7 +3058,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3164,7 +3068,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3236,7 +3139,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3321,7 +3223,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3332,7 +3233,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3393,7 +3293,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3404,7 +3303,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3464,7 +3362,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3475,7 +3372,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3536,7 +3432,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3604,7 +3499,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3665,7 +3559,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3676,7 +3569,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3763,7 +3655,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3774,7 +3665,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3846,7 +3736,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -3857,7 +3746,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3924,7 +3812,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -3996,7 +3883,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4007,7 +3893,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4079,7 +3964,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4090,7 +3974,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4158,7 +4041,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4169,7 +4051,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4226,7 +4107,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4294,7 +4174,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4305,7 +4184,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4380,7 +4258,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4455,7 +4332,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4466,7 +4342,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4538,7 +4413,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4549,7 +4423,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4621,7 +4494,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4632,7 +4504,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4643,7 +4514,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4654,7 +4524,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4665,7 +4534,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4726,7 +4594,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4737,7 +4604,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4748,7 +4614,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4759,7 +4624,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4770,7 +4634,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4831,7 +4694,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4842,7 +4704,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4853,7 +4714,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4864,7 +4724,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4875,7 +4734,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -4932,7 +4790,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -4943,7 +4800,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4954,7 +4810,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -4965,7 +4820,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -4976,7 +4830,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5040,7 +4893,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -5051,7 +4903,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -5062,7 +4913,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -5073,7 +4923,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5084,7 +4933,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5148,7 +4996,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5159,7 +5006,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -5170,7 +5016,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -5181,7 +5026,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -5192,7 +5036,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5253,7 +5096,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5264,7 +5106,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5328,7 +5169,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5339,7 +5179,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5420,7 +5259,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5431,7 +5269,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5499,7 +5336,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `overwriteBackupPolicies`,
@@ -5510,7 +5346,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5521,7 +5356,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5588,7 +5422,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5599,7 +5432,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5697,7 +5529,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5708,7 +5539,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5764,7 +5594,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5775,7 +5604,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5832,7 +5660,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5843,7 +5670,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5904,7 +5730,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -5951,7 +5776,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -5962,7 +5786,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6023,7 +5846,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6084,7 +5906,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6095,7 +5916,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6142,7 +5962,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6153,7 +5972,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6216,7 +6034,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6227,7 +6044,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6288,7 +6104,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6299,7 +6114,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6349,7 +6163,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6360,7 +6173,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6432,7 +6244,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6443,7 +6254,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6504,7 +6314,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6515,7 +6324,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6571,7 +6379,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6582,7 +6389,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6643,7 +6449,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6654,7 +6459,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6715,7 +6519,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6726,7 +6529,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6796,7 +6598,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6807,7 +6608,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -6899,7 +6699,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -6910,7 +6709,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `retainBackups`,
@@ -6921,7 +6719,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7006,7 +6803,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7017,7 +6813,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7092,7 +6887,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7103,7 +6897,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7171,7 +6964,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7182,7 +6974,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7243,7 +7034,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7304,7 +7094,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7315,7 +7104,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7376,7 +7164,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -7387,7 +7174,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -7398,7 +7184,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -7409,7 +7194,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7420,7 +7204,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `providers`,
@@ -7431,7 +7214,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `tier`,
@@ -7442,7 +7224,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7495,7 +7276,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -7506,7 +7286,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -7517,7 +7296,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -7528,7 +7306,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7539,7 +7316,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
@@ -7550,7 +7326,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7614,7 +7389,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -7625,7 +7399,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -7636,7 +7409,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -7647,7 +7419,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7658,7 +7429,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -7693,7 +7463,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7773,7 +7542,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7784,7 +7552,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7845,7 +7612,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7856,7 +7622,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7917,7 +7682,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -7928,7 +7692,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -7996,7 +7759,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8007,7 +7769,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8068,7 +7829,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8079,7 +7839,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8179,7 +7938,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8190,7 +7948,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8261,7 +8018,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -8272,7 +8028,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8328,7 +8083,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -8339,7 +8093,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -8350,7 +8103,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -8361,7 +8113,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -8372,7 +8123,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8466,7 +8216,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -8477,7 +8226,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -8488,7 +8236,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -8499,7 +8246,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -8510,7 +8256,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8593,7 +8338,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8643,7 +8387,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -8654,7 +8397,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -8665,7 +8407,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -8676,7 +8417,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8748,7 +8488,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -8759,7 +8498,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -8770,7 +8508,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -8781,7 +8518,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8842,7 +8578,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8903,7 +8638,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -8965,7 +8699,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9027,7 +8760,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9094,7 +8826,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9105,7 +8836,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9155,7 +8885,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9166,7 +8895,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9227,7 +8955,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9238,7 +8965,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9299,7 +9025,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9310,7 +9035,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9360,7 +9084,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9371,7 +9094,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9465,7 +9187,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9476,7 +9197,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9526,7 +9246,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9537,7 +9256,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `skipRoleValidation`,
@@ -9548,7 +9266,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9598,7 +9315,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9678,7 +9394,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9689,7 +9404,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9750,7 +9464,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9761,7 +9474,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9822,7 +9534,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9902,7 +9613,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `startDate`,
@@ -9913,7 +9623,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -9974,7 +9683,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -9985,7 +9693,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10046,7 +9753,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10107,7 +9813,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -10118,7 +9823,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -10129,7 +9833,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -10140,7 +9843,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10151,7 +9853,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10201,7 +9902,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10212,7 +9912,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `type`,
@@ -10223,7 +9922,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10273,7 +9971,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10284,7 +9981,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10364,7 +10060,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10375,7 +10070,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10436,7 +10130,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10447,7 +10140,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `skipRoleValidation`,
@@ -10458,7 +10150,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10525,7 +10216,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10593,7 +10283,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10668,7 +10357,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10679,7 +10367,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10751,7 +10438,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10762,7 +10448,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10823,7 +10508,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10834,7 +10518,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -10906,7 +10589,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -10917,7 +10599,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -10928,7 +10609,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -10939,7 +10619,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -10950,7 +10629,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `createdBefore`,
@@ -10961,7 +10639,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11022,7 +10699,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11033,7 +10709,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11094,7 +10769,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -11105,7 +10779,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11116,7 +10789,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -11127,7 +10799,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11138,7 +10809,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `completedAfter`,
@@ -11149,7 +10819,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11210,7 +10879,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11260,7 +10928,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11271,7 +10938,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11332,7 +10998,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11343,7 +11008,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11404,7 +11068,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11415,7 +11078,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11476,7 +11138,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11561,7 +11222,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11572,7 +11232,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11622,7 +11281,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11633,7 +11291,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11718,7 +11375,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11729,7 +11385,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11814,7 +11469,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -11825,7 +11479,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11836,7 +11489,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -11847,7 +11499,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11858,7 +11509,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -11908,7 +11558,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -11919,7 +11568,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12010,7 +11658,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12021,7 +11668,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12085,7 +11731,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12096,7 +11741,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12146,7 +11790,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12157,7 +11800,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12229,7 +11871,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12240,7 +11881,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -12251,7 +11891,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12262,7 +11901,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -12273,7 +11911,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12334,7 +11971,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12345,7 +11981,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12420,7 +12055,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12431,7 +12065,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12490,7 +12123,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12501,7 +12133,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeRaw`,
@@ -12512,7 +12143,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12573,7 +12203,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12584,7 +12213,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeRaw`,
@@ -12595,7 +12223,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12656,7 +12283,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -12667,7 +12293,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12678,7 +12303,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -12689,7 +12313,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12700,7 +12323,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -12738,7 +12360,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -12749,7 +12370,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12760,7 +12380,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -12771,7 +12390,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12782,7 +12400,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `eventType`,
@@ -12796,7 +12413,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeRaw`,
@@ -12807,7 +12423,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `maxDate`,
@@ -12818,7 +12433,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `minDate`,
@@ -12829,7 +12443,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -12879,7 +12492,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -12890,7 +12502,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12901,7 +12512,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -12912,7 +12522,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -12923,7 +12532,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `clusterNames`,
@@ -12934,7 +12542,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `eventType`,
@@ -12948,7 +12555,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `excludedEventType`,
@@ -12962,7 +12568,6 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeRaw`,
@@ -12973,7 +12578,6 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `maxDate`,
@@ -12984,7 +12588,6 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `minDate`,
@@ -12995,7 +12598,6 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13054,7 +12656,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13101,7 +12702,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13197,7 +12797,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13255,7 +12854,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13324,7 +12922,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13382,7 +12979,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -13393,7 +12989,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13440,7 +13035,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13544,7 +13138,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13613,7 +13206,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -13624,7 +13216,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -13635,7 +13226,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13682,7 +13272,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -13693,7 +13282,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -13704,7 +13292,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `protocol`,
@@ -13715,7 +13302,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `idpType`,
@@ -13726,7 +13312,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13773,7 +13358,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13831,7 +13415,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13892,7 +13475,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -13962,7 +13544,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14023,7 +13604,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14081,7 +13661,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14156,7 +13735,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14167,7 +13745,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14236,7 +13813,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14247,7 +13823,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14322,7 +13897,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14333,7 +13907,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14394,7 +13967,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -14405,7 +13977,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -14416,7 +13987,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -14427,7 +13997,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14438,7 +14007,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14488,7 +14056,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14499,7 +14066,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14578,7 +14144,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14589,7 +14154,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14645,7 +14209,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14656,7 +14219,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14737,7 +14299,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14748,7 +14309,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14820,7 +14380,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -14831,7 +14390,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -14842,7 +14400,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -14853,7 +14410,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14864,7 +14420,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -14931,7 +14486,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -14942,7 +14496,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15003,7 +14556,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15075,7 +14627,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15086,7 +14637,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -15097,7 +14647,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -15108,7 +14657,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -15119,7 +14667,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15187,7 +14734,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15198,7 +14744,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15273,7 +14818,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15284,7 +14828,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15359,7 +14902,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15370,7 +14912,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15445,7 +14986,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15456,7 +14996,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `db`,
@@ -15467,7 +15006,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `collection`,
@@ -15478,7 +15016,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15553,7 +15090,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15564,7 +15100,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15645,7 +15180,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15693,7 +15227,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15704,7 +15237,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15762,7 +15294,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15822,7 +15353,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15833,7 +15363,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -15893,7 +15422,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -15904,7 +15432,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -15915,7 +15442,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -15926,7 +15452,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -15937,7 +15462,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `viewLinkedInvoices`,
@@ -15948,7 +15472,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `statusNames`,
@@ -15959,7 +15482,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `fromDate`,
@@ -15970,7 +15492,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `toDate`,
@@ -15981,7 +15502,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `sortBy`,
@@ -15992,7 +15512,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `orderBy`,
@@ -16003,7 +15522,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16050,7 +15568,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16061,7 +15578,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16108,7 +15624,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -16119,7 +15634,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -16130,7 +15644,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16194,7 +15707,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16205,7 +15717,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16255,7 +15766,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16266,7 +15776,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16316,7 +15825,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16327,7 +15835,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16391,7 +15898,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16402,7 +15908,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16452,7 +15957,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16463,7 +15967,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16538,7 +16041,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16549,7 +16051,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16610,7 +16111,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16621,7 +16121,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16693,7 +16192,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16704,7 +16202,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16779,7 +16276,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16790,7 +16286,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16862,7 +16357,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16873,7 +16367,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -16948,7 +16441,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -16959,7 +16451,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17020,7 +16511,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -17031,7 +16521,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -17042,7 +16531,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -17053,7 +16541,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17064,7 +16551,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17128,7 +16614,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -17139,7 +16624,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -17150,7 +16634,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -17161,7 +16644,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17172,7 +16654,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `batchId`,
@@ -17183,7 +16664,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17244,7 +16724,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -17255,7 +16734,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -17266,7 +16744,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -17277,7 +16754,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17288,7 +16764,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `completed`,
@@ -17299,7 +16774,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17360,7 +16834,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17371,7 +16844,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17446,7 +16918,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17457,7 +16928,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17524,7 +16994,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17574,7 +17043,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17585,7 +17053,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17635,7 +17102,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17685,7 +17151,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17735,7 +17200,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17797,7 +17261,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17808,7 +17271,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17869,7 +17331,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17880,7 +17341,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -17951,7 +17411,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -17962,7 +17421,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18015,7 +17473,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18026,7 +17483,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18087,7 +17543,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18098,7 +17553,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18151,7 +17605,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18162,7 +17615,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -18203,7 +17655,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18214,7 +17665,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18278,7 +17728,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18289,7 +17738,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18350,7 +17798,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18361,7 +17808,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18408,7 +17854,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18419,7 +17864,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18472,7 +17916,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18483,7 +17926,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18544,7 +17986,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18555,7 +17996,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18619,7 +18059,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18630,7 +18069,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18694,7 +18132,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18705,7 +18142,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18769,7 +18205,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18780,7 +18215,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18841,7 +18275,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18852,7 +18285,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -18924,7 +18356,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -18935,7 +18366,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `m`,
@@ -18946,7 +18376,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `granularity`,
@@ -18957,7 +18386,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -18968,7 +18396,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -18979,7 +18406,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -18990,7 +18416,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19079,7 +18504,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19090,7 +18514,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `m`,
@@ -19101,7 +18524,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `granularity`,
@@ -19112,7 +18534,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -19123,7 +18544,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -19134,7 +18554,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -19145,7 +18564,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19217,7 +18635,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `endDate`,
@@ -19228,7 +18645,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `startDate`,
@@ -19239,7 +18655,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19338,7 +18753,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19349,7 +18763,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `m`,
@@ -19360,7 +18773,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -19371,7 +18783,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `granularity`,
@@ -19382,7 +18793,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -19393,7 +18803,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -19404,7 +18813,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19465,7 +18873,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -19476,7 +18883,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -19487,7 +18893,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -19498,7 +18903,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -19509,7 +18913,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -19520,7 +18923,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19614,7 +19016,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -19625,7 +19026,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -19636,7 +19036,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -19647,7 +19046,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -19658,7 +19056,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -19669,7 +19066,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19730,7 +19126,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -19741,7 +19136,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -19752,7 +19146,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -19763,7 +19156,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19774,7 +19166,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19824,7 +19215,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -19835,7 +19225,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -19846,7 +19235,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -19857,7 +19245,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -19868,7 +19255,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -19929,7 +19315,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20001,7 +19386,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -20012,7 +19396,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -20023,7 +19406,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -20034,7 +19416,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20045,7 +19426,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20106,7 +19486,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `period`,
@@ -20117,7 +19496,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `start`,
@@ -20128,7 +19506,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `end`,
@@ -20139,7 +19516,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -20150,7 +19526,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `metrics`,
@@ -20161,7 +19536,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20244,7 +19618,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20312,7 +19685,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20323,7 +19695,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20373,7 +19744,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20384,7 +19754,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20434,7 +19803,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20445,7 +19813,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20506,7 +19873,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20517,7 +19883,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20578,7 +19943,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20589,7 +19953,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20639,7 +20002,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20650,7 +20012,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20711,7 +20072,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20722,7 +20082,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20783,7 +20142,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -20794,7 +20152,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -20805,7 +20162,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -20816,7 +20172,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20827,7 +20182,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `providerName`,
@@ -20838,7 +20192,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20888,7 +20241,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -20899,7 +20251,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -20910,7 +20261,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -20921,7 +20271,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -20932,7 +20281,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `providerName`,
@@ -20943,7 +20291,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -20993,7 +20340,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -21004,7 +20350,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21015,7 +20360,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -21026,7 +20370,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21037,7 +20380,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21087,7 +20429,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21098,7 +20439,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21159,7 +20499,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21170,7 +20509,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21231,7 +20569,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21242,7 +20579,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21298,7 +20634,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21309,7 +20644,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21393,7 +20727,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21404,7 +20737,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21491,7 +20823,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `startDate`,
@@ -21502,7 +20833,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `endDate`,
@@ -21513,7 +20843,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `archiveOnly`,
@@ -21524,7 +20853,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21585,7 +20913,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21596,7 +20923,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21668,7 +20994,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -21679,7 +21004,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21690,7 +21014,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -21701,7 +21024,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21712,7 +21034,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21773,7 +21094,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21784,7 +21104,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -21885,7 +21204,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21896,7 +21214,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -21907,7 +21224,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -21918,7 +21234,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `env`,
@@ -21929,7 +21244,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -21965,7 +21279,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -22013,7 +21326,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22024,7 +21336,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -22059,7 +21370,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22070,7 +21380,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22125,7 +21434,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22172,7 +21480,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22183,7 +21490,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22241,7 +21547,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22252,7 +21557,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22299,7 +21603,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22357,7 +21660,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22368,7 +21670,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22415,7 +21716,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22426,7 +21726,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `username`,
@@ -22437,7 +21736,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22501,7 +21799,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -22512,7 +21809,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -22523,7 +21819,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -22534,7 +21829,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22545,7 +21839,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `name`,
@@ -22556,7 +21849,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22603,7 +21895,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22614,7 +21905,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -22625,7 +21915,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -22636,7 +21925,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -22647,7 +21935,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22701,7 +21988,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -22712,7 +21998,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -22723,7 +22008,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -22734,7 +22018,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22745,7 +22028,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `name`,
@@ -22756,7 +22038,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -22791,7 +22072,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22802,7 +22082,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22867,7 +22146,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22878,7 +22156,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22925,7 +22202,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22936,7 +22212,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -22983,7 +22258,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -22994,7 +22268,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23052,7 +22325,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -23063,7 +22335,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23121,7 +22392,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23132,7 +22402,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23185,7 +22454,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23196,7 +22464,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23246,7 +22513,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23257,7 +22523,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23307,7 +22572,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23318,7 +22582,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23368,7 +22631,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23379,7 +22641,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23440,7 +22701,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `namespaces`,
@@ -23451,7 +22711,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `since`,
@@ -23469,7 +22728,6 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `until`,
@@ -23487,7 +22745,6 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23646,7 +22903,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23657,7 +22913,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `duration`,
@@ -23675,7 +22930,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `namespaces`,
@@ -23686,7 +22940,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `nLogs`,
@@ -23697,7 +22950,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `since`,
@@ -23715,7 +22967,6 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23776,7 +23027,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23787,7 +23037,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `duration`,
@@ -23805,7 +23054,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `since`,
@@ -23823,7 +23071,6 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -23884,7 +23131,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -23895,7 +23141,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -23906,7 +23151,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -23917,7 +23161,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -23928,7 +23171,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `duration`,
@@ -23946,7 +23188,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `namespaces`,
@@ -23957,7 +23198,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: true,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `nExamples`,
@@ -23968,7 +23208,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `nIndexes`,
@@ -23979,7 +23218,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name: `since`,
@@ -23997,7 +23235,6 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24058,7 +23295,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24069,7 +23305,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24136,7 +23371,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24147,7 +23381,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24219,7 +23452,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24230,7 +23462,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24300,7 +23531,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24311,7 +23541,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24394,7 +23623,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24405,7 +23633,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24492,7 +23719,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24503,7 +23729,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24586,7 +23811,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24597,7 +23821,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24669,7 +23892,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24680,7 +23902,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24730,7 +23951,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24741,7 +23961,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24802,7 +24021,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24813,7 +24031,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24869,7 +24086,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24880,7 +24096,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24941,7 +24156,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -24952,7 +24166,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -24999,7 +24212,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -25010,7 +24222,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25021,7 +24232,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -25032,7 +24242,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25043,7 +24252,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25101,7 +24309,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25112,7 +24319,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25162,7 +24368,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25173,7 +24378,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25231,7 +24435,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25242,7 +24445,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25311,7 +24513,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25322,7 +24523,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25380,7 +24580,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25391,7 +24590,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25460,7 +24658,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -25471,7 +24668,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25482,7 +24678,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -25493,7 +24688,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25504,7 +24698,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25562,7 +24755,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -25573,7 +24765,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25584,7 +24775,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -25595,7 +24785,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25606,7 +24795,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25653,7 +24841,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -25664,7 +24851,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25675,7 +24861,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -25686,7 +24871,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25697,7 +24881,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25747,7 +24930,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25758,7 +24940,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25819,7 +25000,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25830,7 +25010,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25888,7 +25067,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25899,7 +25077,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -25910,7 +25087,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -25921,7 +25097,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -25932,7 +25107,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -25999,7 +25173,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -26010,7 +25183,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -26021,7 +25193,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -26032,7 +25203,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26043,7 +25213,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26093,7 +25262,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26104,7 +25272,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26175,7 +25342,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26186,7 +25352,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26247,7 +25412,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26258,7 +25422,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26319,7 +25482,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -26330,7 +25492,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -26341,7 +25502,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -26352,7 +25512,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26363,7 +25522,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26419,7 +25577,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -26430,7 +25587,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26481,7 +25637,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26492,7 +25647,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `projectOwnerId`,
@@ -26503,7 +25657,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -26538,7 +25691,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -26549,7 +25701,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26599,7 +25750,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26610,7 +25760,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26660,7 +25809,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26721,7 +25869,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26732,7 +25879,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26810,7 +25956,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26821,7 +25966,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26871,7 +26015,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26882,7 +26025,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -26929,7 +26071,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -26940,7 +26081,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27001,7 +26141,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27012,7 +26151,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27090,7 +26228,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27101,7 +26238,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -27112,7 +26248,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `instanceSize`,
@@ -27123,7 +26258,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `defaultStatus`,
@@ -27134,7 +26268,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -27145,7 +26278,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -27156,7 +26288,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27206,7 +26337,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27217,7 +26347,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27267,7 +26396,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27278,7 +26406,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `username`,
@@ -27289,7 +26416,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27339,7 +26465,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27350,7 +26475,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27400,7 +26524,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -27411,7 +26534,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -27422,7 +26544,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -27433,7 +26554,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27444,7 +26564,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `flattenTeams`,
@@ -27455,7 +26574,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeOrgUsers`,
@@ -27466,7 +26584,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27523,7 +26640,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -27534,7 +26650,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -27545,7 +26660,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -27556,7 +26670,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27567,7 +26680,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -27602,7 +26714,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27652,7 +26763,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27663,7 +26773,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27731,7 +26840,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27742,7 +26850,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27795,7 +26902,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27806,7 +26912,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27884,7 +26989,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27895,7 +26999,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -27945,7 +27048,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -27956,7 +27058,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28006,7 +27107,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28067,7 +27167,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -28078,7 +27177,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28139,7 +27237,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28150,7 +27247,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28206,7 +27302,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28217,7 +27312,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28267,7 +27361,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28278,7 +27371,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28328,7 +27420,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28339,7 +27430,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28389,7 +27479,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28400,7 +27489,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28456,7 +27544,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28467,7 +27554,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28514,7 +27600,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28525,7 +27610,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28583,7 +27667,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28594,7 +27677,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28641,7 +27723,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28652,7 +27733,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28710,7 +27790,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28721,7 +27800,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28768,7 +27846,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28779,7 +27856,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28837,7 +27913,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28848,7 +27923,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28901,7 +27975,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28912,7 +27985,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -28979,7 +28051,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -28990,7 +28061,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -29025,7 +28095,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -29069,7 +28138,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29080,7 +28148,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29151,7 +28218,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29162,7 +28228,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29240,7 +28305,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29251,7 +28315,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29315,7 +28378,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -29326,7 +28388,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -29337,7 +28398,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -29348,7 +28408,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29359,7 +28418,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29412,7 +28470,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29423,7 +28480,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29514,7 +28570,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29578,7 +28633,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29653,7 +28707,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29728,7 +28781,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29792,7 +28844,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29870,7 +28921,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29881,7 +28931,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -29942,7 +28991,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -29953,7 +29001,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30003,7 +29050,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -30014,7 +29060,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -30025,7 +29070,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -30036,7 +29080,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30047,7 +29090,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30108,7 +29150,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30119,7 +29160,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30180,7 +29220,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30191,7 +29230,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30238,7 +29276,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -30249,7 +29286,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -30260,7 +29296,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -30271,7 +29306,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30282,7 +29316,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30340,7 +29373,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30351,7 +29383,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30409,7 +29440,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30420,7 +29450,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30481,7 +29510,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30492,7 +29520,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30564,7 +29591,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30575,7 +29601,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30647,7 +29672,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30658,7 +29682,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30716,7 +29739,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30727,7 +29749,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30796,7 +29817,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30807,7 +29827,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30876,7 +29895,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30887,7 +29905,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -30948,7 +29965,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -30959,7 +29975,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31017,7 +30032,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -31028,7 +30042,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31039,7 +30052,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31050,7 +30062,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31061,7 +30072,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31122,7 +30132,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31133,7 +30142,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31144,7 +30152,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -31155,7 +30162,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31205,7 +30211,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -31216,7 +30221,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31227,7 +30231,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31238,7 +30241,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31249,7 +30251,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31307,7 +30308,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31318,7 +30318,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31329,7 +30328,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -31340,7 +30338,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31398,7 +30395,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -31409,7 +30405,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31420,7 +30415,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -31431,7 +30425,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31478,7 +30471,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31489,7 +30481,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31550,7 +30541,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31561,7 +30551,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31628,7 +30617,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31639,7 +30627,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31703,7 +30690,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31714,7 +30700,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31789,7 +30774,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31800,7 +30784,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31870,7 +30853,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31881,7 +30863,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -31945,7 +30926,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -31956,7 +30936,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32031,7 +31010,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32042,7 +31020,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32109,7 +31086,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32170,7 +31146,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32181,7 +31156,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32231,7 +31205,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32242,7 +31215,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32303,7 +31275,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32314,7 +31285,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32364,7 +31334,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32375,7 +31344,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32425,7 +31393,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32436,7 +31403,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32497,7 +31463,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32508,7 +31473,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32569,7 +31533,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32580,7 +31543,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32652,7 +31614,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32663,7 +31624,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32724,7 +31684,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -32735,7 +31694,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32807,7 +31765,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32868,7 +31825,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `endDate`,
@@ -32879,7 +31835,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `startDate`,
@@ -32890,7 +31845,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -32951,7 +31905,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -32962,7 +31915,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `regionName`,
@@ -32973,7 +31925,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33023,7 +31974,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33034,7 +31984,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33045,7 +31994,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33056,7 +32004,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33106,7 +32053,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33167,7 +32113,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33239,7 +32184,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeConnections`,
@@ -33250,7 +32194,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33311,7 +32254,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33322,7 +32264,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33394,7 +32335,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `envelope`,
@@ -33405,7 +32345,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33416,7 +32355,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33427,7 +32365,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33438,7 +32375,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33488,7 +32424,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33499,7 +32434,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33510,7 +32444,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33521,7 +32454,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33571,7 +32503,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33582,7 +32513,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33593,7 +32523,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33604,7 +32533,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33665,7 +32593,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33676,7 +32603,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33687,7 +32613,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33698,7 +32623,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33748,7 +32672,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33759,7 +32682,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33770,7 +32692,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -33781,7 +32702,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -33792,7 +32712,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33853,7 +32772,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -33864,7 +32782,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33936,7 +32853,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -33997,7 +32913,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34008,7 +32923,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34080,7 +32994,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34091,7 +33004,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34163,7 +33075,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34174,7 +33085,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34246,7 +33156,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34257,7 +33166,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34324,7 +33232,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34335,7 +33242,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34385,7 +33291,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34396,7 +33301,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34454,7 +33358,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34465,7 +33368,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34512,7 +33414,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34523,7 +33424,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34581,7 +33481,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34592,7 +33491,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34650,7 +33548,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34661,7 +33558,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34719,7 +33615,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -34730,7 +33625,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -34741,7 +33635,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -34752,7 +33645,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34763,7 +33655,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34810,7 +33701,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34821,7 +33711,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -34832,7 +33721,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -34843,7 +33731,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -34854,7 +33741,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -34904,7 +33790,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -34915,7 +33800,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -34926,7 +33810,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -34937,7 +33820,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35002,7 +33884,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35063,7 +33944,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35074,7 +33954,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35143,7 +34022,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35154,7 +34032,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35212,7 +34089,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35223,7 +34099,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35290,7 +34165,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `additionalInfo`,
@@ -35301,7 +34175,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{},
@@ -35352,7 +34225,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -35363,7 +34235,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -35374,7 +34245,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -35385,7 +34255,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35396,7 +34265,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35457,7 +34325,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35468,7 +34335,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35529,7 +34395,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35540,7 +34405,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35601,7 +34465,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -35612,7 +34475,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -35623,7 +34485,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -35634,7 +34495,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35645,7 +34505,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35695,7 +34554,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -35706,7 +34564,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -35717,7 +34574,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -35728,7 +34584,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35739,7 +34594,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35812,7 +34666,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35823,7 +34676,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35887,7 +34739,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -35937,7 +34788,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -35948,7 +34798,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -35959,7 +34808,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -35970,7 +34818,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -35981,7 +34828,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{

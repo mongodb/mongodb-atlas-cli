@@ -42,7 +42,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -53,7 +52,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{
@@ -124,7 +122,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeCount`,
@@ -135,7 +132,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -146,7 +142,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pageNum`,
@@ -157,7 +152,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `int`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `pretty`,
@@ -168,7 +162,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
@@ -179,7 +172,6 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{},
 						},
 					},
 					URLParameters: []Parameter{

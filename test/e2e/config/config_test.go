@@ -39,7 +39,7 @@ func TestConfig(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 	t.Run("config", func(t *testing.T) {
-		t.Setenv("MCLI_PRIVATE_API_KEY", "")
+		t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "")
 		pty, tty, err := pseudotty.Open()
 		if err != nil {
 			t.Fatalf("failed to open pseudotty: %v", err)

@@ -205,7 +205,7 @@ func generateClusterFile(mdbVersion string) (string, error) {
 	}
 
 	templateFile := "data/create_cluster_test.json"
-	if service := os.Getenv("MCLI_SERVICE"); service == config.CloudGovService {
+	if service := os.Getenv("MONGODB_ATLAS_SERVICE"); service == config.CloudGovService {
 		templateFile = "data/create_cluster_gov_test.json"
 	}
 

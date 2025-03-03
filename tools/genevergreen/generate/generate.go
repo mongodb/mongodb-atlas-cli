@@ -28,7 +28,6 @@ const (
 
 var (
 	serverVersions = []string{
-		"5.0",
 		"6.0",
 		"7.0",
 		"8.0",
@@ -38,7 +37,6 @@ var (
 		"8.0": {"debian11"},
 		"7.0": {"ubuntu2404"},
 		"6.0": {"ubuntu2404"},
-		"5.0": {"ubuntu2404"},
 	}
 
 	oses = []string{
@@ -99,13 +97,11 @@ func RepoTasks(c *shrub.Configuration) {
 				if repo == "org" {
 					mongoRepo = "https://repo.mongodb.org"
 				}
-
-				t := &shrub.Task{
-					Name: fmt.Sprintf("test_repo_atlascli_%v_%v_%v", os, repo, serverVersion),
-				}
-
 				if slices.Contains(unsupportedNewOsByVersion[serverVersion], newOs[os]) {
 					continue
+				}
+				t := &shrub.Task{
+					Name: fmt.Sprintf("test_repo_atlascli_%s_%s_%s", os, repo, serverVersion),
 				}
 
 				t = t.Stepback(false).
@@ -117,7 +113,7 @@ func RepoTasks(c *shrub.Configuration) {
 						"package":        pkg,
 						"entrypoint":     entrypoint,
 						"image":          os,
-						"mongo_package":  fmt.Sprintf("mongodb-%v", repo),
+						"mongo_package":  "mongodb-" + repo,
 						"mongo_repo":     mongoRepo,
 					})
 				c.Tasks = append(c.Tasks, t)
@@ -138,7 +134,7 @@ func PostPkgTasks(c *shrub.Configuration) {
 
 	for _, os := range oses {
 		t := &shrub.Task{
-			Name: fmt.Sprintf("pkg_test_atlascli_docker_%v", os),
+			Name: fmt.Sprintf("pkg_test_atlascli_docker_%s", os),
 		}
 		t = t.Dependency(shrub.TaskDependency{
 			Name:    "package_goreleaser",

@@ -39,11 +39,7 @@ func TestConfig(t *testing.T) {
 	cliPath, err := e2e.AtlasCLIBin()
 	require.NoError(t, err)
 	t.Run("config", func(t *testing.T) {
-		key := os.Getenv("MCLI_PRIVATE_API_KEY")
-		_ = os.Unsetenv("MCLI_PRIVATE_API_KEY")
-		t.Cleanup(func() {
-			_ = os.Setenv("MCLI_PRIVATE_API_KEY", key)
-		})
+		t.Setenv("MCLI_PRIVATE_API_KEY", "")
 		pty, tty, err := pseudotty.Open()
 		if err != nil {
 			t.Fatalf("failed to open pseudotty: %v", err)

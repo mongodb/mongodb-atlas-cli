@@ -1,0 +1,10 @@
+overlay: 1.0.0
+info:
+  title: Configure groupId flag
+  version: 1.0.0
+actions:
+  - target: $.components.parameters.groupId
+    update:
+      x-xgen-atlascli:
+        aliases: 
+          - projectId

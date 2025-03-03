@@ -68,6 +68,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,
@@ -170,6 +171,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 						{
 							Name:        `clusterName`,
@@ -180,6 +182,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,

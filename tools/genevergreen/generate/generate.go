@@ -134,7 +134,7 @@ func PostPkgTasks(c *shrub.Configuration) {
 
 	for _, os := range oses {
 		t := &shrub.Task{
-			Name: fmt.Sprintf("pkg_test_atlascli_docker_%s", os),
+			Name: "pkg_test_atlascli_docker_" + os,
 		}
 		t = t.Dependency(shrub.TaskDependency{
 			Name:    "package_goreleaser",

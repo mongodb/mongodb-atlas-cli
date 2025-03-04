@@ -52,7 +52,9 @@ For more information about flags, format of --file and examples, see: https://ww
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []string{`beautiful`},
+							Aliases: []ParameterAlias{
+								{Long: `beautiful`, Short: ``},
+							},
 						},
 					},
 					URLParameters: []Parameter{
@@ -68,7 +70,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{`projectId`, `gId`, `extraProjectIdFlag`},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+								{Long: `gId`, Short: ``},
+								{Long: `extraProjectIdFlag`, Short: `e`},
+							},
 						},
 					},
 					Verb: http.MethodPost,

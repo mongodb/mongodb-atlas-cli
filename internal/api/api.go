@@ -54,11 +54,16 @@ type Version struct {
 
 type Parameter struct {
 	Name        string
-	Aliases     []string
+	Aliases     []ParameterAlias
 	Short       string
 	Description string
 	Required    bool
 	Type        ParameterType
+}
+
+type ParameterAlias struct {
+	Long  string
+	Short string
 }
 
 type ParameterType struct {

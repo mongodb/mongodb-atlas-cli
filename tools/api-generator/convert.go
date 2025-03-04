@@ -20,6 +20,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -268,44 +269,89 @@ func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (stri
 }
 
 type parameterExtensions struct {
-	aliases []string
+	aliases []parameterAliasExtension
 	short   string
+}
+
+type parameterAliasExtension struct {
+	long  string
+	short string
 }
 
 func extractParameterExtensions(parameterRef *openapi3.ParameterRef) parameterExtensions {
 	ext := parameterExtensions{
-		aliases: []string{},
+		aliases: []parameterAliasExtension{},
 		short:   "",
 	}
 
-	getExtensionValues := func(extensionsMap map[string]any) {
-		if extensionsMap == nil {
-			return
-		}
-
-		if extensions, okExtensions := extensionsMap["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
-			if rawParameterAliases, ok := extensions["aliases"].([]any); ok && rawParameterAliases != nil {
-				for _, rawParameterAlias := range rawParameterAliases {
-					if parameterAlias, ok := rawParameterAlias.(string); ok {
-						ext.aliases = append(ext.aliases, parameterAlias)
-					}
-				}
-			}
-
-			if flagShort, okFlagShort := extensions["flag-short"].(string); okFlagShort && ext.short == "" {
-				ext.short = flagShort
-			}
-		}
-	}
-
-	getExtensionValues(parameterRef.Extensions)
+	extractParameterExtensionsMap(&ext, parameterRef.Extensions)
 
 	value := parameterRef.Value
 	if value != nil {
-		getExtensionValues(value.Extensions)
+		extractParameterExtensionsMap(&ext, value.Extensions)
 	}
 
 	return ext
+}
+
+func extractParameterExtensionsMap(ext *parameterExtensions, extensionsMap map[string]any) {
+	if extensionsMap == nil {
+		return
+	}
+
+	if extensions, okExtensions := extensionsMap["x-xgen-atlascli"].(map[string]any); okExtensions && extensions != nil {
+		if rawParameterAliases, ok := extensions["aliases"].([]any); ok && rawParameterAliases != nil {
+			for _, rawParameterAlias := range rawParameterAliases {
+				if parameterAlias, ok := rawParameterAlias.(string); ok {
+					ext.aliases = append(ext.aliases, parseSimpleAliasExtensionEntry(parameterAlias))
+				} else if complexParameterAlias, ok := rawParameterAlias.(map[string]any); ok {
+					alias := parseComplexAliasExtensionEntry(complexParameterAlias)
+
+					if alias.long != "" {
+						ext.aliases = append(ext.aliases, alias)
+					}
+				}
+			}
+		}
+
+		if flagShort, okFlagShort := extensions["flag-short"].(string); okFlagShort && ext.short == "" {
+			ext.short = flagShort
+		}
+	}
+}
+
+// parse simple form of extension
+//
+//	   aliases:
+//			- projectId
+func parseSimpleAliasExtensionEntry(value string) parameterAliasExtension {
+	return parameterAliasExtension{
+		long: value,
+	}
+}
+
+// parse complex form of extension
+//
+//	   aliases:
+//			- long: projectId
+//	     - short: P
+func parseComplexAliasExtensionEntry(value map[string]any) parameterAliasExtension {
+	alias := parameterAliasExtension{}
+	for key, value := range value {
+		if strValue, ok := value.(string); ok {
+			key := strings.ToLower(key)
+			switch key {
+			case "long":
+				alias.long = strValue
+			case "short":
+				if len(strValue) == 1 {
+					alias.short = strValue
+				}
+			}
+		}
+	}
+
+	return alias
 }
 
 // Extract and categorize parameters.
@@ -344,7 +390,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 			Description: description,
 			Required:    parameter.Required,
 			Type:        *parameterType,
-			Aliases:     aliases,
+			Aliases:     mapParameterAliases(aliases),
 		}
 
 		switch parameter.In {
@@ -363,6 +409,20 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 		query: queryParameters,
 		url:   urlParameters,
 	}, nil
+}
+
+func mapParameterAliases(aliases []parameterAliasExtension) []api.ParameterAlias {
+	var parameterAliases []api.ParameterAlias
+	if len(aliases) > 0 {
+		parameterAliases = make([]api.ParameterAlias, 0, len(aliases))
+		for _, alias := range aliases {
+			parameterAliases = append(parameterAliases, api.ParameterAlias{
+				Long:  alias.long,
+				Short: alias.short,
+			})
+		}
+	}
+	return parameterAliases
 }
 
 // Build versions from responses and request body.

@@ -76,13 +76,13 @@ func updateAPICommandDescription(cmd *cobra.Command) {
 func updateLeafDescriptions(cmd *cobra.Command) {
 	if len(cmd.Commands()) == 0 {
 		lines := strings.Split(cmd.Long, "\n")
-		// Remove the last line which will always be "For more information and examples, see: <AtlasCLI docs url>"
-		if len(lines) > 1 {
+		// Replace last line if it contains the extected text: "For more information and examples, see: <AtlasCLI docs url>"
+		if strings.HasPrefix(lines[len(lines)-1], "For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/") {
 			lines = lines[:len(lines)-1]
+			newLine := "For more information and examples, see the referenced API documentation linked above."
+			lines = append(lines, newLine)
 		}
 
-		newLine := "For more information and examples, see the referenced API documentation linked above."
-		lines = append(lines, newLine)
 		cmd.Long = strings.Join(lines, "\n")
 	}
 

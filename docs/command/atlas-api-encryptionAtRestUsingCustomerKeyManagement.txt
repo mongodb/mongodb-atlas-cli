@@ -15,7 +15,6 @@ atlas api encryptionAtRestUsingCustomerKeyManagement
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns and edits the Encryption at Rest using Customer Key Management configuration.
 
 MongoDB Cloud encrypts all storage whether or not you use your own key management.
-For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

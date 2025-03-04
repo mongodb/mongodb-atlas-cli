@@ -14,9 +14,6 @@ atlas api test
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Atlas test endpoints.
 
-
-For more information and examples, see the referenced API documentation linked above.
-
 Options
 -------
 

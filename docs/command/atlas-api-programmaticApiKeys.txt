@@ -15,7 +15,6 @@ atlas api programmaticApiKeys
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns, adds, edits, and removes access tokens to use the MongoDB Cloud API.
 
 MongoDB Cloud applies these keys to organizations. These resources can return, assign, or revoke use of these keys within a specified project.
-For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

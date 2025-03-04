@@ -14,9 +14,6 @@ atlas api mongoDbCloudUsers
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns, adds, and edits MongoDB Cloud users.
 
-
-For more information and examples, see the referenced API documentation linked above.
-
 Options
 -------
 

@@ -14,9 +14,6 @@ atlas api legacyBackup
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Manages Legacy Backup snapshots, restore jobs, schedules and checkpoints.
 
-
-For more information and examples, see the referenced API documentation linked above.
-
 Options
 -------
 

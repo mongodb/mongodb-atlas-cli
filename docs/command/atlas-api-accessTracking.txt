@@ -15,7 +15,6 @@ atlas api accessTracking
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns access logs for authentication attempts made to Atlas database deployments.
 
 To view database access history, you must have either the Project Owner or Organization Owner role.
-For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

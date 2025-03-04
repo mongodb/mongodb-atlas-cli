@@ -15,7 +15,6 @@ atlas api streams
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns, adds, edits, and removes Streams Instances.
 
 This resource requires your project ID.
-For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

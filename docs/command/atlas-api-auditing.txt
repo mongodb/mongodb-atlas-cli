@@ -14,9 +14,6 @@ atlas api auditing
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns and edits database auditing settings for MongoDB Cloud projects.
 
-
-For more information and examples, see the referenced API documentation linked above.
-
 Options
 -------
 

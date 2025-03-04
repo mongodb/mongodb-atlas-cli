@@ -14,9 +14,6 @@ atlas api
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Interact directly with any Atlas Admin API endpoint through the Atlas CLI, streamlining script development.
 
-
-For more information and examples, see the referenced API documentation linked above.
-
 Options
 -------
 

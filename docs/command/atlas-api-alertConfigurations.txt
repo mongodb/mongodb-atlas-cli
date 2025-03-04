@@ -15,7 +15,6 @@ atlas api alertConfigurations
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns and edits the conditions that trigger alerts and how MongoDB Cloud notifies users.
 
 This collection remains under revision and may change.
-For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

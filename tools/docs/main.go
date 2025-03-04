@@ -70,22 +70,24 @@ func updateAPICommandDescription(cmd *cobra.Command) {
 		panic("api command not found!")
 	}
 
-	updateDescriptionRecursively(apiCommand)
+	updateLeafDescriptions(apiCommand)
 }
 
-func updateDescriptionRecursively(cmd *cobra.Command) {
-	lines := strings.Split(cmd.Long, "\n")
-	// Remove the last line which will always be "For more information and examples, see: <AtlasCLI docs url>"
-	if len(lines) > 1 {
-		lines = lines[:len(lines)-1]
+func updateLeafDescriptions(cmd *cobra.Command) {
+	if len(cmd.Commands()) == 0 {
+		lines := strings.Split(cmd.Long, "\n")
+		// Remove the last line which will always be "For more information and examples, see: <AtlasCLI docs url>"
+		if len(lines) > 1 {
+			lines = lines[:len(lines)-1]
+		}
+
+		newLine := "For more information and examples, see the referenced API documentation linked above."
+		lines = append(lines, newLine)
+		cmd.Long = strings.Join(lines, "\n")
 	}
 
-	newLine := "For more information and examples, see the referenced API documentation linked above."
-	lines = append(lines, newLine)
-	cmd.Long = strings.Join(lines, "\n")
-
 	for _, subCommand := range cmd.Commands() {
-		updateDescriptionRecursively(subCommand)
+		updateLeafDescriptions(subCommand)
 	}
 }
 

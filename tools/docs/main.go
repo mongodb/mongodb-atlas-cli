@@ -17,6 +17,7 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/mongodb-labs/cobra2snooty"
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
@@ -24,6 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
+
+const apiCommandName = "api"
 
 func setDisableAutoGenTag(cmd *cobra.Command) {
 	cmd.DisableAutoGenTag = true
@@ -35,7 +38,7 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 func addExperimenalToAPICommands(cmd *cobra.Command) {
 	var apiCommand *cobra.Command
 	for _, subCommand := range cmd.Commands() {
-		if subCommand.Use == "api" {
+		if subCommand.Use == apiCommandName {
 			apiCommand = subCommand
 		}
 	}
@@ -52,6 +55,39 @@ func markExperimentalRecursively(cmd *cobra.Command) {
 
 	for _, subCommand := range cmd.Commands() {
 		markExperimentalRecursively(subCommand)
+	}
+}
+
+func updateAPICommandDescription(cmd *cobra.Command) {
+	var apiCommand *cobra.Command
+	for _, subCommand := range cmd.Commands() {
+		if subCommand.Use == apiCommandName {
+			apiCommand = subCommand
+		}
+	}
+
+	if apiCommand == nil {
+		panic("api command not found!")
+	}
+
+	updateLeafDescriptions(apiCommand)
+}
+
+func updateLeafDescriptions(cmd *cobra.Command) {
+	if len(cmd.Commands()) == 0 {
+		lines := strings.Split(cmd.Long, "\n")
+		// Replace last line if it contains the extected text: "For more information and examples, see: <AtlasCLI docs url>"
+		if strings.HasPrefix(lines[len(lines)-1], "For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/") {
+			lines = lines[:len(lines)-1]
+			newLine := "For more information and examples, see the referenced API documentation linked above."
+			lines = append(lines, newLine)
+		}
+
+		cmd.Long = strings.Join(lines, "\n")
+	}
+
+	for _, subCommand := range cmd.Commands() {
+		updateLeafDescriptions(subCommand)
 	}
 }
 
@@ -77,6 +113,7 @@ func main() {
 
 	setDisableAutoGenTag(atlasBuilder)
 	addExperimenalToAPICommands(atlasBuilder)
+	updateAPICommandDescription(atlasBuilder)
 
 	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command"); err != nil {
 		log.Fatal(err)

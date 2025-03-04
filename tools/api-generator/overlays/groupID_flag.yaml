@@ -7,4 +7,5 @@ actions:
     update:
       x-xgen-atlascli:
         aliases: 
-          - projectId
+          - long: projectId
+            short: P

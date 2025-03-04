@@ -20,9 +20,9 @@ import (
 
 func TestExtractVersionAndContentType(t *testing.T) {
 	tests := []struct {
-		input       string
-		version     string
-		contentType string
+		input           string
+		wantVersion     string
+		wantContentType string
 	}{
 		{
 			"application/vnd.atlas.2025-01-01+json",
@@ -43,13 +43,15 @@ func TestExtractVersionAndContentType(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			version, contentType, err := extractVersionAndContentType(tt.input)
+			gotVersion, gotContentType, err := extractVersionAndContentType(tt.input)
 			if err != nil {
-				t.Errorf("Error = %v", err)
+				t.Fatalf("Error = %v", err)
 			}
-
-			if version != tt.version || contentType != tt.contentType {
-				t.Errorf("Expected version=%s, contentType=%s. Got: version=%s, contentType=%s", tt.version, tt.contentType, version, contentType)
+			if gotVersion != tt.wantVersion {
+				t.Errorf("Expected: %s. Got: %s", tt.wantVersion, gotVersion)
+			}
+			if gotContentType != tt.wantContentType {
+				t.Errorf("Expected: %s Got: %s,", tt.wantContentType, gotContentType)
 			}
 		})
 	}

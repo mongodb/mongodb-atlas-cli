@@ -386,7 +386,7 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.Version, isRequest bool, sunset *time.Time) error {
 	version, contentType, err := extractVersionAndContentType(versionedContentType)
 	if err != nil {
-		return fmt.Errorf("unsupported version '%s' error: %w", versionedContentType, err)
+		return fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
 	}
 
 	if _, ok := versionsMap[version]; !ok {

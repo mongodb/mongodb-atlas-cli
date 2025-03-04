@@ -47,11 +47,14 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						{
 							Name:        `pretty`,
 							Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
-							Short:       ``,
+							Short:       `p`,
 							Required:    false,
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `bool`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `beautiful`, Short: ``},
 							},
 						},
 					},
@@ -67,6 +70,11 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+								{Long: `gId`, Short: ``},
+								{Long: `extraProjectIdFlag`, Short: `e`},
 							},
 						},
 					},

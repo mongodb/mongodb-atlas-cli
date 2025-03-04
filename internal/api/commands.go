@@ -68,6 +68,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -126,6 +129,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -241,6 +247,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -361,6 +370,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `hostname`,
@@ -439,6 +451,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -500,6 +515,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -572,6 +590,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -720,6 +741,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -812,6 +836,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `alertId`,
@@ -887,6 +914,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `alertConfigId`,
@@ -961,6 +991,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -1040,6 +1073,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `alertId`,
@@ -1118,6 +1154,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -1231,6 +1270,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -1323,6 +1365,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `alertConfigId`,
@@ -1397,6 +1442,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -1492,6 +1540,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -1561,6 +1612,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -1629,6 +1683,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -1720,6 +1777,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -1798,6 +1858,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -1898,6 +1961,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -1977,6 +2043,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -2052,6 +2121,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -2131,6 +2203,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -2231,6 +2306,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -2309,6 +2387,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -2399,6 +2480,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -2467,6 +2551,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -2556,6 +2643,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -2651,6 +2741,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -2729,6 +2822,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -2829,6 +2925,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -2914,6 +3013,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -2972,6 +3074,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -3037,6 +3142,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -3106,6 +3214,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -3200,6 +3311,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -3268,6 +3382,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -3338,6 +3455,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -3396,6 +3516,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -3462,6 +3585,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -3531,6 +3657,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -3626,6 +3755,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -3705,6 +3837,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3770,6 +3905,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -3850,6 +3988,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -3929,6 +4070,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -4005,6 +4149,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4060,6 +4207,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -4137,6 +4287,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -4208,6 +4361,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -4291,6 +4447,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -4369,6 +4528,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -4479,6 +4641,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -4577,6 +4742,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -4677,6 +4845,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -4772,6 +4943,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -4875,6 +5049,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -4977,6 +5154,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -5045,6 +5225,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -5117,6 +5300,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -5207,6 +5393,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -5293,6 +5482,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -5368,6 +5560,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -5539,6 +5734,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5604,6 +5802,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -5720,6 +5921,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `liveMigrationId`,
@@ -5778,6 +5982,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -5904,6 +6111,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -5976,6 +6186,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `roleId`,
@@ -6045,6 +6258,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -6103,6 +6319,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -6183,6 +6402,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `roleId`,
@@ -6252,6 +6474,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -6316,6 +6541,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -6386,6 +6614,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -6454,6 +6685,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -6532,6 +6766,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -6644,6 +6881,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -6737,6 +6977,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -6820,6 +7063,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -6896,6 +7142,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -6954,6 +7203,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -7023,6 +7275,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -7143,6 +7398,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -7244,6 +7502,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -7383,6 +7644,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `name`,
@@ -7471,6 +7735,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -7540,6 +7807,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -7608,6 +7878,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -7685,6 +7958,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -7753,6 +8029,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -7862,6 +8141,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -7940,6 +8222,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -8035,6 +8320,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -8165,6 +8453,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `processId`,
@@ -8244,6 +8535,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8322,6 +8616,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -8422,6 +8719,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `processId`,
@@ -8481,6 +8781,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -8539,6 +8842,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -8600,6 +8906,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -8659,6 +8968,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -8735,6 +9047,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -8793,6 +9108,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -8863,6 +9181,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `roleName`,
@@ -8932,6 +9253,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -8990,6 +9314,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -9093,6 +9420,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -9162,6 +9492,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -9210,6 +9543,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -9298,6 +9634,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `endpointId`,
@@ -9367,6 +9706,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -9425,6 +9767,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -9513,6 +9858,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -9582,6 +9930,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `endpointId`,
@@ -9640,6 +9991,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -9740,6 +10094,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9809,6 +10166,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -9867,6 +10227,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -9955,6 +10318,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -10034,6 +10400,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -10098,6 +10467,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -10165,6 +10537,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -10249,6 +10624,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10328,6 +10706,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10396,6 +10777,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -10516,6 +10900,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10584,6 +10971,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -10694,6 +11084,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10753,6 +11146,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -10811,6 +11207,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -10881,6 +11280,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `pipelineName`,
@@ -10950,6 +11352,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `pipelineName`,
@@ -11008,6 +11413,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -11102,6 +11510,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -11160,6 +11571,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -11252,6 +11666,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -11375,6 +11792,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11433,6 +11853,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -11532,6 +11955,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11604,6 +12030,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -11662,6 +12091,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -11772,6 +12204,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11840,6 +12275,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -11922,6 +12360,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -12079,6 +12520,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -12454,6 +12898,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -13586,6 +14033,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -13663,6 +14113,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -13746,6 +14199,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -13846,6 +14302,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -13904,6 +14363,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -13992,6 +14454,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14056,6 +14521,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -14145,6 +14613,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -14255,6 +14726,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `name`,
@@ -14340,6 +14814,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -14388,6 +14865,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -14498,6 +14978,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `name`,
@@ -14573,6 +15056,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -14657,6 +15143,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -14739,6 +15228,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -14853,6 +15345,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14925,6 +15420,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -15538,6 +16036,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15597,6 +16098,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -15655,6 +16159,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -15728,6 +16235,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -15786,6 +16296,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -15871,6 +16384,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -15939,6 +16455,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -16018,6 +16537,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -16101,6 +16623,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -16179,6 +16704,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -16261,6 +16789,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -16360,6 +16891,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -16473,6 +17007,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -16582,6 +17119,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -16650,6 +17190,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -16733,6 +17276,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -16798,6 +17344,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -16857,6 +17406,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -16905,6 +17457,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -16955,6 +17510,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -17003,6 +17561,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -17144,6 +17705,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `userId`,
@@ -17222,6 +17786,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -17539,6 +18106,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `userId`,
@@ -17795,6 +18365,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `userId`,
@@ -18011,6 +18584,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `processId`,
@@ -18079,6 +18655,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -18208,6 +18787,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -18355,6 +18937,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `partitionName`,
@@ -18443,6 +19028,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -18600,6 +19188,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `processId`,
@@ -18749,6 +19340,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18858,6 +19452,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -18946,6 +19543,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -19036,6 +19636,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `processId`,
@@ -19104,6 +19707,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -19203,6 +19809,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -19343,6 +19952,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -19401,6 +20013,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -19468,6 +20083,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19527,6 +20145,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -19585,6 +20206,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -19655,6 +20279,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `containerId`,
@@ -19724,6 +20351,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -19782,6 +20412,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -19851,6 +20484,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -19961,6 +20597,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20060,6 +20699,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20149,6 +20791,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20207,6 +20852,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -20277,6 +20925,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `containerId`,
@@ -20346,6 +20997,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -20410,6 +21064,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -20502,6 +21159,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -20617,6 +21277,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -20685,6 +21348,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -20795,6 +21461,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -20863,6 +21532,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -22221,6 +22893,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -22279,6 +22954,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -22339,6 +23017,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -22397,6 +23078,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -22501,6 +23185,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -22549,6 +23236,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -22596,6 +23286,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -22720,6 +23413,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `processId`,
@@ -22822,6 +23518,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -22986,6 +23685,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `processId`,
@@ -23054,6 +23756,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -23129,6 +23834,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -23209,6 +23917,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -23287,6 +23998,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -23376,6 +24090,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -23471,6 +24188,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -23560,6 +24280,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `cloudProvider`,
@@ -23639,6 +24362,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -23697,6 +24423,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -23767,6 +24496,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -23831,6 +24563,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -24052,6 +24787,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -24608,6 +25346,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -24666,6 +25407,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -24832,6 +25576,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `apiUserId`,
@@ -24937,6 +25684,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -24995,6 +25745,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -25075,6 +25828,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `entryValue`,
@@ -25143,6 +25899,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -25243,6 +26002,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -25307,6 +26069,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -25423,6 +26188,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -25482,6 +26250,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25530,6 +26301,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -25627,6 +26401,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25685,6 +26462,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -25801,6 +26581,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `invitationId`,
@@ -25896,6 +26679,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -26006,6 +26792,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -26064,6 +26853,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -26134,6 +26926,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -26192,6 +26987,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -26301,6 +27099,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -26433,6 +27234,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -26491,6 +27295,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -26567,6 +27374,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -26657,6 +27467,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26715,6 +27528,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -26775,6 +27591,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26823,6 +27642,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -26893,6 +27715,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `userId`,
@@ -26962,6 +27787,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -27027,6 +27855,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -27085,6 +27916,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -27145,6 +27979,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -27203,6 +28040,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -27697,6 +28537,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -27861,6 +28704,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -27940,6 +28786,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -28026,6 +28875,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -28129,6 +28981,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -28190,6 +29045,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -28280,6 +29138,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `instanceName`,
@@ -28341,6 +29202,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -28414,6 +29278,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `instanceName`,
@@ -28486,6 +29353,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `instanceName`,
@@ -28547,6 +29417,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -28643,6 +29516,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -28701,6 +29577,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -28791,6 +29670,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clientId`,
@@ -28859,6 +29741,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -29157,6 +30042,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -29215,6 +30103,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -29314,6 +30205,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -29592,6 +30486,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clientId`,
@@ -29757,6 +30654,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clientId`,
@@ -29845,6 +30745,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -30173,6 +31076,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPatch,
@@ -30317,6 +31223,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30388,6 +31297,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -30471,6 +31383,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -30549,6 +31464,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30610,6 +31528,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -30693,6 +31614,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `clusterName`,
@@ -30757,6 +31681,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -30827,6 +31754,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -30885,6 +31815,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -30955,6 +31888,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -31014,6 +31950,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -31072,6 +32011,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -31142,6 +32084,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `connectionId`,
@@ -31210,6 +32155,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -31290,6 +32238,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -31359,6 +32310,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -31427,6 +32381,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -31507,6 +32464,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -31585,6 +32545,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -31665,6 +32628,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -31713,6 +32679,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -31772,6 +32741,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -31852,6 +32824,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -31920,6 +32895,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -32030,6 +33008,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -32109,6 +33090,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -32187,6 +33171,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -32277,6 +33264,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -32366,6 +33356,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -32434,6 +33427,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -32504,6 +33500,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `id`,
@@ -32572,6 +33571,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -32652,6 +33654,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -32730,6 +33735,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -32810,6 +33818,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `tenantName`,
@@ -32884,6 +33895,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -33380,6 +34394,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -33521,6 +34538,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -33733,6 +34753,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `teamId`,
@@ -33909,6 +34932,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPost,
@@ -33978,6 +35004,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodDelete,
@@ -34036,6 +35065,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{
@@ -34136,6 +35168,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodGet,
@@ -34235,6 +35270,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 					},
 					Verb: http.MethodPut,
@@ -34306,6 +35344,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
+							},
 						},
 						{
 							Name:        `username`,
@@ -34367,6 +35408,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 					},
@@ -34456,6 +35500,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							Type: ParameterType{
 								IsArray: false,
 								Type:    `string`,
+							},
+							Aliases: []ParameterAlias{
+								{Long: `projectId`, Short: ``},
 							},
 						},
 						{

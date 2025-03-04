@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const apiCmdName = "api"
+const apiCommandName = "api"
 
 func setDisableAutoGenTag(cmd *cobra.Command) {
 	cmd.DisableAutoGenTag = true
@@ -38,7 +38,7 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 func addExperimenalToAPICommands(cmd *cobra.Command) {
 	var apiCommand *cobra.Command
 	for _, subCommand := range cmd.Commands() {
-		if subCommand.Use == apiCmdName {
+		if subCommand.Use == apiCommandName {
 			apiCommand = subCommand
 		}
 	}
@@ -61,7 +61,7 @@ func markExperimentalRecursively(cmd *cobra.Command) {
 func updateAPICommandDescription(cmd *cobra.Command) {
 	var apiCommand *cobra.Command
 	for _, subCommand := range cmd.Commands() {
-		if subCommand.Use == apiCmdName {
+		if subCommand.Use == apiCommandName {
 			apiCommand = subCommand
 		}
 	}

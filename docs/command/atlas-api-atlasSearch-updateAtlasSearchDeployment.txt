@@ -50,7 +50,7 @@ Options
    * - --file
      - string
      - false
-     - path to the file which contains the api request contents
+     - path to the file which contains the api request contents, alternatively you may pass standard input
    * - --groupId
      - string
      - true

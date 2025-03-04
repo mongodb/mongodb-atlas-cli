@@ -61,7 +61,6 @@ var Commands = GroupedAndSortedCommands{
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodPost,

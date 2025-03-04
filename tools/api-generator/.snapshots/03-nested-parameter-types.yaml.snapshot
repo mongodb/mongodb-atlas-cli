@@ -97,7 +97,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `clusterName`,
@@ -108,7 +107,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `clusterView`,
@@ -119,7 +117,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `databaseName`,
@@ -130,7 +127,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 						{
 							Name:        `collectionName`,
@@ -141,7 +137,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []string{},
 						},
 					},
 					Verb: http.MethodGet,

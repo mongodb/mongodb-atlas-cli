@@ -15,6 +15,7 @@ atlas api rollingIndex
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one index to a database deployment in a rolling manner.
 
 You can't create a rolling index on an M0 free cluster or M2/M5 shared cluster.
+For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

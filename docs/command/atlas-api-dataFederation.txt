@@ -15,6 +15,7 @@ atlas api dataFederation
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns, adds, edits, and removes Federated Database Instances.
 
 This resource requires your project ID. Changes to federated database instance configurations can affect costs.
+For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

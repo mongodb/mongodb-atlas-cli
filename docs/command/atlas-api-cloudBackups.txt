@@ -15,6 +15,7 @@ atlas api cloudBackups
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Manages Cloud Backup snapshots, snapshot export buckets, restore jobs, and schedules.
 
 This resource applies only to clusters that use Cloud Backups.
+For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

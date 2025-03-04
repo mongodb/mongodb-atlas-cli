@@ -14,6 +14,9 @@ atlas api databaseUsers
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns, adds, edits, and removes database users.
 
+
+For more information and examples, see the referenced API documentation linked above.
+
 Options
 -------
 

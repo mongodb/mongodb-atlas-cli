@@ -14,6 +14,9 @@ atlas api federatedAuthentication
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns, adds, edits, and removes federation-related features such as role mappings and connected organization configurations.
 
+
+For more information and examples, see the referenced API documentation linked above.
+
 Options
 -------
 

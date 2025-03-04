@@ -15,6 +15,7 @@ atlas api atlasSearch
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns, adds, edits, and removes Atlas Search indexes for the specified cluster.
 
 Also returns and updates user-defined analyzers for the specified cluster.
+For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

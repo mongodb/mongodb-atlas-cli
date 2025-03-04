@@ -15,6 +15,7 @@ atlas api serverlessPrivateEndpoints
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns, adds, edits, and removes private endpoints for serverless instances.
 
 To learn more, see the Atlas Administration API tab on the following tutorial.
+For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

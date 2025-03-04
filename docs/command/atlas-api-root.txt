@@ -15,6 +15,7 @@ atlas api root
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns details that describe the MongoDB Cloud build and the access token that requests this resource.
 
 This starts the MongoDB Cloud API.
+For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

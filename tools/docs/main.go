@@ -17,6 +17,7 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/mongodb-labs/cobra2snooty"
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
@@ -24,6 +25,8 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
+
+const apiCmdName = "api"
 
 func setDisableAutoGenTag(cmd *cobra.Command) {
 	cmd.DisableAutoGenTag = true
@@ -35,7 +38,7 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 func addExperimenalToAPICommands(cmd *cobra.Command) {
 	var apiCommand *cobra.Command
 	for _, subCommand := range cmd.Commands() {
-		if subCommand.Use == "api" {
+		if subCommand.Use == apiCmdName {
 			apiCommand = subCommand
 		}
 	}
@@ -52,6 +55,37 @@ func markExperimentalRecursively(cmd *cobra.Command) {
 
 	for _, subCommand := range cmd.Commands() {
 		markExperimentalRecursively(subCommand)
+	}
+}
+
+func updateAPICommandDescription(cmd *cobra.Command) {
+	var apiCommand *cobra.Command
+	for _, subCommand := range cmd.Commands() {
+		if subCommand.Use == apiCmdName {
+			apiCommand = subCommand
+		}
+	}
+
+	if apiCommand == nil {
+		panic("api command not found!")
+	}
+
+	updateDescriptionRecursively(apiCommand)
+}
+
+func updateDescriptionRecursively(cmd *cobra.Command) {
+	lines := strings.Split(cmd.Long, "\n")
+	// Remove the last line which will always be "For more information and examples, see: <AtlasCLI docs url>"
+	if len(lines) > 1 {
+		lines = lines[:len(lines)-1]
+	}
+
+	newLine := "For more information and examples, see the referenced API documentation linked above."
+	lines = append(lines, newLine)
+	cmd.Long = strings.Join(lines, "\n")
+
+	for _, subCommand := range cmd.Commands() {
+		updateDescriptionRecursively(subCommand)
 	}
 }
 
@@ -77,6 +111,7 @@ func main() {
 
 	setDisableAutoGenTag(atlasBuilder)
 	addExperimenalToAPICommands(atlasBuilder)
+	updateAPICommandDescription(atlasBuilder)
 
 	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command"); err != nil {
 		log.Fatal(err)

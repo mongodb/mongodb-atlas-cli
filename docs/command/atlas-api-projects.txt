@@ -14,6 +14,9 @@ atlas api projects
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns, adds, and edits collections of clusters and users in MongoDB Cloud.
 
+
+For more information and examples, see the referenced API documentation linked above.
+
 Options
 -------
 

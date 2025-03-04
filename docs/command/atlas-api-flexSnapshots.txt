@@ -14,6 +14,9 @@ atlas api flexSnapshots
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns and requests to download flex database deployment snapshots.
 
+
+For more information and examples, see the referenced API documentation linked above.
+
 Options
 -------
 

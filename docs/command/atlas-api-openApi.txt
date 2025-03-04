@@ -14,6 +14,9 @@ atlas api openApi
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns information about the MongoDB Atlas Specification.
 
+
+For more information and examples, see the referenced API documentation linked above.
+
 Options
 -------
 

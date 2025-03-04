@@ -14,6 +14,9 @@ atlas api resourcePolicies
 
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Configure and manage Atlas Resource Policies within your organization.
 
+
+For more information and examples, see the referenced API documentation linked above.
+
 Options
 -------
 

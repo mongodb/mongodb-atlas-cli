@@ -17,7 +17,7 @@ atlas api thirdPartyIntegrations
 MongoDB Cloud sends alerts to each third-party service that you configure.
 
 
-IMPORTANT: Each project can only have one configuration per integrationType.
+For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

@@ -15,6 +15,7 @@ atlas api cloudMigrationService
 `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Manages the Cloud Migration Service.
 
 Source organizations, projects, and MongoDB clusters reside on Cloud Manager or Ops Manager. Destination organizations, projects, and MongoDB clusters reside on MongoDB Cloud. Source databases can't use any authentication except SCRAM-SHA.
+For more information and examples, see the referenced API documentation linked above.
 
 Options
 -------

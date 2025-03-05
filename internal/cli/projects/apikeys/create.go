@@ -90,7 +90,7 @@ func CreateBuilder() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.ProjectAPIKeyRoles)
+	cmd.Flags().StringSliceVar(&opts.roles, flag.Role, []string{}, usage.CreateProjectAPIKeyRoles)
 	cmd.Flags().StringVar(&opts.description, flag.Description, "", usage.APIKeyDescription)
 
 	opts.AddProjectOptsFlags(cmd)

@@ -46,7 +46,7 @@ Options
    * - --file
      - string
      - false
-     - path to the file which contains the api request contents
+     - path to your API request file. Leave empty to use standard input instead - you must provide one or the other, but not both.
    * - -h, --help
      - 
      - false

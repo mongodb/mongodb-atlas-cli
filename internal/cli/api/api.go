@@ -253,7 +253,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	addVersionFlag(cmd, command, &version)
 
 	if needsFileFlag(command) {
-		cmd.Flags().StringVar(&file, flag.File, "", "path to the file which contains the api request contents")
+		cmd.Flags().StringVar(&file, flag.File, "", "path to your API request file. Leave empty to use standard input instead - you must provide one or the other, but not both.")
 	}
 
 	// Add output flags:

@@ -49,7 +49,14 @@ type Version struct {
 	Version              string
 	Sunset               *time.Time
 	RequestContentType   string
+	RequestBodyExamples  []RequestBodyExample
 	ResponseContentTypes []string
+}
+
+type RequestBodyExample struct {
+	Name        string
+	Description string
+	Value       string
 }
 
 type Parameter struct {
@@ -59,6 +66,7 @@ type Parameter struct {
 	Description string
 	Required    bool
 	Type        ParameterType
+	Example     string
 }
 
 type ParameterType struct {

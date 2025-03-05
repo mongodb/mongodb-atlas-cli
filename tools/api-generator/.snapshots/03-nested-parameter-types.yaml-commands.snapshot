@@ -44,6 +44,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `metrics`,
@@ -54,6 +55,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `start`,
@@ -64,6 +66,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -74,6 +77,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `period`,
@@ -84,6 +88,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Example: `PT10H`,
 						},
 					},
 					URLParameters: []Parameter{
@@ -99,6 +104,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 						{
 							Name:        `clusterName`,
@@ -109,6 +115,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `clusterView`,
@@ -119,6 +126,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `databaseName`,
@@ -129,6 +137,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Example: `mydb`,
 						},
 						{
 							Name:        `collectionName`,
@@ -139,6 +148,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Example: `mycoll`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -150,6 +160,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},

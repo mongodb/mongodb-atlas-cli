@@ -44,6 +44,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -54,6 +55,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -64,6 +66,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -74,6 +77,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -84,6 +88,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Example: ``,
 						},
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
@@ -94,6 +99,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -109,6 +115,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -120,6 +127,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -127,6 +135,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -134,6 +143,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
+						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},

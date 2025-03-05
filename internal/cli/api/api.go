@@ -326,15 +326,18 @@ func handleInput(cmd *cobra.Command) (io.ReadCloser, error) {
 		return nil, err
 	}
 
-	if isPiped {
-		// Use stdin as the input
-		return nil, nil
-	}
-
 	// If not piped, get the file flag
 	filePath, err := cmd.Flags().GetString(flag.File)
 	if err != nil {
 		return nil, fmt.Errorf("error getting file flag: %w", err)
+	}
+
+	if isPiped {
+		if filePath != "" {
+			return nil, errors.New("cannot use --file flag and also input from standard input")
+		}
+		// Use stdin as the input
+		return nil, nil
 	}
 
 	// Require file flag if not piped

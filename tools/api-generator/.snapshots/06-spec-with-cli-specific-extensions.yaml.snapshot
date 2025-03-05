@@ -54,9 +54,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Aliases: []ParameterAlias{
-								{Long: `beautiful`, Short: ``},
-							},
+							Aliases: []string{`beautiful`},
 						},
 					},
 					URLParameters: []Parameter{
@@ -72,11 +70,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Aliases: []ParameterAlias{
-								{Long: `projectId`, Short: ``},
-								{Long: `gId`, Short: ``},
-								{Long: `extraProjectIdFlag`, Short: `e`},
-							},
+							Aliases: []string{`projectId`, `gId`, `extraProjectIdFlag`},
 						},
 					},
 					Verb: http.MethodPost,

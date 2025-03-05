@@ -273,7 +273,29 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 		return nil, err
 	}
 
+	// Handle parameter aliases
+	cmd.Flags().SetNormalizeFunc(normalizeFlagFunc(command))
+
 	return cmd, nil
+}
+
+func normalizeFlagFunc(command api.Command) func(f *pflag.FlagSet, name string) pflag.NormalizedName {
+	return func(_ *pflag.FlagSet, name string) pflag.NormalizedName {
+		name = normalizeFlagName(command.RequestParameters.QueryParameters, name)
+		name = normalizeFlagName(command.RequestParameters.URLParameters, name)
+
+		return pflag.NormalizedName(name)
+	}
+}
+
+func normalizeFlagName(parameters []api.Parameter, name string) string {
+	for _, parameter := range parameters {
+		if slices.Contains(parameter.Aliases, name) {
+			return parameter.Name
+		}
+	}
+
+	return name
 }
 
 func addParameters(cmd *cobra.Command, parameters []api.Parameter) error {
@@ -337,7 +359,7 @@ func handleInput(cmd *cobra.Command) (io.ReadCloser, error) {
 			return nil, errors.New("cannot use --file flag and also input from standard input")
 		}
 		// Use stdin as the input
-		return nil, nil
+		return os.Stdin, nil
 	}
 
 	// Require file flag if not piped

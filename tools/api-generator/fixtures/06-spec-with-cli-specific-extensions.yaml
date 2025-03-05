@@ -306,8 +306,7 @@ components:
       required: true
       x-xgen-atlascli:
         aliases: 
-          - long: extraProjectIdFlag
-            short: e
+          - extraProjectIdFlag
       schema:
         example: 32b6e34b3d91647abb20e7b8
         maxLength: 24

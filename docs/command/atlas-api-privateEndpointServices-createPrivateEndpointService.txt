@@ -48,7 +48,7 @@ Options
    * - --file
      - string
      - false
-     - path to the file which contains the api request contents, alternatively you may pass standard input
+     - path to your API request file. Leave empty to use standard input instead - you must provide one or the other, but not both.
    * - --groupId
      - string
      - true

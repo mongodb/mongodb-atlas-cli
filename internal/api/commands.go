@@ -12302,32 +12302,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 						RequestBodyExamples: []RequestBodyExample{
 							{
-								Name:        "X509 Authentication",
-								Description: "X509 Authentication",
-								Value: `{
-  "databaseName": "$external",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "CN=david@example.com,OU=users,DC=example,DC=com",
-  "x509Type": "CUSTOMER"
-}`,
-							},
-							{
 								Name:        "AWS IAM Authentication",
 								Description: "AWS IAM Authentication",
 								Value: `{
@@ -12455,6 +12429,32 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
     }
   ],
   "username": "david"
+}`,
+							},
+							{
+								Name:        "X509 Authentication",
+								Description: "X509 Authentication",
+								Value: `{
+  "databaseName": "$external",
+  "groupId": "32b6e34b3d91647abb20e7b8",
+  "roles": [
+    {
+      "databaseName": "sales",
+      "roleName": "readWrite"
+    },
+    {
+      "databaseName": "marketing",
+      "roleName": "read"
+    }
+  ],
+  "scopes": [
+    {
+      "name": "myCluster",
+      "type": "CLUSTER"
+    }
+  ],
+  "username": "CN=david@example.com,OU=users,DC=example,DC=com",
+  "x509Type": "CUSTOMER"
 }`,
 							},
 						},

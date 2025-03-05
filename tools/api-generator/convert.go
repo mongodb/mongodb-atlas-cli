@@ -498,6 +498,9 @@ func sortVersions(versionsMap map[string]*api.Version) []api.Version {
 		sort.Slice(version.ResponseContentTypes, func(i, j int) bool {
 			return version.ResponseContentTypes[i] < version.ResponseContentTypes[j]
 		})
+		sort.Slice(version.RequestBodyExamples, func(i, j int) bool {
+			return version.RequestBodyExamples[i].Name < version.RequestBodyExamples[j].Name
+		})
 
 		versions = append(versions, *version)
 	}

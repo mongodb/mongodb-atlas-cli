@@ -13,7 +13,7 @@ jobs:
       - name: set jira key (branch name)
         if: ${{ startsWith(github.event.pull_request.head.ref, 'CLOUDP') }}
         env:
-          REF: github.event.pull_request.head.ref
+          REF: ${{ github.event.pull_request.head.ref }}
         run: echo "JIRA_KEY=$REF" >> "$GITHUB_ENV"
       - name: set jira key (comment)
         if: ${{ !startsWith(github.event.pull_request.head.ref, 'CLOUDP') }}

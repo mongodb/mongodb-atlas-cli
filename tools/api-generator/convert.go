@@ -15,6 +15,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -25,6 +26,7 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/iancoleman/strcase"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
 var (
@@ -242,10 +244,14 @@ func extractOverrides(ext map[string]any) map[string]any {
 	return nil
 }
 
-func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (string, string) {
+func extractParametersNameDescriptionExample(parameterRef *openapi3.ParameterRef) (string, string, string) {
 	parameter := parameterRef.Value
 	parameterName := parameter.Name
 	parameterDescription := parameter.Description
+	parameterExample, ok := parameter.Schema.Value.Example.(string)
+	if !ok {
+		parameterExample = ""
+	}
 
 	if overrides := extractOverrides(parameterRef.Extensions); overrides != nil {
 		if overriddenDescription, ok := overrides["description"].(string); ok && overriddenDescription != "" {
@@ -263,7 +269,7 @@ func extractParametersNameDescription(parameterRef *openapi3.ParameterRef) (stri
 		}
 	}
 
-	return parameterName, parameterDescription
+	return parameterName, parameterDescription, parameterExample
 }
 
 type parameterExtensions struct {
@@ -315,7 +321,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 
 	for _, parameterRef := range parameters {
 		parameter := parameterRef.Value
-		parameterName, parameterDescription := extractParametersNameDescription(parameterRef)
+		parameterName, parameterDescription, parameterExample := extractParametersNameDescriptionExample(parameterRef)
 
 		parameterExtensions := extractParameterExtensions(parameterRef)
 		aliases := parameterExtensions.aliases
@@ -343,6 +349,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 			Description: description,
 			Required:    parameter.Required,
 			Type:        *parameterType,
+			Example:     parameterExample,
 			Aliases:     aliases,
 		}
 
@@ -399,7 +406,7 @@ func processResponses(responses *openapi3.Responses, versionsMap map[string]*api
 		}
 
 		for versionedContentType, mediaType := range responses.Value.Content {
-			if err := addContentTypeToVersion(versionedContentType, versionsMap, false, extractSunsetDate(mediaType.Extensions)); err != nil {
+			if err := addContentTypeToVersion(versionedContentType, versionsMap, false, extractSunsetDate(mediaType.Extensions), []api.RequestBodyExample{}); err != nil {
 				return err
 			}
 		}
@@ -414,15 +421,42 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 	}
 
 	for versionedContentType, mediaType := range requestBody.Value.Content {
-		if err := addContentTypeToVersion(versionedContentType, versionsMap, true, extractSunsetDate(mediaType.Extensions)); err != nil {
+		if err := addContentTypeToVersion(versionedContentType, versionsMap, true, extractSunsetDate(mediaType.Extensions), extractRequestBodyExamples(mediaType.Examples)); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
+func extractRequestBodyExamples(examples openapi3.Examples) []api.RequestBodyExample {
+	results := make([]api.RequestBodyExample, 0, len(examples))
+
+	for name, exampleRef := range examples {
+		if exampleRef != nil {
+			result := api.RequestBodyExample{
+				Name:        name,
+				Description: exampleRef.Value.Description,
+				Value:       toJSONString(exampleRef.Value.Value.(map[string]any)),
+			}
+
+			results = append(results, result)
+		}
+	}
+
+	return results
+}
+
+func toJSONString(data any) string {
+	jsonData, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		_, _ = log.Warningln("Unable to convert to JSON string")
+		return ""
+	}
+	return string(jsonData)
+}
+
 // Helper function to add content type to version map.
-func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.Version, isRequest bool, sunset *time.Time) error {
+func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.Version, isRequest bool, sunset *time.Time, examples []api.RequestBodyExample) error {
 	version, contentType, err := extractVersionAndContentType(versionedContentType)
 	if err != nil {
 		return fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
@@ -448,6 +482,7 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 		}
 
 		versionsMap[version].RequestContentType = contentType
+		versionsMap[version].RequestBodyExamples = examples
 	} else {
 		versionsMap[version].ResponseContentTypes = append(versionsMap[version].ResponseContentTypes, contentType)
 	}

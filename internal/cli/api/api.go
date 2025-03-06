@@ -16,6 +16,7 @@ package api
 
 import (
 	"bytes"
+	_ "embed"
 	"errors"
 	"fmt"
 	"io"
@@ -67,10 +68,21 @@ func Builder() *cobra.Command {
 	return apiCmd
 }
 
+//go:embed api_docs_long_text.txt
+var APIDocsAdditionalLongText string
+
 func createRootAPICommand() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "api",
-		Short: "Interact directly with any Atlas Admin API endpoint through the Atlas CLI, streamlining script development.",
+		Short: "experimental: Access all features of the atlas-admin-apiby using the atlas-cli with the syntax: 'atlas api <tag> <operationId>'.",
+		Long: `This experimental feature streamlines script development by letting you interact directly with any atlas-admin-api endpoint by using the atlas-cli.
+
+For more information on
+- Atlas Admin Api see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/
+- Getting started with the Atlas Admin Api: https://www.mongodb.com/docs/atlas/configure-api-access/#std-label-atlas-admin-api-access`,
+		Annotations: map[string]string{
+			"DocsAdditionalLongText": APIDocsAdditionalLongText,
+		},
 	}
 
 	rootCmd.SetHelpTemplate(cli.ExperimentalHelpTemplate)

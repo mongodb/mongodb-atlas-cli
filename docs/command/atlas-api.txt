@@ -111,7 +111,7 @@ In addition, the following options are available for all Atlas Administration AP
    * - ``--api-version``  
      - string  
      - false  
-     - Specify the :ref:`version <api-versioning-overview>` of the {+atlas-admin-api+} 
+     - Specify the version of the Atlas Administration API 
        for the command. Defaults to the latest API version or the value you've configured for ``api_version`` in your profile. 
    * - ``--out``  
      - string  

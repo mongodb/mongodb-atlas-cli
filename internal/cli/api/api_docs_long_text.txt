@@ -51,7 +51,7 @@ Arguments
 
 
 Subcommand options  
--------  
+----------------------  
 
 Pass in the path and query parameters for the {+atlas-admin-api+} endpoint 
 as flags. For example, if the endpoint is ``/api/atlas/v2/orgs/{orgId}/invoices/{invoiceId}``, 

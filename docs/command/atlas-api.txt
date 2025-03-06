@@ -63,7 +63,7 @@ Arguments
    * - <operationId>
      - string
      - true
-     - The identifier of the {+atlas-admin-api+} endpoint in :wikipedia:`camelCase <Camel_case>`. 
+     - The identifier of the Atlas Administration API endpoint in camelCase. 
        To find the operationId, check the 
        `API documentation <https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/>`__ 
        |url| for the endpoint. It appears after ``operation/``. 

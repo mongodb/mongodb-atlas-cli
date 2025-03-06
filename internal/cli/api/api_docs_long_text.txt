@@ -1,5 +1,5 @@
 This experimental feature streamlines script development by letting you interact 
-directly with any {+atlas-admin-api+} endpoint by using the {+atlas-cli+}.
+directly with any Atlas Administration API endpoint by using the Atlas CLI.
 
 To learn more about working with the {+atlas-admin-api+}, see :ref:`atlas-admin-api-access`.
 

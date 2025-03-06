@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 	"text/template"
 	"time"
 
@@ -56,11 +57,9 @@ func extractParameterExamples(parameters openapi3.Parameters) map[string]string 
 
 	for _, parameterRef := range parameters {
 		parameterExample, ok := parameterRef.Value.Schema.Value.Example.(string)
-		if !ok {
-			continue
+		if ok {
+			result[parameterRef.Value.Name] = parameterExample
 		}
-
-		result[parameterRef.Value.Name] = parameterExample
 	}
 
 	return result
@@ -69,13 +68,13 @@ func extractParameterExamples(parameters openapi3.Parameters) map[string]string 
 // For each verion of an operation, the version and examples are extracted.
 // A map of version:[]examples is returned.
 func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[string][]api.RequestBodyExample, error) {
-	examples := make([]api.RequestBodyExample, 0)
 	results := make(map[string][]api.RequestBodyExample, 0)
 	if requestBody == nil {
 		return nil, nil
 	}
 
 	for versionedContentType, mediaType := range requestBody.Value.Content {
+		examples := make([]api.RequestBodyExample, 0)
 		version, _, err := extractVersionAndContentType(versionedContentType)
 		if err != nil {
 			return nil, fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
@@ -115,7 +114,12 @@ func toJSONString(data any) string {
 }
 
 func exportExamples(examplesMap map[string]*api.Examples) error {
-	file, err := os.Create("./internal/api/examples.go")
+	path := "internal/api/examples.go"
+	if dir, _ := os.Getwd(); strings.HasSuffix(dir, "tools/api-generator") {
+		path = "../../internal/api/examples.go"
+	}
+
+	file, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("failed to create file: %w", err)
 	}

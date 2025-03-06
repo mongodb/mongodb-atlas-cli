@@ -44,7 +44,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -55,7 +54,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -71,7 +69,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -83,7 +80,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -91,119 +87,12 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
-						},
-						RequestBodyExamples: []RequestBodyExample{
-							{
-								Name:        "Cluster",
-								Description: "Cluster",
-								Value: `{
-  "clusterType": "SHARDED",
-  "name": "myCluster",
-  "replicationSpecs": [
-    {
-      "regionConfigs": [
-        {
-          "analyticsAutoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": false
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "analyticsSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M30",
-            "nodeCount": 0
-          },
-          "autoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": false
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "electableSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M30",
-            "nodeCount": 3
-          },
-          "priority": 7,
-          "providerName": "AWS",
-          "readOnlySpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M30",
-            "nodeCount": 0
-          },
-          "regionName": "US_EAST_1"
-        }
-      ],
-      "zoneName": "Zone 1"
-    },
-    {
-      "regionConfigs": [
-        {
-          "analyticsAutoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": false
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "analyticsSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M10",
-            "nodeCount": 0
-          },
-          "autoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": false
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "electableSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M10",
-            "nodeCount": 3
-          },
-          "priority": 7,
-          "providerName": "AWS",
-          "readOnlySpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M10",
-            "nodeCount": 0
-          },
-          "regionName": "US_EAST_1"
-        }
-      ],
-      "zoneName": "Zone 1"
-    }
-  ]
-}`,
-							},
 						},
 					},
 					{
@@ -212,7 +101,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -258,7 +146,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -269,7 +156,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -285,7 +171,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 						{
 							Name:        `clusterName`,
@@ -296,7 +181,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -308,7 +192,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -316,7 +199,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -324,7 +206,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},

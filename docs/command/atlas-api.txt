@@ -35,7 +35,7 @@ Syntax
 
 .. important::
    
-   Both ``<tag>`` and ``<operationId>`` must be in :wikipedia:`camelCase <Camel_case>`.
+   Both ``<tag>`` and ``<operationId>`` must be in camelCase.
 
 Arguments  
 ---------  

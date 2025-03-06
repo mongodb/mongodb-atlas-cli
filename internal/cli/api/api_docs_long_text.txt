@@ -53,9 +53,9 @@ Arguments
 Subcommand options  
 ----------------------  
 
-Pass in the path and query parameters for the {+atlas-admin-api+} endpoint 
+Pass in the path and query parameters for the Atlas Administration API endpoint 
 as flags. For example, if the endpoint is ``/api/atlas/v2/orgs/{orgId}/invoices/{invoiceId}``, 
-the {+atlas-cli+} command is:
+the Atlas CLI command is:
 
 .. code-block:: shell
 

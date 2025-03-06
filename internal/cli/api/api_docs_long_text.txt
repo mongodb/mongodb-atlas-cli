@@ -74,7 +74,7 @@ For example:
 
    atlas api clusters create --file cluster-config.json
 
-In addition, the following options are available for all {+atlas-admin-api+} endpoints.
+In addition, the following options are available for all Atlas Administration API endpoints.
 
 .. list-table::  
    :header-rows: 1  

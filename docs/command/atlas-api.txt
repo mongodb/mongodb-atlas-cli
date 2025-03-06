@@ -65,8 +65,9 @@ Arguments
      - true
      - The identifier of the Atlas Administration API endpoint in camelCase. 
        To find the operationId, check the 
-       `API documentation <https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/>`__ 
-       |url| for the endpoint. It appears after ``operation/``. 
+       API documentation
+       URL for the endpoint. It appears after ``operation/``. For the Atlas API 
+       documentation, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.
        
        For example, in 
        ``https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/listClusters``, 

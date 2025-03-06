@@ -1,7 +1,7 @@
 This experimental feature streamlines script development by letting you interact 
 directly with any Atlas Administration API endpoint by using the Atlas CLI.
 
-To learn more about working with the {+atlas-admin-api+}, see :ref:`atlas-admin-api-access`.
+To learn more about working with the Atlas Administration API, see: https://www.mongodb.com/docs/atlas/api/atlas-admin-api/.
 
 Syntax
 ------

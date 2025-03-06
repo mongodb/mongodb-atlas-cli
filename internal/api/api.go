@@ -49,14 +49,7 @@ type Version struct {
 	Version              string
 	Sunset               *time.Time
 	RequestContentType   string
-	RequestBodyExamples  []RequestBodyExample
 	ResponseContentTypes []string
-}
-
-type RequestBodyExample struct {
-	Name        string
-	Description string
-	Value       string
 }
 
 type Parameter struct {
@@ -122,4 +115,15 @@ type WatcherExpectProperties struct {
 type WatcherMatchProperties struct {
 	Path   string
 	Values []string
+}
+
+type Examples struct {
+	ParameterExample    map[string]string               // parameterName: parameterExample
+	RequestBodyExamples map[string][]RequestBodyExample // version: []RequestBodyExample
+}
+
+type RequestBodyExample struct {
+	Name        string
+	Description string
+	Value       string
 }

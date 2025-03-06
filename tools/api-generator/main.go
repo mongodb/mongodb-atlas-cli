@@ -50,6 +50,9 @@ func AllOutputTypes() []OutputType {
 	return []OutputType{Commands, Metadata}
 }
 
+//go:embed examples.go.tmpl
+var examplesTemplateContent string
+
 func main() {
 	var (
 		specPath      string

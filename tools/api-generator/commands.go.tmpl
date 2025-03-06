@@ -45,7 +45,6 @@ var Commands = GroupedAndSortedCommands{
 								IsArray:	{{ .Type.IsArray }},
 								Type:		`{{ .Type.Type }}`,
 							},
-							Example: `{{ .Example }}`,
 							{{if .Aliases }} Aliases: []string{ {{ range $i, $alias := .Aliases }}{{if $i}},{{end}}`{{ $alias }}`{{end}} }, {{end}}
 						},
 					{{- end }}
@@ -61,7 +60,6 @@ var Commands = GroupedAndSortedCommands{
 								IsArray:	{{ .Type.IsArray }},
 								Type:		`{{ .Type.Type }}`,
 							},
-							Example: `{{ .Example }}`,
 							{{if .Aliases }} Aliases: []string{ {{ range $i, $alias := .Aliases }}{{if $i}},{{end}}`{{ $alias }}`{{end}} }, {{end}}
 						},
 					{{- end }}
@@ -76,15 +74,6 @@ var Commands = GroupedAndSortedCommands{
 						ResponseContentTypes: []string{
 						{{- range .ResponseContentTypes }}
 							`{{ . }}`,
-						{{- end }}
-						},
-						RequestBodyExamples: []RequestBodyExample{
-						{{- range .RequestBodyExamples }}
-						{
-							Name:        "{{ .Name }}",
-							Description: "{{ .Description }}",
-							Value: `{{ .Value }}`,
-						},
 						{{- end }}
 						},
 					},

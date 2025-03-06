@@ -44,7 +44,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -55,7 +54,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -71,7 +69,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -84,7 +81,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -108,7 +104,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -119,7 +114,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -135,7 +129,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -148,7 +141,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -178,7 +170,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -189,7 +180,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `authResult`,
@@ -200,7 +190,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -211,7 +200,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `ipAddress`,
@@ -222,7 +210,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `nLogs`,
@@ -233,7 +220,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `start`,
@@ -244,7 +230,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -260,7 +245,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -272,7 +256,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -284,7 +267,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -308,7 +290,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -319,7 +300,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `authResult`,
@@ -330,7 +310,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -341,7 +320,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `ipAddress`,
@@ -352,7 +330,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `nLogs`,
@@ -363,7 +340,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `start`,
@@ -374,7 +350,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -390,7 +365,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -402,7 +376,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -414,7 +387,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -447,7 +419,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -458,7 +429,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -474,7 +444,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -487,7 +456,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -514,7 +482,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -525,7 +492,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -541,7 +507,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -553,7 +518,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -565,7 +529,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -592,7 +555,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -603,7 +565,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -619,7 +580,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -631,7 +591,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -643,7 +602,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -667,7 +625,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -678,7 +635,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -691,7 +647,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -718,7 +673,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -729,7 +683,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -740,7 +693,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -751,7 +703,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -762,7 +713,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -778,7 +728,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -791,7 +740,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -818,7 +766,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -829,7 +776,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -840,7 +786,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -851,7 +796,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -862,7 +806,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -878,7 +821,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -890,7 +832,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -902,7 +843,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -932,7 +872,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -943,7 +882,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -959,7 +897,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -971,7 +908,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -983,7 +919,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -1013,7 +948,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1024,7 +958,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1040,7 +973,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1052,7 +984,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodPut,
@@ -1064,7 +995,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -1097,7 +1027,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1108,7 +1037,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1124,7 +1052,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1136,7 +1063,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -1148,7 +1074,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-05-30`,
@@ -1156,7 +1081,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -1183,7 +1107,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1194,7 +1117,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1210,7 +1132,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1222,7 +1143,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -1234,7 +1154,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -1261,7 +1180,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -1272,7 +1190,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -1283,7 +1200,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -1294,7 +1210,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1305,7 +1220,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `status`,
@@ -1316,7 +1230,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1332,7 +1245,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -1345,7 +1257,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -1372,7 +1283,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -1383,7 +1293,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -1394,7 +1303,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -1405,7 +1313,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1416,7 +1323,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1432,7 +1338,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1444,7 +1349,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -1456,7 +1360,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -1486,7 +1389,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1497,7 +1399,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1513,7 +1414,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1525,7 +1425,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -1537,7 +1436,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-05-30`,
@@ -1545,7 +1443,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -1587,7 +1484,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1598,7 +1494,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1614,7 +1509,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1626,7 +1520,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -1638,7 +1531,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -1662,7 +1554,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1673,7 +1564,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1689,7 +1579,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1701,7 +1590,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -1713,7 +1601,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -1737,7 +1624,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1748,7 +1634,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1764,7 +1649,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1776,7 +1660,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1788,7 +1671,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-05-30`,
@@ -1796,7 +1678,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -1834,7 +1715,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1845,7 +1725,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1861,7 +1740,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1873,7 +1751,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `indexId`,
@@ -1884,7 +1761,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1896,7 +1772,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -1920,7 +1795,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -1931,7 +1805,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1947,7 +1820,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -1959,7 +1831,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `collectionName`,
@@ -1970,7 +1841,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `databaseName`,
@@ -1981,7 +1851,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `indexName`,
@@ -1992,7 +1861,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -2004,7 +1872,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2028,7 +1895,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2039,7 +1905,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2055,7 +1920,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2067,7 +1931,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `indexId`,
@@ -2078,7 +1941,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -2090,7 +1952,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2114,7 +1975,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2125,7 +1985,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2141,7 +2000,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2153,7 +2011,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2165,7 +2022,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-05-30`,
@@ -2173,7 +2029,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2197,7 +2052,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2208,7 +2062,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2224,7 +2077,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2236,7 +2088,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `indexId`,
@@ -2247,7 +2098,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2259,7 +2109,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2283,7 +2132,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2294,7 +2142,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2310,7 +2157,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2322,7 +2168,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `collectionName`,
@@ -2333,7 +2178,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `databaseName`,
@@ -2344,7 +2188,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `indexName`,
@@ -2355,7 +2198,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2367,7 +2209,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2391,7 +2232,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2402,7 +2242,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2418,7 +2257,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2430,7 +2268,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `indexId`,
@@ -2441,7 +2278,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2453,7 +2289,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2477,7 +2312,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2488,7 +2322,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2504,7 +2337,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2516,7 +2348,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `collectionName`,
@@ -2527,7 +2358,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `databaseName`,
@@ -2538,7 +2368,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2550,7 +2379,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2574,7 +2402,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2585,7 +2412,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2601,7 +2427,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2613,7 +2438,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2625,7 +2449,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2649,7 +2472,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2660,7 +2482,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2676,7 +2497,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2688,7 +2508,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `collectionName`,
@@ -2699,7 +2518,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `databaseName`,
@@ -2710,7 +2528,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2722,7 +2539,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2746,7 +2562,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2757,7 +2572,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2773,7 +2587,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2785,7 +2598,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2797,7 +2609,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-05-30`,
@@ -2805,7 +2616,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -2847,7 +2657,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2858,7 +2667,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2874,7 +2682,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2886,7 +2693,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `indexId`,
@@ -2897,7 +2703,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2909,7 +2714,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -2933,7 +2737,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -2944,7 +2747,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2960,7 +2762,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -2972,7 +2773,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `collectionName`,
@@ -2983,7 +2783,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `databaseName`,
@@ -2994,7 +2793,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `indexName`,
@@ -3005,7 +2803,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -3017,7 +2814,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -3041,7 +2837,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -3052,7 +2847,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3068,7 +2862,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -3080,7 +2873,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `indexId`,
@@ -3091,7 +2883,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -3103,7 +2894,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -3133,7 +2923,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -3144,7 +2933,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3160,7 +2948,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -3173,7 +2960,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -3197,7 +2983,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -3208,7 +2993,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3224,7 +3008,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -3237,7 +3020,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -3267,7 +3049,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -3278,7 +3059,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3294,7 +3074,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -3306,7 +3085,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `restoreJobId`,
@@ -3317,7 +3095,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3329,7 +3106,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -3353,7 +3129,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3369,7 +3144,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -3381,7 +3155,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -3393,7 +3166,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -3441,7 +3213,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -3452,7 +3223,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3468,7 +3238,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -3480,7 +3249,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -3492,7 +3260,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -3516,7 +3283,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -3527,7 +3293,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3543,7 +3308,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -3556,43 +3320,12 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{
-							{
-								Name:        "AWS",
-								Description: "AWS",
-								Value: `{
-  "bucketName": "export-bucket",
-  "cloudProvider": "AWS",
-  "iamRoleId": "668c5f0ed436263134491592"
-}`,
-							},
-						},
 					},
 					{
 						Version:            `2024-05-30`,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
-						},
-						RequestBodyExamples: []RequestBodyExample{
-							{
-								Name:        "AWS",
-								Description: "AWS",
-								Value: `{
-  "bucketName": "export-bucket",
-  "cloudProvider": "AWS",
-  "iamRoleId": "668c5f0ed436263134491592"
-}`,
-							},
-							{
-								Name:        "Azure",
-								Description: "Azure",
-								Value: `{
-  "cloudProvider": "AZURE",
-  "roleId": "668c5f0ed436263134491592",
-  "serviceUrl": "https://examplestorageaccount.blob.core.windows.net/examplecontainer"
-}`,
-							},
 						},
 					},
 				},
@@ -3620,7 +3353,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -3631,7 +3363,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3647,7 +3378,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -3659,7 +3389,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -3671,7 +3400,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -3695,7 +3423,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3711,7 +3438,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -3723,7 +3449,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3735,7 +3460,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -3743,7 +3467,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -3767,7 +3490,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3783,7 +3505,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -3795,7 +3516,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3807,7 +3527,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -3831,7 +3550,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -3842,7 +3560,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3858,7 +3575,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -3870,7 +3586,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -3881,7 +3596,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3893,7 +3607,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -3932,7 +3645,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -3943,7 +3655,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3959,7 +3670,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -3971,7 +3681,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -3982,7 +3691,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3994,7 +3702,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4018,7 +3725,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -4029,7 +3735,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4045,7 +3750,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -4058,7 +3762,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -4099,7 +3802,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4115,7 +3817,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -4127,7 +3828,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `exportId`,
@@ -4138,7 +3838,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4150,7 +3849,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4174,7 +3872,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -4185,7 +3882,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4201,7 +3897,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -4213,7 +3908,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `restoreJobId`,
@@ -4224,7 +3918,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4236,7 +3929,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4260,7 +3952,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -4271,7 +3962,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4287,7 +3977,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -4299,7 +3988,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4311,7 +3999,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -4319,7 +4006,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4343,7 +4029,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -4354,7 +4039,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4370,7 +4054,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -4383,7 +4066,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-10-01`,
@@ -4391,7 +4073,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4415,7 +4096,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4431,7 +4111,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -4443,7 +4122,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4455,7 +4133,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-05-30`,
@@ -4463,7 +4140,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4487,7 +4163,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -4498,7 +4173,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4514,7 +4188,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -4526,7 +4199,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -4537,7 +4209,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4549,7 +4220,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4576,7 +4246,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4592,7 +4261,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -4604,7 +4272,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -4615,7 +4282,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4627,7 +4293,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4654,7 +4319,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -4665,7 +4329,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4681,7 +4344,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -4693,7 +4355,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `restoreJobId`,
@@ -4704,7 +4365,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4716,7 +4376,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4740,7 +4399,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -4751,7 +4409,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4767,7 +4424,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -4779,7 +4435,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -4790,7 +4445,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4802,7 +4456,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4826,7 +4479,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -4837,7 +4489,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -4848,7 +4499,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4859,7 +4509,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -4870,7 +4519,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4886,7 +4534,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -4898,7 +4545,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4910,7 +4556,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -4934,7 +4579,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -4945,7 +4589,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4956,7 +4599,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -4967,7 +4609,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -4978,7 +4619,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4994,7 +4634,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -5006,7 +4645,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -5018,7 +4656,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -5042,7 +4679,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -5053,7 +4689,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -5064,7 +4699,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -5075,7 +4709,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5086,7 +4719,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5102,7 +4734,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -5115,7 +4746,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-05-30`,
@@ -5123,7 +4753,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -5147,7 +4776,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -5158,7 +4786,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -5169,7 +4796,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -5180,7 +4806,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5191,7 +4816,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5207,7 +4831,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -5219,7 +4842,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -5231,7 +4853,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -5258,7 +4879,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -5269,7 +4889,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -5280,7 +4899,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -5291,7 +4909,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5302,7 +4919,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5318,7 +4934,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -5330,7 +4945,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -5342,7 +4956,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -5369,7 +4982,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5380,7 +4992,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -5391,7 +5002,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -5402,7 +5012,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -5413,7 +5022,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5429,7 +5037,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -5441,7 +5048,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -5453,7 +5059,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -5477,7 +5082,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5488,7 +5092,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5504,7 +5107,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -5516,7 +5118,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -5528,7 +5129,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -5555,7 +5155,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5566,7 +5165,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5582,7 +5180,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -5594,7 +5191,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -5606,7 +5202,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -5650,7 +5245,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5661,7 +5255,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5677,7 +5270,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -5689,7 +5281,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5701,7 +5292,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -5709,7 +5299,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -5733,7 +5322,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `overwriteBackupPolicies`,
@@ -5744,7 +5332,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5755,7 +5342,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5771,7 +5357,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -5784,7 +5369,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -5825,7 +5409,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5836,7 +5419,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5852,7 +5434,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -5864,7 +5445,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -5875,7 +5455,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5887,7 +5466,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -5937,7 +5515,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -5948,7 +5525,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5961,7 +5537,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -5973,7 +5548,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6006,7 +5580,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6017,7 +5590,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6033,7 +5605,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -6046,7 +5617,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-05-30`,
@@ -6054,7 +5624,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6078,7 +5647,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6089,7 +5657,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6105,7 +5672,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -6117,7 +5683,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `6296fb4c7c7aa997cf94e9a8`,
 						},
 					},
 					Verb: http.MethodPut,
@@ -6129,7 +5694,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6153,7 +5717,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6166,7 +5729,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6178,7 +5740,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6202,7 +5763,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6213,7 +5773,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6229,7 +5788,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -6241,7 +5799,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `6296fb4c7c7aa997cf94e9a8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6253,7 +5810,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6277,7 +5833,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6293,7 +5848,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -6305,7 +5859,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `507f1f77bcf86cd799439011`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6317,7 +5870,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6341,7 +5893,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6352,7 +5903,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6365,7 +5915,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6377,7 +5926,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6401,7 +5949,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6412,7 +5959,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6428,7 +5974,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -6441,7 +5986,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-05-30`,
@@ -6449,7 +5993,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6479,7 +6022,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6490,7 +6032,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6506,7 +6047,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -6518,7 +6058,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -6530,7 +6069,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6554,7 +6092,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6565,7 +6102,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6581,7 +6117,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -6594,7 +6129,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6618,7 +6152,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6629,7 +6162,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6645,7 +6177,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -6657,7 +6188,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `roleId`,
@@ -6668,7 +6198,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6680,7 +6209,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6704,7 +6232,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6715,7 +6242,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6731,7 +6257,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -6743,7 +6268,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6755,7 +6279,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6779,7 +6302,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6790,7 +6312,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6806,7 +6327,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -6819,7 +6339,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6849,7 +6368,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6860,7 +6378,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6876,7 +6393,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -6888,7 +6404,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6900,7 +6415,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6924,7 +6438,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -6935,7 +6448,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6951,7 +6463,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -6963,7 +6474,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6975,7 +6485,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -6999,7 +6508,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -7010,7 +6518,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7026,7 +6533,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -7038,7 +6544,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -7050,7 +6555,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -7083,7 +6587,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -7094,7 +6597,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7110,7 +6612,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -7123,7 +6624,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -7131,7 +6631,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -7139,236 +6638,12 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{
-							{
-								Name:        "Cluster",
-								Description: "Cluster",
-								Value: `{
-  "clusterType": "SHARDED",
-  "name": "myCluster",
-  "replicationSpecs": [
-    {
-      "regionConfigs": [
-        {
-          "analyticsAutoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": false
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "analyticsSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M40",
-            "nodeCount": 0
-          },
-          "autoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": false
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "electableSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M50",
-            "nodeCount": 3
-          },
-          "priority": 7,
-          "providerName": "AWS",
-          "readOnlySpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M50",
-            "nodeCount": 0
-          },
-          "regionName": "US_EAST_1"
-        }
-      ],
-      "zoneName": "Zone 1"
-    },
-    {
-      "regionConfigs": [
-        {
-          "analyticsAutoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": false
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "analyticsSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M30",
-            "nodeCount": 0
-          },
-          "autoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": false
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "electableSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M40",
-            "nodeCount": 3
-          },
-          "priority": 7,
-          "providerName": "AWS",
-          "readOnlySpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M40",
-            "nodeCount": 0
-          },
-          "regionName": "US_EAST_1"
-        }
-      ],
-      "zoneName": "Zone 1"
-    }
-  ]
-}`,
-							},
-						},
 					},
 					{
 						Version:            `2024-10-23`,
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
-						},
-						RequestBodyExamples: []RequestBodyExample{
-							{
-								Name:        "Cluster",
-								Description: "Cluster",
-								Value: `{
-  "clusterType": "SHARDED",
-  "name": "myCluster",
-  "replicationSpecs": [
-    {
-      "regionConfigs": [
-        {
-          "analyticsAutoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": true,
-              "maxInstanceSize": "M40",
-              "minInstanceSize": "M30",
-              "scaleDownEnabled": true
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "analyticsSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M40",
-            "nodeCount": 0
-          },
-          "autoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": true,
-              "maxInstanceSize": "M60",
-              "minInstanceSize": "M30",
-              "scaleDownEnabled": true
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "electableSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M60",
-            "nodeCount": 3
-          },
-          "priority": 7,
-          "providerName": "AWS",
-          "readOnlySpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M60",
-            "nodeCount": 0
-          },
-          "regionName": "US_EAST_1"
-        }
-      ],
-      "zoneName": "Zone 1"
-    },
-    {
-      "regionConfigs": [
-        {
-          "analyticsAutoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": true,
-              "maxInstanceSize": "M40",
-              "minInstanceSize": "M30",
-              "scaleDownEnabled": true
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "analyticsSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M30",
-            "nodeCount": 0
-          },
-          "autoScaling": {
-            "autoIndexing": {
-              "enabled": false
-            },
-            "compute": {
-              "enabled": true,
-              "maxInstanceSize": "M60",
-              "minInstanceSize": "M30",
-              "scaleDownEnabled": true
-            },
-            "diskGB": {
-              "enabled": true
-            }
-          },
-          "electableSpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M40",
-            "nodeCount": 3
-          },
-          "priority": 7,
-          "providerName": "AWS",
-          "readOnlySpecs": {
-            "diskSizeGB": 10,
-            "instanceSize": "M40",
-            "nodeCount": 0
-          },
-          "regionName": "US_EAST_1"
-        }
-      ],
-      "zoneName": "Zone 1"
-    }
-  ]
-}`,
-							},
 						},
 					},
 				},
@@ -7414,7 +6689,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -7425,7 +6699,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `retainBackups`,
@@ -7436,7 +6709,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7452,7 +6724,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -7464,7 +6735,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -7476,7 +6746,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -7484,7 +6753,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -7525,7 +6793,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -7536,7 +6803,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7552,7 +6818,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -7564,7 +6829,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -7576,7 +6840,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -7584,7 +6847,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -7592,7 +6854,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -7616,7 +6877,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -7627,7 +6887,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7643,7 +6902,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -7655,7 +6913,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -7667,7 +6924,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -7675,7 +6931,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -7699,7 +6954,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -7710,7 +6964,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7726,7 +6979,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -7738,7 +6990,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -7750,7 +7001,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -7774,7 +7024,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7790,7 +7039,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -7802,7 +7050,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -7814,7 +7061,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -7838,7 +7084,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -7849,7 +7094,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7865,7 +7109,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -7877,7 +7120,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -7889,7 +7131,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -7913,7 +7154,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -7924,7 +7164,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -7935,7 +7174,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -7946,7 +7184,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -7957,7 +7194,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `providers`,
@@ -7968,7 +7204,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `tier`,
@@ -7979,7 +7214,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7995,7 +7229,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -8008,7 +7241,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -8035,7 +7267,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -8046,7 +7277,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -8057,7 +7287,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -8068,7 +7297,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -8079,7 +7307,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
@@ -8090,7 +7317,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8106,7 +7332,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -8119,7 +7344,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -8127,7 +7351,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -8135,7 +7358,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -8159,7 +7381,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -8170,7 +7391,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -8181,7 +7401,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -8192,7 +7411,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -8203,7 +7421,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -8216,7 +7433,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -8240,7 +7456,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8256,7 +7471,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -8268,7 +7482,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -8280,7 +7493,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -8323,7 +7535,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -8334,7 +7545,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8350,7 +7560,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -8362,7 +7571,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -8374,7 +7582,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -8398,7 +7605,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -8409,7 +7615,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8425,7 +7630,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -8437,7 +7641,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -8449,7 +7652,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -8473,7 +7675,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -8484,7 +7685,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8500,7 +7700,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -8512,7 +7711,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -8524,7 +7722,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -8532,7 +7729,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -8556,7 +7752,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -8567,7 +7762,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8583,7 +7777,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -8595,7 +7788,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -8607,7 +7799,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -8631,7 +7822,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -8642,7 +7832,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8658,7 +7847,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -8670,7 +7858,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8682,7 +7869,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -8690,7 +7876,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -8698,7 +7883,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-10-23`,
@@ -8706,7 +7890,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -8748,7 +7931,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -8759,7 +7941,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8775,7 +7956,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -8787,7 +7967,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8799,7 +7978,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -8807,7 +7985,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -8834,7 +8011,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -8845,7 +8021,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8861,7 +8036,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -8874,7 +8048,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -8904,7 +8077,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `metrics`,
@@ -8915,7 +8087,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `start`,
@@ -8926,7 +8097,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -8937,7 +8107,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `period`,
@@ -8948,7 +8117,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8964,7 +8132,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -8976,7 +8143,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `clusterView`,
@@ -8987,7 +8153,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `databaseName`,
@@ -8998,7 +8163,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mydb`,
 						},
 						{
 							Name:        `collectionName`,
@@ -9009,7 +8173,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mycoll`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9021,7 +8184,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9045,7 +8207,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `metrics`,
@@ -9056,7 +8217,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `start`,
@@ -9067,7 +8227,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -9078,7 +8237,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `period`,
@@ -9089,7 +8247,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9105,7 +8262,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -9117,7 +8273,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `my.host.name.com:27017`,
 						},
 						{
 							Name:        `databaseName`,
@@ -9128,7 +8283,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mydb`,
 						},
 						{
 							Name:        `collectionName`,
@@ -9139,7 +8293,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mycoll`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9151,7 +8304,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9175,7 +8327,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9191,7 +8342,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -9204,7 +8354,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9228,7 +8377,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `start`,
@@ -9239,7 +8387,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -9250,7 +8397,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `period`,
@@ -9261,7 +8407,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9277,7 +8422,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -9289,7 +8433,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `clusterView`,
@@ -9300,7 +8443,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9312,7 +8454,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9336,7 +8477,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `start`,
@@ -9347,7 +8487,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -9358,7 +8497,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `period`,
@@ -9369,7 +8507,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9385,7 +8522,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -9397,7 +8533,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `my.host.name.com:27017`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9409,7 +8544,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9433,7 +8567,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9449,7 +8582,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -9461,7 +8593,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9473,7 +8604,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9497,7 +8627,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9513,7 +8642,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -9525,7 +8653,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -9538,7 +8665,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							`json`,
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9562,7 +8688,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9578,7 +8703,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -9590,7 +8714,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPut,
@@ -9603,7 +8726,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							`json`,
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9627,7 +8749,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9643,7 +8764,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -9655,7 +8775,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -9667,7 +8786,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9697,7 +8815,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -9708,7 +8825,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9724,7 +8840,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -9737,7 +8852,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9761,7 +8875,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -9772,7 +8885,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9788,7 +8900,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -9800,7 +8911,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9812,7 +8922,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9836,7 +8945,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -9847,7 +8955,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9863,7 +8970,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -9875,7 +8981,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9887,7 +8992,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9911,7 +9015,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -9922,7 +9025,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9938,7 +9040,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -9951,7 +9052,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -9975,7 +9075,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -9986,7 +9085,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10002,7 +9100,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -10014,7 +9111,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -10026,7 +9122,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10083,7 +9178,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -10094,7 +9188,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10110,7 +9203,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -10123,7 +9215,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10147,7 +9238,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -10158,7 +9248,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `skipRoleValidation`,
@@ -10169,7 +9258,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10185,7 +9273,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -10198,7 +9285,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10222,7 +9308,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10238,7 +9323,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -10250,7 +9334,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `limitName`,
@@ -10269,7 +9352,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -10281,7 +9363,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10305,7 +9386,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -10316,7 +9396,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10332,7 +9411,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -10344,7 +9422,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -10356,7 +9433,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10380,7 +9456,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -10391,7 +9466,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10407,7 +9481,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -10419,7 +9492,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -10431,7 +9503,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10455,7 +9526,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10471,7 +9541,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -10483,7 +9552,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `limitName`,
@@ -10502,7 +9570,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -10514,7 +9581,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10538,7 +9604,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `startDate`,
@@ -10549,7 +9614,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10565,7 +9629,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -10577,7 +9640,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10589,7 +9651,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`gzip`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10613,7 +9674,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -10624,7 +9684,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10640,7 +9699,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -10652,7 +9710,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10664,7 +9721,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10688,7 +9744,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10704,7 +9759,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -10716,7 +9770,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10728,7 +9781,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10752,7 +9804,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -10763,7 +9814,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -10774,7 +9824,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -10785,7 +9834,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -10796,7 +9844,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10812,7 +9859,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -10825,7 +9871,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10849,7 +9894,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -10860,7 +9904,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `type`,
@@ -10871,7 +9914,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10887,7 +9929,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -10900,7 +9941,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -10924,7 +9964,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -10935,7 +9974,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10951,7 +9989,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -10963,7 +10000,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `limitName`,
@@ -10982,7 +10018,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10994,7 +10029,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11018,7 +10052,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -11029,7 +10062,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11045,7 +10077,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11057,7 +10088,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11069,7 +10099,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11093,7 +10122,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -11104,7 +10132,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `skipRoleValidation`,
@@ -11115,7 +10142,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11131,7 +10157,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11143,7 +10168,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -11155,7 +10179,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11185,7 +10208,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11201,7 +10223,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -11214,7 +10235,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -11256,7 +10276,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11272,7 +10291,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11284,7 +10302,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -11296,7 +10313,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -11334,7 +10350,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -11345,7 +10360,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11361,7 +10375,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11373,7 +10386,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pipelineRunId`,
@@ -11384,7 +10396,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -11396,7 +10407,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11420,7 +10430,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -11431,7 +10440,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11447,7 +10455,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11459,7 +10466,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11471,7 +10477,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11495,7 +10500,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -11506,7 +10510,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11522,7 +10525,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11534,7 +10536,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pipelineRunId`,
@@ -11545,7 +10546,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11557,7 +10557,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11581,7 +10580,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -11592,7 +10590,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11603,7 +10600,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -11614,7 +10610,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -11625,7 +10620,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `createdBefore`,
@@ -11636,7 +10630,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `2022-01-01T00:00:00Z`,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11652,7 +10645,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11664,7 +10656,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11676,7 +10667,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11700,7 +10690,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -11711,7 +10700,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11727,7 +10715,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11739,7 +10726,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11751,7 +10737,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11775,7 +10760,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -11786,7 +10770,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11797,7 +10780,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -11808,7 +10790,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -11819,7 +10800,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `completedAfter`,
@@ -11830,7 +10810,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `2022-01-01T00:00:00Z`,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11846,7 +10825,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11858,7 +10836,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11870,7 +10847,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11894,7 +10870,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11910,7 +10885,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -11923,7 +10897,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -11947,7 +10920,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -11958,7 +10930,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11974,7 +10945,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -11986,7 +10956,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -11998,7 +10967,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -12022,7 +10990,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -12033,7 +11000,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12049,7 +11015,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -12061,7 +11026,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -12073,7 +11037,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -12097,7 +11060,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -12108,7 +11070,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12124,7 +11085,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -12136,7 +11096,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -12148,7 +11107,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -12172,7 +11130,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12188,7 +11145,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -12200,7 +11156,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -12212,7 +11167,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -12260,7 +11214,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -12271,7 +11224,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12287,7 +11239,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -12299,164 +11250,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
-						},
-						RequestBodyExamples: []RequestBodyExample{
-							{
-								Name:        "AWS IAM Authentication",
-								Description: "AWS IAM Authentication",
-								Value: `{
-  "awsIAMType": "USER",
-  "databaseName": "$external",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "arn:aws:iam::358363220050:user/mongodb-aws-iam-auth-test-user"
-}`,
-							},
-							{
-								Name:        "LDAP Authentication",
-								Description: "LDAP Authentication",
-								Value: `{
-  "databaseName": "admin",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "ldapAuthType": "GROUP",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "CN=marketing,OU=groups,DC=example,DC=com"
-}`,
-							},
-							{
-								Name:        "OIDC Workforce Federated Authentication",
-								Description: "OIDC Workforce Federated Authentication",
-								Value: `{
-  "databaseName": "admin",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "oidcAuthType": "IDP_GROUP",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "5dd7496c7a3e5a648454341c/sales"
-}`,
-							},
-							{
-								Name:        "OIDC Workload Federated Authentication",
-								Description: "OIDC Workload Federated Authentication",
-								Value: `{
-  "databaseName": "$external",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "oidcAuthType": "USER",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "5dd7496c7a3e5a648454341c/sales"
-}`,
-							},
-							{
-								Name:        "SCRAM-SHA Authentication",
-								Description: "SCRAM-SHA Authentication",
-								Value: `{
-  "databaseName": "admin",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "password": "changeme123",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "david"
-}`,
-							},
-							{
-								Name:        "X509 Authentication",
-								Description: "X509 Authentication",
-								Value: `{
-  "databaseName": "$external",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "CN=david@example.com,OU=users,DC=example,DC=com",
-  "x509Type": "CUSTOMER"
-}`,
-							},
 						},
 					},
 				},
@@ -12481,7 +11274,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -12492,7 +11284,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12508,7 +11299,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -12520,7 +11310,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `username`,
@@ -12544,7 +11333,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `SCRAM-SHA: dylan or AWS IAM: arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs or x.509/LDAP: CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM or OIDC: IdPIdentifier/IdPGroupName`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12556,7 +11344,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -12580,7 +11367,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -12591,7 +11377,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12607,7 +11392,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -12619,7 +11403,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `username`,
@@ -12643,7 +11426,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `SCRAM-SHA: dylan or AWS IAM: arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs or x.509/LDAP: CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM or OIDC: IdPIdentifier/IdPGroupName`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12655,7 +11437,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -12679,7 +11460,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -12690,7 +11470,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12701,7 +11480,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -12712,7 +11490,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -12723,7 +11500,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12739,7 +11515,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -12752,7 +11527,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -12776,7 +11550,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -12787,7 +11560,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12803,7 +11575,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -12815,7 +11586,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `username`,
@@ -12839,7 +11609,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `SCRAM-SHA: dylan or AWS IAM: arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs or x.509/LDAP: CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM or OIDC: IdPIdentifier/IdPGroupName`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -12851,7 +11620,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -12881,7 +11649,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -12892,7 +11659,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12908,7 +11674,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -12920,7 +11685,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -12932,7 +11696,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -12959,7 +11722,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -12970,7 +11732,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12986,7 +11747,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -12999,7 +11759,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13023,7 +11782,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -13034,7 +11792,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13050,7 +11807,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -13062,7 +11818,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointId`,
@@ -13073,7 +11828,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -13085,7 +11839,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13109,7 +11862,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -13120,7 +11872,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -13131,7 +11882,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -13142,7 +11892,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -13153,7 +11902,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13169,7 +11917,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -13181,7 +11928,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -13193,7 +11939,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13217,7 +11962,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -13228,7 +11972,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13244,7 +11987,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -13256,7 +11998,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointId`,
@@ -13267,7 +12008,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13279,7 +12019,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13306,7 +12045,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -13317,7 +12055,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13333,7 +12070,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -13346,7 +12082,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13379,7 +12114,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -13390,7 +12124,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeRaw`,
@@ -13401,7 +12134,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13414,7 +12146,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `eventId`,
@@ -13425,7 +12156,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -13437,7 +12167,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13464,7 +12193,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -13475,7 +12203,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeRaw`,
@@ -13486,7 +12213,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13502,7 +12228,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -13514,7 +12239,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -13526,7 +12250,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13550,7 +12273,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -13561,7 +12283,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -13572,7 +12293,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -13583,7 +12303,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -13594,7 +12313,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -13607,7 +12325,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13634,7 +12351,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -13645,7 +12361,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -13656,7 +12371,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -13667,7 +12381,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -13678,7 +12391,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `eventType`,
@@ -13692,7 +12404,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeRaw`,
@@ -13703,7 +12414,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `maxDate`,
@@ -13714,7 +12424,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `minDate`,
@@ -13725,7 +12434,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13738,7 +12446,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -13750,7 +12457,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13777,7 +12483,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -13788,7 +12493,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -13799,7 +12503,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -13810,7 +12513,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -13821,7 +12523,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `clusterNames`,
@@ -13832,7 +12533,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `eventType`,
@@ -13846,7 +12546,6 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `excludedEventType`,
@@ -13860,7 +12559,6 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeRaw`,
@@ -13871,7 +12569,6 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `maxDate`,
@@ -13882,7 +12579,6 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `minDate`,
@@ -13893,7 +12589,6 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13909,7 +12604,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -13922,7 +12616,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -13955,7 +12648,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13968,7 +12660,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -13980,7 +12671,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14004,7 +12694,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14017,7 +12706,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `orgId`,
@@ -14028,7 +12716,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -14040,7 +12727,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14065,7 +12751,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14077,7 +12762,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14104,7 +12788,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14117,7 +12800,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -14128,7 +12810,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14140,7 +12821,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14164,7 +12844,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14177,7 +12856,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `id`,
@@ -14188,7 +12866,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 						{
 							Name:        `orgId`,
@@ -14199,7 +12876,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14211,7 +12887,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14235,7 +12910,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14248,7 +12922,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `orgId`,
@@ -14259,7 +12932,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14271,7 +12943,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14295,7 +12966,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -14306,7 +12976,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14319,7 +12988,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14331,7 +12999,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14355,7 +13022,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14368,7 +13034,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -14379,7 +13044,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14391,7 +13055,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14416,7 +13079,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -14427,7 +13089,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `c2777a9eca931f29fc2f`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14439,7 +13100,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14463,7 +13123,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14476,7 +13135,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `id`,
@@ -14487,7 +13145,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 						{
 							Name:        `orgId`,
@@ -14498,7 +13155,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14510,7 +13166,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14534,7 +13189,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -14545,7 +13199,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -14556,7 +13209,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14569,7 +13221,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14581,7 +13232,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14605,7 +13255,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -14616,7 +13265,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -14627,7 +13275,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `protocol`,
@@ -14638,7 +13285,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `idpType`,
@@ -14649,7 +13295,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14662,7 +13307,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14674,7 +13318,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14698,7 +13341,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14711,7 +13353,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `orgId`,
@@ -14722,7 +13363,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14734,7 +13374,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14758,7 +13397,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14771,7 +13409,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `orgId`,
@@ -14782,7 +13419,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14794,7 +13430,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14821,7 +13456,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14834,7 +13468,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -14845,7 +13478,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14857,7 +13489,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14893,7 +13524,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14906,7 +13536,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `orgId`,
@@ -14917,7 +13546,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -14929,7 +13557,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -14956,7 +13583,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14969,7 +13595,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -14980,7 +13605,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -14992,7 +13616,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -15016,7 +13639,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15029,7 +13651,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `55fa922fb343282757d9554e`,
 						},
 						{
 							Name:        `id`,
@@ -15040,7 +13661,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 						{
 							Name:        `orgId`,
@@ -15051,7 +13671,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPut,
@@ -15063,7 +13682,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -15093,7 +13711,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15104,7 +13721,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15120,7 +13736,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -15133,7 +13748,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -15176,7 +13790,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15187,7 +13800,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15203,7 +13815,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -15215,7 +13826,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15227,7 +13837,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -15265,7 +13874,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15276,7 +13884,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15292,7 +13899,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -15304,7 +13910,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15316,7 +13921,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -15340,7 +13944,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -15351,7 +13954,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -15362,7 +13964,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -15373,7 +13974,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15384,7 +13984,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15400,7 +13999,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -15413,7 +14011,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -15437,7 +14034,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15448,7 +14044,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15464,7 +14059,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -15476,7 +14070,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -15488,7 +14081,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -15530,7 +14122,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15541,7 +14132,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15557,7 +14147,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -15570,7 +14159,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -15600,7 +14188,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15611,7 +14198,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15627,7 +14213,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -15639,7 +14224,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -15651,7 +14235,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -15695,7 +14278,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15706,7 +14288,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15722,7 +14303,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -15734,7 +14314,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `restoreJobId`,
@@ -15745,7 +14324,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15757,7 +14335,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -15781,7 +14358,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -15792,7 +14368,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -15803,7 +14378,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -15814,7 +14388,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15825,7 +14398,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15841,7 +14413,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -15853,7 +14424,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15865,7 +14435,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -15895,7 +14464,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -15906,7 +14474,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15919,7 +14486,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -15933,7 +14499,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -15946,7 +14511,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -15970,7 +14534,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15986,7 +14549,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -15998,7 +14560,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -16009,7 +14570,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16021,7 +14581,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16045,7 +14604,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -16056,7 +14614,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -16067,7 +14624,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -16078,7 +14634,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -16089,7 +14644,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16105,7 +14659,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -16117,7 +14670,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16129,7 +14681,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16160,7 +14711,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -16171,7 +14721,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16187,7 +14736,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -16199,7 +14747,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -16211,7 +14758,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -16219,7 +14765,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -16227,7 +14772,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16251,7 +14795,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -16262,7 +14805,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16278,7 +14820,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -16290,7 +14831,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -16302,7 +14842,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -16310,7 +14849,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -16318,7 +14856,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16342,7 +14879,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -16353,7 +14889,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16369,7 +14904,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -16381,7 +14915,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -16393,7 +14926,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -16401,7 +14933,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -16409,7 +14940,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16433,7 +14963,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -16444,7 +14973,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `db`,
@@ -16455,7 +14983,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `collection`,
@@ -16466,7 +14993,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16479,7 +15005,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -16493,7 +15018,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -16506,7 +15030,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -16514,7 +15037,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -16522,7 +15044,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16546,7 +15067,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -16557,7 +15077,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16573,7 +15092,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -16585,7 +15103,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16597,7 +15114,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -16605,7 +15121,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2024-08-05`,
@@ -16613,7 +15128,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16643,7 +15157,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16656,7 +15169,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -16668,7 +15180,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16693,7 +15204,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -16704,7 +15214,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16717,7 +15226,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `invoiceId`,
@@ -16728,7 +15236,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16740,7 +15247,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`csv`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16764,7 +15270,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16777,7 +15282,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `token`,
@@ -16788,7 +15292,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4ABBE973862346D40F3AE859D4BE96E0F895764EB14EAB039E7B82F9D638C05C`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16801,7 +15304,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 							`csv`,
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16826,7 +15328,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -16837,7 +15338,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16850,7 +15350,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `invoiceId`,
@@ -16861,7 +15360,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16874,7 +15372,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 							`csv`,
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -16899,7 +15396,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -16910,7 +15406,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -16921,7 +15416,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -16932,7 +15426,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -16943,7 +15436,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `viewLinkedInvoices`,
@@ -16954,7 +15446,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `statusNames`,
@@ -16965,7 +15456,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `fromDate`,
@@ -16976,7 +15466,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `2023-01-01`,
 						},
 						{
 							Name:        `toDate`,
@@ -16987,7 +15476,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `2023-01-01`,
 						},
 						{
 							Name:        `sortBy`,
@@ -16998,7 +15486,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `orderBy`,
@@ -17009,7 +15496,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17022,7 +15508,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17034,7 +15519,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17058,7 +15542,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17069,7 +15552,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17082,7 +15564,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17094,7 +15575,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17118,7 +15598,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -17129,7 +15608,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -17140,7 +15618,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17153,7 +15630,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `invoiceId`,
@@ -17164,7 +15640,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17176,7 +15651,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17206,7 +15680,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17217,7 +15690,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17233,7 +15705,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -17246,7 +15717,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17270,7 +15740,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17281,7 +15750,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17297,7 +15765,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -17310,7 +15777,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17334,7 +15800,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17345,7 +15810,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17361,7 +15825,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -17373,7 +15836,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17385,7 +15847,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17412,7 +15873,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17423,7 +15883,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17439,7 +15898,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -17452,7 +15910,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17476,7 +15933,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17487,7 +15943,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17503,7 +15958,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -17516,7 +15970,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -17565,7 +16018,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17576,7 +16028,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17592,7 +16043,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -17604,7 +16054,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -17616,7 +16065,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17640,7 +16088,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17651,7 +16098,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17667,7 +16113,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -17679,7 +16124,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -17690,7 +16134,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -17702,7 +16145,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17726,7 +16168,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17737,7 +16178,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17753,7 +16193,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -17765,7 +16204,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `clusterName`,
@@ -17776,7 +16214,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17788,7 +16225,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17815,7 +16251,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17826,7 +16261,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17842,7 +16276,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -17854,7 +16287,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `jobId`,
@@ -17865,7 +16297,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17877,7 +16308,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17901,7 +16331,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -17912,7 +16341,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17928,7 +16356,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -17940,7 +16367,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -17951,7 +16377,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17963,7 +16388,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -17990,7 +16414,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -18001,7 +16424,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18017,7 +16439,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -18029,7 +16450,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18041,7 +16461,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18065,7 +16484,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -18076,7 +16494,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -18087,7 +16504,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -18098,7 +16514,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -18109,7 +16524,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18125,7 +16539,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -18137,7 +16550,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18149,7 +16561,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18176,7 +16587,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -18187,7 +16597,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -18198,7 +16607,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -18209,7 +16617,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -18220,7 +16627,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `batchId`,
@@ -18231,7 +16637,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18247,7 +16652,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -18259,7 +16663,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18271,7 +16674,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18295,7 +16697,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -18306,7 +16707,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -18317,7 +16717,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -18328,7 +16727,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -18339,7 +16737,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `completed`,
@@ -18350,7 +16747,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18366,7 +16762,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -18378,7 +16773,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18390,7 +16784,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18414,7 +16807,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -18425,7 +16817,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18441,7 +16832,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -18453,7 +16843,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -18464,7 +16853,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -18476,7 +16864,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18503,7 +16890,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -18514,7 +16900,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18530,7 +16915,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -18542,7 +16926,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -18554,7 +16937,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18584,7 +16966,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18600,7 +16981,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -18613,7 +16993,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18637,7 +17016,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -18648,7 +17026,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18664,7 +17041,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -18677,7 +17053,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18701,7 +17076,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18717,7 +17091,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -18730,7 +17103,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18754,7 +17126,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18770,7 +17141,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -18783,7 +17153,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18807,7 +17176,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18823,7 +17191,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -18836,7 +17203,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18872,7 +17238,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -18883,7 +17248,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18896,7 +17260,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `userId`,
@@ -18907,7 +17270,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -18919,7 +17281,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -18946,7 +17307,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -18957,7 +17317,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18973,7 +17332,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -18985,7 +17343,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -18997,7 +17354,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19031,7 +17387,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19042,7 +17397,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19058,7 +17412,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -19071,7 +17424,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19098,7 +17450,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19109,7 +17460,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19122,7 +17472,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `teamId`,
@@ -19133,7 +17482,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -19145,7 +17493,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19172,7 +17519,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19183,7 +17529,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19196,7 +17541,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -19208,7 +17552,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19238,7 +17581,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19249,7 +17591,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -19262,7 +17603,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19292,7 +17632,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19303,7 +17642,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19316,7 +17654,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `userId`,
@@ -19327,7 +17664,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19339,7 +17675,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19369,7 +17704,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19380,7 +17714,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19396,7 +17729,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -19408,7 +17740,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19420,7 +17751,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19444,7 +17774,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19455,7 +17784,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19468,7 +17796,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19480,7 +17807,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19504,7 +17830,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19515,7 +17840,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19528,7 +17852,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19540,7 +17863,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19570,7 +17892,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19581,7 +17902,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19594,7 +17914,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `userId`,
@@ -19605,7 +17924,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -19617,7 +17935,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19644,7 +17961,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19655,7 +17971,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19671,7 +17986,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -19683,7 +17997,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -19695,7 +18008,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19722,7 +18034,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19733,7 +18044,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19746,7 +18056,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `teamId`,
@@ -19757,7 +18066,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -19769,7 +18077,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19799,7 +18106,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19810,7 +18116,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19823,7 +18128,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `userId`,
@@ -19834,7 +18138,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -19846,7 +18149,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19876,7 +18178,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19887,7 +18188,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19903,7 +18203,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -19915,7 +18214,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mongodb.example.com:27017`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19927,7 +18225,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -19951,7 +18248,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -19962,7 +18258,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19978,7 +18273,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -19990,7 +18284,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `processId`,
@@ -20001,7 +18294,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mongodb.example.com:27017`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20013,7 +18305,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -20037,7 +18328,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -20048,7 +18338,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `m`,
@@ -20059,7 +18348,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `granularity`,
@@ -20070,7 +18358,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT1M`,
 						},
 						{
 							Name:        `period`,
@@ -20081,7 +18368,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 						{
 							Name:        `start`,
@@ -20092,7 +18378,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -20103,7 +18388,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20119,7 +18403,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -20131,7 +18414,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `processId`,
@@ -20142,7 +18424,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mongodb.example.com:27017`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20154,7 +18435,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -20195,7 +18475,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -20206,7 +18485,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `m`,
@@ -20217,7 +18495,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `granularity`,
@@ -20228,7 +18505,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT1M`,
 						},
 						{
 							Name:        `period`,
@@ -20239,7 +18515,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 						{
 							Name:        `start`,
@@ -20250,7 +18525,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -20261,7 +18535,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20277,7 +18550,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -20289,7 +18561,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `processId`,
@@ -20300,7 +18571,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mongodb.example.com:27017`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20312,7 +18582,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -20336,7 +18605,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endDate`,
@@ -20347,7 +18615,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `startDate`,
@@ -20358,7 +18625,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20374,7 +18640,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -20386,7 +18651,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `logName`,
@@ -20397,7 +18661,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20409,7 +18672,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`gzip`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -20417,7 +18679,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`gzip`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -20461,7 +18722,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -20472,7 +18732,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `m`,
@@ -20483,7 +18742,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `period`,
@@ -20494,7 +18752,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 						{
 							Name:        `granularity`,
@@ -20505,7 +18762,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT1M`,
 						},
 						{
 							Name:        `start`,
@@ -20516,7 +18772,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -20527,7 +18782,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20543,7 +18797,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -20555,7 +18808,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mongodb.example.com:27017`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20567,7 +18819,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -20591,7 +18842,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT1M`,
 						},
 						{
 							Name:        `period`,
@@ -20602,7 +18852,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 						{
 							Name:        `start`,
@@ -20613,7 +18862,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -20624,7 +18872,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -20635,7 +18882,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `metrics`,
@@ -20646,7 +18892,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20659,7 +18904,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `my.host.name.com:27017`,
 						},
 						{
 							Name:        `indexName`,
@@ -20670,7 +18914,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `myindex`,
 						},
 						{
 							Name:        `databaseName`,
@@ -20681,7 +18924,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mydb`,
 						},
 						{
 							Name:        `collectionName`,
@@ -20692,7 +18934,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mycoll`,
 						},
 						{
 							Name: `groupId`,
@@ -20706,7 +18947,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -20719,7 +18959,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -20743,7 +18982,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT1M`,
 						},
 						{
 							Name:        `period`,
@@ -20754,7 +18992,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 						{
 							Name:        `start`,
@@ -20765,7 +19002,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -20776,7 +19012,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -20787,7 +19022,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `metrics`,
@@ -20798,7 +19032,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20811,7 +19044,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `my.host.name.com:27017`,
 						},
 						{
 							Name: `groupId`,
@@ -20825,7 +19057,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -20838,7 +19069,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -20862,7 +19092,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -20873,7 +19102,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -20884,7 +19112,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -20895,7 +19122,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -20906,7 +19132,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20922,7 +19147,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -20935,7 +19159,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -20959,7 +19182,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -20970,7 +19192,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -20981,7 +19202,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -20992,7 +19212,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21003,7 +19222,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21019,7 +19237,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -21031,7 +19248,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mongodb.example.com:27017`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21043,7 +19259,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21067,7 +19282,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21080,7 +19294,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -21094,7 +19307,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -21106,7 +19318,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mongodb.example.com:27017`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21118,7 +19329,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21142,7 +19352,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -21153,7 +19362,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21164,7 +19372,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -21175,7 +19382,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21186,7 +19392,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21202,7 +19407,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -21214,7 +19418,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mongodb.example.com:27017`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21226,7 +19429,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21250,7 +19452,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT1M`,
 						},
 						{
 							Name:        `period`,
@@ -21261,7 +19462,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `PT10H`,
 						},
 						{
 							Name:        `start`,
@@ -21272,7 +19472,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `end`,
@@ -21283,7 +19482,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -21294,7 +19492,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `metrics`,
@@ -21305,7 +19502,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21318,7 +19514,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `my.host.name.com:27017`,
 						},
 						{
 							Name:        `databaseName`,
@@ -21329,7 +19524,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mydb`,
 						},
 						{
 							Name:        `collectionName`,
@@ -21340,7 +19534,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mycoll`,
 						},
 						{
 							Name: `groupId`,
@@ -21354,7 +19547,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -21367,7 +19559,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21391,7 +19582,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21404,7 +19594,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `my.host.name.com:27017`,
 						},
 						{
 							Name: `groupId`,
@@ -21418,7 +19607,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -21431,7 +19619,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21462,7 +19649,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21473,7 +19659,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21489,7 +19674,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -21502,7 +19686,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21526,7 +19709,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21537,7 +19719,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21553,7 +19734,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -21566,7 +19746,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21590,7 +19769,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21601,7 +19779,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21617,7 +19794,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -21629,7 +19805,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -21641,7 +19816,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21665,7 +19839,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21676,7 +19849,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21692,7 +19864,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -21704,7 +19875,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -21716,7 +19886,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21740,7 +19909,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21751,7 +19919,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21767,7 +19934,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -21780,7 +19946,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21804,7 +19969,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21815,7 +19979,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21831,7 +19994,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -21843,7 +20005,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21855,7 +20016,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21879,7 +20039,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21890,7 +20049,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21906,7 +20064,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -21918,7 +20075,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21930,7 +20086,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -21954,7 +20109,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -21965,7 +20119,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21976,7 +20129,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -21987,7 +20139,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -21998,7 +20149,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `providerName`,
@@ -22009,7 +20159,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22025,7 +20174,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -22038,7 +20186,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -22062,7 +20209,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -22073,7 +20219,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -22084,7 +20229,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -22095,7 +20239,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22106,7 +20249,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `providerName`,
@@ -22117,7 +20259,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22133,7 +20274,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -22146,7 +20286,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -22170,7 +20309,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -22181,7 +20319,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -22192,7 +20329,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -22203,7 +20339,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22214,7 +20349,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22230,7 +20364,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -22243,7 +20376,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -22267,7 +20399,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22278,7 +20409,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22294,7 +20424,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -22306,7 +20435,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -22318,7 +20446,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -22342,7 +20469,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22353,7 +20479,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22369,7 +20494,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -22381,7 +20505,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -22393,7 +20516,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -22417,7 +20539,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22428,7 +20549,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22444,7 +20564,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -22457,7 +20576,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -22487,7 +20605,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22498,7 +20615,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22514,7 +20630,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -22526,7 +20641,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -22538,7 +20652,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -22585,7 +20698,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22596,7 +20708,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22612,7 +20723,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -22624,7 +20734,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `clusterName`,
@@ -22635,7 +20744,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -22647,7 +20755,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -22686,7 +20793,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `startDate`,
@@ -22697,7 +20803,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endDate`,
@@ -22708,7 +20813,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `archiveOnly`,
@@ -22719,7 +20823,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22735,7 +20838,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -22747,7 +20849,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22759,7 +20860,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`gzip`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -22783,7 +20883,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22794,7 +20893,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22810,7 +20908,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -22822,7 +20919,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `clusterName`,
@@ -22833,7 +20929,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22845,7 +20940,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -22869,7 +20963,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -22880,7 +20973,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -22891,7 +20983,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -22902,7 +20993,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22913,7 +21003,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22929,7 +21018,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -22941,7 +21029,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22953,7 +21040,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -22977,7 +21063,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -22988,7 +21073,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23004,7 +21088,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -23016,7 +21099,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `clusterName`,
@@ -23027,7 +21109,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -23039,7 +21120,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -23092,7 +21172,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -23103,7 +21182,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -23114,7 +21192,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23125,7 +21202,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `env`,
@@ -23136,7 +21212,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -23150,7 +21225,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 							`json`,
 							`yaml`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23174,7 +21248,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -23187,7 +21260,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2043-01-01`,
@@ -23195,7 +21267,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23225,7 +21296,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23236,7 +21306,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -23249,7 +21318,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23273,7 +21341,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23284,7 +21351,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23297,7 +21363,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -23309,7 +21374,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23341,7 +21405,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23354,7 +21417,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -23366,7 +21428,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23390,7 +21451,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23401,7 +21461,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23414,7 +21473,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `invitationId`,
@@ -23425,7 +21483,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -23437,7 +21494,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23461,7 +21517,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23472,7 +21527,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23485,7 +21539,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23497,7 +21550,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23521,7 +21573,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23534,7 +21585,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `invitationId`,
@@ -23545,7 +21595,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23557,7 +21606,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23581,7 +21629,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23592,7 +21639,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23605,7 +21651,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23617,7 +21662,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23641,7 +21685,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23652,7 +21695,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `username`,
@@ -23663,7 +21705,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23676,7 +21717,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23688,7 +21728,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23729,7 +21768,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -23740,7 +21778,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -23751,7 +21788,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -23762,7 +21798,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23773,7 +21808,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `name`,
@@ -23784,7 +21818,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23797,7 +21830,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23809,7 +21841,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23833,7 +21864,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23844,7 +21874,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -23855,7 +21884,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -23866,7 +21894,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -23877,7 +21904,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23890,7 +21916,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23902,7 +21927,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2043-01-01`,
@@ -23910,7 +21934,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -23934,7 +21957,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -23945,7 +21967,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -23956,7 +21977,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -23967,7 +21987,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -23978,7 +21997,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `name`,
@@ -23989,7 +22007,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -24002,7 +22019,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24026,7 +22042,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24037,7 +22052,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24050,7 +22064,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `userId`,
@@ -24061,7 +22074,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -24073,7 +22085,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2043-01-01`,
@@ -24081,7 +22092,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24105,7 +22115,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24116,7 +22125,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24129,7 +22137,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -24141,7 +22148,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24165,7 +22171,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24176,7 +22181,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24189,7 +22193,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -24201,7 +22204,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24225,7 +22227,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24236,7 +22237,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24249,7 +22249,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `invitationId`,
@@ -24260,7 +22259,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -24272,7 +22270,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24296,7 +22293,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -24307,7 +22303,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24320,7 +22315,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `userId`,
@@ -24331,7 +22325,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPut,
@@ -24343,7 +22336,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24367,7 +22359,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24378,7 +22369,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24391,7 +22381,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -24403,7 +22392,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24433,7 +22421,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24444,7 +22431,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24460,7 +22446,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -24473,7 +22458,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24497,7 +22481,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24508,7 +22491,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24524,7 +22506,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -24537,7 +22518,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24561,7 +22541,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24572,7 +22551,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24588,7 +22566,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -24601,7 +22578,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24625,7 +22601,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24636,7 +22611,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24652,7 +22626,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -24664,7 +22637,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24676,7 +22648,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24700,7 +22671,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `namespaces`,
@@ -24711,7 +22681,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `since`,
@@ -24729,7 +22698,6 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `until`,
@@ -24747,7 +22715,6 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24763,7 +22730,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -24775,7 +22741,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24787,7 +22752,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24815,7 +22779,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -24827,7 +22790,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24839,7 +22801,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24867,7 +22828,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -24879,7 +22839,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24891,7 +22850,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -24915,7 +22873,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -24926,7 +22883,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `duration`,
@@ -24944,7 +22900,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `namespaces`,
@@ -24955,7 +22910,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `nLogs`,
@@ -24966,7 +22920,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `since`,
@@ -24984,7 +22937,6 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25000,7 +22952,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -25012,7 +22963,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25024,7 +22974,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -25048,7 +22997,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25059,7 +23007,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `duration`,
@@ -25077,7 +23024,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `since`,
@@ -25095,7 +23041,6 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25111,7 +23056,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -25123,7 +23067,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25135,7 +23078,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -25159,7 +23101,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -25170,7 +23111,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25181,7 +23121,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -25192,7 +23131,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25203,7 +23141,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `duration`,
@@ -25221,7 +23158,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `namespaces`,
@@ -25232,7 +23168,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: true,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `nExamples`,
@@ -25243,7 +23178,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `nIndexes`,
@@ -25254,7 +23188,6 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `since`,
@@ -25272,7 +23205,6 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25288,7 +23220,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -25300,7 +23231,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25312,7 +23242,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -25336,7 +23265,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25347,7 +23275,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25363,7 +23290,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -25375,7 +23301,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -25387,7 +23312,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -25417,7 +23341,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25428,7 +23351,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25444,7 +23366,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -25456,7 +23377,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -25467,7 +23387,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -25479,7 +23398,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -25503,7 +23421,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25514,7 +23431,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25530,7 +23446,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -25543,7 +23458,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -25587,7 +23501,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25598,7 +23511,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25614,7 +23526,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -25626,7 +23537,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointId`,
@@ -25637,7 +23547,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -25648,7 +23557,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25660,7 +23568,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -25684,7 +23591,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25695,7 +23601,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25711,7 +23616,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -25723,7 +23627,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -25734,7 +23637,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25746,7 +23648,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -25785,7 +23686,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25796,7 +23696,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25812,7 +23711,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -25824,7 +23722,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointId`,
@@ -25835,7 +23732,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -25846,7 +23742,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25858,7 +23753,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -25882,7 +23776,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25893,7 +23786,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25909,7 +23801,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -25921,7 +23812,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -25932,7 +23822,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25944,7 +23833,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -25968,7 +23856,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -25979,7 +23866,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25995,7 +23881,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -26008,7 +23893,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26032,7 +23916,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26043,7 +23926,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26059,7 +23941,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -26071,7 +23952,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -26083,7 +23963,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26107,7 +23986,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26118,7 +23996,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26134,7 +24011,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -26147,7 +24023,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26177,7 +24052,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26188,7 +24062,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26204,7 +24077,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -26216,7 +24088,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -26228,7 +24099,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26252,7 +24122,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26263,7 +24132,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26276,7 +24144,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -26288,7 +24155,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26312,7 +24178,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -26323,7 +24188,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -26334,7 +24198,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -26345,7 +24208,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26356,7 +24218,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26369,7 +24230,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `apiUserId`,
@@ -26380,7 +24240,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -26392,7 +24251,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26416,7 +24274,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26427,7 +24284,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26443,7 +24299,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -26456,7 +24311,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26480,7 +24334,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26491,7 +24344,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26504,7 +24356,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `apiUserId`,
@@ -26515,7 +24366,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -26527,7 +24377,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26551,7 +24400,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26562,7 +24410,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26575,7 +24422,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `apiUserId`,
@@ -26586,7 +24432,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `ipAddress`,
@@ -26597,7 +24442,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `192.0.2.0%2F24`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -26609,7 +24453,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26633,7 +24476,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26644,7 +24486,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26657,7 +24498,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `apiUserId`,
@@ -26668,7 +24508,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -26680,7 +24519,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26704,7 +24542,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26715,7 +24552,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26728,7 +24564,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `ipAddress`,
@@ -26739,7 +24574,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `192.0.2.0%2F24`,
 						},
 						{
 							Name:        `apiUserId`,
@@ -26750,7 +24584,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -26762,7 +24595,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26786,7 +24618,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -26797,7 +24628,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -26808,7 +24638,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -26819,7 +24648,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26830,7 +24658,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26843,7 +24670,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `apiUserId`,
@@ -26854,7 +24680,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -26866,7 +24691,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26890,7 +24714,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -26901,7 +24724,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -26912,7 +24734,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -26923,7 +24744,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -26934,7 +24754,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26947,7 +24766,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -26959,7 +24777,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -26983,7 +24800,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -26994,7 +24810,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -27005,7 +24820,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -27016,7 +24830,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27027,7 +24840,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27043,7 +24855,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -27056,7 +24867,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27080,7 +24890,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27091,7 +24900,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27107,7 +24915,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -27119,7 +24926,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -27131,7 +24937,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27155,7 +24960,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27166,7 +24970,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27179,7 +24982,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `apiUserId`,
@@ -27190,7 +24992,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -27202,7 +25003,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27226,7 +25026,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -27237,7 +25036,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -27248,7 +25046,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27259,7 +25056,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -27270,7 +25066,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27286,7 +25081,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -27298,7 +25092,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -27310,7 +25103,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27340,7 +25132,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -27351,7 +25142,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -27362,7 +25152,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -27373,7 +25162,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27384,7 +25172,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27400,7 +25187,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -27413,7 +25199,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27437,7 +25222,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27448,7 +25232,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27464,7 +25247,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -27486,7 +25268,6 @@ which protocol (like TCP or UDP) the connection uses.`,
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -27498,7 +25279,6 @@ which protocol (like TCP or UDP) the connection uses.`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27522,7 +25302,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27533,7 +25312,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27549,7 +25327,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -27561,7 +25338,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -27573,7 +25349,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27597,7 +25372,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27608,7 +25382,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27624,7 +25397,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -27636,7 +25408,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -27648,7 +25419,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27672,7 +25442,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -27683,7 +25452,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -27694,7 +25462,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -27705,7 +25472,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27716,7 +25482,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27732,7 +25497,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -27745,7 +25509,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27775,7 +25538,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -27786,7 +25548,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27802,7 +25563,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -27816,7 +25576,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 							`json`,
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27840,7 +25599,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27851,7 +25609,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `projectOwnerId`,
@@ -27862,7 +25619,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -27875,7 +25631,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27899,7 +25654,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -27910,7 +25664,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27926,7 +25679,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -27939,7 +25691,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -27963,7 +25714,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -27974,7 +25724,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27990,7 +25739,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -28003,7 +25751,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28027,7 +25774,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28043,7 +25789,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -28055,7 +25800,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28067,7 +25811,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28091,7 +25834,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28102,7 +25844,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28132,7 +25873,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -28146,7 +25886,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -28159,7 +25898,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28183,7 +25921,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28194,7 +25931,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28210,7 +25946,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -28223,7 +25958,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28247,7 +25981,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28258,7 +25991,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28271,7 +26003,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -28283,7 +26014,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28307,7 +26037,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28318,7 +26047,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28334,7 +26062,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -28346,7 +26073,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -28358,7 +26084,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28382,7 +26107,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28393,7 +26117,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28423,7 +26146,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -28437,7 +26159,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -28450,7 +26171,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28474,7 +26194,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28485,7 +26204,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -28496,7 +26214,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `instanceSize`,
@@ -28507,7 +26224,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `M10`,
 						},
 						{
 							Name:        `defaultStatus`,
@@ -28518,7 +26234,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -28529,7 +26244,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -28540,7 +26254,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28556,7 +26269,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -28569,7 +26281,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28593,7 +26304,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28604,7 +26314,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28620,7 +26329,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -28633,7 +26341,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28657,7 +26364,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28668,7 +26374,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `username`,
@@ -28679,7 +26384,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28695,7 +26399,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -28708,7 +26411,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28732,7 +26434,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28743,7 +26444,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28759,7 +26459,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -28772,7 +26471,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28796,7 +26494,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -28807,7 +26504,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -28818,7 +26514,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -28829,7 +26524,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28840,7 +26534,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `flattenTeams`,
@@ -28851,7 +26544,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeOrgUsers`,
@@ -28862,7 +26554,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28878,7 +26569,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -28891,7 +26581,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2043-01-01`,
@@ -28899,7 +26588,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -28923,7 +26611,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -28934,7 +26621,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -28945,7 +26631,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -28956,7 +26641,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -28967,7 +26651,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -28980,7 +26663,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29004,7 +26686,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29020,7 +26701,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29033,7 +26713,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29057,7 +26736,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29068,7 +26746,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29084,7 +26761,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -29096,7 +26772,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -29108,7 +26783,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2043-01-01`,
@@ -29116,7 +26790,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29140,7 +26813,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29151,7 +26823,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29167,7 +26838,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29180,7 +26850,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29207,7 +26876,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29218,7 +26886,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29248,7 +26915,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -29262,7 +26928,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29275,7 +26940,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29299,7 +26963,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29310,7 +26973,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29326,7 +26988,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29339,7 +27000,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29363,7 +27023,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29374,7 +27033,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29390,7 +27048,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29403,7 +27060,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29427,7 +27083,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29443,7 +27098,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -29455,7 +27109,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -29467,7 +27120,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29491,7 +27143,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -29502,7 +27153,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29518,7 +27168,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -29530,7 +27179,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPut,
@@ -29542,7 +27190,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29566,7 +27213,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29577,7 +27223,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29593,7 +27238,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29606,7 +27250,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29636,7 +27279,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29647,7 +27289,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29663,7 +27304,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29676,7 +27316,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29700,7 +27339,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29711,7 +27349,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29727,7 +27364,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29740,7 +27376,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29764,7 +27399,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29775,7 +27409,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29791,7 +27424,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29804,7 +27436,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29828,7 +27459,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29839,7 +27469,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29855,7 +27484,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -29868,7 +27496,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29898,7 +27525,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29909,7 +27535,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29922,7 +27547,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -29934,7 +27558,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -29958,7 +27581,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -29969,7 +27591,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29982,7 +27603,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `resourcePolicyId`,
@@ -29993,7 +27613,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30005,7 +27624,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30029,7 +27647,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30040,7 +27657,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30053,7 +27669,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -30065,7 +27680,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30089,7 +27703,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30100,7 +27713,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30113,7 +27725,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `resourcePolicyId`,
@@ -30124,7 +27735,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -30136,7 +27746,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30160,7 +27769,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30171,7 +27779,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30184,7 +27791,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -30196,7 +27802,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30220,7 +27825,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30231,7 +27835,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30244,7 +27847,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `resourcePolicyId`,
@@ -30255,7 +27857,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -30267,7 +27868,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30291,7 +27891,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30302,7 +27901,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30315,7 +27913,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -30327,7 +27924,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30357,7 +27953,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30368,7 +27963,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30384,7 +27978,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -30396,7 +27989,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -30407,100 +27999,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
-						},
-						RequestBodyExamples: []RequestBodyExample{
-							{
-								Name:        "2dspere Index",
-								Description: "2dspere Index",
-								Value: `{
-  "collation": {
-    "alternate": "non-ignorable",
-    "backwards": false,
-    "caseFirst": "lower",
-    "caseLevel": false,
-    "locale": "af",
-    "maxVariable": "punct",
-    "normalization": false,
-    "numericOrdering": false,
-    "strength": 3
-  },
-  "collection": "accounts",
-  "db": "sample_airbnb",
-  "keys": [
-    {
-      "property_type": "1"
-    }
-  ],
-  "options": {
-    "name": "PartialIndexTest",
-    "partialFilterExpression": {
-      "limit": {
-        "$gt": 900
-      }
-    }
-  }
-}`,
-							},
-							{
-								Name:        "Partial Index",
-								Description: "Partial Index",
-								Value: `{
-  "collation": {
-    "alternate": "non-ignorable",
-    "backwards": false,
-    "caseFirst": "lower",
-    "caseLevel": false,
-    "locale": "af",
-    "maxVariable": "punct",
-    "normalization": false,
-    "numericOrdering": false,
-    "strength": 3
-  },
-  "collection": "accounts",
-  "db": "sample_airbnb",
-  "keys": [
-    {
-      "property_type": "1"
-    }
-  ],
-  "options": {
-    "name": "PartialIndexTest",
-    "partialFilterExpression": {
-      "limit": {
-        "$gt": 900
-      }
-    }
-  }
-}`,
-							},
-							{
-								Name:        "Sparse Index",
-								Description: "Sparse Index",
-								Value: `{
-  "collation": {
-    "alternate": "non-ignorable",
-    "backwards": false,
-    "caseFirst": "lower",
-    "caseLevel": false,
-    "locale": "af",
-    "maxVariable": "punct",
-    "normalization": false,
-    "numericOrdering": false,
-    "strength": 3
-  },
-  "collection": "accounts",
-  "db": "sample_airbnb",
-  "keys": [
-    {
-      "test_field": "1"
-    }
-  ],
-  "options": {
-    "name": "SparseIndexTest",
-    "sparse": true
-  }
-}`,
-							},
 						},
 					},
 				},
@@ -30531,7 +28029,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30542,7 +28039,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -30555,7 +28051,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30579,7 +28074,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -30592,7 +28086,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30625,7 +28118,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30636,7 +28128,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30652,7 +28143,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -30665,7 +28155,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -30710,7 +28199,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30721,7 +28209,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30737,7 +28224,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -30749,7 +28235,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30761,7 +28246,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -30802,7 +28286,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30813,7 +28296,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30829,7 +28311,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -30841,7 +28322,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -30853,7 +28333,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30880,7 +28359,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -30891,7 +28369,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -30902,7 +28379,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -30913,7 +28389,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30924,7 +28399,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30940,7 +28414,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -30953,7 +28426,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -30980,7 +28452,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -30991,7 +28462,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31007,7 +28477,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -31019,7 +28488,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -31031,7 +28499,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 				Watcher: &WatcherProperties{
@@ -31085,7 +28552,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31101,7 +28567,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -31113,7 +28578,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -31125,7 +28589,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31152,7 +28615,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31168,7 +28630,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -31180,7 +28641,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointId`,
@@ -31191,7 +28651,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -31203,7 +28662,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31230,7 +28688,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31246,7 +28703,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -31258,7 +28714,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointId`,
@@ -31269,7 +28724,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31281,7 +28735,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31308,7 +28761,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31324,7 +28776,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -31336,7 +28787,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31348,7 +28798,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31375,7 +28824,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31391,7 +28839,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -31403,7 +28850,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endpointId`,
@@ -31414,7 +28860,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -31426,7 +28871,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31456,7 +28900,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -31467,7 +28910,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31480,7 +28922,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 						{
 							Name: `groupId`,
@@ -31494,7 +28935,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -31507,7 +28947,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31531,7 +28970,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -31542,7 +28980,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31558,7 +28995,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -31571,7 +29007,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31595,7 +29030,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -31606,7 +29040,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31617,7 +29050,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -31628,7 +29060,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -31639,7 +29070,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31655,7 +29085,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -31667,7 +29096,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -31679,7 +29107,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31703,7 +29130,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -31714,7 +29140,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31730,7 +29155,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -31742,7 +29166,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -31754,7 +29177,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31778,7 +29200,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -31789,7 +29210,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31802,7 +29222,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -31814,7 +29233,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31838,7 +29256,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -31849,7 +29266,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31860,7 +29276,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -31871,7 +29286,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -31882,7 +29296,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31895,7 +29308,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `clientId`,
@@ -31906,7 +29318,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -31918,7 +29329,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -31942,7 +29352,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -31953,7 +29362,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31966,7 +29374,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `clientId`,
@@ -31977,7 +29384,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -31989,7 +29395,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32013,7 +29418,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32024,7 +29428,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32037,7 +29440,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 						{
 							Name: `groupId`,
@@ -32051,7 +29453,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -32064,7 +29465,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32088,7 +29488,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32099,7 +29498,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32115,7 +29513,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -32127,7 +29524,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 						{
 							Name:        `ipAddress`,
@@ -32138,7 +29534,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `192.0.2.0%2F24`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -32150,7 +29545,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32174,7 +29568,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32185,7 +29578,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32198,7 +29590,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 						{
 							Name:        `secretId`,
@@ -32209,7 +29600,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -32223,7 +29613,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -32236,7 +29625,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32260,7 +29648,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32271,7 +29658,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32284,7 +29670,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 						{
 							Name:        `orgId`,
@@ -32295,7 +29680,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -32307,7 +29691,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32331,7 +29714,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32342,7 +29724,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32355,7 +29736,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `clientId`,
@@ -32366,7 +29746,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 						{
 							Name:        `ipAddress`,
@@ -32377,7 +29756,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `192.0.2.0%2F24`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -32389,7 +29767,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32413,7 +29790,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32424,7 +29800,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32437,7 +29812,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 						{
 							Name:        `secretId`,
@@ -32448,7 +29822,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `orgId`,
@@ -32459,7 +29832,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -32471,7 +29843,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32495,7 +29866,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32506,7 +29876,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32522,7 +29891,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -32534,7 +29902,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -32546,7 +29913,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32570,7 +29936,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32581,7 +29946,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32594,7 +29958,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `clientId`,
@@ -32605,7 +29968,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -32617,7 +29979,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32641,7 +30002,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -32652,7 +30012,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -32663,7 +30022,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -32674,7 +30032,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32685,7 +30042,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32701,7 +30057,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -32713,7 +30068,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -32725,7 +30079,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32749,7 +30102,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -32760,7 +30112,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32771,7 +30122,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -32782,7 +30132,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32798,7 +30147,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -32811,7 +30159,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32835,7 +30182,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -32846,7 +30192,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -32857,7 +30202,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -32868,7 +30212,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32879,7 +30222,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32892,7 +30234,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `clientId`,
@@ -32903,7 +30244,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -32915,7 +30255,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -32939,7 +30278,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -32950,7 +30288,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -32961,7 +30298,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -32972,7 +30308,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32985,7 +30320,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `clientId`,
@@ -32996,7 +30330,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -33008,7 +30341,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33032,7 +30364,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -33043,7 +30374,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33054,7 +30384,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -33065,7 +30394,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33078,7 +30406,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -33090,7 +30417,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33114,7 +30440,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33125,7 +30450,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33138,7 +30462,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 						{
 							Name: `groupId`,
@@ -33152,7 +30475,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -33165,7 +30487,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33189,7 +30510,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33200,7 +30520,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33213,7 +30532,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `mdb_sa_id_1234567890abcdef12345678`,
 						},
 						{
 							Name:        `orgId`,
@@ -33224,7 +30542,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -33236,7 +30553,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33269,7 +30585,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33280,7 +30595,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33293,7 +30607,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -33307,7 +30620,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -33320,7 +30632,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33347,7 +30658,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33358,7 +30668,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33371,7 +30680,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -33385,7 +30693,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -33397,7 +30704,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -33409,7 +30715,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33436,7 +30741,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33447,7 +30751,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33460,7 +30763,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -33474,7 +30776,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -33487,7 +30788,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33520,7 +30820,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33531,7 +30830,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33544,7 +30842,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -33558,7 +30855,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -33571,7 +30867,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33598,7 +30893,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33609,7 +30903,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33625,7 +30918,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -33637,7 +30929,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `snapshotId`,
@@ -33648,7 +30939,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -33660,7 +30950,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33687,7 +30976,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33698,7 +30986,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33714,7 +31001,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -33726,7 +31012,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -33738,7 +31023,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33768,7 +31052,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33784,7 +31067,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -33796,7 +31078,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -33808,7 +31089,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33832,7 +31112,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33843,7 +31122,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33859,7 +31137,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -33872,7 +31149,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33896,7 +31172,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33907,7 +31182,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33923,7 +31197,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -33935,7 +31208,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -33947,7 +31219,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -33971,7 +31242,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -33982,7 +31252,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33998,7 +31267,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -34011,7 +31279,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34035,7 +31302,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -34046,7 +31312,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34062,7 +31327,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -34075,7 +31339,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34099,7 +31362,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -34110,7 +31372,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34126,7 +31387,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34138,7 +31398,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -34150,7 +31409,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34174,7 +31432,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -34185,7 +31442,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34201,7 +31457,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34213,7 +31468,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -34225,7 +31479,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34249,7 +31502,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -34260,7 +31512,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34276,7 +31527,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34288,7 +31538,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `connectionName`,
@@ -34299,7 +31548,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -34311,7 +31559,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34335,7 +31582,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -34346,7 +31592,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34362,7 +31607,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34374,7 +31618,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -34386,7 +31629,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34410,7 +31652,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -34421,7 +31662,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34437,7 +31677,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34449,7 +31688,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `processorName`,
@@ -34460,7 +31698,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -34472,7 +31709,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34496,7 +31732,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34512,7 +31747,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34524,7 +31758,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -34536,7 +31769,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34560,7 +31792,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `endDate`,
@@ -34571,7 +31802,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `startDate`,
@@ -34582,7 +31812,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34598,7 +31827,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34610,7 +31838,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -34622,7 +31849,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`gzip`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34646,7 +31872,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -34657,7 +31882,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `regionName`,
@@ -34668,7 +31892,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34684,7 +31907,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -34697,7 +31919,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34721,7 +31942,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -34732,7 +31952,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -34743,7 +31962,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -34754,7 +31972,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34770,7 +31987,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -34783,7 +31999,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34807,7 +32022,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34823,7 +32037,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34835,7 +32048,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -34847,7 +32059,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34871,7 +32082,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34887,7 +32097,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34899,7 +32108,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `connectionName`,
@@ -34910,7 +32118,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -34922,7 +32129,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -34946,7 +32152,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeConnections`,
@@ -34957,7 +32162,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -34973,7 +32177,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -34985,7 +32188,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -34997,7 +32199,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35021,7 +32222,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35032,7 +32232,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35048,7 +32247,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -35060,7 +32258,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `processorName`,
@@ -35071,7 +32268,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -35083,7 +32279,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35107,7 +32302,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `envelope`,
@@ -35118,7 +32312,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -35129,7 +32322,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -35140,7 +32332,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35151,7 +32342,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35167,7 +32357,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -35180,7 +32369,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35204,7 +32392,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -35215,7 +32402,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -35226,7 +32412,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35237,7 +32422,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35253,7 +32437,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -35266,7 +32449,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35290,7 +32472,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -35301,7 +32482,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -35312,7 +32492,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35323,7 +32502,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35339,7 +32517,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -35351,7 +32528,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -35363,7 +32539,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35387,7 +32562,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -35398,7 +32572,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -35409,7 +32582,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35420,7 +32592,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35436,7 +32607,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -35449,7 +32619,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35473,7 +32642,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35484,7 +32652,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -35495,7 +32662,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -35506,7 +32672,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -35517,7 +32682,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35533,7 +32697,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -35545,7 +32708,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -35557,7 +32719,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35581,7 +32742,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35592,7 +32752,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35608,7 +32767,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -35620,7 +32778,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `processorName`,
@@ -35631,7 +32788,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -35643,7 +32799,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35667,7 +32822,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35683,7 +32837,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -35695,7 +32848,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -35707,7 +32859,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35731,7 +32882,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35742,7 +32892,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35758,7 +32907,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -35770,7 +32918,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `processorName`,
@@ -35781,7 +32928,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -35793,7 +32939,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35817,7 +32962,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35828,7 +32972,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35844,7 +32987,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -35856,7 +32998,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `processorName`,
@@ -35867,7 +33008,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -35879,7 +33019,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35903,7 +33042,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -35914,7 +33052,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -35930,7 +33067,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -35942,7 +33078,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `connectionName`,
@@ -35953,7 +33088,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -35965,7 +33099,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -35989,7 +33122,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36000,7 +33132,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36016,7 +33147,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -36028,7 +33158,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -36040,7 +33169,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36070,7 +33198,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36081,7 +33208,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36097,7 +33223,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -36110,7 +33235,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36134,7 +33258,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36145,7 +33268,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36158,7 +33280,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `teamId`,
@@ -36169,7 +33290,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -36181,7 +33301,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36205,7 +33324,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36216,7 +33334,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36229,7 +33346,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodPost,
@@ -36241,7 +33357,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36265,7 +33380,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36276,7 +33390,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36289,7 +33402,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `teamId`,
@@ -36300,7 +33412,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -36312,7 +33423,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36336,7 +33446,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36347,7 +33456,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36360,7 +33468,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `teamId`,
@@ -36371,7 +33478,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -36383,7 +33489,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36407,7 +33512,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36418,7 +33522,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36431,7 +33534,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `teamName`,
@@ -36442,7 +33544,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -36454,7 +33555,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36478,7 +33578,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -36489,7 +33588,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -36500,7 +33598,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -36511,7 +33608,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36522,7 +33618,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36535,7 +33630,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 					},
 					Verb: http.MethodGet,
@@ -36547,7 +33641,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36571,7 +33664,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36582,7 +33674,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -36593,7 +33684,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -36604,7 +33694,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -36615,7 +33704,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36631,7 +33719,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -36644,7 +33731,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36668,7 +33754,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -36679,7 +33764,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -36690,7 +33774,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36701,7 +33784,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36714,7 +33796,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `teamId`,
@@ -36725,7 +33806,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -36737,7 +33817,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2043-01-01`,
@@ -36745,7 +33824,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36769,7 +33847,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36785,7 +33862,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -36797,7 +33873,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -36809,7 +33884,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36833,7 +33907,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36844,7 +33917,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36857,7 +33929,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `teamId`,
@@ -36868,7 +33939,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `userId`,
@@ -36879,7 +33949,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -36891,7 +33960,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36915,7 +33983,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36926,7 +33993,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -36939,7 +34005,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `4888442a3354817a7320eb61`,
 						},
 						{
 							Name:        `teamId`,
@@ -36950,7 +34015,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -36962,7 +34026,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -36986,7 +34049,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -36997,7 +34059,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -37013,7 +34074,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -37025,7 +34085,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -37037,7 +34096,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -37067,7 +34125,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `additionalInfo`,
@@ -37078,7 +34135,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -37091,7 +34147,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 					{
 						Version:            `2023-02-01`,
@@ -37099,7 +34154,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -37132,7 +34186,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -37143,7 +34196,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -37154,7 +34206,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -37165,7 +34216,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -37176,7 +34226,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -37189,7 +34238,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -37203,7 +34251,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -37216,7 +34263,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -37240,7 +34286,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -37251,7 +34296,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -37264,7 +34308,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -37278,7 +34321,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -37291,7 +34333,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -37315,7 +34356,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -37326,7 +34366,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -37342,7 +34381,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -37354,7 +34392,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -37366,7 +34403,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -37390,7 +34426,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -37401,7 +34436,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -37412,7 +34446,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -37423,7 +34456,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -37434,7 +34466,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -37450,7 +34481,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -37463,7 +34493,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -37487,7 +34516,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -37498,7 +34526,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -37509,7 +34536,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -37520,7 +34546,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -37531,7 +34556,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -37544,7 +34568,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 						{
 							Name: `groupId`,
@@ -37558,7 +34581,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -37571,7 +34593,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -37607,7 +34628,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -37618,7 +34638,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -37634,7 +34653,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -37646,7 +34664,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodPost,
@@ -37658,7 +34675,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -37685,7 +34701,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -37701,7 +34716,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 					},
@@ -37714,7 +34728,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},
@@ -37738,7 +34751,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `includeCount`,
@@ -37749,7 +34761,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -37760,7 +34771,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pageNum`,
@@ -37771,7 +34781,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
-							Example: ``,
 						},
 						{
 							Name:        `pretty`,
@@ -37782,7 +34791,6 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
-							Example: ``,
 						},
 					},
 					URLParameters: []Parameter{
@@ -37798,7 +34806,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: `32b6e34b3d91647abb20e7b8`,
 							Aliases: []string{`projectId`},
 						},
 						{
@@ -37810,7 +34817,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
-							Example: ``,
 						},
 					},
 					Verb: http.MethodGet,
@@ -37822,7 +34828,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						ResponseContentTypes: []string{
 							`json`,
 						},
-						RequestBodyExamples: []RequestBodyExample{},
 					},
 				},
 			},

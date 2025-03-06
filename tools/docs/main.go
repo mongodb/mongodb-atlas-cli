@@ -91,6 +91,17 @@ func updateLeafDescriptions(cmd *cobra.Command) {
 	}
 }
 
+func addAdditionalLongText(cmd *cobra.Command) {
+	if additionalLongText, found := cmd.Annotations["DocsAdditionalLongText"]; found && additionalLongText != "" {
+		cmd.Long += "\n\n"
+		cmd.Long += additionalLongText
+	}
+
+	for _, cmd := range cmd.Commands() {
+		addAdditionalLongText(cmd)
+	}
+}
+
 func main() {
 	if err := os.RemoveAll("./docs/command"); err != nil {
 		log.Fatal(err)
@@ -114,6 +125,7 @@ func main() {
 	setDisableAutoGenTag(atlasBuilder)
 	addExperimenalToAPICommands(atlasBuilder)
 	updateAPICommandDescription(atlasBuilder)
+	addAdditionalLongText(atlasBuilder)
 
 	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command"); err != nil {
 		log.Fatal(err)

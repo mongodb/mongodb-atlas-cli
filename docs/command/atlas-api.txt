@@ -51,10 +51,11 @@ Arguments
    * - <tag>
      - string
      - true
-     - The category of {+atlas-admin-api+} operations in :wikipedia:`camelCase <Camel_case>`. 
+     - The category of Atlas Administration API operations in camelCase . 
        To find and format the tag, check 
-       the `API documentation <https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/>`__ 
-       |url| for the endpoint. It appears after ``#tag/``, but you need to change to camelCase. 
+       the Atlas Administration API documentation URL 
+       for the endpoint. It appears after ``#tag/``, but you need to change to camelCase. For the Atlas API 
+       documentation, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.
        
        For example, in 
        ``https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs``, 

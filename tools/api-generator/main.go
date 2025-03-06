@@ -37,6 +37,9 @@ import (
 //go:embed commands.go.tmpl
 var templateContent string
 
+//go:embed examples.go.tmpl
+var examplesTemplateContent string
+
 func main() {
 	var (
 		specPath    string

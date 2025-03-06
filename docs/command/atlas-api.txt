@@ -21,9 +21,7 @@ For more information on
 - Getting started with the Atlas Administration API: https://www.mongodb.com/docs/atlas/configure-api-access/#std-label-atlas-admin-api-access
 
 This experimental feature streamlines script development by letting you interact 
-directly with any {+atlas-admin-api+} endpoint by using the {+atlas-cli+}.
-
-To learn more about working with the {+atlas-admin-api+}, see :ref:`atlas-admin-api-access`.
+directly with any Atlas Administration API endpoint by using the Atlas CLI.
 
 Syntax
 ------
@@ -51,10 +49,10 @@ Arguments
    * - <tag>
      - string
      - true
-     - The category of Atlas Administration API operations in camelCase . 
+     - The category of Atlas Administration API operations in camelCase. 
        To find and format the tag, check 
-       the Atlas Administration API documentation URL 
-       for the endpoint. It appears after ``#tag/``, but you need to change to camelCase. For the Atlas API 
+       the API documentation 
+       URL for the endpoint. It appears after ``#tag/``, but you need to change to camelCase. For the Atlas API 
        documentation, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.
        
        For example, in 
@@ -65,7 +63,7 @@ Arguments
      - true
      - The identifier of the Atlas Administration API endpoint in camelCase. 
        To find the operationId, check the 
-       API documentation
+       API documentation  
        URL for the endpoint. It appears after ``operation/``. For the Atlas API 
        documentation, see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.
        
@@ -75,7 +73,7 @@ Arguments
 
 
 Subcommand options  
--------  
+----------------------  
 
 Pass in the path and query parameters for the Atlas Administration API endpoint 
 as flags. For example, if the endpoint is ``/api/atlas/v2/orgs/{orgId}/invoices/{invoiceId}``, 

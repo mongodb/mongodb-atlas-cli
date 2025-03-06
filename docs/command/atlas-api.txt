@@ -124,7 +124,7 @@ In addition, the following options are available for all Atlas Administration AP
       
        To determine the supported formats for an endpoint:
        
-       - Check the content response type examples in the `API documentation <https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/>`__.
+       - Check the content response type examples in the API documentation: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/.
        - Run ``atlas api <tag> <operationId> --help`` for details.  
    * - ``-o, --out-file``  
      - string  

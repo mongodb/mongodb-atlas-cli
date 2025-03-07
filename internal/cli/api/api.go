@@ -111,6 +111,9 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 		Aliases: command.Aliases,
 		Short:   shortDescription,
 		Long:    longDescription,
+		Annotations: map[string]string{
+			"operationId": command.OperationID,
+		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			// Go through all commands that have not been touched/modified by the user and try to populate them from the users profile
 			// Common usecases:

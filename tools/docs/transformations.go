@@ -18,6 +18,8 @@ import (
 	"regexp"
 	"strings"
 
+	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
 
@@ -49,8 +51,27 @@ func updateAPICommandDescription(cmd *cobra.Command) {
 	cmd.Long = strings.Join(lines, "\n")
 }
 
+func isFirstClassPlugin(command *cobra.Command) bool {
+	for _, fcp := range pluginCmd.FirstClassPlugins {
+		cmd := fcp.Commands
+		for _, c := range cmd {
+			if command.Name() == c.Name {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func removePluginCommands(cmd *cobra.Command) {
+	if plugin.IsPluginCmd(cmd) && !isFirstClassPlugin(cmd) {
+		cmd.Parent().RemoveCommand(cmd)
+	}
+}
+
 func applyTransformations(cmd *cobra.Command) {
 	setDisableAutoGenTag(cmd)
+	removePluginCommands(cmd)
 
 	if isAPICommand(cmd) {
 		markExperimenalToAPICommands(cmd)

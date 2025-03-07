@@ -16,9 +16,12 @@
 // Code generated using `make gen-api-commands`. DO NOT EDIT.
 // Don't make any manual changes to this file.
 
-package api
+package main
 
-var EndpointExamples = map[string]Examples{
+import 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+
+
+var EndpointExamples = map[string]api.Examples{
 {{- range $operationID, $examples := . }}
 	"{{ $operationID }}": {
 		ParameterExample: map[string]string{
@@ -26,7 +29,7 @@ var EndpointExamples = map[string]Examples{
 			"{{ $paramName }}": "{{ $example }}",
 		{{- end }}
 		},
-		RequestBodyExamples: map[string][]RequestBodyExample{
+		RequestBodyExamples: map[string][]api.RequestBodyExample{
 		{{- range $version, $requestBodyExamples := $examples.RequestBodyExamples }}
 			"{{ $version }}": {
 				{{- range $example := $requestBodyExamples }}

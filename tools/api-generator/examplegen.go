@@ -30,12 +30,15 @@ import (
 
 // Returns a map of operationID:*Examples.
 func extractExamples(operation *openapi3.Operation, examplesMap map[string]*api.Examples) error {
-	paramMap := extractParameterExamples(operation.Parameters)
-
 	requestBodyExamples, err := extractRequestBodyExamples(operation.RequestBody)
 	if err != nil {
 		return err
 	}
+	if len(requestBodyExamples) == 0 {
+		return nil
+	}
+
+	paramMap := extractParameterExamples(operation.Parameters)
 
 	_, exists := examplesMap[operation.OperationID]
 	if exists {
@@ -114,9 +117,9 @@ func toJSONString(data any) string {
 }
 
 func exportExamples(examplesMap map[string]*api.Examples) error {
-	path := "internal/api/examples.go"
+	path := "tools/docs/examples.go"
 	if dir, _ := os.Getwd(); strings.HasSuffix(dir, "tools/api-generator") {
-		path = "../../internal/api/examples.go"
+		path = "../../tools/docs/examples.go"
 	}
 
 	file, err := os.Create(path)

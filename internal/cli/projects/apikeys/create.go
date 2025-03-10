@@ -77,7 +77,10 @@ func CreateBuilder() *cobra.Command {
 		},
 		Args: require.NoArgs,
 		Example: `  # Create an organization API key with the GROUP_OWNER role and assign it to the project with ID 5e2211c17a3e5a48f5497de3:
-  atlas projects apiKeys create --desc "My API key" --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_OWNER --output json`,
+  atlas projects apiKeys create --desc "My API key" --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_OWNER --output json
+  
+  # Create an organization API key with the GROUP_SEARCH_INDEX_EDITOR and GROUP_DATABASE_ACCESS_ADMIN roles and assign it to the project with ID 5e2211c17a3e5a48f5497de3:
+  atlas projects apiKeys create --desc "My API key" --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_SEARCH_INDEX_EDITOR,GROUP_DATABASE_ACCESS_ADMIN --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

@@ -17,6 +17,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -47,13 +48,20 @@ func testSpec(t *testing.T, name, specPath string) {
 		overlays = []io.Reader{overlayFile}
 	}
 
-	buf := &bytes.Buffer{}
-	if err := convertSpecToAPICommands(context.Background(), specFile, overlays, buf); err != nil {
-		t.Fatalf("failed to convert spec into commmands, error: %s", err)
+	outputFunctions := map[OutputType]func(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error{
+		Commands: convertSpecToAPICommands,
 	}
 
-	if err := snapshotter.SnapshotWithName(name, buf.String()); err != nil {
-		t.Fatalf("unexpected result %s", err)
+	for outputType, outputTypeFunc := range outputFunctions {
+		buf := &bytes.Buffer{}
+
+		if err := outputTypeFunc(context.Background(), specFile, overlays, buf); err != nil {
+			t.Fatalf("failed to convert spec into commmands, error: %s", err)
+		}
+
+		if err := snapshotter.SnapshotWithName(fmt.Sprintf("%s-%s", name, outputType), buf.String()); err != nil {
+			t.Fatalf("unexpected result %s", err)
+		}
 	}
 }
 

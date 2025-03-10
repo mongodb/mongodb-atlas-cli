@@ -18,36 +18,55 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
+	"errors"
 	"fmt"
 	"go/format"
 	"io"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"text/template"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/speakeasy-api/openapi-overlay/pkg/overlay"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
 
 //go:embed commands.go.tmpl
-var templateContent string
+var commandsTemplateContent string
+
+type OutputType string
+
+const (
+	Commands OutputType = "commands"
+	Metadata OutputType = "metadata"
+)
+
+// Returns all possible values of OutputType.
+func AllOutputTypes() []OutputType {
+	return []OutputType{Commands, Metadata}
+}
 
 func main() {
 	var (
-		specPath    string
-		overlayPath string
+		specPath      string
+		overlayPath   string
+		outputTypeStr string
 	)
 
 	var rootCmd = &cobra.Command{
 		Use:   "api-generator",
 		Short: "CLI which generates api command definitions from a OpenAPI spec",
 		RunE: func(command *cobra.Command, _ []string) error {
-			return run(command.Context(), specPath, overlayPath, command.OutOrStdout())
+			outputType := OutputType(outputTypeStr)
+			if !slices.Contains(AllOutputTypes(), outputType) {
+				return fmt.Errorf("'%s' is not a valid output type", outputType)
+			}
+
+			return run(command.Context(), specPath, overlayPath, outputType, command.OutOrStdout())
 		},
 	}
 
@@ -56,13 +75,15 @@ func main() {
 	_ = rootCmd.MarkFlagRequired("spec")
 	_ = rootCmd.MarkFlagFilename("spec")
 
+	rootCmd.Flags().StringVar(&outputTypeStr, "output-type", "", "Set output type [commands/metadata]")
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 }
 
-func run(ctx context.Context, specPath, overlayPath string, w io.Writer) error {
+func run(ctx context.Context, specPath, overlayPath string, outputType OutputType, w io.Writer) error {
 	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
 		return err
@@ -94,7 +115,14 @@ func run(ctx context.Context, specPath, overlayPath string, w io.Writer) error {
 		overlayFiles = append(overlayFiles, overlayFile)
 	}
 
-	return convertSpecToAPICommands(ctx, specFile, overlayFiles, w)
+	switch outputType {
+	case Commands:
+		return convertSpecToAPICommands(ctx, specFile, overlayFiles, w)
+	case Metadata:
+		return errors.New("TODO")
+	default:
+		return fmt.Errorf("'%s' is not a valid outputType", outputType)
+	}
 }
 
 func applyOverlays(r io.Reader, overlayFiles []io.Reader) (io.Reader, error) {
@@ -134,6 +162,10 @@ func applyOverlays(r io.Reader, overlayFiles []io.Reader) (io.Reader, error) {
 }
 
 func convertSpecToAPICommands(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error {
+	return convertSpec(ctx, r, overlayFiles, w, specToCommands, commandsTemplateContent)
+}
+
+func convertSpec[T any](ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer, mapper func(spec *openapi3.T) (T, error), templateContent string) error {
 	overlaySpec, err := applyOverlays(r, overlayFiles)
 	if err != nil {
 		return fmt.Errorf("failed to apply overlays, error: %w", err)
@@ -148,12 +180,12 @@ func convertSpecToAPICommands(ctx context.Context, r io.Reader, overlayFiles []i
 		return fmt.Errorf("spec validation failed, error: %w", err)
 	}
 
-	commands, err := specToCommands(spec)
+	commands, err := mapper(spec)
 	if err != nil {
 		return fmt.Errorf("failed convert spec to api commands: %w", err)
 	}
 
-	return writeCommands(w, commands)
+	return writeCommands(w, templateContent, commands)
 }
 
 func loadSpec(r io.Reader) (*openapi3.T, error) {
@@ -161,8 +193,8 @@ func loadSpec(r io.Reader) (*openapi3.T, error) {
 	return loader.LoadFromIoReader(r)
 }
 
-func writeCommands(w io.Writer, data api.GroupedAndSortedCommands) error {
-	tmpl, err := template.New("commands.go.tmpl").Funcs(template.FuncMap{
+func writeCommands[T any](w io.Writer, templateContent string, data T) error {
+	tmpl, err := template.New("output").Funcs(template.FuncMap{
 		"currentYear": func() int {
 			return time.Now().UTC().Year()
 		},

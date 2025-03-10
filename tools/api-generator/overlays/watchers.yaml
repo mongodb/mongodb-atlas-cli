@@ -441,3 +441,30 @@ actions:
               values:
                 - completed
                 - failed
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/outageSimulation'].post
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getOutageSimulation
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+          expect:
+            match:
+              path: $.state
+              values:
+                - SIMULATING
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/outageSimulation'].delete
+    update:
+      x-xgen-atlascli:
+        watcher:
+          get:
+            version: "2023-01-01"
+            operation-id: getOutageSimulation
+            params:
+              groupId: input:groupId
+              clusterName: input:clusterName
+          expect:
+            http-code: 404

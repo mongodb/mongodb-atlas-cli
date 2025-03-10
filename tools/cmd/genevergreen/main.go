@@ -22,7 +22,7 @@ import (
 	"log"
 
 	"github.com/evergreen-ci/shrub"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/genevergreen/generate"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/cmd/genevergreen/generate"
 )
 
 var (

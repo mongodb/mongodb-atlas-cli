@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package metadatatypes
+// Code generated using `make gen-api-commands`. DO NOT EDIT.
+// Don't make any manual changes to this file.
 
-type Metadata struct {
-	ParameterExample    map[string]string               // parameterName: parameterExample
-	RequestBodyExamples map[string][]RequestBodyExample // version: []RequestBodyExample
-}
+package main
 
-type RequestBodyExample struct {
-	Name        string
-	Description string
-	Value       string
-}
+import "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
+
+var EndpointExamples = map[string]metadatatypes.Metadata{}
+

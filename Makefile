@@ -96,7 +96,7 @@ check: test fix-lint ## Run tests and linters
 
 .PHONY: check-templates
 check-templates: ## Verify templates
-	go run ./tools/templates-checker
+	go run ./tools/cmd/templates-checker
 
 .PHONY: addcopy
 addcopy: ## Add missing license to files
@@ -106,17 +106,17 @@ addcopy: ## Add missing license to files
 generate: gen-docs gen-mocks gen-api-commands ## Generate docs, mocks, code, api commands, all auto generated assets
 
 bin/api-generator:
-	go build -o ./bin/api-generator ./tools/api-generator
+	go build -o ./bin/api-generator ./tools/cmd/api-generator
 
 .PHONY: gen-api-commands
 gen-api-commands: bin/api-generator ## Generate api commands
 	@echo "==> Generating api commands"
-	bin/api-generator --spec ./tools/api-generator/spec.yaml --overlay ./tools/api-generator/overlays --output-type commands > ./internal/api/commands.go
-	bin/api-generator --spec ./tools/api-generator/spec.yaml --overlay ./tools/api-generator/overlays --output-type metadata > ./tools/docs/metadata.go
+	bin/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays --output-type commands > ./internal/api/commands.go
+	bin/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays --output-type metadata > ./tools/cmd/docs/metadata.go
 
 .PHONY: otel
 otel: ## Generate code
-	go run ./tools/otel $(SPAN) --attr $(ATTRS)
+	go run ./tools/cmd/otel $(SPAN) --attr $(ATTRS)
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
@@ -127,7 +127,7 @@ gen-mocks: ## Generate mocks
 .PHONY: gen-docs
 gen-docs: ## Generate docs for atlascli commands
 	@echo "==> Generating docs"
-	go run -ldflags "$(LINKER_FLAGS)" ./tools/docs
+	go run -ldflags "$(LINKER_FLAGS)" ./tools/cmd/docs
 
 .PHONY: build
 build: ## Generate an atlas binary in ./bin
@@ -163,7 +163,7 @@ list: ## List all make targets
 .PHONY: check-library-owners
 check-library-owners: ## Check that all the dependencies in go.mod has a owner in library_owners.json
 	@echo "==> Check library_owners.json"
-	go run ./tools/libraryowners/main.go
+	go run ./tools/cmd/libraryowners/main.go
 	./scripts/verify-library-owners-sorted.sh
 
 .PHONY: update-atlas-sdk

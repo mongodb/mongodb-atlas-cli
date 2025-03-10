@@ -17,7 +17,7 @@
 
 package main
 
-import "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/docs/metadatatypes"
+import "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 
 var EndpointExamples = map[string]metadatatypes.Metadata{
 	"createCluster": {

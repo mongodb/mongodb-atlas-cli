@@ -21,7 +21,7 @@ jobs:
         id: verify-changed-files
         with:
           files: |
-             ./tools/api-generator/spec.yaml
+             ./tools/cmd/api-generator/spec.yaml
       - run:  make gen-api-commands
         if: steps.verify-changed-files.outputs.files_changed == 'true'
       - run:  make gen-docs

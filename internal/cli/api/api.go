@@ -16,7 +16,6 @@ package api
 
 import (
 	"bytes"
-	_ "embed"
 	"errors"
 	"fmt"
 	"io"
@@ -68,9 +67,6 @@ func Builder() *cobra.Command {
 	return apiCmd
 }
 
-//go:embed api_docs_long_text.txt
-var APIDocsAdditionalLongText string
-
 func createRootAPICommand() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "api",
@@ -80,9 +76,6 @@ func createRootAPICommand() *cobra.Command {
 For more information on
 - Atlas Administration API see: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/
 - Getting started with the Atlas Administration API: https://www.mongodb.com/docs/atlas/configure-api-access/#std-label-atlas-admin-api-access`,
-		Annotations: map[string]string{
-			"DocsAdditionalLongText": APIDocsAdditionalLongText,
-		},
 	}
 
 	rootCmd.SetHelpTemplate(cli.ExperimentalHelpTemplate)

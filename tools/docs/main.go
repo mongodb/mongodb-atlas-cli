@@ -21,19 +21,7 @@ import (
 	"github.com/mongodb-labs/cobra2snooty"
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
-	"github.com/spf13/cobra"
 )
-
-func addAdditionalLongText(cmd *cobra.Command) {
-	if additionalLongText, found := cmd.Annotations["DocsAdditionalLongText"]; found && additionalLongText != "" {
-		cmd.Long += "\n\n"
-		cmd.Long += additionalLongText
-	}
-
-	for _, cmd := range cmd.Commands() {
-		addAdditionalLongText(cmd)
-	}
-}
 
 func main() {
 	if err := os.RemoveAll("./docs/command"); err != nil {
@@ -50,7 +38,6 @@ func main() {
 	atlasBuilder.InitDefaultCompletionCmd()
 
 	applyTransformations(atlasBuilder)
-	addAdditionalLongText(atlasBuilder)
 
 	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command"); err != nil {
 		log.Fatal(err)

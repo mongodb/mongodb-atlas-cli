@@ -59,7 +59,6 @@ type Parameter struct {
 	Description string
 	Required    bool
 	Type        ParameterType
-	Example     string
 }
 
 type ParameterType struct {

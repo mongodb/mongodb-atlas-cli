@@ -6417,6 +6417,20 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getOutageSimulation`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						HTTPCode: 404, //nolint
+						Match:    nil,
+					},
+				},
 			},
 			{
 				OperationID: `getOutageSimulation`,
@@ -6554,6 +6568,24 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
+						},
+					},
+				},
+				Watcher: &WatcherProperties{
+					Get: WatcherGetProperties{
+						OperationID: `getOutageSimulation`,
+						Version:     `2023-01-01`,
+						Params: map[string]string{
+							`clusterName`: `input:clusterName`,
+							`groupId`:     `input:groupId`,
+						},
+					},
+					Expect: &WatcherExpectProperties{
+						Match: &WatcherMatchProperties{
+							Path: `$.state`,
+							Values: []string{
+								`SIMULATING`,
+							},
 						},
 					},
 				},

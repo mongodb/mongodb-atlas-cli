@@ -19,7 +19,7 @@ package main
 
 import "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 
-var EndpointExamples = map[string]api.Examples{
+var EndpointExamples = map[string]api.Metadata{
 	"createCluster": {
 		ParameterExample: map[string]string{
 			"groupId": "32b6e34b3d91647abb20e7b8",

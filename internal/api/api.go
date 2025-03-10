@@ -117,7 +117,7 @@ type WatcherMatchProperties struct {
 	Values []string
 }
 
-type Examples struct {
+type Metadata struct {
 	ParameterExample    map[string]string               // parameterName: parameterExample
 	RequestBodyExamples map[string][]RequestBodyExample // version: []RequestBodyExample
 }

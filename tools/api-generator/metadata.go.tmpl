@@ -20,8 +20,7 @@ package main
 
 import 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 
-
-var EndpointExamples = map[string]api.Examples{
+var EndpointExamples = map[string]api.Metadata{
 {{- range $operationID, $examples := . }}
 	"{{ $operationID }}": {
 		ParameterExample: map[string]string{

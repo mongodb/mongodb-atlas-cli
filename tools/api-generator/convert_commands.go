@@ -33,7 +33,6 @@ var (
 
 func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 	groups := make(map[string]*api.Group, 0)
-	examplesMap := make(map[string]*api.Examples, 0)
 
 	for path, item := range spec.Paths.Map() {
 		for verb, operation := range item.Operations() {
@@ -43,10 +42,6 @@ func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 			}
 			if command == nil {
 				continue
-			}
-			err = extractExamples(operation, examplesMap)
-			if err != nil {
-				return nil, fmt.Errorf("failed to extract example: %w", err)
 			}
 
 			if len(operation.Tags) != 1 {
@@ -65,10 +60,6 @@ func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 
 			groups[tag].Commands = append(groups[tag].Commands, *command)
 		}
-	}
-
-	if err := exportExamples(examplesMap); err != nil {
-		return nil, err
 	}
 
 	// Validate that the defined watchers:

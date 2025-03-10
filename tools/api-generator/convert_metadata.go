@@ -17,40 +17,50 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"sort"
-	"strings"
-	"text/template"
-	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
-// Returns a map of operationID:*Examples.
-func extractExamples(operation *openapi3.Operation, examplesMap map[string]*api.Examples) error {
+func specToMetadata(spec *openapi3.T) (map[string]*api.Metadata, error) {
+	metadataMap := make(map[string]*api.Metadata, 0)
+
+	for _, item := range spec.Paths.Map() {
+		for _, operation := range item.Operations() {
+			metadata, err := extractMetadata(operation)
+			if err != nil {
+				return nil, fmt.Errorf("failed to extract example: %w", err)
+			}
+			if metadata != nil {
+				metadataMap[operation.OperationID] = metadata
+			}
+		}
+	}
+	return metadataMap, nil
+}
+
+// Returns a map of operationID:*Metadata.
+func extractMetadata(operation *openapi3.Operation) (*api.Metadata, error) {
+	if operation == nil {
+		return nil, nil
+	}
+
 	requestBodyExamples, err := extractRequestBodyExamples(operation.RequestBody)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if len(requestBodyExamples) == 0 {
-		return nil
+		return nil, nil
 	}
 
 	paramMap := extractParameterExamples(operation.Parameters)
 
-	_, exists := examplesMap[operation.OperationID]
-	if exists {
-		return fmt.Errorf("expect no example to already be stored for OperationID: %s", operation.OperationID)
-	}
-
-	examplesMap[operation.OperationID] = &api.Examples{
+	return &api.Metadata{
 		ParameterExample:    paramMap,
 		RequestBodyExamples: requestBodyExamples,
-	}
-
-	return nil
+	}, nil
 }
 
 // For each parameter in an operation, the parameter name and example is extracted.
@@ -71,10 +81,11 @@ func extractParameterExamples(parameters openapi3.Parameters) map[string]string 
 // For each verion of an operation, the version and examples are extracted.
 // A map of version:[]examples is returned.
 func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[string][]api.RequestBodyExample, error) {
-	results := make(map[string][]api.RequestBodyExample, 0)
-	if requestBody == nil {
+	if requestBody == nil || requestBody.Value == nil {
 		return nil, nil
 	}
+
+	results := make(map[string][]api.RequestBodyExample, 0)
 
 	for versionedContentType, mediaType := range requestBody.Value.Content {
 		examples := make([]api.RequestBodyExample, 0)
@@ -84,15 +95,16 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 		}
 
 		for name, exampleRef := range mediaType.Examples {
-			if exampleRef != nil {
-				result := api.RequestBodyExample{
-					Name:        name,
-					Description: exampleRef.Value.Description,
-					Value:       toJSONString(exampleRef.Value.Value.(map[string]any)),
-				}
-
-				examples = append(examples, result)
+			if exampleRef == nil || exampleRef.Value == nil {
+				continue
 			}
+			result := api.RequestBodyExample{
+				Name:        name,
+				Description: exampleRef.Value.Description,
+				Value:       toJSONString(exampleRef.Value.Value.(map[string]any)),
+			}
+
+			examples = append(examples, result)
 		}
 
 		if len(examples) != 0 {
@@ -114,33 +126,4 @@ func toJSONString(data any) string {
 		return ""
 	}
 	return string(jsonData)
-}
-
-func exportExamples(examplesMap map[string]*api.Examples) error {
-	path := "tools/docs/examples.go"
-	if dir, _ := os.Getwd(); strings.HasSuffix(dir, "tools/api-generator") {
-		path = "../../tools/docs/examples.go"
-	}
-
-	file, err := os.Create(path)
-	if err != nil {
-		return fmt.Errorf("failed to create file: %w", err)
-	}
-	defer file.Close()
-
-	tmpl, err := template.New("examples.go.tmpl").Funcs(template.FuncMap{
-		"currentYear": func() int {
-			return time.Now().UTC().Year()
-		},
-	}).Parse(examplesTemplateContent)
-	if err != nil {
-		return fmt.Errorf("failed to parse template: %w", err)
-	}
-
-	// Execute the template and write to file
-	if err := tmpl.Execute(file, examplesMap); err != nil {
-		return fmt.Errorf("failed to execute template: %w", err)
-	}
-
-	return nil
 }

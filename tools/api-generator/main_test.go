@@ -29,35 +29,38 @@ import (
 
 func testSpec(t *testing.T, name, specPath string) {
 	t.Helper()
+
 	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".snapshot"))
-
-	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
-	if err != nil {
-		t.Fatalf("failed to load '%s', error: %s", specPath, err)
-	}
-	defer specFile.Close()
-
 	overlayPath := specPath + ".overlay.yaml"
-	var overlays []io.Reader
-	if _, err = os.Stat(overlayPath); err == nil {
-		overlayFile, err := os.OpenFile(overlayPath, os.O_RDONLY, os.ModePerm)
-		if err != nil {
-			t.Fatalf("failed to load '%s', error: %s", overlayPath, err)
-		}
-		defer overlayFile.Close()
-		overlays = []io.Reader{overlayFile}
-	}
 
 	outputFunctions := map[OutputType]func(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error{
 		Commands: convertSpecToAPICommands,
+		Metadata: convertSpecToMetadata,
 	}
 
 	for outputType, outputTypeFunc := range outputFunctions {
-		buf := &bytes.Buffer{}
-
-		if err := outputTypeFunc(context.Background(), specFile, overlays, buf); err != nil {
-			t.Fatalf("failed to convert spec into commmands, error: %s", err)
+		specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
+		if err != nil {
+			t.Fatalf("failed to load '%s', error: %s", specPath, err)
 		}
+
+		var overlays []io.Reader
+		var overlayFile *os.File
+		if _, err = os.Stat(overlayPath); err == nil {
+			overlayFile, err = os.OpenFile(overlayPath, os.O_RDONLY, os.ModePerm)
+			if err != nil {
+				t.Fatalf("failed to load '%s', error: %s", overlayPath, err)
+			}
+			overlays = []io.Reader{overlayFile}
+		}
+
+		buf := &bytes.Buffer{}
+		if err := outputTypeFunc(context.Background(), specFile, overlays, buf); err != nil {
+			t.Fatalf("failed to convert spec into %s, error: %s", outputType, err)
+		}
+
+		specFile.Close()
+		overlayFile.Close()
 
 		if err := snapshotter.SnapshotWithName(fmt.Sprintf("%s-%s", name, outputType), buf.String()); err != nil {
 			t.Fatalf("unexpected result %s", err)

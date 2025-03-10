@@ -21,7 +21,7 @@ import (
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/docs/metadatatypes"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 )
 
 func specToMetadata(spec *openapi3.T) (map[string]*metadatatypes.Metadata, error) {

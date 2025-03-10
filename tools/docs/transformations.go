@@ -15,6 +15,7 @@
 package main
 
 import (
+	_ "embed"
 	"regexp"
 	"strings"
 
@@ -22,6 +23,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
 )
+
+//go:embed api_docs_long_text.txt
+var atlasAPIDocsAdditionalLongText string
+
+var additionalLongTexts = map[string]string{
+	"atlas api": atlasAPIDocsAdditionalLongText,
+}
+
+func addAdditionalLongText(cmd *cobra.Command) {
+	commandPath := cmd.CommandPath()
+	if additionalLongText, found := additionalLongTexts[commandPath]; found && additionalLongText != "" {
+		cmd.Long += "\n\n"
+		cmd.Long += additionalLongText
+	}
+}
 
 func isAPICommand(cmd *cobra.Command) bool {
 	return regexp.MustCompile("^atlas api( |$)").MatchString(cmd.CommandPath())
@@ -72,6 +88,7 @@ func removePluginCommands(cmd *cobra.Command) {
 func applyTransformations(cmd *cobra.Command) {
 	setDisableAutoGenTag(cmd)
 	removePluginCommands(cmd)
+	addAdditionalLongText(cmd)
 
 	if isAPICommand(cmd) {
 		markExperimenalToAPICommands(cmd)

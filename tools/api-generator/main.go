@@ -18,7 +18,6 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
-	"errors"
 	"fmt"
 	"go/format"
 	"io"
@@ -37,6 +36,9 @@ import (
 
 //go:embed commands.go.tmpl
 var commandsTemplateContent string
+
+//go:embed metadata.go.tmpl
+var metadataTemplateContent string
 
 type OutputType string
 
@@ -119,7 +121,7 @@ func run(ctx context.Context, specPath, overlayPath string, outputType OutputTyp
 	case Commands:
 		return convertSpecToAPICommands(ctx, specFile, overlayFiles, w)
 	case Metadata:
-		return errors.New("TODO")
+		return convertSpecToMetadata(ctx, specFile, overlayFiles, w)
 	default:
 		return fmt.Errorf("'%s' is not a valid outputType", outputType)
 	}
@@ -165,6 +167,10 @@ func convertSpecToAPICommands(ctx context.Context, r io.Reader, overlayFiles []i
 	return convertSpec(ctx, r, overlayFiles, w, specToCommands, commandsTemplateContent)
 }
 
+func convertSpecToMetadata(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error {
+	return convertSpec(ctx, r, overlayFiles, w, specToMetadata, metadataTemplateContent)
+}
+
 func convertSpec[T any](ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer, mapper func(spec *openapi3.T) (T, error), templateContent string) error {
 	overlaySpec, err := applyOverlays(r, overlayFiles)
 	if err != nil {
@@ -176,8 +182,10 @@ func convertSpec[T any](ctx context.Context, r io.Reader, overlayFiles []io.Read
 		return fmt.Errorf("failed to load spec, error: %w", err)
 	}
 
-	if err := spec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
-		return fmt.Errorf("spec validation failed, error: %w", err)
+	if templateContent != metadataTemplateContent {
+		if err := spec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
+			return fmt.Errorf("spec validation failed, error: %w", err)
+		}
 	}
 
 	commands, err := mapper(spec)

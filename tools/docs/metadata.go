@@ -17,14 +17,14 @@
 
 package main
 
-import "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+import "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/docs/metadatatypes"
 
-var EndpointExamples = map[string]api.Metadata{
+var EndpointExamples = map[string]metadatatypes.Metadata{
 	"createCluster": {
 		ParameterExample: map[string]string{
 			"groupId": "32b6e34b3d91647abb20e7b8",
 		},
-		RequestBodyExamples: map[string][]api.RequestBodyExample{
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
 			"2024-08-05": {
 				{
 					Name:        "Cluster",
@@ -255,7 +255,7 @@ var EndpointExamples = map[string]api.Metadata{
 		ParameterExample: map[string]string{
 			"groupId": "32b6e34b3d91647abb20e7b8",
 		},
-		RequestBodyExamples: map[string][]api.RequestBodyExample{
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
 			"2023-01-01": {
 				{
 					Name:        "AWS IAM Authentication",
@@ -420,7 +420,7 @@ var EndpointExamples = map[string]api.Metadata{
 		ParameterExample: map[string]string{
 			"groupId": "32b6e34b3d91647abb20e7b8",
 		},
-		RequestBodyExamples: map[string][]api.RequestBodyExample{
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
 			"2023-01-01": {
 				{
 					Name:        "AWS",
@@ -458,7 +458,7 @@ var EndpointExamples = map[string]api.Metadata{
 		ParameterExample: map[string]string{
 			"groupId": "32b6e34b3d91647abb20e7b8",
 		},
-		RequestBodyExamples: map[string][]api.RequestBodyExample{
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
 			"2023-01-01": {
 				{
 					Name:        "2dspere Index",

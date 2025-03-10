@@ -20,12 +20,12 @@ import (
 	"sort"
 
 	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/docs/metadatatypes"
 )
 
-func specToMetadata(spec *openapi3.T) (map[string]*api.Metadata, error) {
-	metadataMap := make(map[string]*api.Metadata, 0)
+func specToMetadata(spec *openapi3.T) (map[string]*metadatatypes.Metadata, error) {
+	metadataMap := make(map[string]*metadatatypes.Metadata, 0)
 
 	for _, item := range spec.Paths.Map() {
 		for _, operation := range item.Operations() {
@@ -42,7 +42,7 @@ func specToMetadata(spec *openapi3.T) (map[string]*api.Metadata, error) {
 }
 
 // Returns a map of operationID:*Metadata.
-func extractMetadata(operation *openapi3.Operation) (*api.Metadata, error) {
+func extractMetadata(operation *openapi3.Operation) (*metadatatypes.Metadata, error) {
 	if operation == nil {
 		return nil, nil
 	}
@@ -57,7 +57,7 @@ func extractMetadata(operation *openapi3.Operation) (*api.Metadata, error) {
 
 	paramMap := extractParameterExamples(operation.Parameters)
 
-	return &api.Metadata{
+	return &metadatatypes.Metadata{
 		ParameterExample:    paramMap,
 		RequestBodyExamples: requestBodyExamples,
 	}, nil
@@ -80,15 +80,15 @@ func extractParameterExamples(parameters openapi3.Parameters) map[string]string 
 
 // For each verion of an operation, the version and examples are extracted.
 // A map of version:[]examples is returned.
-func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[string][]api.RequestBodyExample, error) {
+func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[string][]metadatatypes.RequestBodyExample, error) {
 	if requestBody == nil || requestBody.Value == nil {
 		return nil, nil
 	}
 
-	results := make(map[string][]api.RequestBodyExample, 0)
+	results := make(map[string][]metadatatypes.RequestBodyExample, 0)
 
 	for versionedContentType, mediaType := range requestBody.Value.Content {
-		examples := make([]api.RequestBodyExample, 0)
+		examples := make([]metadatatypes.RequestBodyExample, 0)
 		version, _, err := extractVersionAndContentType(versionedContentType)
 		if err != nil {
 			return nil, fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
@@ -98,7 +98,7 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 			if exampleRef == nil || exampleRef.Value == nil {
 				continue
 			}
-			result := api.RequestBodyExample{
+			result := metadatatypes.RequestBodyExample{
 				Name:        name,
 				Description: exampleRef.Value.Description,
 				Value:       toJSONString(exampleRef.Value.Value.(map[string]any)),

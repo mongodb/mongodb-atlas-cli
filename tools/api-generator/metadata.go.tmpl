@@ -18,9 +18,9 @@
 
 package main
 
-import 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+import 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/docs/metadatatypes"
 
-var EndpointExamples = map[string]api.Metadata{
+var EndpointExamples = map[string]metadatatypes.Metadata{
 {{- range $operationID, $examples := . }}
 	"{{ $operationID }}": {
 		ParameterExample: map[string]string{
@@ -28,7 +28,7 @@ var EndpointExamples = map[string]api.Metadata{
 			"{{ $paramName }}": "{{ $example }}",
 		{{- end }}
 		},
-		RequestBodyExamples: map[string][]api.RequestBodyExample{
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
 		{{- range $version, $requestBodyExamples := $examples.RequestBodyExamples }}
 			"{{ $version }}": {
 				{{- range $example := $requestBodyExamples }}

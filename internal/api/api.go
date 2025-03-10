@@ -116,14 +116,3 @@ type WatcherMatchProperties struct {
 	Path   string
 	Values []string
 }
-
-type Metadata struct {
-	ParameterExample    map[string]string               // parameterName: parameterExample
-	RequestBodyExamples map[string][]RequestBodyExample // version: []RequestBodyExample
-}
-
-type RequestBodyExample struct {
-	Name        string
-	Description string
-	Value       string
-}

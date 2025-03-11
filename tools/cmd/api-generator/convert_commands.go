@@ -20,6 +20,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -28,7 +29,7 @@ import (
 )
 
 var (
-	versionRegex = regexp.MustCompile(`^application/vnd\.atlas\.(?P<version>\d{4}-\d{2}-\d{2})\+(?P<contentType>[\w]+)$`)
+	versionRegex = regexp.MustCompile(`^application/vnd\.atlas\.(?P<version>\d{4}-\d{2}-\d{2}|preview|upcoming)\+(?P<contentType>[\w]+)$`)
 )
 
 func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
@@ -95,14 +96,6 @@ func extractSunsetDate(extensions map[string]any) *time.Time {
 	}
 
 	return nil
-}
-
-func extractVersion(extensions map[string]any) string {
-	if version, ok := extensions["x-xgen-version"].(string); ok && version != "" {
-		return version
-	}
-
-	return ""
 }
 
 type operationExtensions struct {
@@ -407,10 +400,6 @@ func processResponses(responses *openapi3.Responses, versionsMap map[string]*api
 		}
 
 		for versionedContentType, mediaType := range responses.Value.Content {
-			// Skip Preview versions in AtlasCLI auto-generation
-			if version := extractVersion(mediaType.Extensions); version == "preview" {
-				continue
-			}
 			if err := addContentTypeToVersion(versionedContentType, versionsMap, false, extractSunsetDate(mediaType.Extensions)); err != nil {
 				return err
 			}
@@ -438,6 +427,11 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 	version, contentType, err := extractVersionAndContentType(versionedContentType)
 	if err != nil {
 		return fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
+	}
+
+	// Skip 'preview' versions
+	if strings.EqualFold(version, "preview") {
+		return nil
 	}
 
 	if _, ok := versionsMap[version]; !ok {

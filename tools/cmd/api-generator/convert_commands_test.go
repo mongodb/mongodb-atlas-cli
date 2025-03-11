@@ -39,6 +39,11 @@ func TestExtractVersionAndContentType(t *testing.T) {
 			"2023-01-01",
 			"csv",
 		},
+		{
+			"application/vnd.atlas.preview+json",
+			"preview",
+			"json",
+		},
 	}
 
 	for _, tt := range tests {

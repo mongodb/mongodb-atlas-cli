@@ -92,8 +92,11 @@ func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
 		out.Roles = &roles
 	}
 
-	scopes := convert.BuildAtlasScopes(opts.scopes)
-	out.Scopes = &scopes
+	if len(opts.scopes) > 0 {
+		scopes := convert.BuildAtlasScopes(opts.scopes)
+		out.Scopes = &scopes
+	}
+
 	out.DatabaseName = opts.authDB
 	if opts.authDB == "" {
 		out.DatabaseName = convert.GetAuthDB(out)

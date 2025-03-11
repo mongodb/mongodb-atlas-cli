@@ -70,7 +70,7 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: "Create an organization API key and assign it to your project.",
 		Long: `MongoDB returns the private API key only once. After you run this command, immediately copy, save, and secure both the public and private API keys.
-		By default, the specified project's parent organization will be assigned as organization member.
+By default, the specified project's parent organization will be assigned as organization member. You must authenicate with a user account or API key with the Organization User Admin role to set organization roles.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
 		Annotations: map[string]string{
@@ -80,8 +80,8 @@ func CreateBuilder() *cobra.Command {
 		Example: `  # Create an organization API key with the GROUP_OWNER role and assign it to the project with ID 5e2211c17a3e5a48f5497de3:
   atlas projects apiKeys create --desc "My API key" --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_OWNER --output json
   
-  # Create an organization API key with the ORG_OWNER and GROUP_SEARCH_INDEX_EDITOR roles and assign it to the project with ID 5e2211c17a3e5a48f5497de3:
-  atlas projects apiKeys create --desc "My API key" --projectId 5e1234c17a3e5a48f5497de3 --role ORG_OWNER,GROUP_SEARCH_INDEX_EDITOR --output json`,
+  # Create an organization API key with the GROUP_SEARCH_INDEX_EDITOR and GROUP_DATABASE_ACCESS_ADMIN roles and assign it to the project with ID 5e2211c17a3e5a48f5497de3:
+  atlas projects apiKeys create --desc "My API key" --projectId 5e1234c17a3e5a48f5497de3 --role GROUP_SEARCH_INDEX_EDITOR,GROUP_DATABASE_ACCESS_ADMIN --output json`,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

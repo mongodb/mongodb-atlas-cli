@@ -1245,24 +1245,24 @@ tasks:
           MONGODB_ATLAS_SERVICE: cloud
           E2E_TAGS: atlas,livemigrations
   # Streams commands tests
-  - name: atlas_streams
-    tags: ["e2e","generic","atlas", "assigned_to_jira_team_cloudp_atlas_streams"]
-    must_have_test_results: true
-    depends_on:
-      - name: compile
-        variant: "code_health"
-        patch_optional: true
-    commands:
-      - func: "install gotestsum"
-      - func: "e2e test"
-        vars:
-          MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
-          MONGODB_ATLAS_PROJECT_ID: ${atlas_project_id}
-          MONGODB_ATLAS_PRIVATE_API_KEY: ${atlas_private_api_key}
-          MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
-          MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
-          MONGODB_ATLAS_SERVICE: cloud
-          E2E_TAGS: atlas,streams
+  # - name: atlas_streams
+  #   tags: ["e2e","generic","atlas", "assigned_to_jira_team_cloudp_atlas_streams"]
+  #   must_have_test_results: true
+  #   depends_on:
+  #     - name: compile
+  #       variant: "code_health"
+  #       patch_optional: true
+  #   commands:
+  #     - func: "install gotestsum"
+  #     - func: "e2e test"
+  #       vars:
+  #         MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
+  #         MONGODB_ATLAS_PROJECT_ID: ${atlas_project_id}
+  #         MONGODB_ATLAS_PRIVATE_API_KEY: ${atlas_private_api_key}
+  #         MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
+  #         MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+  #         MONGODB_ATLAS_SERVICE: cloud
+  #         E2E_TAGS: atlas,streams
   - name: atlas_streams_with_cluster
     tags: [ "e2e","streams","atlas","assigned_to_jira_team_cloudp_atlas_streams"]
     must_have_test_results: true

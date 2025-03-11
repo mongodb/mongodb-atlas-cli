@@ -99,10 +99,21 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 			if exampleRef == nil || exampleRef.Value == nil {
 				continue
 			}
+
+			exampleName := name
+			if exampleRef.Value.Summary != "" {
+				exampleName = exampleRef.Value.Summary
+			}
+
+			var value map[string]any
+			if exampleRef.Value != nil && exampleRef.Value.Value != nil {
+				value = exampleRef.Value.Value.(map[string]any)
+			}
+
 			result := metadatatypes.RequestBodyExample{
-				Name:        name,
+				Name:        exampleName,
 				Description: exampleRef.Value.Description,
-				Value:       toJSONString(exampleRef.Value.Value.(map[string]any)),
+				Value:       toJSONString(value),
 			}
 
 			examples = append(examples, result)
@@ -120,7 +131,11 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 	return results, nil
 }
 
-func toJSONString(data any) string {
+func toJSONString(data map[string]any) string {
+	if len(data) == 0 {
+		return ""
+	}
+
 	jsonData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		_, _ = log.Warningln("Unable to convert to JSON string")

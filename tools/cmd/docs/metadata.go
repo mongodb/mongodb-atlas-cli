@@ -1474,7 +1474,23 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud user to whom to grant the Project Owner role on the specified project. If you set this parameter, it overrides the default value of the oldest Organization Owner.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Create a basic project with environment tag`,
+				Description: `Creates a new project named "MongoTube" with an environment tag set to "e2e"`,
+				Value: `{
+  "name": "MongoTube",
+  "orgId": "67b715468c10250b968dcb84",
+  "tags": [
+    {
+      "key": "environment",
+      "value": "e2e"
+    }
+  ]
+}`,
+			},
+			},
+		},
 	},
 	`createProjectApiKey`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -2981,7 +2997,13 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Delete a project`,
+				Description: `Deletes an existing project`,
+			},
+			},
+		},
 	},
 	`deleteProjectInvitation`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -5729,7 +5751,13 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Get a project`,
+				Description: `Get a project using a project id`,
+			},
+			},
+		},
 	},
 	`getProjectByName`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -8761,7 +8789,13 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Get a list of all projects`,
+				Description: `Get a list of all projects inside of the organisation`,
+			},
+			},
+		},
 	},
 	`listReplicaSetBackups`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -11136,7 +11170,22 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Update project name and tags`,
+				Description: `Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"`,
+				Value: `{
+  "name": "MongoTube - Production",
+  "tags": [
+    {
+      "key": "environment",
+      "value": "production"
+    }
+  ]
+}`,
+			},
+			},
+		},
 	},
 	`updateProjectInvitation`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{

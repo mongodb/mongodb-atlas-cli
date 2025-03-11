@@ -1,0 +1,58 @@
+overlay: 1.0.0
+info:
+  title: Configure groupId flag
+  version: 1.0.0
+actions:
+  - target: $.paths['/api/atlas/v2/groups'].get
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            examples:
+              list_projects:
+                summary: Get a list of all projects
+                value:
+                description: Get a list of all projects inside of the organisation
+  - target: $.paths['/api/atlas/v2/groups'].post.requestBody.content['application/vnd.atlas.2023-01-01+json']
+    update:
+      examples:
+        create_project:
+          summary: Create a basic project with environment tag
+          value:
+            name: "MongoTube"
+            orgId: "67b715468c10250b968dcb84"
+            tags:
+              - key: "environment"
+                value: "e2e"
+          description: Creates a new project named "MongoTube" with an environment tag set to "e2e"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}'].get
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            examples:
+              get_project:
+                summary: Get a project
+                value:
+                description: Get a project using a project id
+  - target: $.paths['/api/atlas/v2/groups/{groupId}'].patch.requestBody.content['application/vnd.atlas.2023-01-01+json']
+    update:
+      examples:
+        update_project:
+          summary: Update project name and tags
+          value:
+            name: "MongoTube - Production"
+            tags:
+              - key: "environment"
+                value: "production"
+          description: Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}'].delete
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            examples:
+              delete_project:
+                summary: Delete a project
+                value:
+                description: Deletes an existing project

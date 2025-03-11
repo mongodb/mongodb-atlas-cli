@@ -36,7 +36,7 @@ var metadata = map[string]metadatatypes.Metadata{
 					{{- range $example := $requestBodyExamples}}metadatatypes.RequestBodyExample{
 						Name:        `{{ $example.Name }}`,
 						Description: `{{ $example.Description }}`,
-						Value:       `{{ $example.Value }}`,
+						{{if $example.Value}}Value:       `{{ $example.Value }}`,{{end}}
 					},{{- end }}
 				},{{- end }}
 			{{- end }}

@@ -25,7 +25,6 @@ import (
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
-	"github.com/getkin/kin-openapi/openapi3"
 )
 
 func testSpec(t *testing.T, name, specPath string) {
@@ -34,7 +33,7 @@ func testSpec(t *testing.T, name, specPath string) {
 	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".snapshot"))
 	overlayPath := specPath + ".overlay.yaml"
 
-	outputFunctions := map[OutputType]func(ctx context.Context, spec *openapi3.T, w io.Writer) error{
+	outputFunctions := map[OutputType]func(ctx context.Context, spec io.Reader, w io.Writer) error{
 		Commands: convertSpecToAPICommands,
 		Metadata: convertSpecToMetadata,
 	}
@@ -48,14 +47,9 @@ func testSpec(t *testing.T, name, specPath string) {
 			specFile.Close()
 		})
 
-		specReader, err := applyOverlays(specFile, overlayPath)
+		spec, err := applyOverlays(specFile, overlayPath)
 		if err != nil {
 			t.Fatalf("failed to apply overlays %q, error: %s", specPath, err)
-		}
-
-		spec, err := loadSpec(specReader)
-		if err != nil {
-			t.Fatalf("failed to load spec from %q, error: %s", specPath, err)
 		}
 
 		buf := &bytes.Buffer{}

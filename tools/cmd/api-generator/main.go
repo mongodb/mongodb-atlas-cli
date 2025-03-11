@@ -45,17 +45,18 @@ type OutputType string
 const (
 	Commands OutputType = "commands"
 	Metadata OutputType = "metadata"
+	Overlay  OutputType = "overlay"
 )
 
 // Returns all possible values of OutputType.
 func AllOutputTypes() []OutputType {
-	return []OutputType{Commands, Metadata}
+	return []OutputType{Commands, Metadata, Overlay}
 }
 
 func main() {
 	var (
 		specPath      string
-		overlayPath   string
+		overlayGlob   string
 		outputTypeStr string
 	)
 
@@ -68,16 +69,16 @@ func main() {
 				return fmt.Errorf("'%s' is not a valid output type", outputType)
 			}
 
-			return run(command.Context(), specPath, overlayPath, outputType, command.OutOrStdout())
+			return run(command.Context(), specPath, overlayGlob, outputType, command.OutOrStdout())
 		},
 	}
 
 	rootCmd.Flags().StringVar(&specPath, "spec", "", "Path to spec file")
-	rootCmd.Flags().StringVar(&overlayPath, "overlay", "", "Path to overlay folder")
+	rootCmd.Flags().StringVar(&overlayGlob, "overlay", "", "Overlay glob")
 	_ = rootCmd.MarkFlagRequired("spec")
 	_ = rootCmd.MarkFlagFilename("spec")
 
-	rootCmd.Flags().StringVar(&outputTypeStr, "output-type", "", "Set output type [commands/metadata]")
+	rootCmd.Flags().StringVar(&outputTypeStr, "output-type", "", "Set output type [overlay/commands/metadata]")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -85,7 +86,7 @@ func main() {
 	}
 }
 
-func run(ctx context.Context, specPath, overlayPath string, outputType OutputType, w io.Writer) error {
+func run(ctx context.Context, specPath, overlayGlob string, outputType OutputType, w io.Writer) error {
 	specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
 		return err
@@ -93,21 +94,19 @@ func run(ctx context.Context, specPath, overlayPath string, outputType OutputTyp
 
 	defer specFile.Close()
 
-	overlaySpec, err := applyOverlays(specFile, overlayPath)
+	overlaySpec, err := applyOverlays(specFile, overlayGlob)
 	if err != nil {
 		return fmt.Errorf("failed to apply overlays, error: %w", err)
 	}
 
-	spec, err := loadSpec(overlaySpec)
-	if err != nil {
-		return fmt.Errorf("failed to load spec, error: %w", err)
-	}
-
 	switch outputType {
 	case Commands:
-		return convertSpecToAPICommands(ctx, spec, w)
+		return convertSpecToAPICommands(ctx, overlaySpec, w)
 	case Metadata:
-		return convertSpecToMetadata(ctx, spec, w)
+		return convertSpecToMetadata(ctx, overlaySpec, w)
+	case Overlay:
+		_, err = io.Copy(w, overlaySpec)
+		return err
 	default:
 		return fmt.Errorf("'%s' is not a valid outputType", outputType)
 	}
@@ -156,16 +155,26 @@ func applyOverlays(r io.Reader, overlayGlob string) (io.Reader, error) {
 	return bytes.NewBuffer(buf), nil
 }
 
-func convertSpecToAPICommands(ctx context.Context, spec *openapi3.T, w io.Writer) error {
-	if err := spec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
+func convertSpecToAPICommands(ctx context.Context, spec io.Reader, w io.Writer) error {
+	parsedSpec, err := loadSpec(spec)
+	if err != nil {
+		return fmt.Errorf("failed to load spec, error: %w", err)
+	}
+
+	if err := parsedSpec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
 		return fmt.Errorf("spec validation failed, error: %w", err)
 	}
 
-	return convertSpec(spec, w, specToCommands, commandsTemplateContent)
+	return convertSpec(parsedSpec, w, specToCommands, commandsTemplateContent)
 }
 
-func convertSpecToMetadata(_ context.Context, spec *openapi3.T, w io.Writer) error {
-	return convertSpec(spec, w, specToMetadata, metadataTemplateContent)
+func convertSpecToMetadata(_ context.Context, spec io.Reader, w io.Writer) error {
+	parsedSpec, err := loadSpec(spec)
+	if err != nil {
+		return fmt.Errorf("failed to load spec, error: %w", err)
+	}
+
+	return convertSpec(parsedSpec, w, specToMetadata, metadataTemplateContent)
 }
 
 func convertSpec[T any](spec *openapi3.T, w io.Writer, mapper func(spec *openapi3.T) (T, error), templateContent string) error {

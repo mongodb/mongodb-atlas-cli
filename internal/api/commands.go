@@ -44,6 +44,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -54,6 +55,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -69,6 +71,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -103,6 +106,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -113,6 +117,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -128,6 +133,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -168,6 +174,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -178,6 +185,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `authResult`,
@@ -188,6 +196,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -198,6 +207,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `ipAddress`,
@@ -208,6 +218,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `nLogs`,
@@ -218,6 +229,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -228,6 +240,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -243,6 +256,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -253,6 +267,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -287,6 +302,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -297,6 +313,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `authResult`,
@@ -307,6 +324,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -317,6 +335,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `ipAddress`,
@@ -327,6 +346,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `nLogs`,
@@ -337,6 +357,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -347,6 +368,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -362,6 +384,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `hostname`,
@@ -372,6 +395,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -415,6 +439,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -425,6 +450,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -440,6 +466,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -477,6 +504,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -487,6 +515,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -502,6 +531,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `alertConfigId`,
@@ -512,6 +542,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -549,6 +580,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -559,6 +591,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -574,6 +607,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `alertConfigId`,
@@ -584,6 +618,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -618,6 +653,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -628,6 +664,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -666,6 +703,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -676,6 +714,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -686,6 +725,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -696,6 +736,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -706,6 +747,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -721,6 +763,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -758,6 +801,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -768,6 +812,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -778,6 +823,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -788,6 +834,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -798,6 +845,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -813,6 +861,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `alertId`,
@@ -823,6 +872,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -863,6 +913,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -873,6 +924,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -888,6 +940,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `alertConfigId`,
@@ -898,6 +951,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -938,6 +992,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -948,6 +1003,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -963,6 +1019,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `alertConfigId`,
@@ -973,6 +1030,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPut,
@@ -1016,6 +1074,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1026,6 +1085,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1041,6 +1101,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `alertId`,
@@ -1051,6 +1112,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -1095,6 +1157,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1105,6 +1168,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1120,6 +1184,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `alertId`,
@@ -1130,6 +1195,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -1167,6 +1233,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -1177,6 +1244,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -1187,6 +1255,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -1197,6 +1266,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1207,6 +1277,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `status`,
@@ -1217,6 +1288,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1232,6 +1304,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -1269,6 +1342,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -1279,6 +1353,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -1289,6 +1364,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -1299,6 +1375,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1309,6 +1386,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1324,6 +1402,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `alertConfigId`,
@@ -1334,6 +1413,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -1374,6 +1454,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1384,6 +1465,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1399,6 +1481,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -1409,6 +1492,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -1450,6 +1534,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1460,6 +1545,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1475,6 +1561,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -1485,6 +1572,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -1519,6 +1607,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1529,6 +1618,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1544,6 +1634,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -1554,6 +1645,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -1588,6 +1680,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1598,6 +1691,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1613,6 +1707,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -1623,6 +1718,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1664,6 +1760,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1674,6 +1771,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1689,6 +1787,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -1699,6 +1798,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexId`,
@@ -1709,6 +1809,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1743,6 +1844,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1753,6 +1855,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1768,6 +1871,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -1778,6 +1882,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collectionName`,
@@ -1788,6 +1893,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -1798,6 +1904,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexName`,
@@ -1808,6 +1915,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1842,6 +1950,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1852,6 +1961,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1867,6 +1977,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -1877,6 +1988,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexId`,
@@ -1887,6 +1999,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -1921,6 +2034,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -1931,6 +2045,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -1946,6 +2061,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -1956,6 +2072,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -1997,6 +2114,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2007,6 +2125,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2022,6 +2141,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2032,6 +2152,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexId`,
@@ -2042,6 +2163,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2076,6 +2198,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2086,6 +2209,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2101,6 +2225,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2111,6 +2236,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collectionName`,
@@ -2121,6 +2247,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -2131,6 +2258,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexName`,
@@ -2141,6 +2269,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2175,6 +2304,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2185,6 +2315,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2200,6 +2331,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2210,6 +2342,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexId`,
@@ -2220,6 +2353,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2254,6 +2388,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2264,6 +2399,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2279,6 +2415,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2289,6 +2426,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collectionName`,
@@ -2299,6 +2437,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -2309,6 +2448,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2343,6 +2483,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2353,6 +2494,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2368,6 +2510,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2378,6 +2521,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2412,6 +2556,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2422,6 +2567,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2437,6 +2583,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2447,6 +2594,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collectionName`,
@@ -2457,6 +2605,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -2467,6 +2616,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2501,6 +2651,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2511,6 +2662,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2526,6 +2678,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2536,6 +2689,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2577,6 +2731,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2587,6 +2742,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2602,6 +2758,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2612,6 +2769,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexId`,
@@ -2622,6 +2780,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2656,6 +2815,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2666,6 +2826,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2681,6 +2842,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2691,6 +2853,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collectionName`,
@@ -2701,6 +2864,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -2711,6 +2875,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexName`,
@@ -2721,6 +2886,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2755,6 +2921,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2765,6 +2932,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2780,6 +2948,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2790,6 +2959,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexId`,
@@ -2800,6 +2970,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2840,6 +3011,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2850,6 +3022,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2865,6 +3038,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -2899,6 +3073,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2909,6 +3084,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2924,6 +3100,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -2964,6 +3141,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -2974,6 +3152,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -2989,6 +3168,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -2999,6 +3179,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `restoreJobId`,
@@ -3009,6 +3190,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3043,6 +3225,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3058,6 +3241,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -3068,6 +3252,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -3105,6 +3290,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -3115,6 +3301,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3130,6 +3317,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -3140,6 +3328,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -3174,6 +3363,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -3184,6 +3374,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3199,6 +3390,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -3243,6 +3435,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -3253,6 +3446,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3268,6 +3462,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -3278,6 +3473,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -3312,6 +3508,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3327,6 +3524,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -3337,6 +3535,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3378,6 +3577,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3393,6 +3593,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `exportBucketId`,
@@ -3403,6 +3604,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3437,6 +3639,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -3447,6 +3650,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3462,6 +3666,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -3472,6 +3677,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -3482,6 +3688,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3516,6 +3723,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -3526,6 +3734,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3541,6 +3750,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -3551,6 +3761,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -3561,6 +3772,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3595,6 +3807,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -3605,6 +3818,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3620,6 +3834,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -3654,6 +3869,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3669,6 +3885,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -3679,6 +3896,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `exportId`,
@@ -3689,6 +3907,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -3723,6 +3942,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -3733,6 +3953,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3748,6 +3969,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -3758,6 +3980,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `restoreJobId`,
@@ -3768,6 +3991,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -3802,6 +4026,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -3812,6 +4037,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3827,6 +4053,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -3837,6 +4064,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -3878,6 +4106,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -3888,6 +4117,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3903,6 +4133,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -3944,6 +4175,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -3959,6 +4191,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `exportBucketId`,
@@ -3969,6 +4202,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4010,6 +4244,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4020,6 +4255,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4035,6 +4271,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4045,6 +4282,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -4055,6 +4293,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4092,6 +4331,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4107,6 +4347,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4117,6 +4358,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -4127,6 +4369,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4164,6 +4407,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4174,6 +4418,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4189,6 +4434,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4199,6 +4445,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `restoreJobId`,
@@ -4209,6 +4456,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4243,6 +4491,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4253,6 +4502,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4268,6 +4518,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4278,6 +4529,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -4288,6 +4540,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4322,6 +4575,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4332,6 +4586,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -4342,6 +4597,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4352,6 +4608,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -4362,6 +4619,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4377,6 +4635,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4387,6 +4646,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4421,6 +4681,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -4431,6 +4692,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4441,6 +4703,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -4451,6 +4714,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4461,6 +4725,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4476,6 +4741,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4486,6 +4752,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4520,6 +4787,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -4530,6 +4798,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4540,6 +4809,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -4550,6 +4820,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4560,6 +4831,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4575,6 +4847,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4616,6 +4889,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -4626,6 +4900,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4636,6 +4911,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -4646,6 +4922,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4656,6 +4933,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4671,6 +4949,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4681,6 +4960,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4718,6 +4998,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -4728,6 +5009,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4738,6 +5020,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -4748,6 +5031,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4758,6 +5042,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4773,6 +5058,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4783,6 +5069,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4820,6 +5107,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4830,6 +5118,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -4840,6 +5129,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -4850,6 +5140,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -4860,6 +5151,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4875,6 +5167,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4885,6 +5178,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4919,6 +5213,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -4929,6 +5224,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -4944,6 +5240,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -4954,6 +5251,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -4991,6 +5289,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5001,6 +5300,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5016,6 +5316,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -5026,6 +5327,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -5060,6 +5362,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5070,6 +5373,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5085,6 +5389,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -5095,6 +5400,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5136,6 +5442,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `overwriteBackupPolicies`,
@@ -5146,6 +5453,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5156,6 +5464,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5171,6 +5480,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPut,
@@ -5205,6 +5515,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5215,6 +5526,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5230,6 +5542,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -5240,6 +5553,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -5250,6 +5564,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5290,6 +5605,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5300,6 +5616,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5312,6 +5629,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -5355,6 +5673,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5365,6 +5684,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5380,6 +5700,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -5421,6 +5742,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5431,6 +5753,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5446,6 +5769,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `liveMigrationId`,
@@ -5456,6 +5780,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPut,
@@ -5490,6 +5815,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5502,6 +5828,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -5536,6 +5863,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5546,6 +5874,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5561,6 +5890,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `liveMigrationId`,
@@ -5571,6 +5901,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -5605,6 +5936,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5620,6 +5952,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `validationId`,
@@ -5630,6 +5963,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -5664,6 +5998,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5674,6 +6009,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5686,6 +6022,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -5720,6 +6057,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5730,6 +6068,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5745,6 +6084,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -5792,6 +6132,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5802,6 +6143,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5817,6 +6159,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `roleId`,
@@ -5827,6 +6170,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -5861,6 +6205,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5871,6 +6216,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5886,6 +6232,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -5920,6 +6267,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -5930,6 +6278,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -5945,6 +6294,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -5955,6 +6305,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `roleId`,
@@ -5965,6 +6316,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -5999,6 +6351,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6009,6 +6362,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6024,6 +6378,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `roleId`,
@@ -6034,6 +6389,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6068,6 +6424,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6078,6 +6435,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6093,6 +6451,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6133,6 +6492,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6143,6 +6503,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6158,6 +6519,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -6168,6 +6530,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6202,6 +6565,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6212,6 +6576,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6227,6 +6592,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -6237,6 +6603,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6271,6 +6638,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6281,6 +6649,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6296,6 +6665,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -6306,6 +6676,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -6349,6 +6720,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6359,6 +6731,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6374,6 +6747,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -6432,6 +6806,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6442,6 +6817,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `retainBackups`,
@@ -6452,6 +6828,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6467,6 +6844,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -6477,6 +6855,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -6521,6 +6900,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6531,6 +6911,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6546,6 +6927,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -6556,6 +6938,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6604,6 +6987,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6614,6 +6998,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6629,6 +7014,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -6639,6 +7025,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6680,6 +7067,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6690,6 +7078,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6705,6 +7094,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -6715,6 +7105,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6749,6 +7140,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6764,6 +7156,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `sampleDatasetId`,
@@ -6774,6 +7167,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6808,6 +7202,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6818,6 +7213,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6833,6 +7229,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -6843,6 +7240,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -6877,6 +7275,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -6887,6 +7286,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -6897,6 +7297,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -6907,6 +7308,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -6917,6 +7319,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `providers`,
@@ -6927,6 +7330,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tier`,
@@ -6937,6 +7341,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -6952,6 +7357,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -6989,6 +7395,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -6999,6 +7406,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -7009,6 +7417,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -7019,6 +7428,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -7029,6 +7439,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeDeletedWithRetainedBackups`,
@@ -7039,6 +7450,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7054,6 +7466,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -7102,6 +7515,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -7112,6 +7526,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -7122,6 +7537,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -7132,6 +7548,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -7142,6 +7559,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -7177,6 +7595,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7192,6 +7611,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -7202,6 +7622,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -7236,6 +7657,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -7246,6 +7668,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7261,6 +7684,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -7271,6 +7695,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -7305,6 +7730,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -7315,6 +7741,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7330,6 +7757,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -7340,6 +7768,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -7374,6 +7803,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -7384,6 +7814,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7399,6 +7830,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -7409,6 +7841,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -7450,6 +7883,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -7460,6 +7894,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7475,6 +7910,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -7485,6 +7921,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -7519,6 +7956,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -7529,6 +7967,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7544,6 +7983,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -7554,6 +7994,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -7609,6 +8050,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -7619,6 +8061,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7634,6 +8077,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -7644,6 +8088,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -7688,6 +8133,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -7698,6 +8144,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7713,6 +8160,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -7753,6 +8201,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `metrics`,
@@ -7763,6 +8212,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -7773,6 +8223,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -7783,6 +8234,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -7793,6 +8245,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7808,6 +8261,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -7818,6 +8272,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterView`,
@@ -7828,6 +8283,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -7838,6 +8294,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collectionName`,
@@ -7848,6 +8305,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -7882,6 +8340,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `metrics`,
@@ -7892,6 +8351,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -7902,6 +8362,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -7912,6 +8373,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -7922,6 +8384,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -7937,6 +8400,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -7947,6 +8411,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -7957,6 +8422,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collectionName`,
@@ -7967,6 +8433,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -8001,6 +8468,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8016,6 +8484,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -8050,6 +8519,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -8060,6 +8530,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -8070,6 +8541,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -8080,6 +8552,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8095,6 +8568,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -8105,6 +8579,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterView`,
@@ -8115,6 +8590,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -8149,6 +8625,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -8159,6 +8636,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -8169,6 +8647,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -8179,6 +8658,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8194,6 +8674,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -8204,6 +8685,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -8238,6 +8720,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8253,6 +8736,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -8263,6 +8747,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -8297,6 +8782,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8312,6 +8798,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -8322,6 +8809,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8357,6 +8845,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8372,6 +8861,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -8382,6 +8872,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPut,
@@ -8417,6 +8908,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8432,6 +8924,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -8442,6 +8935,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8482,6 +8976,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -8492,6 +8987,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8507,6 +9003,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -8541,6 +9038,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -8551,6 +9049,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8566,6 +9065,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `roleName`,
@@ -8576,6 +9076,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -8610,6 +9111,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -8620,6 +9122,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8635,6 +9138,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `roleName`,
@@ -8645,6 +9149,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -8679,6 +9184,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -8689,6 +9195,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8704,6 +9211,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -8738,6 +9246,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -8748,6 +9257,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8763,6 +9273,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `roleName`,
@@ -8773,6 +9284,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -8840,6 +9352,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -8850,6 +9363,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8865,6 +9379,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -8899,6 +9414,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -8909,6 +9425,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `skipRoleValidation`,
@@ -8919,6 +9436,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8934,6 +9452,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -8968,6 +9487,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -8983,6 +9503,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -8993,6 +9514,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `limitName`,
@@ -9011,6 +9533,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -9045,6 +9568,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -9055,6 +9579,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9070,6 +9595,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointId`,
@@ -9080,6 +9606,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9114,6 +9641,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -9124,6 +9652,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9139,6 +9668,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -9149,6 +9679,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9183,6 +9714,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9198,6 +9730,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -9208,6 +9741,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `limitName`,
@@ -9226,6 +9760,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9260,6 +9795,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `startDate`,
@@ -9270,6 +9806,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9285,6 +9822,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -9295,6 +9833,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9329,6 +9868,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -9339,6 +9879,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9354,6 +9895,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointId`,
@@ -9364,6 +9906,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9398,6 +9941,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9413,6 +9957,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -9423,6 +9968,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9457,6 +10003,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -9467,6 +10014,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -9477,6 +10025,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -9487,6 +10036,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -9497,6 +10047,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9512,6 +10063,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9546,6 +10098,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -9556,6 +10109,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `type`,
@@ -9566,6 +10120,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9581,6 +10136,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9615,6 +10171,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -9625,6 +10182,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9640,6 +10198,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -9650,6 +10209,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `limitName`,
@@ -9668,6 +10228,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9702,6 +10263,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -9712,6 +10274,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9727,6 +10290,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -9737,6 +10301,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -9771,6 +10336,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -9781,6 +10347,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `skipRoleValidation`,
@@ -9791,6 +10358,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9806,6 +10374,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -9816,6 +10385,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -9856,6 +10426,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9871,6 +10442,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -9905,6 +10477,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9920,6 +10493,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -9930,6 +10504,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -9964,6 +10539,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -9974,6 +10550,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -9989,6 +10566,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -9999,6 +10577,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineRunId`,
@@ -10009,6 +10588,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -10043,6 +10623,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10053,6 +10634,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10068,6 +10650,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -10078,6 +10661,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10112,6 +10696,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10122,6 +10707,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10137,6 +10723,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -10147,6 +10734,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineRunId`,
@@ -10157,6 +10745,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10191,6 +10780,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -10201,6 +10791,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -10211,6 +10802,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -10221,6 +10813,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10231,6 +10824,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `createdBefore`,
@@ -10241,6 +10835,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10256,6 +10851,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -10266,6 +10862,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10300,6 +10897,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10310,6 +10908,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10325,6 +10924,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -10335,6 +10935,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10369,6 +10970,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -10379,6 +10981,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -10389,6 +10992,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -10399,6 +11003,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10409,6 +11014,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `completedAfter`,
@@ -10419,6 +11025,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10434,6 +11041,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -10444,6 +11052,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10478,6 +11087,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10493,6 +11103,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -10527,6 +11138,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10537,6 +11149,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10552,6 +11165,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -10562,6 +11176,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -10596,6 +11211,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10606,6 +11222,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10621,6 +11238,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -10631,6 +11249,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -10665,6 +11284,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10675,6 +11295,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10690,6 +11311,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -10700,6 +11322,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -10734,6 +11357,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10749,6 +11373,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pipelineName`,
@@ -10759,6 +11384,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -10799,6 +11425,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10809,6 +11436,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10824,6 +11452,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -10858,6 +11487,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10868,6 +11498,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10883,6 +11514,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -10893,6 +11525,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `username`,
@@ -10916,6 +11549,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -10950,6 +11584,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -10960,6 +11595,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -10975,6 +11611,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -10985,6 +11622,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `username`,
@@ -11008,6 +11646,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11042,6 +11681,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -11052,6 +11692,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11062,6 +11703,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -11072,6 +11714,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11082,6 +11725,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11097,6 +11741,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11131,6 +11776,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11141,6 +11787,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11156,6 +11803,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -11166,6 +11814,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `username`,
@@ -11189,6 +11838,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -11229,6 +11879,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11239,6 +11890,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11254,6 +11906,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11264,6 +11917,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -11301,6 +11955,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11311,6 +11966,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11326,6 +11982,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11360,6 +12017,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11370,6 +12028,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11385,6 +12044,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11395,6 +12055,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointId`,
@@ -11405,6 +12066,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11439,6 +12101,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11449,6 +12112,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -11459,6 +12123,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11469,6 +12134,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -11479,6 +12145,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11494,6 +12161,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11504,6 +12172,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11538,6 +12207,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11548,6 +12218,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11563,6 +12234,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -11573,6 +12245,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointId`,
@@ -11583,6 +12256,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -11620,6 +12294,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11630,6 +12305,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11645,6 +12321,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -11688,6 +12365,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11698,6 +12376,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeRaw`,
@@ -11708,6 +12387,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11720,6 +12400,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `eventId`,
@@ -11730,6 +12411,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11767,6 +12449,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11777,6 +12460,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeRaw`,
@@ -11787,6 +12471,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -11802,6 +12487,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `eventId`,
@@ -11812,6 +12498,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -11846,6 +12533,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -11856,6 +12544,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11866,6 +12555,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -11876,6 +12566,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11886,6 +12577,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -11924,6 +12616,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -11934,6 +12627,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -11944,6 +12638,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -11954,6 +12649,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -11964,6 +12660,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `eventType`,
@@ -11977,6 +12674,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeRaw`,
@@ -11987,6 +12685,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `maxDate`,
@@ -11997,6 +12696,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `minDate`,
@@ -12007,6 +12707,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12019,6 +12720,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12056,6 +12758,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -12066,6 +12769,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12076,6 +12780,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -12086,6 +12791,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -12096,6 +12802,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterNames`,
@@ -12106,6 +12813,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `eventType`,
@@ -12119,6 +12827,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `excludedEventType`,
@@ -12132,6 +12841,7 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeRaw`,
@@ -12142,6 +12852,7 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `maxDate`,
@@ -12152,6 +12863,7 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `minDate`,
@@ -12162,6 +12874,7 @@ IMPORTANT: Event type names change frequently. Verify that you specify the event
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12177,6 +12890,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12220,6 +12934,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12232,6 +12947,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -12266,6 +12982,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12278,6 +12995,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -12288,6 +13006,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -12323,6 +13042,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12360,6 +13080,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12372,6 +13093,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -12382,6 +13104,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12416,6 +13139,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12428,6 +13152,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `id`,
@@ -12438,6 +13163,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -12448,6 +13174,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -12482,6 +13209,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12494,6 +13222,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -12504,6 +13233,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12538,6 +13268,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -12548,6 +13279,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12560,6 +13292,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12594,6 +13327,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12606,6 +13340,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -12616,6 +13351,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12651,6 +13387,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -12661,6 +13398,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12695,6 +13433,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12707,6 +13446,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `id`,
@@ -12717,6 +13457,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -12727,6 +13468,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12761,6 +13503,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12771,6 +13514,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -12781,6 +13525,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12793,6 +13538,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12827,6 +13573,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -12837,6 +13584,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -12847,6 +13595,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `protocol`,
@@ -12857,6 +13606,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `idpType`,
@@ -12867,6 +13617,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12879,6 +13630,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12913,6 +13665,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12925,6 +13678,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -12935,6 +13689,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -12969,6 +13724,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -12981,6 +13737,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -12991,6 +13748,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13028,6 +13786,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13040,6 +13799,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -13050,6 +13810,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13096,6 +13857,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13108,6 +13870,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -13118,6 +13881,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13155,6 +13919,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13167,6 +13932,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `identityProviderId`,
@@ -13177,6 +13943,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13211,6 +13978,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13223,6 +13991,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `id`,
@@ -13233,6 +14002,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -13243,6 +14013,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPut,
@@ -13283,6 +14054,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13293,6 +14065,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13308,6 +14081,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -13342,6 +14116,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13352,6 +14127,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13367,6 +14143,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -13377,6 +14154,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -13411,6 +14189,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13421,6 +14200,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13436,6 +14216,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -13446,6 +14227,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -13480,6 +14262,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -13490,6 +14273,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -13500,6 +14284,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -13510,6 +14295,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13520,6 +14306,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13535,6 +14322,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -13569,6 +14357,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13579,6 +14368,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13594,6 +14384,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -13604,6 +14395,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -13638,6 +14430,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13648,6 +14441,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13663,6 +14457,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -13703,6 +14498,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13713,6 +14509,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13728,6 +14525,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -13738,6 +14536,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -13772,6 +14571,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13782,6 +14582,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13797,6 +14598,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -13807,6 +14609,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `restoreJobId`,
@@ -13817,6 +14620,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -13851,6 +14655,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -13861,6 +14666,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -13871,6 +14677,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -13881,6 +14688,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13891,6 +14699,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13906,6 +14715,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -13916,6 +14726,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -13956,6 +14767,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -13966,6 +14778,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -13978,6 +14791,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -13991,6 +14805,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -14025,6 +14840,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14040,6 +14856,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -14050,6 +14867,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -14060,6 +14878,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14094,6 +14913,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -14104,6 +14924,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -14114,6 +14935,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -14124,6 +14946,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -14134,6 +14957,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14149,6 +14973,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -14159,6 +14984,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14200,6 +15026,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -14210,6 +15037,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14225,6 +15053,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -14235,6 +15064,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -14283,6 +15113,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -14293,6 +15124,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14308,6 +15140,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -14318,6 +15151,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -14366,6 +15200,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -14376,6 +15211,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14391,6 +15227,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -14401,6 +15238,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14449,6 +15287,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -14459,6 +15298,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `db`,
@@ -14469,6 +15309,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collection`,
@@ -14479,6 +15320,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14491,6 +15333,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -14504,6 +15347,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -14552,6 +15396,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -14562,6 +15407,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14577,6 +15423,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -14587,6 +15434,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14641,6 +15489,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14653,6 +15502,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -14688,6 +15538,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -14698,6 +15549,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14710,6 +15562,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `invoiceId`,
@@ -14720,6 +15573,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14754,6 +15608,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14766,6 +15621,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `token`,
@@ -14776,6 +15632,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14812,6 +15669,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -14822,6 +15680,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14834,6 +15693,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `invoiceId`,
@@ -14844,6 +15704,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -14880,6 +15741,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -14890,6 +15752,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -14900,6 +15763,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -14910,6 +15774,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -14920,6 +15785,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `viewLinkedInvoices`,
@@ -14930,6 +15796,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `statusNames`,
@@ -14940,6 +15807,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `fromDate`,
@@ -14950,6 +15818,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `toDate`,
@@ -14960,6 +15829,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `sortBy`,
@@ -14970,6 +15840,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orderBy`,
@@ -14980,6 +15851,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -14992,6 +15864,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15026,6 +15899,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15036,6 +15910,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15048,6 +15923,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15082,6 +15958,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -15092,6 +15969,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -15102,6 +15980,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15114,6 +15993,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `invoiceId`,
@@ -15124,6 +16004,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15164,6 +16045,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15174,6 +16056,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15189,6 +16072,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15223,6 +16107,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15233,6 +16118,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15248,6 +16134,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15282,6 +16169,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15292,6 +16180,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15307,6 +16196,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `requestId`,
@@ -15317,6 +16207,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15354,6 +16245,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15364,6 +16256,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15379,6 +16272,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -15413,6 +16307,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15423,6 +16318,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15438,6 +16334,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -15478,6 +16375,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15488,6 +16386,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15503,6 +16402,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -15513,6 +16413,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -15547,6 +16448,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15557,6 +16459,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15572,6 +16475,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -15582,6 +16486,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -15592,6 +16497,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -15626,6 +16532,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15636,6 +16543,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15651,6 +16559,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `checkpointId`,
@@ -15661,6 +16570,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -15671,6 +16581,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15708,6 +16619,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15718,6 +16630,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15733,6 +16646,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -15743,6 +16657,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `jobId`,
@@ -15753,6 +16668,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15787,6 +16703,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15797,6 +16714,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15812,6 +16730,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -15822,6 +16741,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -15832,6 +16752,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15869,6 +16790,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15879,6 +16801,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15894,6 +16817,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -15904,6 +16828,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -15938,6 +16863,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -15948,6 +16874,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -15958,6 +16885,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -15968,6 +16896,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -15978,6 +16907,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -15993,6 +16923,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -16003,6 +16934,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16040,6 +16972,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -16050,6 +16983,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -16060,6 +16994,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -16070,6 +17005,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16080,6 +17016,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `batchId`,
@@ -16090,6 +17027,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16105,6 +17043,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -16115,6 +17054,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16149,6 +17089,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -16159,6 +17100,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -16169,6 +17111,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -16179,6 +17122,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16189,6 +17133,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `completed`,
@@ -16199,6 +17144,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16214,6 +17160,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -16224,6 +17171,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16258,6 +17206,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16268,6 +17217,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16283,6 +17233,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -16293,6 +17244,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -16303,6 +17255,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16340,6 +17293,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16350,6 +17304,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16365,6 +17320,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -16375,6 +17331,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16415,6 +17372,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16430,6 +17388,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -16464,6 +17423,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16474,6 +17434,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16489,6 +17450,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -16523,6 +17485,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16538,6 +17501,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -16572,6 +17536,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16587,6 +17552,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -16621,6 +17587,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16636,6 +17603,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -16682,6 +17650,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16692,6 +17661,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16704,6 +17674,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -16714,6 +17685,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -16751,6 +17723,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16761,6 +17734,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16776,6 +17750,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -16786,6 +17761,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -16830,6 +17806,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16840,6 +17817,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16855,6 +17833,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -16892,6 +17871,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16902,6 +17882,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16914,6 +17895,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -16924,6 +17906,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -16961,6 +17944,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -16971,6 +17955,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -16983,6 +17968,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -17023,6 +18009,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17033,6 +18020,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -17074,6 +18062,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17084,6 +18073,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17096,6 +18086,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -17106,6 +18097,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17146,6 +18138,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17156,6 +18149,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17171,6 +18165,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -17181,6 +18176,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17215,6 +18211,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17225,6 +18222,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17237,6 +18235,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17271,6 +18270,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17281,6 +18281,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17293,6 +18294,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17333,6 +18335,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17343,6 +18346,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17355,6 +18359,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -17365,6 +18370,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -17402,6 +18408,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17412,6 +18419,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17427,6 +18435,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -17437,6 +18446,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -17474,6 +18484,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17484,6 +18495,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17496,6 +18508,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -17506,6 +18519,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -17546,6 +18560,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17556,6 +18571,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17568,6 +18584,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -17578,6 +18595,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -17618,6 +18636,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17628,6 +18647,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17643,6 +18663,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -17653,6 +18674,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17687,6 +18709,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17697,6 +18720,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17712,6 +18736,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -17722,6 +18747,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -17732,6 +18758,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17766,6 +18793,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17776,6 +18804,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `m`,
@@ -17786,6 +18815,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `granularity`,
@@ -17796,6 +18826,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -17806,6 +18837,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -17816,6 +18848,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -17826,6 +18859,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17841,6 +18875,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -17851,6 +18886,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -17861,6 +18897,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -17912,6 +18949,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -17922,6 +18960,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `m`,
@@ -17932,6 +18971,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `granularity`,
@@ -17942,6 +18982,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -17952,6 +18993,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -17962,6 +19004,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -17972,6 +19015,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -17987,6 +19031,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `partitionName`,
@@ -17997,6 +19042,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -18007,6 +19053,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18041,6 +19088,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endDate`,
@@ -18051,6 +19099,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `startDate`,
@@ -18061,6 +19110,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18076,6 +19126,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `hostName`,
@@ -18086,6 +19137,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `logName`,
@@ -18096,6 +19148,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18157,6 +19210,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -18167,6 +19221,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `m`,
@@ -18177,6 +19232,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -18187,6 +19243,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `granularity`,
@@ -18197,6 +19254,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -18207,6 +19265,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -18217,6 +19276,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18232,6 +19292,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -18242,6 +19303,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18276,6 +19338,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -18286,6 +19349,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -18296,6 +19360,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -18306,6 +19371,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -18316,6 +19382,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `metrics`,
@@ -18326,6 +19393,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18338,6 +19406,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `indexName`,
@@ -18348,6 +19417,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -18358,6 +19428,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collectionName`,
@@ -18368,6 +19439,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -18381,6 +19453,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18415,6 +19488,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -18425,6 +19499,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -18435,6 +19510,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -18445,6 +19521,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -18455,6 +19532,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `metrics`,
@@ -18465,6 +19543,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18477,6 +19556,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -18490,6 +19570,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18524,6 +19605,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -18534,6 +19616,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -18544,6 +19627,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -18554,6 +19638,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -18564,6 +19649,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18579,6 +19665,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18613,6 +19700,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -18623,6 +19711,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -18633,6 +19722,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -18643,6 +19733,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -18653,6 +19744,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18668,6 +19760,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -18678,6 +19771,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18712,6 +19806,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18724,6 +19819,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -18737,6 +19833,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -18747,6 +19844,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18781,6 +19879,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -18791,6 +19890,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -18801,6 +19901,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -18811,6 +19912,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -18821,6 +19923,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18836,6 +19939,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -18846,6 +19950,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -18880,6 +19985,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `period`,
@@ -18890,6 +19996,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `start`,
@@ -18900,6 +20007,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `end`,
@@ -18910,6 +20018,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -18920,6 +20029,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `metrics`,
@@ -18930,6 +20040,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -18942,6 +20053,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `databaseName`,
@@ -18952,6 +20064,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `collectionName`,
@@ -18962,6 +20075,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -18975,6 +20089,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19009,6 +20124,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19021,6 +20137,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -19034,6 +20151,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19075,6 +20193,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19085,6 +20204,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19100,6 +20220,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -19134,6 +20255,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19144,6 +20266,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19159,6 +20282,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -19193,6 +20317,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19203,6 +20328,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19218,6 +20344,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `peerId`,
@@ -19228,6 +20355,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -19262,6 +20390,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19272,6 +20401,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19287,6 +20417,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `containerId`,
@@ -19297,6 +20428,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -19331,6 +20463,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19341,6 +20474,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19356,6 +20490,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -19390,6 +20525,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19400,6 +20536,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19415,6 +20552,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `peerId`,
@@ -19425,6 +20563,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19459,6 +20598,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19469,6 +20609,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19484,6 +20625,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `containerId`,
@@ -19494,6 +20636,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19528,6 +20671,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -19538,6 +20682,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -19548,6 +20693,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -19558,6 +20704,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19568,6 +20715,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `providerName`,
@@ -19578,6 +20726,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19593,6 +20742,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19627,6 +20777,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -19637,6 +20788,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -19647,6 +20799,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -19657,6 +20810,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19667,6 +20821,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `providerName`,
@@ -19677,6 +20832,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19692,6 +20848,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19726,6 +20883,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -19736,6 +20894,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -19746,6 +20905,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -19756,6 +20916,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19766,6 +20927,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19781,6 +20943,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -19815,6 +20978,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19825,6 +20989,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19840,6 +21005,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `peerId`,
@@ -19850,6 +21016,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -19884,6 +21051,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19894,6 +21062,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19909,6 +21078,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `containerId`,
@@ -19919,6 +21089,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -19953,6 +21124,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -19963,6 +21135,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -19978,6 +21151,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20018,6 +21192,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20028,6 +21203,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20043,6 +21219,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -20053,6 +21230,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -20087,6 +21265,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20097,6 +21276,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20112,6 +21292,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `archiveId`,
@@ -20122,6 +21303,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -20132,6 +21314,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -20166,6 +21349,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `startDate`,
@@ -20176,6 +21360,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endDate`,
@@ -20186,6 +21371,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `archiveOnly`,
@@ -20196,6 +21382,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20211,6 +21398,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -20221,6 +21409,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20255,6 +21444,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20265,6 +21455,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20280,6 +21471,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `archiveId`,
@@ -20290,6 +21482,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -20300,6 +21493,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20334,6 +21528,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -20344,6 +21539,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -20354,6 +21550,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -20364,6 +21561,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20374,6 +21572,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20389,6 +21588,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -20399,6 +21599,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20433,6 +21634,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20443,6 +21645,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20458,6 +21661,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `archiveId`,
@@ -20468,6 +21672,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -20478,6 +21683,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -20518,6 +21724,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -20528,6 +21735,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -20538,6 +21746,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20548,6 +21757,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `env`,
@@ -20558,6 +21768,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -20594,6 +21805,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -20642,6 +21854,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20652,6 +21865,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -20687,6 +21901,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20697,6 +21912,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20709,6 +21925,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -20751,6 +21968,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20763,6 +21981,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -20797,6 +22016,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20807,6 +22027,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20819,6 +22040,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `invitationId`,
@@ -20829,6 +22051,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -20863,6 +22086,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20873,6 +22097,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20885,6 +22110,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20919,6 +22145,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20931,6 +22158,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `invitationId`,
@@ -20941,6 +22169,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -20975,6 +22204,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -20985,6 +22215,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -20997,6 +22228,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21031,6 +22263,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21041,6 +22274,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `username`,
@@ -21051,6 +22285,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21063,6 +22298,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21114,6 +22350,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -21124,6 +22361,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21134,6 +22372,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -21144,6 +22383,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21154,6 +22394,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -21164,6 +22405,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21176,6 +22418,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21210,6 +22453,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21220,6 +22464,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -21230,6 +22475,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21240,6 +22486,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -21250,6 +22497,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21262,6 +22510,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21303,6 +22552,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -21313,6 +22563,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -21323,6 +22574,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -21333,6 +22585,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21343,6 +22596,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -21353,6 +22607,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -21388,6 +22643,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21398,6 +22654,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21410,6 +22667,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -21420,6 +22678,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -21461,6 +22720,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21471,6 +22731,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21483,6 +22744,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21517,6 +22779,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21527,6 +22790,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21539,6 +22803,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21573,6 +22838,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21583,6 +22849,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21595,6 +22862,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `invitationId`,
@@ -21605,6 +22873,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21639,6 +22908,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -21649,6 +22919,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21661,6 +22932,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -21671,6 +22943,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPut,
@@ -21705,6 +22978,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21715,6 +22989,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21727,6 +23002,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -21767,6 +23043,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21777,6 +23054,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21792,6 +23070,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -21826,6 +23105,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21836,6 +23116,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21851,6 +23132,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -21885,6 +23167,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21895,6 +23178,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21910,6 +23194,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -21944,6 +23229,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -21954,6 +23240,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -21969,6 +23256,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -21979,6 +23267,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22013,6 +23302,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `namespaces`,
@@ -22023,6 +23313,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `since`,
@@ -22040,6 +23331,7 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `until`,
@@ -22057,6 +23349,7 @@ If you specify neither the since nor the until parameters, the endpoint returns 
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22072,6 +23365,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -22082,6 +23376,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22120,6 +23415,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -22130,6 +23426,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22168,6 +23465,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -22178,6 +23476,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22212,6 +23511,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -22222,6 +23522,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `duration`,
@@ -22239,6 +23540,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `namespaces`,
@@ -22249,6 +23551,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `nLogs`,
@@ -22259,6 +23562,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `since`,
@@ -22276,6 +23580,7 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22291,6 +23596,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -22301,6 +23607,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22335,6 +23642,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -22345,6 +23653,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `duration`,
@@ -22362,6 +23671,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `since`,
@@ -22379,6 +23689,7 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22394,6 +23705,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -22404,6 +23716,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22438,6 +23751,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -22448,6 +23762,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -22458,6 +23773,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -22468,6 +23784,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -22478,6 +23795,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `duration`,
@@ -22495,6 +23813,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `namespaces`,
@@ -22505,6 +23824,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: true,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `nExamples`,
@@ -22515,6 +23835,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `nIndexes`,
@@ -22525,6 +23846,7 @@ If you specify neither the duration nor since parameters, the endpoint returns d
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `since`,
@@ -22542,6 +23864,7 @@ If you specify neither the duration nor the since parameters, the endpoint retur
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22557,6 +23880,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processId`,
@@ -22567,6 +23891,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -22601,6 +23926,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -22611,6 +23937,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22626,6 +23953,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -22636,6 +23964,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -22676,6 +24005,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -22686,6 +24016,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22701,6 +24032,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -22711,6 +24043,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -22721,6 +24054,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -22755,6 +24089,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -22765,6 +24100,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22780,6 +24116,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -22814,6 +24151,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -22824,6 +24162,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22839,6 +24178,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -22849,6 +24189,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointId`,
@@ -22859,6 +24200,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -22869,6 +24211,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -22903,6 +24246,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -22913,6 +24257,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -22928,6 +24273,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -22938,6 +24284,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -22948,6 +24295,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -22982,6 +24330,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -22992,6 +24341,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23007,6 +24357,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -23017,6 +24368,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointId`,
@@ -23027,6 +24379,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -23037,6 +24390,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23071,6 +24425,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23081,6 +24436,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23096,6 +24452,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -23106,6 +24463,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointServiceId`,
@@ -23116,6 +24474,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23150,6 +24509,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23160,6 +24520,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23175,6 +24536,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23209,6 +24571,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23219,6 +24582,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23234,6 +24598,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -23244,6 +24609,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23278,6 +24644,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23288,6 +24655,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23303,6 +24671,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -23343,6 +24712,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23353,6 +24723,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23368,6 +24739,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -23378,6 +24750,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -23412,6 +24785,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23422,6 +24796,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23434,6 +24809,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -23468,6 +24844,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -23478,6 +24855,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -23488,6 +24866,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -23498,6 +24877,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23508,6 +24888,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23520,6 +24901,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -23530,6 +24912,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -23564,6 +24947,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23574,6 +24958,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23589,6 +24974,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -23623,6 +25009,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23633,6 +25020,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23645,6 +25033,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -23655,6 +25044,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -23689,6 +25079,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23699,6 +25090,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23711,6 +25103,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -23721,6 +25114,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `ipAddress`,
@@ -23731,6 +25125,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -23765,6 +25160,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23775,6 +25171,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23787,6 +25184,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -23797,6 +25195,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23831,6 +25230,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23841,6 +25241,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23853,6 +25254,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `ipAddress`,
@@ -23863,6 +25265,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -23873,6 +25276,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -23907,6 +25311,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -23917,6 +25322,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -23927,6 +25333,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -23937,6 +25344,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -23947,6 +25355,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -23959,6 +25368,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -23969,6 +25379,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24003,6 +25414,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -24013,6 +25425,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24023,6 +25436,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -24033,6 +25447,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24043,6 +25458,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24055,6 +25471,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24089,6 +25506,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -24099,6 +25517,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24109,6 +25528,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -24119,6 +25539,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24129,6 +25550,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24144,6 +25566,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24178,6 +25601,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24188,6 +25612,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24203,6 +25628,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -24213,6 +25639,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -24247,6 +25674,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24257,6 +25685,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24269,6 +25698,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -24279,6 +25709,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -24313,6 +25744,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24323,6 +25755,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -24333,6 +25766,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24343,6 +25777,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -24353,6 +25788,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24368,6 +25804,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `apiUserId`,
@@ -24378,6 +25815,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -24418,6 +25856,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -24428,6 +25867,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24438,6 +25878,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -24448,6 +25889,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24458,6 +25900,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24473,6 +25916,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -24507,6 +25951,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24517,6 +25962,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24532,6 +25978,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `entryValue`,
@@ -24552,6 +25999,7 @@ which protocol (like TCP or UDP) the connection uses.`,
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -24586,6 +26034,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24596,6 +26045,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24611,6 +26061,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `entryValue`,
@@ -24621,6 +26072,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24655,6 +26107,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24665,6 +26118,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24680,6 +26134,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `entryValue`,
@@ -24690,6 +26145,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24724,6 +26180,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -24734,6 +26191,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -24744,6 +26202,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -24754,6 +26213,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24764,6 +26224,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24779,6 +26240,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -24819,6 +26281,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -24829,6 +26292,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24844,6 +26308,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -24879,6 +26344,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -24889,6 +26355,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `projectOwnerId`,
@@ -24899,6 +26366,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -24934,6 +26402,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -24944,6 +26413,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -24959,6 +26429,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -24993,6 +26464,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25003,6 +26475,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25018,6 +26491,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25052,6 +26526,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25067,6 +26542,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `invitationId`,
@@ -25077,6 +26553,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25111,6 +26588,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25121,6 +26599,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25150,6 +26629,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -25163,6 +26643,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -25197,6 +26678,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25207,6 +26689,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25222,6 +26705,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25256,6 +26740,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25266,6 +26751,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25278,6 +26764,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25312,6 +26799,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25322,6 +26810,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25337,6 +26826,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `invitationId`,
@@ -25347,6 +26837,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25381,6 +26872,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25391,6 +26883,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25420,6 +26913,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -25433,6 +26927,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25467,6 +26962,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25477,6 +26973,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -25487,6 +26984,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `instanceSize`,
@@ -25497,6 +26995,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `defaultStatus`,
@@ -25507,6 +27006,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25517,6 +27017,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -25527,6 +27028,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25542,6 +27044,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25576,6 +27079,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25586,6 +27090,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25601,6 +27106,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25635,6 +27141,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25645,6 +27152,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `username`,
@@ -25655,6 +27163,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25670,6 +27179,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25704,6 +27214,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25714,6 +27225,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25729,6 +27241,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25763,6 +27276,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -25773,6 +27287,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25783,6 +27298,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -25793,6 +27309,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25803,6 +27320,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `flattenTeams`,
@@ -25813,6 +27331,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeOrgUsers`,
@@ -25823,6 +27342,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25838,6 +27358,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -25879,6 +27400,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -25889,6 +27411,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -25899,6 +27422,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -25909,6 +27433,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -25919,6 +27444,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -25954,6 +27480,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -25969,6 +27496,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -26003,6 +27531,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26013,6 +27542,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26028,6 +27558,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -26038,6 +27569,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -26079,6 +27611,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26089,6 +27622,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26104,6 +27638,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -26141,6 +27676,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26151,6 +27687,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26180,6 +27717,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -26193,6 +27731,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26227,6 +27766,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26237,6 +27777,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26252,6 +27793,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26286,6 +27828,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26296,6 +27839,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26311,6 +27855,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26345,6 +27890,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26360,6 +27906,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `invitationId`,
@@ -26370,6 +27917,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26404,6 +27952,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -26414,6 +27963,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26429,6 +27979,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -26439,6 +27990,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPut,
@@ -26473,6 +28025,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26483,6 +28036,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26498,6 +28052,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26538,6 +28093,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26548,6 +28104,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26563,6 +28120,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -26597,6 +28155,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26607,6 +28166,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26622,6 +28182,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -26656,6 +28217,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26666,6 +28228,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26681,6 +28244,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -26715,6 +28279,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26725,6 +28290,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26740,6 +28306,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -26780,6 +28347,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26790,6 +28358,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26802,6 +28371,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -26836,6 +28406,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26846,6 +28417,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26858,6 +28430,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `resourcePolicyId`,
@@ -26868,6 +28441,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -26902,6 +28476,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26912,6 +28487,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26924,6 +28500,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -26958,6 +28535,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -26968,6 +28546,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -26980,6 +28559,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `resourcePolicyId`,
@@ -26990,6 +28570,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -27024,6 +28605,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27034,6 +28616,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27046,6 +28629,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -27080,6 +28664,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27090,6 +28675,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27102,6 +28688,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `resourcePolicyId`,
@@ -27112,6 +28699,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -27146,6 +28734,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27156,6 +28745,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27168,6 +28758,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -27208,6 +28799,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27218,6 +28810,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27233,6 +28826,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -27243,6 +28837,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -27283,6 +28878,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27293,6 +28889,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -27328,6 +28925,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -27372,6 +28970,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27382,6 +28981,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27397,6 +28997,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -27434,6 +29035,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27444,6 +29046,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27459,6 +29062,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -27469,6 +29073,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -27506,6 +29111,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27516,6 +29122,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27531,6 +29138,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -27541,6 +29149,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -27578,6 +29187,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -27588,6 +29198,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -27598,6 +29209,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -27608,6 +29220,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27618,6 +29231,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27633,6 +29247,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -27670,6 +29285,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -27680,6 +29296,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27695,6 +29312,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `name`,
@@ -27705,6 +29323,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -27751,6 +29370,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27766,6 +29386,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `instanceName`,
@@ -27776,6 +29397,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -27813,6 +29435,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27828,6 +29451,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `instanceName`,
@@ -27838,6 +29462,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointId`,
@@ -27848,6 +29473,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -27885,6 +29511,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27900,6 +29527,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `instanceName`,
@@ -27910,6 +29538,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointId`,
@@ -27920,6 +29549,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -27957,6 +29587,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -27972,6 +29603,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `instanceName`,
@@ -27982,6 +29614,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -28019,6 +29652,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28034,6 +29668,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `instanceName`,
@@ -28044,6 +29679,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endpointId`,
@@ -28054,6 +29690,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -28094,6 +29731,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28104,6 +29742,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28116,6 +29755,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -28129,6 +29769,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -28163,6 +29804,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28173,6 +29815,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28188,6 +29831,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -28222,6 +29866,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -28232,6 +29877,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -28242,6 +29888,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -28252,6 +29899,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28262,6 +29910,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28277,6 +29926,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -28287,6 +29937,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -28321,6 +29972,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28331,6 +29983,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28346,6 +29999,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -28356,6 +30010,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -28390,6 +30045,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28400,6 +30056,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28412,6 +30069,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -28446,6 +30104,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -28456,6 +30115,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -28466,6 +30126,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -28476,6 +30137,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28486,6 +30148,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28498,6 +30161,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -28508,6 +30172,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -28542,6 +30207,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28552,6 +30218,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28564,6 +30231,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -28574,6 +30242,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -28608,6 +30277,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28618,6 +30288,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28630,6 +30301,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -28643,6 +30315,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28677,6 +30350,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28687,6 +30361,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28702,6 +30377,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -28712,6 +30388,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `ipAddress`,
@@ -28722,6 +30399,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28756,6 +30434,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28766,6 +30445,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28778,6 +30458,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `secretId`,
@@ -28788,6 +30469,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -28801,6 +30483,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28835,6 +30518,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28845,6 +30529,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28857,6 +30542,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -28867,6 +30553,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28901,6 +30588,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28911,6 +30599,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28923,6 +30612,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -28933,6 +30623,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `ipAddress`,
@@ -28943,6 +30634,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -28977,6 +30669,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -28987,6 +30680,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -28999,6 +30693,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `secretId`,
@@ -29009,6 +30704,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -29019,6 +30715,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -29053,6 +30750,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29063,6 +30761,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29078,6 +30777,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -29088,6 +30788,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -29122,6 +30823,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29132,6 +30834,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29144,6 +30847,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -29154,6 +30858,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -29188,6 +30893,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -29198,6 +30904,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -29208,6 +30915,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -29218,6 +30926,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29228,6 +30937,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29243,6 +30953,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -29253,6 +30964,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -29287,6 +30999,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -29297,6 +31010,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29307,6 +31021,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -29317,6 +31032,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29332,6 +31048,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -29366,6 +31083,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -29376,6 +31094,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -29386,6 +31105,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -29396,6 +31116,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29406,6 +31127,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29418,6 +31140,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -29428,6 +31151,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -29462,6 +31186,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -29472,6 +31197,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29482,6 +31208,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -29492,6 +31219,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29504,6 +31232,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clientId`,
@@ -29514,6 +31243,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -29548,6 +31278,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -29558,6 +31289,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29568,6 +31300,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -29578,6 +31311,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29590,6 +31324,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -29624,6 +31359,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29634,6 +31370,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29646,6 +31383,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -29659,6 +31397,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -29693,6 +31432,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29703,6 +31443,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29715,6 +31456,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `orgId`,
@@ -29725,6 +31467,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -29768,6 +31511,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29778,6 +31522,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29790,6 +31535,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -29803,6 +31549,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -29840,6 +31587,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29850,6 +31598,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29862,6 +31611,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -29875,6 +31625,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `restoreId`,
@@ -29885,6 +31636,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -29922,6 +31674,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -29932,6 +31685,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -29944,6 +31698,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -29957,6 +31712,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -30000,6 +31756,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30010,6 +31767,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30022,6 +31780,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -30035,6 +31794,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -30072,6 +31832,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30082,6 +31843,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30097,6 +31859,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -30107,6 +31870,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `snapshotId`,
@@ -30117,6 +31881,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -30154,6 +31919,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30164,6 +31930,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30179,6 +31946,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `clusterName`,
@@ -30189,6 +31957,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -30229,6 +31998,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30244,6 +32014,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `id`,
@@ -30254,6 +32025,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -30288,6 +32060,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30298,6 +32071,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30313,6 +32087,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -30347,6 +32122,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30357,6 +32133,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30372,6 +32149,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -30382,6 +32160,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -30416,6 +32195,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30426,6 +32206,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30441,6 +32222,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -30475,6 +32257,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30485,6 +32268,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30500,6 +32284,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -30534,6 +32319,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30544,6 +32330,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30559,6 +32346,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -30569,6 +32357,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -30603,6 +32392,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30613,6 +32403,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30628,6 +32419,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `connectionId`,
@@ -30638,6 +32430,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30672,6 +32465,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30682,6 +32476,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30697,6 +32492,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -30707,6 +32503,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `connectionName`,
@@ -30717,6 +32514,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30751,6 +32549,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30761,6 +32560,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30776,6 +32576,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -30786,6 +32587,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30820,6 +32622,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -30830,6 +32633,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30845,6 +32649,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -30855,6 +32660,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processorName`,
@@ -30865,6 +32671,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30899,6 +32706,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30914,6 +32722,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `id`,
@@ -30924,6 +32733,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -30958,6 +32768,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `endDate`,
@@ -30968,6 +32779,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `startDate`,
@@ -30978,6 +32790,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -30993,6 +32806,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -31003,6 +32817,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31037,6 +32852,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `cloudProvider`,
@@ -31047,6 +32863,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `regionName`,
@@ -31057,6 +32874,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31072,6 +32890,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31106,6 +32925,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31116,6 +32936,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -31126,6 +32947,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -31136,6 +32958,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31151,6 +32974,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31185,6 +33009,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31200,6 +33025,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `connectionId`,
@@ -31210,6 +33036,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31244,6 +33071,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31259,6 +33087,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -31269,6 +33098,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `connectionName`,
@@ -31279,6 +33109,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31313,6 +33144,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeConnections`,
@@ -31323,6 +33155,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31338,6 +33171,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -31348,6 +33182,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31382,6 +33217,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -31392,6 +33228,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31407,6 +33244,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -31417,6 +33255,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processorName`,
@@ -31427,6 +33266,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31461,6 +33301,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `envelope`,
@@ -31471,6 +33312,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31481,6 +33323,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -31491,6 +33334,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -31501,6 +33345,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31516,6 +33361,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31550,6 +33396,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31560,6 +33407,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -31570,6 +33418,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -31580,6 +33429,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31595,6 +33445,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31629,6 +33480,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31639,6 +33491,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -31649,6 +33502,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -31659,6 +33513,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31674,6 +33529,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -31684,6 +33540,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31718,6 +33575,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31728,6 +33586,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -31738,6 +33597,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -31748,6 +33608,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31763,6 +33624,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31797,6 +33659,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -31807,6 +33670,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -31817,6 +33681,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -31827,6 +33692,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -31837,6 +33703,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31852,6 +33719,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -31862,6 +33730,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -31896,6 +33765,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -31906,6 +33776,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31921,6 +33792,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -31931,6 +33803,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processorName`,
@@ -31941,6 +33814,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -31975,6 +33849,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -31990,6 +33865,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `id`,
@@ -32000,6 +33876,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -32034,6 +33911,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32044,6 +33922,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32059,6 +33938,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -32069,6 +33949,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processorName`,
@@ -32079,6 +33960,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -32113,6 +33995,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32123,6 +34006,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32138,6 +34022,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -32148,6 +34033,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `processorName`,
@@ -32158,6 +34044,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -32192,6 +34079,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32202,6 +34090,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32217,6 +34106,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -32227,6 +34117,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `connectionName`,
@@ -32237,6 +34128,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -32271,6 +34163,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32281,6 +34174,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32296,6 +34190,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `tenantName`,
@@ -32306,6 +34201,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -32346,6 +34242,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32356,6 +34253,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32371,6 +34269,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -32405,6 +34304,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32415,6 +34315,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32427,6 +34328,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -32437,6 +34339,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -32471,6 +34374,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32481,6 +34385,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32493,6 +34398,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -32527,6 +34433,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32537,6 +34444,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32549,6 +34457,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -32559,6 +34468,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -32593,6 +34503,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32603,6 +34514,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32615,6 +34527,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -32625,6 +34538,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -32659,6 +34573,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32669,6 +34584,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32681,6 +34597,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamName`,
@@ -32691,6 +34608,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -32725,6 +34643,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -32735,6 +34654,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -32745,6 +34665,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -32755,6 +34676,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32765,6 +34687,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32777,6 +34700,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -32811,6 +34735,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32821,6 +34746,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -32831,6 +34757,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -32841,6 +34768,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -32851,6 +34779,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32866,6 +34795,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -32900,6 +34830,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -32910,6 +34841,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -32920,6 +34852,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -32930,6 +34863,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -32942,6 +34876,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -32952,6 +34887,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -32993,6 +34929,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33008,6 +34945,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -33018,6 +34956,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -33052,6 +34991,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33062,6 +35002,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33074,6 +35015,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -33084,6 +35026,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `userId`,
@@ -33094,6 +35037,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -33128,6 +35072,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33138,6 +35083,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33150,6 +35096,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -33160,6 +35107,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -33194,6 +35142,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33204,6 +35153,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33219,6 +35169,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `teamId`,
@@ -33229,6 +35180,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPatch,
@@ -33269,6 +35221,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `additionalInfo`,
@@ -33279,6 +35232,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{},
@@ -33330,6 +35284,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -33340,6 +35295,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33350,6 +35306,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -33360,6 +35317,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33370,6 +35328,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33382,6 +35341,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -33395,6 +35355,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -33429,6 +35390,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33439,6 +35401,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33451,6 +35414,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -33464,6 +35428,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -33498,6 +35463,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33508,6 +35474,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33523,6 +35490,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `integrationType`,
@@ -33533,6 +35501,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -33567,6 +35536,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -33577,6 +35547,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33587,6 +35558,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -33597,6 +35569,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33607,6 +35580,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33622,6 +35596,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,
@@ -33656,6 +35631,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -33666,6 +35642,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33676,6 +35653,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -33686,6 +35664,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33696,6 +35675,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33708,6 +35688,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name: `groupId`,
@@ -33721,6 +35702,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPut,
@@ -33767,6 +35749,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33777,6 +35760,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33792,6 +35776,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `username`,
@@ -33802,6 +35787,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodPost,
@@ -33839,6 +35825,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33854,6 +35841,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodDelete,
@@ -33888,6 +35876,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `includeCount`,
@@ -33898,6 +35887,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `itemsPerPage`,
@@ -33908,6 +35898,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pageNum`,
@@ -33918,6 +35909,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `int`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `pretty`,
@@ -33928,6 +35920,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 								IsArray: false,
 								Type:    `bool`,
 							},
+							Aliases: nil,
 						},
 					},
 					URLParameters: []Parameter{
@@ -33943,6 +35936,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 						{
 							Name:        `username`,
@@ -33953,6 +35947,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 								IsArray: false,
 								Type:    `string`,
 							},
+							Aliases: nil,
 						},
 					},
 					Verb: http.MethodGet,

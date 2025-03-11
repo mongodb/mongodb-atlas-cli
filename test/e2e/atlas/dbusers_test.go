@@ -122,6 +122,20 @@ func TestDBUserWithFlags(t *testing.T) {
 		testUpdateUserCmd(t, cmd, username)
 	})
 
+	t.Run("Update only password", func(t *testing.T) {
+		pwd, err := generateRandomBase64String()
+		require.NoError(t, err)
+		cmd := exec.Command(cliPath,
+			dbusersEntity,
+			"update",
+			username,
+			"--password",
+			pwd,
+			"-o=json")
+
+		testUpdateUserCmd(t, cmd, username)
+	})
+
 	t.Run("Delete", func(t *testing.T) {
 		testDeleteUser(t, cliPath, dbusersEntity, username)
 	})

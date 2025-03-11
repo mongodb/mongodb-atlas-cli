@@ -31,7 +31,6 @@ import (
 )
 
 func TestStreams(t *testing.T) {
-	t.Skip("skipping tests until CLOUDP-305735 is merged")
 	if IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}

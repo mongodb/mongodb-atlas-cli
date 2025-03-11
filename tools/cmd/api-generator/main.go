@@ -93,23 +93,38 @@ func run(ctx context.Context, specPath, overlayPath string, outputType OutputTyp
 
 	defer specFile.Close()
 
-	files, err := os.ReadDir(overlayPath)
+	overlaySpec, err := applyOverlays(specFile, overlayPath)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to apply overlays, error: %w", err)
+	}
+
+	spec, err := loadSpec(overlaySpec)
+	if err != nil {
+		return fmt.Errorf("failed to load spec, error: %w", err)
+	}
+
+	switch outputType {
+	case Commands:
+		return convertSpecToAPICommands(ctx, spec, w)
+	case Metadata:
+		return convertSpecToMetadata(ctx, spec, w)
+	default:
+		return fmt.Errorf("'%s' is not a valid outputType", outputType)
+	}
+}
+
+func applyOverlays(r io.Reader, overlayGlob string) (io.Reader, error) {
+	files, err := filepath.Glob(overlayGlob)
+	if err != nil {
+		return nil, err
 	}
 
 	overlayFiles := make([]io.Reader, 0, len(files))
 
 	for _, file := range files {
-		if !strings.HasSuffix(file.Name(), ".yaml") && !strings.HasSuffix(file.Name(), ".yml") {
-			continue
-		}
-
-		fileName := filepath.Join(overlayPath, file.Name())
-
-		overlayFile, err := os.OpenFile(fileName, os.O_RDONLY, os.ModePerm)
+		overlayFile, err := os.OpenFile(file, os.O_RDONLY, os.ModePerm)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		defer overlayFile.Close() //nolint // required
@@ -117,24 +132,8 @@ func run(ctx context.Context, specPath, overlayPath string, outputType OutputTyp
 		overlayFiles = append(overlayFiles, overlayFile)
 	}
 
-	switch outputType {
-	case Commands:
-		return convertSpecToAPICommands(ctx, specFile, overlayFiles, w)
-	case Metadata:
-		return convertSpecToMetadata(ctx, specFile, overlayFiles, w)
-	default:
-		return fmt.Errorf("'%s' is not a valid outputType", outputType)
-	}
-}
-
-func applyOverlays(r io.Reader, overlayFiles []io.Reader) (io.Reader, error) {
-	if len(overlayFiles) == 0 {
-		return r, nil
-	}
-
 	var spec yaml.Node
-	err := yaml.NewDecoder(r).Decode(&spec)
-	if err != nil {
+	if err := yaml.NewDecoder(r).Decode(&spec); err != nil {
 		return nil, err
 	}
 
@@ -163,31 +162,19 @@ func applyOverlays(r io.Reader, overlayFiles []io.Reader) (io.Reader, error) {
 	return bytes.NewBuffer(buf), nil
 }
 
-func convertSpecToAPICommands(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error {
-	return convertSpec(ctx, r, overlayFiles, w, specToCommands, commandsTemplateContent)
+func convertSpecToAPICommands(ctx context.Context, spec *openapi3.T, w io.Writer) error {
+	if err := spec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
+		return fmt.Errorf("spec validation failed, error: %w", err)
+	}
+
+	return convertSpec(spec, w, specToCommands, commandsTemplateContent)
 }
 
-func convertSpecToMetadata(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error {
-	return convertSpec(ctx, r, overlayFiles, w, specToMetadata, metadataTemplateContent)
+func convertSpecToMetadata(_ context.Context, spec *openapi3.T, w io.Writer) error {
+	return convertSpec(spec, w, specToMetadata, metadataTemplateContent)
 }
 
-func convertSpec[T any](ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer, mapper func(spec *openapi3.T) (T, error), templateContent string) error {
-	overlaySpec, err := applyOverlays(r, overlayFiles)
-	if err != nil {
-		return fmt.Errorf("failed to apply overlays, error: %w", err)
-	}
-
-	spec, err := loadSpec(overlaySpec)
-	if err != nil {
-		return fmt.Errorf("failed to load spec, error: %w", err)
-	}
-
-	if templateContent != metadataTemplateContent {
-		if err := spec.Validate(ctx, openapi3.DisableSchemaPatternValidation(), openapi3.DisableExamplesValidation()); err != nil {
-			return fmt.Errorf("spec validation failed, error: %w", err)
-		}
-	}
-
+func convertSpec[T any](spec *openapi3.T, w io.Writer, mapper func(spec *openapi3.T) (T, error), templateContent string) error {
 	commands, err := mapper(spec)
 	if err != nil {
 		return fmt.Errorf("failed convert spec to api commands: %w", err)
@@ -205,6 +192,9 @@ func writeCommands[T any](w io.Writer, templateContent string, data T) error {
 	tmpl, err := template.New("output").Funcs(template.FuncMap{
 		"currentYear": func() int {
 			return time.Now().UTC().Year()
+		},
+		"replace": func(o, n, s string) string {
+			return strings.ReplaceAll(s, o, n)
 		},
 	}).Parse(templateContent)
 	if err != nil {

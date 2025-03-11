@@ -20,27 +20,26 @@ package main
 
 import 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 
-var EndpointExamples = map[string]metadatatypes.Metadata{
-{{- range $operationID, $examples := . }}
-	"{{ $operationID }}": {
-		ParameterExample: map[string]string{
-		{{- range $paramName, $example := $examples.ParameterExample }}
-			"{{ $paramName }}": "{{ $example }}",
-		{{- end }}
-		},
-		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
-		{{- range $version, $requestBodyExamples := $examples.RequestBodyExamples }}
-			"{{ $version }}": {
-				{{- range $example := $requestBodyExamples }}
-				{
-					Name:        "{{ $example.Name }}",
-					Description: "{{ $example.Description }}",
-					Value:       `{{ $example.Value }}`,
-				},
-				{{- end }}
-			},
-		{{- end }}
-		},
-	},
-{{- end }}
+var metadata = map[string]metadatatypes.Metadata{
+{{- range $operationID, $metadata := . }}
+	`{{ $operationID }}`: {
+		Parameters: {{if not $metadata.Parameters}}nil,{{else}}map[string]metadatatypes.ParameterMetadata{
+		{{- range $paramName, $paramMetadata := $metadata.Parameters }}
+			`{{ $paramName }}`: metadatatypes.ParameterMetadata{
+				Example: `{{ $paramMetadata.Example | replace "`" "` + \"`\" + `" }}`,
+				Usage: `{{ $paramMetadata.Usage | replace "`" "` + \"`\" + `"  }}`,
+			},{{- end }}
+		},{{- end }}
+		RequestBodyExamples: {{if not $metadata.RequestBodyExamples}}nil,{{else}}map[string][]metadatatypes.RequestBodyExample{
+		{{- range $version, $requestBodyExamples := $metadata.RequestBodyExamples }}
+			`{{ $version }}`: {{if not $metadata.RequestBodyExamples}}nil,{{else}}[]metadatatypes.RequestBodyExample{
+					{{- range $example := $requestBodyExamples}}metadatatypes.RequestBodyExample{
+						Name:        `{{ $example.Name }}`,
+						Description: `{{ $example.Description }}`,
+						Value:       `{{ $example.Value }}`,
+					},{{- end }}
+				},{{- end }}
+			{{- end }}
+		},{{- end }}
+	},{{- end }}
 }

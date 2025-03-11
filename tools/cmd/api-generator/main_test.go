@@ -25,6 +25,7 @@ import (
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
+	"github.com/getkin/kin-openapi/openapi3"
 )
 
 func testSpec(t *testing.T, name, specPath string) {
@@ -33,7 +34,7 @@ func testSpec(t *testing.T, name, specPath string) {
 	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".snapshot"))
 	overlayPath := specPath + ".overlay.yaml"
 
-	outputFunctions := map[OutputType]func(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error{
+	outputFunctions := map[OutputType]func(ctx context.Context, spec *openapi3.T, w io.Writer) error{
 		Commands: convertSpecToAPICommands,
 		Metadata: convertSpecToMetadata,
 	}
@@ -43,24 +44,24 @@ func testSpec(t *testing.T, name, specPath string) {
 		if err != nil {
 			t.Fatalf("failed to load '%s', error: %s", specPath, err)
 		}
+		t.Cleanup(func() {
+			specFile.Close()
+		})
 
-		var overlays []io.Reader
-		var overlayFile *os.File
-		if _, err = os.Stat(overlayPath); err == nil {
-			overlayFile, err = os.OpenFile(overlayPath, os.O_RDONLY, os.ModePerm)
-			if err != nil {
-				t.Fatalf("failed to load '%s', error: %s", overlayPath, err)
-			}
-			overlays = []io.Reader{overlayFile}
+		specReader, err := applyOverlays(specFile, overlayPath)
+		if err != nil {
+			t.Fatalf("failed to apply overlays %q, error: %s", specPath, err)
+		}
+
+		spec, err := loadSpec(specReader)
+		if err != nil {
+			t.Fatalf("failed to load spec from %q, error: %s", specPath, err)
 		}
 
 		buf := &bytes.Buffer{}
-		if err := outputTypeFunc(context.Background(), specFile, overlays, buf); err != nil {
+		if err := outputTypeFunc(context.Background(), spec, buf); err != nil {
 			t.Fatalf("failed to convert spec into %s, error: %s", outputType, err)
 		}
-
-		specFile.Close()
-		overlayFile.Close()
 
 		if err := snapshotter.SnapshotWithName(fmt.Sprintf("%s-%s", name, outputType), buf.String()); err != nil {
 			t.Fatalf("unexpected result %s", err)

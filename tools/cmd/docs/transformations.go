@@ -22,6 +22,7 @@ import (
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 //go:embed api_docs_long_text.txt
@@ -85,6 +86,25 @@ func removePluginCommands(cmd *cobra.Command) {
 	}
 }
 
+func replaceFlagUsage(cmd *cobra.Command, f *pflag.Flag) {
+	operationID := cmd.Annotations["operationId"]
+	if operationID == "" {
+		return
+	}
+
+	cmdMetadata, ok := metadata[operationID]
+	if !ok {
+		return
+	}
+
+	paramMetadata, ok := cmdMetadata.Parameters[f.Name]
+	if !ok {
+		return
+	}
+
+	f.Usage = paramMetadata.Usage
+}
+
 func applyTransformations(cmd *cobra.Command) {
 	setDisableAutoGenTag(cmd)
 	removePluginCommands(cmd)
@@ -94,6 +114,10 @@ func applyTransformations(cmd *cobra.Command) {
 		markExperimenalToAPICommands(cmd)
 		updateAPICommandDescription(cmd)
 	}
+
+	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+		replaceFlagUsage(cmd, f)
+	})
 
 	for _, subCmd := range cmd.Commands() {
 		applyTransformations(subCmd)

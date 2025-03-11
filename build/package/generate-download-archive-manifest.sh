@@ -20,5 +20,5 @@ VERSION="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v"
 if [[ ${VERSION} =~ "-pre" ]]; then
   echo "Skipping generate download center manifest for pre-release version: ${VERSION}"
 else
-  go run ../tools/release/main.go --file "${FEED_FILE_NAME}" --version "${VERSION}"
+  go run ../tools/cmd/release/main.go --file "${FEED_FILE_NAME}" --version "${VERSION}"
 fi

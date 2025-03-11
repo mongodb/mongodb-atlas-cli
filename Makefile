@@ -111,8 +111,8 @@ bin/api-generator:
 .PHONY: gen-api-commands
 gen-api-commands: bin/api-generator ## Generate api commands
 	@echo "==> Generating api commands"
-	bin/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays --output-type commands > ./internal/api/commands.go
-	bin/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays --output-type metadata > ./tools/cmd/docs/metadata.go
+	bin/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays/*.yaml --output-type commands > ./internal/api/commands.go
+	bin/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays/*.yaml --output-type metadata > ./tools/cmd/docs/metadata.go
 
 .PHONY: otel
 otel: ## Generate code

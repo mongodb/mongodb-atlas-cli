@@ -118,26 +118,20 @@ func applyOverlays(r io.Reader, overlayGlob string) (io.Reader, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	overlayFiles := make([]io.Reader, 0, len(files))
-
-	for _, file := range files {
-		overlayFile, err := os.OpenFile(file, os.O_RDONLY, os.ModePerm)
-		if err != nil {
-			return nil, err
-		}
-
-		defer overlayFile.Close() //nolint // required
-
-		overlayFiles = append(overlayFiles, overlayFile)
-	}
+	slices.Sort(files)
 
 	var spec yaml.Node
 	if err := yaml.NewDecoder(r).Decode(&spec); err != nil {
 		return nil, err
 	}
 
-	for _, overlayFile := range overlayFiles {
+	for _, file := range files {
+		overlayFile, err := os.OpenFile(file, os.O_RDONLY, os.ModePerm)
+		if err != nil {
+			return nil, err
+		}
+		defer overlayFile.Close() //nolint // required
+
 		var o overlay.Overlay
 		dec := yaml.NewDecoder(overlayFile)
 

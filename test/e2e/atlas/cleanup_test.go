@@ -28,7 +28,6 @@ import (
 )
 
 func TestCleanup(t *testing.T) {
-	t.Skip("skipping cleanup test until CLOUDP-305735 is merged")
 	req := require.New(t)
 	cliPath, err := e2e.AtlasCLIBin()
 	req.NoError(err)

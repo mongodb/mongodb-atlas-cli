@@ -20,15 +20,15 @@ package main
 import "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 
 var EndpointExamples = map[string]metadatatypes.Metadata{
-	"createCluster": {
+	`createCluster`: {
 		ParameterExample: map[string]string{
-			"groupId": "32b6e34b3d91647abb20e7b8",
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
 		},
 		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
-			"2024-08-05": {
+			`2024-08-05`: {
 				{
-					Name:        "Cluster",
-					Description: "Cluster",
+					Name:        `Cluster`,
+					Description: `Cluster`,
 					Value: `{
   "clusterType": "SHARDED",
   "name": "myCluster",
@@ -131,10 +131,10 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 			},
-			"2024-10-23": {
+			`2024-10-23`: {
 				{
-					Name:        "Cluster",
-					Description: "Cluster",
+					Name:        `Cluster`,
+					Description: `Cluster`,
 					Value: `{
   "clusterType": "SHARDED",
   "name": "myCluster",

@@ -22,20 +22,20 @@ import 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadataty
 
 var EndpointExamples = map[string]metadatatypes.Metadata{
 {{- range $operationID, $examples := . }}
-	"{{ $operationID }}": {
+	`{{ $operationID }}`: {
 		ParameterExample: map[string]string{
 		{{- range $paramName, $example := $examples.ParameterExample }}
-			"{{ $paramName }}": "{{ $example }}",
+			`{{ $paramName }}`: `{{ $example }}`,
 		{{- end }}
 		},
 		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
 		{{- range $version, $requestBodyExamples := $examples.RequestBodyExamples }}
-			"{{ $version }}": {
+			`{{ $version }}`: {
 				{{- range $example := $requestBodyExamples }}
 				{
-					Name:        "{{ $example.Name }}",
-					Description: "{{ $example.Description }}",
-					Value:       `{{ $example.Value }}`,
+					Name:        `{{ $example.Name }}`,
+					Description: `{{ $example.Description }}`,
+					{{if $example.Value}}Value:       `{{ $example.Value }}`,{{end}}
 				},
 				{{- end }}
 			},

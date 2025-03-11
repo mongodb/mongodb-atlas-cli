@@ -414,6 +414,10 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 	}
 
 	for versionedContentType, mediaType := range requestBody.Value.Content {
+		if mediaType.Schema == nil || (mediaType.Schema.Ref == "" && mediaType.Schema.Value == nil) {
+			continue
+		}
+
 		if err := addContentTypeToVersion(versionedContentType, versionsMap, true, extractSunsetDate(mediaType.Extensions)); err != nil {
 			return err
 		}

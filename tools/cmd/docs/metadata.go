@@ -20,15 +20,15 @@ package main
 import "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 
 var EndpointExamples = map[string]metadatatypes.Metadata{
-	"createCluster": {
+	`createCluster`: {
 		ParameterExample: map[string]string{
-			"groupId": "32b6e34b3d91647abb20e7b8",
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
 		},
 		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
-			"2024-08-05": {
+			`2024-08-05`: {
 				{
-					Name:        "Cluster",
-					Description: "Cluster",
+					Name:        `Cluster`,
+					Description: `Cluster`,
 					Value: `{
   "clusterType": "SHARDED",
   "name": "myCluster",
@@ -131,10 +131,10 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 			},
-			"2024-10-23": {
+			`2024-10-23`: {
 				{
-					Name:        "Cluster",
-					Description: "Cluster",
+					Name:        `Cluster`,
+					Description: `Cluster`,
 					Value: `{
   "clusterType": "SHARDED",
   "name": "myCluster",
@@ -251,15 +251,15 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 			},
 		},
 	},
-	"createDatabaseUser": {
+	`createDatabaseUser`: {
 		ParameterExample: map[string]string{
-			"groupId": "32b6e34b3d91647abb20e7b8",
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
 		},
 		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
-			"2023-01-01": {
+			`2023-01-01`: {
 				{
-					Name:        "AWS IAM Authentication",
-					Description: "AWS IAM Authentication",
+					Name:        `AWS IAM Authentication`,
+					Description: `AWS IAM Authentication`,
 					Value: `{
   "awsIAMType": "USER",
   "databaseName": "$external",
@@ -284,8 +284,8 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 				{
-					Name:        "LDAP Authentication",
-					Description: "LDAP Authentication",
+					Name:        `LDAP Authentication`,
+					Description: `LDAP Authentication`,
 					Value: `{
   "databaseName": "admin",
   "groupId": "32b6e34b3d91647abb20e7b8",
@@ -310,8 +310,8 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 				{
-					Name:        "OIDC Workforce Federated Authentication",
-					Description: "OIDC Workforce Federated Authentication",
+					Name:        `OIDC Workforce Federated Authentication`,
+					Description: `OIDC Workforce Federated Authentication`,
 					Value: `{
   "databaseName": "admin",
   "groupId": "32b6e34b3d91647abb20e7b8",
@@ -336,8 +336,8 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 				{
-					Name:        "OIDC Workload Federated Authentication",
-					Description: "OIDC Workload Federated Authentication",
+					Name:        `OIDC Workload Federated Authentication`,
+					Description: `OIDC Workload Federated Authentication`,
 					Value: `{
   "databaseName": "$external",
   "groupId": "32b6e34b3d91647abb20e7b8",
@@ -362,8 +362,8 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 				{
-					Name:        "SCRAM-SHA Authentication",
-					Description: "SCRAM-SHA Authentication",
+					Name:        `SCRAM-SHA Authentication`,
+					Description: `SCRAM-SHA Authentication`,
 					Value: `{
   "databaseName": "admin",
   "groupId": "32b6e34b3d91647abb20e7b8",
@@ -388,8 +388,8 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 				{
-					Name:        "X509 Authentication",
-					Description: "X509 Authentication",
+					Name:        `X509 Authentication`,
+					Description: `X509 Authentication`,
 					Value: `{
   "databaseName": "$external",
   "groupId": "32b6e34b3d91647abb20e7b8",
@@ -416,15 +416,15 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 			},
 		},
 	},
-	"createExportBucket": {
+	`createExportBucket`: {
 		ParameterExample: map[string]string{
-			"groupId": "32b6e34b3d91647abb20e7b8",
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
 		},
 		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
-			"2023-01-01": {
+			`2023-01-01`: {
 				{
-					Name:        "AWS",
-					Description: "AWS",
+					Name:        `AWS`,
+					Description: `AWS`,
 					Value: `{
   "bucketName": "export-bucket",
   "cloudProvider": "AWS",
@@ -432,10 +432,10 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 			},
-			"2024-05-30": {
+			`2024-05-30`: {
 				{
-					Name:        "AWS",
-					Description: "AWS",
+					Name:        `AWS`,
+					Description: `AWS`,
 					Value: `{
   "bucketName": "export-bucket",
   "cloudProvider": "AWS",
@@ -443,8 +443,8 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 				{
-					Name:        "Azure",
-					Description: "Azure",
+					Name:        `Azure`,
+					Description: `Azure`,
 					Value: `{
   "cloudProvider": "AZURE",
   "roleId": "668c5f0ed436263134491592",
@@ -454,15 +454,36 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 			},
 		},
 	},
-	"createRollingIndex": {
+	`createProject`: {
+		ParameterExample: map[string]string{},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Create a basic project with environment tag`,
+					Description: `Creates a new project named "MongoTube" with an environment tag set to "e2e"`,
+					Value: `{
+  "name": "MongoTube",
+  "orgId": "67b715468c10250b968dcb84",
+  "tags": [
+    {
+      "key": "environment",
+      "value": "e2e"
+    }
+  ]
+}`,
+				},
+			},
+		},
+	},
+	`createRollingIndex`: {
 		ParameterExample: map[string]string{
-			"groupId": "32b6e34b3d91647abb20e7b8",
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
 		},
 		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
-			"2023-01-01": {
+			`2023-01-01`: {
 				{
-					Name:        "2dspere Index",
-					Description: "2dspere Index",
+					Name:        `2dspere Index`,
+					Description: `2dspere Index`,
 					Value: `{
   "collation": {
     "alternate": "non-ignorable",
@@ -493,8 +514,8 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 				{
-					Name:        "Partial Index",
-					Description: "Partial Index",
+					Name:        `Partial Index`,
+					Description: `Partial Index`,
 					Value: `{
   "collation": {
     "alternate": "non-ignorable",
@@ -525,8 +546,8 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 }`,
 				},
 				{
-					Name:        "Sparse Index",
-					Description: "Sparse Index",
+					Name:        `Sparse Index`,
+					Description: `Sparse Index`,
 					Value: `{
   "collation": {
     "alternate": "non-ignorable",
@@ -550,6 +571,54 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
     "name": "SparseIndexTest",
     "sparse": true
   }
+}`,
+				},
+			},
+		},
+	},
+	`deleteProject`: {
+		ParameterExample: map[string]string{
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
+		},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Delete a project`,
+					Description: `Deletes an existing project`,
+				},
+			},
+		},
+	},
+	`getProject`: {
+		ParameterExample: map[string]string{
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
+		},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Get a project`,
+					Description: `Get a project using a project id`,
+				},
+			},
+		},
+	},
+	`updateProject`: {
+		ParameterExample: map[string]string{
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
+		},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Update project name and tags`,
+					Description: `Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"`,
+					Value: `{
+  "name": "MongoTube - Production",
+  "tags": [
+    {
+      "key": "environment",
+      "value": "production"
+    }
+  ]
 }`,
 				},
 			},

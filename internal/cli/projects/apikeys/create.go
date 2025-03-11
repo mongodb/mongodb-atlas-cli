@@ -70,9 +70,9 @@ func CreateBuilder() *cobra.Command {
 		Use:   "create",
 		Short: "Create an organization API key and assign it to your project.",
 		Long: `MongoDB returns the private API key only once. After you run this command, immediately copy, save, and secure both the public and private API keys.
-By default, the specified project's parent organization will be assigned as organization member. You must authenicate with a user account or API key with the Organization User Admin role to set organization roles.
+If you don't provide an organization level role, the API Key defaults to organization member of the project parent organization.
 
-` + fmt.Sprintf(usage.RequiredRole, "Project User Admin"),
+` + fmt.Sprintf(usage.RequiredOneOfRoles, "Project User Admin or Organization User Admin to manage organization level roles"),
 		Annotations: map[string]string{
 			"output": createTemplate,
 		},

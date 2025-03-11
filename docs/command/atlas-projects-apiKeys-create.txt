@@ -15,9 +15,9 @@ atlas projects apiKeys create
 Create an organization API key and assign it to your project.
 
 MongoDB returns the private API key only once. After you run this command, immediately copy, save, and secure both the public and private API keys.
-By default, the specified project's parent organization will be assigned as organization member. You must authenicate with a user account or API key with the Organization User Admin role to set organization roles.
+If you don't provide an organization level role, the API Key defaults to organization member of the project parent organization.
 
-To use this command, you must authenticate with a user account or an API key with the Project User Admin role.
+To use this command, you must authenticate with a user account or an API key with any of the following roles: Project User Admin or Organization User Admin to manage organization level roles.
 
 Syntax
 ------

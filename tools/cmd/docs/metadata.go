@@ -602,6 +602,17 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 			},
 		},
 	},
+	`listProjects`: {
+		ParameterExample: map[string]string{},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Get a list of all projects`,
+					Description: `Get a list of all projects inside of the organisation`,
+				},
+			},
+		},
+	},
 	`updateProject`: {
 		ParameterExample: map[string]string{
 			`groupId`: `32b6e34b3d91647abb20e7b8`,

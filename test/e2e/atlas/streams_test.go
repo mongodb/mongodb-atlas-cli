@@ -31,6 +31,7 @@ import (
 )
 
 func TestStreams(t *testing.T) {
+	t.Skip("Skipping until mms resource checking has been fixed")
 	if IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}

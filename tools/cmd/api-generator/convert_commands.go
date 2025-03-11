@@ -97,6 +97,14 @@ func extractSunsetDate(extensions map[string]any) *time.Time {
 	return nil
 }
 
+func extractVersion(extensions map[string]any) string {
+	if version, ok := extensions["x-xgen-version"].(string); ok && version != "" {
+		return version
+	}
+
+	return ""
+}
+
 type operationExtensions struct {
 	skip             bool
 	operationID      string
@@ -399,6 +407,10 @@ func processResponses(responses *openapi3.Responses, versionsMap map[string]*api
 		}
 
 		for versionedContentType, mediaType := range responses.Value.Content {
+			// Skip Preview versions in AtlasCLI auto-generation
+			if version := extractVersion(mediaType.Extensions); version == "preview" {
+				continue
+			}
 			if err := addContentTypeToVersion(versionedContentType, versionsMap, false, extractSunsetDate(mediaType.Extensions)); err != nil {
 				return err
 			}

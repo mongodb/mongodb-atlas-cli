@@ -15,8 +15,13 @@
 package metadatatypes
 
 type Metadata struct {
-	ParameterExample    map[string]string               // parameterName: parameterExample
+	Parameters          map[string]ParameterMetadata    // parameterName: parameterMetadata
 	RequestBodyExamples map[string][]RequestBodyExample // version: []requestBodyExample
+}
+
+type ParameterMetadata struct {
+	Example string
+	Usage   string
 }
 
 type RequestBodyExample struct {

@@ -54,7 +54,7 @@ Options
    * - --pretty
      - 
      - false
-     - flag that indicates whether the response body should be in the prettyprint format
+     - Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
    * - --version
      - string
      - false

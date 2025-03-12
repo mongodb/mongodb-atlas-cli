@@ -206,6 +206,9 @@ func writeCommands[T any](w io.Writer, templateContent string, data T) error {
 		"currentYear": func() int {
 			return time.Now().UTC().Year()
 		},
+		"replace": func(o, n, s string) string {
+			return strings.ReplaceAll(s, o, n)
+		},
 	}).Parse(templateContent)
 	if err != nil {
 		return err

@@ -44,7 +44,7 @@ Options
    * - --federationSettingsId
      - string
      - true
-     - unique 24-hexadecimal digit string that identifies your federation
+     - Unique 24-hexadecimal digit string that identifies your federation.
    * - -h, --help
      - 
      - false
@@ -52,7 +52,7 @@ Options
    * - --identityProviderId
      - string
      - true
-     - legacy 20-hexadecimal digit string that identifies the identity provider
+     - Legacy 20-hexadecimal digit string that identifies the identity provider. This id can be found within the Federation Management Console > Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider.
    * - --output
      - string
      - false

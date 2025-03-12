@@ -20,6 +20,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -28,7 +29,7 @@ import (
 )
 
 var (
-	versionRegex = regexp.MustCompile(`^application/vnd\.atlas\.(?P<version>\d{4}-\d{2}-\d{2})\+(?P<contentType>[\w]+)$`)
+	versionRegex = regexp.MustCompile(`^application/vnd\.atlas\.(?P<version>\d{4}-\d{2}-\d{2}|preview|upcoming)\+(?P<contentType>[\w]+)$`)
 )
 
 func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
@@ -432,6 +433,10 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 		return fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
 	}
 
+	if shouldIgnoreVersion(version) {
+		return nil
+	}
+
 	if _, ok := versionsMap[version]; !ok {
 		versionsMap[version] = &api.Version{
 			Version:              version,
@@ -507,6 +512,11 @@ func extractVersionAndContentType(input string) (version string, contentType str
 	contentTypeIndex := versionRegex.SubexpIndex("contentType")
 
 	return matches[versionIndex], matches[contentTypeIndex], nil
+}
+
+func shouldIgnoreVersion(version string) bool {
+	// Ignore 'preview' versions
+	return strings.EqualFold(version, "preview")
 }
 
 func getParameterType(parameter *openapi3.Parameter) (*api.ParameterType, error) {

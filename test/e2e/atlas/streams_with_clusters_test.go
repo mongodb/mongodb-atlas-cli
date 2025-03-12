@@ -105,6 +105,22 @@ func TestStreamsWithClusters(t *testing.T) {
 		a.Equal(connectionName, *connection.Name)
 		a.Equal("atlasAdmin", *connection.DbRoleToExecute.Role)
 	})
+
+	t.Run("Delete the streams instance", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			"streams",
+			"instance",
+			"delete",
+			"--force",
+			instanceName,
+			"--projectId",
+			g.projectID,
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := e2e.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+	})
 }
 
 func generateAtlasConnectionConfigFile(clusterName string) (string, error) {

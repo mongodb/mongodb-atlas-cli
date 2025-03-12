@@ -51,27 +51,28 @@ func extractMetadata(operation *openapi3.Operation) (*metadatatypes.Metadata, er
 	if err != nil {
 		return nil, err
 	}
-	if len(requestBodyExamples) == 0 {
-		return nil, nil
-	}
 
-	paramMap := extractParameterExamples(operation.Parameters)
+	paramMap := extractParameterMetadata(operation.Parameters)
 
 	return &metadatatypes.Metadata{
-		ParameterExample:    paramMap,
+		Parameters:          paramMap,
 		RequestBodyExamples: requestBodyExamples,
 	}, nil
 }
 
 // For each parameter in an operation, the parameter name and example is extracted.
 // A map of parameterName:example is returned.
-func extractParameterExamples(parameters openapi3.Parameters) map[string]string {
-	result := make(map[string]string)
+func extractParameterMetadata(parameters openapi3.Parameters) map[string]metadatatypes.ParameterMetadata {
+	result := make(map[string]metadatatypes.ParameterMetadata)
 
 	for _, parameterRef := range parameters {
-		parameterExample, ok := parameterRef.Value.Schema.Value.Example.(string)
-		if ok {
-			result[parameterRef.Value.Name] = parameterExample
+		example := ""
+		if parameterExample, ok := parameterRef.Value.Schema.Value.Example.(string); ok {
+			example = parameterExample
+		}
+		result[parameterRef.Value.Name] = metadatatypes.ParameterMetadata{
+			Example: example,
+			Usage:   parameterRef.Value.Description,
 		}
 	}
 
@@ -92,6 +93,10 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 		version, _, err := extractVersionAndContentType(versionedContentType)
 		if err != nil {
 			return nil, fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
+		}
+
+		if shouldIgnoreVersion(version) {
+			continue
 		}
 
 		for name, exampleRef := range mediaType.Examples {

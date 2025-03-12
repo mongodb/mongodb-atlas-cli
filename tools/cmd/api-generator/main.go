@@ -77,7 +77,7 @@ func main() {
 	_ = rootCmd.MarkFlagRequired("spec")
 	_ = rootCmd.MarkFlagFilename("spec")
 
-	rootCmd.Flags().StringVar(&outputTypeStr, "output-type", "", "Set output type [overlay/commands/metadata]")
+	rootCmd.Flags().StringVar(&outputTypeStr, "output-type", "", "Set output type [commands/metadata]")
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

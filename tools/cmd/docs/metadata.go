@@ -252,6 +252,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -458,6 +459,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `Cluster`,
 
 				Description: `Cluster`,
 				Value: `{
@@ -568,6 +570,7 @@ var metadata = metadatatypes.Metadata{
 			},
 			},
 			`2024-10-23`: {{
+				Source: `Cluster`,
 
 				Description: `Cluster`,
 				Value: `{
@@ -769,6 +772,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `AWS IAM Authentication`,
 
 				Description: `AWS IAM Authentication`,
 				Value: `{
@@ -799,6 +803,7 @@ var metadata = metadatatypes.Metadata{
 					`pretty`:   `false`,
 				},
 			}, {
+				Source: `LDAP Authentication`,
 
 				Description: `LDAP Authentication`,
 				Value: `{
@@ -829,6 +834,7 @@ var metadata = metadatatypes.Metadata{
 					`pretty`:   `false`,
 				},
 			}, {
+				Source: `OIDC Workforce Federated Authentication`,
 
 				Description: `OIDC Workforce Federated Authentication`,
 				Value: `{
@@ -859,6 +865,7 @@ var metadata = metadatatypes.Metadata{
 					`pretty`:   `false`,
 				},
 			}, {
+				Source: `OIDC Workload Federated Authentication`,
 
 				Description: `OIDC Workload Federated Authentication`,
 				Value: `{
@@ -889,6 +896,7 @@ var metadata = metadatatypes.Metadata{
 					`pretty`:   `false`,
 				},
 			}, {
+				Source: `SCRAM-SHA Authentication`,
 
 				Description: `SCRAM-SHA Authentication`,
 				Value: `{
@@ -919,6 +927,7 @@ var metadata = metadatatypes.Metadata{
 					`pretty`:   `false`,
 				},
 			}, {
+				Source: `X509 Authentication`,
 
 				Description: `X509 Authentication`,
 				Value: `{
@@ -1006,6 +1015,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `AWS`,
 
 				Description: `AWS`,
 				Value: `{
@@ -1021,6 +1031,7 @@ var metadata = metadatatypes.Metadata{
 			},
 			},
 			`2024-05-30`: {{
+				Source: `AWS`,
 
 				Description: `AWS`,
 				Value: `{
@@ -1034,6 +1045,7 @@ var metadata = metadatatypes.Metadata{
 					`pretty`:   `false`,
 				},
 			}, {
+				Source: `Azure`,
 
 				Description: `Azure`,
 				Value: `{
@@ -1365,6 +1377,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `create_project`,
 				Name:        `Create a basic project with environment tag`,
 				Description: `Creates a new project named "MongoTube" with an environment tag set to "e2e"`,
 				Value: `{
@@ -1442,6 +1455,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `project_ip_access_list_add`,
 				Name:        `Add Entries to Project IP Access List`,
 				Description: `Adds multiple access list entries to the specified project`,
 				Value: `[
@@ -1594,6 +1608,45 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `2dspere Index`,
+
+				Description: `2dspere Index`,
+				Value: `{
+  "collation": {
+    "alternate": "non-ignorable",
+    "backwards": false,
+    "caseFirst": "lower",
+    "caseLevel": false,
+    "locale": "af",
+    "maxVariable": "punct",
+    "normalization": false,
+    "numericOrdering": false,
+    "strength": 3
+  },
+  "collection": "accounts",
+  "db": "sample_airbnb",
+  "keys": [
+    {
+      "property_type": "1"
+    }
+  ],
+  "options": {
+    "name": "PartialIndexTest",
+    "partialFilterExpression": {
+      "limit": {
+        "$gt": 900
+      }
+    }
+  }
+}`,
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`envelope`:    `false`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`pretty`:      `false`,
+				},
+			}, {
+				Source: `Partial Index`,
 
 				Description: `Partial Index`,
 				Value: `{
@@ -1631,6 +1684,7 @@ var metadata = metadatatypes.Metadata{
 					`pretty`:      `false`,
 				},
 			}, {
+				Source: `Sparse Index`,
 
 				Description: `Sparse Index`,
 				Value: `{
@@ -1655,43 +1709,6 @@ var metadata = metadatatypes.Metadata{
   "options": {
     "name": "SparseIndexTest",
     "sparse": true
-  }
-}`,
-				Flags: map[string]string{
-					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
-					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
-				},
-			}, {
-
-				Description: `2dspere Index`,
-				Value: `{
-  "collation": {
-    "alternate": "non-ignorable",
-    "backwards": false,
-    "caseFirst": "lower",
-    "caseLevel": false,
-    "locale": "af",
-    "maxVariable": "punct",
-    "normalization": false,
-    "numericOrdering": false,
-    "strength": 3
-  },
-  "collection": "accounts",
-  "db": "sample_airbnb",
-  "keys": [
-    {
-      "property_type": "1"
-    }
-  ],
-  "options": {
-    "name": "PartialIndexTest",
-    "partialFilterExpression": {
-      "limit": {
-        "$gt": 900
-      }
-    }
   }
 }`,
 				Flags: map[string]string{
@@ -1995,6 +2012,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
@@ -2039,6 +2057,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`alertConfigId`: `32b6e34b3d91647abb20e7b8`,
@@ -2066,6 +2085,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -2095,6 +2115,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -2123,6 +2144,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
@@ -2154,6 +2176,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
@@ -2183,6 +2206,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:         `false`,
@@ -2213,6 +2237,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -2246,6 +2271,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -2286,6 +2312,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:    `[clusterName]`,
@@ -2322,6 +2349,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -2356,6 +2384,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -2386,6 +2415,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -2416,6 +2446,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`endpointId`: `[endpointId]`,
@@ -2462,6 +2493,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`databaseName`: `[databaseName]`,
@@ -2490,6 +2522,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:       `false`,
@@ -2519,6 +2552,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:   `false`,
@@ -2538,6 +2572,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
@@ -2565,6 +2600,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -2590,6 +2626,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -2616,6 +2653,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -2648,6 +2686,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -2671,6 +2710,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -2705,6 +2745,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -2743,6 +2784,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:   `false`,
@@ -2776,6 +2818,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`archiveId`:   `[archiveId]`,
@@ -2799,6 +2842,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -2825,6 +2869,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -2855,6 +2900,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -2885,6 +2931,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`containerId`: `32b6e34b3d91647abb20e7b8`,
@@ -2912,6 +2959,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -2944,6 +2992,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:      `false`,
@@ -2981,6 +3030,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`:     `[cloudProvider]`,
@@ -3016,6 +3066,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`:     `[cloudProvider]`,
@@ -3047,6 +3098,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`connectionId`: `[connectionId]`,
@@ -3074,6 +3126,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `delete_project`,
 				Name:        `Delete a project`,
 				Description: `Deletes an existing project`,
 
@@ -3102,6 +3155,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -3135,6 +3189,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `project_ip_access_list_delete`,
 				Name:        `Remove One Entry from One Project IP Access List`,
 				Description: `Removes one access list entry from the specified project's IP access list`,
 
@@ -3184,6 +3239,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -3214,6 +3270,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
@@ -3247,6 +3304,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`:  `mdb_sa_id_1234567890abcdef12345678`,
@@ -3281,6 +3339,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
@@ -3309,6 +3368,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -3341,6 +3401,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -3370,6 +3431,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -3400,6 +3462,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -3430,6 +3493,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`endpointId`:   `[endpointId]`,
@@ -3458,6 +3522,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
@@ -3489,6 +3554,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`:  `mdb_sa_id_1234567890abcdef12345678`,
@@ -3521,6 +3587,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
@@ -3555,6 +3622,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -3589,6 +3657,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`connectionName`: `[connectionName]`,
@@ -3620,6 +3689,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:   `false`,
@@ -3653,6 +3723,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:      `false`,
@@ -3682,6 +3753,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -3712,6 +3784,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:        `false`,
@@ -3739,6 +3812,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -3762,6 +3836,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -3787,6 +3862,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -3829,6 +3905,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -3858,6 +3935,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`endDate`:    `1.636481348e+09`,
@@ -3905,6 +3983,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -3941,6 +4020,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -3994,6 +4074,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`endDate`:    `1.636481348e+09`,
@@ -4041,6 +4122,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4071,6 +4153,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
@@ -4104,6 +4187,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -4135,6 +4219,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`alertId`:  `[alertId]`,
@@ -4165,6 +4250,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`alertConfigId`: `32b6e34b3d91647abb20e7b8`,
@@ -4193,6 +4279,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
@@ -4224,6 +4311,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
@@ -4256,6 +4344,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -4286,6 +4375,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -4311,6 +4401,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -4338,6 +4429,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:         `false`,
@@ -4368,6 +4460,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4401,6 +4494,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4441,6 +4535,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:    `[clusterName]`,
@@ -4477,6 +4572,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4505,6 +4601,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -4531,6 +4628,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -4560,6 +4658,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4593,6 +4692,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -4624,6 +4724,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4654,6 +4755,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -4684,6 +4786,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4714,6 +4817,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4744,6 +4848,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4792,6 +4897,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:    `[clusterName]`,
@@ -4840,6 +4946,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`collectionName`: `mycoll`,
@@ -4866,6 +4973,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -4903,6 +5011,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4940,6 +5049,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -4965,6 +5075,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -4989,6 +5100,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -5018,6 +5130,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -5048,6 +5161,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`endpointId`: `[endpointId]`,
@@ -5075,6 +5189,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-10-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -5107,6 +5222,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`databaseName`: `[databaseName]`,
@@ -5156,6 +5272,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`databaseName`: `[databaseName]`,
@@ -5205,6 +5322,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`databaseName`: `[databaseName]`,
@@ -5254,6 +5372,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:      `false`,
@@ -5284,6 +5403,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -5316,6 +5436,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
@@ -5356,6 +5477,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
@@ -5386,6 +5508,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:       `false`,
@@ -5412,6 +5535,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:   `false`,
@@ -5436,6 +5560,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -5465,6 +5590,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:   `false`,
@@ -5498,6 +5624,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -5529,6 +5656,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -5565,6 +5693,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -5610,6 +5739,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:    `false`,
@@ -5637,6 +5767,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -5658,6 +5789,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
@@ -5707,6 +5839,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`collectionName`: `mycoll`,
@@ -5740,6 +5873,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -5767,6 +5901,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -5796,6 +5931,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -5829,6 +5965,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`checkpointId`: `[checkpointId]`,
@@ -5863,6 +6000,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -5897,6 +6035,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -5928,6 +6067,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -5955,6 +6095,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -5984,6 +6125,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -6011,6 +6153,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6052,6 +6195,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:    `false`,
@@ -6087,6 +6231,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`archiveId`:   `[archiveId]`,
@@ -6107,6 +6252,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2043-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`pretty`: `false`,
@@ -6129,6 +6275,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6159,6 +6306,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6184,6 +6332,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -6208,6 +6357,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6235,6 +6385,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2043-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6265,6 +6416,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -6295,6 +6447,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6325,6 +6478,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`containerId`: `32b6e34b3d91647abb20e7b8`,
@@ -6352,6 +6506,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -6381,6 +6536,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -6414,6 +6570,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:      `false`,
@@ -6451,6 +6608,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`:     `[cloudProvider]`,
@@ -6486,6 +6644,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`:     `[cloudProvider]`,
@@ -6514,6 +6673,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`connectionId`: `[connectionId]`,
@@ -6540,6 +6700,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `get_project`,
 				Name:        `Get a project`,
 				Description: `Get a project using a project id`,
 
@@ -6566,6 +6727,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -6598,6 +6760,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6628,6 +6791,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -6658,6 +6822,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `project_ip_access_list_get_status`,
 				Name:        `Return Status of One Project IP Access List Entry`,
 				Description: `Returns the status of 10.0.0.0/16`,
 
@@ -6690,6 +6855,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `project_ip_access_list_get`,
 				Name:        `Return One Project IP Access List Entry`,
 				Description: `Returns one access list entry from the specified project's IP access list: 10.0.0.0/16`,
 
@@ -6739,6 +6905,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -6781,6 +6948,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -6813,6 +6981,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
@@ -6840,6 +7009,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6869,6 +7039,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2043-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6896,6 +7067,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6925,6 +7097,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:        `false`,
@@ -6952,6 +7125,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -6984,6 +7158,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -7010,6 +7185,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -7037,6 +7213,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -7064,6 +7241,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:        `false`,
@@ -7093,6 +7271,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -7123,6 +7302,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -7156,6 +7336,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -7187,6 +7368,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -7217,6 +7399,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`endpointId`:   `[endpointId]`,
@@ -7245,6 +7428,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
@@ -7278,6 +7462,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -7312,6 +7497,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -7346,6 +7532,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -7377,6 +7564,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`connectionName`: `[connectionName]`,
@@ -7407,6 +7595,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:   `false`,
@@ -7439,6 +7628,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:      `false`,
@@ -7462,6 +7652,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -7488,6 +7679,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -7516,6 +7708,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -7546,6 +7739,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:        `false`,
@@ -7571,6 +7765,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -7595,6 +7790,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -7621,6 +7817,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -7656,6 +7853,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:           `false`,
@@ -7722,6 +7920,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -7767,6 +7966,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -7789,6 +7989,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -7823,6 +8024,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -7864,6 +8066,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`alertId`:      `[alertId]`,
@@ -7906,6 +8109,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -7947,6 +8151,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`alertConfigId`: `32b6e34b3d91647abb20e7b8`,
@@ -7987,6 +8192,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`apiUserId`:    `[apiUserId]`,
@@ -8024,6 +8230,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8062,6 +8269,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8100,6 +8308,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:    `[clusterName]`,
@@ -8132,6 +8341,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -8168,6 +8378,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:    `[clusterName]`,
@@ -8209,6 +8420,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -8251,6 +8463,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -8281,6 +8494,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -8322,6 +8536,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8366,6 +8581,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -8403,6 +8619,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8436,6 +8653,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8465,6 +8683,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -8492,6 +8711,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -8527,6 +8747,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8568,6 +8789,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8607,6 +8829,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8648,6 +8871,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8681,6 +8905,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:      `false`,
@@ -8720,6 +8945,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8747,6 +8973,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -8776,6 +9003,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8813,6 +9041,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8845,6 +9074,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -8883,6 +9113,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8925,6 +9156,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -8964,6 +9196,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-11-13`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9000,6 +9233,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -9048,6 +9282,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`collectionName`: `mycoll`,
@@ -9104,6 +9339,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:           `false`,
@@ -9149,6 +9385,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -9194,6 +9431,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -9239,6 +9477,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -9269,6 +9508,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -9307,6 +9547,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -9358,6 +9599,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9388,6 +9630,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -9424,6 +9667,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9460,6 +9704,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9496,6 +9741,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2043-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9532,6 +9778,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9572,6 +9819,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9613,6 +9861,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9652,6 +9901,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9679,6 +9929,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -9720,6 +9971,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`createdBefore`: `2022-01-01T00:00:00Z`,
@@ -9754,6 +10006,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9796,6 +10049,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`completedAfter`: `2022-01-01T00:00:00Z`,
@@ -9824,6 +10078,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -9852,6 +10107,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
@@ -9885,6 +10141,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9922,6 +10179,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9982,6 +10240,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10014,6 +10273,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -10049,6 +10309,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `project_ip_access_list_list`,
 				Name:        `Return project IP access list`,
 				Description: `Returns all access list entries from the specified project's IP access list.`,
 
@@ -10080,6 +10341,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -10118,6 +10380,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`:     `mdb_sa_id_1234567890abcdef12345678`,
@@ -10154,6 +10417,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10191,6 +10455,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10235,6 +10500,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2043-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10268,6 +10534,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `list_projects`,
 				Name:        `Get a list of all projects`,
 				Description: `Get a list of all projects inside of the organisation`,
 
@@ -10310,6 +10577,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -10338,6 +10606,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -10361,6 +10630,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -10398,6 +10668,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -10440,6 +10711,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
@@ -10479,6 +10751,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10508,6 +10781,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10544,6 +10818,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`:     `mdb_sa_id_1234567890abcdef12345678`,
@@ -10581,6 +10856,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clientId`:     `mdb_sa_id_1234567890abcdef12345678`,
@@ -10614,6 +10890,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10645,6 +10922,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -10675,6 +10953,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -10705,6 +10984,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -10753,6 +11033,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -10795,6 +11076,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:  `false`,
@@ -10820,6 +11102,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -10855,6 +11138,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10890,6 +11174,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10930,6 +11215,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-05-30`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10993,6 +11279,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -11030,6 +11317,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2043-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -11068,6 +11356,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -11252,6 +11541,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -11296,6 +11586,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2043-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -11326,6 +11617,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
@@ -11372,6 +11664,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -11401,6 +11694,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2043-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -11432,6 +11726,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -11500,6 +11795,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
@@ -11525,6 +11821,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -11561,6 +11858,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -11585,6 +11883,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -11625,6 +11924,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:   `false`,
@@ -11656,6 +11956,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:   `false`,
@@ -11681,6 +11982,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`:             `false`,
@@ -12642,6 +12944,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source:      `update_project`,
 				Name:        `Update project name and tags`,
 				Description: `Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"`,
 				Value: `{
@@ -13040,6 +13343,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -13077,6 +13381,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`envelope`: `false`,

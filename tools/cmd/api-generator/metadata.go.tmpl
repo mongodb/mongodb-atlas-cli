@@ -19,25 +19,26 @@
 package main
 
 import 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
-
+{{- $metadata := . }}
 var metadata = metadatatypes.Metadata{
-{{- range $operationID, $operationMetadata := . }}
+{{- range $operationID := $metadata | sortedKeys }}{{$operationMetadata := index $metadata $operationID}}
 	`{{ $operationID }}`: {
 		Parameters: {{if not $operationMetadata.Parameters}}nil,{{else}}map[string]metadatatypes.ParameterMetadata{
-		{{- range $paramName, $paramMetadata := $operationMetadata.Parameters }}
+		{{- range $paramName := $operationMetadata.Parameters | sortedKeys }}{{$paramMetadata := index $operationMetadata.Parameters $paramName}}
 			`{{ $paramName }}`: {
 				Usage: `{{ $paramMetadata.Usage | replace "`" "` + \"`\" + `"  }}`,
 			},{{- end }}
 		},{{- end }}
 		Examples: {{if not $operationMetadata.Examples}}nil,{{else}}map[string][]metadatatypes.Example{
-		{{- range $version, $examples := $operationMetadata.Examples }}
+		{{- range $version := $operationMetadata.Examples | sortedKeys }}{{$examples := index $operationMetadata.Examples $version}}
 			`{{ $version }}`: {{if not $examples}}nil,{{else}}{
 					{{- range $example := $examples}}{
+						{{ if $example.Source }}Source: `{{ $example.Source }}`,{{- end}}
 						{{ if $example.Name }}Name: `{{ $example.Name }}`,{{- end}}
 						{{ if $example.Description }}Description: `{{ $example.Description }}`,{{- end}}
 						{{if $example.Value}}Value: `{{ $example.Value }}`,{{end}}
 						{{if $example.Flags}}Flags: map[string]string {
-						{{- range $flagName, $flagValue := $example.Flags }}
+						{{- range $flagName := $example.Flags | sortedKeys }}{{$flagValue := index $example.Flags $flagName}}
 							`{{ $flagName }}`: `{{ $flagValue }}`,
 						{{- end }}
 						},{{- end}}

@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
@@ -249,7 +250,7 @@ func buildExamplesNoResponseBody(parameterExamples map[string]extractedExamples,
 	return examples, nil
 }
 
-func buildExamplesWithResponseBody(requestBodyExamples, parameterExamples map[string]extractedExamples, operation *openapi3.Operation) (map[string][]metadatatypes.Example, error) {
+func buildExamplesWithResponseBody(requestBodyExamples, parameterExamples map[string]extractedExamples, operation *openapi3.Operation) map[string][]metadatatypes.Example {
 	examples := map[string][]metadatatypes.Example{}
 
 	requiredFlagNames := extractRequiredFlagNames(operation)
@@ -294,18 +295,32 @@ func buildExamplesWithResponseBody(requestBodyExamples, parameterExamples map[st
 	}
 
 	if len(examples) == 0 {
-		return nil, nil
+		return nil
 	}
 
-	return examples, nil
+	return examples
 }
 
 func buildExamples(requestBodyExamples, parameterExamples map[string]extractedExamples, httpMethod string, operation *openapi3.Operation) (map[string][]metadatatypes.Example, error) {
+	var results map[string][]metadatatypes.Example
+
 	if len(requestBodyExamples) == 0 {
-		return buildExamplesNoResponseBody(parameterExamples, httpMethod, operation)
+		var err error
+		results, err = buildExamplesNoResponseBody(parameterExamples, httpMethod, operation)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		results = buildExamplesWithResponseBody(requestBodyExamples, parameterExamples, operation)
 	}
 
-	return buildExamplesWithResponseBody(requestBodyExamples, parameterExamples, operation)
+	for version := range results {
+		slices.SortFunc(results[version], func(a, b metadatatypes.Example) int {
+			return strings.Compare(a.Source, b.Source)
+		})
+	}
+
+	return results, nil
 }
 
 func toValueString(data any) string {

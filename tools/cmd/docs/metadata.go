@@ -1988,7 +1988,19 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`:        `false`,
+					`groupId`:         `32b6e34b3d91647abb20e7b8`,
+					`liveMigrationId`: `6296fb4c7c7aa997cf94e9a8`,
+					`pretty`:          `false`,
+				},
+			},
+			},
+		},
 	},
 	`deauthorizeCloudProviderAccessRole`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -2036,7 +2048,17 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`: `false`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
 	},
 	`deleteAlertConfiguration`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -4101,7 +4123,18 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`: `false`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`pretty`:   `false`,
+				},
+			},
+			},
+		},
 	},
 	`endOutageSimulation`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -11384,7 +11417,18 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the cluster into which you load the sample dataset.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`: `false`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`name`:     `[name]`,
+				},
+			},
+			},
+		},
 	},
 	`migrateProjectToAnotherOrg`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -11438,7 +11482,19 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`:     `false`,
+					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`pipelineName`: `[pipelineName]`,
+					`pretty`:       `false`,
+				},
+			},
+			},
+		},
 	},
 	`pinFeatureCompatibilityVersion`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -11525,7 +11581,18 @@ var metadata = metadatatypes.Metadata{
 				Usage: `The VPC Peering Connection id.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-02-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`: `false`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`id`:       `[id]`,
+				},
+			},
+			},
+		},
 	},
 	`removeConnectedOrgConfig`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -11848,7 +11915,19 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`:     `false`,
+					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`pipelineName`: `[pipelineName]`,
+					`pretty`:       `false`,
+				},
+			},
+			},
+		},
 	},
 	`returnAllControlPlaneIpAddresses`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -12010,7 +12089,19 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2024-08-05`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`envelope`:    `false`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`pretty`:      `false`,
+				},
+			},
+			},
+		},
 	},
 	`saveLdapConfiguration`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -12081,7 +12172,19 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`enable`:      `[enable]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`pretty`:      `false`,
+				},
+			},
+			},
+		},
 	},
 	`startOutageSimulation`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -12122,7 +12225,20 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the stream instance.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2024-05-30`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`:      `false`,
+					`groupId`:       `32b6e34b3d91647abb20e7b8`,
+					`pretty`:        `false`,
+					`processorName`: `[processorName]`,
+					`tenantName`:    `[tenantName]`,
+				},
+			},
+			},
+		},
 	},
 	`stopStreamProcessor`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -12144,7 +12260,20 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the stream instance.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2024-05-30`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`:      `false`,
+					`groupId`:       `32b6e34b3d91647abb20e7b8`,
+					`pretty`:        `false`,
+					`processorName`: `[processorName]`,
+					`tenantName`:    `[tenantName]`,
+				},
+			},
+			},
+		},
 	},
 	`takeSnapshot`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -12182,7 +12311,19 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-02-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`envelope`:    `false`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`pretty`:      `false`,
+				},
+			},
+			},
+		},
 	},
 	`toggleAlertConfiguration`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -12230,7 +12371,17 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`envelope`: `false`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+				},
+			},
+			},
+		},
 	},
 	`toggleRegionalizedPrivateEndpointSetting`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -12284,7 +12435,19 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2024-05-30`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`envelope`:    `false`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`pretty`:      `false`,
+				},
+			},
+			},
+		},
 	},
 	`unpinNamespaces`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{

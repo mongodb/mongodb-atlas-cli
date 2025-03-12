@@ -31,8 +31,8 @@ func specToMetadata(spec *openapi3.T) (metadatatypes.Metadata, error) {
 	metadataMap := make(metadatatypes.Metadata, 0)
 
 	for _, item := range spec.Paths.Map() {
-		for httpMethod, operation := range item.Operations() {
-			metadata, err := extractMetadata(httpMethod, operation)
+		for _, operation := range item.Operations() {
+			metadata, err := extractMetadata(operation)
 			if err != nil {
 				return nil, fmt.Errorf("failed to extract example: %w", err)
 			}
@@ -45,7 +45,7 @@ func specToMetadata(spec *openapi3.T) (metadatatypes.Metadata, error) {
 }
 
 // Returns a map of operationID:*Metadata.
-func extractMetadata(httpMethod string, operation *openapi3.Operation) (*metadatatypes.OperationMetadata, error) {
+func extractMetadata(operation *openapi3.Operation) (*metadatatypes.OperationMetadata, error) {
 	if operation == nil {
 		return nil, nil
 	}
@@ -59,7 +59,7 @@ func extractMetadata(httpMethod string, operation *openapi3.Operation) (*metadat
 
 	paramExamples := extractParameterExamples(operation.Parameters)
 
-	examples, err := buildExamples(requestBodyExamples, paramExamples, httpMethod, operation)
+	examples, err := buildExamples(requestBodyExamples, paramExamples, operation)
 	if err != nil {
 		return nil, err
 	}
@@ -199,12 +199,12 @@ func extractFlagValue(key string, flagName string, examples extractedExamples, r
 	return ""
 }
 
-func buildExamplesNoResponseBody(parameterExamples map[string]extractedExamples, httpMethod string, operation *openapi3.Operation) (map[string][]metadatatypes.Example, error) {
+func buildExamplesNoRequestBody(parameterExamples map[string]extractedExamples, operation *openapi3.Operation) (map[string][]metadatatypes.Example, error) {
 	examples := map[string][]metadatatypes.Example{}
 
 	requiredFlagNames := extractRequiredFlagNames(operation)
 
-	if httpMethod == "POST" || httpMethod == "PUT" {
+	if operation.RequestBody != nil {
 		return nil, nil // don't bother we need a request body
 	}
 
@@ -250,7 +250,7 @@ func buildExamplesNoResponseBody(parameterExamples map[string]extractedExamples,
 	return examples, nil
 }
 
-func buildExamplesWithResponseBody(requestBodyExamples, parameterExamples map[string]extractedExamples, operation *openapi3.Operation) map[string][]metadatatypes.Example {
+func buildExamplesWithRequestBody(requestBodyExamples, parameterExamples map[string]extractedExamples, operation *openapi3.Operation) map[string][]metadatatypes.Example {
 	examples := map[string][]metadatatypes.Example{}
 
 	requiredFlagNames := extractRequiredFlagNames(operation)
@@ -301,17 +301,17 @@ func buildExamplesWithResponseBody(requestBodyExamples, parameterExamples map[st
 	return examples
 }
 
-func buildExamples(requestBodyExamples, parameterExamples map[string]extractedExamples, httpMethod string, operation *openapi3.Operation) (map[string][]metadatatypes.Example, error) {
+func buildExamples(requestBodyExamples, parameterExamples map[string]extractedExamples, operation *openapi3.Operation) (map[string][]metadatatypes.Example, error) {
 	var results map[string][]metadatatypes.Example
 
 	if len(requestBodyExamples) == 0 {
 		var err error
-		results, err = buildExamplesNoResponseBody(parameterExamples, httpMethod, operation)
+		results, err = buildExamplesNoRequestBody(parameterExamples, operation)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		results = buildExamplesWithResponseBody(requestBodyExamples, parameterExamples, operation)
+		results = buildExamplesWithRequestBody(requestBodyExamples, parameterExamples, operation)
 	}
 
 	for version := range results {

@@ -25,15 +25,15 @@ var metadata = map[string]metadatatypes.Metadata{
 	`{{ $operationID }}`: {
 		Parameters: {{if not $metadata.Parameters}}nil,{{else}}map[string]metadatatypes.ParameterMetadata{
 		{{- range $paramName, $paramMetadata := $metadata.Parameters }}
-			`{{ $paramName }}`: metadatatypes.ParameterMetadata{
+			`{{ $paramName }}`: {
 				Example: `{{ $paramMetadata.Example | replace "`" "` + \"`\" + `" }}`,
 				Usage: `{{ $paramMetadata.Usage | replace "`" "` + \"`\" + `"  }}`,
 			},{{- end }}
 		},{{- end }}
 		RequestBodyExamples: {{if not $metadata.RequestBodyExamples}}nil,{{else}}map[string][]metadatatypes.RequestBodyExample{
 		{{- range $version, $requestBodyExamples := $metadata.RequestBodyExamples }}
-			`{{ $version }}`: {{if not $metadata.RequestBodyExamples}}nil,{{else}}[]metadatatypes.RequestBodyExample{
-					{{- range $example := $requestBodyExamples}}metadatatypes.RequestBodyExample{
+			`{{ $version }}`: {{if not $metadata.RequestBodyExamples}}nil,{{else}}{
+					{{- range $example := $requestBodyExamples}}{
 						Name:        `{{ $example.Name }}`,
 						Description: `{{ $example.Description }}`,
 						{{if $example.Value}}Value:       `{{ $example.Value }}`,{{end}}

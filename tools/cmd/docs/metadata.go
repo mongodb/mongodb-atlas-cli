@@ -475,6 +475,29 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 			},
 		},
 	},
+	`createProjectIpAccessList`: {
+		ParameterExample: map[string]string{
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
+		},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Add Entries to Project IP Access List`,
+					Description: `Adds multiple access list entries to the specified project`,
+					Value: `[
+  {
+    "cidrBlock": "192.168.1.0/24",
+    "comment": "Internal network range"
+  },
+  {
+    "cidrBlock": "10.0.0.0/16",
+    "comment": "VPC network range"
+  }
+]`,
+				},
+			},
+		},
+	},
 	`createRollingIndex`: {
 		ParameterExample: map[string]string{
 			`groupId`: `32b6e34b3d91647abb20e7b8`,
@@ -589,6 +612,20 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 			},
 		},
 	},
+	`deleteProjectIpAccessList`: {
+		ParameterExample: map[string]string{
+			`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
+			`groupId`:    `32b6e34b3d91647abb20e7b8`,
+		},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Remove One Entry from One Project IP Access List`,
+					Description: `Removes one access list entry from the specified project's IP access list`,
+				},
+			},
+		},
+	},
 	`getProject`: {
 		ParameterExample: map[string]string{
 			`groupId`: `32b6e34b3d91647abb20e7b8`,
@@ -598,6 +635,47 @@ var EndpointExamples = map[string]metadatatypes.Metadata{
 				{
 					Name:        `Get a project`,
 					Description: `Get a project using a project id`,
+				},
+			},
+		},
+	},
+	`getProjectIpAccessListStatus`: {
+		ParameterExample: map[string]string{
+			`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
+			`groupId`:    `32b6e34b3d91647abb20e7b8`,
+		},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Return Status of One Project IP Access List Entry`,
+					Description: `Returns the status of 10.0.0.0/16`,
+				},
+			},
+		},
+	},
+	`getProjectIpList`: {
+		ParameterExample: map[string]string{
+			`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
+			`groupId`:    `32b6e34b3d91647abb20e7b8`,
+		},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Return One Project IP Access List Entry`,
+					Description: `Returns one access list entry from the specified project's IP access list: 10.0.0.0/16`,
+				},
+			},
+		},
+	},
+	`listProjectIpAccessLists`: {
+		ParameterExample: map[string]string{
+			`groupId`: `32b6e34b3d91647abb20e7b8`,
+		},
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {
+				{
+					Name:        `Return project IP access list`,
+					Description: `Returns all access list entries from the specified project's IP access list.`,
 				},
 			},
 		},

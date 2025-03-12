@@ -151,6 +151,20 @@ func TestBuildPath(t *testing.T) {
 			shouldFail:    true,
 			expectedValue: "",
 		},
+		{
+			name:         "escape path values",
+			pathTemplate: "/api/atlas/v2/groups/{groupId}/accessList/{entryValue}",
+			commandURLParameters: []Parameter{
+				{Name: "groupId", Required: true, Type: ParameterType{IsArray: false, Type: TypeString}},
+				{Name: "entryValue", Required: true, Type: ParameterType{IsArray: false, Type: TypeString}},
+			},
+			parameterValues: map[string][]string{
+				"groupId":    {"groupId-01"},
+				"entryValue": {"192.168.1.0/24"},
+			},
+			shouldFail:    false,
+			expectedValue: "/api/atlas/v2/groups/groupId-01/accessList/192.168.1.0%2F24",
+		},
 	}
 
 	for _, tt := range tests {

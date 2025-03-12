@@ -104,9 +104,9 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 				exampleName = exampleRef.Value.Summary
 			}
 
-			var value map[string]any
+			var value any
 			if exampleRef.Value != nil && exampleRef.Value.Value != nil {
-				value = exampleRef.Value.Value.(map[string]any)
+				value = exampleRef.Value.Value
 			}
 
 			result := metadatatypes.RequestBodyExample{
@@ -130,8 +130,8 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 	return results, nil
 }
 
-func toJSONString(data map[string]any) string {
-	if len(data) == 0 {
+func toJSONString(data any) string {
+	if data == nil {
 		return ""
 	}
 

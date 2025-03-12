@@ -105,6 +105,11 @@ func buildPath(path string, commandURLParameters []Parameter, parameterValues ma
 			return "", fmt.Errorf("url parameter '%s' is not set", commandURLParameter.Name)
 		}
 
+		// Path encode all values
+		for i := range values {
+			values[i] = url.PathEscape(values[i])
+		}
+
 		value := strings.Join(values, ",")
 		path = strings.ReplaceAll(path, "{"+commandURLParameter.Name+"}", value)
 	}

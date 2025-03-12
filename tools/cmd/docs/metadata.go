@@ -770,66 +770,6 @@ var metadata = metadatatypes.Metadata{
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
 
-				Description: `OIDC Workload Federated Authentication`,
-				Value: `{
-  "databaseName": "$external",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "oidcAuthType": "USER",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "5dd7496c7a3e5a648454341c/sales"
-}`,
-				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
-				},
-			}, {
-
-				Description: `SCRAM-SHA Authentication`,
-				Value: `{
-  "databaseName": "admin",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "password": "changeme123",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "david"
-}`,
-				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
-				},
-			}, {
-
 				Description: `X509 Authentication`,
 				Value: `{
   "databaseName": "$external",
@@ -948,6 +888,66 @@ var metadata = metadatatypes.Metadata{
 					`groupId`:  `32b6e34b3d91647abb20e7b8`,
 					`pretty`:   `false`,
 				},
+			}, {
+
+				Description: `OIDC Workload Federated Authentication`,
+				Value: `{
+  "databaseName": "$external",
+  "groupId": "32b6e34b3d91647abb20e7b8",
+  "oidcAuthType": "USER",
+  "roles": [
+    {
+      "databaseName": "sales",
+      "roleName": "readWrite"
+    },
+    {
+      "databaseName": "marketing",
+      "roleName": "read"
+    }
+  ],
+  "scopes": [
+    {
+      "name": "myCluster",
+      "type": "CLUSTER"
+    }
+  ],
+  "username": "5dd7496c7a3e5a648454341c/sales"
+}`,
+				Flags: map[string]string{
+					`envelope`: `false`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`pretty`:   `false`,
+				},
+			}, {
+
+				Description: `SCRAM-SHA Authentication`,
+				Value: `{
+  "databaseName": "admin",
+  "groupId": "32b6e34b3d91647abb20e7b8",
+  "password": "changeme123",
+  "roles": [
+    {
+      "databaseName": "sales",
+      "roleName": "readWrite"
+    },
+    {
+      "databaseName": "marketing",
+      "roleName": "read"
+    }
+  ],
+  "scopes": [
+    {
+      "name": "myCluster",
+      "type": "CLUSTER"
+    }
+  ],
+  "username": "david"
+}`,
+				Flags: map[string]string{
+					`envelope`: `false`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`pretty`:   `false`,
+				},
 			},
 			},
 		},
@@ -1022,11 +1022,11 @@ var metadata = metadatatypes.Metadata{
 			},
 			`2024-05-30`: {{
 
-				Description: `AWS`,
+				Description: `Azure`,
 				Value: `{
-  "bucketName": "export-bucket",
-  "cloudProvider": "AWS",
-  "iamRoleId": "668c5f0ed436263134491592"
+  "cloudProvider": "AZURE",
+  "roleId": "668c5f0ed436263134491592",
+  "serviceUrl": "https://examplestorageaccount.blob.core.windows.net/examplecontainer"
 }`,
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -1035,11 +1035,11 @@ var metadata = metadatatypes.Metadata{
 				},
 			}, {
 
-				Description: `Azure`,
+				Description: `AWS`,
 				Value: `{
-  "cloudProvider": "AZURE",
-  "roleId": "668c5f0ed436263134491592",
-  "serviceUrl": "https://examplestorageaccount.blob.core.windows.net/examplecontainer"
+  "bucketName": "export-bucket",
+  "cloudProvider": "AWS",
+  "iamRoleId": "668c5f0ed436263134491592"
 }`,
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -1440,7 +1440,31 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2023-01-01`: {{
+				Name:        `Add Entries to Project IP Access List`,
+				Description: `Adds multiple access list entries to the specified project`,
+				Value: `[
+  {
+    "cidrBlock": "192.168.1.0/24",
+    "comment": "Internal network range"
+  },
+  {
+    "cidrBlock": "10.0.0.0/16",
+    "comment": "VPC network range"
+  }
+]`,
+				Flags: map[string]string{
+					`envelope`:     `false`,
+					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`includeCount`: `true`,
+					`itemsPerPage`: `100`,
+					`pageNum`:      `1`,
+					`pretty`:       `false`,
+				},
+			},
+			},
+		},
 	},
 	`createProjectServiceAccount`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -1571,6 +1595,43 @@ var metadata = metadatatypes.Metadata{
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
 
+				Description: `2dspere Index`,
+				Value: `{
+  "collation": {
+    "alternate": "non-ignorable",
+    "backwards": false,
+    "caseFirst": "lower",
+    "caseLevel": false,
+    "locale": "af",
+    "maxVariable": "punct",
+    "normalization": false,
+    "numericOrdering": false,
+    "strength": 3
+  },
+  "collection": "accounts",
+  "db": "sample_airbnb",
+  "keys": [
+    {
+      "property_type": "1"
+    }
+  ],
+  "options": {
+    "name": "PartialIndexTest",
+    "partialFilterExpression": {
+      "limit": {
+        "$gt": 900
+      }
+    }
+  }
+}`,
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`envelope`:    `false`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`pretty`:      `false`,
+				},
+			}, {
+
 				Description: `Partial Index`,
 				Value: `{
   "collation": {
@@ -1631,43 +1692,6 @@ var metadata = metadatatypes.Metadata{
   "options": {
     "name": "SparseIndexTest",
     "sparse": true
-  }
-}`,
-				Flags: map[string]string{
-					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
-					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
-				},
-			}, {
-
-				Description: `2dspere Index`,
-				Value: `{
-  "collation": {
-    "alternate": "non-ignorable",
-    "backwards": false,
-    "caseFirst": "lower",
-    "caseLevel": false,
-    "locale": "af",
-    "maxVariable": "punct",
-    "normalization": false,
-    "numericOrdering": false,
-    "strength": 3
-  },
-  "collection": "accounts",
-  "db": "sample_airbnb",
-  "keys": [
-    {
-      "property_type": "1"
-    }
-  ],
-  "options": {
-    "name": "PartialIndexTest",
-    "partialFilterExpression": {
-      "limit": {
-        "$gt": 900
-      }
-    }
   }
 }`,
 				Flags: map[string]string{
@@ -3111,6 +3135,8 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Name:        `Remove One Entry from One Project IP Access List`,
+				Description: `Removes one access list entry from the specified project's IP access list`,
 
 				Flags: map[string]string{
 					`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
@@ -4597,7 +4623,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2024-08-05`: {{
+			`2023-01-01`: {{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4657,7 +4683,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-02-01`: {{
+			`2024-08-05`: {{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -5359,7 +5385,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2024-05-30`: {{
+			`2023-01-01`: {{
 
 				Flags: map[string]string{
 					`envelope`:       `false`,
@@ -5957,7 +5983,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2024-08-05`: {{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -6632,6 +6658,8 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Name:        `Return Status of One Project IP Access List Entry`,
+				Description: `Returns the status of 10.0.0.0/16`,
 
 				Flags: map[string]string{
 					`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
@@ -6662,6 +6690,8 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Name:        `Return One Project IP Access List Entry`,
+				Description: `Returns one access list entry from the specified project's IP access list: 10.0.0.0/16`,
 
 				Flags: map[string]string{
 					`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
@@ -8372,7 +8402,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-02-01`: {{
+			`2023-01-01`: {{
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -9465,7 +9495,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2043-01-01`: {{
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10019,6 +10049,8 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
+				Name:        `Return project IP access list`,
+				Description: `Returns all access list entries from the specified project's IP access list.`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10202,7 +10234,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2043-01-01`: {{
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -10997,7 +11029,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
+			`2023-01-01`: {{
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -11263,7 +11295,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
+			`2023-01-01`: {{
 
 				Flags: map[string]string{
 					`envelope`: `false`,

@@ -326,6 +326,18 @@ func toValueString(data any) string {
 		}
 
 		return string(jsonData)
+	case []any:
+		if len(value) == 0 {
+			return ""
+		}
+
+		jsonData, err := json.MarshalIndent(value, "", "  ")
+		if err != nil {
+			_, _ = log.Warningln("unable to convert to JSON string")
+			return ""
+		}
+
+		return string(jsonData)
 	default:
 		_, _ = log.Warningln("unable to find type")
 		return fmt.Sprintf("%v", value)

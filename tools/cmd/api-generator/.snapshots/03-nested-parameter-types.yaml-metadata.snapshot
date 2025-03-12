@@ -57,6 +57,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-11-15`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`:    `[clusterName]`,

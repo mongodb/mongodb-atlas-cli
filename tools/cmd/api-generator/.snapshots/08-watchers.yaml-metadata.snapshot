@@ -36,6 +36,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `Cluster`,
 
 				Description: `Cluster`,
 				Value: `{
@@ -166,6 +167,7 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
+				Source: `-`,
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,

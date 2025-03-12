@@ -20,23 +20,27 @@ package main
 
 import 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 
-var metadata = map[string]metadatatypes.Metadata{
-{{- range $operationID, $metadata := . }}
+var metadata = metadatatypes.Metadata{
+{{- range $operationID, $operationMetadata := . }}
 	`{{ $operationID }}`: {
-		Parameters: {{if not $metadata.Parameters}}nil,{{else}}map[string]metadatatypes.ParameterMetadata{
-		{{- range $paramName, $paramMetadata := $metadata.Parameters }}
+		Parameters: {{if not $operationMetadata.Parameters}}nil,{{else}}map[string]metadatatypes.ParameterMetadata{
+		{{- range $paramName, $paramMetadata := $operationMetadata.Parameters }}
 			`{{ $paramName }}`: {
-				Example: `{{ $paramMetadata.Example | replace "`" "` + \"`\" + `" }}`,
 				Usage: `{{ $paramMetadata.Usage | replace "`" "` + \"`\" + `"  }}`,
 			},{{- end }}
 		},{{- end }}
-		RequestBodyExamples: {{if not $metadata.RequestBodyExamples}}nil,{{else}}map[string][]metadatatypes.RequestBodyExample{
-		{{- range $version, $requestBodyExamples := $metadata.RequestBodyExamples }}
-			`{{ $version }}`: {{if not $metadata.RequestBodyExamples}}nil,{{else}}{
-					{{- range $example := $requestBodyExamples}}{
-						Name:        `{{ $example.Name }}`,
-						Description: `{{ $example.Description }}`,
-						{{if $example.Value}}Value:       `{{ $example.Value }}`,{{end}}
+		Examples: {{if not $operationMetadata.Examples}}nil,{{else}}map[string][]metadatatypes.Example{
+		{{- range $version, $examples := $operationMetadata.Examples }}
+			`{{ $version }}`: {{if not $examples}}nil,{{else}}{
+					{{- range $example := $examples}}{
+						{{ if $example.Name }}Name: `{{ $example.Name }}`,{{- end}}
+						{{ if $example.Description }}Description: `{{ $example.Description }}`,{{- end}}
+						{{if $example.Value}}Value: `{{ $example.Value }}`,{{end}}
+						{{if $example.Flags}}Flags: map[string]string {
+						{{- range $flagName, $flagValue := $example.Flags }}
+							`{{ $flagName }}`: `{{ $flagValue }}`,
+						{{- end }}
+						},{{- end}}
 					},{{- end }}
 				},{{- end }}
 			{{- end }}

@@ -14,18 +14,21 @@
 
 package metadatatypes
 
-type Metadata struct {
-	Parameters          map[string]ParameterMetadata    // parameterName: parameterMetadata
-	RequestBodyExamples map[string][]RequestBodyExample // version: []requestBodyExample
+type Metadata map[string]*OperationMetadata // operationId: OperationMetadata
+
+type OperationMetadata struct {
+	Parameters map[string]ParameterMetadata // parameterName: ParameterMetadata
+	Examples   map[string][]Example         // version: []Example
 }
 
 type ParameterMetadata struct {
-	Example string
-	Usage   string
+	Usage string
 }
 
-type RequestBodyExample struct {
+type Example struct {
+	Source      string
 	Name        string
 	Description string
 	Value       string
+	Flags       map[string]string
 }

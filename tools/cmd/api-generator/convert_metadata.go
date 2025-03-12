@@ -151,8 +151,11 @@ func extractDefaultVersion(operation *openapi3.Operation) (string, error) {
 		versions = append(versions, version)
 	}
 
-	slices.Sort(versions)
+	if len(versions) == 0 {
+		return "", errors.New("no versions found")
+	}
 
+	slices.Sort(versions)
 	return versions[len(versions)-1], nil
 }
 

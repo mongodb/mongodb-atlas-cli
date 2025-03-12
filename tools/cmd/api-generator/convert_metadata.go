@@ -95,6 +95,10 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 			return nil, fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
 		}
 
+		if shouldIgnoreVersion(version) {
+			continue
+		}
+
 		for name, exampleRef := range mediaType.Examples {
 			if exampleRef == nil || exampleRef.Value == nil {
 				continue

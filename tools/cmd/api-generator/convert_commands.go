@@ -429,8 +429,7 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 		return fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
 	}
 
-	// Skip 'preview' versions
-	if strings.EqualFold(version, "preview") {
+	if shouldIgnoreVersion(version) {
 		return nil
 	}
 
@@ -509,6 +508,11 @@ func extractVersionAndContentType(input string) (version string, contentType str
 	contentTypeIndex := versionRegex.SubexpIndex("contentType")
 
 	return matches[versionIndex], matches[contentTypeIndex], nil
+}
+
+func shouldIgnoreVersion(version string) bool {
+	// Ignore 'preview' versions
+	return strings.EqualFold(version, "preview")
 }
 
 func getParameterType(parameter *openapi3.Parameter) (*api.ParameterType, error) {

@@ -770,36 +770,6 @@ var metadata = metadatatypes.Metadata{
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
 
-				Description: `X509 Authentication`,
-				Value: `{
-  "databaseName": "$external",
-  "groupId": "32b6e34b3d91647abb20e7b8",
-  "roles": [
-    {
-      "databaseName": "sales",
-      "roleName": "readWrite"
-    },
-    {
-      "databaseName": "marketing",
-      "roleName": "read"
-    }
-  ],
-  "scopes": [
-    {
-      "name": "myCluster",
-      "type": "CLUSTER"
-    }
-  ],
-  "username": "CN=david@example.com,OU=users,DC=example,DC=com",
-  "x509Type": "CUSTOMER"
-}`,
-				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
-				},
-			}, {
-
 				Description: `AWS IAM Authentication`,
 				Value: `{
   "awsIAMType": "USER",
@@ -948,6 +918,36 @@ var metadata = metadatatypes.Metadata{
 					`groupId`:  `32b6e34b3d91647abb20e7b8`,
 					`pretty`:   `false`,
 				},
+			}, {
+
+				Description: `X509 Authentication`,
+				Value: `{
+  "databaseName": "$external",
+  "groupId": "32b6e34b3d91647abb20e7b8",
+  "roles": [
+    {
+      "databaseName": "sales",
+      "roleName": "readWrite"
+    },
+    {
+      "databaseName": "marketing",
+      "roleName": "read"
+    }
+  ],
+  "scopes": [
+    {
+      "name": "myCluster",
+      "type": "CLUSTER"
+    }
+  ],
+  "username": "CN=david@example.com,OU=users,DC=example,DC=com",
+  "x509Type": "CUSTOMER"
+}`,
+				Flags: map[string]string{
+					`envelope`: `false`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`pretty`:   `false`,
+				},
 			},
 			},
 		},
@@ -1022,11 +1022,11 @@ var metadata = metadatatypes.Metadata{
 			},
 			`2024-05-30`: {{
 
-				Description: `Azure`,
+				Description: `AWS`,
 				Value: `{
-  "cloudProvider": "AZURE",
-  "roleId": "668c5f0ed436263134491592",
-  "serviceUrl": "https://examplestorageaccount.blob.core.windows.net/examplecontainer"
+  "bucketName": "export-bucket",
+  "cloudProvider": "AWS",
+  "iamRoleId": "668c5f0ed436263134491592"
 }`,
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -1035,11 +1035,11 @@ var metadata = metadatatypes.Metadata{
 				},
 			}, {
 
-				Description: `AWS`,
+				Description: `Azure`,
 				Value: `{
-  "bucketName": "export-bucket",
-  "cloudProvider": "AWS",
-  "iamRoleId": "668c5f0ed436263134491592"
+  "cloudProvider": "AZURE",
+  "roleId": "668c5f0ed436263134491592",
+  "serviceUrl": "https://examplestorageaccount.blob.core.windows.net/examplecontainer"
 }`,
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -1595,43 +1595,6 @@ var metadata = metadatatypes.Metadata{
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
 
-				Description: `2dspere Index`,
-				Value: `{
-  "collation": {
-    "alternate": "non-ignorable",
-    "backwards": false,
-    "caseFirst": "lower",
-    "caseLevel": false,
-    "locale": "af",
-    "maxVariable": "punct",
-    "normalization": false,
-    "numericOrdering": false,
-    "strength": 3
-  },
-  "collection": "accounts",
-  "db": "sample_airbnb",
-  "keys": [
-    {
-      "property_type": "1"
-    }
-  ],
-  "options": {
-    "name": "PartialIndexTest",
-    "partialFilterExpression": {
-      "limit": {
-        "$gt": 900
-      }
-    }
-  }
-}`,
-				Flags: map[string]string{
-					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
-					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
-				},
-			}, {
-
 				Description: `Partial Index`,
 				Value: `{
   "collation": {
@@ -1692,6 +1655,43 @@ var metadata = metadatatypes.Metadata{
   "options": {
     "name": "SparseIndexTest",
     "sparse": true
+  }
+}`,
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`envelope`:    `false`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`pretty`:      `false`,
+				},
+			}, {
+
+				Description: `2dspere Index`,
+				Value: `{
+  "collation": {
+    "alternate": "non-ignorable",
+    "backwards": false,
+    "caseFirst": "lower",
+    "caseLevel": false,
+    "locale": "af",
+    "maxVariable": "punct",
+    "normalization": false,
+    "numericOrdering": false,
+    "strength": 3
+  },
+  "collection": "accounts",
+  "db": "sample_airbnb",
+  "keys": [
+    {
+      "property_type": "1"
+    }
+  ],
+  "options": {
+    "name": "PartialIndexTest",
+    "partialFilterExpression": {
+      "limit": {
+        "$gt": 900
+      }
+    }
   }
 }`,
 				Flags: map[string]string{
@@ -4367,7 +4367,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2024-05-30`: {{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -4623,7 +4623,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2024-08-05`: {{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
@@ -5385,7 +5385,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2024-05-30`: {{
 
 				Flags: map[string]string{
 					`envelope`:       `false`,
@@ -8402,7 +8402,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2024-08-05`: {{
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -11029,7 +11029,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2043-01-01`: {{
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
@@ -11295,7 +11295,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2043-01-01`: {{
 
 				Flags: map[string]string{
 					`envelope`: `false`,
@@ -13076,7 +13076,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
+			`2023-02-01`: {{
 
 				Flags: map[string]string{
 					`envelope`: `false`,

@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"slices"
 	"strconv"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -129,7 +130,7 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 }
 
 func extractDefaultVersion(operation *openapi3.Operation) (string, error) {
-	defaultVersion := ""
+	versions := []string{}
 
 	var defaultResponse *openapi3.ResponseRef
 	for code := 200; code < 300; code++ {
@@ -147,10 +148,12 @@ func extractDefaultVersion(operation *openapi3.Operation) (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("unsupported version %q error: %w", mime, err)
 		}
-		defaultVersion = version
+		versions = append(versions, version)
 	}
 
-	return defaultVersion, nil
+	slices.Sort(versions)
+
+	return versions[len(versions)-1], nil
 }
 
 func extractAllKeys(parameterExamples map[string]extractedExamples) map[string]bool {

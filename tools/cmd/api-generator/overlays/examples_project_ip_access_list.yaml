@@ -1,0 +1,56 @@
+overlay: 1.0.0
+info:
+  title: Configure groupId flag
+  version: 1.0.0
+actions:
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList'].get
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            examples:
+              project_ip_access_list_list:
+                summary: Return project IP access list
+                value:
+                description: Returns all access list entries from the specified project's IP access list.
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList'].post.requestBody.content['application/vnd.atlas.2023-01-01+json']
+    update:
+      examples:
+        project_ip_access_list_add:
+          summary: Add Entries to Project IP Access List
+          value:
+            - cidrBlock: "192.168.1.0/24"
+              comment: "Internal network range"
+            - cidrBlock: "10.0.0.0/16"
+              comment: "VPC network range"
+          description: Adds multiple access list entries to the specified project
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}'].get
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            examples:
+              project_ip_access_list_get:
+                summary: Return One Project IP Access List Entry
+                value:
+                description: "Returns one access list entry from the specified project's IP access list: 10.0.0.0/16"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}/status'].get
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            examples:
+              project_ip_access_list_get_status:
+                summary: Return Status of One Project IP Access List Entry
+                value:
+                description: "Returns the status of 10.0.0.0/16"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}'].delete
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            examples:
+              project_ip_access_list_delete:
+                summary: Remove One Entry from One Project IP Access List
+                value:
+                description: Removes one access list entry from the specified project's IP access list

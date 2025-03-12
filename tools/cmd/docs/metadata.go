@@ -1559,7 +1559,23 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Add Entries to Project IP Access List`,
+				Description: `Adds multiple access list entries to the specified project`,
+				Value: `[
+  {
+    "cidrBlock": "192.168.1.0/24",
+    "comment": "Internal network range"
+  },
+  {
+    "cidrBlock": "10.0.0.0/16",
+    "comment": "VPC network range"
+  }
+]`,
+			},
+			},
+		},
 	},
 	`createProjectServiceAccount`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -3049,7 +3065,13 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Remove One Entry from One Project IP Access List`,
+				Description: `Removes one access list entry from the specified project's IP access list`,
+			},
+			},
+		},
 	},
 	`deleteProjectLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -5847,7 +5869,13 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Return Status of One Project IP Access List Entry`,
+				Description: `Returns the status of 10.0.0.0/16`,
+			},
+			},
+		},
 	},
 	`getProjectIpList`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -5870,7 +5898,13 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Return One Project IP Access List Entry`,
+				Description: `Returns one access list entry from the specified project's IP access list: 10.0.0.0/16`,
+			},
+			},
+		},
 	},
 	`getProjectLimit`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -8613,7 +8647,13 @@ var metadata = map[string]metadatatypes.Metadata{
 				Usage:   `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		RequestBodyExamples: nil,
+		RequestBodyExamples: map[string][]metadatatypes.RequestBodyExample{
+			`2023-01-01`: {{
+				Name:        `Return project IP access list`,
+				Description: `Returns all access list entries from the specified project's IP access list.`,
+			},
+			},
+		},
 	},
 	`listProjectLimits`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{

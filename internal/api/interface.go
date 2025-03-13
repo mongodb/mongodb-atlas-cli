@@ -18,6 +18,8 @@ import (
 	"context"
 	"io"
 	"net/http"
+
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
 type CommandExecutor interface {
@@ -37,7 +39,7 @@ type CommandConverter interface {
 }
 
 type CommandRequest struct {
-	Command     Command
+	Command     api.Command
 	Content     io.Reader
 	ContentType string
 	Format      string

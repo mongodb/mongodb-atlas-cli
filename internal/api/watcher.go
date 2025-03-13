@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/PaesslerAG/jsonpath"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
 var (
@@ -51,7 +52,7 @@ const (
 type Watcher struct {
 	executor CommandExecutor
 	request  *CommandRequest
-	expect   *WatcherExpectProperties
+	expect   *api.WatcherExpectProperties
 }
 
 // Create a new watcher
@@ -62,7 +63,7 @@ type Watcher struct {
 //     were used to execute the deleteCluster operation.
 //   - responseBody: the body from the preceding call
 //   - props: the watcher configuration, this is generated using the api-generator tool
-func NewWatcher(executor CommandExecutor, requestParams map[string][]string, responseBody []byte, props WatcherProperties) (*Watcher, error) {
+func NewWatcher(executor CommandExecutor, requestParams map[string][]string, responseBody []byte, props api.WatcherProperties) (*Watcher, error) {
 	// We're making the same request over and over again, so we only have to build it once
 	request, err := buildRequest(Commands, requestParams, responseBody, props)
 	if err != nil || request == nil {
@@ -80,9 +81,9 @@ func NewWatcher(executor CommandExecutor, requestParams map[string][]string, res
 //
 // - `allCommands`, array with all command definitions, realistically this will always be the static `Commands` variable, but this allows easier unit testing
 // See `NewWatcher` for other parameter descriptions.
-func buildRequest(allCommands GroupedAndSortedCommands, requestParams map[string][]string, responseBody []byte, props WatcherProperties) (*CommandRequest, error) {
+func buildRequest(allCommands api.GroupedAndSortedCommands, requestParams map[string][]string, responseBody []byte, props api.WatcherProperties) (*CommandRequest, error) {
 	// Search for the command definition that we're expected to execute
-	var command *Command
+	var command *api.Command
 	for _, commandGroup := range allCommands {
 		for _, loopCommand := range commandGroup.Commands {
 			if loopCommand.OperationID == props.Get.OperationID {
@@ -164,7 +165,7 @@ func (w *Watcher) WatchOne(ctx context.Context) (bool, error) {
 }
 
 // Actual watcher logic without handling.
-func watchInner(ctx context.Context, executor CommandExecutor, expect *WatcherExpectProperties, commandRequest CommandRequest) (bool, error) {
+func watchInner(ctx context.Context, executor CommandExecutor, expect *api.WatcherExpectProperties, commandRequest CommandRequest) (bool, error) {
 	// execute the command using the executor
 	response, err := executor.ExecuteCommand(ctx, commandRequest)
 	if err != nil {

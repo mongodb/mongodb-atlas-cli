@@ -23,6 +23,7 @@ import (
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/terminal"
+	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
 const (
@@ -44,7 +45,7 @@ type Watcher struct {
 // Construct a new CLI layer watcher
 //
 // See api.NewWatcher for docs on arguments.
-func NewWatcher(executor api.CommandExecutor, requestParams map[string][]string, responseBody []byte, props api.WatcherProperties) (*Watcher, error) {
+func NewWatcher(executor api.CommandExecutor, requestParams map[string][]string, responseBody []byte, props shared_api.WatcherProperties) (*Watcher, error) {
 	apiWatcher, err := api.NewWatcher(executor, requestParams, responseBody, props)
 	if err != nil {
 		return nil, err

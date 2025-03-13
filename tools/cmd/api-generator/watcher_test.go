@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/stretchr/testify/require"
 )
 

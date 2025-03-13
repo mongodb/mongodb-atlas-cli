@@ -18,11 +18,12 @@ import (
 	"io"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api"
+	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
-func NewCommandRequestFromCobraCommand(cobraCommand *cobra.Command, apiCommand api.Command, content io.Reader, format string, version string) (*api.CommandRequest, error) {
+func NewCommandRequestFromCobraCommand(cobraCommand *cobra.Command, apiCommand shared_api.Command, content io.Reader, format string, version string) (*api.CommandRequest, error) {
 	return &api.CommandRequest{
 		Command:    apiCommand,
 		Content:    content,

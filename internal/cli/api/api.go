@@ -30,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -83,7 +84,7 @@ For more information on
 	return rootCmd
 }
 
-func createAPICommandGroupToCobraCommand(group api.Group) *cobra.Command {
+func createAPICommandGroupToCobraCommand(group shared_api.Group) *cobra.Command {
 	groupName := strcase.ToLowerCamel(group.Name)
 	shortDescription, longDescription := splitShortAndLongDescription(group.Description)
 
@@ -95,7 +96,7 @@ func createAPICommandGroupToCobraCommand(group api.Group) *cobra.Command {
 }
 
 //nolint:gocyclo
-func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
+func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error) {
 	// command properties
 	commandName := strcase.ToLowerCamel(command.OperationID)
 	shortDescription, longDescription := splitShortAndLongDescription(command.Description)
@@ -287,7 +288,7 @@ func convertAPIToCobraCommand(command api.Command) (*cobra.Command, error) {
 	return cmd, nil
 }
 
-func normalizeFlagFunc(command api.Command) func(f *pflag.FlagSet, name string) pflag.NormalizedName {
+func normalizeFlagFunc(command shared_api.Command) func(f *pflag.FlagSet, name string) pflag.NormalizedName {
 	return func(_ *pflag.FlagSet, name string) pflag.NormalizedName {
 		name = normalizeFlagName(command.RequestParameters.QueryParameters, name)
 		name = normalizeFlagName(command.RequestParameters.URLParameters, name)
@@ -296,7 +297,7 @@ func normalizeFlagFunc(command api.Command) func(f *pflag.FlagSet, name string) 
 	}
 }
 
-func normalizeFlagName(parameters []api.Parameter, name string) string {
+func normalizeFlagName(parameters []shared_api.Parameter, name string) string {
 	for _, parameter := range parameters {
 		if slices.Contains(parameter.Aliases, name) {
 			return parameter.Name
@@ -306,7 +307,7 @@ func normalizeFlagName(parameters []api.Parameter, name string) string {
 	return name
 }
 
-func addParameters(cmd *cobra.Command, parameters []api.Parameter) error {
+func addParameters(cmd *cobra.Command, parameters []shared_api.Parameter) error {
 	for _, parameter := range parameters {
 		if err := addFlag(cmd, parameter); err != nil {
 			return err
@@ -405,7 +406,7 @@ func isPiped(file *os.File) (bool, error) {
 	return isPiped, nil
 }
 
-func defaultAPIVersion(command api.Command) (string, error) {
+func defaultAPIVersion(command shared_api.Command) (string, error) {
 	// Command versions are sorted by the generation tool
 	nVersions := len(command.Versions)
 	if nVersions == 0 {
@@ -432,7 +433,7 @@ func remindUserToPinVersion(cmd *cobra.Command) {
 	}
 }
 
-func ensureVersionIsSupported(apiCommand api.Command, version *string) {
+func ensureVersionIsSupported(apiCommand shared_api.Command, version *string) {
 	for _, commandVersion := range apiCommand.Versions {
 		if commandVersion.Version == *version {
 			return
@@ -450,7 +451,7 @@ func ensureVersionIsSupported(apiCommand api.Command, version *string) {
 	*version = defaultVersion
 }
 
-func needsFileFlag(apiCommand api.Command) bool {
+func needsFileFlag(apiCommand shared_api.Command) bool {
 	for _, version := range apiCommand.Versions {
 		if version.RequestContentType != "" {
 			return true
@@ -460,7 +461,7 @@ func needsFileFlag(apiCommand api.Command) bool {
 	return false
 }
 
-func addWatchFlagIfNeeded(cmd *cobra.Command, apiCommand api.Command, watch *bool, watchTimeout *int64) {
+func addWatchFlagIfNeeded(cmd *cobra.Command, apiCommand shared_api.Command, watch *bool, watchTimeout *int64) {
 	if apiCommand.Watcher == nil || apiCommand.Watcher.Get.OperationID == "" {
 		return
 	}
@@ -469,7 +470,7 @@ func addWatchFlagIfNeeded(cmd *cobra.Command, apiCommand api.Command, watch *boo
 	cmd.Flags().Int64Var(watchTimeout, flag.WatchTimeout, 0, usage.WatchTimeout)
 }
 
-func addVersionFlag(cmd *cobra.Command, apiCommand api.Command, version *string) {
+func addVersionFlag(cmd *cobra.Command, apiCommand shared_api.Command, version *string) {
 	// Create a unique list of all supported versions
 	versions := make(map[string]struct{}, 0)
 	for _, version := range apiCommand.Versions {
@@ -491,7 +492,7 @@ func addVersionFlag(cmd *cobra.Command, apiCommand api.Command, version *string)
 	cmd.Flags().StringVar(version, flag.Version, *version, fmt.Sprintf("api version to use when calling the api call [options: %s], defaults to the latest version or the profiles api_version config value if set", supportedVersionsVersionsString))
 }
 
-func addOutputFlags(cmd *cobra.Command, apiCommand api.Command, format *string, outputFile *string) error {
+func addOutputFlags(cmd *cobra.Command, apiCommand shared_api.Command, format *string, outputFile *string) error {
 	// Get the list of supported content types for the apiCommand
 	supportedContentTypesList := getContentTypes(&apiCommand)
 
@@ -532,7 +533,7 @@ func addOutputFlags(cmd *cobra.Command, apiCommand api.Command, format *string, 
 	return nil
 }
 
-func getContentTypes(apiCommand *api.Command) []string {
+func getContentTypes(apiCommand *shared_api.Command) []string {
 	// Create a unique list of all supported content types
 	// First create a map to convert 2 nested lists into a map
 	supportedContentTypes := make(map[string]struct{}, 0)

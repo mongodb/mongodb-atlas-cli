@@ -116,7 +116,7 @@ Examples
 
       .. code-block::
 
-         atlas api alertConfigurations listAlertConfigurationsByAlertId --version 2023-01-01 --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false --alertId [alertId] --envelope false --groupId 32b6e34b3d91647abb20e7b8
+         atlas api alertConfigurations listAlertConfigurationsByAlertId --version 2023-01-01 --alertId [alertId] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
 
       .. Code end marker, please don't delete this comment
 

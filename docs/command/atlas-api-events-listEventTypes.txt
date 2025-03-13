@@ -101,7 +101,7 @@ Examples
 
       .. code-block::
 
-         atlas api events listEventTypes --version 2023-01-01 --itemsPerPage 100 --pageNum 1 --pretty false --envelope false --includeCount true
+         atlas api events listEventTypes --version 2023-01-01 --envelope false --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
 
       .. Code end marker, please don't delete this comment
 

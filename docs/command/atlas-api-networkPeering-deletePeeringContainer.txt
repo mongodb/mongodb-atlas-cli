@@ -101,7 +101,7 @@ Examples
 
       .. code-block::
 
-         atlas api networkPeering deletePeeringContainer --version 2023-01-01 --pretty false --containerId 32b6e34b3d91647abb20e7b8 --envelope false --groupId 32b6e34b3d91647abb20e7b8
+         atlas api networkPeering deletePeeringContainer --version 2023-01-01 --containerId 32b6e34b3d91647abb20e7b8 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 

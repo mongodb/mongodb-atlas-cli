@@ -215,7 +215,7 @@ Examples
               ]
             }
          EOF
-         atlas api clusters createCluster --version 2024-08-05 --file payload.json --pretty false --envelope false --groupId 32b6e34b3d91647abb20e7b8
+         atlas api clusters createCluster --version 2024-08-05 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 

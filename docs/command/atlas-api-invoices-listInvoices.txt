@@ -132,7 +132,7 @@ Examples
 
       .. code-block::
 
-         atlas api invoices listInvoices --version 2023-01-01 --orgId 4888442a3354817a7320eb61 --pretty false --orderBy desc --fromDate 2023-01-01 --includeCount true --itemsPerPage 100 --pageNum 1 --toDate 2023-01-01 --viewLinkedInvoices true --envelope false
+         atlas api invoices listInvoices --version 2023-01-01 --envelope false --fromDate 2023-01-01 --includeCount true --itemsPerPage 100 --orderBy desc --orgId 4888442a3354817a7320eb61 --pageNum 1 --pretty false --toDate 2023-01-01 --viewLinkedInvoices true
 
       .. Code end marker, please don't delete this comment
 

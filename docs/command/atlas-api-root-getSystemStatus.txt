@@ -89,7 +89,7 @@ Examples
 
       .. code-block::
 
-         atlas api root getSystemStatus --version 2023-01-01 --pretty false --envelope false
+         atlas api root getSystemStatus --version 2023-01-01 --envelope false --pretty false
 
       .. Code end marker, please don't delete this comment
 

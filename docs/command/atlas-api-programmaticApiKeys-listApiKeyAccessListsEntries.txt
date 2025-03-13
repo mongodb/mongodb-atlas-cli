@@ -111,7 +111,7 @@ Examples
 
       .. code-block::
 
-         atlas api programmaticApiKeys listApiKeyAccessListsEntries --version 2023-01-01 --itemsPerPage 100 --orgId 4888442a3354817a7320eb61 --pageNum 1 --pretty false --apiUserId [apiUserId] --envelope false --includeCount true
+         atlas api programmaticApiKeys listApiKeyAccessListsEntries --version 2023-01-01 --apiUserId [apiUserId] --envelope false --includeCount true --itemsPerPage 100 --orgId 4888442a3354817a7320eb61 --pageNum 1 --pretty false
 
       .. Code end marker, please don't delete this comment
 

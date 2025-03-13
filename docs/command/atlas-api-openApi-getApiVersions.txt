@@ -101,7 +101,7 @@ Examples
 
       .. code-block::
 
-         atlas api openApi getApiVersions --version 2024-08-05 --pageNum 1 --pretty false --envelope false --itemsPerPage 100
+         atlas api openApi getApiVersions --version 2024-08-05 --envelope false --itemsPerPage 100 --pageNum 1 --pretty false
 
       .. Code end marker, please don't delete this comment
 

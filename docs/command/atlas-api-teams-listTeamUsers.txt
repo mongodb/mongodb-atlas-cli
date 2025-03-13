@@ -107,7 +107,7 @@ Examples
 
       .. code-block::
 
-         atlas api teams listTeamUsers --version 2043-01-01 --teamId [teamId] --envelope false --itemsPerPage 100 --orgId 4888442a3354817a7320eb61 --pageNum 1 --pretty false
+         atlas api teams listTeamUsers --version 2043-01-01 --envelope false --itemsPerPage 100 --orgId 4888442a3354817a7320eb61 --pageNum 1 --pretty false --teamId [teamId]
 
       .. Code end marker, please don't delete this comment
 

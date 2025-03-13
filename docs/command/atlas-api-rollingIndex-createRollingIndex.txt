@@ -136,7 +136,7 @@ Examples
               }
             }
          EOF
-         atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8 --pretty false --clusterName [clusterName] --envelope false
+         atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 
@@ -176,7 +176,7 @@ Examples
               }
             }
          EOF
-         atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8 --pretty false --clusterName [clusterName] --envelope false
+         atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 
@@ -212,7 +212,7 @@ Examples
               }
             }
          EOF
-         atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --pretty false --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8
+         atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 

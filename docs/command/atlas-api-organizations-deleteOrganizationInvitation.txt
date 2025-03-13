@@ -99,7 +99,7 @@ Examples
 
       .. code-block::
 
-         atlas api organizations deleteOrganizationInvitation --version 2023-01-01 --invitationId [invitationId] --orgId 4888442a3354817a7320eb61 --pretty false --envelope false
+         atlas api organizations deleteOrganizationInvitation --version 2023-01-01 --envelope false --invitationId [invitationId] --orgId 4888442a3354817a7320eb61 --pretty false
 
       .. Code end marker, please don't delete this comment
 

@@ -126,7 +126,7 @@ Examples
               "username": "arn:aws:iam::358363220050:user/mongodb-aws-iam-auth-test-user"
             }
          EOF
-         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8 --pretty false --envelope false
+         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 
@@ -194,7 +194,7 @@ Examples
               "username": "5dd7496c7a3e5a648454341c/sales"
             }
          EOF
-         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8 --pretty false --envelope false
+         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 

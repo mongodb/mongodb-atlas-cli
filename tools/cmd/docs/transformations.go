@@ -17,6 +17,7 @@ package main
 import (
 	_ "embed"
 	"regexp"
+	"slices"
 	"strings"
 
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
@@ -152,8 +153,13 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 			if ex.Value != "" {
 				sb.WriteString(" --file payload.json")
 			}
-			for flagName, flagValue := range ex.Flags {
-				sb.WriteString(" --" + flagName + " " + flagValue)
+			flagNames := make([]string, 0, len(ex.Flags))
+			for flagName := range ex.Flags {
+				flagNames = append(flagNames, flagName)
+			}
+			slices.Sort(flagNames)
+			for _, flagName := range flagNames {
+				sb.WriteString(" --" + flagName + " " + ex.Flags[flagName])
 			}
 			sb.WriteString("\n\n      .. Code end marker, please don't delete this comment\n\n")
 		}

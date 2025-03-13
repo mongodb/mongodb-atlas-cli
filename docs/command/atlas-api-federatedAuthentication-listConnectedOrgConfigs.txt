@@ -99,7 +99,7 @@ Examples
 
       .. code-block::
 
-         atlas api federatedAuthentication listConnectedOrgConfigs --version 2023-01-01 --federationSettingsId 55fa922fb343282757d9554e --itemsPerPage 100 --pageNum 1 --envelope false
+         atlas api federatedAuthentication listConnectedOrgConfigs --version 2023-01-01 --envelope false --federationSettingsId 55fa922fb343282757d9554e --itemsPerPage 100 --pageNum 1
 
       .. Code end marker, please don't delete this comment
 

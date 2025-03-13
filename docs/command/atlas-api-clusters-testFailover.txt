@@ -101,7 +101,7 @@ Examples
 
       .. code-block::
 
-         atlas api clusters testFailover --version 2023-02-01 --pretty false --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8
+         atlas api clusters testFailover --version 2023-02-01 --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 

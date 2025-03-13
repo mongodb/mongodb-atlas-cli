@@ -46,11 +46,12 @@ type OutputType string
 const (
 	Commands OutputType = "commands"
 	Metadata OutputType = "metadata"
+	Spec     OutputType = "spec"
 )
 
 // Returns all possible values of OutputType.
 func AllOutputTypes() []OutputType {
-	return []OutputType{Commands, Metadata}
+	return []OutputType{Commands, Metadata, Spec}
 }
 
 func main() {
@@ -123,6 +124,8 @@ func run(ctx context.Context, specPath, overlayPath string, outputType OutputTyp
 		return convertSpecToAPICommands(ctx, specFile, overlayFiles, w)
 	case Metadata:
 		return convertSpecToMetadata(ctx, specFile, overlayFiles, w)
+	case Spec:
+		return writeSpecOnly(specFile, overlayFiles, w)
 	default:
 		return fmt.Errorf("'%s' is not a valid outputType", outputType)
 	}
@@ -170,6 +173,16 @@ func convertSpecToAPICommands(ctx context.Context, r io.Reader, overlayFiles []i
 
 func convertSpecToMetadata(ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer) error {
 	return convertSpec(ctx, r, overlayFiles, w, specToMetadata, metadataTemplateContent)
+}
+
+func writeSpecOnly(r io.Reader, overlayFiles []io.Reader, w io.Writer) error {
+	updatedSpec, err := applyOverlays(r, overlayFiles)
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(w, updatedSpec)
+	return err
 }
 
 func convertSpec[T any](ctx context.Context, r io.Reader, overlayFiles []io.Reader, w io.Writer, mapper func(spec *openapi3.T) (T, error), templateContent string) error {

@@ -1,0 +1,43 @@
+overlay: 1.0.0
+info:
+  title: Example of examples
+  version: 1.0.0
+actions:
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].get.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        example_1:
+          value: "[your-project-id]"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].get.parameters[?(@['$ref'] == '#/components/parameters/pageNum')]
+    update:
+      x-xgen-examples:
+        example_1:
+          value: "5"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].get.parameters[?(@['$ref'] == '#/components/parameters/itemsPerPage')]
+    update:
+      x-xgen-examples:
+        example_1:
+          value: "10"
+
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].post.requestBody.content['application/vnd.atlas.2023-01-01+json']
+    update:
+      examples:
+        example_1:
+          summary: First example title
+          value:
+            foo: true
+            bar: baz
+          description: This is the description of the second example
+        example_2:
+          summary: Second example title
+          value:
+            foo: false
+            bar: bazzz
+          description: This is the description of the second example
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].post.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        example_1:
+          value: "group-id-1"
+        example_2:
+          value: "group-id-2"

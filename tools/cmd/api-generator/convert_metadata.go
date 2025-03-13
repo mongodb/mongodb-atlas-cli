@@ -25,6 +25,7 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
+	"gopkg.in/yaml.v3"
 )
 
 func specToMetadata(spec *openapi3.T) (metadatatypes.Metadata, error) {
@@ -95,13 +96,48 @@ func extractParameterExamples(operation *openapi3.Operation) map[string]extracte
 		if defaultExample == nil && parameterRef.Value.Schema != nil {
 			defaultExample = parameterRef.Value.Schema.Value.Example
 		}
+
+		defaultExamples := parameterRef.Value.Examples
+		if examplesOverride := extractParameterExampleExtensions(parameterRef); examplesOverride != nil {
+			defaultExamples = *examplesOverride
+		}
+
 		result[parameterRef.Value.Name] = extractedExamples{
 			Example:  defaultExample,
-			Examples: parameterRef.Value.Examples,
+			Examples: defaultExamples,
 		}
 	}
 
 	return result
+}
+
+func extractParameterExampleExtensions(parameterRef *openapi3.ParameterRef) *openapi3.Examples {
+	if xgenExamplesAny, found := parameterRef.Extensions["x-xgen-examples"]; found {
+		if xgenExamples, ok := xgenExamplesAny.(map[string]any); ok {
+			examples := make(openapi3.Examples)
+
+			for name, exampleAny := range xgenExamples {
+				exampleYaml, err := yaml.Marshal(exampleAny)
+				if err != nil {
+					continue
+				}
+
+				var example *openapi3.Example
+				err = yaml.Unmarshal(exampleYaml, &example)
+				if err != nil {
+					continue
+				}
+
+				examples[name] = &openapi3.ExampleRef{
+					Value: example,
+				}
+			}
+
+			return &examples
+		}
+	}
+
+	return nil
 }
 
 func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[string]extractedExamples, error) {
@@ -185,8 +221,8 @@ func extractRequiredFlagNames(operation *openapi3.Operation) map[string]bool {
 
 func extractFlagValue(key string, flagName string, examples extractedExamples, required bool) string {
 	if key != "-" {
-		if examples.Examples[key] != nil {
-			return toValueString(examples.Examples[key].Value)
+		if example := examples.Examples[key]; example != nil && example.Value != nil && example.Value.Value != nil {
+			return toValueString(examples.Examples[key].Value.Value)
 		}
 	}
 	if examples.Example != nil {

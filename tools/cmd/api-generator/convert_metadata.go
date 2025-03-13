@@ -16,16 +16,19 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"sort"
+	"slices"
+	"strconv"
+	"strings"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 )
 
-func specToMetadata(spec *openapi3.T) (map[string]*metadatatypes.Metadata, error) {
-	metadataMap := make(map[string]*metadatatypes.Metadata, 0)
+func specToMetadata(spec *openapi3.T) (metadatatypes.Metadata, error) {
+	metadataMap := make(metadatatypes.Metadata, 0)
 
 	for _, item := range spec.Paths.Map() {
 		for _, operation := range item.Operations() {
@@ -42,54 +45,73 @@ func specToMetadata(spec *openapi3.T) (map[string]*metadatatypes.Metadata, error
 }
 
 // Returns a map of operationID:*Metadata.
-func extractMetadata(operation *openapi3.Operation) (*metadatatypes.Metadata, error) {
+func extractMetadata(operation *openapi3.Operation) (*metadatatypes.OperationMetadata, error) {
 	if operation == nil {
 		return nil, nil
 	}
+
+	paramMetadata := extractParameterMetadata(operation.Parameters)
 
 	requestBodyExamples, err := extractRequestBodyExamples(operation.RequestBody)
 	if err != nil {
 		return nil, err
 	}
 
-	paramMap := extractParameterMetadata(operation.Parameters)
+	paramExamples := extractParameterExamples(operation.Parameters)
 
-	return &metadatatypes.Metadata{
-		Parameters:          paramMap,
-		RequestBodyExamples: requestBodyExamples,
+	examples, err := buildExamples(requestBodyExamples, paramExamples, operation)
+	if err != nil {
+		return nil, err
+	}
+
+	return &metadatatypes.OperationMetadata{
+		Parameters: paramMetadata,
+		Examples:   examples,
 	}, nil
 }
 
-// For each parameter in an operation, the parameter name and example is extracted.
-// A map of parameterName:example is returned.
 func extractParameterMetadata(parameters openapi3.Parameters) map[string]metadatatypes.ParameterMetadata {
 	result := make(map[string]metadatatypes.ParameterMetadata)
 
 	for _, parameterRef := range parameters {
-		example := ""
-		if parameterExample, ok := parameterRef.Value.Schema.Value.Example.(string); ok {
-			example = parameterExample
-		}
 		result[parameterRef.Value.Name] = metadatatypes.ParameterMetadata{
-			Example: example,
-			Usage:   parameterRef.Value.Description,
+			Usage: parameterRef.Value.Description,
 		}
 	}
 
 	return result
 }
 
-// For each verion of an operation, the version and examples are extracted.
-// A map of version:[]examples is returned.
-func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[string][]metadatatypes.RequestBodyExample, error) {
+type extractedExamples struct {
+	Example  any
+	Examples openapi3.Examples
+}
+
+func extractParameterExamples(parameters openapi3.Parameters) map[string]extractedExamples {
+	result := make(map[string]extractedExamples)
+
+	for _, parameterRef := range parameters {
+		defaultExample := parameterRef.Value.Example
+		if defaultExample == nil {
+			defaultExample = parameterRef.Value.Schema.Value.Example
+		}
+		result[parameterRef.Value.Name] = extractedExamples{
+			Example:  defaultExample,
+			Examples: parameterRef.Value.Examples,
+		}
+	}
+
+	return result
+}
+
+func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[string]extractedExamples, error) {
 	if requestBody == nil || requestBody.Value == nil {
 		return nil, nil
 	}
 
-	results := make(map[string][]metadatatypes.RequestBodyExample, 0)
+	results := make(map[string]extractedExamples, 0)
 
 	for versionedContentType, mediaType := range requestBody.Value.Content {
-		examples := make([]metadatatypes.RequestBodyExample, 0)
 		version, _, err := extractVersionAndContentType(versionedContentType)
 		if err != nil {
 			return nil, fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
@@ -99,51 +121,246 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 			continue
 		}
 
-		for name, exampleRef := range mediaType.Examples {
-			if exampleRef == nil || exampleRef.Value == nil {
-				continue
-			}
-
-			exampleName := name
-			if exampleRef.Value.Summary != "" {
-				exampleName = exampleRef.Value.Summary
-			}
-
-			var value any
-			if exampleRef.Value != nil && exampleRef.Value.Value != nil {
-				value = exampleRef.Value.Value
-			}
-
-			result := metadatatypes.RequestBodyExample{
-				Name:        exampleName,
-				Description: exampleRef.Value.Description,
-				Value:       toJSONString(value),
-			}
-
-			examples = append(examples, result)
-		}
-
-		if len(examples) != 0 {
-			// Ensure list of examples are sorted in same order
-			sort.Slice(examples, func(i, j int) bool {
-				return examples[i].Name < examples[j].Name
-			})
-			results[version] = examples
+		results[version] = extractedExamples{
+			Example:  mediaType.Example,
+			Examples: mediaType.Examples,
 		}
 	}
 
 	return results, nil
 }
 
-func toJSONString(data any) string {
+func extractDefaultVersion(operation *openapi3.Operation) (string, error) {
+	versions := []string{}
+
+	var defaultResponse *openapi3.ResponseRef
+	for code := 200; code < 300; code++ {
+		if response := operation.Responses.Status(code); response != nil {
+			defaultResponse = response
+			break
+		}
+	}
+	if defaultResponse == nil {
+		return "", errors.New("default version not found")
+	}
+
+	for mime := range defaultResponse.Value.Content {
+		version, _, err := extractVersionAndContentType(mime)
+		if err != nil {
+			return "", fmt.Errorf("unsupported version %q error: %w", mime, err)
+		}
+		versions = append(versions, version)
+	}
+
+	if len(versions) == 0 {
+		return "", errors.New("no versions found")
+	}
+
+	slices.Sort(versions)
+	return versions[len(versions)-1], nil
+}
+
+func extractAllKeys(parameterExamples map[string]extractedExamples) map[string]bool {
+	allKeys := map[string]bool{}
+	for _, examples := range parameterExamples {
+		if examples.Example != nil {
+			allKeys["-"] = true
+		}
+		for key := range examples.Examples {
+			allKeys[key] = true
+		}
+	}
+	return allKeys
+}
+
+func extractRequiredFlagNames(operation *openapi3.Operation) map[string]bool {
+	requiredFlags := map[string]bool{}
+	for _, parameterRef := range operation.Parameters {
+		if parameterRef.Value.Required {
+			requiredFlags[parameterRef.Value.Name] = true
+		}
+	}
+	return requiredFlags
+}
+
+func extractFlagValue(key string, flagName string, examples extractedExamples, required bool) string {
+	if key != "-" {
+		if examples.Examples[key] != nil {
+			return toValueString(examples.Examples[key].Value)
+		}
+	}
+	if examples.Example != nil {
+		return toValueString(examples.Example)
+	}
+	if required {
+		return fmt.Sprintf("[%s]", flagName)
+	}
+
+	return ""
+}
+
+func buildExamplesNoRequestBody(parameterExamples map[string]extractedExamples, operation *openapi3.Operation) (map[string][]metadatatypes.Example, error) {
+	examples := map[string][]metadatatypes.Example{}
+
+	requiredFlagNames := extractRequiredFlagNames(operation)
+
+	if operation.RequestBody != nil {
+		return nil, nil // don't bother we need a request body
+	}
+
+	defaultVersion, err := extractDefaultVersion(operation)
+	if err != nil {
+		return nil, err
+	}
+
+	allKeys := extractAllKeys(parameterExamples)
+	for key := range allKeys {
+		example := metadatatypes.Example{
+			Source:      key,
+			Name:        "",
+			Description: "",
+			Value:       "",
+			Flags:       map[string]string{},
+		}
+		for flagName, flagExample := range parameterExamples {
+			if flagExample.Examples[key] != nil {
+				if example.Name == "" && flagExample.Examples[key].Value.Summary != "" {
+					example.Name = flagExample.Examples[key].Value.Summary
+				}
+				if example.Description == "" && flagExample.Examples[key].Value.Description != "" {
+					example.Description = flagExample.Examples[key].Value.Description
+				}
+			}
+			value := extractFlagValue(key, flagName, flagExample, requiredFlagNames[flagName])
+			if value != "" {
+				example.Flags[flagName] = value
+			}
+		}
+
+		if examples[defaultVersion] == nil {
+			examples[defaultVersion] = []metadatatypes.Example{}
+		}
+		examples[defaultVersion] = append(examples[defaultVersion], example)
+	}
+
+	if len(examples) == 0 {
+		return nil, nil
+	}
+
+	return examples, nil
+}
+
+func buildExamplesWithRequestBody(requestBodyExamples, parameterExamples map[string]extractedExamples, operation *openapi3.Operation) map[string][]metadatatypes.Example {
+	examples := map[string][]metadatatypes.Example{}
+
+	requiredFlagNames := extractRequiredFlagNames(operation)
+
+	for version, requestBodyExamples := range requestBodyExamples {
+		if requestBodyExamples.Example != nil {
+			example := metadatatypes.Example{
+				Source: "-",
+				Value:  toValueString(requestBodyExamples.Example),
+				Flags:  map[string]string{},
+			}
+			for flagName, flagExample := range parameterExamples {
+				value := extractFlagValue("-", flagName, flagExample, requiredFlagNames[flagName])
+				if value != "" {
+					example.Flags[flagName] = value
+				}
+			}
+			if examples[version] == nil {
+				examples[version] = []metadatatypes.Example{}
+			}
+			examples[version] = append(examples[version], example)
+		}
+		for exampleName, requestBodyExample := range requestBodyExamples.Examples {
+			example := metadatatypes.Example{
+				Source:      exampleName,
+				Name:        requestBodyExample.Value.Summary,
+				Description: requestBodyExample.Value.Description,
+				Value:       toValueString(requestBodyExample.Value.Value),
+				Flags:       map[string]string{},
+			}
+			for flagName, flagExample := range parameterExamples {
+				value := extractFlagValue(exampleName, flagName, flagExample, requiredFlagNames[flagName])
+				if value != "" {
+					example.Flags[flagName] = value
+				}
+			}
+			if examples[version] == nil {
+				examples[version] = []metadatatypes.Example{}
+			}
+			examples[version] = append(examples[version], example)
+		}
+	}
+
+	if len(examples) == 0 {
+		return nil
+	}
+
+	return examples
+}
+
+func buildExamples(requestBodyExamples, parameterExamples map[string]extractedExamples, operation *openapi3.Operation) (map[string][]metadatatypes.Example, error) {
+	var results map[string][]metadatatypes.Example
+
+	if len(requestBodyExamples) == 0 {
+		var err error
+		results, err = buildExamplesNoRequestBody(parameterExamples, operation)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		results = buildExamplesWithRequestBody(requestBodyExamples, parameterExamples, operation)
+	}
+
+	for version := range results {
+		slices.SortFunc(results[version], func(a, b metadatatypes.Example) int {
+			return strings.Compare(a.Source, b.Source)
+		})
+	}
+
+	return results, nil
+}
+
+func toValueString(data any) string {
 	if data == nil {
 		return ""
 	}
 
-	jsonData, err := json.MarshalIndent(data, "", "  ")
-	if err != nil {
-		_, _ = log.Warningln("Unable to convert to JSON string")
-		return ""
+	switch value := data.(type) {
+	case string:
+		return value
+	case bool:
+		return strconv.FormatBool(value)
+	case float64:
+		return fmt.Sprintf("%v", value)
+	case map[string]any:
+		if len(value) == 0 {
+			return ""
+		}
+
+		jsonData, err := json.MarshalIndent(value, "", "  ")
+		if err != nil {
+			_, _ = log.Warningln("unable to convert to JSON string")
+			return ""
+		}
+
+		return string(jsonData)
+	case []any:
+		if len(value) == 0 {
+			return ""
+		}
+
+		jsonData, err := json.MarshalIndent(value, "", "  ")
+		if err != nil {
+			_, _ = log.Warningln("unable to convert to JSON string")
+			return ""
+		}
+
+		return string(jsonData)
+	default:
+		_, _ = log.Warningln("unable to find type")
+		return fmt.Sprintf("%v", value)
 	}
-	return string(jsonData)
 }

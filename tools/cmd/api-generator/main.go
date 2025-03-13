@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"slices"
 	"strings"
 	"text/template"
@@ -201,6 +202,25 @@ func loadSpec(r io.Reader) (*openapi3.T, error) {
 	return loader.LoadFromIoReader(r)
 }
 
+func sortedKeys(v any) []string {
+	if reflect.TypeOf(v).Kind() != reflect.Map {
+		return nil
+	}
+
+	if reflect.TypeOf(v).Key().Kind() != reflect.String {
+		return nil
+	}
+
+	keys := make([]string, 0, reflect.ValueOf(v).Len())
+	for _, key := range reflect.ValueOf(v).MapKeys() {
+		keys = append(keys, key.String())
+	}
+
+	slices.Sort(keys)
+
+	return keys
+}
+
 func writeCommands[T any](w io.Writer, templateContent string, data T) error {
 	tmpl, err := template.New("output").Funcs(template.FuncMap{
 		"currentYear": func() int {
@@ -209,6 +229,7 @@ func writeCommands[T any](w io.Writer, templateContent string, data T) error {
 		"replace": func(o, n, s string) string {
 			return strings.ReplaceAll(s, o, n)
 		},
+		"sortedKeys": sortedKeys,
 	}).Parse(templateContent)
 	if err != nil {
 		return err

@@ -105,11 +105,8 @@ addcopy: ## Add missing license to files
 .PHONY: generate
 generate: gen-docs gen-mocks gen-api-commands ## Generate docs, mocks, code, api commands, all auto generated assets
 
-bin/api-generator:
-	go build -o ./bin/api-generator ./tools/cmd/api-generator
-
 .PHONY: gen-api-commands
-gen-api-commands: bin/api-generator ## Generate api commands
+gen-api-commands: ## Generate api commands
 	@echo "==> Generating api commands"
 	go run ./tools/cmd/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays --output-type commands > ./internal/api/commands.go
 	go run ./tools/cmd/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays --output-type metadata > ./tools/cmd/docs/metadata.go

@@ -13,6 +13,12 @@ actions:
                 summary: Return project IP access list
                 value:
                 description: Returns all access list entries from the specified project's IP access list.
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList'].get.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        project_ip_access_list_list:
+          value: "[your-project-id]"
+
   - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList'].post.requestBody.content['application/vnd.atlas.2023-01-01+json']
     update:
       examples:
@@ -24,6 +30,12 @@ actions:
             - cidrBlock: "10.0.0.0/16"
               comment: "VPC network range"
           description: Adds multiple access list entries to the specified project
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList'].post.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        project_ip_access_list_add:
+          value: "[your-project-id]"
+          
   - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}'].get
     update:
       requestBody:
@@ -34,6 +46,17 @@ actions:
                 summary: Return One Project IP Access List Entry
                 value:
                 description: "Returns one access list entry from the specified project's IP access list: 10.0.0.0/16"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}'].get.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        project_ip_access_list_get:
+          value: "[your-project-id]"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}'].get.parameters[?(@['name'] == 'entryValue')]
+    update:
+      examples:
+        project_ip_access_list_get:
+          value: "10.0.0.0/16"
+
   - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}/status'].get
     update:
       requestBody:
@@ -44,6 +67,17 @@ actions:
                 summary: Return Status of One Project IP Access List Entry
                 value:
                 description: "Returns the status of 10.0.0.0/16"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}/status'].get.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        project_ip_access_list_get_status:
+          value: "[your-project-id]"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}/status'].get.parameters[?(@['name'] == 'entryValue')]
+    update:
+      examples:
+        project_ip_access_list_get_status:
+          value: "10.0.0.0/16"
+
   - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}'].delete
     update:
       requestBody:
@@ -54,3 +88,13 @@ actions:
                 summary: Remove One Entry from One Project IP Access List
                 value:
                 description: Removes one access list entry from the specified project's IP access list
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}'].delete.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        project_ip_access_list_delete:
+          value: "[your-project-id]"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/accessList/{entryValue}'].delete.parameters[?(@['name'] == 'entryValue')]
+    update:
+      examples:
+        project_ip_access_list_delete:
+          value: "10.0.0.0/16"

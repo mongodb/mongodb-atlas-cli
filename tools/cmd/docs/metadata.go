@@ -1499,7 +1499,7 @@ var metadata = metadatatypes.Metadata{
 ]`,
 				Flags: map[string]string{
 					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`groupId`:      `[your-project-id]`,
 					`includeCount`: `true`,
 					`itemsPerPage`: `100`,
 					`pageNum`:      `1`,
@@ -3247,9 +3247,9 @@ var metadata = metadatatypes.Metadata{
 				Description: `Removes one access list entry from the specified project's IP access list`,
 
 				Flags: map[string]string{
-					`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
+					`entryValue`: `10.0.0.0/16`,
 					`envelope`:   `false`,
-					`groupId`:    `32b6e34b3d91647abb20e7b8`,
+					`groupId`:    `[your-project-id]`,
 					`pretty`:     `false`,
 				},
 			},
@@ -6893,9 +6893,9 @@ var metadata = metadatatypes.Metadata{
 				Description: `Returns the status of 10.0.0.0/16`,
 
 				Flags: map[string]string{
-					`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
+					`entryValue`: `10.0.0.0/16`,
 					`envelope`:   `false`,
-					`groupId`:    `32b6e34b3d91647abb20e7b8`,
+					`groupId`:    `[your-project-id]`,
 					`pretty`:     `false`,
 				},
 			},
@@ -6926,9 +6926,9 @@ var metadata = metadatatypes.Metadata{
 				Description: `Returns one access list entry from the specified project's IP access list: 10.0.0.0/16`,
 
 				Flags: map[string]string{
-					`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
+					`entryValue`: `10.0.0.0/16`,
 					`envelope`:   `false`,
-					`groupId`:    `32b6e34b3d91647abb20e7b8`,
+					`groupId`:    `[your-project-id]`,
 					`pretty`:     `false`,
 				},
 			},
@@ -10383,7 +10383,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`groupId`:      `[your-project-id]`,
 					`includeCount`: `true`,
 					`itemsPerPage`: `100`,
 					`pageNum`:      `1`,

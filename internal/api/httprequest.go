@@ -20,6 +20,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
 var (
@@ -98,7 +100,7 @@ func ConvertToHTTPRequest(baseURL string, request CommandRequest) (*http.Request
 // > The default serialization method is style: simple and explode: false.
 // > Given the path /users/{id}, the path parameter id is serialized as follows:
 // > style: simple + exploded: false, example template /users/{id}, single value: /users/5, array: /users/3,4,5.
-func buildPath(path string, commandURLParameters []Parameter, parameterValues map[string][]string) (string, error) {
+func buildPath(path string, commandURLParameters []shared_api.Parameter, parameterValues map[string][]string) (string, error) {
 	for _, commandURLParameter := range commandURLParameters {
 		values, exist := parameterValues[commandURLParameter.Name]
 		if !exist || len(values) == 0 {
@@ -120,7 +122,7 @@ func buildPath(path string, commandURLParameters []Parameter, parameterValues ma
 // https://swagger.io/docs/specification/v3_0/serialization/#query-parameters
 // Our spec only contains the default:
 // style: form + exploded: true, example template /users{?id*}, single value: /users?id=5, array: /users?id=3&id=4&id=5
-func buildQueryParameters(commandQueryParameters []Parameter, parameterValues map[string][]string) (string, error) {
+func buildQueryParameters(commandQueryParameters []shared_api.Parameter, parameterValues map[string][]string) (string, error) {
 	query := new(url.URL).Query()
 
 	for _, commandQueryParameter := range commandQueryParameters {
@@ -143,7 +145,7 @@ func buildQueryParameters(commandQueryParameters []Parameter, parameterValues ma
 }
 
 // select a version from a list of versions, throws an error if no match is found.
-func selectVersion(versionString string, versions []Version) (*Version, error) {
+func selectVersion(versionString string, versions []shared_api.Version) (*shared_api.Version, error) {
 	for _, version := range versions {
 		if version.Version == versionString {
 			return &version, nil
@@ -155,7 +157,7 @@ func selectVersion(versionString string, versions []Version) (*Version, error) {
 
 // generate the accept header using the given format string
 // try to find the content type in the list of response content types, if not found set the type to json.
-func acceptHeader(version *Version, requestedContentType string) (string, error) {
+func acceptHeader(version *shared_api.Version, requestedContentType string) (string, error) {
 	contentType := ""
 	supportedTypes := make([]string, 0)
 
@@ -174,7 +176,7 @@ func acceptHeader(version *Version, requestedContentType string) (string, error)
 	return fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, contentType), nil
 }
 
-func contentType(version *Version) *string {
+func contentType(version *shared_api.Version) *string {
 	if version.RequestContentType != "" {
 		contentType := fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, version.RequestContentType)
 		return &contentType

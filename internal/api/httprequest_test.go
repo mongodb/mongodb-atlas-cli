@@ -20,13 +20,14 @@ import (
 	"strings"
 	"testing"
 
+	shared_api "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/stretchr/testify/require"
 )
 
 func TestBuildQueryParameters(t *testing.T) {
 	tests := []struct {
 		name                   string
-		commandQueryParameters []Parameter
+		commandQueryParameters []shared_api.Parameter
 		parameterValues        map[string][]string
 		shouldFail             bool
 		expectedValue          string
@@ -87,7 +88,7 @@ func TestBuildQueryParameters(t *testing.T) {
 
 		{
 			name:                   "missing query parameters",
-			commandQueryParameters: []Parameter{{Name: "required-test-query-parameter", Required: true, Type: ParameterType{IsArray: false, Type: TypeBool}}},
+			commandQueryParameters: []shared_api.Parameter{{Name: "required-test-query-parameter", Required: true, Type: shared_api.ParameterType{IsArray: false, Type: shared_api.TypeBool}}},
 			parameterValues:        map[string][]string{},
 			shouldFail:             true,
 		},
@@ -111,7 +112,7 @@ func TestBuildPath(t *testing.T) {
 	tests := []struct {
 		name                 string
 		pathTemplate         string
-		commandURLParameters []Parameter
+		commandURLParameters []shared_api.Parameter
 		parameterValues      map[string][]string
 		shouldFail           bool
 		expectedValue        string
@@ -154,9 +155,9 @@ func TestBuildPath(t *testing.T) {
 		{
 			name:         "escape path values",
 			pathTemplate: "/api/atlas/v2/groups/{groupId}/accessList/{entryValue}",
-			commandURLParameters: []Parameter{
-				{Name: "groupId", Required: true, Type: ParameterType{IsArray: false, Type: TypeString}},
-				{Name: "entryValue", Required: true, Type: ParameterType{IsArray: false, Type: TypeString}},
+			commandURLParameters: []shared_api.Parameter{
+				{Name: "groupId", Required: true, Type: shared_api.ParameterType{IsArray: false, Type: shared_api.TypeString}},
+				{Name: "entryValue", Required: true, Type: shared_api.ParameterType{IsArray: false, Type: shared_api.TypeString}},
 			},
 			parameterValues: map[string][]string{
 				"groupId":    {"groupId-01"},
@@ -314,17 +315,17 @@ func TestConvertToHttpRequest(t *testing.T) {
 
 // Please keep fixtures below this command
 // Trying to keep this file readable.
-var getCollStatsLatencyNamespaceClusterMeasurementsCommand = Command{
+var getCollStatsLatencyNamespaceClusterMeasurementsCommand = shared_api.Command{
 	OperationID: `getCollStatsLatencyNamespaceClusterMeasurements`,
 	Description: `Get a list of the Coll Stats Latency cluster-level measurements for the given namespace.`,
-	RequestParameters: RequestParameters{
+	RequestParameters: shared_api.RequestParameters{
 		URL: `/api/atlas/v2/groups/{groupId}/clusters/{clusterName}/{clusterView}/{databaseName}/{collectionName}/collStats/measurements`,
-		QueryParameters: []Parameter{
+		QueryParameters: []shared_api.Parameter{
 			{
 				Name:        `envelope`,
 				Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 				Required:    false,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `bool`,
 				},
@@ -333,7 +334,7 @@ var getCollStatsLatencyNamespaceClusterMeasurementsCommand = Command{
 				Name:        `metrics`,
 				Description: `List that contains the metrics that you want to retrieve for the associated data series. If you don&#39;t set this parameter, this resource returns data series for all Coll Stats Latency metrics.`,
 				Required:    false,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: true,
 					Type:    `string`,
 				},
@@ -342,7 +343,7 @@ var getCollStatsLatencyNamespaceClusterMeasurementsCommand = Command{
 				Name:        `start`,
 				Description: `Date and time when MongoDB Cloud begins reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 				Required:    false,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `string`,
 				},
@@ -351,7 +352,7 @@ var getCollStatsLatencyNamespaceClusterMeasurementsCommand = Command{
 				Name:        `end`,
 				Description: `Date and time when MongoDB Cloud stops reporting the metrics. This parameter expresses its value in the ISO 8601 timestamp format in UTC. Include this parameter when you do not set period.`,
 				Required:    false,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `string`,
 				},
@@ -360,13 +361,13 @@ var getCollStatsLatencyNamespaceClusterMeasurementsCommand = Command{
 				Name:        `period`,
 				Description: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set start and end.`,
 				Required:    false,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `string`,
 				},
 			},
 		},
-		URLParameters: []Parameter{
+		URLParameters: []shared_api.Parameter{
 			{
 				Name: `groupId`,
 				Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
@@ -374,7 +375,7 @@ var getCollStatsLatencyNamespaceClusterMeasurementsCommand = Command{
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 				Required: true,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `string`,
 				},
@@ -383,7 +384,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Name:        `clusterName`,
 				Description: `Human-readable label that identifies the cluster to retrieve metrics for.`,
 				Required:    true,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `string`,
 				},
@@ -392,7 +393,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Name:        `clusterView`,
 				Description: `Human-readable label that identifies the cluster topology to retrieve metrics for.`,
 				Required:    true,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `string`,
 				},
@@ -401,7 +402,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Name:        `databaseName`,
 				Description: `Human-readable label that identifies the database.`,
 				Required:    true,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `string`,
 				},
@@ -410,7 +411,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Name:        `collectionName`,
 				Description: `Human-readable label that identifies the collection.`,
 				Required:    true,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `string`,
 				},
@@ -418,7 +419,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		},
 		Verb: http.MethodGet,
 	},
-	Versions: []Version{
+	Versions: []shared_api.Version{
 		{
 			Version:            `2023-11-15`,
 			RequestContentType: ``,
@@ -429,17 +430,17 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 	},
 }
 
-var createClusterCommand = Command{
+var createClusterCommand = shared_api.Command{
 	OperationID: `createCluster`,
 	Description: `Creates one cluster in the specified project. Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.`,
-	RequestParameters: RequestParameters{
+	RequestParameters: shared_api.RequestParameters{
 		URL: `/api/atlas/v2/groups/{groupId}/clusters`,
-		QueryParameters: []Parameter{
+		QueryParameters: []shared_api.Parameter{
 			{
 				Name:        `envelope`,
 				Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 				Required:    false,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `bool`,
 				},
@@ -448,13 +449,13 @@ var createClusterCommand = Command{
 				Name:        `pretty`,
 				Description: `Flag that indicates whether the response body should be in the prettyprint format.`,
 				Required:    false,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `bool`,
 				},
 			},
 		},
-		URLParameters: []Parameter{
+		URLParameters: []shared_api.Parameter{
 			{
 				Name: `groupId`,
 				Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
@@ -462,7 +463,7 @@ var createClusterCommand = Command{
 
 NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 				Required: true,
-				Type: ParameterType{
+				Type: shared_api.ParameterType{
 					IsArray: false,
 					Type:    `string`,
 				},
@@ -470,7 +471,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		},
 		Verb: http.MethodPost,
 	},
-	Versions: []Version{
+	Versions: []shared_api.Version{
 		{
 			Version:            `2023-01-01`,
 			RequestContentType: `json`,

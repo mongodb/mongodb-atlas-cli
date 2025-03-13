@@ -31,6 +31,8 @@ linters-settings:
         alias: pluginCmd
       - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport
         alias: storeTransport
+      - pkg: github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api
+        alias: shared_api
   misspell:
     locale: US
     ignore-words:

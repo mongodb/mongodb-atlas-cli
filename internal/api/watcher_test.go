@@ -21,6 +21,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/stretchr/testify/require"
 )
 
@@ -279,7 +280,7 @@ func TestWatchInner(t *testing.T) {
 	tests := []struct {
 		name              string
 		executor          *MockCommandExecutor
-		expect            *WatcherExpectProperties
+		expect            *api.WatcherExpectProperties
 		commandRequest    CommandRequest
 		expectedCompleted bool
 		expectedErr       error
@@ -292,11 +293,11 @@ func TestWatchInner(t *testing.T) {
 					HTTPCode:  404,
 				},
 			},
-			expect: &WatcherExpectProperties{
+			expect: &api.WatcherExpectProperties{
 				HTTPCode: 404,
 			},
 			commandRequest: CommandRequest{
-				Command: Command{
+				Command: api.Command{
 					OperationID: "GetCluster",
 				},
 			},
@@ -312,15 +313,15 @@ func TestWatchInner(t *testing.T) {
 					Output:    io.NopCloser(strings.NewReader(`{"status": "IDLE"}`)),
 				},
 			},
-			expect: &WatcherExpectProperties{
+			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
-				Match: &WatcherMatchProperties{
+				Match: &api.WatcherMatchProperties{
 					Path:   "$.status",
 					Values: []string{"IDLE"},
 				},
 			},
 			commandRequest: CommandRequest{
-				Command: Command{
+				Command: api.Command{
 					OperationID: "GetCluster",
 				},
 			},
@@ -336,15 +337,15 @@ func TestWatchInner(t *testing.T) {
 					Output:    io.NopCloser(strings.NewReader(`{"status": "DONE"}`)),
 				},
 			},
-			expect: &WatcherExpectProperties{
+			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
-				Match: &WatcherMatchProperties{
+				Match: &api.WatcherMatchProperties{
 					Path:   "$.status",
 					Values: []string{"IDLE", "DONE"},
 				},
 			},
 			commandRequest: CommandRequest{
-				Command: Command{
+				Command: api.Command{
 					OperationID: "GetCluster",
 				},
 			},
@@ -356,11 +357,11 @@ func TestWatchInner(t *testing.T) {
 			executor: &MockCommandExecutor{
 				err: errors.New("execution failed"),
 			},
-			expect: &WatcherExpectProperties{
+			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
 			},
 			commandRequest: CommandRequest{
-				Command: Command{
+				Command: api.Command{
 					OperationID: "GetCluster",
 				},
 			},
@@ -376,11 +377,11 @@ func TestWatchInner(t *testing.T) {
 					Output:    io.NopCloser(strings.NewReader(`{}`)),
 				},
 			},
-			expect: &WatcherExpectProperties{
+			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
 			},
 			commandRequest: CommandRequest{
-				Command: Command{
+				Command: api.Command{
 					OperationID: "GetCluster",
 				},
 			},
@@ -398,7 +399,7 @@ func TestWatchInner(t *testing.T) {
 			},
 			expect: nil,
 			commandRequest: CommandRequest{
-				Command: Command{
+				Command: api.Command{
 					OperationID: "GetCluster",
 				},
 			},
@@ -414,15 +415,15 @@ func TestWatchInner(t *testing.T) {
 					Output:    io.NopCloser(strings.NewReader(`invalid json`)),
 				},
 			},
-			expect: &WatcherExpectProperties{
+			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
-				Match: &WatcherMatchProperties{
+				Match: &api.WatcherMatchProperties{
 					Path:   "$.status",
 					Values: []string{"IDLE"},
 				},
 			},
 			commandRequest: CommandRequest{
-				Command: Command{
+				Command: api.Command{
 					OperationID: "GetCluster",
 				},
 			},
@@ -438,15 +439,15 @@ func TestWatchInner(t *testing.T) {
 					Output:    io.NopCloser(strings.NewReader(`{"status": "CREATING"}`)),
 				},
 			},
-			expect: &WatcherExpectProperties{
+			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
-				Match: &WatcherMatchProperties{
+				Match: &api.WatcherMatchProperties{
 					Path:   "$.status",
 					Values: []string{"IDLE", "DONE"},
 				},
 			},
 			commandRequest: CommandRequest{
-				Command: Command{
+				Command: api.Command{
 					OperationID: "GetCluster",
 				},
 			},

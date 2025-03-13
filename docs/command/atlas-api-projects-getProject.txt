@@ -88,3 +88,17 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+.. tabs::
+   .. tab:: Get a project
+      :tabid: 2023-01-01_get_project
+      Get a project using a project id
+
+      .. code-block::
+
+         atlas api projects getProject --version 2023-01-01 --groupId 32b6e34b3d91647abb20e7b8 --pretty false --envelope false
+
+      .. Code end marker, please don't delete this comment
+

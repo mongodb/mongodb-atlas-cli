@@ -15,12 +15,14 @@
 package main
 
 import (
+	"io"
 	"log"
 	"os"
 
 	"github.com/mongodb-labs/cobra2snooty"
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/root"
+	"github.com/spf13/cobra"
 )
 
 func main() {
@@ -37,9 +39,17 @@ func main() {
 
 	atlasBuilder.InitDefaultCompletionCmd()
 
-	applyTransformations(atlasBuilder)
+	if err := applyTransformations(atlasBuilder); err != nil {
+		log.Fatal(err)
+	}
 
-	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command"); err != nil {
+	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command", cobra2snooty.WithCustomExampleFormatter(func(w io.Writer, cmd *cobra.Command) {
+		if isAPICommand(cmd) {
+			_, _ = w.Write([]byte(cmd.Example))
+			return
+		}
+		cobra2snooty.DefaultExampleFormatter(w, cmd)
+	})); err != nil {
 		log.Fatal(err)
 	}
 

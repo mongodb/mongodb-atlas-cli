@@ -100,3 +100,17 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+.. tabs::
+   .. tab:: Return project IP access list
+      :tabid: 2023-01-01_project_ip_access_list_list
+      Returns all access list entries from the specified project's IP access list.
+
+      .. code-block::
+
+         atlas api projectIpAccessList listProjectIpAccessLists --version 2023-01-01 --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false --envelope false --groupId 32b6e34b3d91647abb20e7b8
+
+      .. Code end marker, please don't delete this comment
+

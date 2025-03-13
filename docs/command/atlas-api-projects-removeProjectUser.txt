@@ -92,3 +92,16 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+.. tabs::
+   .. tab:: Example
+      :tabid: 2043-01-01_default
+
+      .. code-block::
+
+         atlas api projects removeProjectUser --version 2043-01-01 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false --userId [userId]
+
+      .. Code end marker, please don't delete this comment
+

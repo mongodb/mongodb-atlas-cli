@@ -109,3 +109,16 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-01-01_default
+
+      .. code-block::
+
+         atlas api databaseUsers getDatabaseUser --version 2023-01-01 --databaseName [databaseName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false --username SCRAM-SHA: dylan or AWS IAM: arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs or x.509/LDAP: CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM or OIDC: IdPIdentifier/IdPGroupName
+
+      .. Code end marker, please don't delete this comment
+

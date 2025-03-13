@@ -21,6 +21,7 @@ import (
 
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -105,7 +106,79 @@ func replaceFlagUsage(cmd *cobra.Command, f *pflag.Flag) {
 	f.Usage = paramMetadata.Usage
 }
 
-func applyTransformations(cmd *cobra.Command) {
+func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Example) string {
+	if len(examples) == 0 {
+		return ""
+	}
+
+	var sb strings.Builder
+	sb.WriteString(`Examples
+-----------------
+
+.. tabs::
+`)
+
+	for version, exList := range examples {
+		for _, ex := range exList {
+			sb.WriteString("   .. tab:: ")
+			if ex.Name == "" {
+				sb.WriteString("Example")
+			} else {
+				sb.WriteString(ex.Name)
+			}
+			sb.WriteString("\n      :tabid: ")
+			sb.WriteString(version)
+			sb.WriteString("_")
+			if ex.Source == "-" {
+				sb.WriteString("default")
+			} else {
+				sb.WriteString(strings.ToLower(strings.ReplaceAll(ex.Source, " ", "_")))
+			}
+			sb.WriteString("\n")
+			if ex.Description != "" {
+				sb.WriteString("      " + ex.Description + "\n")
+			}
+			sb.WriteString("\n      .. code-block::\n\n")
+			if ex.Value != "" {
+				sb.WriteString("         cat <<EOF > payload.json\n")
+				lines := strings.Split(ex.Value, "\n")
+				for _, line := range lines {
+					sb.WriteString("            " + line + "\n")
+				}
+				sb.WriteString("         EOF\n")
+			}
+			sb.WriteString("         " + cmd.CommandPath())
+			sb.WriteString(" --version " + version)
+			if ex.Value != "" {
+				sb.WriteString(" --file payload.json")
+			}
+			for flagName, flagValue := range ex.Flags {
+				sb.WriteString(" --" + flagName + " " + flagValue)
+			}
+			sb.WriteString("\n\n      .. Code end marker, please don't delete this comment\n\n")
+		}
+	}
+
+	return sb.String()
+}
+
+func updateExamples(cmd *cobra.Command) error {
+	operationID := cmd.Annotations["operationId"]
+	if operationID == "" {
+		return nil
+	}
+
+	cmdMetadata, ok := metadata[operationID]
+	if !ok || cmdMetadata.Examples == nil {
+		return nil
+	}
+
+	cmd.Example = buildExamples(cmd, cmdMetadata.Examples)
+
+	return nil
+}
+
+func applyTransformations(cmd *cobra.Command) error {
 	setDisableAutoGenTag(cmd)
 	removePluginCommands(cmd)
 	addAdditionalLongText(cmd)
@@ -113,6 +186,9 @@ func applyTransformations(cmd *cobra.Command) {
 	if isAPICommand(cmd) {
 		markExperimenalToAPICommands(cmd)
 		updateAPICommandDescription(cmd)
+		if err := updateExamples(cmd); err != nil {
+			return err
+		}
 	}
 
 	cmd.Flags().VisitAll(func(f *pflag.Flag) {
@@ -120,6 +196,10 @@ func applyTransformations(cmd *cobra.Command) {
 	})
 
 	for _, subCmd := range cmd.Commands() {
-		applyTransformations(subCmd)
+		if err := applyTransformations(subCmd); err != nil {
+			return err
+		}
 	}
+
+	return nil
 }

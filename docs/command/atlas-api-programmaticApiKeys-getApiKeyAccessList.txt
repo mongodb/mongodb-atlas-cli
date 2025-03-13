@@ -94,3 +94,16 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-01-01_default
+
+      .. code-block::
+
+         atlas api programmaticApiKeys getApiKeyAccessList --version 2023-01-01 --apiUserId [apiUserId] --envelope false --ipAddress 192.0.2.0%2F24 --orgId 4888442a3354817a7320eb61 --pretty false
+
+      .. Code end marker, please don't delete this comment
+

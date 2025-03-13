@@ -92,3 +92,58 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+.. tabs::
+   .. tab:: Example
+      :tabid: 2024-05-30_aws
+      AWS
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "bucketName": "export-bucket",
+              "cloudProvider": "AWS",
+              "iamRoleId": "668c5f0ed436263134491592"
+            }
+         EOF
+         atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --groupId 32b6e34b3d91647abb20e7b8 --pretty false --envelope false
+
+      .. Code end marker, please don't delete this comment
+
+   .. tab:: Example
+      :tabid: 2024-05-30_azure
+      Azure
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "cloudProvider": "AZURE",
+              "roleId": "668c5f0ed436263134491592",
+              "serviceUrl": "https://examplestorageaccount.blob.core.windows.net/examplecontainer"
+            }
+         EOF
+         atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+
+      .. Code end marker, please don't delete this comment
+
+   .. tab:: Example
+      :tabid: 2023-01-01_aws
+      AWS
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "bucketName": "export-bucket",
+              "cloudProvider": "AWS",
+              "iamRoleId": "668c5f0ed436263134491592"
+            }
+         EOF
+         atlas api cloudBackups createExportBucket --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8 --pretty false --envelope false
+
+      .. Code end marker, please don't delete this comment
+

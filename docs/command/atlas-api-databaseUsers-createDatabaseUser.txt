@@ -92,3 +92,211 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-01-01_aws_iam_authentication
+      AWS IAM Authentication
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "awsIAMType": "USER",
+              "databaseName": "$external",
+              "groupId": "32b6e34b3d91647abb20e7b8",
+              "roles": [
+                {
+                  "databaseName": "sales",
+                  "roleName": "readWrite"
+                },
+                {
+                  "databaseName": "marketing",
+                  "roleName": "read"
+                }
+              ],
+              "scopes": [
+                {
+                  "name": "myCluster",
+                  "type": "CLUSTER"
+                }
+              ],
+              "username": "arn:aws:iam::358363220050:user/mongodb-aws-iam-auth-test-user"
+            }
+         EOF
+         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8 --pretty false --envelope false
+
+      .. Code end marker, please don't delete this comment
+
+   .. tab:: Example
+      :tabid: 2023-01-01_ldap_authentication
+      LDAP Authentication
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "databaseName": "admin",
+              "groupId": "32b6e34b3d91647abb20e7b8",
+              "ldapAuthType": "GROUP",
+              "roles": [
+                {
+                  "databaseName": "sales",
+                  "roleName": "readWrite"
+                },
+                {
+                  "databaseName": "marketing",
+                  "roleName": "read"
+                }
+              ],
+              "scopes": [
+                {
+                  "name": "myCluster",
+                  "type": "CLUSTER"
+                }
+              ],
+              "username": "CN=marketing,OU=groups,DC=example,DC=com"
+            }
+         EOF
+         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+
+      .. Code end marker, please don't delete this comment
+
+   .. tab:: Example
+      :tabid: 2023-01-01_oidc_workforce_federated_authentication
+      OIDC Workforce Federated Authentication
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "databaseName": "admin",
+              "groupId": "32b6e34b3d91647abb20e7b8",
+              "oidcAuthType": "IDP_GROUP",
+              "roles": [
+                {
+                  "databaseName": "sales",
+                  "roleName": "readWrite"
+                },
+                {
+                  "databaseName": "marketing",
+                  "roleName": "read"
+                }
+              ],
+              "scopes": [
+                {
+                  "name": "myCluster",
+                  "type": "CLUSTER"
+                }
+              ],
+              "username": "5dd7496c7a3e5a648454341c/sales"
+            }
+         EOF
+         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8 --pretty false --envelope false
+
+      .. Code end marker, please don't delete this comment
+
+   .. tab:: Example
+      :tabid: 2023-01-01_oidc_workload_federated_authentication
+      OIDC Workload Federated Authentication
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "databaseName": "$external",
+              "groupId": "32b6e34b3d91647abb20e7b8",
+              "oidcAuthType": "USER",
+              "roles": [
+                {
+                  "databaseName": "sales",
+                  "roleName": "readWrite"
+                },
+                {
+                  "databaseName": "marketing",
+                  "roleName": "read"
+                }
+              ],
+              "scopes": [
+                {
+                  "name": "myCluster",
+                  "type": "CLUSTER"
+                }
+              ],
+              "username": "5dd7496c7a3e5a648454341c/sales"
+            }
+         EOF
+         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+
+      .. Code end marker, please don't delete this comment
+
+   .. tab:: Example
+      :tabid: 2023-01-01_scram-sha_authentication
+      SCRAM-SHA Authentication
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "databaseName": "admin",
+              "groupId": "32b6e34b3d91647abb20e7b8",
+              "password": "changeme123",
+              "roles": [
+                {
+                  "databaseName": "sales",
+                  "roleName": "readWrite"
+                },
+                {
+                  "databaseName": "marketing",
+                  "roleName": "read"
+                }
+              ],
+              "scopes": [
+                {
+                  "name": "myCluster",
+                  "type": "CLUSTER"
+                }
+              ],
+              "username": "david"
+            }
+         EOF
+         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+
+      .. Code end marker, please don't delete this comment
+
+   .. tab:: Example
+      :tabid: 2023-01-01_x509_authentication
+      X509 Authentication
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "databaseName": "$external",
+              "groupId": "32b6e34b3d91647abb20e7b8",
+              "roles": [
+                {
+                  "databaseName": "sales",
+                  "roleName": "readWrite"
+                },
+                {
+                  "databaseName": "marketing",
+                  "roleName": "read"
+                }
+              ],
+              "scopes": [
+                {
+                  "name": "myCluster",
+                  "type": "CLUSTER"
+                }
+              ],
+              "username": "CN=david@example.com,OU=users,DC=example,DC=com",
+              "x509Type": "CUSTOMER"
+            }
+         EOF
+         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+
+      .. Code end marker, please don't delete this comment
+

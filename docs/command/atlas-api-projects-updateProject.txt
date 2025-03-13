@@ -92,3 +92,28 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+.. tabs::
+   .. tab:: Update project name and tags
+      :tabid: 2023-01-01_update_project
+      Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"
+
+      .. code-block::
+
+         cat <<EOF > payload.json
+            {
+              "name": "MongoTube - Production",
+              "tags": [
+                {
+                  "key": "environment",
+                  "value": "production"
+                }
+              ]
+            }
+         EOF
+         atlas api projects updateProject --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+
+      .. Code end marker, please don't delete this comment
+

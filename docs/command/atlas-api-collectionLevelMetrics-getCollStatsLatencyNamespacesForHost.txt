@@ -98,3 +98,16 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-11-15_default
+
+      .. code-block::
+
+         atlas api collectionLevelMetrics getCollStatsLatencyNamespacesForHost --version 2023-11-15 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --period PT10H --processId my.host.name.com:27017
+
+      .. Code end marker, please don't delete this comment
+

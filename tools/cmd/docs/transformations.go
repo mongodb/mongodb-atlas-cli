@@ -15,6 +15,7 @@
 package main
 
 import (
+	"cmp"
 	_ "embed"
 	"regexp"
 	"slices"
@@ -107,6 +108,15 @@ func replaceFlagUsage(cmd *cobra.Command, f *pflag.Flag) {
 	f.Usage = paramMetadata.Usage
 }
 
+func sortedKeys[K cmp.Ordered, V any](m map[K]V) []K {
+	keys := make([]K, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+	slices.Sort(keys)
+	return keys
+}
+
 func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Example) string {
 	if len(examples) == 0 {
 		return ""
@@ -119,8 +129,8 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 .. tabs::
 `)
 
-	for version, exList := range examples {
-		for _, ex := range exList {
+	for _, version := range sortedKeys(examples) {
+		for _, ex := range examples[version] {
 			sb.WriteString("   .. tab:: ")
 			if ex.Name == "" {
 				sb.WriteString("Example")
@@ -153,12 +163,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 			if ex.Value != "" {
 				sb.WriteString(" --file payload.json")
 			}
-			flagNames := make([]string, 0, len(ex.Flags))
-			for flagName := range ex.Flags {
-				flagNames = append(flagNames, flagName)
-			}
-			slices.Sort(flagNames)
-			for _, flagName := range flagNames {
+			for _, flagName := range sortedKeys(ex.Flags) {
 				sb.WriteString(" --" + flagName + " " + ex.Flags[flagName])
 			}
 			sb.WriteString("\n\n      .. Code end marker, please don't delete this comment\n\n")

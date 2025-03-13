@@ -57,7 +57,7 @@ func extractMetadata(operation *openapi3.Operation) (*metadatatypes.OperationMet
 		return nil, err
 	}
 
-	paramExamples := extractParameterExamples(operation.Parameters)
+	paramExamples := extractParameterExamples(operation)
 
 	examples, err := buildExamples(requestBodyExamples, paramExamples, operation)
 	if err != nil {
@@ -87,12 +87,12 @@ type extractedExamples struct {
 	Examples openapi3.Examples
 }
 
-func extractParameterExamples(parameters openapi3.Parameters) map[string]extractedExamples {
+func extractParameterExamples(operation *openapi3.Operation) map[string]extractedExamples {
 	result := make(map[string]extractedExamples)
 
-	for _, parameterRef := range parameters {
+	for _, parameterRef := range operation.Parameters {
 		defaultExample := parameterRef.Value.Example
-		if defaultExample == nil {
+		if defaultExample == nil && parameterRef.Value.Schema != nil {
 			defaultExample = parameterRef.Value.Schema.Value.Example
 		}
 		result[parameterRef.Value.Name] = extractedExamples{

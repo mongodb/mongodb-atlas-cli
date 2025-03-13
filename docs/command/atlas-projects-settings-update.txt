@@ -98,7 +98,7 @@ Options
    * - --enableDataExplorerGenAISampleDocumentPassing
      - 
      - false
-     - Flag that enables the Data Explorer GenAI Features project setting.
+     - Flag that enables the Data Explorer GenAI Sample Document Passing project setting.
 
        Mutually exclusive with --disableDataExplorerGenAISampleDocumentPassing.
    * - --enablePerformanceAdvisor

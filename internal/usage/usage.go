@@ -292,7 +292,7 @@ dbName and collection are required only for built-in roles.`
 	DisableDataExplorer                           = "Flag that disables the Data Explorer project setting."
 	EnableDataExplorerGenAIFeatures               = "Flag that enables the Data Explorer GenAI Features project setting."
 	DisableDataExplorerGenAIFeatures              = "Flag that disables the Data Explorer GenAI Features project setting."
-	EnableDataExplorerGenAISampleDocumentPassing  = "Flag that enables the Data Explorer GenAI Features project setting."
+	EnableDataExplorerGenAISampleDocumentPassing  = "Flag that enables the Data Explorer GenAI Sample Document Passing project setting."
 	DisableDataExplorerGenAISampleDocumentPassing = "Flag that disables the Data Explorer GenAI Sample Document Passing project setting." //nolint:gosec // This is just a message not a credential
 	EnablePerformanceAdvisor                      = "Flag that enables the Performance Advisor project setting."
 	DisablePerformanceAdvisor                     = "Flag that disables the Performance Advisor project setting."

@@ -216,6 +216,7 @@ Examples
              }
            ]
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.
@@ -226,7 +227,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-   .. tab:: Example
+   .. tab:: Example 1
       :tabid: 2024-10-23_cluster
 
       Cluster
@@ -347,6 +348,7 @@ Examples
              }
            ]
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.

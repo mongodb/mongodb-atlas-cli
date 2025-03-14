@@ -127,6 +127,7 @@ Examples
            ],
            "username": "arn:aws:iam::358363220050:user/mongodb-aws-iam-auth-test-user"
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.
@@ -137,7 +138,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-   .. tab:: Example
+   .. tab:: Example 1
       :tabid: 2023-01-01_ldap_authentication
 
       LDAP Authentication
@@ -168,6 +169,7 @@ Examples
            ],
            "username": "CN=marketing,OU=groups,DC=example,DC=com"
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.
@@ -178,7 +180,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-   .. tab:: Example
+   .. tab:: Example 2
       :tabid: 2023-01-01_oidc_workforce_federated_authentication
 
       OIDC Workforce Federated Authentication
@@ -209,6 +211,7 @@ Examples
            ],
            "username": "5dd7496c7a3e5a648454341c/sales"
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.
@@ -219,7 +222,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-   .. tab:: Example
+   .. tab:: Example 3
       :tabid: 2023-01-01_oidc_workload_federated_authentication
 
       OIDC Workload Federated Authentication
@@ -250,6 +253,7 @@ Examples
            ],
            "username": "5dd7496c7a3e5a648454341c/sales"
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.
@@ -260,7 +264,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-   .. tab:: Example
+   .. tab:: Example 4
       :tabid: 2023-01-01_scram-sha_authentication
 
       SCRAM-SHA Authentication
@@ -291,6 +295,7 @@ Examples
            ],
            "username": "david"
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.
@@ -301,7 +306,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-   .. tab:: Example
+   .. tab:: Example 5
       :tabid: 2023-01-01_x509_authentication
 
       X509 Authentication
@@ -332,6 +337,7 @@ Examples
            "username": "CN=david@example.com,OU=users,DC=example,DC=com",
            "x509Type": "CUSTOMER"
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.

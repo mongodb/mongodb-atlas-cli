@@ -137,6 +137,7 @@ Examples
              }
            }
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.
@@ -147,7 +148,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-   .. tab:: Example
+   .. tab:: Example 1
       :tabid: 2023-01-01_partial_index
 
       Partial Index
@@ -184,6 +185,7 @@ Examples
              }
            }
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.
@@ -194,7 +196,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-   .. tab:: Example
+   .. tab:: Example 2
       :tabid: 2023-01-01_sparse_index
 
       Sparse Index
@@ -227,6 +229,7 @@ Examples
              "sparse": true
            }
          }
+
       .. Code end marker, please don't delete this comment
 
       After creating `payload.json`, run the command below in the same directory.

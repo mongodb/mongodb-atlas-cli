@@ -19,6 +19,7 @@ import (
 	_ "embed"
 	"regexp"
 	"slices"
+	"strconv"
 	"strings"
 
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
@@ -146,12 +147,18 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 `)
 	}
 
+	exampleIdx := 0
 	for _, version := range sortedKeys(examples) {
 		for _, ex := range examples[version] {
 			if tabs {
 				sb.WriteString("   .. tab:: ")
 				if ex.Name == "" {
 					sb.WriteString("Example")
+					if exampleIdx > 0 {
+						sb.WriteString(" ")
+						sb.WriteString(strconv.Itoa(exampleIdx))
+					}
+					exampleIdx++
 				} else {
 					sb.WriteString(ex.Name)
 				}
@@ -191,7 +198,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 					sb.WriteString("   " + line + "\n")
 				}
 				if tabs {
-					sb.WriteString("      ")
+					sb.WriteString("\n      ")
 				}
 				sb.WriteString(".. Code end marker, please don't delete this comment\n\n")
 				if tabs {

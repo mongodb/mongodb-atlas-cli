@@ -83,13 +83,11 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2023-02-01_default
+Run the command below.
 
-      .. code-block::
+.. code-block::
 
-         atlas api test versionedExample --version 2023-02-01 --envelope false
+   atlas api test versionedExample --version 2023-02-01 --envelope false
 
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

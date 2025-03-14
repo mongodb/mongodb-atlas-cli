@@ -79,13 +79,11 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2043-01-01_default
+Run the command below.
 
-      .. code-block::
+.. code-block::
 
-         atlas api openApi getOpenApiInfo --version 2043-01-01 --pretty false
+   atlas api openApi getOpenApiInfo --version 2043-01-01 --pretty false
 
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

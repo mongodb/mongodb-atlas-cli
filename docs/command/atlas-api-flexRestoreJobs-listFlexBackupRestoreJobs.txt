@@ -107,13 +107,11 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2024-11-13_default
+Run the command below.
 
-      .. code-block::
+.. code-block::
 
-         atlas api flexRestoreJobs listFlexBackupRestoreJobs --version 2024-11-13 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --name [name] --pageNum 1 --pretty false
+   atlas api flexRestoreJobs listFlexBackupRestoreJobs --version 2024-11-13 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --name [name] --pageNum 1 --pretty false
 
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

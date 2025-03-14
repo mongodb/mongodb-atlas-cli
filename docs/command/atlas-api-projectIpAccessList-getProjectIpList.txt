@@ -95,14 +95,13 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Return One Project IP Access List Entry
-      :tabid: 2023-01-01_project_ip_access_list_get
-      Returns one access list entry from the specified project's IP access list: 10.0.0.0/16
+   Returns one access list entry from the specified project's IP access list: 10.0.0.0/16
 
-      .. code-block::
+Run the command below.
 
-         atlas api projectIpAccessList getProjectIpList --version 2023-01-01 --entryValue IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+.. code-block::
 
-      .. Code end marker, please don't delete this comment
+   atlas api projectIpAccessList getProjectIpList --version 2023-01-01 --entryValue IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+
+.. Code end marker, please don't delete this comment
 

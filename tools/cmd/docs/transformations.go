@@ -117,7 +117,15 @@ func sortedKeys[K cmp.Ordered, V any](m map[K]V) []K {
 	return keys
 }
 
-func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Example) string {
+func countExamples(examples map[string][]metadatatypes.Example) int {
+	count := 0
+	for _, exs := range examples {
+		count += len(exs)
+	}
+	return count
+}
+
+func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Example) string { //nolint:gocyclo // code used by CI
 	if len(examples) == 0 {
 		return ""
 	}
@@ -126,39 +134,85 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 	sb.WriteString(`Examples
 -----------------
 
-.. tabs::
 `)
+
+	tabs := true
+	if countExamples(examples) == 1 {
+		tabs = false
+	}
+
+	if tabs {
+		sb.WriteString(`.. tabs::
+`)
+	}
 
 	for _, version := range sortedKeys(examples) {
 		for _, ex := range examples[version] {
-			sb.WriteString("   .. tab:: ")
-			if ex.Name == "" {
-				sb.WriteString("Example")
-			} else {
-				sb.WriteString(ex.Name)
+			if tabs {
+				sb.WriteString("   .. tab:: ")
+				if ex.Name == "" {
+					sb.WriteString("Example")
+				} else {
+					sb.WriteString(ex.Name)
+				}
+				sb.WriteString("\n      :tabid: ")
+				sb.WriteString(version)
+				sb.WriteString("_")
+				if ex.Source == "-" {
+					sb.WriteString("default")
+				} else {
+					sb.WriteString(strings.ToLower(strings.ReplaceAll(ex.Source, " ", "_")))
+				}
+				sb.WriteString("\n\n")
 			}
-			sb.WriteString("\n      :tabid: ")
-			sb.WriteString(version)
-			sb.WriteString("_")
-			if ex.Source == "-" {
-				sb.WriteString("default")
-			} else {
-				sb.WriteString(strings.ToLower(strings.ReplaceAll(ex.Source, " ", "_")))
-			}
-			sb.WriteString("\n")
+
 			if ex.Description != "" {
-				sb.WriteString("      " + ex.Description + "\n")
+				if tabs {
+					sb.WriteString("   ")
+				}
+				sb.WriteString("   " + ex.Description + "\n\n")
 			}
-			sb.WriteString("\n      .. code-block::\n\n")
 			if ex.Value != "" {
-				sb.WriteString("         cat <<EOF > payload.json\n")
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString("Create the file below and save it as `payload.json`\n\n")
+
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString(".. code-block::\n\n")
 				lines := strings.Split(ex.Value, "\n")
 				for _, line := range lines {
-					sb.WriteString("            " + line + "\n")
+					if tabs {
+						sb.WriteString("      ")
+					}
+
+					sb.WriteString("   " + line + "\n")
 				}
-				sb.WriteString("         EOF\n")
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString(".. Code end marker, please don't delete this comment\n\n")
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString("After creating `payload.json`, run the command below in the same directory.\n\n")
+			} else {
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString("Run the command below.\n\n")
 			}
-			sb.WriteString("         " + cmd.CommandPath())
+
+			if tabs {
+				sb.WriteString("      ")
+			}
+			sb.WriteString(".. code-block::\n\n")
+			if tabs {
+				sb.WriteString("      ")
+			}
+			sb.WriteString("   " + cmd.CommandPath())
 			sb.WriteString(" --version " + version)
 			if ex.Value != "" {
 				sb.WriteString(" --file payload.json")
@@ -166,7 +220,11 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 			for _, flagName := range sortedKeys(ex.Flags) {
 				sb.WriteString(" --" + flagName + " " + ex.Flags[flagName])
 			}
-			sb.WriteString("\n\n      .. Code end marker, please don't delete this comment\n\n")
+			sb.WriteString("\n\n")
+			if tabs {
+				sb.WriteString("      ")
+			}
+			sb.WriteString(".. Code end marker, please don't delete this comment\n\n")
 		}
 	}
 

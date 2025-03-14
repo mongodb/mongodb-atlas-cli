@@ -102,116 +102,137 @@ Examples
 .. tabs::
    .. tab:: Example
       :tabid: 2023-01-01_2dspere_index
+
       2dspere Index
+
+      Create the file below and save it as `payload.json`
 
       .. code-block::
 
-         cat <<EOF > payload.json
-            {
-              "collation": {
-                "alternate": "non-ignorable",
-                "backwards": false,
-                "caseFirst": "lower",
-                "caseLevel": false,
-                "locale": "af",
-                "maxVariable": "punct",
-                "normalization": false,
-                "numericOrdering": false,
-                "strength": 3
-              },
-              "collection": "accounts",
-              "db": "sample_airbnb",
-              "keys": [
-                {
-                  "property_type": "1"
-                }
-              ],
-              "options": {
-                "name": "PartialIndexTest",
-                "partialFilterExpression": {
-                  "limit": {
-                    "$gt": 900
-                  }
-                }
-              }
-            }
-         EOF
+         {
+           "collation": {
+             "alternate": "non-ignorable",
+             "backwards": false,
+             "caseFirst": "lower",
+             "caseLevel": false,
+             "locale": "af",
+             "maxVariable": "punct",
+             "normalization": false,
+             "numericOrdering": false,
+             "strength": 3
+           },
+           "collection": "accounts",
+           "db": "sample_airbnb",
+           "keys": [
+             {
+               "property_type": "1"
+             }
+           ],
+           "options": {
+             "name": "PartialIndexTest",
+             "partialFilterExpression": {
+               "limit": {
+                 "$gt": 900
+               }
+             }
+           }
+         }
+      .. Code end marker, please don't delete this comment
+
+      After creating `payload.json`, run the command below in the same directory.
+
+      .. code-block::
+
          atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 
    .. tab:: Example
       :tabid: 2023-01-01_partial_index
+
       Partial Index
+
+      Create the file below and save it as `payload.json`
 
       .. code-block::
 
-         cat <<EOF > payload.json
-            {
-              "collation": {
-                "alternate": "non-ignorable",
-                "backwards": false,
-                "caseFirst": "lower",
-                "caseLevel": false,
-                "locale": "af",
-                "maxVariable": "punct",
-                "normalization": false,
-                "numericOrdering": false,
-                "strength": 3
-              },
-              "collection": "accounts",
-              "db": "sample_airbnb",
-              "keys": [
-                {
-                  "property_type": "1"
-                }
-              ],
-              "options": {
-                "name": "PartialIndexTest",
-                "partialFilterExpression": {
-                  "limit": {
-                    "$gt": 900
-                  }
-                }
-              }
-            }
-         EOF
+         {
+           "collation": {
+             "alternate": "non-ignorable",
+             "backwards": false,
+             "caseFirst": "lower",
+             "caseLevel": false,
+             "locale": "af",
+             "maxVariable": "punct",
+             "normalization": false,
+             "numericOrdering": false,
+             "strength": 3
+           },
+           "collection": "accounts",
+           "db": "sample_airbnb",
+           "keys": [
+             {
+               "property_type": "1"
+             }
+           ],
+           "options": {
+             "name": "PartialIndexTest",
+             "partialFilterExpression": {
+               "limit": {
+                 "$gt": 900
+               }
+             }
+           }
+         }
+      .. Code end marker, please don't delete this comment
+
+      After creating `payload.json`, run the command below in the same directory.
+
+      .. code-block::
+
          atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment
 
    .. tab:: Example
       :tabid: 2023-01-01_sparse_index
+
       Sparse Index
+
+      Create the file below and save it as `payload.json`
 
       .. code-block::
 
-         cat <<EOF > payload.json
-            {
-              "collation": {
-                "alternate": "non-ignorable",
-                "backwards": false,
-                "caseFirst": "lower",
-                "caseLevel": false,
-                "locale": "af",
-                "maxVariable": "punct",
-                "normalization": false,
-                "numericOrdering": false,
-                "strength": 3
-              },
-              "collection": "accounts",
-              "db": "sample_airbnb",
-              "keys": [
-                {
-                  "test_field": "1"
-                }
-              ],
-              "options": {
-                "name": "SparseIndexTest",
-                "sparse": true
-              }
-            }
-         EOF
+         {
+           "collation": {
+             "alternate": "non-ignorable",
+             "backwards": false,
+             "caseFirst": "lower",
+             "caseLevel": false,
+             "locale": "af",
+             "maxVariable": "punct",
+             "normalization": false,
+             "numericOrdering": false,
+             "strength": 3
+           },
+           "collection": "accounts",
+           "db": "sample_airbnb",
+           "keys": [
+             {
+               "test_field": "1"
+             }
+           ],
+           "options": {
+             "name": "SparseIndexTest",
+             "sparse": true
+           }
+         }
+      .. Code end marker, please don't delete this comment
+
+      After creating `payload.json`, run the command below in the same directory.
+
+      .. code-block::
+
          atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
       .. Code end marker, please don't delete this comment

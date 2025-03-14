@@ -107,26 +107,29 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Add Entries to Project IP Access List
-      :tabid: 2023-01-01_project_ip_access_list_add
-      Adds multiple access list entries to the specified project
+   Adds multiple access list entries to the specified project
 
-      .. code-block::
+Create the file below and save it as `payload.json`
 
-         cat <<EOF > payload.json
-            [
-              {
-                "cidrBlock": "192.168.1.0/24",
-                "comment": "Internal network range"
-              },
-              {
-                "cidrBlock": "10.0.0.0/16",
-                "comment": "VPC network range"
-              }
-            ]
-         EOF
-         atlas api projectIpAccessList createProjectIpAccessList --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
+.. code-block::
 
-      .. Code end marker, please don't delete this comment
+   [
+     {
+       "cidrBlock": "192.168.1.0/24",
+       "comment": "Internal network range"
+     },
+     {
+       "cidrBlock": "10.0.0.0/16",
+       "comment": "VPC network range"
+     }
+   ]
+.. Code end marker, please don't delete this comment
+
+After creating `payload.json`, run the command below in the same directory.
+
+.. code-block::
+
+   atlas api projectIpAccessList createProjectIpAccessList --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
+
+.. Code end marker, please don't delete this comment
 

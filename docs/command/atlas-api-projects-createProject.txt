@@ -93,26 +93,29 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Create a basic project with environment tag
-      :tabid: 2023-01-01_create_project
-      Creates a new project named "MongoTube" with an environment tag set to "e2e"
+   Creates a new project named "MongoTube" with an environment tag set to "e2e"
 
-      .. code-block::
+Create the file below and save it as `payload.json`
 
-         cat <<EOF > payload.json
-            {
-              "name": "MongoTube",
-              "orgId": "67b715468c10250b968dcb84",
-              "tags": [
-                {
-                  "key": "environment",
-                  "value": "e2e"
-                }
-              ]
-            }
-         EOF
-         atlas api projects createProject --version 2023-01-01 --file payload.json --envelope false --pretty false
+.. code-block::
 
-      .. Code end marker, please don't delete this comment
+   {
+     "name": "MongoTube",
+     "orgId": "67b715468c10250b968dcb84",
+     "tags": [
+       {
+         "key": "environment",
+         "value": "e2e"
+       }
+     ]
+   }
+.. Code end marker, please don't delete this comment
+
+After creating `payload.json`, run the command below in the same directory.
+
+.. code-block::
+
+   atlas api projects createProject --version 2023-01-01 --file payload.json --envelope false --pretty false
+
+.. Code end marker, please don't delete this comment
 

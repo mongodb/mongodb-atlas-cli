@@ -129,7 +129,7 @@ After creating `payload.json`, run the command below in the same directory.
 
 .. code-block::
 
-   atlas api projectIpAccessList createProjectIpAccessList --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
+   atlas api projectIpAccessList createProjectIpAccessList --version 2023-01-01 --file payload.json --envelope false --groupId [your-project-id] --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
 
 .. Code end marker, please don't delete this comment
 

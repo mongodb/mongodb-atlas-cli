@@ -110,11 +110,13 @@ Inherited Options
 Examples
 -----------------
 
+   Returns all clusters in the specified project
+
 Run the command below.
 
 .. code-block::
 
-   atlas api clusters listClusters --version 2024-08-05 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
+   atlas api clusters listClusters --version 2024-08-05 --envelope false --groupId [your-project-id] --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
 
 .. Code end marker, please don't delete this comment
 

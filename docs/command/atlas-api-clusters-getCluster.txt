@@ -98,11 +98,13 @@ Inherited Options
 Examples
 -----------------
 
+   Returns the details for the specified cluster in the project
+
 Run the command below.
 
 .. code-block::
 
-   atlas api clusters getCluster --version 2024-08-05 --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+   atlas api clusters getCluster --version 2024-08-05 --clusterName [your-cluster-name] --envelope false --groupId [your-project-id] --pretty false
 
 .. Code end marker, please don't delete this comment
 

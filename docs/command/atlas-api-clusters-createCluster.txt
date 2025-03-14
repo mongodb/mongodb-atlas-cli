@@ -359,3 +359,43 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
+   .. tab:: Create a basic MongoDB Atlas cluster
+      :tabid: 2024-10-23_create_cluster
+
+      Creates a new M10 replica set cluster in AWS US East region running MongoDB 6.0
+
+      Create the file below and save it as `payload.json`
+
+      .. code-block::
+
+         {
+           "clusterType": "REPLICASET",
+           "name": "MyCluster",
+           "replicationSpecs": [
+             {
+               "regionConfigs": [
+                 {
+                   "electableSpecs": {
+                     "diskSizeGB": 10,
+                     "instanceSize": "M10",
+                     "nodeCount": 3
+                   },
+                   "priority": 7,
+                   "providerName": "AWS",
+                   "regionName": "US_EAST_1"
+                 }
+               ]
+             }
+           ]
+         }
+
+      .. Code end marker, please don't delete this comment
+
+      After creating `payload.json`, run the command below in the same directory.
+
+      .. code-block::
+
+         atlas api clusters createCluster --version 2024-10-23 --file payload.json --envelope false --groupId [your-project-id] --pretty false
+
+      .. Code end marker, please don't delete this comment
+

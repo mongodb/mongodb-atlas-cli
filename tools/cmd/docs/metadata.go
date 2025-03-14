@@ -5764,12 +5764,12 @@ var metadata = metadatatypes.Metadata{
 				Description: `Returns a compressed (.gz) MongoDB log file containing log messages for the specified host`,
 
 				Flags: map[string]string{
-					`endDate`:   `1.6095456e+09`,
+					`endDate`:   `1609545600`,
 					`envelope`:  `false`,
 					`groupId`:   `[your-project-id]`,
 					`hostName`:  `[your-host-name]`,
 					`logName`:   `mongodb`,
-					`startDate`: `1.6094592e+09`,
+					`startDate`: `1609459200`,
 				},
 			},
 			},

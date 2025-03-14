@@ -48,9 +48,9 @@ actions:
     update:
       examples:
         get_host_logs:
-          value: 1609459200
+          value: "1609459200"
   - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{hostName}/logs/{logName}.gz'].get.parameters[?(@['name'] == 'endDate')]
     update:
       examples:
         get_host_logs:
-          value: 1609545600
+          value: "1609545600"

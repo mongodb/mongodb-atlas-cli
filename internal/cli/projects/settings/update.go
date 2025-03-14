@@ -31,17 +31,21 @@ const updateTemplate = "Project settings updated.\n"
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store                                     store.ProjectSettingsUpdater
-	enableCollectDatabaseSpecificsStatistics  bool
-	disableCollectDatabaseSpecificsStatistics bool
-	enableDataExplorer                        bool
-	disableDataExplorer                       bool
-	enablePerformanceAdvisor                  bool
-	disablePerformanceAdvisor                 bool
-	enableSchemaAdvisor                       bool
-	disableSchemaAdvisor                      bool
-	enableRealtimePerformancePanel            bool
-	disableRealtimePerformancePanel           bool
+	store                                         store.ProjectSettingsUpdater
+	enableCollectDatabaseSpecificsStatistics      bool
+	disableCollectDatabaseSpecificsStatistics     bool
+	enableDataExplorer                            bool
+	disableDataExplorer                           bool
+	enableDataExplorerGenAIFeatures               bool
+	disableDataExplorerGenAIFeatures              bool
+	enableDataExplorerGenAISampleDocumentPassing  bool
+	disableDataExplorerGenAISampleDocumentPassing bool
+	enablePerformanceAdvisor                      bool
+	disablePerformanceAdvisor                     bool
+	enableSchemaAdvisor                           bool
+	disableSchemaAdvisor                          bool
+	enableRealtimePerformancePanel                bool
+	disableRealtimePerformancePanel               bool
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -63,11 +67,13 @@ func (opts *UpdateOpts) Run() error {
 
 func (opts *UpdateOpts) newProjectSettings() *atlasv2.GroupSettings {
 	return &atlasv2.GroupSettings{
-		IsCollectDatabaseSpecificsStatisticsEnabled: cli.ReturnValueForSetting(opts.enableCollectDatabaseSpecificsStatistics, opts.disableCollectDatabaseSpecificsStatistics),
-		IsDataExplorerEnabled:                       cli.ReturnValueForSetting(opts.enableDataExplorer, opts.disableDataExplorer),
-		IsPerformanceAdvisorEnabled:                 cli.ReturnValueForSetting(opts.enablePerformanceAdvisor, opts.disablePerformanceAdvisor),
-		IsRealtimePerformancePanelEnabled:           cli.ReturnValueForSetting(opts.enableRealtimePerformancePanel, opts.disableRealtimePerformancePanel),
-		IsSchemaAdvisorEnabled:                      cli.ReturnValueForSetting(opts.enableSchemaAdvisor, opts.disableSchemaAdvisor),
+		IsCollectDatabaseSpecificsStatisticsEnabled:     cli.ReturnValueForSetting(opts.enableCollectDatabaseSpecificsStatistics, opts.disableCollectDatabaseSpecificsStatistics),
+		IsDataExplorerEnabled:                           cli.ReturnValueForSetting(opts.enableDataExplorer, opts.disableDataExplorer),
+		IsDataExplorerGenAIFeaturesEnabled:              cli.ReturnValueForSetting(opts.enableDataExplorerGenAIFeatures, opts.disableDataExplorerGenAIFeatures),
+		IsDataExplorerGenAISampleDocumentPassingEnabled: cli.ReturnValueForSetting(opts.enableDataExplorerGenAISampleDocumentPassing, opts.disableDataExplorerGenAISampleDocumentPassing),
+		IsPerformanceAdvisorEnabled:                     cli.ReturnValueForSetting(opts.enablePerformanceAdvisor, opts.disablePerformanceAdvisor),
+		IsRealtimePerformancePanelEnabled:               cli.ReturnValueForSetting(opts.enableRealtimePerformancePanel, opts.disableRealtimePerformancePanel),
+		IsSchemaAdvisorEnabled:                          cli.ReturnValueForSetting(opts.enableSchemaAdvisor, opts.disableSchemaAdvisor),
 	}
 }
 
@@ -106,6 +112,14 @@ func UpdateBuilder() *cobra.Command {
 	cmd.Flags().BoolVarP(&opts.enableDataExplorer, flag.EnableDataExplorer, "", false, usage.EnableDataExplorer)
 	cmd.Flags().BoolVarP(&opts.disableDataExplorer, flag.DisableDataExplorer, "", false, usage.DisableDataExplorer)
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableDataExplorer, flag.DisableDataExplorer)
+
+	cmd.Flags().BoolVarP(&opts.enableDataExplorerGenAIFeatures, flag.EnableDataExplorerGenAIFeatures, "", false, usage.EnableDataExplorerGenAIFeatures)
+	cmd.Flags().BoolVarP(&opts.disableDataExplorerGenAIFeatures, flag.DisableDataExplorerGenAIFeatures, "", false, usage.DisableDataExplorerGenAIFeatures)
+	cmd.MarkFlagsMutuallyExclusive(flag.EnableDataExplorerGenAIFeatures, flag.DisableDataExplorerGenAIFeatures)
+
+	cmd.Flags().BoolVarP(&opts.enableDataExplorerGenAISampleDocumentPassing, flag.EnableDataExplorerGenAISampleDocumentPassing, "", false, usage.EnableDataExplorerGenAISampleDocumentPassing)
+	cmd.Flags().BoolVarP(&opts.disableDataExplorerGenAISampleDocumentPassing, flag.DisableDataExplorerGenAISampleDocumentPassing, "", false, usage.DisableDataExplorerGenAISampleDocumentPassing)
+	cmd.MarkFlagsMutuallyExclusive(flag.EnableDataExplorerGenAISampleDocumentPassing, flag.DisableDataExplorerGenAISampleDocumentPassing)
 
 	cmd.Flags().BoolVarP(&opts.enablePerformanceAdvisor, flag.EnablePerformanceAdvisor, "", false, usage.EnablePerformanceAdvisor)
 	cmd.Flags().BoolVarP(&opts.disablePerformanceAdvisor, flag.DisablePerformanceAdvisor, "", false, usage.DisablePerformanceAdvisor)

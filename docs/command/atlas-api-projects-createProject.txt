@@ -90,3 +90,32 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+   Creates a new project named "MongoTube" with an environment tag set to "e2e"
+
+Create the file below and save it as `payload.json`
+
+.. code-block::
+
+   {
+     "name": "MongoTube",
+     "orgId": "67b715468c10250b968dcb84",
+     "tags": [
+       {
+         "key": "environment",
+         "value": "e2e"
+       }
+     ]
+   }
+.. Code end marker, please don't delete this comment
+
+After creating `payload.json`, run the command below in the same directory.
+
+.. code-block::
+
+   atlas api projects createProject --version 2023-01-01 --file payload.json --envelope false --pretty false
+
+.. Code end marker, please don't delete this comment
+

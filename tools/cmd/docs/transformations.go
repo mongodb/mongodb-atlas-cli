@@ -15,12 +15,16 @@
 package main
 
 import (
+	"cmp"
 	_ "embed"
 	"regexp"
+	"slices"
+	"strconv"
 	"strings"
 
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
@@ -105,7 +109,152 @@ func replaceFlagUsage(cmd *cobra.Command, f *pflag.Flag) {
 	f.Usage = paramMetadata.Usage
 }
 
-func applyTransformations(cmd *cobra.Command) {
+func sortedKeys[K cmp.Ordered, V any](m map[K]V) []K {
+	keys := make([]K, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+	slices.Sort(keys)
+	return keys
+}
+
+func countExamples(examples map[string][]metadatatypes.Example) int {
+	count := 0
+	for _, exs := range examples {
+		count += len(exs)
+	}
+	return count
+}
+
+func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Example) string { //nolint:gocyclo // code used by CI
+	if len(examples) == 0 {
+		return ""
+	}
+
+	var sb strings.Builder
+	sb.WriteString(`Examples
+-----------------
+
+`)
+
+	tabs := true
+	if countExamples(examples) == 1 {
+		tabs = false
+	}
+
+	if tabs {
+		sb.WriteString(`.. tabs::
+`)
+	}
+
+	exampleIdx := 0
+	for _, version := range sortedKeys(examples) {
+		for _, ex := range examples[version] {
+			if tabs {
+				sb.WriteString("   .. tab:: ")
+				if ex.Name == "" {
+					sb.WriteString("Example")
+					if exampleIdx > 0 {
+						sb.WriteString(" ")
+						sb.WriteString(strconv.Itoa(exampleIdx))
+					}
+					exampleIdx++
+				} else {
+					sb.WriteString(ex.Name)
+				}
+				sb.WriteString("\n      :tabid: ")
+				sb.WriteString(version)
+				sb.WriteString("_")
+				if ex.Source == "-" {
+					sb.WriteString("default")
+				} else {
+					sb.WriteString(strings.ToLower(strings.ReplaceAll(ex.Source, " ", "_")))
+				}
+				sb.WriteString("\n\n")
+			}
+
+			if ex.Description != "" {
+				if tabs {
+					sb.WriteString("   ")
+				}
+				sb.WriteString("   " + ex.Description + "\n\n")
+			}
+			if ex.Value != "" {
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString("Create the file below and save it as `payload.json`\n\n")
+
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString(".. code-block::\n\n")
+				lines := strings.Split(ex.Value, "\n")
+				for _, line := range lines {
+					if tabs {
+						sb.WriteString("      ")
+					}
+
+					sb.WriteString("   " + line + "\n")
+				}
+				if tabs {
+					sb.WriteString("\n      ")
+				}
+				sb.WriteString(".. Code end marker, please don't delete this comment\n\n")
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString("After creating `payload.json`, run the command below in the same directory.\n\n")
+			} else {
+				if tabs {
+					sb.WriteString("      ")
+				}
+				sb.WriteString("Run the command below.\n\n")
+			}
+
+			if tabs {
+				sb.WriteString("      ")
+			}
+			sb.WriteString(".. code-block::\n\n")
+			if tabs {
+				sb.WriteString("      ")
+			}
+			sb.WriteString("   " + cmd.CommandPath())
+			sb.WriteString(" --version " + version)
+			if ex.Value != "" {
+				sb.WriteString(" --file payload.json")
+			}
+			for _, flagName := range sortedKeys(ex.Flags) {
+				sb.WriteString(" --" + flagName + " " + ex.Flags[flagName])
+			}
+			sb.WriteString("\n\n")
+			if tabs {
+				sb.WriteString("      ")
+			}
+			sb.WriteString(".. Code end marker, please don't delete this comment\n\n")
+		}
+	}
+
+	return sb.String()
+}
+
+func updateExamples(cmd *cobra.Command) error {
+	operationID := cmd.Annotations["operationId"]
+	if operationID == "" {
+		return nil
+	}
+
+	cmdMetadata, ok := metadata[operationID]
+	if !ok || cmdMetadata.Examples == nil {
+		return nil
+	}
+
+	cmd.Example = buildExamples(cmd, cmdMetadata.Examples)
+
+	return nil
+}
+
+func applyTransformations(cmd *cobra.Command) error {
 	setDisableAutoGenTag(cmd)
 	removePluginCommands(cmd)
 	addAdditionalLongText(cmd)
@@ -113,6 +262,9 @@ func applyTransformations(cmd *cobra.Command) {
 	if isAPICommand(cmd) {
 		markExperimenalToAPICommands(cmd)
 		updateAPICommandDescription(cmd)
+		if err := updateExamples(cmd); err != nil {
+			return err
+		}
 	}
 
 	cmd.Flags().VisitAll(func(f *pflag.Flag) {
@@ -120,6 +272,10 @@ func applyTransformations(cmd *cobra.Command) {
 	})
 
 	for _, subCmd := range cmd.Commands() {
-		applyTransformations(subCmd)
+		if err := applyTransformations(subCmd); err != nil {
+			return err
+		}
 	}
+
+	return nil
 }

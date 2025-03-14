@@ -98,3 +98,14 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+Run the command below.
+
+.. code-block::
+
+   atlas api organizations listOrganizationUsers --version 2043-01-01 --envelope false --includeCount true --itemsPerPage 100 --orgId 4888442a3354817a7320eb61 --pageNum 1 --pretty false
+
+.. Code end marker, please don't delete this comment
+

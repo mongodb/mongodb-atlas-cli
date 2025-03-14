@@ -104,3 +104,32 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+   Adds multiple access list entries to the specified project
+
+Create the file below and save it as `payload.json`
+
+.. code-block::
+
+   [
+     {
+       "cidrBlock": "192.168.1.0/24",
+       "comment": "Internal network range"
+     },
+     {
+       "cidrBlock": "10.0.0.0/16",
+       "comment": "VPC network range"
+     }
+   ]
+.. Code end marker, please don't delete this comment
+
+After creating `payload.json`, run the command below in the same directory.
+
+.. code-block::
+
+   atlas api projectIpAccessList createProjectIpAccessList --version 2023-01-01 --file payload.json --envelope false --groupId [your-project-id] --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
+
+.. Code end marker, please don't delete this comment
+

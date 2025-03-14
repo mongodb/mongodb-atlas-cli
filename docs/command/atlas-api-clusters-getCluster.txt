@@ -95,3 +95,16 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+   Returns the details for the specified cluster in the project
+
+Run the command below.
+
+.. code-block::
+
+   atlas api clusters getCluster --version 2024-08-05 --clusterName [your-cluster-name] --envelope false --groupId [your-project-id] --pretty false
+
+.. Code end marker, please don't delete this comment
+

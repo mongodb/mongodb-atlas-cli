@@ -104,3 +104,40 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+   Updates the cluster to increase disk size to 20GB and increase node count to 5
+
+Create the file below and save it as `payload.json`
+
+.. code-block::
+
+   {
+     "replicationSpecs": [
+       {
+         "regionConfigs": [
+           {
+             "electableSpecs": {
+               "diskSizeGB": 20,
+               "instanceSize": "M10",
+               "nodeCount": 5
+             },
+             "priority": 7,
+             "providerName": "AWS",
+             "regionName": "US_EAST_1"
+           }
+         ]
+       }
+     ]
+   }
+.. Code end marker, please don't delete this comment
+
+After creating `payload.json`, run the command below in the same directory.
+
+.. code-block::
+
+   atlas api clusters updateCluster --version 2024-10-23 --file payload.json --clusterName [your-cluster-name] --envelope false --groupId [your-project-id] --pretty false
+
+.. Code end marker, please don't delete this comment
+

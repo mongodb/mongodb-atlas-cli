@@ -100,3 +100,16 @@ Inherited Options
      - false
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
+Examples
+-----------------
+
+   Returns a compressed (.gz) MongoDB log file containing log messages for the specified host
+
+Run the command below.
+
+.. code-block::
+
+   atlas api monitoringAndLogs getHostLogs --version 2023-02-01 --endDate 1609545600 --envelope false --groupId [your-project-id] --hostName [your-host-name] --logName mongodb --startDate 1609459200
+
+.. Code end marker, please don't delete this comment
+

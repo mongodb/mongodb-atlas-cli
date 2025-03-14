@@ -5759,13 +5759,17 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
-				Source: `-`,
+				Source:      `get_host_logs`,
+				Name:        `Download MongoDB logs for a specific cluster host`,
+				Description: `Returns a compressed (.gz) MongoDB log file containing log messages for the specified host`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`hostName`: `[hostName]`,
-					`logName`:  `[logName]`,
+					`endDate`:   `1.6095456e+09`,
+					`envelope`:  `false`,
+					`groupId`:   `[your-project-id]`,
+					`hostName`:  `[your-host-name]`,
+					`logName`:   `mongodb`,
+					`startDate`: `1.6094592e+09`,
 				},
 			},
 			},
@@ -8335,11 +8339,13 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-01-01`: {{
-				Source: `-`,
+				Source:      `list_atlas_processes`,
+				Name:        `List all processes for a project`,
+				Description: `Returns details of all processes for the specified project`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`groupId`:      `[your-project-id]`,
 					`includeCount`: `true`,
 					`itemsPerPage`: `100`,
 					`pageNum`:      `1`,

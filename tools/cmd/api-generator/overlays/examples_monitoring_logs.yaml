@@ -1,0 +1,56 @@
+overlay: 1.0.0
+info:
+  title: MongoDB Atlas Monitoring and Logs Operations Examples
+  version: 1.0.0
+actions:
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/processes'].get
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-01-01+json:
+            examples:
+              list_atlas_processes:
+                summary: List all processes for a project
+                value:
+                description: Returns details of all processes for the specified project
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/processes'].get.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        list_atlas_processes:
+          value: "[your-project-id]"
+
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{hostName}/logs/{logName}.gz'].get
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-02-01+gzip:
+            examples:
+              get_host_logs:
+                summary: Download MongoDB logs for a specific cluster host
+                value:
+                description: Returns a compressed (.gz) MongoDB log file containing log messages for the specified host
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{hostName}/logs/{logName}.gz'].get.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        get_host_logs:
+          value: "[your-project-id]"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{hostName}/logs/{logName}.gz'].get.parameters[?(@['name'] == 'hostName')]
+    update:
+      examples:
+        get_host_logs:
+          value: "[your-host-name]"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{hostName}/logs/{logName}.gz'].get.parameters[?(@['name'] == 'logName')]
+    update:
+      examples:
+        get_host_logs:
+          value: "mongodb"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{hostName}/logs/{logName}.gz'].get.parameters[?(@['name'] == 'startDate')]
+    update:
+      examples:
+        get_host_logs:
+          value: 1609459200
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{hostName}/logs/{logName}.gz'].get.parameters[?(@['name'] == 'endDate')]
+    update:
+      examples:
+        get_host_logs:
+          value: 1609545600

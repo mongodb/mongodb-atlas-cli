@@ -60,7 +60,7 @@ jobs:
         if: env.review_needed == 'true' && steps.append_comment.outputs.previous_comment_id == ''
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DOCS }}
-          SLACK_WEBHOOK_TYPE: incoming_webhook
+          SLACK_WEBHOOK_TYPE: incoming-webhook
         with:
           payload: |
             {

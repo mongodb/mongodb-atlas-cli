@@ -105,11 +105,20 @@ addcopy: ## Add missing license to files
 .PHONY: generate
 generate: gen-docs gen-mocks gen-api-commands ## Generate docs, mocks, code, api commands, all auto generated assets
 
+.PHONY: apply-overlay
+apply-overlay: ## Apply overlay on openapi spec
+	@echo "==> Applying overlay"
+	go run ./tools/cmd/apply-overlay --spec ./tools/cmd/apply-overlay/spec.yaml --overlay ./tools/cmd/apply-overlay/overlays/\*.yaml > ./tools/cmd/apply-overlay/spec-overlay.yaml
+
 .PHONY: gen-api-commands
-gen-api-commands: ## Generate api commands
+gen-api-commands: apply-overlay ## Generate api commands
 	@echo "==> Generating api commands"
-	go run ./tools/cmd/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays --output-type commands > ./internal/api/commands.go
-	go run ./tools/cmd/api-generator --spec ./tools/cmd/api-generator/spec.yaml --overlay ./tools/cmd/api-generator/overlays --output-type metadata > ./tools/cmd/docs/metadata.go
+	go run ./tools/cmd/api-generator --spec ./tools/cmd/apply-overlay/spec-overlay.yaml --output-type commands > ./internal/api/commands.go
+
+.PHONY: gen-docs-metadata
+gen-docs-metadata: apply-overlay ## Generate docs metadata
+	@echo "==> Generating docs metadata"
+	go run ./tools/cmd/api-generator --spec ./tools/cmd/apply-overlay/spec-overlay.yaml --output-type metadata > ./tools/cmd/docs/metadata.go
 
 .PHONY: otel
 otel: ## Generate code
@@ -122,7 +131,7 @@ gen-mocks: ## Generate mocks
 	go generate ./internal...
 
 .PHONY: gen-docs
-gen-docs: ## Generate docs for atlascli commands
+gen-docs: gen-docs-metadata ## Generate docs for atlascli commands
 	@echo "==> Generating docs"
 	go run -ldflags "$(LINKER_FLAGS)" ./tools/cmd/docs
 

@@ -178,6 +178,7 @@ jobs:
           go-version-file: 'go.mod'
       - name: Generate docs
         run: make gen-docs > /dev/null
+      - run: git diff
       - name: Check for uncommitted files
         run: |
           export FILES=

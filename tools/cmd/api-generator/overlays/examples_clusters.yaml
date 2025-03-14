@@ -1,0 +1,113 @@
+overlay: 1.0.0
+info:
+  title: MongoDB Atlas Cluster Operations Examples
+  version: 1.0.0
+actions:
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].get
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2024-08-05+json:
+            examples:
+              list_clusters:
+                summary: List all clusters in a project
+                value:
+                description: Returns all clusters in the specified project
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].get.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        list_clusters:
+          value: "[your-project-id]"
+
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].post.requestBody.content['application/vnd.atlas.2024-10-23+json']
+    update:
+      examples:
+        create_cluster:
+          summary: Create a basic MongoDB Atlas cluster
+          value:
+            name: "MyCluster"
+            clusterType: "REPLICASET"
+            replicationSpecs:
+              - regionConfigs:
+                  - electableSpecs:
+                      diskSizeGB: 10
+                      instanceSize: "M10"
+                      nodeCount: 3
+                    priority: 7
+                    providerName: "AWS"
+                    regionName: "US_EAST_1"
+          description: Creates a new M10 replica set cluster in AWS US East region running MongoDB 6.0
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters'].post.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        create_cluster:
+          value: "[your-project-id]"
+
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].get
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2024-08-05+json:
+            examples:
+              get_cluster:
+                summary: Get details of a specific cluster
+                value:
+                description: Returns the details for the specified cluster in the project
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].get.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        get_cluster:
+          value: "[your-project-id]"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].get.parameters[?(@['name'] == 'clusterName')]
+    update:
+      examples:
+        get_cluster:
+          value: "[your-cluster-name]"
+
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].patch.requestBody.content['application/vnd.atlas.2024-10-23+json']
+    update:
+      examples:
+        update_cluster:
+          summary: Update a cluster's configuration
+          value:
+            replicationSpecs:
+              - regionConfigs:
+                  - electableSpecs:
+                      diskSizeGB: 20
+                      instanceSize: "M10"
+                      nodeCount: 5
+                    priority: 7
+                    providerName: "AWS"
+                    regionName: "US_EAST_1"
+          description: Updates the cluster to increase disk size to 20GB and increase node count to 5
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].patch.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        update_cluster:
+          value: "[your-project-id]"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].patch.parameters[?(@['name'] == 'clusterName')]
+    update:
+      examples:
+        update_cluster:
+          value: "[your-cluster-name]"
+
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].delete
+    update:
+      requestBody:
+        content:
+          application/vnd.atlas.2023-02-01+json:
+            examples:
+              delete_cluster:
+                summary: Delete a cluster
+                value:
+                description: Deletes the specified cluster from the project
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].delete.parameters[?(@['$ref'] == '#/components/parameters/groupId')]
+    update:
+      x-xgen-examples:
+        delete_cluster:
+          value: "[your-project-id]"
+  - target: $.paths['/api/atlas/v2/groups/{groupId}/clusters/{clusterName}'].delete.parameters[?(@['name'] == 'clusterName')]
+    update:
+      examples:
+        delete_cluster:
+          value: "[your-cluster-name]"

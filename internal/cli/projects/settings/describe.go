@@ -38,8 +38,8 @@ func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-var describeTemplate = `COLLECT DATABASE SPECIFICS STATISTICS ENABLED	DATA EXPLORER ENABLED	PERFORMANCE ADVISOR ENABLED	REALTIME PERFORMANCE PANEL ENABLED	SCHEMA ADVISOR ENABLED
-{{.IsCollectDatabaseSpecificsStatisticsEnabled}}	{{.IsDataExplorerEnabled}}	{{.IsPerformanceAdvisorEnabled}}	{{.IsRealtimePerformancePanelEnabled}}	{{.IsSchemaAdvisorEnabled}}
+var describeTemplate = `COLLECT DATABASE SPECIFICS STATISTICS ENABLED	DATA EXPLORER ENABLED	DATA EXPLORER GEN AI FEATURES ENABLED	DATA EXPLORER GEN AI SAMPLE DOCUMENT PASSING ENABLED	PERFORMANCE ADVISOR ENABLED	REALTIME PERFORMANCE PANEL ENABLED	SCHEMA ADVISOR ENABLED
+{{.IsCollectDatabaseSpecificsStatisticsEnabled}}	{{.IsDataExplorerEnabled}}	{{.IsDataExplorerGenAIFeaturesEnabled}}	{{.IsDataExplorerGenAISampleDocumentPassingEnabled}}	{{.IsPerformanceAdvisorEnabled}}	{{.IsRealtimePerformancePanelEnabled}}	{{.IsSchemaAdvisorEnabled}}
 `
 
 func (opts *DescribeOpts) Run() error {

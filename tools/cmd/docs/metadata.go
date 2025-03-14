@@ -690,6 +690,35 @@ var metadata = metadatatypes.Metadata{
 					`groupId`:  `32b6e34b3d91647abb20e7b8`,
 					`pretty`:   `false`,
 				},
+			}, {
+				Source:      `create_cluster`,
+				Name:        `Create a basic MongoDB Atlas cluster`,
+				Description: `Creates a new M10 replica set cluster in AWS US East region running MongoDB 6.0`,
+				Value: `{
+  "clusterType": "REPLICASET",
+  "name": "MyCluster",
+  "replicationSpecs": [
+    {
+      "regionConfigs": [
+        {
+          "electableSpecs": {
+            "diskSizeGB": 10,
+            "instanceSize": "M10",
+            "nodeCount": 3
+          },
+          "priority": 7,
+          "providerName": "AWS",
+          "regionName": "US_EAST_1"
+        }
+      ]
+    }
+  ]
+}`,
+				Flags: map[string]string{
+					`envelope`: `false`,
+					`groupId`:  `[your-project-id]`,
+					`pretty`:   `false`,
+				},
 			},
 			},
 		},
@@ -1470,7 +1499,7 @@ var metadata = metadatatypes.Metadata{
 ]`,
 				Flags: map[string]string{
 					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`groupId`:      `[your-project-id]`,
 					`includeCount`: `true`,
 					`itemsPerPage`: `100`,
 					`pageNum`:      `1`,
@@ -2406,12 +2435,14 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2023-02-01`: {{
-				Source: `-`,
+				Source:      `delete_cluster`,
+				Name:        `Delete a cluster`,
+				Description: `Deletes the specified cluster from the project`,
 
 				Flags: map[string]string{
-					`clusterName`: `[clusterName]`,
+					`clusterName`: `[your-cluster-name]`,
 					`envelope`:    `false`,
-					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`groupId`:     `[your-project-id]`,
 					`pretty`:      `false`,
 				},
 			},
@@ -3216,9 +3247,9 @@ var metadata = metadatatypes.Metadata{
 				Description: `Removes one access list entry from the specified project's IP access list`,
 
 				Flags: map[string]string{
-					`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
+					`entryValue`: `10.0.0.0/16`,
 					`envelope`:   `false`,
-					`groupId`:    `32b6e34b3d91647abb20e7b8`,
+					`groupId`:    `[your-project-id]`,
 					`pretty`:     `false`,
 				},
 			},
@@ -4819,12 +4850,14 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
-				Source: `-`,
+				Source:      `get_cluster`,
+				Name:        `Get details of a specific cluster`,
+				Description: `Returns the details for the specified cluster in the project`,
 
 				Flags: map[string]string{
-					`clusterName`: `[clusterName]`,
+					`clusterName`: `[your-cluster-name]`,
 					`envelope`:    `false`,
-					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`groupId`:     `[your-project-id]`,
 					`pretty`:      `false`,
 				},
 			},
@@ -6860,9 +6893,9 @@ var metadata = metadatatypes.Metadata{
 				Description: `Returns the status of 10.0.0.0/16`,
 
 				Flags: map[string]string{
-					`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
+					`entryValue`: `10.0.0.0/16`,
 					`envelope`:   `false`,
-					`groupId`:    `32b6e34b3d91647abb20e7b8`,
+					`groupId`:    `[your-project-id]`,
 					`pretty`:     `false`,
 				},
 			},
@@ -6893,9 +6926,9 @@ var metadata = metadatatypes.Metadata{
 				Description: `Returns one access list entry from the specified project's IP access list: 10.0.0.0/16`,
 
 				Flags: map[string]string{
-					`entryValue`: `IPv4: 192.0.2.0%2F24 or IPv6: 2001:db8:85a3:8d3:1319:8a2e:370:7348 or IPv4 CIDR: 198.51.100.0%2f24 or IPv6 CIDR: 2001:db8::%2f58 or AWS SG: sg-903004f8`,
+					`entryValue`: `10.0.0.0/16`,
 					`envelope`:   `false`,
-					`groupId`:    `32b6e34b3d91647abb20e7b8`,
+					`groupId`:    `[your-project-id]`,
 					`pretty`:     `false`,
 				},
 			},
@@ -8652,11 +8685,13 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: map[string][]metadatatypes.Example{
 			`2024-08-05`: {{
-				Source: `-`,
+				Source:      `list_clusters`,
+				Name:        `List all clusters in a project`,
+				Description: `Returns all clusters in the specified project`,
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`groupId`:      `[your-project-id]`,
 					`includeCount`: `true`,
 					`itemsPerPage`: `100`,
 					`pageNum`:      `1`,
@@ -10348,7 +10383,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`groupId`:      `[your-project-id]`,
 					`includeCount`: `true`,
 					`itemsPerPage`: `100`,
 					`pageNum`:      `1`,
@@ -12689,7 +12724,38 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 		},
-		Examples: nil,
+		Examples: map[string][]metadatatypes.Example{
+			`2024-10-23`: {{
+				Source:      `update_cluster`,
+				Name:        `Update a cluster's configuration`,
+				Description: `Updates the cluster to increase disk size to 20GB and increase node count to 5`,
+				Value: `{
+  "replicationSpecs": [
+    {
+      "regionConfigs": [
+        {
+          "electableSpecs": {
+            "diskSizeGB": 20,
+            "instanceSize": "M10",
+            "nodeCount": 5
+          },
+          "priority": 7,
+          "providerName": "AWS",
+          "regionName": "US_EAST_1"
+        }
+      ]
+    }
+  ]
+}`,
+				Flags: map[string]string{
+					`clusterName`: `[your-cluster-name]`,
+					`envelope`:    `false`,
+					`groupId`:     `[your-project-id]`,
+					`pretty`:      `false`,
+				},
+			},
+			},
+		},
 	},
 	`updateClusterAdvancedConfiguration`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{

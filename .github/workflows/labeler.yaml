@@ -58,10 +58,9 @@ jobs:
           message: "APIx Bot :bowtie:: a message has been sent to Docs Slack channel :rocket:."
       - uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d
         if: env.review_needed == 'true' && steps.append_comment.outputs.previous_comment_id == ''
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DOCS }}
-          SLACK_WEBHOOK_TYPE: incoming-webhook
         with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL_DOCS }}
+          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [

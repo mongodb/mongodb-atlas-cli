@@ -1,4 +1,4 @@
-// Copyright 2024 MongoDB Inc
+// Copyright 2025 MongoDB Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,59 +16,45 @@ package main
 
 import (
 	"bytes"
-	"context"
-	"fmt"
-	"io"
 	"os"
 	"path/filepath"
+	"slices"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
 )
 
-func testSpec(t *testing.T, name, specPath string) {
-	t.Helper()
-
+func TestRun(t *testing.T) {
 	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".snapshot"))
 
-	outputFunctions := map[OutputType]func(ctx context.Context, r io.Reader, w io.Writer) error{
-		Commands: convertSpecToAPICommands,
-		Metadata: convertSpecToMetadata,
-	}
-
-	for outputType, outputTypeFunc := range outputFunctions {
-		specFile, err := os.OpenFile(specPath, os.O_RDONLY, os.ModePerm)
-		if err != nil {
-			t.Fatalf("failed to load '%s', error: %s", specPath, err)
-		}
-		t.Cleanup(func() {
-			specFile.Close()
-		})
-
-		buf := &bytes.Buffer{}
-		if err := outputTypeFunc(context.Background(), specFile, buf); err != nil {
-			t.Fatalf("failed to convert spec into %s, error: %s", outputType, err)
-		}
-
-		if err := snapshotter.SnapshotWithName(fmt.Sprintf("%s-%s", name, outputType), buf.String()); err != nil {
-			t.Fatalf("unexpected result %s", err)
-		}
-	}
-}
-
-// To update snapshots run: UPDATE_SNAPSHOTS=true go test ./...
-func TestSnapshots(t *testing.T) {
 	const FixtureDirectory = "./fixtures/"
 	files, err := os.ReadDir(FixtureDirectory)
 	if err != nil {
 		t.Fatalf("failed to load fixtures: %s", err)
 	}
 
+	overlayFiles, err := filepath.Glob(FixtureDirectory + "*.overlay-*.yaml")
+	if err != nil {
+		t.Fatalf("failed to find overlays: %s", err)
+	}
+
 	for _, file := range files {
 		fileName := file.Name()
 		fullPath := filepath.Join(FixtureDirectory, fileName)
+
+		if slices.Contains(overlayFiles, fullPath) {
+			continue
+		}
+
 		t.Run(fileName, func(t *testing.T) {
-			testSpec(t, fileName, fullPath)
+			buf := &bytes.Buffer{}
+			if err := run(fullPath, fullPath+".overlay-*.yaml", buf); err != nil {
+				t.Fatalf("failed to run: %s", err)
+			}
+
+			if err := snapshotter.SnapshotWithName(fileName, buf.String()); err != nil {
+				t.Fatalf("unexpected result %s", err)
+			}
 		})
 	}
 }

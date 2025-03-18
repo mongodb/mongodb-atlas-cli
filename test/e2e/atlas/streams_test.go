@@ -49,22 +49,7 @@ func TestStreams(t *testing.T) {
 	req.NoError(err)
 
 	t.Run("List all streams in the e2e project", func(t *testing.T) {
-		cmd := exec.Command(cliPath,
-			"streams",
-			"instance",
-			"list",
-			"-o=json",
-			"--projectId",
-			g.projectID,
-		)
-
-		cmd.Env = os.Environ()
-		resp, err := e2e.RunAndGetStdOut(cmd)
-		req.NoError(err, string(resp))
-
-		var instances atlasv2.PaginatedApiStreamsTenant
-		req.NoError(json.Unmarshal(resp, &instances))
-
+		instances := e2e.ListStreamsInstances(t, cliPath, g.projectID)
 		// These instances don't have a default instance, since the projects are instantiated automatically
 		assert.Empty(t, instances.Results, "A new project should have no instances")
 	})

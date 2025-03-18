@@ -720,6 +720,71 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	require.True(t, done, "failed to clean all private endpoints")
 }
 
+func deleteAllStreams(t *testing.T, cliPath, projectID string) {
+	t.Helper()
+
+	streams := listStreamsByProject(t, cliPath, projectID)
+	if streams.TotalCount != nil && *streams.TotalCount == 0 {
+		return
+	}
+
+	for _, stream := range *streams.Results {
+		deleteStream(t, cliPath, projectID, *stream.Name)
+	}
+
+	done := false
+	for attempt := 0; attempt < 10; attempt++ {
+		streams = listStreamsByProject(t, cliPath, projectID)
+		if streams.TotalCount != nil && *streams.TotalCount == 0 {
+			t.Logf("all streams successfully deleted")
+			done = true
+			break
+		}
+		time.Sleep(sleep)
+	}
+
+	require.True(t, done, "failed to clean all streams")
+}
+
+func listStreamsByProject(t *testing.T, cliPath, projectID string) *atlasv2.PaginatedApiStreamsTenant {
+	t.Helper()
+	cmd := exec.Command(cliPath,
+		streamsEntity,
+		"instance",
+		"list",
+		"--projectId",
+		projectID,
+		"-o=json",
+	)
+
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	t.Log(string(resp))
+	require.NoError(t, err, string(resp))
+	var streams *atlasv2.PaginatedApiStreamsTenant
+	require.NoError(t, json.Unmarshal(resp, &streams))
+
+	return streams
+}
+
+func deleteStream(t *testing.T, cliPath, projectID, streamID string) {
+	t.Helper()
+
+	cmd := exec.Command(cliPath,
+		streamsEntity,
+		"instance",
+		"delete",
+		"--force",
+		streamID,
+		"--projectId",
+		projectID,
+		"--force",
+	)
+	cmd.Env = os.Environ()
+	resp, err := e2e.RunAndGetStdOut(cmd)
+	require.NoError(t, err, string(resp))
+}
+
 func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider string) []atlasv2.EndpointService {
 	t.Helper()
 	cmd := exec.Command(cliPath,

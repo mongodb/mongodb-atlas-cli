@@ -96,6 +96,10 @@ func TestCleanup(t *testing.T) {
 					t.Parallel()
 					deleteAllPrivateEndpoints(t, cliPath, projectID, p)
 				})
+				t.Run("delete all streams for "+p, func(t *testing.T) {
+					t.Parallel()
+					deleteAllStreams(t, cliPath, projectID, p)
+				})
 			}
 			t.Run("delete all clusters", func(t *testing.T) {
 				t.Parallel()

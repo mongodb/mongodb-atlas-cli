@@ -78,7 +78,7 @@ Options
    * - --version
      - string
      - false
-     - api version to use when calling the api call [options: "2043-01-01"], defaults to the latest version or the profiles api_version config value if set This value defaults to "2043-01-01".
+     - api version to use when calling the api call [options: "2025-02-19"], defaults to the latest version or the profiles api_version config value if set This value defaults to "2025-02-19".
 
 Inherited Options
 -----------------
@@ -103,7 +103,7 @@ Run the command below.
 
 .. code-block::
 
-   atlas api mongoDbCloudUsers getOrganizationUser --version 2043-01-01 --envelope false --orgId 4888442a3354817a7320eb61 --pretty false --userId [userId]
+   atlas api mongoDbCloudUsers getOrganizationUser --version 2025-02-19 --envelope false --orgId 4888442a3354817a7320eb61 --pretty false --userId [userId]
 
 .. Code end marker, please don't delete this comment
 

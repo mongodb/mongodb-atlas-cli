@@ -3,7 +3,7 @@ module github.com/mongodb/mongodb-atlas-cli/atlascli
 go 1.23.6
 
 require (
-	cloud.google.com/go/kms v1.21.0
+	cloud.google.com/go/kms v1.21.1
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.17.0
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.8.2
@@ -63,12 +63,12 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.118.2 // indirect
+	cloud.google.com/go v0.118.3 // indirect
 	cloud.google.com/go/auth v0.15.0 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.7 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
-	cloud.google.com/go/iam v1.4.0 // indirect
-	cloud.google.com/go/longrunning v0.6.4 // indirect
+	cloud.google.com/go/iam v1.4.1 // indirect
+	cloud.google.com/go/longrunning v0.6.5 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.10.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/internal v1.1.1 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.3.3 // indirect
@@ -168,8 +168,8 @@ require (
 	golang.org/x/term v0.30.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
-	google.golang.org/genproto v0.0.0-20250122153221-138b5a5a4fd4 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20250219182151-9fdb1cabc7b2 // indirect
+	google.golang.org/genproto v0.0.0-20250303144028-a0af3efb3deb // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20250303144028-a0af3efb3deb // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250303144028-a0af3efb3deb // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )

@@ -728,7 +728,7 @@ func deleteAllStreams(t *testing.T, cliPath, projectID string) {
 		return
 	}
 
-	for _, stream := range *streams.Results {
+	for _, stream := range streams.GetResults() {
 		deleteStream(t, cliPath, projectID, *stream.Name)
 	}
 

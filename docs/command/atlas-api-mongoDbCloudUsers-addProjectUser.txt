@@ -84,7 +84,7 @@ Options
    * - --version
      - string
      - false
-     - api version to use when calling the api call [options: "2043-01-01"], defaults to the latest version or the profiles api_version config value if set This value defaults to "2043-01-01".
+     - api version to use when calling the api call [options: "2025-02-19"], defaults to the latest version or the profiles api_version config value if set This value defaults to "2025-02-19".
 
 Inherited Options
 -----------------

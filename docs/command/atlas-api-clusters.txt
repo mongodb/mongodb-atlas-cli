@@ -51,6 +51,7 @@ Inherited Options
 Related Commands
 ----------------
 
+* :ref:`atlas-api-clusters-autoScalingConfiguration` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the internal configuration of AutoScaling for sharded clusters.
 * :ref:`atlas-api-clusters-createCluster` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one cluster in the specified project.
 * :ref:`atlas-api-clusters-deleteCluster` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Removes one cluster from the specified project.
 * :ref:`atlas-api-clusters-getCluster` - `experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the details for one cluster in the specified project.
@@ -74,6 +75,7 @@ Related Commands
 .. toctree::
    :titlesonly:
 
+   autoScalingConfiguration </command/atlas-api-clusters-autoScalingConfiguration>
    createCluster </command/atlas-api-clusters-createCluster>
    deleteCluster </command/atlas-api-clusters-deleteCluster>
    getCluster </command/atlas-api-clusters-getCluster>

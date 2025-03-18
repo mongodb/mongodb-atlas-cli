@@ -230,6 +230,37 @@ var metadata = metadatatypes.Metadata{
 		},
 		Examples: nil,
 	},
+	`autoScalingConfiguration`: {
+		Parameters: map[string]metadatatypes.ParameterMetadata{
+			`clusterName`: {
+				Usage: `Human-readable label that identifies this cluster.`,
+			},
+			`envelope`: {
+				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+			},
+			`groupId`: {
+				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+**NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+			},
+			`pretty`: {
+				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+			},
+		},
+		Examples: map[string][]metadatatypes.Example{
+			`2024-08-05`: {{
+				Source: `-`,
+
+				Flags: map[string]string{
+					`clusterName`: `[clusterName]`,
+					`envelope`:    `false`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
+					`pretty`:      `false`,
+				},
+			},
+			},
+		},
+	},
 	`cancelBackupRestoreJob`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`clusterName`: {
@@ -4388,38 +4419,6 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`getApiVersions`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`env`: {
-				Usage: `The environment to get the versions from. If not provided, it returnsthe versions for the given MongoDB URL. (E.g. prod for cloud.mongodb.com)`,
-			},
-			`envelope`: {
-				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-			},
-			`itemsPerPage`: {
-				Usage: `Number of items that the response returns per page.`,
-			},
-			`pageNum`: {
-				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
-			},
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
-			},
-		},
-		Examples: map[string][]metadatatypes.Example{
-			`2024-08-05`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`:     `false`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-				},
-			},
-			},
-		},
-	},
 	`getAtlasProcess`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -4523,7 +4522,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2024-05-30`: {{
+			`2025-03-12`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -6314,23 +6313,6 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 	},
-	`getOpenApiInfo`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
-			},
-		},
-		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`pretty`: `false`,
-				},
-			},
-			},
-		},
-	},
 	`getOrganization`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`envelope`: {
@@ -6454,7 +6436,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
+			`2025-02-19`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -7108,7 +7090,7 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
+			`2025-02-19`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -9416,16 +9398,15 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:           `false`,
-					`fromDate`:           `2023-01-01`,
-					`includeCount`:       `true`,
-					`itemsPerPage`:       `100`,
-					`orderBy`:            `desc`,
-					`orgId`:              `4888442a3354817a7320eb61`,
-					`pageNum`:            `1`,
-					`pretty`:             `false`,
-					`toDate`:             `2023-01-01`,
-					`viewLinkedInvoices`: `true`,
+					`envelope`:     `false`,
+					`fromDate`:     `2023-01-01`,
+					`includeCount`: `true`,
+					`itemsPerPage`: `100`,
+					`orderBy`:      `desc`,
+					`orgId`:        `4888442a3354817a7320eb61`,
+					`pageNum`:      `1`,
+					`pretty`:       `false`,
+					`toDate`:       `2023-01-01`,
 				},
 			},
 			},
@@ -9806,24 +9787,31 @@ var metadata = metadatatypes.Metadata{
 			`orgId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
+			`orgMembershipStatus`: {
+				Usage: `Organization membership status to filter users by. If you exclude this parameter, this resource returns both pending and active users. Not supported in deprecated versions.`,
+			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
+			`username`: {
+				Usage: `Email address to filter users by. Not supported in deprecated versions.`,
+			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
+			`2025-02-19`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`envelope`:            `false`,
+					`includeCount`:        `true`,
+					`itemsPerPage`:        `100`,
+					`orgId`:               `4888442a3354817a7320eb61`,
+					`orgMembershipStatus`: `ACTIVE`,
+					`pageNum`:             `1`,
+					`pretty`:              `false`,
 				},
 			},
 			},
@@ -10048,14 +10036,13 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`createdBefore`: `2022-01-01T00:00:00Z`,
-					`envelope`:      `false`,
-					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`includeCount`:  `true`,
-					`itemsPerPage`:  `100`,
-					`pageNum`:       `1`,
-					`pipelineName`:  `[pipelineName]`,
-					`pretty`:        `false`,
+					`envelope`:     `false`,
+					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`includeCount`: `true`,
+					`itemsPerPage`: `100`,
+					`pageNum`:      `1`,
+					`pipelineName`: `[pipelineName]`,
+					`pretty`:       `false`,
 				},
 			},
 			},
@@ -10126,14 +10113,13 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`completedAfter`: `2022-01-01T00:00:00Z`,
-					`envelope`:       `false`,
-					`groupId`:        `32b6e34b3d91647abb20e7b8`,
-					`includeCount`:   `true`,
-					`itemsPerPage`:   `100`,
-					`pageNum`:        `1`,
-					`pipelineName`:   `[pipelineName]`,
-					`pretty`:         `false`,
+					`envelope`:     `false`,
+					`groupId`:      `32b6e34b3d91647abb20e7b8`,
+					`includeCount`: `true`,
+					`itemsPerPage`: `100`,
+					`pageNum`:      `1`,
+					`pipelineName`: `[pipelineName]`,
+					`pretty`:       `false`,
 				},
 			},
 			},
@@ -10565,24 +10551,31 @@ var metadata = metadatatypes.Metadata{
 			`itemsPerPage`: {
 				Usage: `Number of items that the response returns per page.`,
 			},
+			`orgMembershipStatus`: {
+				Usage: `Flag that indicates whether to filter the returned list by users organization membership status. If you exclude this parameter, this resource returns both pending and active users. Not supported in deprecated versions.`,
+			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
+			`username`: {
+				Usage: `Email address to filter users by. Not supported in deprecated versions.`,
+			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
+			`2025-02-19`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`envelope`:            `false`,
+					`groupId`:             `32b6e34b3d91647abb20e7b8`,
+					`includeCount`:        `true`,
+					`itemsPerPage`:        `100`,
+					`orgMembershipStatus`: `ACTIVE`,
+					`pageNum`:             `1`,
+					`pretty`:              `false`,
 				},
 			},
 			},
@@ -11379,6 +11372,9 @@ var metadata = metadatatypes.Metadata{
 			`orgId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
+			`orgMembershipStatus`: {
+				Usage: `Organization membership status to filter users by. If you exclude this parameter, this resource returns both pending and active users. Not supported in deprecated versions.`,
+			},
 			`pageNum`: {
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
@@ -11388,18 +11384,22 @@ var metadata = metadatatypes.Metadata{
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the team whose application users you want to return.`,
 			},
+			`username`: {
+				Usage: `Email address to filter users by. Not supported in deprecated versions.`,
+			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
+			`2025-02-19`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-					`teamId`:       `[teamId]`,
+					`envelope`:            `false`,
+					`itemsPerPage`:        `100`,
+					`orgId`:               `4888442a3354817a7320eb61`,
+					`orgMembershipStatus`: `ACTIVE`,
+					`pageNum`:             `1`,
+					`pretty`:              `false`,
+					`teamId`:              `[teamId]`,
 				},
 			},
 			},
@@ -11689,11 +11689,11 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the user to be deleted.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the [Return All MongoDB Cloud Users in One Organization](#tag/MongoDB-Cloud-Users/operation/listOrganizationUsers) resource and filter by username.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
+			`2025-02-19`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -11797,11 +11797,11 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
 			},
 			`userId`: {
-				Usage: `Unique 24-hexadecimal string that identifies MongoDB Cloud user you want to remove from the specified project. To return a application user's ID using their application username, use the Get All application users in One Project endpoint.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the [Return All MongoDB Cloud Users in One Project](#tag/MongoDB-Cloud-Users/operation/listProjectUsers) resource and filter by username.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
-			`2043-01-01`: {{
+			`2025-02-19`: {{
 				Source: `-`,
 
 				Flags: map[string]string{
@@ -13604,25 +13604,5 @@ var metadata = metadatatypes.Metadata{
 			},
 		},
 		Examples: nil,
-	},
-	`versionedExample`: {
-		Parameters: map[string]metadatatypes.ParameterMetadata{
-			`additionalInfo`: {
-				Usage: `Show more info.`,
-			},
-			`envelope`: {
-				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
-			},
-		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-02-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`: `false`,
-				},
-			},
-			},
-		},
 	},
 }

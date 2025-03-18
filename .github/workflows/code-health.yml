@@ -23,7 +23,7 @@ jobs:
           go-version-file: 'go.mod'
           cache: false # see https://github.com/golangci/golangci-lint-action/issues/807
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@2226d7cb06a077cd73e56eedd38eecad18e5d837
+        uses: golangci/golangci-lint-action@55c2c1448f86e01eaae002a5a3a9624417608d84
         with:
           version: v1.64.6
   unit-tests:
@@ -344,7 +344,7 @@ jobs:
         with:
           dockerfile: Dockerfile
       - name: Enable containerd image store
-        uses: docker/setup-docker-action@c2d73c1a11a9b44be6d855121d75c3e0dac814c1
+        uses: docker/setup-docker-action@b60f85385d03ac8acfca6d9996982511d8620a19
         with:
           version: v24.0.6
           daemon-config: |

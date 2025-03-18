@@ -724,7 +724,7 @@ func deleteAllStreams(t *testing.T, cliPath, projectID string) {
 	t.Helper()
 
 	streams := listStreamsByProject(t, cliPath, projectID)
-	if streams.TotalCount != nil && *streams.TotalCount == 0 {
+	if streams.GetTotalCount() == 0 {
 		return
 	}
 
@@ -735,7 +735,7 @@ func deleteAllStreams(t *testing.T, cliPath, projectID string) {
 	done := false
 	for attempt := 0; attempt < 10; attempt++ {
 		streams = listStreamsByProject(t, cliPath, projectID)
-		if streams.TotalCount != nil && *streams.TotalCount == 0 {
+		if streams.GetTotalCount() == 0 {
 			t.Logf("all streams successfully deleted")
 			done = true
 			break

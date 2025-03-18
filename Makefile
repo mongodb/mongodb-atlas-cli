@@ -108,17 +108,17 @@ generate: gen-docs gen-mocks gen-api-commands ## Generate docs, mocks, code, api
 .PHONY: apply-overlay
 apply-overlay: ## Apply overlay on openapi spec
 	@echo "==> Applying overlay"
-	go run ./tools/cmd/apply-overlay --spec ./tools/internal/specs/spec.yaml --overlay ./tools/internal/specs/overlays/\*.yaml > ./tools/internal/specs/spec-overlay.yaml
+	go run ./tools/cmd/apply-overlay --spec ./tools/internal/specs/spec.yaml --overlay ./tools/internal/specs/overlays/\*.yaml > ./tools/internal/specs/spec-with-overlays.yaml
 
 .PHONY: gen-api-commands
 gen-api-commands: apply-overlay ## Generate api commands
 	@echo "==> Generating api commands"
-	go run ./tools/cmd/api-generator --spec ./tools/internal/specs/spec-overlay.yaml --output-type commands > ./internal/api/commands.go
+	go run ./tools/cmd/api-generator --spec ./tools/internal/specs/spec-with-overlays.yaml --output-type commands > ./internal/api/commands.go
 
 .PHONY: gen-docs-metadata
 gen-docs-metadata: apply-overlay ## Generate docs metadata
 	@echo "==> Generating docs metadata"
-	go run ./tools/cmd/api-generator --spec ./tools/internal/specs/spec-overlay.yaml --output-type metadata > ./tools/cmd/docs/metadata.go
+	go run ./tools/cmd/api-generator --spec ./tools/internal/specs/spec-with-overlays.yaml --output-type metadata > ./tools/cmd/docs/metadata.go
 
 .PHONY: otel
 otel: ## Generate code

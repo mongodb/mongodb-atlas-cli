@@ -12,7 +12,7 @@ atlas api programmaticApiKeys listProjectApiKeys
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all organization API keys that you assigned to the specified project.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all organization API keys that you assigned to the specified project.
 
 Users with the Project Owner role in the project associated with the API key can use the organization API key to access the resources. To use this resource, the requesting API Key must have the Project Owner role.
 

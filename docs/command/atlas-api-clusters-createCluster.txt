@@ -12,7 +12,7 @@ atlas api clusters createCluster
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one cluster in the specified project.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one cluster in the specified project.
 
 Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
 

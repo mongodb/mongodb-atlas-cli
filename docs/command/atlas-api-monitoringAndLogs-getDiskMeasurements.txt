@@ -12,7 +12,7 @@ atlas api monitoringAndLogs getDiskMeasurements
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the measurements of one disk or partition for the specified host for the specified project.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the measurements of one disk or partition for the specified host for the specified project.
 
 Returned value can be one of the following:
 

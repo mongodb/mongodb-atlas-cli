@@ -12,7 +12,7 @@ atlas api mongoDbCloudUsers createUser
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one MongoDB Cloud user account.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one MongoDB Cloud user account.
 
 A MongoDB Cloud user account grants access to only the MongoDB Cloud application. To grant database access, create a database user. MongoDB Cloud sends an email to the users you specify, inviting them to join the project. Invited users don't have access to the project until they accept the invitation. Invitations expire after 30 days.
 

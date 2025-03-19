@@ -12,7 +12,7 @@ atlas api flexRestoreJobs createFlexBackupRestoreJob
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Restores one snapshot of one flex cluster from the specified project.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Restores one snapshot of one flex cluster from the specified project.
 
 To use this resource, the requesting API Key must have the Project Owner role.
 

@@ -12,7 +12,7 @@ atlas api flexSnapshots downloadFlexBackup
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Requests one snapshot for the specified flex cluster.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Requests one snapshot for the specified flex cluster.
 
 This resource returns a snapshotURL that you can use to download the snapshot. This snapshotURL remains active for four hours after you make the request. To use this resource, the requesting API Key must have the Project Owner role.
 

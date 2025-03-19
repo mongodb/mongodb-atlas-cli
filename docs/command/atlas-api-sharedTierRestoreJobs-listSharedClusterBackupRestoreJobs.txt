@@ -12,7 +12,7 @@ atlas api sharedTierRestoreJobs listSharedClusterBackupRestoreJobs
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all restore jobs for the specified M2 or M5 cluster.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all restore jobs for the specified M2 or M5 cluster.
 
 Restore jobs restore a cluster using a snapshot. To use this resource, the requesting API Key must have the Project Read Only role.
 

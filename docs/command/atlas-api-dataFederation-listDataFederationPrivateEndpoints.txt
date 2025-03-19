@@ -12,7 +12,7 @@ atlas api dataFederation listDataFederationPrivateEndpoints
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all private endpoints for Federated Database Instances and Online Archives in the specified project.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all private endpoints for Federated Database Instances and Online Archives in the specified project.
 
 To use this resource, the requesting API Key must have the Project Read Only or Project Charts Admin roles.
 

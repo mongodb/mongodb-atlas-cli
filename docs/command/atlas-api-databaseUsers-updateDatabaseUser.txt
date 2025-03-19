@@ -12,7 +12,7 @@ atlas api databaseUsers updateDatabaseUser
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Updates one database user that belongs to the specified project.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Updates one database user that belongs to the specified project.
 
 To use this resource, the requesting API Key must have the Project Owner role, Project Charts Admin role, Project Stream Processing Owner role, or the Project Database Access Admin role.
 

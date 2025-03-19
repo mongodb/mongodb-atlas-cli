@@ -12,7 +12,7 @@ atlas api organizations getOrganizationSettings
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns details about the specified organization's settings.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns details about the specified organization's settings.
 
 To use this resource, the requesting API Key must have the Organization Owner role.
 

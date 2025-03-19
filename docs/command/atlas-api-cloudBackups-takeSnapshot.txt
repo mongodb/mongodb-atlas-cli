@@ -12,7 +12,7 @@ atlas api cloudBackups takeSnapshot
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Takes one on-demand snapshot for the specified cluster.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Takes one on-demand snapshot for the specified cluster.
 
 Atlas takes on-demand snapshots immediately and scheduled snapshots at regular intervals. If an on-demand snapshot with a status of queued or inProgress exists, before taking another snapshot, wait until Atlas completes completes processing the previously taken on-demand snapshot.
 

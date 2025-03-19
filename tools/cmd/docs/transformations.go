@@ -53,7 +53,7 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 }
 
 func markExperimenalToAPICommands(cmd *cobra.Command) {
-	cmd.Short = "`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: " + cmd.Short
+	cmd.Short = "`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: " + cmd.Short
 }
 
 func updateAPICommandDescription(cmd *cobra.Command) {

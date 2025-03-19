@@ -12,7 +12,7 @@ atlas api invoices queryLineItemsFromSingleInvoice
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Query the lineItems of the specified invoice and return the result JSON.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Query the lineItems of the specified invoice and return the result JSON.
 
 A unique 24-hexadecimal digit string identifies the invoice.
 

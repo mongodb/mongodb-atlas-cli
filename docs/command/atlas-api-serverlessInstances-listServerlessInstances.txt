@@ -12,7 +12,7 @@ atlas api serverlessInstances listServerlessInstances
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns details for all serverless instances in the specified project.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns details for all serverless instances in the specified project.
 
 To use this resource, the requesting API Key must have the Project Read Only role.
 

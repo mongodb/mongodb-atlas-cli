@@ -12,7 +12,7 @@ atlas api ldapConfiguration getLdapConfiguration
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the current LDAP configuration for the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the current LDAP configuration for the specified project.
 
 To use this resource, the requesting API Key must have the Project Owner role.
 

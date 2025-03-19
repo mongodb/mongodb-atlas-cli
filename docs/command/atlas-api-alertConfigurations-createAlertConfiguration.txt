@@ -12,7 +12,7 @@ atlas api alertConfigurations createAlertConfiguration
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one alert configuration for the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one alert configuration for the specified project.
 
 Alert configurations define the triggers and notification methods for alerts. To use this resource, the requesting API Key must have the Organization Owner or Project Owner role.
 

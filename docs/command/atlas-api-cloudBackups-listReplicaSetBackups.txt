@@ -12,7 +12,7 @@ atlas api cloudBackups listReplicaSetBackups
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all snapshots of one cluster from the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all snapshots of one cluster from the specified project.
 
 To use this resource, the requesting API Key must have the Project Read Only role or Project Backup Manager role.
 

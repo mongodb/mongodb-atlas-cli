@@ -12,7 +12,7 @@ atlas api clusters listClustersForAllProjects
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the details for all clusters in all projects to which you have access.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details for all clusters in all projects to which you have access.
 
 Clusters contain a group of hosts that maintain the same data set. The response does not include multi-cloud clusters. To use this resource, the requesting API Key can have any cluster-level role.
 

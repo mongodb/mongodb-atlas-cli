@@ -12,7 +12,7 @@ atlas api mongoDbCloudUsers getOrganizationUser
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns information about the specified MongoDB Cloud user within the context of the specified organization.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns information about the specified MongoDB Cloud user within the context of the specified organization.
 
 To use this resource, the requesting API Key must have the Organization Member role.
 

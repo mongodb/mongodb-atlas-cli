@@ -12,7 +12,7 @@ atlas api privateEndpointServices getRegionalizedPrivateEndpointSetting
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Checks whether each region in the specified cloud service provider can create multiple private endpoints per region.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Checks whether each region in the specified cloud service provider can create multiple private endpoints per region.
 
 The cloud service provider manages the private endpoint for the project. To use this resource, the requesting API Key must have the Project Read Only role.
 

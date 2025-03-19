@@ -12,7 +12,7 @@ atlas api performanceAdvisor listSlowQueryNamespaces
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns up to 20 namespaces for collections experiencing slow queries on the specified host.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns up to 20 namespaces for collections experiencing slow queries on the specified host.
 
 If you specify a secondary member of a replica set that hasn't received any database read operations, the endpoint doesn't return any namespaces. To use this resource, the requesting API Key must have the Project Read Only role.
 

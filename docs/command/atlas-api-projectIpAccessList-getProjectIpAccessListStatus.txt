@@ -12,7 +12,7 @@ atlas api projectIpAccessList getProjectIpAccessListStatus
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the status of one project IP access list entry.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the status of one project IP access list entry.
 
 This resource checks if the provided project IP access list entry applies to all cloud providers serving clusters from the specified project.
 

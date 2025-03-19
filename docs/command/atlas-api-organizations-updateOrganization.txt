@@ -12,7 +12,7 @@ atlas api organizations updateOrganization
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Updates one organization.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one organization.
 
 To use this resource, the requesting API Key must have the Organization Owner role.
 

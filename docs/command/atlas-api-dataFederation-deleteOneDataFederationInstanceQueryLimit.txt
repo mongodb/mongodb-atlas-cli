@@ -12,7 +12,7 @@ atlas api dataFederation deleteOneDataFederationInstanceQueryLimit
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Deletes one query limit for one federated database instance.
+`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Deletes one query limit for one federated database instance.
 
 To use this resource, the requesting API Key must have the Project Owner role.
 

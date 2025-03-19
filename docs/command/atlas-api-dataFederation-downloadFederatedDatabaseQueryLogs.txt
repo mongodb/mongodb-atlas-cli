@@ -12,7 +12,7 @@ atlas api dataFederation downloadFederatedDatabaseQueryLogs
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Downloads the query logs for the specified federated database instance.
+`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Downloads the query logs for the specified federated database instance.
 
 To use this resource, the requesting API Key must have the Project Owner or Project Data Access Read Write roles. The API does not support direct calls with the json response schema. You must request a gzip response schema using an accept header of the format: "Accept: application/vnd.atlas.YYYY-MM-DD+gzip".
 

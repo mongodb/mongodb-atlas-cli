@@ -12,7 +12,7 @@ atlas api federatedAuthentication deleteRoleMapping
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Removes one role mapping in the specified organization from the specified federation.
+`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Removes one role mapping in the specified organization from the specified federation.
 
 To use this resource, the requesting API Key must have the Organization Owner role.
 

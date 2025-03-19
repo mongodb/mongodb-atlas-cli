@@ -12,7 +12,7 @@ atlas api dataLakePipelines listPipelineSchedules
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns a list of backup schedule policy items that you can use as a Data Lake Pipeline source.
+`Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns a list of backup schedule policy items that you can use as a Data Lake Pipeline source.
 
 To use this resource, the requesting API Key must have the Project Read Only role.
 

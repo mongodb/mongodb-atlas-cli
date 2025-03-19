@@ -12,8 +12,7 @@ atlas api
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Public Preview: please provide feedback at feedback.mongodb.com.
-Access all features of the Atlas Administration API by using the Atlas CLI with the syntax: 'atlas api <tag> <operationId>'.
+`Public Preview: please provide feedback at feedback.mongodb.com, see more at <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Access all features of the Atlas Administration API by using the Atlas CLI with the syntax: 'atlas api <tag> <operationId>'.
 
 This feature in public preview streamlines script development by letting you interact directly with any Atlas Administration API endpoint by using the Atlas CLI.
 

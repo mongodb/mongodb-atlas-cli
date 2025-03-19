@@ -12,7 +12,7 @@ atlas api privateEndpointServices deletePrivateEndpointService
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Removes one private endpoint service from the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one private endpoint service from the specified project.
 
 This cloud service provider manages the private endpoint service that belongs to the project. To use this resource, the requesting API Key must have the Project Owner role.
 

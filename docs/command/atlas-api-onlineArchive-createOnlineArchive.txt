@@ -12,7 +12,7 @@ atlas api onlineArchive createOnlineArchive
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one online archive.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one online archive.
 
 This archive stores data from one cluster within one project. To use this resource, the requesting API Key must have the Project Data Access Admin role.
 

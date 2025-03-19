@@ -12,7 +12,7 @@ atlas api serverlessPrivateEndpoints createServerlessPrivateEndpoint
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates one private endpoint for one serverless instance.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one private endpoint for one serverless instance.
 
 To use this resource, the requesting API Key must have the Project Owner role.
 

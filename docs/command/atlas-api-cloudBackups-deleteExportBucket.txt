@@ -12,7 +12,7 @@ atlas api cloudBackups deleteExportBucket
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Deletes an Export Bucket.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Deletes an Export Bucket.
 
 Auto export must be disabled on all clusters in this Project exporting to this Export Bucket before revoking access. To use this resource, the requesting API Key must have the Project Backup Manager role.
 

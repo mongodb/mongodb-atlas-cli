@@ -12,7 +12,7 @@ atlas api alertConfigurations listAlertConfigurationMatchersFieldNames
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Get all field names that the matchers.fieldName parameter accepts when you create or update an Alert Configuration.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Get all field names that the matchers.fieldName parameter accepts when you create or update an Alert Configuration.
 
 You can successfully call this endpoint with any assigned role.
 

@@ -21,5 +21,5 @@ const (
 
 {{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}`
 
-	ExperimentalHelpTemplate = "experimental: " + HelpTemplate
+	ExperimentalHelpTemplate = "Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli.\n\n" + HelpTemplate
 )

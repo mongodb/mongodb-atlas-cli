@@ -12,7 +12,7 @@ atlas api federatedAuthentication getConnectedOrgConfig
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the specified connected org config from the specified federation.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the specified connected org config from the specified federation.
 
 To use this resource, the requesting API Key must have the Organization Owner role in the connected org.
 

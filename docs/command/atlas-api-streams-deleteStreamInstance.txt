@@ -12,7 +12,7 @@ atlas api streams deleteStreamInstance
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Delete one stream instance in the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Delete one stream instance in the specified project.
 
 To use this resource, the requesting API Key must have the Project Data Access Admin role, Project Owner role or Project Stream Processing Owner role.
 

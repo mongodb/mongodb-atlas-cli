@@ -12,7 +12,7 @@ atlas api invoices createCostExplorerQueryProcess
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates a query process within the Cost Explorer for the given parameters.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates a query process within the Cost Explorer for the given parameters.
 
 A token is returned that can be used to poll the status of the query and eventually retrieve the results.
 

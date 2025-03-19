@@ -12,7 +12,7 @@ atlas api clusters getClusterStatus
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the status of all changes that you made to the specified cluster in the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the status of all changes that you made to the specified cluster in the specified project.
 
 Use this resource to check the progress MongoDB Cloud has made in processing your changes. The response does not include the deployment of new dedicated clusters. To use this resource, the requesting API Key must have the Project Read Only role.
 

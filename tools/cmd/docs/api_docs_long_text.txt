@@ -1,4 +1,4 @@
-This experimental feature streamlines script development by letting you interact 
+This feature in public preview streamlines script development by letting you interact 
 directly with any Atlas Administration API endpoint by using the Atlas CLI.
 
 Syntax

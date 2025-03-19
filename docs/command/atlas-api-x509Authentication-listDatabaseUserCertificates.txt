@@ -12,7 +12,7 @@ atlas api x509Authentication listDatabaseUserCertificates
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all unexpired X.509 certificates for the specified MongoDB user.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all unexpired X.509 certificates for the specified MongoDB user.
 
 This MongoDB user belongs to one project. Atlas manages these certificates and the MongoDB user. To use this resource, the requesting API Key must have the Project Read Only role.
 

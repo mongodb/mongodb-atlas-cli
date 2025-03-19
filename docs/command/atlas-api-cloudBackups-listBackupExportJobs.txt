@@ -12,7 +12,7 @@ atlas api cloudBackups listBackupExportJobs
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns all Cloud Backup Snapshot Export Jobs associated with the specified Atlas cluster.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all Cloud Backup Snapshot Export Jobs associated with the specified Atlas cluster.
 
 To use this resource, the requesting API Key must have the Project Atlas Admin role.
 

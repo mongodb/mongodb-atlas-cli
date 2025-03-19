@@ -12,7 +12,7 @@ atlas api clusters unpinFeatureCompatibilityVersion
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Unpins the current fixed Feature Compatibility Version (FCV).
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Unpins the current fixed Feature Compatibility Version (FCV).
 
 This feature is not available for clusters on rapid release.
 

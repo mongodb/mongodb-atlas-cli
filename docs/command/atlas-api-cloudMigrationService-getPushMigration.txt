@@ -12,7 +12,7 @@ atlas api cloudMigrationService getPushMigration
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Return details of one cluster migration job.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Return details of one cluster migration job.
 
 Each push live migration job uses one migration host. Your API Key must have the Organization Member role to successfully call this resource.
 

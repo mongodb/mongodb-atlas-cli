@@ -12,7 +12,7 @@ atlas api atlasSearch deleteAtlasSearchIndexByName
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Removes one Atlas Search index that you identified with its database, collection, and name.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one Atlas Search index that you identified with its database, collection, and name.
 
 To use this resource, the requesting API key must have the Project Data Access Admin role. This deletion is eventually consistent.
 

@@ -12,7 +12,7 @@ atlas api teams getTeamById
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns one team that you identified using its unique 24-hexadecimal digit ID.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one team that you identified using its unique 24-hexadecimal digit ID.
 
 This team belongs to one organization. Teams enable you to grant project access roles to MongoDB Cloud users. To use this resource, the requesting API Key must have the Organization Member role.
 

@@ -8,7 +8,7 @@ labels:
     type: "pull_request"
     draft: False
     files:
-      - "docs/command/*.txt"
+      - "docs\\/command\\/.*\\.txt"
   - label: "mongocli"
     type: "pull_request"
     draft: False

@@ -12,7 +12,7 @@ atlas api dataFederation createOneDataFederationQueryLimit
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Creates or updates one query limit for one federated database instance.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates or updates one query limit for one federated database instance.
 
 To use this resource, the requesting API Key must have the Project Owner role.
 

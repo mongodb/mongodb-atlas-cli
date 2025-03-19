@@ -12,7 +12,7 @@ atlas api privateEndpointServices getPrivateEndpointService
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the name, interfaces, and state of the specified private endpoint service from one project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the name, interfaces, and state of the specified private endpoint service from one project.
 
 The cloud service provider hosted this private endpoint service that belongs to the project. To use this resource, the requesting API Key must have the Project Read Only role.
 

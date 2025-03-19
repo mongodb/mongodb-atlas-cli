@@ -12,7 +12,7 @@ atlas api monitoringAndLogs getIndexMetrics
    :depth: 1
    :class: singlecol
 
-`experimental <https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api/>`_: Returns the Atlas Search metrics data series within the provided time range for one namespace and index name on the specified process.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the Atlas Search metrics data series within the provided time range for one namespace and index name on the specified process.
 
 You must have the Project Read Only or higher role to view the Atlas Search metric types.
 

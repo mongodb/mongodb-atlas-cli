@@ -149,6 +149,11 @@ functions:
           UPDATE_SNAPSHOTS: "true"
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        command: git diff
     - command: archive.targz_pack
       params:
         target: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
@@ -174,7 +179,7 @@ functions:
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}
-        display_name: internal-bucket
+        display_name: internal-bucket coverage.tgz
     - command: s3.put
       params:
         aws_key: ${aws_key}
@@ -184,7 +189,7 @@ functions:
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}
-        display_name: internal-bucket
+        display_name: internal-bucket snapshots.tgz
   "merge cov":
     - command: subprocess.exec
       params:

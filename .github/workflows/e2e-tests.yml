@@ -6,11 +6,61 @@ on:
       - master
   pull_request:
 jobs:
-  config:
+  tests:
     env:
       TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-      UNIT_TAGS: unit
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tags:
+          - atlas,autogeneration
+          - atlas,backup,compliancepolicy
+          - atlas,backup,flex
+          - atlas,backup,exports,buckets
+          - atlas,backup,exports,jobs
+          - atlas,backup,restores
+          - atlas,backup,schedule
+          - atlas,backup,snapshot
+          - atlas,cleanup
+          - atlas,clusters,file
+          - atlas,clusters,flags
+          - atlas,clusters,flex
+          - atlas,clusters,m0
+          - atlas,clusters,sharded
+          - atlas,clusters,upgrade
+          - atlas,datafederation,db
+          - atlas,datafederation,privatenetwork
+          - atlas,datafederation,querylimits
+          - atlas,decrypt
+          - atlas,deployments,atlasclusters
+          - atlas,deployments,local,auth,deprecated
+          - atlas,deployments,local,auth,new
+          - atlas,deployments,local,nocli
+          - atlas,deployments,local,noauth
+          - atlas,generic
+          - atlas,interactive
+          - atlas,ldap
+          - atlas,livemigrations
+          - atlas,logs
+          - atlas,metrics
+          - atlas,networking
+          - atlas,onlinearchive
+          - atlas,performanceAdvisor
+          - atlas,plugin,install
+          - atlas,plugin,run
+          - atlas,plugin,uninstall
+          - atlas,plugin,update
+          - atlas,processes
+          - atlas,search
+          - atlas,search_nodes
+          - atlas,serverless,instance
+          - atlas,streams
+          - atlas,streams_with_cluster
+          - brew
+          - config
+          - iam
+          - iam,atlas
+          - kubernetes
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
@@ -24,7 +74,8 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run: go install gotest.tools/gotestsum@latest
-      - run: |
+      - if: matrix.tags == 'config'
+        run: |
           set -Eeou pipefail
           mkdir "$XDG_CONFIG_HOME/atlascli"
           cat <<EOF > "$XDG_CONFIG_HOME/atlascli/config.toml"
@@ -35,33 +86,20 @@ jobs:
           EOF
       - run: make e2e-test
         env:
-          E2E_TAGS: config
-      - name: Test Summary
-        id: test_summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
+          E2E_TAGS: ${{ matrix.tags }}
+          MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
+          MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
+          MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
+          MONGODB_ATLAS_PRIVATE_API_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}
+          MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
+          MONGODB_ATLAS_SERVICE: cloud
+          DO_NOT_TRACK: 1
+          UPDATE_SNAPSHOTS: true
+      - name: upload snaphots
+        uses: actions/upload-artifact@v4.6.2
         with:
-          paths: e2e-tests.xml
-  brew:
-    env:
-      TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
-      UNIT_TAGS: unit
-    runs-on: ubuntu-latest
-    steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
-        with:
-          config: ${{ vars.PERMISSIONS_CONFIG }}
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Install Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: 'go.mod'
-      - run: go install gotest.tools/gotestsum@latest
-      - run: make e2e-test
-        env:
-          E2E_TAGS: brew
+          name: snapshots
+          path: test/e2e/snapshots/
       - name: Test Summary
         id: test_summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86

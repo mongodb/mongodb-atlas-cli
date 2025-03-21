@@ -28,6 +28,7 @@ import (
 )
 
 func TestAtlasOrgAPIKeys(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

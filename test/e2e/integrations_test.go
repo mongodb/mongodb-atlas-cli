@@ -28,6 +28,7 @@ import (
 )
 
 func TestIntegrations(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("integrations")
 

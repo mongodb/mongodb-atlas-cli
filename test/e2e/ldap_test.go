@@ -35,6 +35,7 @@ const (
 )
 
 func TestLDAPWithFlags(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("ldap")
 
@@ -150,6 +151,7 @@ func TestLDAPWithFlags(t *testing.T) {
 }
 
 func TestLDAPWithStdin(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("ldap")
 

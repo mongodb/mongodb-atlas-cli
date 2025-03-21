@@ -41,6 +41,7 @@ const (
 )
 
 func TestDBUserWithFlags(t *testing.T) {
+	setup(t)
 	username, err := RandUsername()
 	require.NoError(t, err)
 
@@ -141,6 +142,7 @@ func TestDBUserWithFlags(t *testing.T) {
 }
 
 func TestDBUsersWithStdin(t *testing.T) {
+	setup(t)
 	username, err := RandUsername()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

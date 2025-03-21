@@ -29,6 +29,7 @@ import (
 )
 
 func TestStreamsWithClusters(t *testing.T) {
+	setup(t)
 	if IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}

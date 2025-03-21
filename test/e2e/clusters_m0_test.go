@@ -28,6 +28,7 @@ import (
 )
 
 func TestClustersM0Flags(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersM0")
 

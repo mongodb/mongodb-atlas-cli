@@ -30,6 +30,7 @@ import (
 )
 
 func TestAlertConfig(t *testing.T) {
+	setup(t)
 	var alertID string
 
 	cliPath, err := AtlasCLIBin()

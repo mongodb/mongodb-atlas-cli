@@ -29,6 +29,7 @@ import (
 )
 
 func TestSetup(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup")
 	cliPath, err := AtlasCLIBin()

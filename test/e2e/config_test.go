@@ -34,6 +34,7 @@ const (
 )
 
 func TestConfig(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	t.Run("config", func(t *testing.T) {

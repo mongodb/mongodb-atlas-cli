@@ -39,6 +39,7 @@ const (
 )
 
 func TestDBRoles(t *testing.T) {
+	setup(t)
 	n, err := RandInt(1000)
 	require.NoError(t, err)
 

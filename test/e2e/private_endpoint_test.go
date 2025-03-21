@@ -38,6 +38,7 @@ var regionsAWS = []string{
 }
 
 func TestPrivateEndpointsAWS(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsAWS")
 
@@ -158,6 +159,7 @@ var regionsAzure = []string{
 }
 
 func TestPrivateEndpointsAzure(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsAzure")
 
@@ -287,6 +289,7 @@ var regionsGCP = []string{
 }
 
 func TestPrivateEndpointsGCP(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsGPC")
 
@@ -399,6 +402,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 }
 
 func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("regionalizedPrivateEndpointsSettings")
 

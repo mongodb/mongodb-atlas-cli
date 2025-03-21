@@ -36,6 +36,7 @@ func getKeysToDelete() map[string]struct{} {
 }
 
 func TestCleanup(t *testing.T) {
+	setup(t)
 	req := require.New(t)
 	cliPath, err := AtlasCLIBin()
 	req.NoError(err)

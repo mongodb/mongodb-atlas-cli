@@ -1421,3 +1421,9 @@ func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }
+
+func setup(t *testing.T) {
+	t.Helper()
+
+	snapshotServer(t)
+}

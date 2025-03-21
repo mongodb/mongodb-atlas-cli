@@ -32,6 +32,7 @@ var filesAWS embed.FS
 const awsTestsInputDir = "decryption/aws"
 
 func TestDecryptWithAWS(t *testing.T) {
+	setup(t)
 	req := require.New(t)
 
 	cliPath, err := AtlasCLIBin()

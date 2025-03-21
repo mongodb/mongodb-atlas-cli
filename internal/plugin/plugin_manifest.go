@@ -37,7 +37,8 @@ type ManifestGithubValues struct {
 }
 
 type ManifestCommand struct {
-	Description string `yaml:"description,omitempty"`
+	Aliases     []string `yaml:"aliases,omitempty"`
+	Description string   `yaml:"description,omitempty"`
 }
 
 type Manifest struct {
@@ -258,9 +259,14 @@ func getUniqueManifests(manifests []*Manifest, existingCommandsSet set.Set[strin
 }
 
 func (m *Manifest) HasDuplicateCommand(existingCommandsSet set.Set[string]) bool {
-	for cmdName := range m.Commands {
+	for cmdName, cmd := range m.Commands {
 		if existingCommandsSet.Contains(cmdName) {
 			return true
+		}
+		for _, alias := range cmd.Aliases {
+			if existingCommandsSet.Contains(alias) {
+				return true
+			}
 		}
 	}
 	return false

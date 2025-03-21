@@ -115,6 +115,7 @@ func GetDefaultPluginDirectory() (string, error) {
 type Command struct {
 	Name        string
 	Description string
+	Aliases     []string
 }
 
 type Github struct {
@@ -182,7 +183,8 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 				sourceType:       PluginSourceType,
 				sourcePluginName: p.Name,
 			},
-			RunE: p.Run,
+			RunE:    p.Run,
+			Aliases: pluginCmd.Aliases,
 		}
 
 		// Disable the default cobra help function.
@@ -241,7 +243,7 @@ func createPluginFromManifest(manifest *Manifest) (*Plugin, error) {
 	}
 
 	for cmdName, value := range manifest.Commands {
-		plugin.Commands = append(plugin.Commands, &Command{Name: cmdName, Description: value.Description})
+		plugin.Commands = append(plugin.Commands, &Command{Name: cmdName, Description: value.Description, Aliases: value.Aliases})
 	}
 
 	return &plugin, nil

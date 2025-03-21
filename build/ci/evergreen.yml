@@ -165,7 +165,7 @@ functions:
     - command: archive.targz_pack
       params:
         target: src/github.com/mongodb/mongodb-atlas-cli/snapshots.tgz
-        source_dir: src/github.com/mongodb/mongodb-atlas-cli/test/e2e/snapshots
+        source_dir: src/github.com/mongodb/mongodb-atlas-cli/test/e2e/snapshots/**/*
         include:
           - '*'
         exclude_files:

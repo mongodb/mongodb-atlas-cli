@@ -26,6 +26,15 @@ import (
 	"go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
 
+// list of keys to delete as clean up.
+func getKeysToDelete() map[string]struct{} {
+	return map[string]struct{}{
+		"mongodb-atlas-operator-api-key": {},
+		"e2e-test-helper":                {},
+		"e2e-test-atlas-org":             {},
+	}
+}
+
 func TestCleanup(t *testing.T) {
 	req := require.New(t)
 	cliPath, err := AtlasCLIBin()

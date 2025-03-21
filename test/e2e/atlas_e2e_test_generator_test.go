@@ -20,10 +20,8 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
-	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250219001/admin"
 )
@@ -100,111 +98,6 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 	g.t.Cleanup(func() {
 		deleteProjectWithRetry(g.t, g.projectID)
 	})
-}
-
-// list of keys to delete as clean up.
-func getKeysToDelete() map[string]struct{} {
-	return map[string]struct{}{
-		"mongodb-atlas-operator-api-key": {},
-		"e2e-test-helper":                {},
-		"e2e-test-atlas-org":             {},
-	}
-}
-
-func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
-	t.Helper()
-
-	cmd := exec.Command(cliPath,
-		orgEntity,
-		"apiKeys",
-		"ls",
-		"-o=json")
-
-	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
-	require.NoError(t, err, string(resp))
-
-	var keys atlasv2.PaginatedApiApiUser
-	err = json.Unmarshal(resp, &keys)
-	require.NoError(t, err)
-
-	uniqueKeysToDelete := make(map[string]struct{})
-	for _, key := range keys.GetResults() {
-		keyID := key.GetId()
-		desc := key.GetDesc()
-
-		if _, ok := toDelete[desc]; ok {
-			uniqueKeysToDelete[keyID] = struct{}{}
-		}
-	}
-
-	for keyID := range uniqueKeysToDelete {
-		errors := []error{}
-		t.Logf("Deleting key with ID: %s", keyID)
-		cmd = exec.Command(cliPath,
-			orgEntity,
-			"apiKeys",
-			"rm",
-			keyID,
-			"--force")
-		cmd.Env = os.Environ()
-		_, err = RunAndGetStdOutAndErr(cmd)
-		if err != nil && !strings.Contains(err.Error(), "API_KEY_NOT_FOUND") {
-			errors = append(errors, err)
-		}
-		if len(errors) > 0 {
-			t.Errorf("unexpected errors while deleting keys: %v", errors)
-		}
-	}
-}
-
-func deleteOrgInvitations(t *testing.T, cliPath string) {
-	t.Helper()
-	cmd := exec.Command(cliPath,
-		orgEntity,
-		invitationsEntity,
-		"ls",
-		"-o=json")
-	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
-	t.Logf("%s\n", resp)
-	require.NoError(t, err, string(resp))
-	var invitations []atlasv2.OrganizationInvitation
-	require.NoError(t, json.Unmarshal(resp, &invitations), string(resp))
-	for _, i := range invitations {
-		deleteOrgInvitation(t, cliPath, *i.Id)
-	}
-}
-
-func deleteOrgTeams(t *testing.T, cliPath string) {
-	t.Helper()
-
-	cmd := exec.Command(cliPath,
-		teamsEntity,
-		"ls",
-		"-o=json")
-	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
-	t.Logf("%s\n", resp)
-	require.NoError(t, err, string(resp))
-	var teams atlasv2.PaginatedTeam
-	require.NoError(t, json.Unmarshal(resp, &teams), string(resp))
-	for _, team := range teams.GetResults() {
-		assert.NoError(t, deleteTeam(team.GetId()))
-	}
-}
-
-func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
-	t.Helper()
-	cmd := exec.Command(cliPath,
-		orgEntity,
-		invitationsEntity,
-		"delete",
-		id,
-		"--force")
-	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
-	require.NoError(t, err, string(resp))
 }
 
 func (g *atlasE2ETestGenerator) generateFlexCluster() {

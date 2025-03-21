@@ -33,7 +33,7 @@ func getTestManifest() *Manifest {
 		PluginDirectoryPath: "/plugins/testPlugin",
 		Version:             "1.2.3",
 		Commands: map[string]ManifestCommand{
-			"testCommand": {"Test command"},
+			"testCommand": {Description: "Test command", Aliases: []string{"T1", "T2"}},
 		},
 	}
 }
@@ -61,6 +61,7 @@ func Test_GetCobraCommands(t *testing.T) {
 	assert.Len(t, commands, 1)
 	assert.Equal(t, "testCommand", commands[0].Use)
 	assert.Equal(t, manifest.Commands["testCommand"].Description, commands[0].Short)
+	assert.Equal(t, manifest.Commands["testCommand"].Aliases, commands[0].Aliases)
 	assert.NotNil(t, commands[0].RunE)
 }
 
@@ -80,4 +81,6 @@ func Test_createPluginFromManifest(t *testing.T) {
 	assert.True(t, plugin.Version.Equal(manifestSemverVersion))
 
 	assert.Len(t, plugin.Commands, len(manifest.Commands))
+	assert.Equal(t, plugin.Commands[0].Description, manifest.Commands["testCommand"].Description)
+	assert.Equal(t, plugin.Commands[0].Aliases, manifest.Commands["testCommand"].Aliases)
 }

@@ -27,7 +27,11 @@ func snapshotDir(t *testing.T) string {
 		t.Fatal(err)
 	}
 
-	dir = path.Join(dir, "test/e2e/snapshots", t.Name())
+	if strings.HasSuffix(dir, "test/e2e") {
+		dir = path.Join(dir, "snapshots", t.Name())
+	} else {
+		dir = path.Join(dir, "test/e2e/snapshots", t.Name())
+	}
 
 	if err := enforceSnapshotDir(dir); err != nil {
 		t.Fatal(err)

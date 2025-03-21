@@ -48,7 +48,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			emailProject,
 			"--role",
 			"GROUP_READ_ONLY",
-			"--projectID",
+			"--projectId",
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -68,7 +68,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			projectsEntity,
 			invitationsEntity,
 			"ls",
-			"--projectID",
+			"--projectId",
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -87,7 +87,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			invitationsEntity,
 			"get",
 			invitationID,
-			"--projectID",
+			"--projectId",
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -112,7 +112,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			roleName1,
 			"--role",
 			roleName2,
-			"--projectID",
+			"--projectId",
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -136,7 +136,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			roleName1,
 			"--role",
 			roleName2,
-			"--projectID",
+			"--projectId",
 			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -157,7 +157,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			"delete",
 			invitationID,
 			"--force",
-			"--projectID",
+			"--projectId",
 			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)

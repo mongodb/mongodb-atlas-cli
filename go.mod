@@ -23,7 +23,7 @@ require (
 	github.com/evergreen-ci/shrub v0.0.0-20241002130202-d2f0f3752474
 	github.com/getkin/kin-openapi v0.130.0
 	github.com/go-test/deep v1.1.1
-	github.com/golang-jwt/jwt/v4 v4.5.1
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/golang/mock v1.6.0
 	github.com/google/go-github/v61 v61.0.0
 	github.com/hinshun/vt10x v0.0.0-20220301184237-5011da428d02

@@ -106,7 +106,7 @@ func TestDBRoles(t *testing.T) {
 		a.Len(role.GetActions(), 2)
 		got := []string{role.GetActions()[0].Action, role.GetActions()[1].Action}
 		slices.Sort(got)
-		a.Equal(createPrivilege, got[0])
+		a.Equal(createPrivilege, got[1])
 		a.Len(role.GetInheritedRoles(), 1)
 		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})

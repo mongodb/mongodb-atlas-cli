@@ -26,6 +26,7 @@ import (
 const completionEntity = "completion"
 
 func TestAtlasCLIAutocomplete(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	options := []string{"zsh", "bash", "fish", "powershell"}

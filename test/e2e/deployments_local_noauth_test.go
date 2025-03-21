@@ -35,6 +35,7 @@ import (
 )
 
 func TestDeploymentsLocal(t *testing.T) {
+	setup(t)
 	const deploymentName = "test"
 
 	cliPath, err := AtlasCLIBin()

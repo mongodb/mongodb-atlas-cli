@@ -31,6 +31,7 @@ import (
 )
 
 func TestOnlineArchives(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("onlineArchives")
 

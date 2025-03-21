@@ -30,6 +30,7 @@ import (
 )
 
 func TestStreams(t *testing.T) {
+	setup(t)
 	if IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}
@@ -41,11 +42,9 @@ func TestStreams(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	req.NoError(err)
 
-	instanceName, err := RandEntityWithRevision("instance")
-	req.NoError(err)
+	instanceName := memory(t, "instanceName", must(RandEntityWithRevision("instance")))
 
-	connectionName, err := RandEntityWithRevision("connection")
-	req.NoError(err)
+	connectionName := memory(t, "connectionName", must(RandEntityWithRevision("connection")))
 
 	t.Run("List all streams in the e2e project", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

@@ -30,13 +30,13 @@ import (
 )
 
 func TestExportJobs(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	clusterName, err := RandClusterName()
+	clusterName := memory(t, "clusterName", must(RandClusterName()))
 	fmt.Println(clusterName)
-	r.NoError(err)
 
 	mdbVersion, err := MongoDBMajorVersion()
 	r.NoError(err)
@@ -217,6 +217,10 @@ func TestExportJobs(t *testing.T) {
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
+
+	if skipCleanup() {
+		return
+	}
 
 	t.Run("Watch snapshot deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

@@ -27,6 +27,7 @@ import (
 )
 
 func TestProcesses(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("processes")
 

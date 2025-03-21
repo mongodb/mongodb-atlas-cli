@@ -24,6 +24,7 @@ import (
 )
 
 func TestPerformanceAdvisor(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("performanceAdvisor")
 

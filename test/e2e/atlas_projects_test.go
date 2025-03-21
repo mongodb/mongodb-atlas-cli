@@ -30,15 +30,13 @@ import (
 )
 
 func TestAtlasProjects(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	n, err := RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	n := memoryRand(t, "rand", 1000)
 	projectName := fmt.Sprintf("e2e-proj-%d", n)
 
 	var projectID string

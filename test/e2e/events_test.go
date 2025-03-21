@@ -28,6 +28,7 @@ import (
 )
 
 func TestEvents(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	t.Run("List Project Events", func(t *testing.T) {

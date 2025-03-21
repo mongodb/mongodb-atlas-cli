@@ -25,6 +25,7 @@ import (
 )
 
 func TestLogs(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 
 	g.generateProjectAndCluster("logs")

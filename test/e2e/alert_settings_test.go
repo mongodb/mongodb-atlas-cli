@@ -30,6 +30,7 @@ import (
 )
 
 func TestAlertConfig(t *testing.T) {
+	setup(t)
 	var alertID string
 
 	cliPath, err := AtlasCLIBin()
@@ -145,8 +146,7 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	t.Run("Update Setting using file input", func(t *testing.T) {
-		n, err := RandInt(1000)
-		require.NoError(t, err)
+		n := memoryRand(t, "rand", 1000)
 		fileName := fmt.Sprintf("%d_alerts.json", n.Int64())
 		fileContent := fmt.Sprintf(`{
 			"eventTypeName": %q,

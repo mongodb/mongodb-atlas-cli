@@ -32,6 +32,7 @@ import (
 const writeConcern = "majority"
 
 func TestClustersFlags(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("clustersFlags")
 
@@ -39,8 +40,7 @@ func TestClustersFlags(t *testing.T) {
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName, err := RandClusterName()
-	req.NoError(err)
+	clusterName := memory(t, "clusterName", must(RandClusterName()))
 
 	tier := e2eTier()
 	region, err := g.newAvailableRegion(tier, e2eClusterProvider)

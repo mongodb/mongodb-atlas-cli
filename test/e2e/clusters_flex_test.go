@@ -31,12 +31,12 @@ import (
 // They will be fully enabled in https://jira.mongodb.org/browse/CLOUDP-291186. We will be able to move these e2e tests
 // to create their project once the ticket is completed.
 func TestFlexCluster(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	flexClusterName, err := RandClusterName()
-	req.NoError(err)
+	flexClusterName := memory(t, "flexClusterName", must(RandClusterName()))
 
 	t.Run("Create flex cluster", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

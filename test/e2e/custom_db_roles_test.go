@@ -39,8 +39,8 @@ const (
 )
 
 func TestDBRoles(t *testing.T) {
-	n, err := RandInt(1000)
-	require.NoError(t, err)
+	setup(t)
+	n := memoryRand(t, "rand", 1000)
 
 	roleName := fmt.Sprintf("role-%v", n)
 

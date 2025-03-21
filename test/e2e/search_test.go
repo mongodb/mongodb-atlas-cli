@@ -32,6 +32,7 @@ import (
 const analyzer = "lucene.simple"
 
 func TestSearch(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("search")
 	r := require.New(t)
@@ -39,8 +40,7 @@ func TestSearch(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	r.NoError(err)
 
-	n, err := RandInt(1000)
-	r.NoError(err)
+	n := memoryRand(t, "rand", 1000)
 	indexName := fmt.Sprintf("index-%v", n)
 	var indexID string
 
@@ -367,7 +367,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Create array mapping", func(t *testing.T) {
-		n, err := RandInt(1000)
+		n := memoryRand(t, "rand", 1000)
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
@@ -448,6 +448,7 @@ func TestSearch(t *testing.T) {
 }
 
 func TestSearchDeprecated(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("search")
 	r := require.New(t)
@@ -455,8 +456,7 @@ func TestSearchDeprecated(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	r.NoError(err)
 
-	n, err := RandInt(1000)
-	r.NoError(err)
+	n := memoryRand(t, "rand", 1000)
 	indexName := fmt.Sprintf("index-%v", n)
 	var indexID string
 
@@ -775,7 +775,7 @@ func TestSearchDeprecated(t *testing.T) {
 	})
 
 	t.Run("Create array mapping", func(t *testing.T) {
-		n, err := RandInt(1000)
+		n := memoryRand(t, "rand", 1000)
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)

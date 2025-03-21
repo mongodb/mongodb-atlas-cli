@@ -33,6 +33,7 @@ import (
 const minSearchNodesMDBVersion = "6.0"
 
 func TestSearchNodes(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)

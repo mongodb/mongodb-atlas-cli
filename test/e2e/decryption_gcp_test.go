@@ -34,6 +34,7 @@ var filesGCP embed.FS
 const gcpTestsInputDir = "decryption/gcp"
 
 func TestDecryptWithGCP(t *testing.T) {
+	setup(t)
 	req := require.New(t)
 
 	cliPath, err := AtlasCLIBin()

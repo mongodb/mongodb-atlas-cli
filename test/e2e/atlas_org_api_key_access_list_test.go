@@ -29,6 +29,7 @@ import (
 )
 
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
+	setup(t)
 	cliPath, er := AtlasCLIBin()
 	require.NoError(t, er)
 
@@ -39,9 +40,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		require.NoError(t, deleteOrgAPIKey(apiKeyID))
 	})
 
-	n, err := RandInt(255)
-	require.NoError(t, err)
-
+	n := memoryRand(t, "rand", 255)
 	entry := fmt.Sprintf("192.168.0.%d", n)
 
 	t.Run("Create", func(t *testing.T) {

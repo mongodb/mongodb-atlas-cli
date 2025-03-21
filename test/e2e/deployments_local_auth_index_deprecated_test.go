@@ -35,6 +35,7 @@ import (
 )
 
 func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
+	setup(t)
 	const (
 		deploymentName = "test-auth-deprecated"
 		dbUsername     = "admin"

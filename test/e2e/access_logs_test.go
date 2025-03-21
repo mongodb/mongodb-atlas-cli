@@ -26,6 +26,7 @@ import (
 )
 
 func TestAccessLogs(t *testing.T) {
+	setup(t)
 	req := require.New(t)
 
 	g := newAtlasE2ETestGenerator(t)

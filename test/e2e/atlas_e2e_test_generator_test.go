@@ -93,6 +93,10 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 		g.t.Fatal("projectID not created")
 	}
 
+	if skipCleanup() {
+		return
+	}
+
 	g.t.Cleanup(func() {
 		deleteProjectWithRetry(g.t, g.projectID)
 	})
@@ -105,20 +109,24 @@ func (g *atlasE2ETestGenerator) generateFlexCluster() {
 		g.t.Fatal("unexpected error: project must be generated")
 	}
 
-	var err error
-	g.clusterName, err = deployFlexClusterForProject(g.projectID)
+	g.clusterName = memory(g.t, "generateFlexClusterName", must(RandClusterName()))
+
+	err := deployFlexClusterForProject(g.projectID, g.clusterName)
 	if err != nil {
 		g.t.Fatalf("unexpected error deploying flex cluster: %v", err)
 	}
 	g.t.Logf("flexClusterName=%s", g.clusterName)
+
+	if skipCleanup() {
+		return
+	}
 
 	g.t.Cleanup(func() {
 		_ = deleteClusterForProject(g.projectID, g.clusterName)
 	})
 }
 
-// generateCluster generates a new cluster and also registers its deletion on test cleanup.
-func (g *atlasE2ETestGenerator) generateCluster() {
+func (g *atlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 	g.t.Helper()
 
 	if g.projectID == "" {
@@ -137,12 +145,18 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 		g.mDBVer = mdbVersion
 	}
 
-	g.clusterName, g.clusterRegion, err = deployClusterForProject(g.projectID, g.tier, g.mDBVer, g.enableBackup)
+	g.clusterName = memory(g.t, prefix+"GenerateClusterName", must(RandClusterNameWithPrefix(prefix)))
+
+	g.clusterRegion, err = deployClusterForProject(g.projectID, g.clusterName, g.tier, g.mDBVer, g.enableBackup)
 	if err != nil {
 		g.Logf("projectID=%q, clusterName=%q", g.projectID, g.clusterName)
 		g.t.Errorf("unexpected error deploying cluster: %v", err)
 	}
 	g.t.Logf("clusterName=%s", g.clusterName)
+
+	if skipCleanup() {
+		return
+	}
 
 	g.t.Cleanup(func() {
 		g.Logf("Cluster cleanup %q\n", g.projectID)
@@ -152,12 +166,17 @@ func (g *atlasE2ETestGenerator) generateCluster() {
 	})
 }
 
+// generateCluster generates a new cluster and also registers its deletion on test cleanup.
+func (g *atlasE2ETestGenerator) generateCluster() {
+	g.generateClusterWithPrefix("cluster")
+}
+
 // generateProjectAndCluster calls both generateProject and generateCluster.
 func (g *atlasE2ETestGenerator) generateProjectAndCluster(prefix string) {
 	g.t.Helper()
 
 	g.generateProject(prefix)
-	g.generateCluster()
+	g.generateClusterWithPrefix(prefix)
 }
 
 // newAvailableRegion returns the first region for the provider/tier.
@@ -257,4 +276,17 @@ func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
 
 	cmd.Env = os.Environ()
 	return RunAndGetStdOut(cmd)
+}
+
+func skipCleanup() bool {
+	return isTrue(os.Getenv("E2E_SKIP_CLEANUP"))
+}
+
+func isTrue(s string) bool {
+	switch s {
+	case "t", "T", "true", "True", "TRUE", "y", "Y", "yes", "Yes", "YES", "1":
+		return true
+	default:
+		return false
+	}
 }

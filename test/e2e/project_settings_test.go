@@ -13,6 +13,8 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
+// TODO: fix the test and add snapshots
+
 package e2e_test
 
 import (
@@ -27,6 +29,7 @@ import (
 )
 
 func TestProjectSettings(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 

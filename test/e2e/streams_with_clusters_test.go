@@ -29,6 +29,7 @@ import (
 )
 
 func TestStreamsWithClusters(t *testing.T) {
+	setup(t)
 	if IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}
@@ -40,8 +41,7 @@ func TestStreamsWithClusters(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	req.NoError(err)
 
-	instanceName, err := RandEntityWithRevision("instance")
-	req.NoError(err)
+	instanceName := memory(t, "instanceName", must(RandEntityWithRevision("instance")))
 
 	g.generateCluster()
 

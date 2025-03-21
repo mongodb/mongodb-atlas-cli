@@ -28,6 +28,7 @@ import (
 )
 
 func TestRestores(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -214,6 +215,10 @@ func TestRestores(t *testing.T) {
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
+
+	if skipCleanup() {
+		return
+	}
 
 	t.Run("Watch snapshot deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

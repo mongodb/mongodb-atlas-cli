@@ -29,6 +29,8 @@ E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=
+export UPDATE_SNAPSHOTS?=skip
+export E2E_SKIP_CLEANUP?=false
 
 ifeq ($(OS),Windows_NT)
 	export PATH := .\bin;$(shell go env GOPATH)\bin;$(PATH)

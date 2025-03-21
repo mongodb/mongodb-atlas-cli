@@ -28,6 +28,7 @@ import (
 )
 
 func TestIdentityProviders(t *testing.T) {
+	setup(t)
 	req := require.New(t)
 
 	cliPath, err := AtlasCLIBin()

@@ -28,12 +28,12 @@ import (
 )
 
 func TestSnapshots(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	clusterName, err := RandClusterName()
-	r.NoError(err)
+	clusterName := memory(t, "clusterName", must(RandClusterName()))
 
 	mdbVersion, err := MongoDBMajorVersion()
 	r.NoError(err)
@@ -145,6 +145,10 @@ func TestSnapshots(t *testing.T) {
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
+
+	if skipCleanup() {
+		return
+	}
 
 	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

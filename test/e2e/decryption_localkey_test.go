@@ -32,6 +32,7 @@ var filesLocalKey embed.FS
 const localKeyTestsInputDir = "decryption/localKey"
 
 func TestDecryptWithLocalKey(t *testing.T) {
+	setup(t)
 	req := require.New(t)
 
 	cliPath, err := AtlasCLIBin()

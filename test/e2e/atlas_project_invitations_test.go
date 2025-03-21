@@ -28,6 +28,7 @@ import (
 )
 
 func TestAtlasProjectInvitations(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -35,7 +36,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 	g.generateProject("invitations")
 
 	var invitationID string
-	n, err := RandInt(1000)
+	n := memoryRand(t, "rand", 1000)
 	require.NoError(t, err)
 
 	emailProject := fmt.Sprintf("test-%v@mongodb.com", n)

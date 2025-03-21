@@ -113,6 +113,7 @@ func snapshotServer(t *testing.T) {
 			return err
 		}
 
+		t.Logf("writing snapshot at %q", filename)
 		return os.WriteFile(filename, out, 0600)
 	}
 

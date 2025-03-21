@@ -97,10 +97,13 @@ jobs:
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
+      - name: set artifact name
+        run: |
+          echo "NAME=snapshots_${{ matrix.tags }}" | sed "s|,|_|g" >> "$GITHUB_ENV"
       - name: upload snaphots
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: snapshots_${{ matrix.tags }}
+          name: ${{ env.NAME }}
           path: test/e2e/snapshots/
       - name: Test Summary
         id: test_summary

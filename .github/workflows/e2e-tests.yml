@@ -35,7 +35,7 @@ jobs:
           EOF
       - run: make e2e-test
         env:
-          E2E_TAGS: atlas,config
+          E2E_TAGS: config
       - name: Test Summary
         id: test_summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
@@ -61,7 +61,7 @@ jobs:
       - run: go install gotest.tools/gotestsum@latest
       - run: make e2e-test
         env:
-          E2E_TAGS: atlas,brew
+          E2E_TAGS: brew
       - name: Test Summary
         id: test_summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86

@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || iam || atlas
 
 package e2e_test
 
@@ -57,7 +56,7 @@ const (
 	datafederationEntity          = "datafederation"
 	datalakePipelineEntity        = "datalakepipeline"
 	alertsEntity                  = "alerts"
-	configEntity                  = "settings"
+	configEntity                  = "config"
 	dbusersEntity                 = "dbusers"
 	certsEntity                   = "certs"
 	privateEndpointsEntity        = "privateendpoints"

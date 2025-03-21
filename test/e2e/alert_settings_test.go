@@ -38,7 +38,7 @@ func TestAlertConfig(t *testing.T) {
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
-			configEntity,
+			settingsEntity,
 			"create",
 			"--event",
 			eventTypeName,
@@ -73,7 +73,7 @@ func TestAlertConfig(t *testing.T) {
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
-			configEntity,
+			settingsEntity,
 			"get",
 			alertID,
 			"-o=json")
@@ -88,7 +88,7 @@ func TestAlertConfig(t *testing.T) {
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
-			configEntity,
+			settingsEntity,
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
@@ -102,7 +102,7 @@ func TestAlertConfig(t *testing.T) {
 	t.Run("List Compact", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
-			configEntity,
+			settingsEntity,
 			"ls",
 			"-c",
 			"-o=json")
@@ -117,7 +117,7 @@ func TestAlertConfig(t *testing.T) {
 	t.Run("Update", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
-			configEntity,
+			settingsEntity,
 			"update",
 			alertID,
 			"--event",
@@ -168,7 +168,7 @@ func TestAlertConfig(t *testing.T) {
 
 		cmd := exec.Command(cliPath,
 			alertsEntity,
-			configEntity,
+			settingsEntity,
 			"update",
 			alertID,
 			"--file", fileName,
@@ -187,7 +187,7 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	t.Run("Delete", func(t *testing.T) {
-		cmd := exec.Command(cliPath, alertsEntity, configEntity, "delete", alertID, "--force")
+		cmd := exec.Command(cliPath, alertsEntity, settingsEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -196,7 +196,7 @@ func TestAlertConfig(t *testing.T) {
 	t.Run("List Matcher Fields", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			alertsEntity,
-			configEntity,
+			settingsEntity,
 			"fields",
 			"type",
 			"-o=json")

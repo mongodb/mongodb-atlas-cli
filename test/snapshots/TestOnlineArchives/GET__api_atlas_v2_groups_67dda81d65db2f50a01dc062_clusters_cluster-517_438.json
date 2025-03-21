@@ -1,0 +1,53 @@
+{
+  "Content-Length": [
+    "204"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:11:11 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "72"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "eyJkZXRhaWwiOiJObyBjbHVzdGVyIG5hbWVkIGNsdXN0ZXItNTE3IGV4aXN0cyBpbiBncm91cCA2N2RkYTgxZDY1ZGIyZjUwYTAxZGMwNjIuIiwiZXJyb3IiOjQwNCwiZXJyb3JDb2RlIjoiQ0xVU1RFUl9OT1RfRk9VTkQiLCJwYXJhbWV0ZXJzIjpbImNsdXN0ZXItNTE3IiwiNjdkZGE4MWQ2NWRiMmY1MGEwMWRjMDYyIl0sInJlYXNvbiI6Ik5vdCBGb3VuZCJ9"
+  ],
+  "__status__": [
+    "404"
+  ]
+}

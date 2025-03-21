@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "785"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 17:55:40 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "718"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::createCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1V32/aMBD+VyY/tySB0rK8pUArJn5UJF23TlPl2Ad4dezIdphYxf++M6ZdYdq0l/UByfjuvvvOd9/liVC+pooB72u1EMvGUCe0IukTYY11uprVoKyVfVGvwASfQtqkTdIvX09IJZSommqoaCmBo+HGaKeZliQlxThPHtrkhDhpX4dPNAc0D4ZX2e24INsTUlL22NR7EJIuqLSAtwL9FTCnjacDR2YDlN8YWIABpI+AFphWnJqNh2QS2YMpNrU3zYc341E/y4cF0mEBFavMnRFqaRHdRyCggwH+MKAdt7uncee0nRTJRdrtpmfxPYZyYR9z8QOuL0naiVtxuLmjBt/hua6r2/H488NdNp8MBxiC5Mym9tkyNwfr8IHWggOWRKaz6RA9llKXVPYD4RzkYkIVXQLPV9RwxH2peGl0U4/wBcj5Bee0l7zv8KTTOWtzmvQ6Z1BSRBOv7Oy8y8v2ohvTOOHlgi3QLmkJ0obuSaEe/fGJrPAhMW7lXG3TKGJSN/yUw7pVabXUvGwxXUW0FhF1ktpo3Y52ZGz0JybRvgH2+XDa6/WI75rctUousEtvlTcKAxYZfH9t4IMu7QuVg9QHaV97vz1Xq2htV9r9C9NfvluvSW8ZXE7oN20+IvpOzqTXismL7eC6dY4GRSs/vIfNqmljXymuFu5YowZqKdhuZeQ1sDBMfxnBs47P1VS72UbvxEMsMTqshhCP4y83TjC7h0REZZ1fUl57iD1J4r0YR7Ob3EsxRilCaT9q2VSwF31eZNNBNvciVCjNvm6UI2mMUqeN0zmjcicuXHS6qhsv+9+XTG2AC9wVaziu3GI8DPR3dWjYBl5+QRyjbdEGEjePv/wfpXW2nrDQRrgNSS/8n7BrpqG52V1Owt6cKbn5X48b+rlPeZs/DLO8eEh2k/lDKxj9eTh6jASfffA9Ht+FSKO164Nx++yjfH49n82KTwlGIHv3HNKfD7NiNL32Xx3wW3k3mv6jFDb+cRfXQQhz7Au1kG9w+CuEGRc52f4Evx+hIhsHAAA="
+  ],
+  "__status__": [
+    "201"
+  ]
+}

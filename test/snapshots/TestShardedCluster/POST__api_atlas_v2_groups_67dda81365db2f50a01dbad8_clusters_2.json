@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "830"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 17:55:33 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "976"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::createCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1V227bOBD9lQWfE0uy6yTQm2KrWS98CSyl6XZRGJQ4trmhSIGkVLiB/71DUcnGLrroS/tgQObMnDmcy+EzoaylsgQ2UXLLd42mlitJ4mdSNsaqalWDNEZMeL0H7X1yYaIhif/5fEEqLnnVVKmkhQCGhnutrCqVIDHJ51m0GZILYoV5G75QDNA8Td8nD/OcHC9IQcunpu5BSLylwgCecvSXUFqlHR04M2ug7F7DFjQgfQQ0UCrJqD44yFIge9D5oXam7M9kPU2nyKXsKGSgW9ALKukOKpC2p5Tk8yTbLJJlcvedc4+ULm7T6SuUY4fVyqzmcmccS/oFS8BbamHO5VOmWzxEOrU/SyWrFZfWFc+RxDtYmOIPkYfhcHwZji6HUR5dx+NxPBp9wiyMm6eMf4W7WxKPwkHoTx6pxtK/lPL9w3z+9+YxWS86YlgPfagdscSuwVjsScsZYBXJcrVM0WMnVEHFxNcoA7H1pWDZnmqGuK9F3mnV1DMsOrm6ZozeRKOrMSuG23FIw4gVlN0gGn9jH5/YyyvXf0ELEMYPjMCquM9nssfeYdze2trEQVAK1bBLBu2gUnKnWDEoVRXQmgfUCmqCdhh0ZEzwIyZB33Pz8nH57vqKuEER3XSILQ7G78ob+JkONNZfafhLFeaVyknqk7RvvX8/VyNpbfbK/gzT/3yPTgacZXq7oP8q/QHROwUhN4OQvNpOjgeuL5JWbnhPm1XTxrxZ8prbc1nQUAtediqV1VD6YfqfERyVLldTdbON3kMHscNor0Y+HsdfHCwvTQ+JiNJYp4tu9xB7EYX9Ms5W95lbxRBXEQrzQYmmghedyZPlFKXGZcTVnKjG7XqIq04bq7KSim65UFtVVTdu7b/XtVoD4ygrLZzf3GA8TNUXeWo4el5OIM7RjmgDgSLlDn/F1UZe25Tm9kDia/fHa83SNzd5zIiX6pUUh19VXN/PPuVDtkmTLN9E3WR+VRJmPx6Od4x4nz74E37+4SO1UnYC2vbZZ9n6br1a5R8jjED29iVksk6TfLa8cw8dOFXuRtO9g/5xOO9i6xdhjX2hBrIDDn+FMPM8I8dv9jxcoI4HAAA="
+  ],
+  "__status__": [
+    "201"
+  ]
+}

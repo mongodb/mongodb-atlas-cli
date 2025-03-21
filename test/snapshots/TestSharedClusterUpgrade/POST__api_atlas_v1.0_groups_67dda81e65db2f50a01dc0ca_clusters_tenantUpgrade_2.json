@@ -1,0 +1,53 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "914"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:02:14 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasLegacyClusterDescriptionResource::upgradeTenantCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "X-Xgen-Up-Proto": [
+    "HTTP/2"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAANVWbW8iNxD+K5U/3JcG9oUS0pWiigQuogovYqFpU1WRWQ/gi7G3tnd7XMR/73hfGpYkp+qqtjqJD8uMZ+aZZ8YzfiI0sypOqOByQ6InkqhdmllwnyDpSgAj0ZoKA2ck1cB4YnkOwxONQXsYqD9kU3E4I4ybx5urF+IVTR6z9NTNil8rKSGxSr8WXwNlMw1r0CATREgMJEoyqvcEXSYiMxb0Yp861Xw4ux1d9+PhgqCq9MqVjK3GPI3zbix1tuie7JTcKLaKPK9y0uqFFy2zRW3L9/HXhmz3oduuzrUY5G0JNgp7ftA7e90m+AKb8HM23g/GiEurM3iHJdvGKtMJXFK24/KdhlTwhMZgL6kV1LT2dNv5+HvtGimos411/pzwt0bnzaRfB1DQi+xbGFDXGiT0w27L77TCYBH0om43+u77e1IWO+af4OaKRH67WwruqEaIm7FizvL98vb2l4e7/nw8HKAFFlLvU1eZvp2DsTOtcs4Ay08m08kQT2yEWlFxXUKMQazHVNINsNilVvRs1R0brbJ05Mp53mOMXgRw3mWrcN31qR+wxE8oeuPP+rDb0HfOnV7QFQhsj19/w28uH93nE9li06Hd1trUFHypjBXcVDy18dJ4NOVeQb6XB23fK+AY7y0sNenmmH3ielwUjS3WSPp/F9krL6SnsQZKw49qZf4C0wjeCHx8+v9AayRNzVbZv4P1+ewBa1toBldj+kHpn9A7NiBaX7TdVal0DXH7vFYs56OvZWIcQV6mDG8uO7m6F5EfRkFwf3TwjtvttLiQ5mtJ858NRkl3bi41b6HMdsV8QQ4C3Hs0M8drkNvTxZVWY+vq1bVWaxGFrbdPLZuU4RfDSX/iVtXb23hHP46kG+MJuBlLIpkJgYXj8qX4UK1Y9DJrBurfxW7srtdQLPJj0+rE2LHC35Br2GBrVJJl/DDsx4uHwO2HimnXOe9pucE7DWmcQuLyeLbCPzjLxd7yxExwPSAxPmITCM0RWIk6jkCuNLd7EvXKV8BUin1tcTi8CFNO7c/M+i68KHKZmcEHyJpv/i2cn5Ss6bzHz2+CYhhppew1aFs9XUbx/GY+nS5+Dtze1nmfMRy05gvWdrH2bR1xORv0F6PJDYot3ZQcPQKCxS2cozCnInPnIIQCFvrG5ipIxSay5QPqtLfzckrOkQ1qIN4joh36uF3E5PAn15M9g1wKAAA="
+  ],
+  "__status__": [
+    "200"
+  ]
+}

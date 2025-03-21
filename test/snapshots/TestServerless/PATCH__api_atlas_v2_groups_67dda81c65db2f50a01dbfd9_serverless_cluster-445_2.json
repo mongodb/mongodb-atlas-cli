@@ -1,0 +1,47 @@
+{
+  "Content-Length": [
+    "1149"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 17:57:51 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "536"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasLegacyServerlessInstanceDescriptionResource::updateServerlessInstance"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "eyJjb25uZWN0aW9uU3RyaW5ncyI6eyJzdGFuZGFyZFNydiI6Im1vbmdvZGIrc3J2Oi8vY2x1c3Rlci00NDUuZnNseTV3aC5tb25nb2RiLWRldi5uZXQifSwiY3JlYXRlRGF0ZSI6IjIwMjUtMDMtMjFUMTc6NTU6NDNaIiwiZ3JvdXBJZCI6IjY3ZGRhODFjNjVkYjJmNTBhMDFkYmZkOSIsImlkIjoiNjdkZGE4MWYzZDEzMzQyZGExODM1MGM0IiwibGlua3MiOlt7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZGRhODFjNjVkYjJmNTBhMDFkYmZkOS9zZXJ2ZXJsZXNzL2NsdXN0ZXItNDQ1IiwicmVsIjoic2VsZiJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9hdGxhcy92Mi9ncm91cHMvNjdkZGE4MWM2NWRiMmY1MGEwMWRiZmQ5L3NlcnZlcmxlc3MvY2x1c3Rlci00NDUvYmFja3VwL3Jlc3RvcmVKb2JzIiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9yZXN0b3JlSm9icyJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9hdGxhcy92Mi9ncm91cHMvNjdkZGE4MWM2NWRiMmY1MGEwMWRiZmQ5L3NlcnZlcmxlc3MvY2x1c3Rlci00NDUvYmFja3VwL3NuYXBzaG90cyIsInJlbCI6Imh0dHBzOi8vY2xvdWQubW9uZ29kYi5jb20vc25hcHNob3RzIn1dLCJtb25nb0RCVmVyc2lvbiI6IjguMC42IiwibmFtZSI6ImNsdXN0ZXItNDQ1IiwicHJvdmlkZXJTZXR0aW5ncyI6eyJiYWNraW5nUHJvdmlkZXJOYW1lIjoiQVdTIiwiZWZmZWN0aXZlRGlza1NpemVHQkxpbWl0Ijo1LCJlZmZlY3RpdmVJbnN0YW5jZVNpemVOYW1lIjoiRkxFWCIsImVmZmVjdGl2ZVByb3ZpZGVyTmFtZSI6IlRFTkFOVCIsIm5leHRCYWNrdXBEYXRlIjoiMjAyNS0wMy0yMlQxNzo1NTo0M1oiLCJwcm92aWRlck5hbWUiOiJTRVJWRVJMRVNTIiwicmVnaW9uTmFtZSI6IlVTX0VBU1RfMSIsInRlbmFudEJhY2t1cEVuYWJsZWQiOnRydWV9LCJzZXJ2ZXJsZXNzQmFja3VwT3B0aW9ucyI6eyJzZXJ2ZXJsZXNzQ29udGludW91c0JhY2t1cEVuYWJsZWQiOmZhbHNlfSwic3RhdGVOYW1lIjoiVVBEQVRJTkciLCJ0YWdzIjpbeyJrZXkiOiJlbnYiLCJ2YWx1ZSI6ImUyZSJ9XSwidGVybWluYXRpb25Qcm90ZWN0aW9uRW5hYmxlZCI6ZmFsc2V9"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "896"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:17:13 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "79"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1Va48aNxT9K5U/5EuAeS2PjLSqCNAV1S4gZjapElUrM76Asx57anumJSv+e65nZh/QNIoqJRJI4Ot77uvc4wdCWUVlBmyi5JbvSk0tV5LEDyQrjVX5sgBpjJjwYg+6uZMKE4Qk/vhnh+Rc8rzMZ5JuBDA0rLSyKlOCxCS9ToK7kHSIFeal+41igObp7Lfx7XVKjh2yodl9WbQgJN5SYQBPOd6XkFmlXTpwZtZA2UrDFjRg+ghoIFOSUX1wkJnA7EGnh8KZ1rPV9XwyTmYpppM1qFhlYjWXO+PQjaXOF+FJruROsU3seS1IdxiOumaP1q7v46cHZf6p32vvdRlUPQk2Dod+MOx83Sf4Hz7ht3y8X3Eol1aX8IqWdp+oUmdwSRkO5JWGQvCMJmAvqRXUdA90H/3z1yM0tuCx2kRXzwW/Nro6LfrrCdTtxe5bmOIX/UM/7Hf9qBsGaTCK/TAOLj5gEMbNfcI/w9VbEl/4Pb+DI8z0oXCdH9s1GItkqTgDHC9ZLBcz9NkJtaFi0qSQgNjeUEl3wBKXOs7qafo7rcpi7sY1GDJGRwEM+mwTbvs+9QOW+RlFNP5kf0MHEQui6CJkNBhFw2DQR7ugGxCmYbLg8t79fCB7JBX67a0tTN0PVbK69rYPvUzlHi24VzfXq0KvTsZ4/5XJY0vNy94Sx2BR01ZssaU/K67XLJunsf9Kw+9qY55SOQl9Evbl7Z+fq5G0MHtlvyfT57tHp0/OMn17Qz8p/Q7Ra2kjo55bgtZ2ctwboEHS3NH6dFgFLc0L9Sm4Pderdu1qYSkga8j0TMFR2D8pOuqDi1XmNbfxduAgdujdyGTjj/QXB8sz00IionTbm4FbLcS+Cfx21+bLVULiyPfdpm3MOyXKHFoBTNLxYjpeT11ElN+JKqUlsY+bjOqhkoyKerlQ9FVelG6r/y24hQbGUTcrOK/coD9M1d/y1HBs8nL7f452RBsIVGF3+CNKi44uYa40twcSD92fRmsWzXDH7xPSvCFLKQ4/qrnNPNuQt8ndbJykd0HNzM9Kwvwb+hSR5k7r/AF//tJ4aqXsBLRto8+T9dV6uUz/CBpht48ut6vpOJ0vrtwLTFs63QN2A2dR4WFFRenuQQg1LnIdX4+av+4Vb57I81FXzbascXjUQHLADckR4zpNyPELvKrSUkwIAAA="
+  ],
+  "__status__": [
+    "200"
+  ]
+}

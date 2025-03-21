@@ -1,0 +1,53 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "149"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:07:46 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "49"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasSampleDatasetLoadResource::getSampleDatasetLoadStatus"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAHXLsQ6CMBSF4Xe5MyRt4bakq7CJOjC5mCu9GJMipi2T8d2l0dXx5P/OCy53Bxa0cY7ITBrdVU0oSEjHNFZQwOjXmDgcaOYN/lapscltmZ+eE7eUclRCYSmqUslBNlYYW9fnrALTP4MWZTYcwhJ6jpFum3qs3hcQ0/eyO/anfTd0Lbw/2SbQObAAAAA="
+  ],
+  "__status__": [
+    "200"
+  ]
+}

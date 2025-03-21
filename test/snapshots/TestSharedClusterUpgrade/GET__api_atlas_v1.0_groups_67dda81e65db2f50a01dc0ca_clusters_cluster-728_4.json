@@ -1,0 +1,53 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "894"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:02:14 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasLegacyClusterDescriptionResource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "X-Xgen-Up-Proto": [
+    "HTTP/2"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAANVW224bNxD9lYIPeamlvaiy3AWMQLYUQ4UuhlauGxeBQS1HK8YUuSW5ahRD/97hXmqtbAdFgrYIoIfVDOd2ZjiHj4TmVsUJFVymJHokidpkuQX3CZIuBTASragwcEIyDYwnlm9heKQxaA8D9adsKvYnhHHzcHXxTLykyUOeHbtZ8kslJSRW6Zfia6DsWsMKNMgEMyQGEiUZ1TuCLhORGwt6scucaj68Ho8u+/FwQVBVeuVKxlZjncZ5N5Y6W3RPNkqmii0jz6uctHrhWcusUdvyffy1Id987Larcy0G27YEG4U9P+idvGwTfIVN+CUb760x4tzqHN5gy9axynUC55RtuHyjIRM8oTHYc2oFNa0dXXc+/VG7RgjqamO9fSr4R6O3zaJfTqCAF9G3MKBuNEjoh92W32mFwSLoRd1u9NPPd6Rsdsw/w9UFifx2txTcUo0pphPFnOW7m/H4/f1tfz4ZDtACG6l3metM387B2GuttpwBtp9MZ9MhnkiFWlJxWaYYg1hNqKQpsNiVVsxsNR2pVnk2cu087TFGzwI47bJluOr61A9Y4icUvfEnfdht6DunTi/oEgSOx+8f8JvLB/f5SNY4dGi3tjYzBV4qZwU2FU5tvDQezbhXgO9tg7bvFekY77VcatDNIfrEzbgoBlusEPT/LrJXXkhPYw+Uhl/U0vydTCN4I/Dh6f8jWyNpZtbK/pNcn87usbeFZnAxoR+V/hW94wCi9VnbXZVK1xC3T2vFzXz0vWyMg5RvMoY3lx1d3bPID6MguDs4eMvtelZcSPO9lPlti1HSjdtLzVso802xXxCDAHmP5uaQBrk9Jq6sWlsXL9JarcUsbM0+tWxahl8Mp/2po6rX2XhDP42kW+MJuB1LIpkLgY3j8rl4X1EserluBurfxm7trlZQEPmhaXVi4lDhr8g1pDgaleQmvh/248V94PihQtpNzjtaMninIY0zSFwdT1b4B3e52FmemCnSAwLjY24CU3MAVqKOA5Arze2ORL3yFTCTYldb7PfPwpRb+wu7vgvPmlxWZvABsuLpv5XnZyVrOO/w84egWEZaKXsJ2lZPl1E8v5rPZovfAsfbettnDBet+QraLmjf1hFHg7EjVEvTiuDQGKenQA2nxJYvpOPh3ZZrcI7lUgPxDkNu0Nl4EZP9X4kaGKw9CgAA"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

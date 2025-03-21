@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "741"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:01:57 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "70"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1U207bQBD9lWofeCmJLyEXLKEqJClKlQQUm9JSVWjtHTsuzq7ZXVsKiH/vrO1AQimq+oCUSOuZOXM5c3kgIY1ui3zCaZgBI15MMwWHJExHgnOItJDEeyDwQi2BsgsJMUjgERCPKIgEZ1RuyOMhibJCaZDBJjeq5eRiNh0N/UlAUFV7TQX3tUx5oox3panBonuyFjwRLPQsq3HS6vU6LbVCbcu28de+K/NN1m7sWgzKNgftuX3b6R++jnH+A+O+hbE+KZWdaFnAAS30yheFjOCEsnXKDyTkWRpRH/QJ1RlVrdy+2wyeXCMF22p9WT4X/FHJcr/o1xOo6EX2NYzxj3jXdrstu9NyncDpe92u1zm+xiAsVbd+eg9np8Sz291acEUlppjMBTPIz5ez2febq+FyPhkjAhspN7npzFAvQekLKcqUAbafLM4XE7RIMhHSbFSn6EMWzymnCTDflIZ+n6YjkaLIp6advT5jdOAMel0WunHXprbDQtZl6C3d0Ycd5nQ6Ry6jzqBzFB/HqM9oCBmOx4+f+E75rXk+kBUOHeJWWueq4ksUrOKm4akdibVF89SqyLdK16qSUdbfMtlSrna5J2bCs2qssxgpf6+4Vr2MlkT+hYQvIlRPqeyF3gu7a/3+uSpOc7US+l8yfbZ9xK5WmvHpnP4S8it6x9FD9KBtlqTR7YnbPVRwujbDu9+snBZq5zrlqX55z5q1rA5PDlE9TLsjSPdHcBCZWMW6mm20doyLBNF4FuM0qfGQ4SkzcRqXKIljc91KmHKz5hGYHcQgc1NT+ocMl9mwiLuz3bZFXd7wyjdlyVTIVG+I1zcfexbBZDFcBGSbViO99G8mQz+4cSqC7wWH6Rtr1ie1TQO+xueHGimF0COQujnhU395tjw/D7459f3SW8h0PDOXQdOk2VTsCZ6YimcsSden/mUzyrqrS+SPKvA32Mk1OpsFPnn8DaieuOmRBgAA"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

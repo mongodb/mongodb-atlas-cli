@@ -1,0 +1,44 @@
+{
+  "Content-Disposition": [
+    "attachment; filename=\"e2e-data-federation-222_2025-03-21T17:56:17Z_2025-03-21T17:56:27Z_queries.log.gz\""
+  ],
+  "Content-Type": [
+    "application/gzip"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 17:56:28 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "1189"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasDataFederationResource::queryLogsForTenant"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAA/wEAAP//AAAAAAAAAAA="
+  ],
+  "__status__": [
+    "200"
+  ]
+}

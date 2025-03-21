@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "745"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:02:15 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "82"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1U207bQBD9lWofeCmJ7YRcsISqkLgoVRJQbEpLVaG1d+y4OLtmd20pIP69s7YDCaWo6gNSIq1n5szlzOWBhDS6LXKP0zADRtyYZgoOSZiOBecQaSGJ+0DghVoCZRcSYpDAIyAuURAJzqjckMdDEmWF0iCDTW5US+9iNh2PfC8gqKq9poL7WqY8Uca70tRg0T1ZC54IFrqW1Thp9fvdllqhtmXb+Gvflfkmazd2LQZlm4N2OwPbGRy+jnH+A9N5C2N9Uio70bKAA1rolS8KGcEJZeuUH0jIszSiPugTqjOqWrl9txk+uUYKttX6snwu+KOS5X7RrydQ0Yvsa5jgH/Edu9Nr2d1Wxwmcgdvrud3jawzCUnXrp/dwdkpcu92rBVdUYorJXDCD/Hw5m32/uRot594EEdhIuclNZ0Z6CUpfSFGmDLD9ZHG+8NAiyURIs3Gdog9ZPKecJsB8Uxr6fZqORIoin5p29geM0aEz7PdY2Il7NrUdFrIeQ2/pjj7sMqfbPeow6gy7R/FxjPqMhpDhePz4ie+U35rnA1nh0CFupXWuKr5EwSpuGp7akVhbNE+tinyr7FhVMsr6WyZbytUu98RMeFaNdRYj5e8V16qX0ZLIv5DwRYTqKZW90Hthd63fP1fFaa5WQv9Lps+2j9jVSjM5ndNfQn5F7zh6iB62zZI0uj1xu48KTtdmePebldNC7VynPNUv71mzltXhySGqh2l3BOn+CA4jE6tYV7ON1o5xkSAaz2KcJjUeMjxlJk7jEiVxbK5bCVNu1jwCs4MYZG5qSv+Q4TIbFnF3ttu2qMsbXfmmLJkKmeoNcQfmY88i8BajRUC2aTXSS//GG/nBjVMRfC84TN9YswGpbRrwNT4/1EgphB6D1M0Jn/rLs+X5efDNqe+X3kIm3swLposzFGuaNNuKfcEzU3GNZen63L9sSFl3dokcUgX+Bru5RoezwCePvwHRqYtplQYAAA=="
+  ],
+  "__status__": [
+    "200"
+  ]
+}

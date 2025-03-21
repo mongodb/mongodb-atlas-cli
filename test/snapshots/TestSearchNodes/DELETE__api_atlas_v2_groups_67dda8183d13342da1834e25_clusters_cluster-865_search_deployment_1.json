@@ -1,0 +1,23 @@
+{
+  "Content-Length": [
+    "0"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:23:40 GMT"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Www-Authenticate": [
+    "Digest realm=\"MMS Public API\", domain=\"\", nonce=\"exqg6Bul6AHLrq3XzgGGq+kR+gA1HeEe\", algorithm=MD5, qop=\"auth\", stale=false"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "17"
+  ],
+  "__body__": [
+    ""
+  ],
+  "__status__": [
+    "401"
+  ]
+}

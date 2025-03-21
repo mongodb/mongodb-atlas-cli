@@ -1,0 +1,47 @@
+{
+  "Content-Length": [
+    "174"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:06:12 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "63"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasOnlineArchiveResource::updateOnlineArchive"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "eyJkZXRhaWwiOiJBbiBhcmNoaXZlIG11c3QgYmUgaW4gYW4gYWN0aXZlIHN0YXRlIGluIG9yZGVyIHRvIGJlIHBhdXNlZC4iLCJlcnJvciI6NDA5LCJlcnJvckNvZGUiOiJPTkxJTkVfQVJDSElWRV9NVVNUX0JFX0FDVElWRV9UT19QQVVTRSIsInBhcmFtZXRlcnMiOltdLCJyZWFzb24iOiJDb25mbGljdCJ9"
+  ],
+  "__status__": [
+    "409"
+  ]
+}

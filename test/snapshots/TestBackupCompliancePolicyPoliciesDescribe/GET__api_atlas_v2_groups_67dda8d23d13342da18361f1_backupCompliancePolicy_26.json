@@ -1,0 +1,53 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "275"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-10-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 17:59:34 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "46"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiDiskBackupDataProtectionResource::getDataProtectionSettings"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAGWQ3UrDQBCF32Wv05JNmjbkymIiBESKVAXFizEzoSv7x+4GTcV3d0OxLe3dcOY75+zOD4Mh7IwTe8JGgZCsYr1wPmhQNJdwGG7oG5SVNO+MYsmZ5cmTu5vwh0idW6+oezhC/6mR6YwdN84E6oIwutHwIQlZ1YP0lDAkSWGSjgrpzo12YtfhkXy4dBhdkwKNGyNFN7aBFKv0IGXCrLiCrTOfsbiNCluuEKHELEee54sMgZf5kvc8vtHFHuPoRWg0XzWMnlVpwny3Ixxi3KkqLt7e4yZAmL65vt22z00MGCxGBeuDnKVZMUvzWca3fFUVZbUoXk/QdKoI6b00e2WI/f4BgZsg3qEBAAA="
+  ],
+  "__status__": [
+    "200"
+  ]
+}

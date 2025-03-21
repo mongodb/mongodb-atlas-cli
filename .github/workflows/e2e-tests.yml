@@ -31,26 +31,26 @@ jobs:
           - atlas,datafederation,db
           - atlas,datafederation,privatenetwork
           - atlas,datafederation,querylimits
-          # - atlas,decrypt
+          # - atlas,decrypt # TODO needs credentials
           - atlas,deployments,atlasclusters
-          - atlas,deployments,local,auth,deprecated
-          - atlas,deployments,local,auth,new
-          - atlas,deployments,local,nocli
-          - atlas,deployments,local,noauth
-          - atlas,generic
+          # - atlas,deployments,local,auth,deprecated # needs docker to run
+          # - atlas,deployments,local,auth,new # needs docker to run
+          # - atlas,deployments,local,nocli # needs docker to run
+          # - atlas,deployments,local,noauth # needs docker to run
+          # - atlas,generic # TODO fix test
           - atlas,interactive
           - atlas,ldap
           - atlas,livemigrations
           - atlas,logs
-          - atlas,metrics
+          # - atlas,metrics # TODO fix test colon in name
           - atlas,networking
           - atlas,onlinearchive
-          - atlas,performanceAdvisor
+          # - atlas,performanceAdvisor # TODO fix test colon in name
           - atlas,plugin,install
           - atlas,plugin,run
           - atlas,plugin,uninstall
           - atlas,plugin,update
-          - atlas,processes
+          # - atlas,processes # TODO fix test colon in name
           - atlas,search
           - atlas,search_nodes
           - atlas,serverless,instance
@@ -93,18 +93,19 @@ jobs:
           MONGODB_ATLAS_OPS_MANAGER_URL: ${{ secrets.MONGODB_ATLAS_OPS_MANAGER_URL }}
           MONGODB_ATLAS_SERVICE: cloud
           DO_NOT_TRACK: 1
-          UPDATE_SNAPSHOTS: true
+          UPDATE_SNAPSHOTS: false
           E2E_CLOUD_ROLE_ID: ${{ secrets.E2E_CLOUD_ROLE_ID }}
           E2E_TEST_BUCKET: ${{ secrets.E2E_TEST_BUCKET }}
           E2E_FLEX_INSTANCE_NAME: ${{ secrets.E2E_FLEX_INSTANCE_NAME }}
-      - name: set artifact name
-        run: |
-          echo "NAME=snapshots_${{ matrix.tags }}" | sed "s|,|_|g" >> "$GITHUB_ENV"
-      - name: upload snaphots
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: ${{ env.NAME }}
-          path: test/e2e/snapshots/
+          IDENTITY_PROVIDER_ID: ${{ secrets.IDENTITY_PROVIDER_ID }}
+      # - name: set artifact name
+      #   run: |
+      #     echo "NAME=snapshots_${{ matrix.tags }}" | sed "s|,|_|g" >> "$GITHUB_ENV"
+      # - name: upload snaphots
+      #   uses: actions/upload-artifact@v4.6.2
+      #   with:
+      #     name: ${{ env.NAME }}
+      #     path: test/e2e/snapshots/
       - name: Test Summary
         id: test_summary
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86

@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -103,7 +104,9 @@ func TestDBRoles(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(roleName, role.RoleName)
 		a.Len(role.GetActions(), 2)
-		a.Equal(createPrivilege, role.GetActions()[0].Action)
+		got := []string{role.GetActions()[0].Action, role.GetActions()[1].Action}
+		slices.Sort(got)
+		a.Equal(createPrivilege, got[0])
 		a.Len(role.GetInheritedRoles(), 1)
 		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})

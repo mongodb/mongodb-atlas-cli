@@ -17,7 +17,6 @@ package e2e_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"os/exec"
 	"testing"
@@ -31,24 +30,16 @@ func TestProjectSettings(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	n, err := RandInt(1000)
-	require.NoError(t, err)
-
-	projectName := fmt.Sprintf("e2e-proj-%v", n)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
-	defer func() {
-		if e := deleteProject(projectID); e != nil {
-			t.Errorf("error deleting project: %v", e)
-		}
-	}()
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("settings")
 
 	t.Run("Describe", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			settingsEntity,
 			"get",
+			"--projectId",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -71,6 +62,8 @@ func TestProjectSettings(t *testing.T) {
 			settingsEntity,
 			"update",
 			"--disableCollectDatabaseSpecificsStatistics",
+			"--projectId",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)

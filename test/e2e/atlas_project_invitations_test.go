@@ -31,19 +31,14 @@ func TestAtlasProjectInvitations(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	var invitationID string
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("invitations")
 
+	var invitationID string
 	n, err := RandInt(1000)
 	require.NoError(t, err)
 
-	projectName := fmt.Sprintf("e2e-proj-%v", n)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-
 	emailProject := fmt.Sprintf("test-%v@mongodb.com", n)
-	t.Cleanup(func() {
-		deleteProjectWithRetry(t, projectID)
-	})
 
 	t.Run("Invite", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -53,8 +48,8 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			emailProject,
 			"--role",
 			"GROUP_READ_ONLY",
-			"--projectId",
-			projectID,
+			"--projectID",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -73,8 +68,8 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			projectsEntity,
 			invitationsEntity,
 			"ls",
-			"--projectId",
-			projectID,
+			"--projectID",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -92,8 +87,8 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			invitationsEntity,
 			"get",
 			invitationID,
-			"--projectId",
-			projectID,
+			"--projectID",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -117,8 +112,8 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			roleName1,
 			"--role",
 			roleName2,
-			"--projectId",
-			projectID,
+			"--projectID",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -141,8 +136,8 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			roleName1,
 			"--role",
 			roleName2,
-			"--projectId",
-			projectID,
+			"--projectID",
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -162,8 +157,8 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			"delete",
 			invitationID,
 			"--force",
-			"--projectId",
-			projectID)
+			"--projectID",
+			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
 		a := assert.New(t)

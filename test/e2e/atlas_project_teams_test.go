@@ -32,16 +32,11 @@ func TestAtlasProjectTeams(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
+	g := newAtlasE2ETestGenerator(t)
+	g.generateProject("teams")
+
 	n, err := RandInt(1000)
 	require.NoError(t, err)
-
-	projectName := fmt.Sprintf("e2e-proj-%v", n)
-	projectID, err := createProject(projectName)
-	require.NoError(t, err)
-	t.Cleanup(func() {
-		deleteProjectWithRetry(t, projectID)
-	})
-
 	teamName := fmt.Sprintf("e2e-teams-%v", n)
 	teamID, err := createTeam(teamName)
 	require.NoError(t, err)
@@ -59,7 +54,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 			"--role",
 			"GROUP_READ_ONLY",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -89,7 +84,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 			"--role",
 			roleName2,
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -112,7 +107,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 			teamsEntity,
 			"ls",
 			"--projectId",
-			projectID,
+			g.projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -132,7 +127,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 			teamID,
 			"--force",
 			"--projectId",
-			projectID)
+			g.projectID)
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
 		a := assert.New(t)

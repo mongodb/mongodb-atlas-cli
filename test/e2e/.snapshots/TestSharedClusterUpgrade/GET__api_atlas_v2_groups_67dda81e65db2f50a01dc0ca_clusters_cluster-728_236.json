@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "733"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:03:58 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "66"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1UbU/bMBD+K5M/7Mto88LSskhoKm2HOtFSNWFsTBNy4ktqSO3MdqoVxH/fOUmBMoamfUBqJefunnt57uWWJDS9rsqxoEkBjIQZLTTskYQPpRCQGqlIeEvgiVoBZXMFGSgQKZCQaEilYFRtyN0eSYtKG1DxprSqxXh+MhkOonFMUNV45VJERnGRa+tdG2qx6J6spMglS0LHaZ10+v5BRy9R23Fd/HWhWl0F3dauw2DdFWBCv+96/b3nMd5/YPyXMM5HrYtDoyp4SyuzjGSlUjikbMXFWwVlwVMagTmkpqC6s6HL/V8/t66Rgm21kVo/FPxOq/Vu0c8nUNOL7BsY4R/xvusHHXe/43ux1w+DIHz/4QKDMK6vI34Dx0ckdLtBIzinClPMp5JZ5Kezk5Nvl+eDxXQ8QgQ2Um1K25mBWYA2cyXXnAG2n8xOZ2O0yAuZ0GLYpBhBkU2poDmwyJaGfu+nI1eyKie2nb0+Y/TAg17AEj8LXOp6LHVTit74g94PdvT7PasvaAIFjsf3H/jm4to+b8kShw5xS2NKXfMlK1Zz0/LUTeXKoSV3avKdte/UyWjnb5lsKdePuSd2wot6rIsMKX+tuE6zjI5C/qWCzzLR96nshN4J+9j69XPVgpZ6Kc2/ZPpge4ddrTWjoym9kuoLesfRQ/RB1y5Jq9sRd3uoEHRlh3e3WSWt9KPrVHLz9J61a1kfnhLSZpheGMEAbKxqVc82WnvWRY5oPIsZzxs8FHjKbJzWJUqyzF63NUyEXfMU7A5ikKmtif8hw2W2LOLubLdt1pQ3OI9sWYpLxc2GhH37sWMRj2eDWUy2abXSs+hyPIjiS68m+EYKmLywZgFpbFrwBT7fNEglpRmCMu0Jn0SL48XpafzVa+6X2ULO5qNBPJkdo9jQvN1W7AuemZprLMs05/5pQ9ZNZxfIIdUQbbCbK3R4Ekfk7jc3F0RwlQYAAA=="
+  ],
+  "__status__": [
+    "200"
+  ]
+}

@@ -28,6 +28,7 @@ import (
 )
 
 func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("dataFederationPrivateEndpointsAWS")
 
@@ -36,7 +37,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 
 	n, err := RandInt(int64(8000))
 	require.NoError(t, err)
-	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%d", 1000+n.Int64())
+	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%d", 1000+n)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

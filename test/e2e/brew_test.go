@@ -31,9 +31,17 @@ const (
 )
 
 func TestAtlasCLIConfig(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	tempDirEnv := "XDG_CONFIG_HOME=" + os.TempDir() // make sure no config.toml is detected
+
+	t.Setenv("MONGODB_ATLAS_ORG_ID", "")
+	t.Setenv("MONGODB_ATLAS_PROJECT_ID", "")
+	t.Setenv("MONGODB_ATLAS_PUBLIC_API_KEY", "")
+	t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "")
+	t.Setenv("MONGODB_ATLAS_OPS_MANAGER_URL", "")
+	t.Setenv("MONGODB_ATLAS_SERVICE", "")
 
 	t.Run("config ls", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "config", "ls")

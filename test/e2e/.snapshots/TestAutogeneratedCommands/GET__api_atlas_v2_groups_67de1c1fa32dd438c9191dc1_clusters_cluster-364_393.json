@@ -1,0 +1,26 @@
+{
+  "Content-Length": [
+    "106"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Sat, 22 Mar 2025 02:23:42 GMT"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Www-Authenticate": [
+    "Digest realm=\"MMS Public API\", domain=\"\", nonce=\"7/z/FO8to9FftQz7rLtO8skE4Ff0PHOw\", algorithm=MD5, qop=\"auth\", stale=false"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "17"
+  ],
+  "__body__": [
+    "ewogICJlcnJvciIgOiA0MDEsCiAgInJlYXNvbiIgOiAiVW5hdXRob3JpemVkIiwKICAiZGV0YWlsIiA6ICJZb3UgYXJlIG5vdCBhdXRob3JpemVkIGZvciB0aGlzIHJlc291cmNlLiIKfQ=="
+  ],
+  "__status__": [
+    "401"
+  ]
+}

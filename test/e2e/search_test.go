@@ -32,6 +32,7 @@ import (
 const analyzer = "lucene.simple"
 
 func TestSearch(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("search")
 	r := require.New(t)
@@ -448,6 +449,7 @@ func TestSearch(t *testing.T) {
 }
 
 func TestSearchDeprecated(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("search")
 	r := require.New(t)

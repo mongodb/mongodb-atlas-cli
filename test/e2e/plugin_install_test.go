@@ -70,6 +70,7 @@ func generateTestPlugin(directoryName string, binaryName string, manifestContent
 }
 
 func TestPluginInstall(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 

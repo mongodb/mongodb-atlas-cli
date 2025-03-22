@@ -29,6 +29,7 @@ import (
 )
 
 func TestAtlasOrgs(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 

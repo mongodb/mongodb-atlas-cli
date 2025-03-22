@@ -38,6 +38,7 @@ var regionsAWS = []string{
 }
 
 func TestPrivateEndpointsAWS(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsAWS")
 
@@ -47,7 +48,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	region := regionsAWS[n.Int64()]
+	region := regionsAWS[n]
 	var id string
 
 	t.Run("Create", func(t *testing.T) {
@@ -158,6 +159,7 @@ var regionsAzure = []string{
 }
 
 func TestPrivateEndpointsAzure(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsAzure")
 
@@ -167,7 +169,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	region := regionsAzure[n.Int64()]
+	region := regionsAzure[n]
 	var id string
 
 	t.Run("Create", func(t *testing.T) {
@@ -287,13 +289,14 @@ var regionsGCP = []string{
 }
 
 func TestPrivateEndpointsGCP(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("privateEndpointsGPC")
 
 	n, err := RandInt(int64(len(regionsGCP)))
 	require.NoError(t, err)
 
-	region := regionsGCP[n.Int64()]
+	region := regionsGCP[n]
 
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
@@ -399,6 +402,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 }
 
 func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
+	setup(t)
 	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("regionalizedPrivateEndpointsSettings")
 

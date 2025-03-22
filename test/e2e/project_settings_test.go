@@ -27,6 +27,7 @@ import (
 )
 
 func TestProjectSettings(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 

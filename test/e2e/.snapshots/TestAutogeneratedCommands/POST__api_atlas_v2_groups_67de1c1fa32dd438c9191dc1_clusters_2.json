@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "776"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Sat, 22 Mar 2025 02:10:40 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "599"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::createCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=04bf3bdf79af984bb073294518a45c339d20a0ec; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1V204bMRD9lcrPkL2EUti3JQkoVS4ou0BLVSHHniQuXntle1MFlH/vOA6XpCrqCzxE2nhmjo89c44fCeVLqhjwjlYzMW8MdUIrkj0S1linq3ENylrZEfUCTMgppU1Skv34eUAqoUTVVD1FpxI4Bi6NdpppSTJSDorkLiUHxEn7unyoOWC42zvPrwYlWR+QKWX3Tb0FIdmMSgu4KjBfAXPaeDqwFzZA+aWBGRhA+ghogWnFqVl5SCaRPZhyVfvQpHc56HfyolciHRZQ8ZSFM0LNLaL7CgR00MUfFqRx+vkwbh+maRmnWRJnR8ktlnJh7wvxABdnJGvHrTis3FCD9/B0rvOrweD73U0+Gfa6WILkzKr2u+VuAtbhBS0FBzwSGY1HPcyYSz2lshMIFyBnQ6roHHixoIYj7vOJ50Y3dR9vgBx/4ZCwZEbbKedH7RN2mpwmnCWIJl7iabITh1OKcUmnIG3onhTq3n8+kgVeJNYtnKttFkVM6oYfcli2Kq3mmk9bTFcRrUVEnaQ2WqbRhoyN/sUk2jbAPn0cto+PiO+a3LRKzrBLH7VvFAYsMnj/2sBXPbXPVHa23tn2dfbHc7WK1nah3f8wfclde036SPdsSH9pc43oGzmTk1ZMnmM7y61jDCha+eHdbVZNG/tKcbVw+xo1UEvBNpZR1MDCML0xgid+BFVTbWYbsxMPMcfqYA2hHsdfrpxgdguJiMo6b1Jee4g9TOKtGPvjy8JLMUYpwtRea9lUsBV9Ueajbj7xIlQozY5ulCNZjFKnjdMFo3IjLjQ6XdWNl/3fJlMb4AK9Ygn7J7dYD139W+0G1oGXN4h9tDXGQKLz+MX3OFp77QkLbYRbkeyL/xO8ZhSam98UJPjmWMnVe11u6Od2y6virpcX5V2ymcwHraD/hj/5x8LnbItv8fNTqDRauw4Yt929X0wuJuNx+c07HrJ3TyWdSS8v+6ML/+qAd+XNaPpHKTj+fheXQQgT7Au1UKxw+CuEGZQFWf8B7+fzURsHAAA="
+  ],
+  "__status__": [
+    "201"
+  ]
+}

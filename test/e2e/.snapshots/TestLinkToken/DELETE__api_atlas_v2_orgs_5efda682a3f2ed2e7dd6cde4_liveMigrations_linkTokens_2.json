@@ -1,0 +1,47 @@
+{
+  "Content-Length": [
+    "137"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 17:55:28 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "40"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiLiveMigrationsLinkTokensResource::deleteOrgLink"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "eyJkZXRhaWwiOiJDb3VsZCBub3QgZmluZCB0aGUgcmVxdWVzdGVkIGV4dGVybmFsIG9yZ2FuaXphdGlvbiBsaW5rLiIsImVycm9yIjo0MDQsImVycm9yQ29kZSI6bnVsbCwicGFyYW1ldGVycyI6bnVsbCwicmVhc29uIjoiTm90IEZvdW5kIn0="
+  ],
+  "__status__": [
+    "404"
+  ]
+}

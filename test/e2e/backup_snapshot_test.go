@@ -28,6 +28,7 @@ import (
 )
 
 func TestSnapshots(t *testing.T) {
+	setup(t)
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)

@@ -26,6 +26,7 @@ import (
 )
 
 func TestPluginKubernetes(t *testing.T) {
+	setup(t)
 	t.Helper()
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)

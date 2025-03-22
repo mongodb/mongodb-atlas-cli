@@ -29,6 +29,7 @@ import (
 )
 
 func TestDBUserCerts(t *testing.T) {
+	setup(t)
 	n, err := RandInt(1000)
 	require.NoError(t, err)
 	username := fmt.Sprintf("user%v", n)

@@ -146,14 +146,28 @@ functions:
           <<: *go_env
           MONGODB_ATLAS_SKIP_UPDATE_CHECK: "yes"
           DO_NOT_TRACK: "1"
+          UPDATE_SNAPSHOTS: "true"
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        command: git diff
     - command: archive.targz_pack
       params:
         target: src/github.com/mongodb/mongodb-atlas-cli/coverage.tgz
         source_dir: src/github.com/mongodb/mongodb-atlas-cli/cov
         include:
           - '*'
+        exclude_files:
+          - .gitkeep
+    - command: archive.targz_pack
+      params:
+        target: src/github.com/mongodb/mongodb-atlas-cli/snapshots.tgz
+        source_dir: src/github.com/mongodb/mongodb-atlas-cli/test/e2e/snapshots
+        include:
+          - '**/*.json'
         exclude_files:
           - .gitkeep
     - command: s3.put
@@ -165,7 +179,17 @@ functions:
         bucket: mongodb-mongocli-build
         permissions: public-read
         content_type: ${content_type|application/json}
-        display_name: internal-bucket
+        display_name: internal-bucket coverage.tgz
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        local_file: src/github.com/mongodb/mongodb-atlas-cli/snapshots.tgz
+        remote_file: ${project}/dist/${revision}_${created_at}/atlascli/cov/${build_variant}_${task_name}.snapshots.tgz
+        bucket: mongodb-mongocli-build
+        permissions: public-read
+        content_type: ${content_type|application/json}
+        display_name: internal-bucket snapshots.tgz
   "merge cov":
     - command: subprocess.exec
       params:

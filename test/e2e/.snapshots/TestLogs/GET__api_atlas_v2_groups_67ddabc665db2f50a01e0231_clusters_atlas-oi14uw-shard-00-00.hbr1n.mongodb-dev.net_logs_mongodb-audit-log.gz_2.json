@@ -1,0 +1,50 @@
+{
+  "Content-Disposition": [
+    "attachment; filename=\"atlas-oi14uw-shard-00-00.hbr1n.mongodb-dev.net_2025-03-20T18:23:17.000000158_2025-03-21T18:23:17.000000158_MONGODB_AUDIT_LOG.log.gz\""
+  ],
+  "Content-Length": [
+    "0"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+gzip"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:23:17 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "126"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::logsForHost"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    ""
+  ],
+  "__status__": [
+    "200"
+  ]
+}

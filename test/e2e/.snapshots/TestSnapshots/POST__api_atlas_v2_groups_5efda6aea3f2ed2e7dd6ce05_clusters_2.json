@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "795"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 17:55:31 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "840"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::createCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1VbU/bMBD+K5M/Q/PStYx8C21AnfqCmgAb04Sc+Np6OHZkO50K6n/fuS6MMiHtC3yo5Prunnt8d8/lkVC2prICNlBywZetppYrSZJHUrXGqnrWgDRGDHizAu19CmGimCQ/fh6Rmktet3UmaSmAoeFSK6sqJUhCinEe3cXkiFhhXoZPFAM0D7Pz9GpckO0RKWl13zZ7EJJY3QJecnSXUFmlHRt4si6oMGjWQNmlhgVoQPaIZ6BSklG9cYiVQPKgi03jTPPscjwapHlWIJvKo+Ijc6u5XBpEdxEIaGGIPwyIw7h3HHaP46iITpJeL+nGtxjKuLnP+QNcnJEkCjuhv7mhGsvw9Kzzq/H4+91NOp9kQwxBcnrTuGypnYOxWJ81Z4BPItPZNEOPpVAlFQNPOAexmFBJl8DyFdUMcZ9fvNSqbUZYAdKDBaN9CrS7iIHFcMJYv4Kwh2jc2ft4Qb9En/s9VsaLXkjDiJVV2Ee7oCUI45snuLx3x0eywkJi3MraxiRBUAnVsmMG606t5FKxslOpOqAND6gV1ATrONiRMcFbTIJ9A8zT4Tg+PSWua2LXKrHALn1U3sDPV6Cx/krDV1WaZyoHqQ/SvvT+eK5G0saslP0fpn99t06SzjI8m9BfSl8j+k7N5EsnJM+2g+uOGwtJaze8h81qaGteKK7h9pVENTSCV7uFkTdQ+Vl6OYHdgwkse8ylauvdaKN35CCWGO0Xg4/H6Rcbyyuzh0REaaxbUU56iD2Jwr0WR7PLnCTdMEQlQmmulWhr2Gs+L9LpMJ07DUpU5kC10pIkRKXT1qq8omKnLVxzqm5ap/p/d0yjgXFcFWvIXlkMxsNQ/ZaHhq3n5fbDa7Qt2kDg4nGX7/G07tYR5kpzuyHJifvjV83U9za9yYlfmzMpNu9VXN/Pfcqr/C5L8+Iu2g3mg5Iwens4aEm8zz74Fo+ffKRWyg5A2332UT6/mM9mxbcII5C9fQoZzLO0GE0v3DcH3FLejab7JPmF/7qLa6+DOfaFGsg3OPs1woyLnGz/AGowF+kZBwAA"
+  ],
+  "__status__": [
+    "201"
+  ]
+}

@@ -29,6 +29,7 @@ import (
 )
 
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
+	setup(t)
 	cliPath, er := AtlasCLIBin()
 	require.NoError(t, er)
 

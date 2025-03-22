@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "783"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 17:57:12 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "88"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1VbW/aMBD+K5M/t+SlA6p8S4FWTLxUJG23TlNl4gO8OnZkO0y04r/vjNMWmDbtSyuBlPjunjvf3fPkmVC2prIA1lNywZe1ppYrSZJnUtTGqnJagTRG9Hi1Au19cmGimCTff5yQkkte1uVA0rkAhoZrrawqlCAJyUdZ9BCTE2KF2Q8fKwZo7g8u05tRTrYnZE6Lx7pqQEiyoMIAnnL0l1BYpV05cGTWQNm1hgVowPIR0EChJKN64yALgdWDzjeVM80G16NhL80GOZZTeFS8ZWY1l0uD6C4CAS308Y8BcRi3T8Oz0zjKo27SbiefO/cYyrh5zPgTXF2Q5Cxshf7kjmrsw8u9Lm9Go28Pd+lsPOhjCBanN5XLltoZGIsNWnMGeCUymU4G6LEUak5FzxecgViMqaRLYNmKaoa4rzdealVXQ+wA6XQZo+cR67TZPF60QxpGrAg7rtn8zR7HB3b8oV3QOQjjpye4fHSPz2SFjcS4lbWVSYKgEKpmpwzWrVLJpWLzVqHKgFY8oFZQE6zjYFeMCf5WSdAMwLw8nLajLnFTE7tRiQVO6aPyBn7BAo39Vxq+qLl5LeUg9UHafe+Pr9VIWpmVsv9T6Zvv1nHSWfoXY/pT6VtE39GZnLdC8mo7OG510CBp6Zb3cFgVrc0e4ypujzmqoRK82ElGVkHhl2l/BaPDFSzOXa663O02ekcOYonRXhp8PK6/2FhemAYSEaWxTqQc9xB7HIUNGYfT68xRMUQqwtzcKlGX0JA+y9NJP505EkqkZk/V0pIkRKrT2qqsoGJHLhQ6VVa1o/2fIlNpYBy1Yg3HNzcYD331Sx4atr4uJxDHaFu0gUDlcYfvcbWzrSuYK83thiRd9+K1ZuKHm95lxOvmVIrNezXXz7NJeZM9DNIsf4h2m/mkJAz/oU9Ov5xPE3yPj598pFbK9kDbJvswm13NptP8a4QRWL19CenNBmk+nFy5rw5dNjKHC436vFtS93ny2n88z7WnxAwnRA1kG6RBiYCjPCPb38p80mQlBwAA"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

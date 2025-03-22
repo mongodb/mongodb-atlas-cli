@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "374"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Fri, 21 Mar 2025 18:25:55 GMT"
+  ],
+  "Deprecation": [
+    "Thu, 30 May 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Mon, 30 Nov 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "1246"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasFTSIndexConfigResource::createFTSIndex"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=ad65f30d9e01bb8a1e467336a18ab265d8ba9be5; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAK1T3U/CMBD/X/o8TWCihjfiV0gMGng0hBztwRr6sbSdWMn+d3sDhqKSmPi0rff7urtuw8CAiu/oWJ+piqPBcx/ACHCCZW3Rs/7LhvEC3L1UYfs9zZgBjYm3wri2TjzaNbob8JiIwa7QHLAbFmJJUEUYTph6ukPJxrxF7MRYXWe/O+4j/o9l23BNCG6VQh6kNaOtWWl98MlAQIA56SQG6FLhLDiQRpplKkoj8G14m2qXV0LAIs9z0cnzi66AznXOc84TSENZJrgnbxFTL5Kz/gKUx4wtJCrRVOZWRHp+38y6kAF9CZz61ZUKknA6TpBb6iAOWsoX+k8L2rfuKH8a9vEJDUJrNKHJdEgHVSjs3w2yE215SdOkIS6NdTiY29dE7fZ6J2IKyytKR8oBtiP9pPzjBTnSqtvr1CzvrNvpJJRHcLwYnPor0muokiMbjmbP46eH8d1kQsfRWBP17qbu3Ro5Vn8A4xhO2GkDAAA="
+  ],
+  "__status__": [
+    "200"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "Cache-Control": [
+    "no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0"
+  ],
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Sat, 22 Mar 2025 02:23:37 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "202"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasProcessMeasurementsResource::getHostMeasurements"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=04bf3bdf79af984bb073294518a45c339d20a0ec; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "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"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

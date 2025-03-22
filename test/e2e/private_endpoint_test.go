@@ -48,7 +48,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	region := regionsAWS[n.Int64()]
+	region := regionsAWS[n]
 	var id string
 
 	t.Run("Create", func(t *testing.T) {
@@ -169,7 +169,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	region := regionsAzure[n.Int64()]
+	region := regionsAzure[n]
 	var id string
 
 	t.Run("Create", func(t *testing.T) {
@@ -296,7 +296,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	n, err := RandInt(int64(len(regionsGCP)))
 	require.NoError(t, err)
 
-	region := regionsGCP[n.Int64()]
+	region := regionsGCP[n]
 
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)

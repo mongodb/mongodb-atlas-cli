@@ -17,11 +17,9 @@ package e2e_test
 import (
 	"bytes"
 	"context"
-	"crypto/rand"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math/big"
 	"net/url"
 	"os"
 	"os/exec"
@@ -196,10 +194,6 @@ func AtlasCLIBin() (string, error) {
 		return "", fmt.Errorf("%w: invalid bin %q", err, path)
 	}
 	return cliPath, nil
-}
-
-func RandInt(maximum int64) (*big.Int, error) {
-	return rand.Int(rand.Reader, big.NewInt(maximum))
 }
 
 func deleteProjectWithRetry(t *testing.T, projectID string) {
@@ -1420,10 +1414,4 @@ func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
-}
-
-func setup(t *testing.T) {
-	t.Helper()
-
-	snapshotServer(t)
 }

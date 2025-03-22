@@ -16,10 +16,12 @@ package e2e_test
 
 import (
 	"bytes"
+	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/big"
 	"net/http"
 	"net/http/httptest"
 	"net/http/httputil"
@@ -32,6 +34,8 @@ import (
 )
 
 var fileIDs = map[string]map[string]int{}
+var randInts = map[string]map[int64]int64{}
+var currentTestName string
 
 func snapshotDir(t *testing.T) string {
 	t.Helper()
@@ -84,6 +88,37 @@ func snapshotName(t *testing.T, r *http.Request) string {
 	return fmt.Sprintf("%s_%d.json", filename, id)
 }
 
+func updateSnapshots() bool {
+	return os.Getenv("UPDATE_SNAPSHOTS") == "true"
+}
+
+func RandInt(maximum int64) (int64, error) {
+	if updateSnapshots() {
+		i, err := rand.Int(rand.Reader, big.NewInt(maximum))
+		if err != nil {
+			return 0, err
+		}
+
+		r := i.Int64()
+
+		if randInts[currentTestName] == nil {
+			randInts[currentTestName] = map[int64]int64{}
+		}
+
+		randInts[currentTestName][0]++
+
+		id := randInts[currentTestName][0]
+		randInts[currentTestName][id] = r
+
+		return r, nil
+	}
+
+	randInts[currentTestName][0]++
+	id := randInts[currentTestName][0]
+
+	return randInts[currentTestName][id], nil
+}
+
 func snapshotServer(t *testing.T) {
 	t.Helper()
 
@@ -94,11 +129,24 @@ func snapshotServer(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	updateSnapshots := os.Getenv("UPDATE_SNAPSHOTS") == "true"
+	dir := snapshotDir(t)
+	randIntsFilename := path.Join(dir, "randInts.json")
 
-	if updateSnapshots {
-		dir := snapshotDir(t)
+	if updateSnapshots() {
+		randInts[t.Name()] = map[int64]int64{}
 		_ = os.RemoveAll(dir)
+	} else {
+		buf, err := os.ReadFile(randIntsFilename)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		var data map[int64]int64
+		if err := json.Unmarshal(buf, &data); err != nil {
+			t.Fatal(err)
+		}
+
+		randInts[t.Name()] = data
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
@@ -132,7 +180,7 @@ func snapshotServer(t *testing.T) {
 	}
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if updateSnapshots {
+		if updateSnapshots() {
 			r.Host = targetURL.Host
 			proxy.ServeHTTP(w, r)
 			return
@@ -144,14 +192,19 @@ func snapshotServer(t *testing.T) {
 			return
 		}
 
+		t.Logf("reading snapshot from %q", filename)
 		buf, err := os.ReadFile(filename)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			if os.IsNotExist(err) {
+				http.Error(w, `{"errorCode":"NOT_FOUND","error":"snapshot not found"}`, http.StatusNotFound)
+				return
+			}
+			http.Error(w, fmt.Sprintf(`{"errorCode":"UNKNOWN_ERROR","error":%q}`, err.Error()), http.StatusInternalServerError)
 			return
 		}
 		var data map[string][]string
 		if err := json.Unmarshal(buf, &data); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf(`{"errorCode":"UNKNOWN_ERROR","error":%q}`, err.Error()), http.StatusInternalServerError)
 			return
 		}
 
@@ -164,7 +217,7 @@ func snapshotServer(t *testing.T) {
 
 		status, err := strconv.Atoi(data["__status__"][0])
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf(`{"errorCode":"UNKNOWN_ERROR","error":%q}`, err.Error()), http.StatusInternalServerError)
 			return
 		}
 		w.WriteHeader(status)
@@ -172,20 +225,41 @@ func snapshotServer(t *testing.T) {
 		if data["__body__"] != nil {
 			body, err := base64.StdEncoding.DecodeString(data["__body__"][0])
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				http.Error(w, fmt.Sprintf(`{"errorCode":"UNKNOWN_ERROR","error":%q}`, err.Error()), http.StatusInternalServerError)
 				return
 			}
 			_, err = w.Write(body)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				http.Error(w, fmt.Sprintf(`{"errorCode":"UNKNOWN_ERROR","error":%q}`, err.Error()), http.StatusInternalServerError)
 				return
 			}
 		}
 	}))
 
 	t.Cleanup(func() {
+		if updateSnapshots() {
+			out, err := json.MarshalIndent(randInts[t.Name()], "", "  ")
+
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			err = os.WriteFile(randIntsFilename, out, 0600)
+
+			if err != nil {
+				t.Fatal(err)
+			}
+		}
 		server.Close()
 	})
 
 	t.Setenv("MONGODB_ATLAS_OPS_MANAGER_URL", server.URL)
+}
+
+func setup(t *testing.T) {
+	t.Helper()
+
+	currentTestName = t.Name()
+
+	snapshotServer(t)
 }

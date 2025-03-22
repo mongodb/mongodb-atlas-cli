@@ -34,7 +34,7 @@ func TestIntegrations(t *testing.T) {
 
 	n, err := RandInt(255)
 	require.NoError(t, err)
-	key := "51c0ef87e9951c3e147accf0e12" + n.String()
+	key := fmt.Sprintf("51c0ef87e9951c3e147accf0e12%v", n)
 
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
@@ -42,7 +42,7 @@ func TestIntegrations(t *testing.T) {
 	t.Run("Create DATADOG", func(t *testing.T) {
 		n, err := RandInt(9)
 		require.NoError(t, err)
-		datadogKey := "000000000000000000000000000000" + n.String() + n.String()
+		datadogKey := fmt.Sprintf("000000000000000000000000000000%v%v", n, n)
 		if IsGov() {
 			t.Skip("Skipping DATADOG integration test, cloudgov does not have an available datadog region")
 		}
@@ -68,7 +68,7 @@ func TestIntegrations(t *testing.T) {
 	t.Run("Create OPSGENIE", func(t *testing.T) {
 		n, err := RandInt(9)
 		require.NoError(t, err)
-		opsGenieKey := "00000000-aaaa-2222-bbbb-3333333333" + n.String() + n.String()
+		opsGenieKey := fmt.Sprintf("00000000-aaaa-2222-bbbb-3333333333%v%v", n, n)
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"create",
@@ -92,7 +92,7 @@ func TestIntegrations(t *testing.T) {
 	t.Run("Create PAGER_DUTY", func(t *testing.T) {
 		n, err := RandInt(9)
 		require.NoError(t, err)
-		pagerDutyKey := "000000000000000000000000000000" + n.String() + n.String()
+		pagerDutyKey := fmt.Sprintf("000000000000000000000000000000%v%v", n, n)
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"create",
@@ -116,7 +116,7 @@ func TestIntegrations(t *testing.T) {
 	t.Run("Create VICTOR_OPS", func(t *testing.T) {
 		n, err := RandInt(9)
 		require.NoError(t, err)
-		victorOpsKey := "fa07bbc8-eab2-4085-81af-daed47dc1c" + n.String() + n.String()
+		victorOpsKey := fmt.Sprintf("fa07bbc8-eab2-4085-81af-daed47dc1c%v%v", n, n)
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"create",

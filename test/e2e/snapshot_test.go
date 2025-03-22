@@ -135,6 +135,7 @@ func snapshotServer(t *testing.T) {
 	if updateSnapshots() {
 		randInts[t.Name()] = map[int64]int64{}
 		_ = os.RemoveAll(dir)
+		_ = enforceSnapshotDir(dir)
 	} else {
 		buf, err := os.ReadFile(randIntsFilename)
 		if err != nil {

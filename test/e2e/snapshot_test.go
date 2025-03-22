@@ -76,7 +76,7 @@ func snapshotName(t *testing.T, r *http.Request) string {
 
 	dir := snapshotDir(t)
 
-	filename := fmt.Sprintf("%s/%s_%s", dir, r.Method, strings.ReplaceAll(r.URL.Path, "/", "_"))
+	filename := fmt.Sprintf("%s/%s_%s", dir, r.Method, strings.ReplaceAll(strings.ReplaceAll(r.URL.Path, "/", "_"), ":", "_"))
 
 	if fileIDs[t.Name()] == nil {
 		fileIDs[t.Name()] = map[string]int{}

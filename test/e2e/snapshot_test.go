@@ -46,9 +46,9 @@ func snapshotDir(t *testing.T) string {
 	}
 
 	if strings.HasSuffix(dir, "test/e2e") {
-		dir = path.Join(dir, "snapshots", t.Name())
+		dir = path.Join(dir, ".snapshots", t.Name())
 	} else {
-		dir = path.Join(dir, "test/e2e/snapshots", t.Name())
+		dir = path.Join(dir, "test/e2e/.snapshots", t.Name())
 	}
 
 	if err := enforceSnapshotDir(dir); err != nil {
@@ -119,6 +119,24 @@ func RandInt(maximum int64) (int64, error) {
 	return randInts[currentTestName][id], nil
 }
 
+func loadRandInts(randIntsFilename string) (map[int64]int64, error) {
+	buf, err := os.ReadFile(randIntsFilename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return map[int64]int64{}, nil
+		}
+		return nil, err
+	}
+
+	var data map[int64]int64
+	if err := json.Unmarshal(buf, &data); err != nil {
+		return nil, err
+	}
+	data[0] = 0
+
+	return data, nil
+}
+
 func snapshotServer(t *testing.T) {
 	t.Helper()
 
@@ -137,18 +155,10 @@ func snapshotServer(t *testing.T) {
 		_ = os.RemoveAll(dir)
 		_ = enforceSnapshotDir(dir)
 	} else {
-		buf, err := os.ReadFile(randIntsFilename)
+		randInts[t.Name()], err = loadRandInts(randIntsFilename)
 		if err != nil {
 			t.Fatal(err)
 		}
-
-		var data map[int64]int64
-		if err := json.Unmarshal(buf, &data); err != nil {
-			t.Fatal(err)
-		}
-		data[0] = 0
-
-		randInts[t.Name()] = data
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)

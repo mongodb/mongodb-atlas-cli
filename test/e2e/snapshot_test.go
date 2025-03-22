@@ -145,6 +145,7 @@ func snapshotServer(t *testing.T) {
 		if err := json.Unmarshal(buf, &data); err != nil {
 			t.Fatal(err)
 		}
+		data[0] = 0
 
 		randInts[t.Name()] = data
 	}

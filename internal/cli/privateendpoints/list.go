@@ -44,7 +44,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PrivateEndpointsDeprecated(opts.ConfigProjectID(), opts.NewListOptions())
+	r, err := opts.store.PrivateEndpointsDeprecated(opts.ConfigProjectID(), opts.NewAtlasListOptions())
 
 	if err != nil {
 		return err

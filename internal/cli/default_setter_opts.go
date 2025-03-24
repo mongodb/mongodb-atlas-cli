@@ -93,8 +93,7 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 	}
 	if err != nil {
 		err = commonerrors.Check(err)
-		var atlasErr *atlas.ErrorResponse
-		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
+		if atlasErr, ok := atlasv2.AsError(err); ok && atlasErr.GetError() == 404 {
 			return nil, nil, errNoResults
 		}
 		return nil, nil, err
@@ -118,8 +117,7 @@ func (opts *DefaultSetterOpts) orgs(filter string) (results []atlasv2.AtlasOrgan
 	pagination := &atlasv2.ListOrganizationsApiParams{Name: &filter, ItemsPerPage: pointer.Get(resultsLimit)}
 	orgs, err := opts.Store.Organizations(pagination)
 	if err != nil {
-		var atlasErr *atlas.ErrorResponse
-		if errors.As(err, &atlasErr) && atlasErr.HTTPCode == 404 {
+		if atlasErr, ok := atlasv2.AsError(err); ok && atlasErr.GetError() == 404 {
 			return nil, errNoResults
 		}
 		return nil, commonerrors.Check(err)

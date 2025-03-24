@@ -46,7 +46,7 @@ var listTemplate = `ID	BUCKET NAME	CLOUD PROVIDER	IAM ROLE ID{{range valueOrEmpt
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.ExportBuckets(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err

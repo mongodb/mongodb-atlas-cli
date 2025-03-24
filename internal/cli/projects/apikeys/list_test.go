@@ -44,7 +44,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectAPIKeys(listOpts.ProjectID, listOpts.NewListOptions()).
+		ProjectAPIKeys(listOpts.ProjectID, listOpts.NewAtlasListOptions()).
 		Return(&expected, nil).
 		Times(1)
 

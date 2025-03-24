@@ -64,7 +64,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		Snapshots(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		Snapshots(listOpts.ProjectID, "Cluster0", listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

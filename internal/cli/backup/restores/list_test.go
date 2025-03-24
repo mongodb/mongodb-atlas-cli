@@ -48,7 +48,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		RestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		RestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

@@ -21,7 +21,7 @@ import (
 //go:generate mockgen -destination=../mocks/mock_deprecated_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PrivateEndpointListerDeprecated,PrivateEndpointDescriberDeprecated,PrivateEndpointCreatorDeprecated,PrivateEndpointDeleterDeprecated,InterfaceEndpointCreatorDeprecated,InterfaceEndpointDescriberDeprecated,InterfaceEndpointDeleterDeprecated
 
 type PrivateEndpointListerDeprecated interface {
-	PrivateEndpointsDeprecated(string, *atlas.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error)
+	PrivateEndpointsDeprecated(string, *ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error)
 }
 
 type PrivateEndpointDescriberDeprecated interface {
@@ -49,8 +49,13 @@ type InterfaceEndpointDeleterDeprecated interface {
 }
 
 // PrivateEndpointsDeprecated encapsulates the logic to manage different cloud providers.
-func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *atlas.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error) {
-	result, _, err := s.client.PrivateEndpointsDeprecated.List(s.ctx, projectID, opts)
+func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error) {
+	lst := &atlas.ListOptions{
+		PageNum:      opts.PageNum,
+		ItemsPerPage: opts.ItemsPerPage,
+		IncludeCount: opts.IncludeCount,
+	}
+	result, _, err := s.client.PrivateEndpointsDeprecated.List(s.ctx, projectID, lst)
 	return result, err
 }
 

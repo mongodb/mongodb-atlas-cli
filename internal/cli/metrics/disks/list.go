@@ -44,7 +44,7 @@ func (opts *ListsOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListsOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.ProcessDisks(opts.ConfigProjectID(), opts.host, opts.port, listOpts)
 	if err != nil {
 		return err

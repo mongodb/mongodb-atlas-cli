@@ -48,7 +48,7 @@ var listTemplate = `ID	DATABASE	COLLECTION	STATE{{range valueOrEmptySlice .Resul
 `
 
 func (opts *ListOpts) Run() error {
-	lst := opts.NewListOptions()
+	lst := opts.NewAtlasListOptions()
 	r, err := opts.store.OnlineArchives(opts.ConfigProjectID(), opts.clusterName, lst)
 	if err != nil {
 		return err

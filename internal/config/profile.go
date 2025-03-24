@@ -27,7 +27,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version"
 	"github.com/pelletier/go-toml"
 	"github.com/spf13/afero"

@@ -15,7 +15,7 @@
 	"github.com/evergreen-ci/shrub": "apix-2",
 	"github.com/getkin/kin-openapi": "apix-2",
 	"github.com/go-test/deep": "apix-2",
-	"github.com/golang-jwt/jwt/v4": "apix-2",
+	"github.com/golang-jwt/jwt/v5": "apix-2",
 	"github.com/golang/mock": "apix-2",
 	"github.com/google/go-github/v61": "apix-2",
 	"github.com/hinshun/vt10x": "apix-2",

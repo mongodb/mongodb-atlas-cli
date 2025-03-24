@@ -63,7 +63,7 @@ func (opts *ListOpts) Run() error {
 }
 
 func (opts *ListOpts) newProcessesListParams() *atlasv2.ListAtlasProcessesApiParams {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	processesList := &atlasv2.ListAtlasProcessesApiParams{
 		GroupId: opts.ConfigProjectID(),
 	}

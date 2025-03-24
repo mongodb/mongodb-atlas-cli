@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockUserCreator is a mock of UserCreator interface.
@@ -127,7 +127,7 @@ func (m *MockUserLister) EXPECT() *MockUserListerMockRecorder {
 }
 
 // OrganizationUsers mocks base method.
-func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedOrgUser, error) {
+func (m *MockUserLister) OrganizationUsers(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedOrgUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationUsers", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedOrgUser)

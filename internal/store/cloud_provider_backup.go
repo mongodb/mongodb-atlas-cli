@@ -20,13 +20,12 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_cloud_provider_backup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store RestoreJobsLister,RestoreJobsDescriber,RestoreJobsCreator,SnapshotsLister,SnapshotsCreator,SnapshotsDescriber,SnapshotsDeleter,ExportJobsLister,ExportJobsDescriber,ExportJobsCreator,ExportBucketsLister,ExportBucketsCreator,ExportBucketsDeleter,ExportBucketsDescriber,ScheduleDescriber,ScheduleDescriberUpdater,ScheduleDeleter,SnapshotsDownloader
 
 type RestoreJobsLister interface {
-	RestoreJobs(string, string, *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error)
+	RestoreJobs(string, string, *ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error)
 	RestoreFlexClusterJobs(args *atlasv2.ListFlexBackupRestoreJobsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)
 }
 
@@ -42,7 +41,7 @@ type RestoreJobsCreator interface {
 }
 
 type SnapshotsLister interface {
-	Snapshots(string, string, *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error)
+	Snapshots(string, string, *ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error)
 	FlexClusterSnapshots(*atlasv2.ListFlexBackupsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113, error)
 }
 
@@ -64,7 +63,7 @@ type SnapshotsDeleter interface {
 }
 
 type ExportJobsLister interface {
-	ExportJobs(string, string, *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDiskBackupExportJob, error)
+	ExportJobs(string, string, *ListOptions) (*atlasv2.PaginatedApiAtlasDiskBackupExportJob, error)
 }
 
 type ExportJobsCreator interface {
@@ -72,7 +71,7 @@ type ExportJobsCreator interface {
 }
 
 type ExportBucketsLister interface {
-	ExportBuckets(string, *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBuckets, error)
+	ExportBuckets(string, *ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBuckets, error)
 }
 
 type ExportJobsDescriber interface {
@@ -105,7 +104,7 @@ type ScheduleDeleter interface {
 }
 
 // RestoreJobs encapsulates the logic to manage different cloud providers.
-func (s *Store) RestoreJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error) {
+func (s *Store) RestoreJobs(projectID, clusterName string, opts *ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error) {
 	res := s.clientv2.CloudBackupsApi.ListBackupRestoreJobs(s.ctx, projectID, clusterName)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
@@ -159,7 +158,7 @@ func (s *Store) CreateSnapshot(projectID, clusterName string, request *atlasv2.D
 }
 
 // Snapshots encapsulates the logic to manage different cloud providers.
-func (s *Store) Snapshots(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error) {
+func (s *Store) Snapshots(projectID, clusterName string, opts *ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error) {
 	res := s.clientv2.CloudBackupsApi.ListReplicaSetBackups(s.ctx, projectID, clusterName)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
@@ -210,7 +209,7 @@ func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error 
 }
 
 // ExportJobs encapsulates the logic to manage different cloud providers.
-func (s *Store) ExportJobs(projectID, clusterName string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiAtlasDiskBackupExportJob, error) {
+func (s *Store) ExportJobs(projectID, clusterName string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDiskBackupExportJob, error) {
 	res := s.clientv2.CloudBackupsApi.ListBackupExportJobs(s.ctx, projectID, clusterName)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)
@@ -232,7 +231,7 @@ func (s *Store) CreateExportJob(projectID, clusterName string, job *atlasv2.Disk
 }
 
 // ExportBuckets encapsulates the logic to manage different cloud providers.
-func (s *Store) ExportBuckets(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBuckets, error) {
+func (s *Store) ExportBuckets(projectID string, opts *ListOptions) (*atlasv2.PaginatedBackupSnapshotExportBuckets, error) {
 	res := s.clientv2.CloudBackupsApi.ListExportBuckets(s.ctx, projectID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)

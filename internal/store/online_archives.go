@@ -19,13 +19,12 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_online_archives.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OnlineArchiveLister,OnlineArchiveDescriber,OnlineArchiveCreator,OnlineArchiveUpdater,OnlineArchiveDeleter
 
 type OnlineArchiveLister interface {
-	OnlineArchives(string, string, *atlas.ListOptions) (*atlasv2.PaginatedOnlineArchive, error)
+	OnlineArchives(string, string, *ListOptions) (*atlasv2.PaginatedOnlineArchive, error)
 }
 
 type OnlineArchiveDescriber interface {
@@ -45,7 +44,7 @@ type OnlineArchiveDeleter interface {
 }
 
 // OnlineArchives encapsulate the logic to manage different cloud providers.
-func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *atlas.ListOptions) (*atlasv2.PaginatedOnlineArchive, error) {
+func (s *Store) OnlineArchives(projectID, clusterName string, lstOpt *ListOptions) (*atlasv2.PaginatedOnlineArchive, error) {
 	if s.service == config.CloudGovService {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}

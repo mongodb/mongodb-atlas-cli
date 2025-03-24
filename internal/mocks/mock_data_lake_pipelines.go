@@ -9,8 +9,8 @@ import (
 	time "time"
 
 	gomock "github.com/golang/mock/gomock"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockPipelinesLister is a mock of PipelinesLister interface.
@@ -226,7 +226,7 @@ func (m *MockPipelineAvailableSnapshotsLister) EXPECT() *MockPipelineAvailableSn
 }
 
 // PipelineAvailableSnapshots mocks base method.
-func (m *MockPipelineAvailableSnapshotsLister) PipelineAvailableSnapshots(arg0, arg1 string, arg2 *time.Time, arg3 *mongodbatlas.ListOptions) (*admin.PaginatedBackupSnapshot, error) {
+func (m *MockPipelineAvailableSnapshotsLister) PipelineAvailableSnapshots(arg0, arg1 string, arg2 *time.Time, arg3 *store.ListOptions) (*admin.PaginatedBackupSnapshot, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PipelineAvailableSnapshots", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(*admin.PaginatedBackupSnapshot)

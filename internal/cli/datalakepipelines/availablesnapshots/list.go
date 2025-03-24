@@ -71,7 +71,7 @@ func (opts *ListOpts) validate() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.PipelineAvailableSnapshots(opts.ConfigProjectID(), opts.pipelineName, convertTime(opts.completedAfter), opts.NewListOptions())
+	r, err := opts.store.PipelineAvailableSnapshots(opts.ConfigProjectID(), opts.pipelineName, convertTime(opts.completedAfter), opts.NewAtlasListOptions())
 	if err != nil {
 		return err
 	}

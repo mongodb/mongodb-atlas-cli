@@ -48,7 +48,7 @@ var databasesListTemplate = `DATABASE NAME{{range valueOrEmptySlice .Results}}
 `
 
 func (opts *ListsOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.ProcessDatabases(opts.ConfigProjectID(), opts.host, opts.port, listOpts)
 	if err != nil {
 		return err

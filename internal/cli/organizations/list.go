@@ -61,7 +61,7 @@ func (opts *ListOpts) newOrganizationListOptions() *atlasv2.ListOrganizationsApi
 	params := &atlasv2.ListOrganizationsApiParams{
 		Name: &opts.name,
 	}
-	if listOpt := opts.NewListOptions(); listOpt != nil {
+	if listOpt := opts.NewAtlasListOptions(); listOpt != nil {
 		params.PageNum = &listOpt.PageNum
 		params.ItemsPerPage = &listOpt.ItemsPerPage
 		params.IncludeCount = &listOpt.IncludeCount

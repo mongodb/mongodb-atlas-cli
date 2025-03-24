@@ -18,17 +18,16 @@ import (
 	"strconv"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_process_disks.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProcessDisksLister
 
 type ProcessDisksLister interface {
-	ProcessDisks(string, string, int, *atlas.ListOptions) (*atlasv2.PaginatedDiskPartition, error)
+	ProcessDisks(string, string, int, *ListOptions) (*atlasv2.PaginatedDiskPartition, error)
 }
 
 // ProcessDisks encapsulates the logic to manage different cloud providers.
-func (s *Store) ProcessDisks(groupID, host string, port int, opts *atlas.ListOptions) (*atlasv2.PaginatedDiskPartition, error) {
+func (s *Store) ProcessDisks(groupID, host string, port int, opts *ListOptions) (*atlasv2.PaginatedDiskPartition, error) {
 	processID := host + ":" + strconv.Itoa(port)
 	result, _, err := s.clientv2.MonitoringAndLogsApi.ListDiskPartitions(s.ctx, groupID, processID).
 		ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount).Execute()

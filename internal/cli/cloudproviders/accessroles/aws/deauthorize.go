@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const (
@@ -54,20 +53,12 @@ func (opts *DeauthorizeOpts) Run() error {
 		return opts.Print(deauthorizeFail)
 	}
 
-	err := opts.store.DeauthorizeCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest())
+	err := opts.store.DeauthorizeCloudProviderAccessRoles(opts.ConfigProjectID(), provider, opts.Entry)
 	if err != nil {
 		return err
 	}
 
 	return opts.Print(deauthorizeSuccess)
-}
-
-func (opts *DeauthorizeOpts) newCloudProviderDeauthorizationRequest() *atlas.CloudProviderDeauthorizationRequest {
-	return &atlas.CloudProviderDeauthorizationRequest{
-		ProviderName: provider,
-		GroupID:      opts.ConfigProjectID(),
-		RoleID:       opts.Entry,
-	}
 }
 
 // atlas cloudProvider aws accessRoles deauthorize <roleId> [--projectId projectId].

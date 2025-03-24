@@ -67,7 +67,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PipelineAvailableSnapshots(listOpts.ProjectID, listOpts.pipelineName, convertTime(listOpts.completedAfter), listOpts.NewListOptions()).
+		PipelineAvailableSnapshots(listOpts.ProjectID, listOpts.pipelineName, convertTime(listOpts.completedAfter), listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

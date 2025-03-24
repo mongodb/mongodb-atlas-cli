@@ -16,7 +16,6 @@ package store
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleAuthorizer,CloudProviderAccessRoleLister,CloudProviderAccessRoleDeauthorizer
@@ -30,12 +29,12 @@ type CloudProviderAccessRoleLister interface {
 }
 
 type CloudProviderAccessRoleDeauthorizer interface {
-	DeauthorizeCloudProviderAccessRoles(*atlas.CloudProviderDeauthorizationRequest) error
+	DeauthorizeCloudProviderAccessRoles(string, string, string) error
 }
 
 // CloudProviderAccessRoleAuthorizer encapsulates the logic to manage different cloud providers.
 type CloudProviderAccessRoleAuthorizer interface {
-	AuthorizeCloudProviderAccessRole(string, string, *atlas.CloudProviderAccessRoleRequest) (*atlasv2.CloudProviderAccessRole, error)
+	AuthorizeCloudProviderAccessRole(string, string, *atlasv2.CloudProviderAccessRoleRequestUpdate) (*atlasv2.CloudProviderAccessRole, error)
 }
 
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
@@ -54,17 +53,13 @@ func (s *Store) CloudProviderAccessRoles(groupID string) (*atlasv2.CloudProvider
 }
 
 // DeauthorizeCloudProviderAccessRoles encapsulates the logic to manage different cloud providers.
-func (s *Store) DeauthorizeCloudProviderAccessRoles(req *atlas.CloudProviderDeauthorizationRequest) error {
-	_, err := s.clientv2.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRole(s.ctx, req.GroupID, req.ProviderName, req.RoleID).Execute()
+func (s *Store) DeauthorizeCloudProviderAccessRoles(groupID string, cloudProvider string, roleID string) error {
+	_, err := s.clientv2.CloudProviderAccessApi.DeauthorizeCloudProviderAccessRole(s.ctx, groupID, cloudProvider, roleID).Execute()
 	return err
 }
 
 // AuthorizeCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
-func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlas.CloudProviderAccessRoleRequest) (*atlasv2.CloudProviderAccessRole, error) {
-	role := atlasv2.CloudProviderAccessRoleRequestUpdate{
-		ProviderName:      req.ProviderName,
-		IamAssumedRoleArn: req.IAMAssumedRoleARN,
-	}
-	result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeCloudProviderAccessRole(s.ctx, groupID, roleID, &role).Execute()
+func (s *Store) AuthorizeCloudProviderAccessRole(groupID, roleID string, req *atlasv2.CloudProviderAccessRoleRequestUpdate) (*atlasv2.CloudProviderAccessRole, error) {
+	result, _, err := s.clientv2.CloudProviderAccessApi.AuthorizeCloudProviderAccessRole(s.ctx, groupID, roleID, req).Execute()
 	return result, err
 }

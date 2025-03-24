@@ -33,6 +33,7 @@ import (
 )
 
 const (
+	CloudServiceURL    = "https://cloud.mongodb.com/"
 	CloudGovServiceURL = "https://cloud.mongodbgov.com/"
 )
 

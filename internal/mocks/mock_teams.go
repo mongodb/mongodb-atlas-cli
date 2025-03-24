@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockTeamLister is a mock of TeamLister interface.
@@ -36,7 +36,7 @@ func (m *MockTeamLister) EXPECT() *MockTeamListerMockRecorder {
 }
 
 // Teams mocks base method.
-func (m *MockTeamLister) Teams(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedTeam, error) {
+func (m *MockTeamLister) Teams(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedTeam, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Teams", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedTeam)

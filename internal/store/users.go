@@ -16,7 +16,6 @@ package store
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store UserCreator,UserDescriber,UserLister,TeamUserLister
@@ -26,7 +25,7 @@ type UserCreator interface {
 }
 
 type UserLister interface {
-	OrganizationUsers(string, *atlas.ListOptions) (*atlasv2.PaginatedOrgUser, error)
+	OrganizationUsers(string, *ListOptions) (*atlasv2.PaginatedOrgUser, error)
 }
 
 type TeamUserLister interface {
@@ -57,7 +56,7 @@ func (s *Store) UserByName(username string) (*atlasv2.CloudAppUser, error) {
 }
 
 // OrganizationUsers encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationUsers(organizationID string, opts *atlas.ListOptions) (*atlasv2.PaginatedOrgUser, error) {
+func (s *Store) OrganizationUsers(organizationID string, opts *ListOptions) (*atlasv2.PaginatedOrgUser, error) {
 	res := s.clientv2.MongoDBCloudUsersApi.ListOrganizationUsers(s.ctx, organizationID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)

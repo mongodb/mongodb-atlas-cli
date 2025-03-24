@@ -16,13 +16,12 @@ package store
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_api_keys.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectAPIKeyLister,ProjectAPIKeyCreator,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater,OrganizationAPIKeyCreator,OrganizationAPIKeyDeleter,ProjectAPIKeyDeleter,ProjectAPIKeyAssigner
 
 type ProjectAPIKeyLister interface {
-	ProjectAPIKeys(string, *atlas.ListOptions) (*atlasv2.PaginatedApiApiUser, error)
+	ProjectAPIKeys(string, *ListOptions) (*atlasv2.PaginatedApiApiUser, error)
 }
 
 type ProjectAPIKeyCreator interface {
@@ -38,7 +37,7 @@ type ProjectAPIKeyAssigner interface {
 }
 
 type OrganizationAPIKeyLister interface {
-	OrganizationAPIKeys(string, *atlas.ListOptions) (*atlasv2.PaginatedApiApiUser, error)
+	OrganizationAPIKeys(string, *ListOptions) (*atlasv2.PaginatedApiApiUser, error)
 }
 
 type OrganizationAPIKeyDescriber interface {
@@ -58,7 +57,7 @@ type OrganizationAPIKeyDeleter interface {
 }
 
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationAPIKeys(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
+func (s *Store) OrganizationAPIKeys(orgID string, opts *ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
 	res := s.clientv2.ProgrammaticAPIKeysApi.ListApiKeys(s.ctx, orgID)
 	if opts != nil {
 		res = res.ItemsPerPage(opts.ItemsPerPage).PageNum(opts.PageNum).IncludeCount(opts.IncludeCount)
@@ -92,7 +91,7 @@ func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
 }
 
 // ProjectAPIKeys returns the API Keys for a specific project.
-func (s *Store) ProjectAPIKeys(projectID string, opts *atlas.ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
+func (s *Store) ProjectAPIKeys(projectID string, opts *ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
 	res := s.clientv2.ProgrammaticAPIKeysApi.ListProjectApiKeys(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)

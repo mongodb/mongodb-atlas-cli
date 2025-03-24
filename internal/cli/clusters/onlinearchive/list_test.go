@@ -44,7 +44,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		OnlineArchives(listOpts.ProjectID, listOpts.clusterName, listOpts.NewListOptions()).
+		OnlineArchives(listOpts.ProjectID, listOpts.clusterName, listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

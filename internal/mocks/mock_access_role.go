@@ -9,7 +9,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	admin "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockCloudProviderAccessRoleCreator is a mock of CloudProviderAccessRoleCreator interface.
@@ -74,7 +73,7 @@ func (m *MockCloudProviderAccessRoleAuthorizer) EXPECT() *MockCloudProviderAcces
 }
 
 // AuthorizeCloudProviderAccessRole mocks base method.
-func (m *MockCloudProviderAccessRoleAuthorizer) AuthorizeCloudProviderAccessRole(arg0, arg1 string, arg2 *mongodbatlas.CloudProviderAccessRoleRequest) (*admin.CloudProviderAccessRole, error) {
+func (m *MockCloudProviderAccessRoleAuthorizer) AuthorizeCloudProviderAccessRole(arg0, arg1 string, arg2 *admin.CloudProviderAccessRoleRequestUpdate) (*admin.CloudProviderAccessRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AuthorizeCloudProviderAccessRole", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.CloudProviderAccessRole)
@@ -150,15 +149,15 @@ func (m *MockCloudProviderAccessRoleDeauthorizer) EXPECT() *MockCloudProviderAcc
 }
 
 // DeauthorizeCloudProviderAccessRoles mocks base method.
-func (m *MockCloudProviderAccessRoleDeauthorizer) DeauthorizeCloudProviderAccessRoles(arg0 *mongodbatlas.CloudProviderDeauthorizationRequest) error {
+func (m *MockCloudProviderAccessRoleDeauthorizer) DeauthorizeCloudProviderAccessRoles(arg0, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeauthorizeCloudProviderAccessRoles", arg0)
+	ret := m.ctrl.Call(m, "DeauthorizeCloudProviderAccessRoles", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeauthorizeCloudProviderAccessRoles indicates an expected call of DeauthorizeCloudProviderAccessRoles.
-func (mr *MockCloudProviderAccessRoleDeauthorizerMockRecorder) DeauthorizeCloudProviderAccessRoles(arg0 interface{}) *gomock.Call {
+func (mr *MockCloudProviderAccessRoleDeauthorizerMockRecorder) DeauthorizeCloudProviderAccessRoles(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeauthorizeCloudProviderAccessRoles", reflect.TypeOf((*MockCloudProviderAccessRoleDeauthorizer)(nil).DeauthorizeCloudProviderAccessRoles), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeauthorizeCloudProviderAccessRoles", reflect.TypeOf((*MockCloudProviderAccessRoleDeauthorizer)(nil).DeauthorizeCloudProviderAccessRoles), arg0, arg1, arg2)
 }

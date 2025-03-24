@@ -17,7 +17,6 @@ package api
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"go.mongodb.org/atlas/mongodbatlas"
 )
 
 type AuthenticatedConfigWrapper struct {
@@ -51,5 +50,5 @@ func (c *AuthenticatedConfigWrapper) GetBaseURL() (string, error) {
 	}
 
 	// By default, return the default base URL
-	return mongodbatlas.CloudURL, nil
+	return store.CloudServiceURL, nil
 }

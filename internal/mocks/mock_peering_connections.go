@@ -407,7 +407,7 @@ func (m *MockContainersLister) EXPECT() *MockContainersListerMockRecorder {
 }
 
 // AllContainers mocks base method.
-func (m *MockContainersLister) AllContainers(arg0 string, arg1 *mongodbatlas.ListOptions) ([]admin.CloudProviderContainer, error) {
+func (m *MockContainersLister) AllContainers(arg0 string, arg1 *store.ListOptions) ([]admin.CloudProviderContainer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AllContainers", arg0, arg1)
 	ret0, _ := ret[0].([]admin.CloudProviderContainer)

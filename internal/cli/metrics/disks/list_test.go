@@ -44,7 +44,7 @@ func TestDisksListsOpts_Run(t *testing.T) {
 		store: mockStore,
 	}
 
-	opts := listOpts.NewListOptions()
+	opts := listOpts.NewAtlasListOptions()
 	mockStore.
 		EXPECT().ProcessDisks(listOpts.ProjectID, listOpts.host, listOpts.port, opts).
 		Return(expected, nil).

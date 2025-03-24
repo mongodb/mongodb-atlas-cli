@@ -52,7 +52,7 @@ func TestList_Run(t *testing.T) {
 
 		mockStore.
 			EXPECT().
-			AllContainers(listOpts.ProjectID, listOpts.NewListOptions()).
+			AllContainers(listOpts.ProjectID, listOpts.NewAtlasListOptions()).
 			Return(expected, nil).
 			Times(1)
 

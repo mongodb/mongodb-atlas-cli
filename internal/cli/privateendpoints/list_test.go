@@ -37,7 +37,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		PrivateEndpointsDeprecated(listOpts.ProjectID, listOpts.NewListOptions()).
+		PrivateEndpointsDeprecated(listOpts.ProjectID, listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

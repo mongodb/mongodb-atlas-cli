@@ -47,7 +47,7 @@ var restoreListTemplate = `ID	SNAPSHOT	CLUSTER	TYPE	EXPIRES AT{{range valueOrEmp
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.ServerlessRestoreJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
 	if err != nil {
 		return err

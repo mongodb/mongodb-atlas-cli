@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -35,7 +36,7 @@ func (m *MockPrivateEndpointListerDeprecated) EXPECT() *MockPrivateEndpointListe
 }
 
 // PrivateEndpointsDeprecated mocks base method.
-func (m *MockPrivateEndpointListerDeprecated) PrivateEndpointsDeprecated(arg0 string, arg1 *mongodbatlas.ListOptions) ([]mongodbatlas.PrivateEndpointConnectionDeprecated, error) {
+func (m *MockPrivateEndpointListerDeprecated) PrivateEndpointsDeprecated(arg0 string, arg1 *store.ListOptions) ([]mongodbatlas.PrivateEndpointConnectionDeprecated, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PrivateEndpointsDeprecated", arg0, arg1)
 	ret0, _ := ret[0].([]mongodbatlas.PrivateEndpointConnectionDeprecated)

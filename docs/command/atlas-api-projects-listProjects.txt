@@ -97,17 +97,13 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Get a list of all projects
-      :tabid: 2023-01-01_list_projects
+   Get a list of all projects inside of the organisation
 
-      Get a list of all projects inside of the organisation
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api projects listProjects --version 2023-01-01 --envelope false --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
 
-         atlas api projects listProjects --version 2023-01-01 --envelope false --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

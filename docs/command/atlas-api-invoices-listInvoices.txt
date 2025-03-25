@@ -126,15 +126,11 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2023-01-01_default
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api invoices listInvoices --version 2023-01-01 --envelope false --fromDate 2023-01-01 --includeCount true --itemsPerPage 100 --orderBy desc --orgId 4888442a3354817a7320eb61 --pageNum 1 --pretty false --toDate 2023-01-01
 
-         atlas api invoices listInvoices --version 2023-01-01 --envelope false --fromDate 2023-01-01 --includeCount true --itemsPerPage 100 --orderBy desc --orgId 4888442a3354817a7320eb61 --pageNum 1 --pretty false --toDate 2023-01-01
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

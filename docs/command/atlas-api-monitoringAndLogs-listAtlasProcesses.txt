@@ -103,17 +103,13 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: List all processes for a project
-      :tabid: 2023-01-01_list_atlas_processes
+   Returns details of all processes for the specified project
 
-      Returns details of all processes for the specified project
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api monitoringAndLogs listAtlasProcesses --version 2023-01-01 --envelope false --groupId [your-project-id] --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
 
-         atlas api monitoringAndLogs listAtlasProcesses --version 2023-01-01 --envelope false --groupId [your-project-id] --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

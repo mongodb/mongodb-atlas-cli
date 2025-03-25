@@ -103,17 +103,13 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Return project IP access list
-      :tabid: 2023-01-01_project_ip_access_list_list
+   Returns all access list entries from the specified project's IP access list.
 
-      Returns all access list entries from the specified project's IP access list.
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api projectIpAccessList listProjectIpAccessLists --version 2023-01-01 --envelope false --groupId [your-project-id] --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
 
-         atlas api projectIpAccessList listProjectIpAccessLists --version 2023-01-01 --envelope false --groupId [your-project-id] --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

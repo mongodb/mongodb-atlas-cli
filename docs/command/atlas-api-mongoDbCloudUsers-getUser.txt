@@ -89,15 +89,11 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2023-01-01_default
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api mongoDbCloudUsers getUser --version 2023-01-01 --envelope false --pretty false --userId [userId]
 
-         atlas api mongoDbCloudUsers getUser --version 2023-01-01 --envelope false --pretty false --userId [userId]
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

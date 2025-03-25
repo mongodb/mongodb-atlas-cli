@@ -93,15 +93,11 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2023-01-01_default
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api teams deleteTeam --version 2023-01-01 --envelope false --orgId 4888442a3354817a7320eb61 --pretty false --teamId [teamId]
 
-         atlas api teams deleteTeam --version 2023-01-01 --envelope false --orgId 4888442a3354817a7320eb61 --pretty false --teamId [teamId]
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

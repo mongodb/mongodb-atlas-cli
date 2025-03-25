@@ -95,33 +95,28 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Update project name and tags
-      :tabid: 2023-01-01_update_project
+   Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"
 
-      Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"
+Create the file below and save it as `payload.json`
 
-      Create the file below and save it as `payload.json`
+.. code-block::
 
-      .. code-block::
+   {
+     "name": "MongoTube - Production",
+     "tags": [
+       {
+         "key": "environment",
+         "value": "production"
+       }
+     ]
+   }
+.. Code end marker, please don't delete this comment
 
-         {
-           "name": "MongoTube - Production",
-           "tags": [
-             {
-               "key": "environment",
-               "value": "production"
-             }
-           ]
-         }
+After creating `payload.json`, run the command below in the same directory.
 
-      .. Code end marker, please don't delete this comment
+.. code-block::
 
-      After creating `payload.json`, run the command below in the same directory.
+   atlas api projects updateProject --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      .. code-block::
-
-         atlas api projects updateProject --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

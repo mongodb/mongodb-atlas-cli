@@ -99,15 +99,11 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2023-02-01_default
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api streams listPrivateLinkConnections --version 2023-02-01 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --itemsPerPage 100 --pageNum 1 --pretty false
 
-         atlas api streams listPrivateLinkConnections --version 2023-02-01 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --itemsPerPage 100 --pageNum 1 --pretty false
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

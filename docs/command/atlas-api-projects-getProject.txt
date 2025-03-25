@@ -91,17 +91,13 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Get a project
-      :tabid: 2023-01-01_get_project
+   Get a project using a project id
 
-      Get a project using a project id
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api projects getProject --version 2023-01-01 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-         atlas api projects getProject --version 2023-01-01 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

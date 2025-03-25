@@ -101,15 +101,11 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2023-01-01_default
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api federatedAuthentication listIdentityProviders --version 2023-01-01 --envelope false --federationSettingsId 55fa922fb343282757d9554e --itemsPerPage 100 --pageNum 1
 
-         atlas api federatedAuthentication listIdentityProviders --version 2023-01-01 --envelope false --federationSettingsId 55fa922fb343282757d9554e --itemsPerPage 100 --pageNum 1
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

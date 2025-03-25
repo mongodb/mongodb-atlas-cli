@@ -110,17 +110,13 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: List all clusters in a project
-      :tabid: 2024-08-05_list_clusters
+   Returns all clusters in the specified project
 
-      Returns all clusters in the specified project
+Run the command below.
 
-      Run the command below.
+.. code-block::
 
-      .. code-block::
+   atlas api clusters listClusters --version 2024-08-05 --envelope false --groupId [your-project-id] --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
 
-         atlas api clusters listClusters --version 2024-08-05 --envelope false --groupId [your-project-id] --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250219001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 var errDeploymentUnexpectedState = errors.New("deployment is in unexpected state")

@@ -23,7 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250219001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestNamespacesList_Run(t *testing.T) {

@@ -17,7 +17,7 @@
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@v6
+        uses: mongodb/apix-action/create-jira@v7
         id: create
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}

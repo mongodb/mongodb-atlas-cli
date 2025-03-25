@@ -45,7 +45,6 @@ require (
 	github.com/yuin/goldmark v1.7.8
 	go.mongodb.org/atlas v0.37.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20250219001 v20250219001.1.0
 	go.mongodb.org/mongo-driver v1.17.3
 	go.opentelemetry.io/otel v1.35.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.35.0
@@ -61,6 +60,8 @@ require (
 	google.golang.org/protobuf v1.36.5
 	gopkg.in/yaml.v3 v3.0.1
 )
+
+require go.mongodb.org/atlas-sdk/v20250312001 v20250312001.0.0
 
 require (
 	cloud.google.com/go v0.118.3 // indirect

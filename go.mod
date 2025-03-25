@@ -5,7 +5,7 @@ go 1.23.6
 require (
 	cloud.google.com/go/kms v1.21.1
 	github.com/AlecAivazis/survey/v2 v2.3.7
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.17.0
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.17.1
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.8.2
 	github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys v1.3.1
 	github.com/Masterminds/semver/v3 v3.3.1

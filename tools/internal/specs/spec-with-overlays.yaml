@@ -2842,20 +2842,6 @@ components:
             type: object
         ApiSearchDeploymentResponseView:
             properties:
-                encryptionAtRestProvider:
-                    description: Cloud service provider that manages your customer keys to provide an additional layer of Encryption At Rest for the cluster.
-                    enum:
-                        - NONE
-                        - AWS
-                        - AZURE
-                        - GCP
-                    externalDocs:
-                        description: Encryption at Rest using Customer Key Management
-                        url: https://www.mongodb.com/docs/atlas/security-kms-encryption/
-                    readOnly: true
-                    type: string
-                    x-xgen-hidden-env:
-                        envs: qa,prod,stage
                 groupId:
                     description: Unique 24-hexadecimal character string that identifies the project.
                     example: 32b6e34b3d91647abb20e7b8
@@ -14841,12 +14827,6 @@ components:
                     $ref: '#/components/schemas/AWSKMSConfiguration'
                 azureKeyVault:
                     $ref: '#/components/schemas/AzureKeyVault'
-                enabledForSearchNodes:
-                    description: Flag that indicates whether Encryption at Rest for Dedicated Search Nodes is enabled in the specified project.
-                    nullable: true
-                    type: boolean
-                    x-xgen-hidden-env:
-                        envs: qa,prod,stage
                 googleCloudKms:
                     $ref: '#/components/schemas/GoogleCloudKMS'
             type: object
@@ -34738,7 +34718,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 7ba878caf7309fb2cfb49ae90b974ea8a32678f1
+    x-xgen-sha: 73c148a924e72fbcd5dc88bfe9fe33571022f2ee
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -39966,6 +39946,8 @@ paths:
             summary: Create One Online Archive
             tags:
                 - Online Archive
+            x-xgen-changelog:
+                "2023-08-02": If 'criteria':'DATE' is specified, then you must specify 'DATE' values in partition fields
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Online-Archive/operation/createOnlineArchive
             x-xgen-atlascli:
                 watcher:
@@ -40844,6 +40826,8 @@ paths:
             summary: Return Search Nodes
             tags:
                 - Atlas Search
+            x-xgen-changelog:
+                "2025-03-12": Updates the return of the API when no nodes exist, the endpoint returns 200 with an empty JSON ({}) instead of 400.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/getAtlasSearchDeployment
         patch:
             description: Updates the Search Nodes for the specified cluster.
@@ -49448,6 +49432,8 @@ paths:
             summary: Return All Project Stream Instances
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listStreamInstances
         post:
             description: Creates one stream instance in the specified project. To use this resource, the requesting API Key must have the Project Data Access Admin role, Project Owner role or Project Stream Processing Owner role.
@@ -49480,6 +49466,8 @@ paths:
             summary: Create One Stream Instance
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createStreamInstance
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}:
         delete:
@@ -49514,6 +49502,8 @@ paths:
             summary: Delete One Stream Instance
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteStreamInstance
         get:
             description: Returns the details of one stream instance within the specified project. To use this resource, the requesting API Key must have the Project Data Access roles, Project Owner role or Project Stream Processing Owner role.
@@ -49553,6 +49543,8 @@ paths:
             summary: Return One Stream Instance
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getStreamInstance
         patch:
             description: Update one stream instance in the specified project. To use this resource, the requesting API Key must have the Project Data Access Admin role, Project Owner role or Project Stream Processing Owner role.
@@ -49595,6 +49587,8 @@ paths:
             summary: Update One Stream Instance
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/updateStreamInstance
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/auditLogs:
         get:
@@ -49684,6 +49678,8 @@ paths:
             summary: Return All Connections Of The Stream Instances
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listStreamConnections
             x-xgen-atlascli:
                 override:
@@ -49728,6 +49724,8 @@ paths:
             summary: Create One Connection
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createStreamConnection
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/connections/{connectionName}:
         delete:
@@ -49770,6 +49768,8 @@ paths:
             summary: Delete One Stream Connection
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteStreamConnection
         get:
             description: Returns the details of one stream connection within the specified stream instance. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -49808,6 +49808,8 @@ paths:
             summary: Return One Stream Connection
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getStreamConnection
         patch:
             description: Update one connection for the specified stream instance in the specified project. To use this resource, the requesting API Key must have the Project Owner role or Project Stream Processing Owner role.
@@ -49858,6 +49860,8 @@ paths:
             summary: Update One Stream Connection
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2023-09-11": The MongoDB Atlas Streams Processing API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/updateStreamConnection
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/processor:
         post:
@@ -50233,6 +50237,8 @@ paths:
             summary: Return All Private Link
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2024-10-02": The MongoDB Atlas Streams Processing Private Link API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listPrivateLinkConnections
             x-xgen-atlascli:
                 override:
@@ -50271,6 +50277,8 @@ paths:
             summary: Create One Private Link connection
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2024-10-02": The MongoDB Atlas Streams Processing Private Link API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createPrivateLinkConnection
     /api/atlas/v2/groups/{groupId}/streams/privateLinkConnections/{connectionId}:
         delete:
@@ -50305,6 +50313,8 @@ paths:
             summary: Delete One Private Link connection
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2024-10-02": The MongoDB Atlas Streams Processing Private Link API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deletePrivateLinkConnection
         get:
             description: Returns the details of one Private Link connection within the project. To use this resource, the requesting API Key must have the Project Read Only role.
@@ -50337,6 +50347,8 @@ paths:
             summary: Return One PrivateLink Connection
             tags:
                 - Streams
+            x-xgen-changelog:
+                "2024-10-02": The MongoDB Atlas Streams Processing Private Link API is now exposed as part of private preview, but is subject to change until GA.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getPrivateLinkConnection
     /api/atlas/v2/groups/{groupId}/streams/vpcPeeringConnections:
         get:

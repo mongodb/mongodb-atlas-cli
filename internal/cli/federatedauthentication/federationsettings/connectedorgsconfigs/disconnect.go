@@ -56,7 +56,8 @@ func (opts *DisconnectOpts) InitStore(ctx context.Context) func() error {
 }
 
 func (opts *DisconnectOpts) removeIdpFromOrgConfig(orgConfig *atlasv2.ConnectedOrgConfig) {
-	if opts.protocol == oidc {
+	switch opts.protocol {
+	case oidc:
 		if orgConfig.DataAccessIdentityProviderIds == nil {
 			return
 		}
@@ -68,7 +69,8 @@ func (opts *DisconnectOpts) removeIdpFromOrgConfig(orgConfig *atlasv2.ConnectedO
 			}
 		}
 		orgConfig.DataAccessIdentityProviderIds = &newIdps
-	} else if opts.protocol == saml {
+
+	case saml:
 		emptyID := ""
 		orgConfig.IdentityProviderId = &emptyID
 	}

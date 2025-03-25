@@ -86,8 +86,8 @@ func ConnectBuilder() *cobra.Command {
 	cmd.Flags().StringVar(&opts.ConnectWith, flag.ConnectWith, "", usage.ConnectWithConnect)
 	opts.AddProjectOptsFlags(cmd)
 	cmd.Flags().StringVar(&opts.DeploymentType, flag.TypeFlag, "", usage.DeploymentType)
-	cmd.Flags().StringVar(&opts.DeploymentOpts.DBUsername, flag.Username, "", usage.DBUsername)
-	cmd.Flags().StringVar(&opts.DeploymentOpts.DBUserPassword, flag.Password, "", usage.Password)
+	cmd.Flags().StringVar(&opts.DBUsername, flag.Username, "", usage.DBUsername)
+	cmd.Flags().StringVar(&opts.DBUserPassword, flag.Password, "", usage.Password)
 	cmd.Flags().StringVar(&opts.ConnectionStringType, flag.ConnectionStringType, ConnectionStringTypeStandard, usage.ConnectionStringType)
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.ConnectWith, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
@@ -159,7 +159,7 @@ func (opts *ConnectOpts) Connect(ctx context.Context) error {
 func (opts *ConnectOpts) askConnectWith() error {
 	if opts.ConnectWith == "" {
 		var err error
-		if opts.ConnectWith, err = opts.DeploymentOpts.PromptConnectWith(); err != nil {
+		if opts.ConnectWith, err = opts.PromptConnectWith(); err != nil {
 			return err
 		}
 	}
@@ -178,12 +178,12 @@ func (opts *ConnectOpts) connectToDeployment(connectionString string) error {
 		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
 			return err
 		}
-		return compass.Run(opts.DeploymentOpts.DBUsername, opts.DeploymentOpts.DBUserPassword, connectionString)
+		return compass.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
 	case options.MongoshConnect:
 		if !mongosh.Detect() {
 			return mongosh.ErrMongoshNotInstalled
 		}
-		return mongosh.Run(opts.DeploymentOpts.DBUsername, opts.DeploymentOpts.DBUserPassword, connectionString)
+		return mongosh.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
 	}
 
 	return nil
@@ -193,7 +193,7 @@ func (opts *ConnectOpts) promptDBUsername() error {
 	p := &survey.Input{
 		Message: "Username for authenticating to MongoDB deployment",
 	}
-	return telemetry.TrackAskOne(p, &opts.DeploymentOpts.DBUsername)
+	return telemetry.TrackAskOne(p, &opts.DBUsername)
 }
 
 func (*ConnectOpts) promptStartDeployment() (bool, error) {
@@ -209,14 +209,14 @@ func (*ConnectOpts) promptStartDeployment() (bool, error) {
 
 func (opts *ConnectOpts) promptDBUserPassword() error {
 	if !opts.IsTerminalInput() {
-		_, err := fmt.Fscanln(opts.InReader, &opts.DeploymentOpts.DBUserPassword)
+		_, err := fmt.Fscanln(opts.InReader, &opts.DBUserPassword)
 		return err
 	}
 
 	p := &survey.Password{
 		Message: "Password for authenticating to MongoDB deployment",
 	}
-	return telemetry.TrackAskOne(p, &opts.DeploymentOpts.DBUserPassword)
+	return telemetry.TrackAskOne(p, &opts.DBUserPassword)
 }
 
 func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
@@ -245,13 +245,13 @@ func (opts *ConnectToAtlasOpts) InitAtlasStore(ctx context.Context) func() error
 
 func (opts *ConnectOpts) validateAndPromptAtlasOpts() error {
 	requiresAuth := opts.ConnectWith == options.MongoshConnect || opts.ConnectWith == options.CompassConnect
-	if requiresAuth && opts.DeploymentOpts.DBUsername == "" {
+	if requiresAuth && opts.DBUsername == "" {
 		if err := opts.promptDBUsername(); err != nil {
 			return err
 		}
 	}
 
-	if requiresAuth && opts.DeploymentOpts.DBUserPassword == "" {
+	if requiresAuth && opts.DBUserPassword == "" {
 		if err := opts.promptDBUserPassword(); err != nil {
 			return err
 		}

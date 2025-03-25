@@ -106,7 +106,7 @@ func IPAddress() (string, error) {
 
 func (opts *CreateOpts) needsArg() bool {
 	// Unless currentIP flag is enabled and type is ip address, args are required.
-	return !(opts.entryType == ipAddress && opts.currentIP)
+	return opts.entryType != ipAddress || !opts.currentIP
 }
 
 func (opts *CreateOpts) validateCurrentIPFlag(cmd *cobra.Command, args []string) func() error {

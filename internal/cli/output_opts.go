@@ -88,7 +88,7 @@ func (opts *OutputOpts) IsJSONPathOutput() bool {
 }
 
 func (opts *OutputOpts) IsPlainOutput() bool {
-	return !(opts.IsJSONOutput() || opts.IsGoTemplate() || opts.IsJSONPathOutput())
+	return !opts.IsJSONOutput() && !opts.IsGoTemplate() && !opts.IsJSONPathOutput()
 }
 
 // ConfigWriter returns the io.Writer.

@@ -77,14 +77,15 @@ func (opts *ConnectOpts) Run() error {
 		ConnectedOrgConfig:   orgConfig,
 	}
 
-	if opts.protocol == oidc {
+	switch opts.protocol {
+	case oidc:
 		if orgConfig.DataAccessIdentityProviderIds == nil {
 			orgConfig.DataAccessIdentityProviderIds = &[]string{}
 		}
 
 		newList := append(*orgConfig.DataAccessIdentityProviderIds, opts.identityProviderID)
 		params.ConnectedOrgConfig.DataAccessIdentityProviderIds = &newList
-	} else if opts.protocol == saml {
+	case saml:
 		params.ConnectedOrgConfig.IdentityProviderId = &opts.identityProviderID
 	}
 
@@ -96,7 +97,7 @@ func (opts *ConnectOpts) Run() error {
 	return opts.Print(r)
 }
 
-// atlas federatedAuthentication federationSettings connectedOrgConfigs connect --identityProviderId identityProviderId --federationSettingsId federationSettingsId [-o/--output output].
+// ConnectBuilder defines the builder for the cobra command atlas federatedAuthentication federationSettings connectedOrgConfigs connect --identityProviderId identityProviderId --federationSettingsId federationSettingsId [-o/--output output].
 func ConnectBuilder() *cobra.Command {
 	opts := &ConnectOpts{
 		DescribeOrgConfigsOpts: &DescribeOrgConfigsOpts{},

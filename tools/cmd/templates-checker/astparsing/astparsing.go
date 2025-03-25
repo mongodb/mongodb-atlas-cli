@@ -369,7 +369,7 @@ func getRelatedTemplateFromCallExpr(pkg *packages.Package, callExpr *ast.CallExp
 
 	// If there's a string literal that's not a template ignore it
 	case *ast.BasicLit:
-		if !(strings.Contains(templateArg.Value, "{{") && strings.Contains(templateArg.Value, "}}")) {
+		if !strings.Contains(templateArg.Value, "{{") || !strings.Contains(templateArg.Value, "}}") {
 			return nil, nil
 		}
 	}

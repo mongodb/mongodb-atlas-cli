@@ -95,13 +95,17 @@ Inherited Options
 Examples
 -----------------
 
-   Returns the status of 10.0.0.0/16
+.. tabs::
+   .. tab:: Return Status of One Project IP Access List Entry
+      :tabid: 2023-01-01_project_ip_access_list_get_status
 
-Run the command below.
+      Returns the status of 10.0.0.0/16
 
-.. code-block::
+      Run the command below.
 
-   atlas api projectIpAccessList getProjectIpAccessListStatus --version 2023-01-01 --entryValue 10.0.0.0/16 --envelope false --groupId [your-project-id] --pretty false
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api projectIpAccessList getProjectIpAccessListStatus --version 2023-01-01 --entryValue 10.0.0.0/16 --envelope false --groupId [your-project-id] --pretty false
+
+      .. Code end marker, please don't delete this comment
 

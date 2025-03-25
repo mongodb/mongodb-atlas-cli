@@ -86,7 +86,7 @@ func (opts *DeleteOpts) runLocal(ctx context.Context) error {
 		opts.StartSpinner()
 
 		defer opts.StopSpinner()
-		return opts.DeploymentOpts.RemoveLocal(ctx)
+		return opts.RemoveLocal(ctx)
 	})
 }
 

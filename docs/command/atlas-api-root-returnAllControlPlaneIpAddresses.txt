@@ -79,11 +79,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-11-15_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api root returnAllControlPlaneIpAddresses --version 2023-11-15 --envelope false
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api root returnAllControlPlaneIpAddresses --version 2023-11-15 --envelope false
+
+      .. Code end marker, please don't delete this comment
 

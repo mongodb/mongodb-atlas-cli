@@ -95,256 +95,231 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2023-01-01_aws_iam_authentication
+   AWS IAM Authentication
 
-      AWS IAM Authentication
+Create the file below and save it as `payload.json`
 
-      Create the file below and save it as `payload.json`
+.. code-block::
 
-      .. code-block::
+   {
+     "awsIAMType": "USER",
+     "databaseName": "$external",
+     "groupId": "32b6e34b3d91647abb20e7b8",
+     "roles": [
+       {
+         "databaseName": "sales",
+         "roleName": "readWrite"
+       },
+       {
+         "databaseName": "marketing",
+         "roleName": "read"
+       }
+     ],
+     "scopes": [
+       {
+         "name": "myCluster",
+         "type": "CLUSTER"
+       }
+     ],
+     "username": "arn:aws:iam::358363220050:user/mongodb-aws-iam-auth-test-user"
+   }
+.. Code end marker, please don't delete this comment
 
-         {
-           "awsIAMType": "USER",
-           "databaseName": "$external",
-           "groupId": "32b6e34b3d91647abb20e7b8",
-           "roles": [
-             {
-               "databaseName": "sales",
-               "roleName": "readWrite"
-             },
-             {
-               "databaseName": "marketing",
-               "roleName": "read"
-             }
-           ],
-           "scopes": [
-             {
-               "name": "myCluster",
-               "type": "CLUSTER"
-             }
-           ],
-           "username": "arn:aws:iam::358363220050:user/mongodb-aws-iam-auth-test-user"
-         }
+After creating `payload.json`, run the command below in the same directory.
 
-      .. Code end marker, please don't delete this comment
+.. code-block::
 
-      After creating `payload.json`, run the command below in the same directory.
+   atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      .. code-block::
+.. Code end marker, please don't delete this comment
 
-         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+   LDAP Authentication
 
-      .. Code end marker, please don't delete this comment
+Create the file below and save it as `payload.json`
 
-   .. tab:: Example 1
-      :tabid: 2023-01-01_ldap_authentication
+.. code-block::
 
-      LDAP Authentication
+   {
+     "databaseName": "admin",
+     "groupId": "32b6e34b3d91647abb20e7b8",
+     "ldapAuthType": "GROUP",
+     "roles": [
+       {
+         "databaseName": "sales",
+         "roleName": "readWrite"
+       },
+       {
+         "databaseName": "marketing",
+         "roleName": "read"
+       }
+     ],
+     "scopes": [
+       {
+         "name": "myCluster",
+         "type": "CLUSTER"
+       }
+     ],
+     "username": "CN=marketing,OU=groups,DC=example,DC=com"
+   }
+.. Code end marker, please don't delete this comment
 
-      Create the file below and save it as `payload.json`
+After creating `payload.json`, run the command below in the same directory.
 
-      .. code-block::
+.. code-block::
 
-         {
-           "databaseName": "admin",
-           "groupId": "32b6e34b3d91647abb20e7b8",
-           "ldapAuthType": "GROUP",
-           "roles": [
-             {
-               "databaseName": "sales",
-               "roleName": "readWrite"
-             },
-             {
-               "databaseName": "marketing",
-               "roleName": "read"
-             }
-           ],
-           "scopes": [
-             {
-               "name": "myCluster",
-               "type": "CLUSTER"
-             }
-           ],
-           "username": "CN=marketing,OU=groups,DC=example,DC=com"
-         }
+   atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+   OIDC Workforce Federated Authentication
 
-      .. code-block::
+Create the file below and save it as `payload.json`
 
-         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+.. code-block::
 
-      .. Code end marker, please don't delete this comment
+   {
+     "databaseName": "admin",
+     "groupId": "32b6e34b3d91647abb20e7b8",
+     "oidcAuthType": "IDP_GROUP",
+     "roles": [
+       {
+         "databaseName": "sales",
+         "roleName": "readWrite"
+       },
+       {
+         "databaseName": "marketing",
+         "roleName": "read"
+       }
+     ],
+     "scopes": [
+       {
+         "name": "myCluster",
+         "type": "CLUSTER"
+       }
+     ],
+     "username": "5dd7496c7a3e5a648454341c/sales"
+   }
+.. Code end marker, please don't delete this comment
 
-   .. tab:: Example 2
-      :tabid: 2023-01-01_oidc_workforce_federated_authentication
+After creating `payload.json`, run the command below in the same directory.
 
-      OIDC Workforce Federated Authentication
+.. code-block::
 
-      Create the file below and save it as `payload.json`
+   atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      .. code-block::
+.. Code end marker, please don't delete this comment
 
-         {
-           "databaseName": "admin",
-           "groupId": "32b6e34b3d91647abb20e7b8",
-           "oidcAuthType": "IDP_GROUP",
-           "roles": [
-             {
-               "databaseName": "sales",
-               "roleName": "readWrite"
-             },
-             {
-               "databaseName": "marketing",
-               "roleName": "read"
-             }
-           ],
-           "scopes": [
-             {
-               "name": "myCluster",
-               "type": "CLUSTER"
-             }
-           ],
-           "username": "5dd7496c7a3e5a648454341c/sales"
-         }
+   OIDC Workload Federated Authentication
 
-      .. Code end marker, please don't delete this comment
+Create the file below and save it as `payload.json`
 
-      After creating `payload.json`, run the command below in the same directory.
+.. code-block::
 
-      .. code-block::
+   {
+     "databaseName": "$external",
+     "groupId": "32b6e34b3d91647abb20e7b8",
+     "oidcAuthType": "USER",
+     "roles": [
+       {
+         "databaseName": "sales",
+         "roleName": "readWrite"
+       },
+       {
+         "databaseName": "marketing",
+         "roleName": "read"
+       }
+     ],
+     "scopes": [
+       {
+         "name": "myCluster",
+         "type": "CLUSTER"
+       }
+     ],
+     "username": "5dd7496c7a3e5a648454341c/sales"
+   }
+.. Code end marker, please don't delete this comment
 
-         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+After creating `payload.json`, run the command below in the same directory.
 
-      .. Code end marker, please don't delete this comment
+.. code-block::
 
-   .. tab:: Example 3
-      :tabid: 2023-01-01_oidc_workload_federated_authentication
+   atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      OIDC Workload Federated Authentication
+.. Code end marker, please don't delete this comment
 
-      Create the file below and save it as `payload.json`
+   SCRAM-SHA Authentication
 
-      .. code-block::
+Create the file below and save it as `payload.json`
 
-         {
-           "databaseName": "$external",
-           "groupId": "32b6e34b3d91647abb20e7b8",
-           "oidcAuthType": "USER",
-           "roles": [
-             {
-               "databaseName": "sales",
-               "roleName": "readWrite"
-             },
-             {
-               "databaseName": "marketing",
-               "roleName": "read"
-             }
-           ],
-           "scopes": [
-             {
-               "name": "myCluster",
-               "type": "CLUSTER"
-             }
-           ],
-           "username": "5dd7496c7a3e5a648454341c/sales"
-         }
+.. code-block::
 
-      .. Code end marker, please don't delete this comment
+   {
+     "databaseName": "admin",
+     "groupId": "32b6e34b3d91647abb20e7b8",
+     "password": "changeme123",
+     "roles": [
+       {
+         "databaseName": "sales",
+         "roleName": "readWrite"
+       },
+       {
+         "databaseName": "marketing",
+         "roleName": "read"
+       }
+     ],
+     "scopes": [
+       {
+         "name": "myCluster",
+         "type": "CLUSTER"
+       }
+     ],
+     "username": "david"
+   }
+.. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+After creating `payload.json`, run the command below in the same directory.
 
-      .. code-block::
+.. code-block::
 
-         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+   atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 
-   .. tab:: Example 4
-      :tabid: 2023-01-01_scram-sha_authentication
+   X509 Authentication
 
-      SCRAM-SHA Authentication
+Create the file below and save it as `payload.json`
 
-      Create the file below and save it as `payload.json`
+.. code-block::
 
-      .. code-block::
+   {
+     "databaseName": "$external",
+     "groupId": "32b6e34b3d91647abb20e7b8",
+     "roles": [
+       {
+         "databaseName": "sales",
+         "roleName": "readWrite"
+       },
+       {
+         "databaseName": "marketing",
+         "roleName": "read"
+       }
+     ],
+     "scopes": [
+       {
+         "name": "myCluster",
+         "type": "CLUSTER"
+       }
+     ],
+     "username": "CN=david@example.com,OU=users,DC=example,DC=com",
+     "x509Type": "CUSTOMER"
+   }
+.. Code end marker, please don't delete this comment
 
-         {
-           "databaseName": "admin",
-           "groupId": "32b6e34b3d91647abb20e7b8",
-           "password": "changeme123",
-           "roles": [
-             {
-               "databaseName": "sales",
-               "roleName": "readWrite"
-             },
-             {
-               "databaseName": "marketing",
-               "roleName": "read"
-             }
-           ],
-           "scopes": [
-             {
-               "name": "myCluster",
-               "type": "CLUSTER"
-             }
-           ],
-           "username": "david"
-         }
+After creating `payload.json`, run the command below in the same directory.
 
-      .. Code end marker, please don't delete this comment
+.. code-block::
 
-      After creating `payload.json`, run the command below in the same directory.
+   atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      .. code-block::
-
-         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
-
-      .. Code end marker, please don't delete this comment
-
-   .. tab:: Example 5
-      :tabid: 2023-01-01_x509_authentication
-
-      X509 Authentication
-
-      Create the file below and save it as `payload.json`
-
-      .. code-block::
-
-         {
-           "databaseName": "$external",
-           "groupId": "32b6e34b3d91647abb20e7b8",
-           "roles": [
-             {
-               "databaseName": "sales",
-               "roleName": "readWrite"
-             },
-             {
-               "databaseName": "marketing",
-               "roleName": "read"
-             }
-           ],
-           "scopes": [
-             {
-               "name": "myCluster",
-               "type": "CLUSTER"
-             }
-           ],
-           "username": "CN=david@example.com,OU=users,DC=example,DC=com",
-           "x509Type": "CUSTOMER"
-         }
-
-      .. Code end marker, please don't delete this comment
-
-      After creating `payload.json`, run the command below in the same directory.
-
-      .. code-block::
-
-         atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

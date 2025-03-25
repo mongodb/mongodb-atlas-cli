@@ -101,11 +101,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2025-02-19_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api mongoDbCloudUsers getProjectUser --version 2025-02-19 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false --userId [userId]
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api mongoDbCloudUsers getProjectUser --version 2025-02-19 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false --userId [userId]
+
+      .. Code end marker, please don't delete this comment
 

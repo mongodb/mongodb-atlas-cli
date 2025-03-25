@@ -44,9 +44,9 @@ func (opts *CreateOpts) Run() error {
 		return err
 	}
 
-	createRequest := opts.LiveMigrationsOpts.NewCreateRequest()
+	createRequest := opts.NewCreateRequest()
 
-	r, err := opts.store.CreateValidation(opts.LiveMigrationsOpts.ConfigProjectID(), createRequest)
+	r, err := opts.store.CreateValidation(opts.ConfigProjectID(), createRequest)
 	if err != nil {
 		return err
 	}

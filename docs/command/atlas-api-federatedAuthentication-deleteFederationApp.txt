@@ -81,11 +81,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-01-01_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api federatedAuthentication deleteFederationApp --version 2023-01-01 --federationSettingsId 55fa922fb343282757d9554e
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api federatedAuthentication deleteFederationApp --version 2023-01-01 --federationSettingsId 55fa922fb343282757d9554e
+
+      .. Code end marker, please don't delete this comment
 

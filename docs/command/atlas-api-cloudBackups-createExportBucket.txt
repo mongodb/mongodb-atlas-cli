@@ -95,79 +95,66 @@ Inherited Options
 Examples
 -----------------
 
-.. tabs::
-   .. tab:: Example
-      :tabid: 2023-01-01_aws
+   AWS
 
-      AWS
+Create the file below and save it as `payload.json`
 
-      Create the file below and save it as `payload.json`
+.. code-block::
 
-      .. code-block::
+   {
+     "bucketName": "export-bucket",
+     "cloudProvider": "AWS",
+     "iamRoleId": "668c5f0ed436263134491592"
+   }
+.. Code end marker, please don't delete this comment
 
-         {
-           "bucketName": "export-bucket",
-           "cloudProvider": "AWS",
-           "iamRoleId": "668c5f0ed436263134491592"
-         }
+After creating `payload.json`, run the command below in the same directory.
 
-      .. Code end marker, please don't delete this comment
+.. code-block::
 
-      After creating `payload.json`, run the command below in the same directory.
+   atlas api cloudBackups createExportBucket --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      .. code-block::
+.. Code end marker, please don't delete this comment
 
-         atlas api cloudBackups createExportBucket --version 2023-01-01 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+   AWS
 
-      .. Code end marker, please don't delete this comment
+Create the file below and save it as `payload.json`
 
-   .. tab:: Example 1
-      :tabid: 2024-05-30_aws
+.. code-block::
 
-      AWS
+   {
+     "bucketName": "export-bucket",
+     "cloudProvider": "AWS",
+     "iamRoleId": "668c5f0ed436263134491592"
+   }
+.. Code end marker, please don't delete this comment
 
-      Create the file below and save it as `payload.json`
+After creating `payload.json`, run the command below in the same directory.
 
-      .. code-block::
+.. code-block::
 
-         {
-           "bucketName": "export-bucket",
-           "cloudProvider": "AWS",
-           "iamRoleId": "668c5f0ed436263134491592"
-         }
+   atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+   Azure
 
-      .. code-block::
+Create the file below and save it as `payload.json`
 
-         atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+.. code-block::
 
-      .. Code end marker, please don't delete this comment
+   {
+     "cloudProvider": "AZURE",
+     "roleId": "668c5f0ed436263134491592",
+     "serviceUrl": "https://examplestorageaccount.blob.core.windows.net/examplecontainer"
+   }
+.. Code end marker, please don't delete this comment
 
-   .. tab:: Example 2
-      :tabid: 2024-05-30_azure
+After creating `payload.json`, run the command below in the same directory.
 
-      Azure
+.. code-block::
 
-      Create the file below and save it as `payload.json`
+   atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
 
-      .. code-block::
-
-         {
-           "cloudProvider": "AZURE",
-           "roleId": "668c5f0ed436263134491592",
-           "serviceUrl": "https://examplestorageaccount.blob.core.windows.net/examplecontainer"
-         }
-
-      .. Code end marker, please don't delete this comment
-
-      After creating `payload.json`, run the command below in the same directory.
-
-      .. code-block::
-
-         atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
-
-      .. Code end marker, please don't delete this comment
+.. Code end marker, please don't delete this comment
 

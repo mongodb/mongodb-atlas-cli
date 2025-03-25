@@ -103,13 +103,17 @@ Inherited Options
 Examples
 -----------------
 
-   Returns a compressed (.gz) MongoDB log file containing log messages for the specified host
+.. tabs::
+   .. tab:: Download MongoDB logs for a specific cluster host
+      :tabid: 2023-02-01_get_host_logs
 
-Run the command below.
+      Returns a compressed (.gz) MongoDB log file containing log messages for the specified host
 
-.. code-block::
+      Run the command below.
 
-   atlas api monitoringAndLogs getHostLogs --version 2023-02-01 --endDate 1609545600 --envelope false --groupId [your-project-id] --hostName [your-host-name] --logName mongodb --startDate 1609459200
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api monitoringAndLogs getHostLogs --version 2023-02-01 --endDate 1609545600 --envelope false --groupId [your-project-id] --hostName [your-host-name] --logName mongodb --startDate 1609459200
+
+      .. Code end marker, please don't delete this comment
 

@@ -95,11 +95,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-01-01_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api thirdPartyIntegrations getThirdPartyIntegration --version 2023-01-01 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --integrationType [integrationType] --pretty false
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api thirdPartyIntegrations getThirdPartyIntegration --version 2023-01-01 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --integrationType [integrationType] --pretty false
+
+      .. Code end marker, please don't delete this comment
 

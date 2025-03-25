@@ -115,11 +115,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2025-02-19_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api mongoDbCloudUsers listTeamUsers --version 2025-02-19 --envelope false --itemsPerPage 100 --orgId 4888442a3354817a7320eb61 --orgMembershipStatus ACTIVE --pageNum 1 --pretty false --teamId [teamId]
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api mongoDbCloudUsers listTeamUsers --version 2025-02-19 --envelope false --itemsPerPage 100 --orgId 4888442a3354817a7320eb61 --orgMembershipStatus ACTIVE --pageNum 1 --pretty false --teamId [teamId]
+
+      .. Code end marker, please don't delete this comment
 

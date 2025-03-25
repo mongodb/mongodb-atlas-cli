@@ -76,13 +76,13 @@ func (opts *ListOpts) Run() error {
 }
 
 func (opts *ListOpts) newListFlexBackupsAPIParams() *atlasv2.ListFlexBackupsApiParams {
-	includeCount := !opts.ListOpts.OmitCount
+	includeCount := !opts.OmitCount
 	return &atlasv2.ListFlexBackupsApiParams{
 		GroupId:      opts.ConfigProjectID(),
 		Name:         opts.clusterName,
 		IncludeCount: &includeCount,
-		ItemsPerPage: &opts.ListOpts.ItemsPerPage,
-		PageNum:      &opts.ListOpts.PageNum,
+		ItemsPerPage: &opts.ItemsPerPage,
+		PageNum:      &opts.PageNum,
 	}
 }
 

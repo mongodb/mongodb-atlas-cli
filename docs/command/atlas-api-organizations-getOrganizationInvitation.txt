@@ -92,11 +92,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-01-01_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api organizations getOrganizationInvitation --version 2023-01-01 --envelope false --invitationId [invitationId] --orgId 4888442a3354817a7320eb61
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api organizations getOrganizationInvitation --version 2023-01-01 --envelope false --invitationId [invitationId] --orgId 4888442a3354817a7320eb61
+
+      .. Code end marker, please don't delete this comment
 

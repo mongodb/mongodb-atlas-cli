@@ -117,11 +117,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-01-01_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api monitoringAndLogs listIndexMetrics --version 2023-01-01 --collectionName mycoll --databaseName mydb --envelope false --granularity PT1M --groupId 32b6e34b3d91647abb20e7b8 --metrics [metrics] --period PT10H --processId my.host.name.com:27017
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api monitoringAndLogs listIndexMetrics --version 2023-01-01 --collectionName mycoll --databaseName mydb --envelope false --granularity PT1M --groupId 32b6e34b3d91647abb20e7b8 --metrics [metrics] --period PT10H --processId my.host.name.com:27017
+
+      .. Code end marker, please don't delete this comment
 

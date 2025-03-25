@@ -140,11 +140,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 
 `)
 
-	tabs := true
-	if countExamples(examples) == 1 {
-		tabs = false
-	}
-
+	tabs := countExamples(examples) == 1
 	if tabs {
 		sb.WriteString(`.. tabs::
 `)

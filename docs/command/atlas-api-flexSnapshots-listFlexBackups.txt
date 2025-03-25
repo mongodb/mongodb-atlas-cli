@@ -107,11 +107,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2024-11-13_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api flexSnapshots listFlexBackups --version 2024-11-13 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --name [name] --pageNum 1 --pretty false
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api flexSnapshots listFlexBackups --version 2024-11-13 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --name [name] --pageNum 1 --pretty false
+
+      .. Code end marker, please don't delete this comment
 

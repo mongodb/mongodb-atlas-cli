@@ -110,13 +110,17 @@ Inherited Options
 Examples
 -----------------
 
-   Deletes the specified cluster from the project
+.. tabs::
+   .. tab:: Delete a cluster
+      :tabid: 2023-02-01_delete_cluster
 
-Run the command below.
+      Deletes the specified cluster from the project
 
-.. code-block::
+      Run the command below.
 
-   atlas api clusters deleteCluster --version 2023-02-01 --clusterName [your-cluster-name] --envelope false --groupId [your-project-id] --pretty false
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api clusters deleteCluster --version 2023-02-01 --clusterName [your-cluster-name] --envelope false --groupId [your-project-id] --pretty false
+
+      .. Code end marker, please don't delete this comment
 

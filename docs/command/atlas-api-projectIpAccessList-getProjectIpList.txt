@@ -95,13 +95,17 @@ Inherited Options
 Examples
 -----------------
 
-   Returns one access list entry from the specified project's IP access list: 10.0.0.0/16
+.. tabs::
+   .. tab:: Return One Project IP Access List Entry
+      :tabid: 2023-01-01_project_ip_access_list_get
 
-Run the command below.
+      Returns one access list entry from the specified project's IP access list: 10.0.0.0/16
 
-.. code-block::
+      Run the command below.
 
-   atlas api projectIpAccessList getProjectIpList --version 2023-01-01 --entryValue 10.0.0.0/16 --envelope false --groupId [your-project-id] --pretty false
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api projectIpAccessList getProjectIpList --version 2023-01-01 --entryValue 10.0.0.0/16 --envelope false --groupId [your-project-id] --pretty false
+
+      .. Code end marker, please don't delete this comment
 

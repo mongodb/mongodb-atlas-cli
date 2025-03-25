@@ -99,11 +99,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2025-02-19_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api mongoDbCloudUsers removeOrganizationUser --version 2025-02-19 --envelope false --orgId 4888442a3354817a7320eb61 --pretty false --userId [userId]
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api mongoDbCloudUsers removeOrganizationUser --version 2025-02-19 --envelope false --orgId 4888442a3354817a7320eb61 --pretty false --userId [userId]
+
+      .. Code end marker, please don't delete this comment
 

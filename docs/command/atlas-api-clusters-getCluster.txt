@@ -98,13 +98,17 @@ Inherited Options
 Examples
 -----------------
 
-   Returns the details for the specified cluster in the project
+.. tabs::
+   .. tab:: Get details of a specific cluster
+      :tabid: 2024-08-05_get_cluster
 
-Run the command below.
+      Returns the details for the specified cluster in the project
 
-.. code-block::
+      Run the command below.
 
-   atlas api clusters getCluster --version 2024-08-05 --clusterName [your-cluster-name] --envelope false --groupId [your-project-id] --pretty false
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api clusters getCluster --version 2024-08-05 --clusterName [your-cluster-name] --envelope false --groupId [your-project-id] --pretty false
+
+      .. Code end marker, please don't delete this comment
 

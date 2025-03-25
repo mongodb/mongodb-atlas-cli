@@ -110,11 +110,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-01-01_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api cloudBackups listServerlessBackupRestoreJobs --version 2023-01-01 --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api cloudBackups listServerlessBackupRestoreJobs --version 2023-01-01 --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --pageNum 1 --pretty false
+
+      .. Code end marker, please don't delete this comment
 

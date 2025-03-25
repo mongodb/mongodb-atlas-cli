@@ -91,11 +91,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2024-08-05_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api resourcePolicies deleteAtlasResourcePolicy --version 2024-08-05 --envelope false --orgId 4888442a3354817a7320eb61 --pretty false --resourcePolicyId 32b6e34b3d91647abb20e7b8
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api resourcePolicies deleteAtlasResourcePolicy --version 2024-08-05 --envelope false --orgId 4888442a3354817a7320eb61 --pretty false --resourcePolicyId 32b6e34b3d91647abb20e7b8
+
+      .. Code end marker, please don't delete this comment
 

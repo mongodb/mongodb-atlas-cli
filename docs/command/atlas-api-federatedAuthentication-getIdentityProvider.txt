@@ -89,11 +89,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2023-11-15_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api federatedAuthentication getIdentityProvider --version 2023-11-15 --envelope false --federationSettingsId 55fa922fb343282757d9554e --identityProviderId 32b6e34b3d91647abb20e7b8
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api federatedAuthentication getIdentityProvider --version 2023-11-15 --envelope false --federationSettingsId 55fa922fb343282757d9554e --identityProviderId 32b6e34b3d91647abb20e7b8
+
+      .. Code end marker, please don't delete this comment
 

@@ -99,11 +99,15 @@ Inherited Options
 Examples
 -----------------
 
-Run the command below.
+.. tabs::
+   .. tab:: Example
+      :tabid: 2024-05-30_default
 
-.. code-block::
+      Run the command below.
 
-   atlas api streams deleteStreamProcessor --version 2024-05-30 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false --processorName [processorName] --tenantName [tenantName]
+      .. code-block::
 
-.. Code end marker, please don't delete this comment
+         atlas api streams deleteStreamProcessor --version 2024-05-30 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false --processorName [processorName] --tenantName [tenantName]
+
+      .. Code end marker, please don't delete this comment
 

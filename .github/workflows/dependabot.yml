@@ -22,9 +22,15 @@
         uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 2
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Install npm dependencies
+        run: npm install
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
+        uses: mongodb/apix-action/token@95298ca9c5b2dffcdf79efaae59b9d2d1ac245e2
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
@@ -41,7 +47,7 @@
           echo "JIRA_TEAM=$JIRA_TEAM"
           echo "assigned_team=$JIRA_TEAM" >> "${GITHUB_OUTPUT}"
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@v6
+        uses: mongodb/apix-action/create-jira@v7
         id: create
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}

@@ -15,6 +15,12 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Install npm dependencies
+        run: npm install
       - run:  go install github.com/icholy/gomajor@latest
       - id:   version
         run:  echo "VERSION=$(curl -sSfL -X GET  https://api.github.com/repos/mongodb/atlas-sdk-go/releases/latest | jq -r '.tag_name')" >> "$GITHUB_OUTPUT"
@@ -30,7 +36,7 @@ jobs:
       - name: Find JIRA ticket
         id: find
         if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: mongodb/apix-action/find-jira@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
+        uses: mongodb/apix-action/find-jira@95298ca9c5b2dffcdf79efaae59b9d2d1ac245e2
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           jql: project = CLOUDP and summary ~ "Bump Atlas GO SDK to '${{ steps.version.outputs.VERSION }}'"
@@ -39,7 +45,7 @@ jobs:
         run: |
           echo "JIRA_KEY=${{steps.find.outputs.issue-key}}" >> "$GITHUB_ENV"
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
+        uses: mongodb/apix-action/create-jira@95298ca9c5b2dffcdf79efaae59b9d2d1ac245e2
         id: create
         if: (steps.verify-changed-files.outputs.files_changed == 'true') && (steps.find.outputs.found == 'false')
         with:
@@ -75,7 +81,7 @@ jobs:
       - name: set Apix Bot token
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         id: app-token
-        uses: mongodb/apix-action/token@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
+        uses: mongodb/apix-action/token@95298ca9c5b2dffcdf79efaae59b9d2d1ac245e2
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}

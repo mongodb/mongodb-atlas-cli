@@ -1,0 +1,59 @@
+{
+  "Body": "H4sIAAAAAAAAAMVVTW/bOBD9KwueE0uWYyvRTbHdwAt/BJbSbFssAkoc2dxQpEBSLtzA/32HppI6LrrYS9GDAZnDeXzDmff4QijbUVkCGytZ8U2rqeVKkuSFlK2xql41II0RY95sQfs9uTD9iCRf/r4gNZe8buuppIUAhoF7rawqlSAJyedZ/ykiF8QKc5q+UAwwPJl+SB/mOTlckIKWz23TgZCkosIArnLcL6G0Sjs6cBbWQNm9hgo0IH0ENFAqyajeO8hSIHvQ+b5xofX0fj4bp9k0RzqlR8UqM6u53BhEdxkIaGGCP0yIwmh4GQ4uo1HeHyWDOBmGnzGVcfOc8W9wd0uSQdgL/coj1XgPr3V9eJjPPz09puvFdIIpSE7vG3daatdgLF7QjjPAkshytZzijo1QBRVjTzgDUS2opBtg2ZZqhrhvFW+0apsZ3gAZxXAVsWFBWUFHw/6AXpfDKi4qROMncbiJ4yKK41EV03gYhjHGBS1AGN89weWz+3whW7xIzNta25gkCEqhWnbJYNerldwoVvRKVQe04QG1gppgFwVHMib4GZOga4AJ0taqDUjAwXJDVtdUMnN5Hd0Q10NxbJyosGe/h0Xghy/Q2Bul4U9VmDdi74i8I3G6+3czN5I2Zqvs/+H9fe/BqddFJrcL+o/SH/Gso/DJdS8kb7F3y70RBiSt3Zj/V1sb2poTpTbcnmtbQyN4ebSarIHSD+Hp6LLT0b2qbhysbOujJnB330FsMNtbis9H2Yi95aXpIBFRGuvMzWkWsRf9sBPxbHWfOQmHKGEozEcl2ho6s8jydDlJ1068EiU9Vq20JAnRIijWnJVUHEWJBqnqpnV28aM5NRoYR4/ZwXnlBvNhor7K94GD5+WM5RztgDEQ6Fhu8VeUNjg4wlxpbvckid0f71HLrtWPGfF+u5Ji/6su1/ezO/Ihe5qmWf7UP87pNyVh9jNfu6pKRvyeLvkzfv7hM7VSdgzadqfPsvXderXK/+pjBrK3rynj9TTNZ8s791qBc/PjaLrHzL8U513ceVmssS/UQLZHqdYIM88zcvgXORYTWVMHAAA=",
+  "Status": 201,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/groups/67e42d5badba6513a8c5f7bf/clusters",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "806"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 16:37:49 GMT"
+    ],
+    "Deprecation": [
+      "Mon, 5 Aug 2024 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Sun, 1 Mar 2026 00:00:00 GMT"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "488"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasClusterDescriptionV15Resource::createCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

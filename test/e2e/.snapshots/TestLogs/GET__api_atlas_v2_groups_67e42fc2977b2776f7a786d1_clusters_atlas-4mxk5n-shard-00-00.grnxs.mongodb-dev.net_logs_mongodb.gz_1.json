@@ -1,0 +1,50 @@
+{
+  "Body": "",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e42fc2977b2776f7a786d1/clusters/atlas-4mxk5n-shard-00-00.grnxs.mongodb-dev.net/logs/mongodb.gz",
+  "Headers": {
+    "Content-Disposition": [
+      "attachment; filename=\"atlas-4mxk5n-shard-00-00.grnxs.mongodb-dev.net_2025-03-25T16:57:03.00000078_2025-03-26T16:57:03.00000078_MONGODB.log.gz\""
+    ],
+    "Content-Length": [
+      "0"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-02-01+gzip"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 16:57:03 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "137"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasClusterDescriptionV15Resource::logsForHost"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

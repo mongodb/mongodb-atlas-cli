@@ -1,0 +1,47 @@
+{
+  "Body": "eyJkZXRhaWwiOiJDYW5ub3QgdXNlIG5vbi1mbGV4IGNsdXN0ZXIgYmFja3VwUmVzdG9yZXMtMjEyIGluIHRoZSBmbGV4IEFQSS4iLCJlcnJvciI6NDAwLCJlcnJvckNvZGUiOiJDQU5OT1RfVVNFX05PTl9GTEVYX0NMVVNURVJfSU5fRkxFWF9BUEkiLCJwYXJhbWV0ZXJzIjpbImJhY2t1cFJlc3RvcmVzLTIxMiJdLCJyZWFzb24iOiJCYWQgUmVxdWVzdCJ9",
+  "Status": 400,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e42d57adba6513a8c5f72f/flexClusters/backupRestores-212/backup/restoreJobs",
+  "Headers": {
+    "Content-Length": [
+      "201"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 17:01:08 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "60"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFlexBackupResource::getRestoreJobs"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

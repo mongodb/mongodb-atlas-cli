@@ -37,7 +37,7 @@ func TestRestores(t *testing.T) {
 	g.generateProjectAndCluster("backupRestores")
 	require.NotEmpty(t, g.clusterName)
 
-	g2 := newAtlasE2ETestGenerator(t)
+	g2 := newAtlasE2ETestGenerator(t, withSnapshot())
 	g2.generateProjectAndCluster("backupRestores2")
 	require.NotEmpty(t, g2.clusterName)
 

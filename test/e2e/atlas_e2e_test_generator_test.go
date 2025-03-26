@@ -37,6 +37,14 @@ import (
 
 const updateSnapshotsEnvVarKey = "UPDATE_SNAPSHOTS"
 
+type snapshotMode int
+
+const (
+	snapshotModeReplay snapshotMode = iota
+	snapshotModeUpdate
+	snapshotModeSkip
+)
+
 type snapshotData struct {
 	Body   []byte
 	Status int
@@ -77,18 +85,19 @@ func (d snapshotData) Write(w http.ResponseWriter) (int, error) {
 
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
 type atlasE2ETestGenerator struct {
-	projectID     string
-	projectName   string
-	clusterName   string
-	clusterRegion string
-	tier          string
-	mDBVer        string
-	enableBackup  bool
-	firstProcess  *atlasv2.ApiHostViewAtlas
-	t             *testing.T
-	fileIDs       map[string]int
-	memoryMap     map[string]any
-	lastData      *snapshotData
+	projectID           string
+	projectName         string
+	clusterName         string
+	clusterRegion       string
+	tier                string
+	mDBVer              string
+	enableBackup        bool
+	firstProcess        *atlasv2.ApiHostViewAtlas
+	t                   *testing.T
+	fileIDs             map[string]int
+	memoryMap           map[string]any
+	lastData            *snapshotData
+	currentSnapshotMode snapshotMode
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -111,7 +120,7 @@ func (g *atlasE2ETestGenerator) Logf(format string, args ...any) {
 // newAtlasE2ETestGenerator creates a new instance of atlasE2ETestGenerator struct.
 func newAtlasE2ETestGenerator(t *testing.T, opts ...func(g *atlasE2ETestGenerator)) *atlasE2ETestGenerator {
 	t.Helper()
-	g := &atlasE2ETestGenerator{t: t, fileIDs: map[string]int{}, memoryMap: map[string]any{}}
+	g := &atlasE2ETestGenerator{t: t, currentSnapshotMode: snapshotModeSkip, fileIDs: map[string]int{}, memoryMap: map[string]any{}}
 	for _, opt := range opts {
 		opt(g)
 	}
@@ -516,9 +525,13 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 	}
 
 	if updateSnapshots() {
+		g.currentSnapshotMode = snapshotModeUpdate
+
 		dir := g.snapshotDir()
 		_ = os.RemoveAll(dir)
 	} else {
+		g.currentSnapshotMode = snapshotModeReplay
+
 		g.loadMemory()
 	}
 
@@ -563,7 +576,7 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 	}
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if updateSnapshots() {
+		if g.currentSnapshotMode == snapshotModeUpdate {
 			r.Host = targetURL.Host
 			proxy.ServeHTTP(w, r)
 			return
@@ -576,7 +589,7 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 	}))
 
 	g.t.Cleanup(func() {
-		if updateSnapshots() {
+		if g.currentSnapshotMode == snapshotModeUpdate {
 			g.storeMemory()
 		}
 		server.Close()
@@ -588,56 +601,62 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 func (g *atlasE2ETestGenerator) memory(key string, value any) any {
 	g.t.Helper()
 
-	if skipSnapshots() {
+	switch g.currentSnapshotMode {
+	case snapshotModeSkip:
 		return value
-	}
-
-	if updateSnapshots() {
+	case snapshotModeUpdate:
 		_, ok := g.memoryMap[key]
 		if ok {
 			g.t.Fatalf("memory key %q already exists", key)
 		}
 		g.memoryMap[key] = value
 		return value
+	case snapshotModeReplay:
+		data, ok := g.memoryMap[key]
+		if !ok {
+			g.t.Fatalf("memory key %q not found", key)
+		}
+		return data
+	default:
+		g.t.Fatalf("unexpected snapshot mode: %v", g.currentSnapshotMode)
+		return nil
 	}
-	data, ok := g.memoryMap[key]
-	if !ok {
-		g.t.Fatalf("memory key %q not found", key)
-	}
-	return data
 }
 
 func (g *atlasE2ETestGenerator) memoryFunc(key string, value any, marshal func(value any) ([]byte, error), unmarshal func([]byte) (any, error)) any {
 	g.t.Helper()
 
-	if skipSnapshots() {
+	switch g.currentSnapshotMode {
+	case snapshotModeSkip:
 		return value
-	}
-
-	if updateSnapshots() {
+	case snapshotModeUpdate:
 		data, err := marshal(value)
 		if err != nil {
 			g.t.Fatalf("marshal: %v", err)
 		}
 		g.memoryMap[key] = base64.StdEncoding.EncodeToString(data)
 		return value
+	case snapshotModeReplay:
+		data, ok := g.memoryMap[key]
+		if !ok {
+			g.t.Fatalf("memory key %q not found", key)
+		}
+		buf, err := base64.StdEncoding.DecodeString(data.(string))
+		if err != nil {
+			g.t.Fatalf("decode: %v", err)
+		}
+		r, err := unmarshal(buf)
+		if err != nil {
+			g.t.Fatalf("unmarshal: %v", err)
+		}
+		return r
+	default:
+		g.t.Fatalf("unexpected snapshot mode: %v", g.currentSnapshotMode)
+		return nil
 	}
-	data, ok := g.memoryMap[key]
-	if !ok {
-		g.t.Fatalf("memory key %q not found", key)
-	}
-	buf, err := base64.StdEncoding.DecodeString(data.(string))
-	if err != nil {
-		g.t.Fatalf("decode: %v", err)
-	}
-	r, err := unmarshal(buf)
-	if err != nil {
-		g.t.Fatalf("unmarshal: %v", err)
-	}
-	return r
 }
 
-func (g *atlasE2ETestGenerator) memoryRand(key string, n int64) *big.Int { //nolint:unparam // in case there are more than one random values in the same test
+func (g *atlasE2ETestGenerator) memoryRand(key string, n int64) *big.Int {
 	g.t.Helper()
 
 	r, ok := g.memoryFunc(key, must(RandInt(n)), func(value any) ([]byte, error) {

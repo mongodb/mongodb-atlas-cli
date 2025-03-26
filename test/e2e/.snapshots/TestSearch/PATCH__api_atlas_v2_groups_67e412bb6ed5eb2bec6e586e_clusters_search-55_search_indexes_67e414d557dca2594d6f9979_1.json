@@ -1,8 +1,8 @@
 {
-  "Body": "eyJjb2xsZWN0aW9uTmFtZSI6Im1vdmllcyIsImRhdGFiYXNlIjoic2FtcGxlX21mbGl4IiwiaW5kZXhJRCI6IjY3ZTNlZDk3OTg5ZjI0N2Q1MWViNzdiNiIsImxhdGVzdERlZmluaXRpb24iOnsiYW5hbHl6ZXIiOiJsdWNlbmUuc2ltcGxlIiwibWFwcGluZ3MiOnsiZHluYW1pYyI6dHJ1ZX19LCJuYW1lIjoiaW5kZXgtNjE3IiwicXVlcnlhYmxlIjpmYWxzZSwic3RhdHVzIjoiUEVORElORyIsInR5cGUiOiJzZWFyY2gifQ==",
+  "Body": "eyJjb2xsZWN0aW9uTmFtZSI6Im1vdmllcyIsImRhdGFiYXNlIjoic2FtcGxlX21mbGl4IiwiaW5kZXhJRCI6IjY3ZTQxNGQ1NTdkY2EyNTk0ZDZmOTk3OSIsImxhdGVzdERlZmluaXRpb24iOnsiYW5hbHl6ZXIiOiJsdWNlbmUuc2ltcGxlIiwibWFwcGluZ3MiOnsiZHluYW1pYyI6dHJ1ZX19LCJuYW1lIjoiaW5kZXgtNTQzIiwicXVlcnlhYmxlIjpmYWxzZSwic3RhdHVzIjoiUEVORElORyIsInR5cGUiOiJzZWFyY2gifQ==",
   "Status": 200,
   "Method": "PATCH",
-  "Path": "/api/atlas/v2/groups/67e3eb26989f247d51eb6868/clusters/search-204/search/indexes/67e3ed97989f247d51eb77b6",
+  "Path": "/api/atlas/v2/groups/67e412bb6ed5eb2bec6e586e/clusters/search-55/search/indexes/67e414d557dca2594d6f9979",
   "Headers": {
     "Content-Length": [
       "238"
@@ -11,7 +11,7 @@
       "application/vnd.atlas.2024-05-30+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 12:05:46 GMT"
+      "Wed, 26 Mar 2025 14:53:12 GMT"
     ],
     "Referrer-Policy": [
       "strict-origin-when-cross-origin"
@@ -26,7 +26,7 @@
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "80"
+      "96"
     ],
     "X-Frame-Options": [
       "DENY"
@@ -38,7 +38,7 @@
       "17.0.14+7"
     ],
     "X-Mongodb-Service-Version": [
-      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+      "gitHash=860911e593e40a85c23e0410667d1c42748372a5; versionString=master"
     ],
     "X-Permitted-Cross-Domain-Policies": [
       "none"

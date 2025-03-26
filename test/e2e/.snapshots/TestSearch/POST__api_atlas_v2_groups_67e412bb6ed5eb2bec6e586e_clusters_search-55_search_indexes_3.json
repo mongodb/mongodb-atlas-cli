@@ -1,23 +1,20 @@
 {
-  "Body": "H4sIAAAAAAAAACWOywrCMBRE/+WuKwhqtF0r0k2VdilSbpNbDeRFk0pD6b8b63bOYWZm4FYp4kFaU6EmKEDbjyQPGQgM2KH/ZR61U9TqXskpEWkETeU5AXakHfW8E7kg1jNkXc5xK/IkaXROmpeHYgYRDWrJoQjDSEsG5j+19mwO+1PSfcAwJhnKqr3Xt2t9aZpfHI01USfweGYQolvvEA78DcsXbspomr4AAAA=",
-  "Status": 200,
+  "Body": "H4sIAAAAAAAAAGWQQU/DMAyF/4vPHRqo7dTekIrQLhUnLgghL3FZpCQNcYooVf87zsYmJG6W37P9PS+gRmtJJTP6Hh1BC2HkxFCAxoQH5NxidMHSW4povPHvIhqv6WvfiVbvqLwtta52WuFd1ZS6HpqGtmKymIhTR4NM5QPQLuAwBFnBudazR2cUtANapgIGQ1afFDU6R14w2pc/thQncaU5ZCY9qil7YC2WS49TzHjr67oWwIRRHe892vmboqh2UuTphhN6jVHL4D/CZ4r8C/p5Kbfi8+fXnFJvMEacN1VVS8SPieKMB0vXELI+TQIOTw99t+8f4Up8BoL1B/XqQfp0AQAA",
+  "Status": 201,
   "Method": "POST",
-  "Path": "/api/atlas/v2/groups/67e3eda5d9de6f6a6b9c9b24/clusters/search-42/fts/indexes",
+  "Path": "/api/atlas/v2/groups/67e412bb6ed5eb2bec6e586e/clusters/search-55/search/indexes",
   "Headers": {
     "Content-Encoding": [
       "gzip"
     ],
     "Content-Length": [
-      "173"
+      "261"
     ],
     "Content-Type": [
-      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+      "application/vnd.atlas.2024-05-30+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 12:15:07 GMT"
-    ],
-    "Deprecation": [
-      "Thu, 30 May 2024 00:00:00 GMT"
+      "Wed, 26 Mar 2025 14:53:17 GMT"
     ],
     "Referrer-Policy": [
       "strict-origin-when-cross-origin"
@@ -28,9 +25,6 @@
     "Strict-Transport-Security": [
       "max-age=31536000; includeSubdomains;"
     ],
-    "Sunset": [
-      "Mon, 30 Nov 2026 00:00:00 GMT"
-    ],
     "Vary": [
       "Accept-Encoding"
     ],
@@ -38,19 +32,19 @@
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "1175"
+      "2562"
     ],
     "X-Frame-Options": [
       "DENY"
     ],
     "X-Java-Method": [
-      "ApiAtlasFTSIndexConfigResource::createFTSIndex"
+      "ApiAtlasSearchIndexConfigResource::createSearchIndex"
     ],
     "X-Java-Version": [
       "17.0.14+7"
     ],
     "X-Mongodb-Service-Version": [
-      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+      "gitHash=860911e593e40a85c23e0410667d1c42748372a5; versionString=master"
     ],
     "X-Permitted-Cross-Domain-Policies": [
       "none"

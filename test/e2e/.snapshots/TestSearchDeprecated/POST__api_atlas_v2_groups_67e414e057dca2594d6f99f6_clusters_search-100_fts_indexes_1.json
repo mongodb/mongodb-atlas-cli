@@ -1,17 +1,20 @@
 {
-  "Body": "e30=",
-  "Status": 202,
-  "Method": "DELETE",
-  "Path": "/api/atlas/v2/groups/67e3eb26989f247d51eb6868/clusters/search-204/fts/indexes/67e3ed97989f247d51eb77b6",
+  "Body": "H4sIAAAAAAAAACWOyw6CMBRE/+WuMQEfxbDWGDZoYGkMuZSrNukrtBgawr9bdDvnZGZm4EZK4l4YXaEiKECZjyAHCfTosUO3Zg6VldSqpxRTJEL3NJWnCFhO+yxPc0b9gbptR5zRcUdplBRaK/TLQTFDHzQqwaHww0hLAvo/9evZsCyLuvPoxyhDWbW3+nqpz02zxkEbHVQE90cCPtjfHcKBv2H5AicWpIy+AAAA",
+  "Status": 200,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/groups/67e414e057dca2594d6f99f6/clusters/search-100/fts/indexes",
   "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
     "Content-Length": [
-      "2"
+      "174"
     ],
     "Content-Type": [
       "application/vnd.atlas.2023-01-01+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 12:05:46 GMT"
+      "Wed, 26 Mar 2025 15:02:31 GMT"
     ],
     "Deprecation": [
       "Thu, 30 May 2024 00:00:00 GMT"
@@ -28,23 +31,26 @@
     "Sunset": [
       "Mon, 30 Nov 2026 00:00:00 GMT"
     ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
     "X-Content-Type-Options": [
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "70"
+      "1497"
     ],
     "X-Frame-Options": [
       "DENY"
     ],
     "X-Java-Method": [
-      "ApiAtlasFTSIndexConfigResource::deleteFTSIndex"
+      "ApiAtlasFTSIndexConfigResource::createFTSIndex"
     ],
     "X-Java-Version": [
       "17.0.14+7"
     ],
     "X-Mongodb-Service-Version": [
-      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+      "gitHash=860911e593e40a85c23e0410667d1c42748372a5; versionString=master"
     ],
     "X-Permitted-Cross-Domain-Policies": [
       "none"

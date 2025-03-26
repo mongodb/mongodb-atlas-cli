@@ -366,7 +366,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	t.Run("Create array mapping", func(t *testing.T) {
-		n := g.memoryRand("rand", 1000)
+		n := g.memoryRand("arrayRand", 1000)
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
@@ -773,7 +773,7 @@ func TestSearchDeprecated(t *testing.T) {
 	})
 
 	t.Run("Create array mapping", func(t *testing.T) {
-		n := g.memoryRand("rand", 1000)
+		n := g.memoryRand("arrayRand", 1000)
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)

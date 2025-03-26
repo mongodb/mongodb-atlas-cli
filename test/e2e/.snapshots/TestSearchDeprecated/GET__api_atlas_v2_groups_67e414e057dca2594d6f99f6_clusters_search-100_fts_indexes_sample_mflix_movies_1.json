@@ -1,17 +1,20 @@
 {
-  "Body": "eyJhbmFseXplciI6Imx1Y2VuZS5zaW1wbGUiLCJjb2xsZWN0aW9uTmFtZSI6Im1vdmllcyIsImRhdGFiYXNlIjoic2FtcGxlX21mbGl4IiwiaW5kZXhJRCI6IjY3ZTNlZmNiZDlkZTZmNmE2YjljYTBkOSIsIm1hcHBpbmdzIjp7ImR5bmFtaWMiOnRydWV9LCJuYW1lIjoiaW5kZXgtNTQ4Iiwic3RhdHVzIjoiSU5fUFJPR1JFU1MiLCJzeW5vbnltcyI6W10sInR5cGUiOiJzZWFyY2gifQ==",
+  "Body": "H4sIAAAAAAAAACWOTQ+CMBBE/8ue0YAfYDhrjBc1ciSELGXVJu2W0GKshP9u0eu8l5kpR0BG5T/UQw5qEMS0tFJ3iiACYZQi4aThM2oKgjYvSTaQFh02aOfM4mzX+q7kOxDJLb1P+wDSjDZJFmcptVtqVg2JlHZrioOkseskPyzkI7SeUUsBuesHmiLg/9SvZ5EmSdCtQzcEGU7n+nq7HG+Hophjz4a9DqCsInC++90h7MUTpuoLnCzRz9sAAAA=",
   "Status": 200,
-  "Method": "PATCH",
-  "Path": "/api/atlas/v2/groups/67e3eda5d9de6f6a6b9c9b24/clusters/search-42/fts/indexes/67e3efcbd9de6f6a6b9ca0d9",
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e414e057dca2594d6f99f6/clusters/search-100/fts/indexes/sample_mflix/movies",
   "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
     "Content-Length": [
-      "217"
+      "191"
     ],
     "Content-Type": [
       "application/vnd.atlas.2023-01-01+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 12:15:09 GMT"
+      "Wed, 26 Mar 2025 15:02:40 GMT"
     ],
     "Deprecation": [
       "Thu, 30 May 2024 00:00:00 GMT"
@@ -28,23 +31,26 @@
     "Sunset": [
       "Mon, 30 Nov 2026 00:00:00 GMT"
     ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
     "X-Content-Type-Options": [
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "77"
+      "57"
     ],
     "X-Frame-Options": [
       "DENY"
     ],
     "X-Java-Method": [
-      "ApiAtlasFTSIndexConfigResource::updateUserDefinedFTSIndexFields"
+      "ApiAtlasFTSIndexConfigResource::getFTSIndexes"
     ],
     "X-Java-Version": [
       "17.0.14+7"
     ],
     "X-Mongodb-Service-Version": [
-      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+      "gitHash=860911e593e40a85c23e0410667d1c42748372a5; versionString=master"
     ],
     "X-Permitted-Cross-Domain-Policies": [
       "none"

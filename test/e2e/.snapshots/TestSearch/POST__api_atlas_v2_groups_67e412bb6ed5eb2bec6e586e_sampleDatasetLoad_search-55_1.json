@@ -1,23 +1,20 @@
 {
-  "Body": "H4sIAAAAAAAAACWOwQ6CMBBE/2XPaExUFM4awwUNHg0hS7tok3ZpaDFW4r9b9DrvZWZuEyCjDm8aIAc9CmJaOmWsJkhA9FqT8KrnEg1FwfRPRS4SiR5bdHPmcLYb02n1ikSxpFdxiCDd0Zo60cpMUtqlmLaZwJXMomTQWsV3B/kEMjAaJSD3w0ifBPg/9etZbDf7qDuPfowyFGVzqc6n6ni9znHgnoOJ4FYn4IP93SEcxAM+9Rd0GcfA2wAAAA==",
-  "Status": 200,
-  "Method": "GET",
-  "Path": "/api/atlas/v2/groups/67e3eda5d9de6f6a6b9c9b24/clusters/search-42/fts/indexes/sample_mflix/movies",
+  "Body": "H4sIAAAAAAAAAD2LzQoCIRCA32XOLag5LnoOIqINIgi6xKTTFrhtqHuK3j0j6vr9POF0C+DAtKylthLb4Emh1cFcrMEzzMDHKRdOHQ1cw8yU/LVB/JhxeEQuvKBS1X2KsbLE9COghMJGzBtl9lI7VE7IY/04pTFtOGfq/18u3+Ww3a1X3RJeb1nHMw+aAAAA",
+  "Status": 201,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/groups/67e412bb6ed5eb2bec6e586e/sampleDatasetLoad/search-55",
   "Headers": {
     "Content-Encoding": [
       "gzip"
     ],
     "Content-Length": [
-      "190"
+      "144"
     ],
     "Content-Type": [
       "application/vnd.atlas.2023-01-01+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 12:15:15 GMT"
-    ],
-    "Deprecation": [
-      "Thu, 30 May 2024 00:00:00 GMT"
+      "Wed, 26 Mar 2025 14:52:01 GMT"
     ],
     "Referrer-Policy": [
       "strict-origin-when-cross-origin"
@@ -28,9 +25,6 @@
     "Strict-Transport-Security": [
       "max-age=31536000; includeSubdomains;"
     ],
-    "Sunset": [
-      "Mon, 30 Nov 2026 00:00:00 GMT"
-    ],
     "Vary": [
       "Accept-Encoding"
     ],
@@ -38,19 +32,19 @@
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "55"
+      "118"
     ],
     "X-Frame-Options": [
       "DENY"
     ],
     "X-Java-Method": [
-      "ApiAtlasFTSIndexConfigResource::getFTSIndexes"
+      "ApiAtlasSampleDatasetLoadResource::sampleDatasetLoad"
     ],
     "X-Java-Version": [
       "17.0.14+7"
     ],
     "X-Mongodb-Service-Version": [
-      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+      "gitHash=860911e593e40a85c23e0410667d1c42748372a5; versionString=master"
     ],
     "X-Permitted-Cross-Domain-Policies": [
       "none"

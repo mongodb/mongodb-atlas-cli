@@ -1,20 +1,23 @@
 {
-  "Body": "H4sIAAAAAAAAAHXLPQ+CMBSF4f9yZ5q0pR/aVdhEHZhcTC0XNSlibstk/O/SOJszvs95w+UxgANjscZxu1k3SmUHLfBqAwqoIMQlZaSDn3CFCT2FO1OylHl6RczY+FyS5FIzXjNpeiGd0I7rc1GE/p9RTphikGimDlPyt1U9lxgrSPl32R27077t2wY+X/v+c2SuAAAA",
+  "Body": "H4sIAAAAAAAAAH2QQUsDMRCF/8uct2Jtu4t7EyrSS5X2KKWMmVkNJJMlyYJxyX83aVE8eQvvfeR9zAwoaNIXe+jBTIqFb0JEIfQEDShnDKuonezRckFGF2IoBWHENww1CmhHw+foUYuW91JqIf7cbUvXdrxedre06Ujh3eZ+Te2AarUqkMVxLHiAfgZKglYr6Ac0gRsYNBu6NMpZy1Im+9c/WPRToWIa6z45NVUGcjP/ZCH6qpJPOTcgV/WL1QK9x7Rol1UhMHr18fDfAcozTmUddvvzy+H56fB4PNY4iZNkq9bpV+T6HeRvVx5zFFQBAAA=",
   "Status": 200,
-  "Method": "GET",
-  "Path": "/api/atlas/v2/groups/67e3eda5d9de6f6a6b9c9b24/sampleDatasetLoad/67e3ef98989f247d51eb7ce1",
+  "Method": "POST",
+  "Path": "/api/atlas/v2/groups/67e414e057dca2594d6f99f6/clusters/search-100/fts/indexes",
   "Headers": {
     "Content-Encoding": [
       "gzip"
     ],
     "Content-Length": [
-      "150"
+      "242"
     ],
     "Content-Type": [
       "application/vnd.atlas.2023-01-01+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 12:15:06 GMT"
+      "Wed, 26 Mar 2025 15:02:37 GMT"
+    ],
+    "Deprecation": [
+      "Thu, 30 May 2024 00:00:00 GMT"
     ],
     "Referrer-Policy": [
       "strict-origin-when-cross-origin"
@@ -25,6 +28,9 @@
     "Strict-Transport-Security": [
       "max-age=31536000; includeSubdomains;"
     ],
+    "Sunset": [
+      "Mon, 30 Nov 2026 00:00:00 GMT"
+    ],
     "Vary": [
       "Accept-Encoding"
     ],
@@ -32,19 +38,19 @@
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "49"
+      "2306"
     ],
     "X-Frame-Options": [
       "DENY"
     ],
     "X-Java-Method": [
-      "ApiAtlasSampleDatasetLoadResource::getSampleDatasetLoadStatus"
+      "ApiAtlasFTSIndexConfigResource::createFTSIndex"
     ],
     "X-Java-Version": [
       "17.0.14+7"
     ],
     "X-Mongodb-Service-Version": [
-      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+      "gitHash=860911e593e40a85c23e0410667d1c42748372a5; versionString=master"
     ],
     "X-Permitted-Cross-Domain-Policies": [
       "none"

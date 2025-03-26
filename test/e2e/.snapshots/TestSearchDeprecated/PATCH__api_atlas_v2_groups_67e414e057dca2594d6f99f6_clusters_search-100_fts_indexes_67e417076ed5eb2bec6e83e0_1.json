@@ -1,23 +1,20 @@
 {
-  "Body": "H4sIAAAAAAAAALWTPW+DMBBA/8vNEIP5Cl47dW+XVh0u9hlQDEa2SYeI/17SqGlZKhbme3r3pNNdQZrJB3JPdhoCiCQC6QgDKRDAE17ESRbz8iXNRZEJzt8ggu42KyvK05ySolISeVHnqtR1rctlbrrh7EG8X6F1pBe2DWH0gjFp7KRiRZdDb4fGqtNB2p7h2DEMBj27cNY4O42e/WN3ZBalJ6NhjnZYwaQdAnYDOf/YtrKvzH/gnWru59nU8oPuU6Iw4Ak9vfptOWt+n6aRtrXcuZ0anJXkPW3qeLD7tHy2XSDT+bCh5ZedPyIYsKfvv0In25g4xWl2XCzWNc+3fy9IKyyPHDPNSXGqlCqlohzmL6HB7RZDBAAA",
-  "Status": 201,
-  "Method": "POST",
-  "Path": "/api/atlas/v2/groups",
+  "Body": "eyJhbmFseXplciI6Imx1Y2VuZS5zaW1wbGUiLCJjb2xsZWN0aW9uTmFtZSI6Im1vdmllcyIsImRhdGFiYXNlIjoic2FtcGxlX21mbGl4IiwiaW5kZXhJRCI6IjY3ZTQxNzA3NmVkNWViMmJlYzZlODNlMCIsIm1hcHBpbmdzIjp7ImR5bmFtaWMiOnRydWV9LCJuYW1lIjoiaW5kZXgtNjExIiwic3RhdHVzIjoiSU5fUFJPR1JFU1MiLCJzeW5vbnltcyI6W10sInR5cGUiOiJzZWFyY2gifQ==",
+  "Status": 200,
+  "Method": "PATCH",
+  "Path": "/api/atlas/v2/groups/67e414e057dca2594d6f99f6/clusters/search-100/fts/indexes/67e417076ed5eb2bec6e83e0",
   "Headers": {
-    "Content-Encoding": [
-      "gzip"
-    ],
     "Content-Length": [
-      "282"
+      "217"
     ],
     "Content-Type": [
       "application/vnd.atlas.2023-01-01+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 14:53:20 GMT"
+      "Wed, 26 Mar 2025 15:02:33 GMT"
     ],
-    "Location": [
-      "https://cloud-dev.mongodb.com//api/atlas/v1.0"
+    "Deprecation": [
+      "Thu, 30 May 2024 00:00:00 GMT"
     ],
     "Referrer-Policy": [
       "strict-origin-when-cross-origin"
@@ -28,20 +25,20 @@
     "Strict-Transport-Security": [
       "max-age=31536000; includeSubdomains;"
     ],
-    "Vary": [
-      "Accept-Encoding"
+    "Sunset": [
+      "Mon, 30 Nov 2026 00:00:00 GMT"
     ],
     "X-Content-Type-Options": [
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "1964"
+      "70"
     ],
     "X-Frame-Options": [
       "DENY"
     ],
     "X-Java-Method": [
-      "ApiAtlasGroupsResource::addGroup"
+      "ApiAtlasFTSIndexConfigResource::updateUserDefinedFTSIndexFields"
     ],
     "X-Java-Version": [
       "17.0.14+7"

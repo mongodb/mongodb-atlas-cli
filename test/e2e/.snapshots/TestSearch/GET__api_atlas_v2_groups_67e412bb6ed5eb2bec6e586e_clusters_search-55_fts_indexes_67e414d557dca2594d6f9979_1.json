@@ -1,20 +1,23 @@
 {
-  "Body": "H4sIAAAAAAAAAD2LwQrCMBQE/+WdLTSvaaI5CyJiBREELxLTbRVSK0l6Ev/diCh7m9l50vnWkiGlUaFbzPM6lrqtBS7aQdCMnJ9iQmjsgHyMsMFdC8kfMw4Pj4SlTVndJ+8zC7A/QlxyXZRVweog2AhphDrlDiGMYYsYbf/vYvomx91+s25W9HoDoH72OpoAAAA=",
+  "Body": "H4sIAAAAAAAAACWOvQ6CMBSF3+XOOKgUUmaNYUEDozHk2l60SVsaWgyE8O5WXM93/hYQvdYkgupthYagANN/FHlIQGLAJ/qf5tE4Ta3ptJoiUVbSVJ4iyHJK96lkLJcCD4ynMus4z3k0GXRO2ZeHYgE5WzRKQBGGkRLoFGkZgR21XhOw/+GtdcfSYwz7gGGMDiir9lZfL/W5aX7ybHs7mwjujwTC7LZzhIN4w/oFk29zN8wAAAA=",
   "Status": 200,
   "Method": "GET",
-  "Path": "/api/atlas/v2/groups/67e3eda5d9de6f6a6b9c9b24/sampleDatasetLoad/67e3ef98989f247d51eb7ce1",
+  "Path": "/api/atlas/v2/groups/67e412bb6ed5eb2bec6e586e/clusters/search-55/fts/indexes/67e414d557dca2594d6f9979",
   "Headers": {
     "Content-Encoding": [
       "gzip"
     ],
     "Content-Length": [
-      "146"
+      "182"
     ],
     "Content-Type": [
       "application/vnd.atlas.2023-01-01+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 12:14:16 GMT"
+      "Wed, 26 Mar 2025 14:53:12 GMT"
+    ],
+    "Deprecation": [
+      "Thu, 30 May 2024 00:00:00 GMT"
     ],
     "Referrer-Policy": [
       "strict-origin-when-cross-origin"
@@ -25,6 +28,9 @@
     "Strict-Transport-Security": [
       "max-age=31536000; includeSubdomains;"
     ],
+    "Sunset": [
+      "Mon, 30 Nov 2026 00:00:00 GMT"
+    ],
     "Vary": [
       "Accept-Encoding"
     ],
@@ -32,19 +38,19 @@
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "38"
+      "50"
     ],
     "X-Frame-Options": [
       "DENY"
     ],
     "X-Java-Method": [
-      "ApiAtlasSampleDatasetLoadResource::getSampleDatasetLoadStatus"
+      "ApiAtlasFTSIndexConfigResource::getFTSIndex"
     ],
     "X-Java-Version": [
       "17.0.14+7"
     ],
     "X-Mongodb-Service-Version": [
-      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+      "gitHash=860911e593e40a85c23e0410667d1c42748372a5; versionString=master"
     ],
     "X-Permitted-Cross-Domain-Policies": [
       "none"

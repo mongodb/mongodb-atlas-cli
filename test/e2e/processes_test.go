@@ -27,7 +27,7 @@ import (
 )
 
 func TestProcesses(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProjectAndCluster("processes")
 
 	cliPath, err := AtlasCLIBin()

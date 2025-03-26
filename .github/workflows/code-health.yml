@@ -30,8 +30,6 @@ jobs:
     env:
       COVERAGE: coverage.out
       TEST_CMD: gotestsum --junitfile unit-tests.xml --format standard-verbose --
-      UNIT_TAGS: unit
-      INTEGRATION_TAGS: integration
     strategy:
       fail-fast: false
       matrix:

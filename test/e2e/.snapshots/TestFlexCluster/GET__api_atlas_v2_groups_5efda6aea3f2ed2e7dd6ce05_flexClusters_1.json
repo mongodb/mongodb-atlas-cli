@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAANVWa2vbMBT9L/7QL4tjyYmdxBBKmrglEEqo3W2sjCJbN4lX2TKSHPqg/33XTkJb1nRNYZSBDbKu7uuco4sfLJEVN9oKrh6slYKFFVgrY0odOE4qZMVtDut2Loul5Ek7lbnDysxhRjDtrF1nqWRVaseDBWc+A9ZZuMBd6HHup0A8ZyHgdiwqbUDp46xIRcVhLKvCDI2q4KhkSziv8iE9ygzkeg5qjjtDSojVshQILEaDWFiPP+tPXQmzKTRh6U1VRmBMVixx68GCgiUCuBXUcR9bVrpJGt+VgEEuwvlsOh5FYYxxU1kUkJpMFpFRO39tWMGZwgDWtlkEgKU26/eLTgK2XqHRJgSftqS3QtDuDpUGoQJM4PYI7bVedaIfcXLfdnKOtRYbHFllVpGsVApDxvOsOFJQiixliNCw4cpemX5n/WsXHFHYNRyp9VPPX7RaN8Q34Nld2tlXglVjrIAZmOCLEVziejbp2K4fUxp43YAOfmCaRiDTGtZ9GsFDWW33e9ABBgkfcPAXPvOTQdonQNHe5J6cfEURIWt4tt8mbR8NBcvr3M/qxc1SyXXGQT2XRy0YXM+3pvON3+hbhOd5pm+i7B7OTqzAa5OnANtTp7PweyPHJSbf7l1G1+Eoiq9pjQNCaWBnmE9G8fT8DB0Mq3NfoXSxNiSF1ZLDCsxGfOFOsQsmNLSs9aa7CxDANER32FGOAWdxhDn+geT/QqAX0P4HCExc/wWBgx45gMAedT+bwPFF+J8QuHdmJWmOo7J8MbOWucdEXuwfP3860Y84uW87HTSz7pfZqkrfObO4LKThiL2BSgNfSAUurveV89r86trUtekgpr2AoPzJofL3u57b9btAUuqTHiEDtz/wOu+QP5fn0kya2i+x9lOpQjeMQZvPvgzTySw84CLUvL59D+oQ0jDR/ANYQefxN4Q5QtR/CAAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "717"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2024-11-13+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 11:55:20 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "191"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFlexClusterResource::getAllFlexClusters"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

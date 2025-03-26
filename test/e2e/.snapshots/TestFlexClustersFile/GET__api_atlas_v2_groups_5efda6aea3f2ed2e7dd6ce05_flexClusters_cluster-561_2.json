@@ -1,0 +1,47 @@
+{
+  "Body": "eyJkZXRhaWwiOiJObyBjbHVzdGVyIG5hbWVkIGNsdXN0ZXItNTYxIGV4aXN0cyBpbiBncm91cCA1ZWZkYTZhZWEzZjJlZDJlN2RkNmNlMDUuIiwiZXJyb3IiOjQwNCwiZXJyb3JDb2RlIjoiQ0xVU1RFUl9OT1RfRk9VTkQiLCJwYXJhbWV0ZXJzIjpbImNsdXN0ZXItNTYxIiwiNWVmZGE2YWVhM2YyZWQyZTdkZDZjZTA1Il0sInJlYXNvbiI6Ik5vdCBGb3VuZCJ9",
+  "Status": 404,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters/cluster-561",
+  "Headers": {
+    "Content-Length": [
+      "204"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 11:55:17 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "65"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFlexClusterResource::getFlexCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

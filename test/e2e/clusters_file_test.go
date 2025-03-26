@@ -30,15 +30,14 @@ import (
 )
 
 func TestClustersFile(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("clustersFile")
 
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterFileName, err := RandClusterName()
-	req.NoError(err)
+	clusterFileName := g.memory("clusterFileName", must(RandClusterName())).(string)
 
 	mdbVersion, err := MongoDBMajorVersion()
 	req.NoError(err)
@@ -179,6 +178,10 @@ func TestClustersFile(t *testing.T) {
 		expected := fmt.Sprintf("Deleting cluster '%s'", clusterFileName)
 		assert.Equal(t, expected, string(resp))
 	})
+
+	if skipCleanup() {
+		return
+	}
 
 	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

@@ -30,22 +30,20 @@ import (
 )
 
 func TestStreams(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	if IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}
 
-	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("atlasStreams")
 	req := require.New(t)
 
 	cliPath, err := AtlasCLIBin()
 	req.NoError(err)
 
-	instanceName, err := RandEntityWithRevision("instance")
-	req.NoError(err)
+	instanceName := g.memory("instanceName", must(RandEntityWithRevision("instance"))).(string)
 
-	connectionName, err := RandEntityWithRevision("connection")
-	req.NoError(err)
+	connectionName := g.memory("connectionName", must(RandEntityWithRevision("connection"))).(string)
 
 	t.Run("List all streams in the e2e project", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

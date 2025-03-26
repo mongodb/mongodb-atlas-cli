@@ -29,15 +29,13 @@ import (
 )
 
 func TestAtlasTeams(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	n, err := RandInt(1000)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	n := g.memoryRand("rand", 1000)
 
 	teamName := fmt.Sprintf("teams%v", n)
 	var teamID string

@@ -1,0 +1,56 @@
+{
+  "Body": "H4sIAAAAAAAAAM2Xa2+aUBjHvwsv9qrCuV9MmsUpm2ZWmWK2blkMlWMlUyCATZam332PtF28zOqqLDsQE+Fcfs//uYV7y8ShVbcIIryGaI0IH5M6wnXGvloX1m0WxMt5kEXFT5jk+RRdlU+TZdpZLRPSUBNMqVZ6SpgMOTY3fKonMGmW5EU5JyjmQV6bTiexErV8FmRhDSG47dtcp6m9SOLbJLyphebOjk1RJxJhCevnUfwjt+rf7q1ZZqawz6wo0rzuOJN5sgzL6U9L7UmycII0csqTnDvilIC5s4/OSbNkYvLc5M5r4Jwwyn/kThgUgbMwQb7MzMLERf52Ta3LUqs3qcmiJLz0cAtkbYNVmZmDKbmZT62Hi//PtN+EG0QbNCu/Wg/fL6x100s/rQTxkuj5bxEtTF4Ei3R/eN0F86Wx6sgmTCtOGUGYES7Vavs4WMArq9UZfhx7jYHf8Tv93rjT94bjgdtoweplHK2OsobNRrcxGHvuYDx0m/1eq5T21TTMplpShbBiWkolD8B8HnR8t0oawSShVCCOCWJMH8Dx+36jWx0OsjmR6+MFX3UbvttrXm+766rT7XYeWYanwggkMFyKcI4w5odZtr11PhgtqC20xAQrzgXDZD+M3x70Rx/a3sjf1ubdte8Oz+YsSSTGEM0QzhRJIY9D2pbovEzEVohqrBBRysVoP9HQazTd8fuBu8NyakIhiBeIGYp1Obj7Qk49UoyG7o6XTqNQ0qZEUyYxVRQpeogA5G+6PX9bj6fHp7FgYguJBCcKUkljiV4oeZs0W7qchQbZCBGpwEGIUY6gMWC5I8+nkTtyxy3X89s7te7U+IQ8gVqLMGJYc43Wz75qfBn/+4Yksc0kg/4MLZIQLsgRRBV3Ja5t8BAmwIMxppyKI5gqb02Kbo6XmSpvT9gmkNtCyeff43iqa1FQe8FbEEBI6FKgzQL8B6ZqizCEjRYb1XcvQiUVmHMGXhGQ6IQrdgxG9WUY2jRclK9S/W+I9pVi2CINsiIqoiTuPe61IoSpT18Kp3yjgWFZsc+wh1/mNp25XA4AAA==",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e3eaf3989f247d51eb5f9c/processes/atlas-ffcn86-shard-00-00.gs9pp.mongodb-dev.net:27017/disks/data/measurements",
+  "Headers": {
+    "Cache-Control": [
+      "no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0"
+    ],
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "796"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 12:02:05 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "94"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasProcessMeasurementsResource::getSpecificDiskMeasurements"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

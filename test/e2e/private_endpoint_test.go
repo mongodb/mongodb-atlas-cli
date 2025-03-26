@@ -38,11 +38,10 @@ var regionsAWS = []string{
 }
 
 func TestPrivateEndpointsAWS(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("privateEndpointsAWS")
 
-	n, err := RandInt(int64(len(regionsAWS)))
-	require.NoError(t, err)
+	n := g.memoryRand("rand", int64(len(regionsAWS)))
 
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
@@ -133,6 +132,10 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
+	if skipCleanup() {
+		return
+	}
+
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
@@ -158,11 +161,10 @@ var regionsAzure = []string{
 }
 
 func TestPrivateEndpointsAzure(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("privateEndpointsAzure")
 
-	n, err := RandInt(int64(len(regionsAzure)))
-	require.NoError(t, err)
+	n := g.memoryRand("rand", int64(len(regionsAzure)))
 
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
@@ -255,6 +257,10 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
+	if skipCleanup() {
+		return
+	}
+
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
@@ -287,11 +293,10 @@ var regionsGCP = []string{
 }
 
 func TestPrivateEndpointsGCP(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("privateEndpointsGPC")
 
-	n, err := RandInt(int64(len(regionsGCP)))
-	require.NoError(t, err)
+	n := g.memoryRand("rand", int64(len(regionsGCP)))
 
 	region := regionsGCP[n.Int64()]
 
@@ -381,6 +386,10 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
+	if skipCleanup() {
+		return
+	}
+
 	t.Run("Watch", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
@@ -399,7 +408,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 }
 
 func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("regionalizedPrivateEndpointsSettings")
 
 	cliPath, err := AtlasCLIBin()

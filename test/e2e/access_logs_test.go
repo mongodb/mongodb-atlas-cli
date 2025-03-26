@@ -26,9 +26,9 @@ import (
 )
 
 func TestAccessLogs(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	req := require.New(t)
 
-	g := newAtlasE2ETestGenerator(t)
 	g.generateProjectAndCluster("accessLogs")
 
 	h, err := g.getHostname()

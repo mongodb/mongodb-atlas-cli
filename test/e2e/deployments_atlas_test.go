@@ -36,17 +36,14 @@ const (
 )
 
 func TestDeploymentsAtlas(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("setup")
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName, err := RandClusterName()
-	req.NoError(err)
-
-	dbUserUsername, err := RandUsername()
-	req.NoError(err)
+	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
+	dbUserUsername := g.memory("dbUserUsername", must(RandUsername())).(string)
 
 	dbUserPassword := dbUserUsername + "~PwD"
 

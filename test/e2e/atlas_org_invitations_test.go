@@ -28,11 +28,11 @@ import (
 )
 
 func TestAtlasOrgInvitations(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	n, err := RandInt(1000)
-	require.NoError(t, err)
+	n := g.memoryRand("rand", 1000)
 
 	emailOrg := fmt.Sprintf("test-%v@mongodb.com", n)
 	var orgInvitationID string

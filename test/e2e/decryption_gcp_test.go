@@ -34,6 +34,7 @@ var filesGCP embed.FS
 const gcpTestsInputDir = "decryption/gcp"
 
 func TestDecryptWithGCP(t *testing.T) {
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
 	req := require.New(t)
 
 	cliPath, err := AtlasCLIBin()

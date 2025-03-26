@@ -28,6 +28,7 @@ import (
 )
 
 func TestEvents(t *testing.T) {
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	t.Run("List Project Events", func(t *testing.T) {

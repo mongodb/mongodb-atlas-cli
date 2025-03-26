@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAANVWW28qNxD+K5UfzksDy0JYwkpRRQInouISsaRpU1WRdz0LPhh7ZXtpORH/veO9NJDLUXWqtjoSD8uM5/bNeD4/EZpbFSVUcLki4RNJ1DbLLbhPkDQWwEiYUmHgjGQaGE8s38HohcagPQzV7/JUcTgjjJvNzdUrcUyTTZ69dBPzayUlJFbpt+JroOxWQwoaZIIZEgOJkozqPUGXiciNBb3cZ061GN1OxteDaLQkqCq9ciUjq7FO47wbS50tuidbJVeKxaHn0aTxaZNu9lo1zBqVjVYLf02fBetsHzSrgw0Gu6YEG7Z7Lb939qaR/zVG7S8beT8YIy6tzuEDdm0dqVwncEnZlssPGjLBExqBvaRWUNOA+Jzade0cUagLjvTuuebvjd5h3RV4jc75u8UWGGMLLAypmw/SbrW7jVan0Q6Wvh92u2Gn/0DKjkf8M9xckbDV7JaCe6oxydVUMWf58W4y+eXxfrCYjoZogd3U+8y1Z2AXYOytVjvOAGeAzOazEZ5YCRVTcV0mGYFIp1TSFbDIFVcMbjUiK63ybOx6GvSgA3Gnx/oMgjSgQdxPLuLzFL3xI33cv+in7fMe6/oQB3Gni3pBYxA4I7/+ht9cbtznE1nj5KHd2trMFIipnBXYVDg18eZ4NONeAb+385str0jHeO/lUsNujvEnbtBFMd0iRdD/u8heeSs9jT1QGn5UsfkrmZPgJ4GPT/8f2RpJM7NW9u/k+nz2gL0tNMOrKf2k9E/oHQcQrS+argWV7kTcDGrF3WL8Da2No6zvMoaXl711e7vBw9HBe27X8+JOmm+o0n+2ICXduu10ehdlvi22DMLgIwXS3BwzIrcvOSyrltfVmwxXazELWxNRLZuV4Zej2WDmWOt9Yt7SP8bSrfME3KYlocyFwN5x+Vp8qNgWvdyeBhrcR275pikUnH5sWp2YOgD4O3INK5yOSnIXPY4G0fKx7ViiQtoNz0daknnnRBplkLg6nq3wD250sbc8MTMkCQSmhbkJTM0BWIk6DkCuNLd7EvbKB8Fcin1tcTi8ClPu7i9s/HbvVZPLygy+RVK++rfy/KxkDecDfn7nFytJK2WvQdvqFTOOFjeL+Xz5s+/4W+8GjOG6NV9F38UDwNYxx8OJI1ZLVxXRoTnOT4Ebzoktn0svx3dXrsMFFkwNRHsMukVnk2VEDn8CCM+6MkoKAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v1.0/groups/67e3eb37d9de6f6a6b9c8b4f/clusters/cluster-340",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "908"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 11:55:57 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasLegacyClusterDescriptionResource::getCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ],
+    "X-Xgen-Up-Proto": [
+      "HTTP/2"
+    ]
+  }
+}

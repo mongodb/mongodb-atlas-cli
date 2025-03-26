@@ -1,0 +1,59 @@
+{
+  "Body": "H4sIAAAAAAAAACWOyw6CMBRE/+WuMQEfxbDWGDZoYGkMuZSrNukrtBgawr9bdDvnZGZm4EZK4l4YXaEiKECZjyAHCfTosUO3Zg6VldSqpxRTJEL3NJWnCFhO+yxPc0b9gbptR5zRcUdplBRaK/TLQTFDHzQqwaHww0hLAvo/9evZsCyLuvPoxyhDWbW3+nqpz02zxkEbHVQE90cCPtjfHcKBv2H5AicWpIy+AAAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e414e057dca2594d6f99f6/clusters/search-100/fts/indexes/67e417076ed5eb2bec6e83e0",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "174"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 15:02:32 GMT"
+    ],
+    "Deprecation": [
+      "Thu, 30 May 2024 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Mon, 30 Nov 2026 00:00:00 GMT"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "49"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFTSIndexConfigResource::getFTSIndex"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=860911e593e40a85c23e0410667d1c42748372a5; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

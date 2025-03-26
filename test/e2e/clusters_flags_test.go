@@ -32,15 +32,14 @@ import (
 const writeConcern = "majority"
 
 func TestClustersFlags(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("clustersFlags")
 
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName, err := RandClusterName()
-	req.NoError(err)
+	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
 
 	tier := e2eTier()
 	region, err := g.newAvailableRegion(tier, e2eClusterProvider)

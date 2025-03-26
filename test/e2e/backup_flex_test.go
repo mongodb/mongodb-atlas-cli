@@ -31,10 +31,10 @@ import (
 // They will be fully enabled in https://jira.mongodb.org/browse/CLOUDP-291186. We will be able to move these e2e tests
 // to create their project once the ticket is completed.
 func TestFlexBackup(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	g := newAtlasE2ETestGenerator(t)
 	g.projectID = os.Getenv("MONGODB_ATLAS_PROJECT_ID")
 	g.generateFlexCluster()
 

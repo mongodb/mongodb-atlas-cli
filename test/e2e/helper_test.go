@@ -262,14 +262,10 @@ func splitOutput(cmd *exec.Cmd) (string, string, error) {
 	return o.String(), e.String(), err
 }
 
-func deployFlexClusterForProject(projectID string) (string, error) {
+func deployFlexClusterForProject(projectID, clusterName string) error {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
-		return "", err
-	}
-	clusterName, err := RandClusterName()
-	if err != nil {
-		return "", err
+		return err
 	}
 
 	args := []string{
@@ -287,7 +283,7 @@ func deployFlexClusterForProject(projectID string) (string, error) {
 	create := exec.Command(cliPath, args...)
 	create.Env = os.Environ()
 	if resp, err := RunAndGetStdOut(create); err != nil {
-		return "", fmt.Errorf("error creating flex cluster (%s): %w - %s", clusterName, err, string(resp))
+		return fmt.Errorf("error creating flex cluster (%s): %w - %s", clusterName, err, string(resp))
 	}
 
 	watchArgs := []string{
@@ -303,10 +299,10 @@ func deployFlexClusterForProject(projectID string) (string, error) {
 	watch := exec.Command(cliPath, watchArgs...)
 	watch.Env = os.Environ()
 	if resp, err := RunAndGetStdOut(watch); err != nil {
-		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
+		return fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
 
-	return clusterName, nil
+	return nil
 }
 
 func watchServerlessInstanceForProject(projectID, clusterName string) error {
@@ -351,18 +347,14 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 	_ = watchServerlessInstanceForProject(projectID, clusterName)
 }
 
-func deployClusterForProject(projectID, tier, mDBVersion string, enableBackup bool) (string, string, error) {
+func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, enableBackup bool) (string, error) {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
-		return "", "", err
-	}
-	clusterName, err := RandClusterName()
-	if err != nil {
-		return "", "", err
+		return "", err
 	}
 	region, err := newAvailableRegion(projectID, tier, e2eClusterProvider)
 	if err != nil {
-		return "", "", err
+		return "", err
 	}
 	args := []string{
 		clustersEntity,
@@ -383,7 +375,7 @@ func deployClusterForProject(projectID, tier, mDBVersion string, enableBackup bo
 	create := exec.Command(cliPath, args...)
 	create.Env = os.Environ()
 	if resp, err := RunAndGetStdOut(create); err != nil {
-		return "", "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
+		return "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
 	}
 
 	watchArgs := []string{
@@ -397,9 +389,9 @@ func deployClusterForProject(projectID, tier, mDBVersion string, enableBackup bo
 	watch := exec.Command(cliPath, watchArgs...)
 	watch.Env = os.Environ()
 	if resp, err := RunAndGetStdOut(watch); err != nil {
-		return "", "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
+		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
-	return clusterName, region, nil
+	return region, nil
 }
 
 func e2eTier() string {
@@ -550,14 +542,18 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 }
 
 func RandClusterName() (string, error) {
+	return RandClusterNameWithPrefix("cluster")
+}
+
+func RandClusterNameWithPrefix(prefix string) (string, error) {
 	n, err := RandInt(1000)
 	if err != nil {
 		return "", err
 	}
 	if revision, ok := os.LookupEnv("revision"); ok {
-		return fmt.Sprintf("cluster-%v-%s", n, revision), nil
+		return fmt.Sprintf("%s-%v-%s", prefix, n, revision), nil
 	}
-	return fmt.Sprintf("cluster-%v", n), nil
+	return fmt.Sprintf("%s-%v", prefix, n), nil
 }
 
 func RandIdentityProviderName() (string, error) {
@@ -1420,4 +1416,11 @@ func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
 	cmd.Env = os.Environ()
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
+}
+
+func must[T any](value T, err error) T {
+	if err != nil {
+		panic(err)
+	}
+	return value
 }

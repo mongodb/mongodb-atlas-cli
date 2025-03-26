@@ -32,6 +32,7 @@ const (
 )
 
 func TestAlerts(t *testing.T) {
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	var alertID string

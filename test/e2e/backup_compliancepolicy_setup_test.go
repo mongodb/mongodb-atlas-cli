@@ -28,12 +28,11 @@ import (
 )
 
 func TestBackupCompliancePolicySetup(t *testing.T) {
-	setup(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("setup-compliance-policy")
 
 	scheduledPolicyItem := atlasv2.BackupComplianceScheduledPolicyItem{

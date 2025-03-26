@@ -28,13 +28,12 @@ import (
 )
 
 func TestRestores(t *testing.T) {
-	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
 	var snapshotID, restoreJobID string
 
-	g := newAtlasE2ETestGeneratorWithBackup(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot(), withBackup())
 	g.generateProjectAndCluster("backupRestores")
 	require.NotEmpty(t, g.clusterName)
 

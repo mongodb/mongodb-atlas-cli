@@ -30,12 +30,12 @@ import (
 )
 
 func TestExportJobs(t *testing.T) {
-	setup(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	clusterName := memory(t, "clusterName", must(RandClusterName()))
+	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
 	fmt.Println(clusterName)
 
 	mdbVersion, err := MongoDBMajorVersion()

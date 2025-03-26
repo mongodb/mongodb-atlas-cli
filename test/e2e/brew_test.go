@@ -31,7 +31,6 @@ const (
 )
 
 func TestAtlasCLIConfig(t *testing.T) {
-	setup(t)
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	tempDirEnv := "XDG_CONFIG_HOME=" + os.TempDir() // make sure no config.toml is detected

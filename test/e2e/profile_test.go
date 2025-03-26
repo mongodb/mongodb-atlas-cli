@@ -52,7 +52,7 @@ func validateProfile(t *testing.T, cliPath string, profile string, profileValid 
 }
 
 func TestProfile(t *testing.T) {
-	setup(t)
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 

@@ -26,8 +26,7 @@ import (
 )
 
 func TestSetupFailureFlow(t *testing.T) {
-	setup(t)
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("setup")
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)

@@ -28,15 +28,14 @@ import (
 )
 
 func TestAtlasProjectInvitations(t *testing.T) {
-	setup(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("invitations")
 
 	var invitationID string
-	n := memoryRand(t, "rand", 1000)
+	n := g.memoryRand("rand", 1000)
 	require.NoError(t, err)
 
 	emailProject := fmt.Sprintf("test-%v@mongodb.com", n)

@@ -41,9 +41,8 @@ const (
 )
 
 func TestDBUserWithFlags(t *testing.T) {
-	setup(t)
-	username, err := RandUsername()
-	require.NoError(t, err)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	username := g.memory("username", must(RandUsername())).(string)
 
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
@@ -142,11 +141,8 @@ func TestDBUserWithFlags(t *testing.T) {
 }
 
 func TestDBUsersWithStdin(t *testing.T) {
-	setup(t)
-	username, err := RandUsername()
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	username := g.memory("username", must(RandUsername())).(string)
 
 	idpID, _ := os.LookupEnv("IDENTITY_PROVIDER_ID")
 	require.NotEmpty(t, idpID)

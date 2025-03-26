@@ -39,8 +39,8 @@ const (
 )
 
 func TestDBRoles(t *testing.T) {
-	setup(t)
-	n := memoryRand(t, "rand", 1000)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	n := g.memoryRand("rand", 1000)
 
 	roleName := fmt.Sprintf("role-%v", n)
 

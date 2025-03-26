@@ -28,12 +28,11 @@ import (
 )
 
 func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
-	setup(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("compliance-policy-pointintimerestore")
 	initialItem := atlasv2.BackupComplianceScheduledPolicyItem{
 		FrequencyInterval: 1,

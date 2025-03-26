@@ -27,8 +27,7 @@ import (
 )
 
 func TestMaintenanceWindows(t *testing.T) {
-	setup(t)
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("maintenance")
 
 	cliPath, err := AtlasCLIBin()

@@ -15,9 +15,21 @@
 package e2e_test
 
 import (
+	"bytes"
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
+	"io"
+	"math/big"
+	"net/http"
+	"net/http/httptest"
+	"net/http/httputil"
+	"net/url"
 	"os"
 	"os/exec"
+	"path"
+	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -35,6 +47,9 @@ type atlasE2ETestGenerator struct {
 	enableBackup  bool
 	firstProcess  *atlasv2.ApiHostViewAtlas
 	t             *testing.T
+	fileIDs       map[string]int
+	memoryMap     map[string]any
+	lastData      map[string][]string
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -55,14 +70,25 @@ func (g *atlasE2ETestGenerator) Logf(format string, args ...any) {
 }
 
 // newAtlasE2ETestGenerator creates a new instance of atlasE2ETestGenerator struct.
-func newAtlasE2ETestGenerator(t *testing.T) *atlasE2ETestGenerator {
+func newAtlasE2ETestGenerator(t *testing.T, opts ...func(g *atlasE2ETestGenerator)) *atlasE2ETestGenerator {
 	t.Helper()
-	return &atlasE2ETestGenerator{t: t}
+	g := &atlasE2ETestGenerator{t: t, fileIDs: map[string]int{}, memoryMap: map[string]any{}}
+	for _, opt := range opts {
+		opt(g)
+	}
+	return g
 }
 
-func newAtlasE2ETestGeneratorWithBackup(t *testing.T) *atlasE2ETestGenerator {
-	t.Helper()
-	return &atlasE2ETestGenerator{t: t, enableBackup: true}
+func withBackup() func(g *atlasE2ETestGenerator) {
+	return func(g *atlasE2ETestGenerator) {
+		g.enableBackup = true
+	}
+}
+
+func withSnapshot() func(g *atlasE2ETestGenerator) {
+	return func(g *atlasE2ETestGenerator) {
+		g.snapshotServer()
+	}
 }
 
 // generateProject generates a new project and also registers its deletion on test cleanup.
@@ -109,7 +135,7 @@ func (g *atlasE2ETestGenerator) generateFlexCluster() {
 		g.t.Fatal("unexpected error: project must be generated")
 	}
 
-	g.clusterName = memory(g.t, "generateFlexClusterName", must(RandClusterName()))
+	g.clusterName = g.memory("generateFlexClusterName", must(RandClusterName())).(string)
 
 	err := deployFlexClusterForProject(g.projectID, g.clusterName)
 	if err != nil {
@@ -145,7 +171,7 @@ func (g *atlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 		g.mDBVer = mdbVersion
 	}
 
-	g.clusterName = memory(g.t, prefix+"GenerateClusterName", must(RandClusterNameWithPrefix(prefix)))
+	g.clusterName = g.memory(prefix+"GenerateClusterName", must(RandClusterNameWithPrefix(prefix))).(string)
 
 	g.clusterRegion, err = deployClusterForProject(g.projectID, g.clusterName, g.tier, g.mDBVer, g.enableBackup)
 	if err != nil {
@@ -289,4 +315,325 @@ func isTrue(s string) bool {
 	default:
 		return false
 	}
+}
+
+func (g *atlasE2ETestGenerator) snapshotBaseDir() string {
+	g.t.Helper()
+
+	dir, err := os.Getwd()
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
+	if strings.HasSuffix(dir, "test/e2e") {
+		dir = path.Join(dir, ".snapshots")
+	} else {
+		dir = path.Join(dir, "test/e2e/.snapshots")
+	}
+
+	return dir
+}
+
+func (g *atlasE2ETestGenerator) snapshotDir() string {
+	g.t.Helper()
+
+	dir := g.snapshotBaseDir()
+
+	dir = path.Join(dir, g.t.Name())
+
+	return dir
+}
+
+func (g *atlasE2ETestGenerator) enforceDir(filename string) {
+	g.t.Helper()
+
+	dir := path.Dir(filename)
+
+	if _, err := os.Stat(dir); err != nil {
+		if !os.IsNotExist(err) {
+			g.t.Fatal(err)
+		}
+
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+			g.t.Fatal(err)
+		}
+	}
+}
+
+func (g *atlasE2ETestGenerator) snapshotBaseName(r *http.Request) string {
+	g.t.Helper()
+
+	dir := g.snapshotDir()
+
+	return fmt.Sprintf("%s/%s_%s", dir, r.Method, strings.ReplaceAll(strings.ReplaceAll(r.URL.Path, "/", "_"), ":", "_"))
+}
+
+func (g *atlasE2ETestGenerator) snapshotName(r *http.Request) string {
+	g.t.Helper()
+
+	baseName := g.snapshotBaseName(r)
+
+	g.fileIDs[baseName]++
+
+	id := g.fileIDs[baseName]
+
+	fileName := fmt.Sprintf("%s_%d.json", baseName, id)
+
+	return fileName
+}
+
+func (g *atlasE2ETestGenerator) snapshotNameStepBack(r *http.Request) {
+	g.t.Helper()
+
+	baseName := g.snapshotBaseName(r)
+
+	g.fileIDs[baseName] -= 2
+	if g.fileIDs[baseName] < 0 {
+		g.t.Fatal("no previous snapshot")
+	}
+}
+
+func updateSnapshots() bool {
+	return isTrue(os.Getenv("UPDATE_SNAPSHOTS"))
+}
+
+func skipSnapshots() bool {
+	return os.Getenv("UPDATE_SNAPSHOTS") == "skip"
+}
+
+func (g *atlasE2ETestGenerator) loadMemory() {
+	g.t.Helper()
+
+	dir := g.snapshotDir()
+	filename := path.Join(dir, "memory.json")
+
+	buf, err := os.ReadFile(filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			g.memoryMap = map[string]any{}
+			return
+		}
+		g.t.Fatal(err)
+	}
+
+	if err := json.Unmarshal(buf, &g.memoryMap); err != nil {
+		g.t.Fatal(err)
+	}
+}
+
+func (g *atlasE2ETestGenerator) storeMemory() {
+	g.t.Helper()
+
+	dir := g.snapshotDir()
+	filename := path.Join(dir, "memory.json")
+
+	buf, err := json.Marshal(g.memoryMap)
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
+	g.enforceDir(filename)
+
+	if err := os.WriteFile(filename, buf, 0600); err != nil {
+		g.t.Fatal(err)
+	}
+}
+
+func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) []byte {
+	g.t.Helper()
+
+	filename := g.snapshotName(r)
+
+	g.t.Logf("reading snapshot from %q", filename)
+	buf, err := os.ReadFile(filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			g.snapshotNameStepBack(r)
+			return g.readSnapshot(r)
+		}
+		g.t.Fatal(err)
+	}
+
+	return buf
+}
+
+func (g *atlasE2ETestGenerator) snapshotServer() {
+	g.t.Helper()
+
+	if skipSnapshots() {
+		return
+	}
+
+	targetURI := os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL")
+
+	targetURL, err := url.Parse(targetURI)
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
+	if updateSnapshots() {
+		dir := g.snapshotDir()
+		_ = os.RemoveAll(dir)
+	} else {
+		g.loadMemory()
+	}
+
+	proxy := httputil.NewSingleHostReverseProxy(targetURL)
+
+	proxy.ModifyResponse = func(resp *http.Response) error {
+		if resp.StatusCode == http.StatusUnauthorized && resp.Header.Get("Www-Authenticate") != "" {
+			return nil // skip 401
+		}
+
+		data := map[string][]string{}
+		for k, v := range resp.Header {
+			data[k] = v
+		}
+
+		data["__path__"] = []string{resp.Request.URL.Path}
+
+		data["__method__"] = []string{resp.Request.Method}
+
+		data["__status__"] = []string{strconv.Itoa(resp.StatusCode)}
+
+		var buf bytes.Buffer
+		if _, err := io.Copy(&buf, resp.Body); err != nil {
+			return err
+		}
+		resp.Body.Close()
+		resp.Body = io.NopCloser(&buf)
+
+		data["__body__"] = []string{base64.StdEncoding.EncodeToString(buf.Bytes())}
+
+		if g.lastData != nil && data["__method__"][0] == g.lastData["__method__"][0] && data["__path__"][0] == g.lastData["__path__"][0] && data["__status__"][0] == g.lastData["__status__"][0] && data["__body__"][0] == g.lastData["__body__"][0] {
+			return nil // skip same content
+		}
+
+		g.lastData = data
+
+		out, err := json.MarshalIndent(data, "", "  ")
+		if err != nil {
+			return err
+		}
+
+		filename := g.snapshotName(resp.Request)
+		g.t.Logf("writing snapshot at %q", filename)
+		g.enforceDir(filename)
+		return os.WriteFile(filename, out, 0600)
+	}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if updateSnapshots() {
+			r.Host = targetURL.Host
+			proxy.ServeHTTP(w, r)
+			return
+		}
+
+		buf := g.readSnapshot(r)
+		var data map[string][]string
+		if err := json.Unmarshal(buf, &data); err != nil {
+			g.t.Fatal(err)
+		}
+
+		for k, v := range data {
+			if k == "__body__" || k == "__status__" || k == "__method__" || k == "__path__" {
+				continue
+			}
+			w.Header()[k] = v
+		}
+
+		status, err := strconv.Atoi(data["__status__"][0])
+		if err != nil {
+			g.t.Fatal(err)
+		}
+		w.WriteHeader(status)
+
+		if data["__body__"] != nil {
+			body, err := base64.StdEncoding.DecodeString(data["__body__"][0])
+			if err != nil {
+				g.t.Fatal(err)
+			}
+			_, err = w.Write(body)
+			if err != nil {
+				g.t.Fatal(err)
+			}
+		}
+	}))
+
+	g.t.Cleanup(func() {
+		if updateSnapshots() {
+			g.storeMemory()
+		}
+		server.Close()
+	})
+
+	g.t.Setenv("MONGODB_ATLAS_OPS_MANAGER_URL", server.URL)
+}
+
+func (g *atlasE2ETestGenerator) memory(key string, value any) any {
+	g.t.Helper()
+
+	if skipSnapshots() {
+		return value
+	}
+
+	if updateSnapshots() {
+		_, ok := g.memoryMap[key]
+		if ok {
+			g.t.Fatalf("memory key %q already exists", key)
+		}
+		g.memoryMap[key] = value
+		return value
+	}
+	data, ok := g.memoryMap[key]
+	if !ok {
+		g.t.Fatalf("memory key %q not found", key)
+	}
+	return data
+}
+
+func (g *atlasE2ETestGenerator) memoryFunc(key string, value any, marshal func(value any) ([]byte, error), unmarshal func([]byte) (any, error)) any {
+	g.t.Helper()
+
+	if skipSnapshots() {
+		return value
+	}
+
+	if updateSnapshots() {
+		data, err := marshal(value)
+		if err != nil {
+			g.t.Fatalf("marshal: %v", err)
+		}
+		g.memoryMap[key] = base64.StdEncoding.EncodeToString(data)
+		return value
+	}
+	data, ok := g.memoryMap[key]
+	if !ok {
+		g.t.Fatalf("memory key %q not found", key)
+	}
+	buf, err := base64.StdEncoding.DecodeString(data.(string))
+	if err != nil {
+		g.t.Fatalf("decode: %v", err)
+	}
+	r, err := unmarshal(buf)
+	if err != nil {
+		g.t.Fatalf("unmarshal: %v", err)
+	}
+	return r
+}
+
+func (g *atlasE2ETestGenerator) memoryRand(key string, n int64) *big.Int { //nolint:unparam // in case there are more than one random values in the same test
+	g.t.Helper()
+
+	r, ok := g.memoryFunc(key, must(RandInt(n)), func(value any) ([]byte, error) {
+		i := value.(*big.Int)
+		return i.Bytes(), nil
+	}, func(buf []byte) (any, error) {
+		return big.NewInt(0).SetBytes(buf), nil
+	}).(*big.Int)
+
+	if !ok {
+		g.t.Fatalf("unexpected error: %v", r)
+	}
+	return r
 }

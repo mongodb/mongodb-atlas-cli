@@ -28,15 +28,14 @@ import (
 )
 
 func TestClustersM0Flags(t *testing.T) {
-	setup(t)
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("clustersM0")
 
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName := memory(t, "clusterName", must(RandClusterName()))
+	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

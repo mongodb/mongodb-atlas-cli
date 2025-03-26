@@ -27,7 +27,7 @@ import (
 )
 
 func TestExportBuckets(t *testing.T) {
-	setup(t)
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)

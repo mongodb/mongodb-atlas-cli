@@ -32,7 +32,7 @@ var filesAzure embed.FS
 const azureTestsInputDir = "decryption/azure"
 
 func TestDecryptWithAzure(t *testing.T) {
-	setup(t)
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
 	req := require.New(t)
 
 	cliPath, err := AtlasCLIBin()

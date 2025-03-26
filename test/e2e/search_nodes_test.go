@@ -33,12 +33,11 @@ import (
 const minSearchNodesMDBVersion = "6.0"
 
 func TestSearchNodes(t *testing.T) {
-	setup(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("searchNodes")
 	g.tier = tierM10
 	g.mDBVer = minSearchNodesMDBVersion

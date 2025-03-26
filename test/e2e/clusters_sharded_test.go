@@ -28,15 +28,14 @@ import (
 )
 
 func TestShardedCluster(t *testing.T) {
-	setup(t)
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("shardedClusters")
 
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	shardedClusterName := memory(t, "shardedClusterName", must(RandClusterName()))
+	shardedClusterName := g.memory("shardedClusterName", must(RandClusterName())).(string)
 
 	tier := e2eTier()
 	region, err := g.newAvailableRegion(tier, e2eClusterProvider)

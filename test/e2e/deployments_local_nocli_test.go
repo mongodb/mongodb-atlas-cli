@@ -37,7 +37,6 @@ import (
 )
 
 func TestDeploymentsLocalWithNoCLI(t *testing.T) {
-	setup(t)
 	const (
 		deploymentName = "test-nocli"
 		dbUsername     = "admin"

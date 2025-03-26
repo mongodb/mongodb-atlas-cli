@@ -29,7 +29,7 @@ import (
 )
 
 func TestAtlasProjectAPIKeys(t *testing.T) {
-	setup(t)
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

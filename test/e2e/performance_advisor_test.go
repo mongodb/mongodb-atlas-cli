@@ -24,8 +24,7 @@ import (
 )
 
 func TestPerformanceAdvisor(t *testing.T) {
-	setup(t)
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProjectAndCluster("performanceAdvisor")
 
 	cliPath, err := AtlasCLIBin()

@@ -35,7 +35,6 @@ import (
 )
 
 func TestDeploymentsLocalWithAuth(t *testing.T) {
-	setup(t)
 	const (
 		deploymentName = "test-auth"
 		dbUsername     = "admin"

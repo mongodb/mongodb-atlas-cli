@@ -30,15 +30,14 @@ import (
 )
 
 func TestClustersFile(t *testing.T) {
-	setup(t)
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("clustersFile")
 
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterFileName := memory(t, "clusterFileName", must(RandClusterName()))
+	clusterFileName := g.memory("clusterFileName", must(RandClusterName())).(string)
 
 	mdbVersion, err := MongoDBMajorVersion()
 	req.NoError(err)

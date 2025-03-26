@@ -27,8 +27,7 @@ import (
 )
 
 func TestSharedClusterUpgrade(t *testing.T) {
-	setup(t)
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("clustersUpgrade")
 	g.tier = tierM0
 	g.generateCluster()

@@ -29,11 +29,10 @@ import (
 )
 
 func TestProjectSettings(t *testing.T) {
-	setup(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("settings")
 
 	t.Run("Describe", func(t *testing.T) {

@@ -29,11 +29,11 @@ import (
 )
 
 func TestAtlasTeamUsers(t *testing.T) {
-	setup(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	n := memoryRand(t, "rand", 1000)
+	n := g.memoryRand("rand", 1000)
 
 	teamName := fmt.Sprintf("teams%v", n)
 	teamID, err := createTeam(teamName)

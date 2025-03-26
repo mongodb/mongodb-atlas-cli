@@ -29,8 +29,8 @@ import (
 )
 
 func TestDBUserCerts(t *testing.T) {
-	setup(t)
-	n := memoryRand(t, "rand", 1000)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	n := g.memoryRand("rand", 1000)
 	username := fmt.Sprintf("user%v", n)
 
 	cliPath, err := AtlasCLIBin()

@@ -29,11 +29,10 @@ import (
 )
 
 func TestAccessList(t *testing.T) {
-	setup(t)
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("accessList")
 
-	n := memoryRand(t, "rand", 255)
+	n := g.memoryRand("rand", 255)
 	req := require.New(t)
 
 	entry := fmt.Sprintf("192.168.0.%d", n)

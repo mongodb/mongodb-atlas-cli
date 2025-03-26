@@ -1,0 +1,47 @@
+{
+  "Body": "eyJjb2xsZWN0aW9uTmFtZSI6Im1vdmllcyIsImRhdGFiYXNlIjoic2FtcGxlX21mbGl4IiwiaW5kZXhJRCI6IjY3ZTQyZjg5YWRiYTY1MTNhOGM2MmFjZSIsImxhdGVzdERlZmluaXRpb24iOnsiYW5hbHl6ZXIiOiJsdWNlbmUuc2ltcGxlIiwibWFwcGluZ3MiOnsiZHluYW1pYyI6dHJ1ZX19LCJuYW1lIjoiaW5kZXgtNTIiLCJxdWVyeWFibGUiOmZhbHNlLCJzdGF0dXMiOiJQRU5ESU5HIiwidHlwZSI6InNlYXJjaCJ9",
+  "Status": 200,
+  "Method": "PATCH",
+  "Path": "/api/atlas/v2/groups/67e42d5cadba6513a8c5f8e8/clusters/search-78/search/indexes/67e42f89adba6513a8c62ace",
+  "Headers": {
+    "Content-Length": [
+      "237"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2024-05-30+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 16:47:08 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "100"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasSearchIndexConfigResource::updateUserDefinedIndexFields"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

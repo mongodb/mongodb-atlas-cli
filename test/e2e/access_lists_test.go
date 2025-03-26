@@ -29,12 +29,11 @@ import (
 )
 
 func TestAccessList(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("accessList")
 
-	n, err := RandInt(255)
+	n := g.memoryRand("rand", 255)
 	req := require.New(t)
-	req.NoError(err)
 
 	entry := fmt.Sprintf("192.168.0.%d", n)
 	currentIPEntry := ""

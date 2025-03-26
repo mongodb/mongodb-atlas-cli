@@ -35,7 +35,7 @@ const (
 )
 
 func TestLDAPWithFlags(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProjectAndCluster("ldap")
 
 	cliPath, err := AtlasCLIBin()
@@ -150,7 +150,7 @@ func TestLDAPWithFlags(t *testing.T) {
 }
 
 func TestLDAPWithStdin(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProjectAndCluster("ldap")
 
 	cliPath, err := AtlasCLIBin()

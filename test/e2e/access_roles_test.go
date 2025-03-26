@@ -29,7 +29,7 @@ import (
 const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("accessRoles")
 
 	cliPath, err := AtlasCLIBin()

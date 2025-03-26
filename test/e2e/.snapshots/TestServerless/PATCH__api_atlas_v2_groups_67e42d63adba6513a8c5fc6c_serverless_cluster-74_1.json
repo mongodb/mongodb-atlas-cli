@@ -1,0 +1,47 @@
+{
+  "Body": "eyJjb25uZWN0aW9uU3RyaW5ncyI6eyJzdGFuZGFyZFNydiI6Im1vbmdvZGIrc3J2Oi8vY2x1c3Rlci03NC54bWc1eWM0Lm1vbmdvZGItZGV2Lm5ldCJ9LCJjcmVhdGVEYXRlIjoiMjAyNS0wMy0yNlQxNjozNzo1OFoiLCJncm91cElkIjoiNjdlNDJkNjNhZGJhNjUxM2E4YzVmYzZjIiwiaWQiOiI2N2U0MmQ2NmFkYmE2NTEzYThjNWZkYTAiLCJsaW5rcyI6W3siaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9hdGxhcy92Mi9ncm91cHMvNjdlNDJkNjNhZGJhNjUxM2E4YzVmYzZjL3NlcnZlcmxlc3MvY2x1c3Rlci03NCIsInJlbCI6InNlbGYifSx7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTQyZDYzYWRiYTY1MTNhOGM1ZmM2Yy9zZXJ2ZXJsZXNzL2NsdXN0ZXItNzQvYmFja3VwL3Jlc3RvcmVKb2JzIiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9yZXN0b3JlSm9icyJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9hdGxhcy92Mi9ncm91cHMvNjdlNDJkNjNhZGJhNjUxM2E4YzVmYzZjL3NlcnZlcmxlc3MvY2x1c3Rlci03NC9iYWNrdXAvc25hcHNob3RzIiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9zbmFwc2hvdHMifV0sIm1vbmdvREJWZXJzaW9uIjoiOC4wLjYiLCJuYW1lIjoiY2x1c3Rlci03NCIsInByb3ZpZGVyU2V0dGluZ3MiOnsiYmFja2luZ1Byb3ZpZGVyTmFtZSI6IkFXUyIsImVmZmVjdGl2ZURpc2tTaXplR0JMaW1pdCI6NSwiZWZmZWN0aXZlSW5zdGFuY2VTaXplTmFtZSI6IkZMRVgiLCJlZmZlY3RpdmVQcm92aWRlck5hbWUiOiJURU5BTlQiLCJuZXh0QmFja3VwRGF0ZSI6IjIwMjUtMDMtMjdUMTY6Mzc6NThaIiwicHJvdmlkZXJOYW1lIjoiU0VSVkVSTEVTUyIsInJlZ2lvbk5hbWUiOiJVU19FQVNUXzEiLCJ0ZW5hbnRCYWNrdXBFbmFibGVkIjp0cnVlfSwic2VydmVybGVzc0JhY2t1cE9wdGlvbnMiOnsic2VydmVybGVzc0NvbnRpbnVvdXNCYWNrdXBFbmFibGVkIjpmYWxzZX0sInN0YXRlTmFtZSI6IlVQREFUSU5HIiwidGFncyI6W3sia2V5IjoiZW52IiwidmFsdWUiOiJlMmUifV0sInRlcm1pbmF0aW9uUHJvdGVjdGlvbkVuYWJsZWQiOmZhbHNlfQ==",
+  "Status": 200,
+  "Method": "PATCH",
+  "Path": "/api/atlas/v2/groups/67e42d63adba6513a8c5fc6c/serverless/cluster-74",
+  "Headers": {
+    "Content-Length": [
+      "1144"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 16:38:17 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "457"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasLegacyServerlessInstanceDescriptionResource::updateServerlessInstance"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

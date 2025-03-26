@@ -25,6 +25,7 @@ import (
 )
 
 func TestPluginUpdate(t *testing.T) {
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	runPluginUpdateTest(t, cliPath, "Update without specifying version", false, examplePluginRepository, "v1.0.38", "")

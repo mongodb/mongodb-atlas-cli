@@ -29,19 +29,18 @@ import (
 )
 
 func TestStreamsWithClusters(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	if IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}
 
-	g := newAtlasE2ETestGenerator(t)
 	g.generateProject("atlasStreams")
 	req := require.New(t)
 
 	cliPath, err := AtlasCLIBin()
 	req.NoError(err)
 
-	instanceName, err := RandEntityWithRevision("instance")
-	req.NoError(err)
+	instanceName := g.memory("instanceName", must(RandEntityWithRevision("instance"))).(string)
 
 	g.generateCluster()
 
@@ -75,6 +74,10 @@ func TestStreamsWithClusters(t *testing.T) {
 	t.Run("Create a streams connection with an atlas cluster", func(t *testing.T) {
 		configFile, err := generateAtlasConnectionConfigFile(g.clusterName)
 		req.NoError(err)
+
+		t.Cleanup(func() {
+			req.NoError(os.Remove(configFile))
+		})
 
 		connectionName := "ClusterConn"
 

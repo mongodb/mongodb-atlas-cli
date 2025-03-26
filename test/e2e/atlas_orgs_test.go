@@ -29,6 +29,7 @@ import (
 )
 
 func TestAtlasOrgs(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -80,7 +81,7 @@ func TestAtlasOrgs(t *testing.T) {
 	})
 	require.NotEmpty(t, userID)
 
-	n, err := RandInt(255)
+	n := g.memoryRand("rand", 255)
 	require.NoError(t, err)
 	orgName := fmt.Sprintf("e2e-org-%v", n)
 	var (

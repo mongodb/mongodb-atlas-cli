@@ -1,0 +1,59 @@
+{
+  "Body": "H4sIAAAAAAAAAMVV728aORD9V07+0C8X2B8cbLJSdKJAK04QInbTXFudIuMdwBevvWd7qWjE/37j9aZJaC6qTmorgQQ7M8+z8+Y93xFa7KhkUIyUXPNNranlSpL0jrDaWFUuKpDGiBGvtqB9Ti5MFJP0418npOSSl3U5kXQloMDApVZWMSVISvJZFt3E5IRYYR6Xz1UBGB5P3gyvZjk5nJAVZbd11YKQdE2FAXzKMV8Cs0q7duAorIEWlxrWoAHbR0ADTMmC6r2DZAK7B53vKxdaTi5n09Ewm+TYDvOo+JaZ1VxujEM3lrpahCelkhtVrNIgUFJwCVSzLd+B6fRPex2zxaROGOKnO5DVp7jbpncK2HUl2DROwig5ebE0+v+l8Uulwe/I1LnVNbyitd1mqtYMzmmBLL3SUAnOaAb2nFpBTafah/+o/j00zuV+BJnePUzhV6N3z07i+T6a0SMzFsb4RZg4jPudsNeJB3k0SHtJ2o8/4FkFN7cZ/wxvX5O0F3ZD/+Saamz1fkHeXM1m72+uh8v5ZIwlyLLeV462oV2CsbhpO14A7ga5WFxMMGMj1IqKkWc+A7GeU0k3UGTuFRH3y+pstKqrqeN6kMBvcdFntFjRQT/q0VPWX58N1ojGH+KD8CxJVnGSDNYJTfpRFGFc0BUI42WAw7l1P+/IFjcS67bWVgbnxoSqi2Y47aC6TJUBrXjQkBDs4qBpxgT/1UnQbrJpORg+4oA4FYhm9cUaR/+Djw+8bgONbCgNf6iV+dLRkw6enP44+6e1bCStzFbZb2n4IffgHM9Fxq/n9G+l3+EhjVmS065TUBt78rg7wICkpdvoZxmsaG0e2VrF7bERttJtHKsC5hfthfUM3XrKumz2HrMjB7HBau+/vh6lIfaWM9NCIqJ0DsDA6RKx51HYCnW6uMycTEOUKazMOyXqElpnzfLhxXi4dAKVKNuRqqUlaYg2gA6kMkZFIzy8TVRZ1c4SvnbySkPB0ZB3cPzmButhrD7Jp4GD78uZxzHaAWMg0N7dw+/xar2Da5grze2epIn7433ownM8vM6Iv5wWUuy/13A9n+2RV9nNZJjlN1GzoJ+VhOkLy3FGfE5b/AF//uIrtVJ2BNq2p0+z5dvlYpH/GfnLwd6XTMczZ7eWblr7Q7GhbzcL6u5/f7kec7nzqlgiO9RAtkeJlgg2yzNy+BdxTIk6hggAAA==",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e42d5cadba6513a8c5f96f/clusters/onlineArchives-583",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "907"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 16:46:57 GMT"
+    ],
+    "Deprecation": [
+      "Mon, 5 Aug 2024 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Sun, 1 Mar 2026 00:00:00 GMT"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "73"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasClusterDescriptionV15Resource::getCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

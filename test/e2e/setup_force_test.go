@@ -29,17 +29,15 @@ import (
 )
 
 func TestSetup(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("setup")
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName, err := RandClusterName()
-	req.NoError(err)
+	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
 
-	dbUserUsername, err := RandUsername()
-	req.NoError(err)
+	dbUserUsername := g.memory("dbUserUsername", must(RandClusterName())).(string)
 
 	tagKey := "env"
 	tagValue := "e2etest"

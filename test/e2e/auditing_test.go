@@ -28,7 +28,7 @@ import (
 )
 
 func TestAuditing(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("auditing")
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)

@@ -28,15 +28,14 @@ import (
 )
 
 func TestServerless(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("serverless")
 
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName, err := RandClusterName()
-	req.NoError(err)
+	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
 
 	t.Run("Create", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
@@ -149,6 +148,10 @@ func TestServerless(t *testing.T) {
 		a := assert.New(t)
 		a.Equal(expected, string(resp))
 	})
+
+	if skipCleanup() {
+		return
+	}
 
 	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

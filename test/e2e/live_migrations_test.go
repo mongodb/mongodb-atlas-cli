@@ -24,6 +24,7 @@ import (
 )
 
 func TestLinkToken(t *testing.T) {
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)

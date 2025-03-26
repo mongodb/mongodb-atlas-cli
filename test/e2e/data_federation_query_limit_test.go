@@ -28,12 +28,12 @@ import (
 )
 
 func TestDataFederationQueryLimit(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	n, err := RandInt(1000)
-	r.NoError(err)
+	n := g.memoryRand("rand", 1000)
 	dataFederationName := fmt.Sprintf("e2e-data-federation-%v", n)
 	testBucket := os.Getenv("E2E_TEST_BUCKET")
 	r.NotEmpty(testBucket)

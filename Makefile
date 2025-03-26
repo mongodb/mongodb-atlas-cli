@@ -24,11 +24,13 @@ ATLAS_E2E_BINARY?=../../bin/${ATLAS_BINARY_NAME}
 DEBUG_FLAGS=all=-N -l
 
 TEST_CMD?=go test
-UNIT_TAGS?=unit
+UNIT_TAGS?=unit,e2eSnap
 E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
 E2E_PARALLEL?=1
 E2E_EXTRA_ARGS?=
+export UPDATE_SNAPSHOTS?=skip
+export E2E_SKIP_CLEANUP?=false 
 
 ifeq ($(OS),Windows_NT)
 	export PATH := .\bin;$(shell go env GOPATH)\bin;$(PATH)
@@ -153,8 +155,22 @@ e2e-test: build-debug ## Run E2E tests
 
 .PHONY: unit-test
 unit-test: ## Run unit-tests
+unit-test: export DO_NOT_TRACK=1
+unit-test: export E2E_SKIP_CLEANUP=true
+unit-test: export UPDATE_SNAPSHOTS=false
+unit-test: export MONGODB_ATLAS_ORG_ID=5f0f5b3e0f2912c8b8f3b9b9
+unit-test: export MONGODB_ATLAS_PROJECT_ID=5f0f5b3e0f2912c8b8f3b9b9
+unit-test: export MONGODB_ATLAS_PRIVATE_API_KEY=12345678-abcd-ef01-2345-6789abcdef01
+unit-test: export MONGODB_ATLAS_PUBLIC_API_KEY=ABCDEF01
+unit-test: export MONGODB_ATLAS_OPS_MANAGER_URL=http://localhost:8080
+unit-test: export MONGODB_ATLAS_SERVICE=cloud
+unit-test: export IDENTITY_PROVIDER_ID=5f0f5b3e0f2912c8b8f3b9b9
+unit-test: export E2E_CLOUD_ROLE_ID=5f0f5b3e0f2912c8b8f3b9b9
+unit-test: export E2E_TEST_BUCKET=test-bucket
+unit-test: export E2E_FLEX_INSTANCE_NAME=instance_name
+unit-test: build-debug
 	@echo "==> Running unit tests..."
-	$(TEST_CMD) --tags="$(UNIT_TAGS)" -race -cover -coverprofile $(COVERAGE) -count=1 ./...
+	$(TEST_CMD) -parallel $(E2E_PARALLEL) --tags="$(UNIT_TAGS)" -cover -coverprofile $(COVERAGE) -count=1 ./...
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

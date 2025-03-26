@@ -27,7 +27,7 @@ import (
 )
 
 func TestCustomDNS(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("customDNS")
 
 	cliPath, err := AtlasCLIBin()

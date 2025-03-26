@@ -1,0 +1,50 @@
+{
+  "Body": "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",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters/doNotDeleteUsedForE2ETest/backup/restoreJobs",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2024-11-13+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 16:39:11 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "108"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFlexBackupResource::getRestoreJobs"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

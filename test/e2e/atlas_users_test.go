@@ -29,6 +29,7 @@ import (
 )
 
 func TestAtlasUsers(t *testing.T) {
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	var (
@@ -94,8 +95,7 @@ func TestAtlasUsers(t *testing.T) {
 	})
 
 	t.Run("Invite", func(t *testing.T) {
-		n, err := RandInt(10000)
-		require.NoError(t, err)
+		n := g.memoryRand("rand", 10000)
 		emailUser := fmt.Sprintf("cli-test-%v@moongodb.com", n)
 		if revision, ok := os.LookupEnv("revision"); ok {
 			emailUser = fmt.Sprintf("cli-test-%v-%s@moongodb.com", n, revision)

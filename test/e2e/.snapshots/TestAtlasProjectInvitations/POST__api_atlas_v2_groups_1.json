@@ -1,0 +1,56 @@
+{
+  "Body": "H4sIAAAAAAAAALWTsW6DMBBA/8UzxNSAHVg7dW+XVh0O+whWHBv5TDpE/HuJoqbNUrEw39O7J53uwrSbKGF8DpNPrC0ypiNCQsNaJgpR50WZC/n6JNty31bNO8uYvc6kwkqYRjZKdUIp2StQtQK9zJ31R2Ltx4UNEfuFHVIaqeVcuzCZ3OB5dwr+EEy30+HEYbQckgPiZ8EPMUwj8X/sEd2iJHQ9m7MNVnAdfALrMdJ924P9wfwH3qjmdp5VLT/oNiUGEnRA+Ebrch75bZpGXNdy4zZqiEEjEa7quLPbtHwNNqGzlFa0/LLzZ8Y8nHDBrT/bBMkGTzkKzMtCLqoQDy/Xp6+xNyD3AspeoBGojJHaYMXmb61KQ+hIBAAA",
+  "Status": 201,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/groups",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "285"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 16:38:46 GMT"
+    ],
+    "Location": [
+      "https://cloud-dev.mongodb.com//api/atlas/v1.0"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "2399"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasGroupsResource::addGroup"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

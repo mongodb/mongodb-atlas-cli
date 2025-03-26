@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || kubernetes || (atlas && plugin)
+//go:build e2e || kubernetes
 
 package e2e_test
 
@@ -26,7 +26,8 @@ import (
 )
 
 func TestPluginKubernetes(t *testing.T) {
-	t.Helper()
+	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 

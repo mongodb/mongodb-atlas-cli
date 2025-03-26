@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAANVWbW/iRhD+K9V+uC8N2IaACVJUkcBFVOFFGJo2VRWt7THssez6dtduScR/76xfGsjLqbqqrU7ig5nZmXnmmdmZfSI0MzKIKGdiTfpPJJK7NDNgP0HQkENM+gnlGs5IqiBmkWE5jF5oNNrDUP4uThWHMxIzvb25eiUOabTN0pduQnYthYDISPVWfAU0nitIQIGIECHREEkRU7Un6DLimTaglvvUqhaj+e34ehCMlgRVpVcmRWAU5qmtd22otUX3ZCfFWsZh33Fo1GgbvhVbr6E3qGy4Lv6aieRZtmHN6mAjhrwpwPRbvuv5Z28aeV9j1PqykfOD1vzSqAw+YNU2gcxUBJc03jHxQUHKWUQDMJfUcKob7JN8/Mxq58hCnXCg8uecv9cqx7wr8hrn7e57EAqOsQQGhtT2B2m5rU7DbTda3aXX7bf9fvvinpQVD9gj3FyRvtvslII7qhDkeiJja/lxdXv7y8PdYDEZDdECq6n2qS3PwCxAm7mSOYsBe4BMZ9MRnlhzGVJ+XYIMgCcTKuga4sAmVzRu1SJrJbN0bGva9eG8FZ8nXifp0Z4bXdBeq9fphuiNPes77QvfD1u+30186p9HUYx6TkPg2CO//obfTGzt5xPZYOeh3caYVBeMySwuuKl4auLNcWjKnIJ+J/earlPA0c57WGra9TH/xDY6L7qbJ0j6fxfZKW+lo7AGUsGPMtR/gTkJfhL4+PT/gVYLmuqNNH8H6/PZA9a20AyvJvSTVD+hd2xAtO417WWpdCfiZrdWrBbjb2hsHKFepTFe3vit29vp3B8dvGNmMyvupP6GMv1nA1LQnZ1Op3dRZLtiyiANHq5AmunjjcjMyx2WVsPr6s0NV2sRhakXUS2bluGXo+lgarfW+4t5R/8YCzvOI7CTlvRFxjnWjonX4kO1bdHL/DTQ4C6wwzdJoNjpx6bViYllhb0jV7DG7qgkq+BhNAiWD57dEhXTtnk+0nKZt0+kQQqRzePZCv/gROd7wyI9xSWBxLiIjSM0S2AlalsCmVTM7EnfLx8EM8H3tcXh8CpMObu/NPG9V0UuM9P4FknY+t/C+ShFTec9fn7nFSNJSWmuQZnqFTMOFjeL2Wz5swWJm3oQxzhu9Vet7+IBYOqYq/lwsBxPb1Bs6LpkaQsIF7dxjsKc8syegxYUwNA7tldBK7aRKV9TL7s7L6flAvmgGoI9Ytqhj9tlQA5/AqqxoZ1pCgAA",
+  "Status": 200,
+  "Method": "POST",
+  "Path": "/api/atlas/v1.0/groups/67e42d4f15f8a80c9a82856b/clusters/tenantUpgrade",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "930"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 16:37:56 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasLegacyClusterDescriptionResource::upgradeTenantCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ],
+    "X-Xgen-Up-Proto": [
+      "HTTP/2"
+    ]
+  }
+}

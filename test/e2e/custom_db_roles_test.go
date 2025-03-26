@@ -39,8 +39,8 @@ const (
 )
 
 func TestDBRoles(t *testing.T) {
-	n, err := RandInt(1000)
-	require.NoError(t, err)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	n := g.memoryRand("rand", 1000)
 
 	roleName := fmt.Sprintf("role-%v", n)
 

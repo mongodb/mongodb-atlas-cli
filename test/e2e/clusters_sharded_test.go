@@ -28,15 +28,14 @@ import (
 )
 
 func TestShardedCluster(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t)
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	g.generateProject("shardedClusters")
 
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	shardedClusterName, err := RandClusterName()
-	req.NoError(err)
+	shardedClusterName := g.memory("shardedClusterName", must(RandClusterName())).(string)
 
 	tier := e2eTier()
 	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
@@ -80,6 +79,10 @@ func TestShardedCluster(t *testing.T) {
 		expected := fmt.Sprintf("Deleting cluster '%s'", shardedClusterName)
 		assert.Equal(t, expected, string(resp))
 	})
+
+	if skipCleanup() {
+		return
+	}
 
 	t.Run("Watch deletion", func(t *testing.T) {
 		cmd := exec.Command(cliPath,

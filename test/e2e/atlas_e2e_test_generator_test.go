@@ -28,13 +28,52 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
+
+const updateSnapshotsEnvVarKey = "UPDATE_SNAPSHOTS"
+
+type snapshotData struct {
+	Body   []byte
+	Status int
+	Method string
+	Path   string
+
+	Headers map[string][]string
+}
+
+func (d snapshotData) Compare(v snapshotData) int {
+	methodCmp := strings.Compare(d.Method, v.Method)
+	if methodCmp != 0 {
+		return methodCmp
+	}
+
+	pathCmp := strings.Compare(d.Path, v.Path)
+	if pathCmp != 0 {
+		return pathCmp
+	}
+
+	statusCmp := d.Status - v.Status
+	if statusCmp != 0 {
+		return statusCmp
+	}
+
+	return bytes.Compare(d.Body, v.Body)
+}
+
+func (d snapshotData) Write(w http.ResponseWriter) (int, error) {
+	for k, v := range d.Headers {
+		w.Header()[k] = v
+	}
+
+	w.WriteHeader(d.Status)
+
+	return w.Write(d.Body)
+}
 
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
 type atlasE2ETestGenerator struct {
@@ -49,7 +88,7 @@ type atlasE2ETestGenerator struct {
 	t             *testing.T
 	fileIDs       map[string]int
 	memoryMap     map[string]any
-	lastData      map[string][]string
+	lastData      *snapshotData
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -394,11 +433,11 @@ func (g *atlasE2ETestGenerator) snapshotNameStepBack(r *http.Request) {
 }
 
 func updateSnapshots() bool {
-	return isTrue(os.Getenv("UPDATE_SNAPSHOTS"))
+	return isTrue(os.Getenv(updateSnapshotsEnvVarKey))
 }
 
 func skipSnapshots() bool {
-	return os.Getenv("UPDATE_SNAPSHOTS") == "skip"
+	return os.Getenv(updateSnapshotsEnvVarKey) == "skip"
 }
 
 func (g *atlasE2ETestGenerator) loadMemory() {
@@ -439,7 +478,7 @@ func (g *atlasE2ETestGenerator) storeMemory() {
 	}
 }
 
-func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) []byte {
+func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) snapshotData {
 	g.t.Helper()
 
 	filename := g.snapshotName(r)
@@ -454,7 +493,12 @@ func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) []byte {
 		g.t.Fatal(err)
 	}
 
-	return buf
+	var data snapshotData
+	if err := json.Unmarshal(buf, &data); err != nil {
+		g.t.Fatal(err)
+	}
+
+	return data
 }
 
 func (g *atlasE2ETestGenerator) snapshotServer() {
@@ -485,16 +529,12 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 			return nil // skip 401
 		}
 
-		data := map[string][]string{}
-		for k, v := range resp.Header {
-			data[k] = v
+		data := snapshotData{
+			Path:    resp.Request.URL.Path,
+			Method:  resp.Request.Method,
+			Status:  resp.StatusCode,
+			Headers: resp.Header,
 		}
-
-		data["__path__"] = []string{resp.Request.URL.Path}
-
-		data["__method__"] = []string{resp.Request.Method}
-
-		data["__status__"] = []string{strconv.Itoa(resp.StatusCode)}
 
 		var buf bytes.Buffer
 		if _, err := io.Copy(&buf, resp.Body); err != nil {
@@ -503,13 +543,13 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 		resp.Body.Close()
 		resp.Body = io.NopCloser(&buf)
 
-		data["__body__"] = []string{base64.StdEncoding.EncodeToString(buf.Bytes())}
+		data.Body = buf.Bytes()
 
-		if g.lastData != nil && data["__method__"][0] == g.lastData["__method__"][0] && data["__path__"][0] == g.lastData["__path__"][0] && data["__status__"][0] == g.lastData["__status__"][0] && data["__body__"][0] == g.lastData["__body__"][0] {
+		if g.lastData != nil && data.Compare(*g.lastData) == 0 {
 			return nil // skip same content
 		}
 
-		g.lastData = data
+		g.lastData = &data
 
 		out, err := json.MarshalIndent(data, "", "  ")
 		if err != nil {
@@ -529,34 +569,9 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 			return
 		}
 
-		buf := g.readSnapshot(r)
-		var data map[string][]string
-		if err := json.Unmarshal(buf, &data); err != nil {
+		data := g.readSnapshot(r)
+		if _, err := data.Write(w); err != nil {
 			g.t.Fatal(err)
-		}
-
-		for k, v := range data {
-			if k == "__body__" || k == "__status__" || k == "__method__" || k == "__path__" {
-				continue
-			}
-			w.Header()[k] = v
-		}
-
-		status, err := strconv.Atoi(data["__status__"][0])
-		if err != nil {
-			g.t.Fatal(err)
-		}
-		w.WriteHeader(status)
-
-		if data["__body__"] != nil {
-			body, err := base64.StdEncoding.DecodeString(data["__body__"][0])
-			if err != nil {
-				g.t.Fatal(err)
-			}
-			_, err = w.Write(body)
-			if err != nil {
-				g.t.Fatal(err)
-			}
 		}
 	}))
 

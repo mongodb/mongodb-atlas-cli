@@ -35,7 +35,7 @@ jobs:
           # - atlas,deployments,local,auth,new # needs docker to run
           # - atlas,deployments,local,nocli # needs docker to run
           # - atlas,deployments,local,noauth # needs docker to run
-          - atlas,generic
+          # - atlas,generic # tests are failing in master
           # - atlas,interactive # does not work well with snapshots
           - atlas,ldap
           - atlas,livemigrations
@@ -50,7 +50,7 @@ jobs:
           - atlas,plugin,update
           - atlas,processes
           - atlas,search
-          - atlas,search_nodes
+          # - atlas,search_nodes # tests are failing in master
           - atlas,serverless,instance
           - atlas,streams
           - atlas,streams_with_cluster

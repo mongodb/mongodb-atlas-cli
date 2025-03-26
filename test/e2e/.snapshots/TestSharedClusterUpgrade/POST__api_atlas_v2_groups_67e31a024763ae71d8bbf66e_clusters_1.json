@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "626"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:02:59 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "904"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::createCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1U227aQBD9lWqfA76QQOI3B9yIiptsp2lTVdHaHpttll1rd0EiKP/eWRtSoGrUpzwgLTNzzlyPdySj+fO6jgTNOBQkKCnXcEEyNpRCQG6kIsGOwJlbAS0WCkpQIHIgAdGQS1FQtSWvFyTna21ApdvauuJoMRkPwyRKCbpaViZFYhQTlUZ2i0BCAyP8IcB3/auO2+v4V6nvBW4vcN1HhBZMPyfsBe5uSeB2r1rDA1UrpJnKwiI/308m358ewngajRCBtaltbZOFJgZtFkpuWAHYEZnNZxFGVFxmlA/behPg5ZQKWkGRLKkqkPet4UrJdT3GAZD+AHoedf3LQb9HYeAV11lW9vuAbOzIf3niH3jWz2kGHDv+8RPfTDzb544scY6IWxpT68Bxci7XRaeATXclRSWLrJvLlUNr5lDDqXY2vtMUo51/VeLs568Pj87NtUvs0nizKV7ikj4qr9Pel6Nw/lLBF5npt1JOUp+kPY7++Fq1oLVeSvM/lf6JfcWtNp7R7ZT+kuorsuPpIfq6a8e/952Yu310CLqyx3u6rJqu9ZHgambOJaqg5iynjZZqyNtjeucEXXuCYr1qbhujPUtRIRqVXrKqxQNHddo8e0q0lKUV7AbGQhuKarcaxCRTWyX7y4ZitlNE7RzUNmvbCx8S25ZiUjGzJcHA/jmJSKNZOEvJoay99T55isIkffKbAb9IAeN3ZDYgbcwe/IjPT16DVFKaISiz/yqNk/guns/Tbx4isAlzgAzjKEzHszs04zbw49JMGJsx7XfrfA2bdp8xTo5qSLa4wxXSTNKEvP4GenGT414FAAA="
+  ],
+  "__method__": [
+    "POST"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a024763ae71d8bbf66e/clusters"
+  ],
+  "__status__": [
+    "201"
+  ]
+}

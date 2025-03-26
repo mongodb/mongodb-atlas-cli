@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "658"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:21 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "76"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1UXW/aMBT9K5OfCyHhO28pzSomoFWSrlunqXKSm+Bh7Mg2kWjV/97rBDroVGlPfUAK995z7ufxM0lpttlVoaAph5z4BeUaLkjKZlIIyIxUxH8m8M6tgOa3CgpQIDIgPtGQSZFTtScvFyTjO21AJfvKuqLwdjGfBXGYEHS1rEyK2CgmSo3sFoGEBq7whwCv5w07vX7HGyae6/f6vuc+IDRnehOzJ7i+JH6vO2wN91RtkWYpc4v8erdY/Hy8D6JleIUIrE3tK5ssMBFoc6tkzXLAjsjqZhViRMllSvmsrTcGXiypoCXk8ZqqHHnfGi6V3FVzHAAZjaHvUncwGI/6FMZuPknTgmYTZGMn/mkK0J8ORpBOh8N8lE3Rz2kKHDv+9Ru/mdjYz2eyxjkibm1MpX3Hybjc5Z0c6u5WilLmaTeTW4dWzKGGU+3UntMUo52PKnEO89fHj06/5xG7NN5sihe4pM/K67T35Sicv1TwTab6rZSz1GdpT6M/v1YtaKXX0vxPpX9jX3Crjefqckn/SPUd2fH0ED3p9sib78zcHaFD0K093vNlVXSnTwRXMfNeogoqzjLaaKmCrD2m0xOcnJ9gmtpcu21z2xjtWooS0aj0gpUtHjiq0+Y5UKKlKKxga5gLbSiq3WoQkyxtT+wfG4rZThG1c1Tbqm0vuI9tW4pJxcye+GP75ywiCVfBKiHHsg7Wu/gxDOLk0W0G/CQFzD/uMRuQNuYAfsDPLy1SSWlmoMzhVZrH0XV0c5P8cBGBTZgjZBaFQTJfXaPZ0MNUNoAF43NSo7GmfGfjwAODV9pw49rwFWpWgV2b9oF7v6+6XXyEI6Ya4j0ue4s8iyQmL6+A9YXThwUAAA=="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a144763ae71d8bbfac8/clusters/cluster-302"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

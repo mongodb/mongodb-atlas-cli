@@ -1,0 +1,50 @@
+{
+  "Content-Length": [
+    "3"
+  ],
+  "Content-Type": [
+    "text/plain"
+  ],
+  "Date": [
+    "Wed, 26 Mar 2025 01:23:26 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=f5eefc1349c3a128c260dc92302cb8054e0477b1; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "X-Xgen-Up-Proto": [
+    "HTTP/2"
+  ],
+  "__body__": [
+    "OC4w"
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/private/unauth/nds/defaultMongoDBMajorVersion"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

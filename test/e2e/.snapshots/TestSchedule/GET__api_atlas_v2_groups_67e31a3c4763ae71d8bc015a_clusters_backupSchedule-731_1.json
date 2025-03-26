@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "792"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:04:00 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "67"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAMVVTW/bOBD9KwXPiSVZTdzqptpq4MIfgak02xaLgKLGNhuKFEjKhRv4v+/QVNI4uy320t2DAZkz8+aRw/f4QFi9Y4pDPdZqLTadYU5oRbIHwjvrdLNsQVkrx6Ldggk5pbTJkGRf/jwjjVCi6ZpCsUpCjYFro53mWpKMlDOa3A3JGXHSPi+f6xowPCne5zezkhzOSMX4fdf2ICRzpgNcFJiugDttPBt4jK6ZtBg2wOprA2swgOwRzwLXqmZm7xG5RPJgyn3rQ6viejYd57QokQ0PqLhJ6oxQG4vovgIBHUzwhwXDeHhxHqfnw4tymGRxml28/YyltbD3VHyHq3ckS+NBHFZumcFjeNzW+5vZ7NPdbb6aFxMsQXJm3/puuVuBdXg+O1EDbokslosCMzZSV0yOA2EKcj1nim2gpltmasR92vHG6K6d4gmQyxGkCUv569FlymCU1G8qHicXDNHEs/j6JJ7yGuOSVSBtGJ4U6t5/PpAtHiTWbZ1rbRZFXOquPq9hN2i02ui6GnDdRKwVEXOS2Wg3jI5kbPQzJlE/ABuF2VK+hbqTcD5KE+KHJ48Tk2sc1n/cvl+KDE5DG/igK/vE6ITBSffn2f8bZatYa7fa/RvCP3IPXqc+Mnk3Z1+1+YhNjhInbwYxeYqdLA8uMaBY42/0P06wZZ19psZWuBfyNdBKwY9mQlvg4Z794nZWle/YNcdrj9mJh9hgdTCNUI/KkHsnuO0hEVFZ5+3LyxKx50nc63S6vKZepTGqFCr7Ucuugd4PaJkvJvnK61Ohase6U45kMboA65ymnMmj7tACddN23hH+7j+tgVqgjeygeBGxWA8T/U2dBg6Bl/eOl2gHjIFEU/KLv2Nr6cETFtoItyfZyP8JNrQII85vKQmWulRy/7sON8yzb3lD74qclnfJ8X5+1wqmv7CulIScvvgzfr4KlUZrNwbj+u5TurpaLZflH/6SInv3WDJeFXk5XVz594htegdEvaF1Hy+pf7jCs/BynrsgjBVOiFmge1Rpg4CzkpLDX5IvVSE/BwAA"
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a3c4763ae71d8bc015a/clusters/backupSchedule-731"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

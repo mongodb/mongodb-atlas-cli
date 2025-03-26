@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "189"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:02:59 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "58"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasDataFederationResource::getTenantUsageLimits"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAALWOOw7CMBAF7+I6RrZRviXQ8UsBDYhiiTcQKbGFvYkUIe6OI8QBKHjlmynm/GRV7xwaOnq4IStExFrwtLW6qRvUK6BwMiVUzMWcq/igZCFUEecnFjED3USvI6Evna3Qe9SzR49uDJTQgKHdx0GFXAMBr1GjA2qs4XkmgzZA2wdDykx894r+kNVZQ/d2CrMDOteb0rZNNQZxsdkv178HizyPpUxUmqZJaL68AcE+zv1MAQAA"
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/dataFederation/e2e-data-federation-981/limits"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

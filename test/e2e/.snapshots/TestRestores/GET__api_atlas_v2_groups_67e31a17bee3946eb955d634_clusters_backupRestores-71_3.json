@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "901"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:22:31 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "80"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAMVV227jNhD9lYIP+9LYuviWCAgKr+1duLDjwFI27RZFQFFjmw1FCiTlhTfwv3coyptL06AosC1gGzJn5sxoZs7hA6HFnkoGxUTJDd/WmlquJEkeCKuNVeWqAmmMmPBqB9r7ZMJEMUl++/2MlFzysi5nkuYCCjRca2UVU4IkJFuk0V1MzogV5mn4UhWA5unsw/hmkZHjGckpu6+rFoQkVteAhxzdJTCrtKsGTtYNFQbNGmhxrWEDGrB6xDPAlCyoPjhEJrB40Nmhcqb17Hoxn4zTWYbVMI+KL5lazeXWOHRjqYtFeFIquVVFngSBL0sDtgF/OqOoY3bo0wlD/HS51bHqtt6dAvZdCTaJR2E0OnsrMvrXkfFbkcFPOKVL17p3tLa7VNWawSUtcELvNFSCM5qCvaRWUNOJ+mUo6Qkam3J6/1TvH1vwo9H719rwehlN23EqFqb4RZQ4jAedsNeJB1kcJWEvifufMVXBzX3Kv8LH9yTphd3Qn9xSjZWeduPDzWLx693teL2cTTEEJ6wPlRvZ2K6xDlyyPS8A94Jcra5m6LEVKqdi4qeegtgsqaRbKFL3hoj7bW22WtXV3M15OIJeRKNRDtC76A8hvxgMimGvj2j8iZ31R8MehVFUnOf5hl1coF3QHITxDBBc3rvHB7LDbcS4nbWVwbYxoeqiaU7bqC5TZUArHjQzCPZx0BRjgr+rJGi32LQjWD+OgDgCiGbrxQY7/99mb0+Cdid+Vrn5VtCzAp4lf+r9f1VsJK3MTtl/Uu+j79EpnbNM3y/pH0p/whyNSJLzrmNPa3t23B2iQdLSrfNr46tobZ7IWcXtC/1rSdsIVQXM79gbm3k+cAnrsll59I4cxBajver6eGSFOFjOTAuJiNJxn4GjJGIvo7Dl6Hx1nTqGhshQyM0nJeoSWkFNs/HVdLx23JTI2ImqpSVJiAqA2qNSRkXDObxDVFnVTg3+KuCoKAVHHd7D7IXFYDxM1Rf53HD0dTndeIl2RBsIVHV3+D1erXd0BXOluT2QZOT+eAm68hMe36bE30krKQ7fq7l+nm3Km/RuNk6zu6hZz69KwvyN5dgQ79MGf8bHH3ykVspOQNs2+zxdf1yvVtkvkb8W7ClkPl04pbV02yofMg0lu1lQd+v7O/XlLPeeE2ucDjWQHpCfJYItspQc/wRAO54ufAgAAA=="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a17bee3946eb955d634/clusters/backupRestores-71"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "Cache-Control": [
+    "no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0"
+  ],
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "806"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:11:03 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "97"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasProcessMeasurementsResource::getSpecificDiskMeasurements"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAM2X227aQBCG38UXvQr2ng9IUUXBLagEXDBq06pCBm/AKtjUNpHaKO/esZNWQMqhAaKuuMHew7f/zP6zvrNMHFpViyDCK4hWCPcJrmJUReKzdWFN0iBezoI0yn9AJ8+n6Kp8miwXrWKYkIZifaNGxlDNhBlpzsfhKIRO0yTLyz5BPguyymQaJJOgkk2DNKwgBD9bfNf6pz1P4kkSjiqhubVjk1eJRFjC+FkUf8us6pc7a5qaG5hnmueLrOo441myDMvuj0PtcTJ3gkXklCs5t8QpATNnG52zSJOxyTKTOc+Bc8Io+5Y5YZAHztwE2TI1cxPn2esVtS5LrV4tTBol4aWHGz4mTdhVamawlczMbqz7i/9va38I14jWaIq4WvdfL6zVrZdxKgTxkuj33zyamywP5ovt6XUbzJbGqiKbaMWp0AQpogGDF/PHwRzeWY1W//3Qq/X8lt/qdoatrtcf9txaA4Yv46hYy+rXa+1ab+i5vWHfrXc7jVLbZ+NQmxJGEKYKKyKllntoPvZavntOHEGIpIoiIrhQmNE9PH7Xr7XPx4NsDqqstu087ZrvdurXmwG7arXbrQeW/nEw2MZMEC00qCM5wlrvh9mM1wlpCCG2QhLiJTEXnO+Qxm/2uoN3TW/gb6rz5tp3+ycLl+aKMltqjKWiXGFyENKmRqdlIsAjKJMKYa6LJlyMtnP1vVrdHb7tuU+IjsNgkDxUY40Rc3fkzcPyg777JEjHLa+kjTSFI60YmAzHah8CyF93O/6mEo+Pj01dWyPBKMYcOjJFduTJOs2GMCehQTZCVCrOCAFlGBOMYbEJ9GHgDtxhw/X85hO3O9ZyVVEBGGaYSgT2srL0Ve3T8OVrksK24ohQiI5mUihyANGZ6xIHVwFLYZAxXMARZgcgnb00QaKstd1MZy9PxEaKrjZ+GND5SlRRnxgqTIeSddP9C845jVcgONdw6yvbmv1uBTmLBcPqQsJFj2qJyZ6D/jI2jCmCm6eWkkBdUP9CtM2KYYpFkOZRHiVx52GughC6Pn4uHPOhBhtL820bu/8F88Y4WWEOAAA="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e319f8bee3946eb955cdbd/processes/atlas-ghaoga-shard-00-00.6q99z.mongodb-dev.net:27017/disks/data/measurements"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

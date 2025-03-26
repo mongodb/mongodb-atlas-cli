@@ -1,0 +1,53 @@
+{
+  "Content-Length": [
+    "579"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2024-08-05+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:11:51 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "101"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasDiskBackupScheduleResource::deleteSnapshotSchedule"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "eyJhdXRvRXhwb3J0RW5hYmxlZCI6ZmFsc2UsImNsdXN0ZXJJZCI6IjY3ZTMxYTNmNDc2M2FlNzFkOGJjMDNjZCIsImNsdXN0ZXJOYW1lIjoiYmFja3VwU2NoZWR1bGUtNzMxIiwiY29weVNldHRpbmdzIjpbXSwibGlua3MiOlt7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTMxYTNjNDc2M2FlNzFkOGJjMDE1YS9jbHVzdGVycy9iYWNrdXBTY2hlZHVsZS03MzEvYmFja3VwL3NjaGVkdWxlIiwicmVsIjoic2VsZiJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9wdWJsaWMvdjEuMC9ncm91cHMvNjdlMzFhM2M0NzYzYWU3MWQ4YmMwMTVhIiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9ncm91cCJ9XSwicG9saWNpZXMiOlt7ImlkIjoiNjdlMzFiZjJmOGJhNDQ3ODc3Yzk5OGQxIiwicG9saWN5SXRlbXMiOltdfV0sInJlZmVyZW5jZUhvdXJPZkRheSI6MjEsInJlZmVyZW5jZU1pbnV0ZU9mSG91ciI6MTEsInJlc3RvcmVXaW5kb3dEYXlzIjo3LCJ1c2VPcmdBbmRHcm91cE5hbWVzSW5FeHBvcnRQcmVmaXgiOnRydWV9"
+  ],
+  "__method__": [
+    "DELETE"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a3c4763ae71d8bc015a/clusters/backupSchedule-731/backup/schedule"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

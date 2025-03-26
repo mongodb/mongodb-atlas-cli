@@ -1,0 +1,53 @@
+{
+  "Content-Length": [
+    "213"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:11:35 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "36"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasOnlineArchiveResource::getOnlineArchive"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "eyJkZXRhaWwiOiJDYW5ub3QgZmluZCByZXNvdXJjZSBPbmxpbmUgYXJjaGl2ZSB3aXRoIGlkIDY3ZTMxYzA1NDc2M2FlNzFkOGJjMjRlYS4iLCJlcnJvciI6NDA0LCJlcnJvckNvZGUiOiJSRVNPVVJDRV9OT1RfRk9VTkQiLCJwYXJhbWV0ZXJzIjpbIk9ubGluZSBhcmNoaXZlIHdpdGggaWQgNjdlMzFjMDU0NzYzYWU3MWQ4YmMyNGVhIl0sInJlYXNvbiI6Ik5vdCBGb3VuZCJ9"
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a0cbee3946eb955d1a7/clusters/onlineArchives-624/onlineArchives/67e31c054763ae71d8bc24ea"
+  ],
+  "__status__": [
+    "404"
+  ]
+}

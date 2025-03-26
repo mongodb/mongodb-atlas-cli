@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "490"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:11:50 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sat, 30 May 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "46"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasDiskBackupScheduleResource::getSnapshotSchedule"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAKWUTY/aMBCG/4vPAcdJIGxulXbVcmipxLaVWu3BiSfEwtipP1iiFf+9NqR0EdlGVW/WeOZ9Xs/YfkHUWfVwaJW2D5KWAhgqaioMRKgSzljQSx9B8xxSQtM6y+cphZywRVnFacXQJe0T3YFPLGm1de26aoA5AZM8JSFFtd0arOVyY1Dx4ylCgsttWL6gRkPt6xprW1NgXAnl2ITBfrpTcqNYOa3UDtOWY2oFNXif4I1WrjW4t1RdWSIzintDBt966UPY9DHvTYPweAOiRsfoH+y0rhS8wnsyjcccXShXqleKJwV09J2RcLBrSVvTKOtLkjiZTeJ0kswf47QgpCCz716vVR7O4dxCfplQWSf1oqRZli/yvLq7WzDyO7lbWtid82sNPx1IH5K+T3vqrc2jP9HHrg2TbJTTovPlf5NPTmezIC1X8ovkwTKjnXkd/kqF84J5aO8AmtyiGeWj5PT/yQOHfgbYjqKzAXQoHGJnb7Cz+BbuL4RtRumzAfqpcghPkre6ntzyO6DjE58P4EPhIP34FK60f1KgPQc++Cu1qu9ph4qEvIp/5NJZWNVh31edtoxVGr5xydTzfRhrkUfIGVjpzTvJ3ofnEn4cs5Tnz+uzF+OH/u86/gJsFzJH1wQAAA=="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a3c4763ae71d8bc015a/clusters/backupSchedule-731/backup/schedule"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

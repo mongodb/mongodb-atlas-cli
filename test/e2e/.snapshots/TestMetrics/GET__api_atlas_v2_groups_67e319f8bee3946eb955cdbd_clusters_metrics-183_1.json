@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "796"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:02:51 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "79"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1V32/aMBD+VyY/tySBQWneMmAVEz8qkq5bp6ly4gO8OnZkO0ys4n/fOc46YKq0l+0hUuK7++7z3X2XZ0LZjsoC2EjJNd/UmlquJImfSVEbq8plBdIYMeLVFrT3yYSJuiT+8vWClFzysi4nkuYCGBputbKqUILEJJul0WOXXBArzHH4XDFA83jyPrmbZeRwQXJaPNVVC0LiNRUG8JSjv4TCKu3owJlZA2W3GtagAekjoIFCSUb13kEWAtmDzvaVM60mt7PpKEknGdIpPCreMrWay41BdBeBgBbG+GBAN+z2L8PeZbefdaM47Mb96AFDGTdPKf8BN+9I3As7oT+5pxrr8Ote7+9ms8+P98lqPhljCJLT+8plS+wKjMUC7TgDvBJZLBcT9NgIlVMx8oRTEOs5lXQDLN1SzRD35cYbrepqihUggyvoRdfrYQ7Qu347gPy63y9YzhCNH9nzt1eDHoWriA3zfD2IhmgXNAdhfPcEl0/u9ZlssZAYt7W2MnEQFELV7JLBrlMquVEs7xSqDGjFA2oFNcGuGzRkTPAak6BtgAlKwCoX5jIa9ojrmmhaJdbYpf+VN/ADFmisv9LwQeXmhcpJ6pO0x97/n6uRtDJbZf+G6W/fg9Oks4zfzek3pT8ieiNnMuyE5MV2ctwZoEHS0g3vabMqWpsjxVXcnmtUQyV40ayMtILCD9PxCNLTEQzdCMq6bGYbvSMHscFovxp8PI6/2Fuk0UIiojTWLSmnPcSeR2ErxunyNnVSDFGKkJuPStQltKJPs2QxTlZOhBKlOVK1tCQOUeq0tiotqGjEhYtOlVXtZP/nkqk0MI67YgfnNzcYD2P1XZ4aDp6XWxDnaAe0gcDN4w7/xdV6B0eYK83tnsRX7sPvmoVvbnKfEr83l1Ls/1VxfT/blHfp4yRJs8eomcwfSsL09eFoEjufNvgBX9/4SK2UHYG2bfZpurpZLZfZpwgjkL39FTJaTZJsurhxfx26adccSgz3czOk7vfkd/95P3deEivsEDWQ7lGYJQLOspQcfgKMYVzxJQcAAA=="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e319f8bee3946eb955cdbd/clusters/metrics-183"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "789"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:17 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "517"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::createCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1VXW/aMBT9K5OfC/mgQJu3FGjFxEdF0nbrNCEnuYBXx45sh4lW/PddY9oBU6W9tA+REt97jo9977l5IbRYU5FD0ZNiwZa1ooZJQaIXktfayHJagdCa91i1AuVyUq6DkEQ/fp6RkglW1uVA0IxDgYFbJY3MJScRSUdJMA/JGTFcH8LHsgAM9wfX8d0oJdszktH8qa72JCRaUK4BVxnmC8iNVFYOnIQV0OJWwQIUoHwk1JBLUVC1sZQ5R/Wg0k1lQ7PB7WjYi5NBinJyx4qnTIxiYqmR3SKQ0EAfHwSEfthu+K1G2E7DIPJbUXDxiNCC6aeEPcPNFYlaftN3Kw9U4T28nuv6bjT6Pn+IZ+NBHyEoTm0qu1tsZqANXtCaFYBHIpPpZIAZSy4zyntOcAJ8MaaCLqFIVlQVyPt24qWSdTXEGyCdLrQCGoTn3U6LQjcoLrJsQdtdZGMH8U4G0Lo870B22W4XnfAS45xmwLWrHmfiyb6+kBVeJOJWxlQ68rycy7poFLBullIsZZE1c1l6tGIeNZxqbx16OzHae0+Jty+A9jRQla8aQbdFbNH4rlJ8gUX6pG09116ewtuXCr7KTL8pOdr5aNfD7E+XqgWt9Eqa/xH6N3drDWkj/asx/SXVPZLvvEwumj55ix0tNzsYELR0BjqoVEVrfeC2iplTfyqoOMt34yKpIHeNdNh+7eP2C2z7ibrc9TVmB5ZiiWg3FhweW59vDMv1nhIZhTZ2QFnfIfc48PdGHE5vE2tDH20Imb6XvC5hb/gkjSf9eGYNKNCWPVkLQyIfbU5rI5Oc8p2xcMjJsqqt5f8dMJWCguGcWMPpyTXioS9/i+PA1umyw+GUbYsx4Dh17OJHHK21tYKZVMxsSNS1H27OTFxt44eEuJk5FXzzUZfr6rnf8i6ZD+IknQe7xnyWAobvN0cYEJezBz/i6xeHVFKaHiiz332YzG5m02n6zSJQvXmF9GaDOB1ObuwfB+xE3rWm/SG5aX9axbXzwQzrQjUkGzRjiTSjNCHbP97w5xMXBwAA"
+  ],
+  "__method__": [
+    "POST"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a124763ae71d8bbfa57/clusters"
+  ],
+  "__status__": [
+    "201"
+  ]
+}

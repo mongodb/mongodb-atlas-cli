@@ -1,0 +1,50 @@
+{
+  "Content-Length": [
+    "167"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:15 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "24"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasV2DatabaseUsersResource::addUser"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "eyJkZXRhaWwiOiJObyBncm91cCB3aXRoIElEIDExMTExMTExMTExMTExMTExMTExMTExMSBleGlzdHMuIiwiZXJyb3IiOjQwNCwiZXJyb3JDb2RlIjoiR1JPVVBfTk9UX0ZPVU5EIiwicGFyYW1ldGVycyI6WyIxMTExMTExMTExMTExMTExMTExMTExMTEiXSwicmVhc29uIjoiTm90IEZvdW5kIn0="
+  ],
+  "__method__": [
+    "POST"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/111111111111111111111111/databaseUsers"
+  ],
+  "__status__": [
+    "404"
+  ]
+}

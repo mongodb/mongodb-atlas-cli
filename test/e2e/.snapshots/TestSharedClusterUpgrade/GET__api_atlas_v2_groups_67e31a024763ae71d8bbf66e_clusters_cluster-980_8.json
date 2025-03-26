@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "892"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:12:17 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "68"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1VbY/aOBD+Kyd/6JcCeWEXtpFWFQWu4sQuK5y+qNWpcpIJuDh2ZDvZ0hX/veMk2wXuWp1OaiWQwDPzeF6eefxAWFYzmUI2VTLnm0ozy5Uk0QNJK2NVsSpBGiOmvNyCbn1iYYKQRB//7pGCS15UxVyyRECGhjutrEqVIBGJlzT4FJIescIch9+oDNA8m/85ebOMyaFHEpbuqrIDIVHOhAE85egvIbVKu3TgzKyBZXcactCA6SOggVTJjOm9g0wFZg863pfOtJ7fLRfTCZ3HmE7aomKV1GouN8ahG8tcLMKTQsmNypLI81ja/5JvLYyu+maLxr7v42eg8q2f3JeDzrGfQT2QYKNw7Afj3r8GBf8nKPx5kPcS53JtdQXPWGW3VFU6hWuW4UyeaSgFTxkFe82sYKb/mYvdhj2CYxceC6a6fqr5udE11t01r//i6ofFNj3GEViY4RcRQj+87PvDfngZh0HkD6Ng/AGvybjZUf4VXr8i0YU/8Hs4x1TvS9f+iV2DsciYmmeAMya3q9s5xmyESpiYtklQEPkNk2wDGXXJ48C+U2CjVVUu3MxGYxgGzA8vxqMhg3GQXSVJPhoBovEne3B5Yk9GOdoFS0CYls6Cy537+UC2yCyM21pbmqYjqsqa2rs+DFJVeKzkXtNerw69Jhnj/SiTx6aa4+4SR2PRcFfk2NLfda/Xbpynsf9Kw18qMd9TObn65Npj79+fq5GsNFtl/0umT74HJ1LOMnt1wz4r/RbRG30jVwPX/s52cjwYoUGywtH6dFglq8yRBJXcnotWt3iNupSQtmQ6oqB/cVL02HcUlVXRcBu9AwexwehWK9t4pL/YW56aDhIRpdvfFNxqIfZN4He7tljdURINfd9tWmLeKlEV0KkgjSe3s8l65m5EDZ6qSloS+bjJqB+Kpkw0y4XKr4qyclv9T9UtNWQcxbOG88oNxsNM3ctTw6HNy+3/OdoBbSBQit3hryhteHAJc6W53ZNo7P60WnPbDnfyjpL2IVlJsf9VzW3n2V35hn6aT2iM76Jj5lclYfETfcpI69MFf8CffwRNpFbKTkHb7vYFXb9er1bx+6CVdvsYspgtnaRa1lFpB9gJnEONhzUTlfOBEBpM5Dm+HQ133TPevpHnY67bTVnj4JgBusftKBBjGVNy+AYYUPwfTQgAAA=="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a024763ae71d8bbf66e/clusters/cluster-980"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

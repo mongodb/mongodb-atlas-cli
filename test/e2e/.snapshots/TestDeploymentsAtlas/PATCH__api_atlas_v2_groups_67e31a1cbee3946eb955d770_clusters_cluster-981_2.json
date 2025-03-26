@@ -1,0 +1,59 @@
+{
+  "Content-Length": [
+    "2130"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:13:58 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "417"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::updateCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "eyJhZHZhbmNlZENvbmZpZ3VyYXRpb24iOnsiY3VzdG9tT3BlbnNzbENpcGhlckNvbmZpZ1RsczEyIjpbXSwibWluaW11bUVuYWJsZWRUbHNQcm90b2NvbCI6IlRMUzFfMiIsInRsc0NpcGhlckNvbmZpZ01vZGUiOiJERUZBVUxUIn0sImJhY2t1cEVuYWJsZWQiOmZhbHNlLCJiaUNvbm5lY3RvciI6eyJlbmFibGVkIjpmYWxzZSwicmVhZFByZWZlcmVuY2UiOiJzZWNvbmRhcnkifSwiY2x1c3RlclR5cGUiOiJSRVBMSUNBU0VUIiwiY29ubmVjdGlvblN0cmluZ3MiOnsic3RhbmRhcmQiOiJtb25nb2RiOi8vY2x1c3Rlci05ODEtc2hhcmQtMDAtMDAudnFvc3EubW9uZ29kYi1kZXYubmV0OjI3MDE3LGNsdXN0ZXItOTgxLXNoYXJkLTAwLTAxLnZxb3NxLm1vbmdvZGItZGV2Lm5ldDoyNzAxNyxjbHVzdGVyLTk4MS1zaGFyZC0wMC0wMi52cW9zcS5tb25nb2RiLWRldi5uZXQ6MjcwMTcvP3NzbD10cnVlJmF1dGhTb3VyY2U9YWRtaW4mcmVwbGljYVNldD1hdGxhcy1nMzYxb2stc2hhcmQtMCIsInN0YW5kYXJkU3J2IjoibW9uZ29kYitzcnY6Ly9jbHVzdGVyLTk4MS52cW9zcS5tb25nb2RiLWRldi5uZXQifSwiY3JlYXRlRGF0ZSI6IjIwMjUtMDMtMjVUMjE6MDM6MjdaIiwiZGlza1NpemVHQiI6MTAuMCwiZGlza1dhcm1pbmdNb2RlIjoiRlVMTFlfV0FSTUVEIiwiZW5jcnlwdGlvbkF0UmVzdFByb3ZpZGVyIjoiTk9ORSIsImdsb2JhbENsdXN0ZXJTZWxmTWFuYWdlZFNoYXJkaW5nIjpmYWxzZSwiZ3JvdXBJZCI6IjY3ZTMxYTFjYmVlMzk0NmViOTU1ZDc3MCIsImlkIjoiNjdlMzFhMWZiZWUzOTQ2ZWI5NTVkODgzIiwibGFiZWxzIjpbXSwibGlua3MiOlt7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTMxYTFjYmVlMzk0NmViOTU1ZDc3MC9jbHVzdGVycy9jbHVzdGVyLTk4MSIsInJlbCI6InNlbGYifSx7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTMxYTFjYmVlMzk0NmViOTU1ZDc3MC9jbHVzdGVycy9jbHVzdGVyLTk4MS9iYWNrdXAvcmVzdG9yZUpvYnMiLCJyZWwiOiJodHRwczovL2Nsb3VkLm1vbmdvZGIuY29tL3Jlc3RvcmVKb2JzIn0seyJocmVmIjoiaHR0cHM6Ly9jbG91ZC1kZXYubW9uZ29kYi5jb20vYXBpL2F0bGFzL3YyL2dyb3Vwcy82N2UzMWExY2JlZTM5NDZlYjk1NWQ3NzAvY2x1c3RlcnMvY2x1c3Rlci05ODEvYmFja3VwL3NuYXBzaG90cyIsInJlbCI6Imh0dHBzOi8vY2xvdWQubW9uZ29kYi5jb20vc25hcHNob3RzIn1dLCJtb25nb0RCTWFqb3JWZXJzaW9uIjoiOC4wIiwibW9uZ29EQlZlcnNpb24iOiI4LjAuNiIsIm5hbWUiOiJjbHVzdGVyLTk4MSIsInBhdXNlZCI6ZmFsc2UsInBpdEVuYWJsZWQiOmZhbHNlLCJyZXBsaWNhdGlvblNwZWNzIjpbeyJpZCI6IjY3ZTMxYTFmYmVlMzk0NmViOTU1ZDg3MyIsIm51bVNoYXJkcyI6MSwicmVnaW9uQ29uZmlncyI6W3siYW5hbHl0aWNzU3BlY3MiOnsiaW5zdGFuY2VTaXplIjoiTTEwIiwiZGlza0lPUFMiOjMwMDAsImVic1ZvbHVtZVR5cGUiOiJTVEFOREFSRCIsIm5vZGVDb3VudCI6MH0sImF1dG9TY2FsaW5nIjp7ImNvbXB1dGUiOnsiZW5hYmxlZCI6ZmFsc2UsInByZWRpY3RpdmVFbmFibGVkIjpmYWxzZSwic2NhbGVEb3duRW5hYmxlZCI6ZmFsc2V9LCJkaXNrR0IiOnsiZW5hYmxlZCI6ZmFsc2V9fSwiZWxlY3RhYmxlU3BlY3MiOnsiaW5zdGFuY2VTaXplIjoiTTEwIiwiZGlza0lPUFMiOjMwMDAsImVic1ZvbHVtZVR5cGUiOiJTVEFOREFSRCIsIm5vZGVDb3VudCI6M30sInByaW9yaXR5Ijo3LCJwcm92aWRlck5hbWUiOiJBV1MiLCJyZWFkT25seVNwZWNzIjp7Imluc3RhbmNlU2l6ZSI6Ik0xMCIsImRpc2tJT1BTIjozMDAwLCJlYnNWb2x1bWVUeXBlIjoiU1RBTkRBUkQiLCJub2RlQ291bnQiOjB9LCJyZWdpb25OYW1lIjoiVVNfRUFTVF8xIn1dLCJ6b25lSWQiOiI2N2UzMWExZmJlZTM5NDZlYjk1NWQ4N2IiLCJ6b25lTmFtZSI6IlpvbmUgMSJ9XSwicm9vdENlcnRUeXBlIjoiSVNSR1JPT1RYMSIsInN0YXRlTmFtZSI6IlVQREFUSU5HIiwidGFncyI6W10sInRlcm1pbmF0aW9uUHJvdGVjdGlvbkVuYWJsZWQiOmZhbHNlLCJ2ZXJzaW9uUmVsZWFzZVN5c3RlbSI6IkxUUyJ9"
+  ],
+  "__method__": [
+    "PATCH"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a1cbee3946eb955d770/clusters/cluster-981"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

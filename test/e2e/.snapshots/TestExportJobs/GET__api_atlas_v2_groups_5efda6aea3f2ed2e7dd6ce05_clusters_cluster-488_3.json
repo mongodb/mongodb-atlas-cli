@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "905"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:28:42 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "92"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1VbW8aORD+Kyd/6JcL7FuBZKXoRIFGnHiJ2E1z1+oUedcD+OK1t7aXlkb89453lzSkLzqd1EoggWfmmfHMM48fCGU7KnNgIyXXfFNparmSJH4geWWsKpYlSGPEiJdb0I1PKkwQkvjdP2ek4JIXVTGRNBPA0HCtlVW5EiQm6SwJ7kJyRqwwT8PnigGax5PXw5tZSg5nJKP5fVW2ICReU2EATzn6S8it0q4ceGbWQNm1hjVowPIR0ECuJKN67yBzgdWDTvelM60m17PpaJhMUiwnb1DxlonVXG6MQzeWuliEJ4WSG8Wy2PNakM7L8/OO2aK14/v46W4C+fF9t/XrMNh1Jdg4HPjB4OzbMcH/iAl/FOP9gUO5tLqCF7Sy20RVOodLynAgLzSUguc0AXtJraCm0/to8pAeobEFx9smevflwr8bvTu99LcLqNuL3bcwxi/Gh37Y6/hRJ+ylYRD7UdyL3mISxs19wj/B1SsSB37Xb05uqcYajyR4fTOb/X13O1zNJ2MMwUnqfelGM7QrMBbZtOMMcP5ksVxM0GMjVEbFqKkxAbGeU0k3wBJ3N8R9pMdGq6qcunn2YM1onwKN1iGwEAaM9XPwe4jGnb0/gCig0UUGEF287EN20euxrH+BdkEzEKahuuDy3v18IFtkHcZtrS1N3TBVsbo5baO6uSo8WnKv7r63C726GON9r5Jjz83T5hNHcVHzWqyx578qr9dso6ex/0rDnyozj6WcpD5J+9T719dqJC3NVtn/UukX34MTMGcZv5rTf5V+g+i19pHzrtuS1nZy3O2jQdLCkfd0WCWtzBN5Krl9FDS3pq6wei1r4Skhb7j0AwYGgUtVFTW10TtwEBuMbmS0iUf2i73luWkhEVG67c7BrR5izwO/3cXp8johceT7uImQmTdKVAW0Apmkw8V4uHI7KHEzR6qSlsQ+bjqqi0pyKurdwkdBFWXltv5rQS41MI66uoPnSm4wHsbqgzw1HJq6nD48RzugDQSqtDv8GVeLDq5grjS3exIP3J9GahbNbIe3CWnemKUU+5/V3Gaebcqb5G4yTNK7oCbmJyVh+n1yRI4czqcNfos/f2sitVJ2BNq22afJ6mq1XKZ/BY3w22PIeDKbpNPFlXuh6aZVOeQzynNNUveUN+/k83numo1Y4YSogWSPW1Ag4CxNyOEzALw4P1EIAAA="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-488"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

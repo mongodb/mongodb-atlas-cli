@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "3386"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:35 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "1226"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasV2DatabaseUsersResource::generateCert"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "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"
+  ],
+  "__method__": [
+    "POST"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/databaseUsers/user15/certs"
+  ],
+  "__status__": [
+    "201"
+  ]
+}

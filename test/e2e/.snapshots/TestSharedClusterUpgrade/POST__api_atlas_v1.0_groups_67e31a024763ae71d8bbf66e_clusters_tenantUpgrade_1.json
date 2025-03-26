@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "918"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:17 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasLegacyClusterDescriptionResource::upgradeTenantCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "X-Xgen-Up-Proto": [
+    "HTTP/2"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAANVWbW/bOAz+Kwd92Jc18UvWpAtQHNImK3JoXhAn610PQyHbtKNFkQxJ9pYV+e+j/LImfRkOO+wOA/LBIUXy4UOK1D2huZFBRDkTKenfk0hus9yA/QRBQw4x6SeUazghmYKYRYYVMHqk0WgPQ/lJHCv2JyRmenN18UQc0miTZ4/dhOxSCgGRkeq5+ApoPFeQgAIRIUKiIZIipmpH0GXEc21ALXeZVS1G8+vx5SAYLQmqKq9MisAozFNb79pQa4vuyVaKVMZh33Fo1PqcrA10z1p6jcqW6+KvLZO1G37K2vXBVgxFW4Dp+z3X6508a+T9iJH/fSPnd635uVE5vMKqrQOZqwjOabxl4pWCjLOIBmDOqeFUtz4yvklp4xxZaBIOVPGQ82utCsy7Jq/19uzFZEuOsQQGhtT2B/Fd/7Tldlr+6dL3+m6n77q3pKp4wL7A1QXpu+3TSnBDFYJMJzK2lu9W19d/3d0MFpPREC2wmmqX2fIMzAK0mStZsBiwB8h0Nh3hiZTLkPLLCmQAPJlQQVOIA5tc2bh1i6RK5tnY1rTbg45HXf9Nr9uh0PPiszBMul1Ab+xA/+ZI3/OsntMQOPbI3x/wm4mN/bwna+w8tFsbk+mSMZnHJTc1T228OQ7NmFPS7xRe23VKONp5CUtDuz7kn9hG52V38wRJ/+8iO9WtdBTWQCr4Q4b6G5ij4EeBD0//H2i1oJleS/NPsD6c3WNtS83wYkI/SvUevWMDovVZ25ag1h2J291GsVqMf6GxcYB6lcV4eePnbq93entw8IaZ9ay8k/oXyvTfDUhBt3Y6Hd9FkW/LKYM0eLgCaa4PNyIzj3dYVg+vi2c3XKNFFKZZRI1sWoVfjqaDqd1aLy/mLf08FnacR2AnLemLnHOsHRNPxft626KX+XGgwU1gh2+SQLnTD03rExNLAHtBriDF7qglq+BuNAiWd77dEjXTtnne0WqZd46kQQaRzePBCv/gROc7wyI9xSWBxLiIjSM0S2At6lgCmVTM7Ei/Vz0IZoLvGov9/kmYanZ/Z+K78KTIVWYa3yIJS38Wzi9SNHTe4udvXjmSlJTmEpSpXzHjYHG1mM2Wf3p2f6tiEMc4bvUPre/yAWCamKv5cLAcT69QbGhasbQBhIvbuEBhQXluz4EPJTD0ju1V0optZKrX1OPuLqppuUA+qIZgh5i26ON6GZD9V5+rkcFpCgAA"
+  ],
+  "__method__": [
+    "POST"
+  ],
+  "__path__": [
+    "/api/atlas/v1.0/groups/67e31a024763ae71d8bbf66e/clusters/tenantUpgrade"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

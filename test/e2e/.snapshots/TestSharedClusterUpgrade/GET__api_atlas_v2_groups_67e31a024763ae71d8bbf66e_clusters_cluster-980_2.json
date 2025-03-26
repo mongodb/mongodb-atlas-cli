@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "739"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:17 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "67"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1UbW/aMBD+K5M/9MsKeaElLFI1UWAVE9CKpOvWaaqc5BJcgh3ZDhut+t93TkIL3VpN+1AJJMd3z/nuuefunkQ0XpbFiNMoh4T4Kc0VHJKIDQTnEGshiX9P4JlZAk0uJKQggcdAfKIgFjyhckMeDkmcl0qDDDeFMc1HF5PxoB+MQoKmOioTPNCS8UyZ6EpTg8XwZCV4JpLItywat36lCw3dXkst0Niybfy1Rbqwo59Fu3FsJbBuc9C+69mOd/hXkPM/IPd1kPVRqfxEyxIOaKkXgShlDCc0WTF+IKHIWUwD0CdU51S1blm+zOg2OLKwLTiQ66ea3yu5xrob8lofei8WW3GMLdAwxD9GcG33uGV3Wu5x6Dq+3fFt+xqfSZhaBuwOzk6Jb7eP64srKjHJbCoSg/x0OZl8u7nqz6ejISKwm3JTmPb09RyUvpBizRJADZDZ+WyEHlkuIpoP6iQDyNMp5TSDJDDFYdxHiWRSlMXY9LTrQcehtnvkdTsUPCfpRVHa7QJGYzv2oz275xh7TiPIUSPff+CZ8aU53pMFKg9xC60LVTEmyqTipuGpHYuVRQtmVfRba9eqklHWS5lsSVe77BMj87zSdp4i5W/1rlVPpCWRfyHhs4jUYyp7T+89u+v99rkqTgu1EPpfMn3yfcCuVpbh6ZTeCvkFo6P0EN1rG/ob2951u4sGTldGvPvNKmipdlZUwfTzpdYMZrV9CohrMb0iQdtIkJerStvo7ZgQGaJxN6Ysq/GQ4z4z7zQh8SZNzYpbw5ibQY/BzCA+MjVZsj/ucJgNizg722mb1eX1rwJTlmRCMr0hvmc+9jzC0aw/C8k2reb2MrgZ9YPwxq0IvhMcxq+MmUdqnwZ8jcd3ToWUQugBSN3s8XEwP5ufn4dfnXqD6S1kPJyYzaBp1kwq9gRXTMUzlqTrff+8Geu6q3PkjyoINtjJFQabhAF5+A0ImzcElgYAAA=="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a024763ae71d8bbf66e/clusters/cluster-980"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

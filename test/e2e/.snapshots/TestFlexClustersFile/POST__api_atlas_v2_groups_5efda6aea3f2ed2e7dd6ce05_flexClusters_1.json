@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "340"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2024-11-13+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:11 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "719"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasFlexClusterResource::createFlexCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAE1RbWvCMBj8L/k8pS+2bv1WtRNBREz3wsaQtDlLsW8kqdCJ/31PsGP7EAi5u+eeu1xZJvJz33EYUzaFZtGVoRFZBckio3rcHlhe9dpApUMHFrFDst9uljFPUkZQ2zTITdk23KhRbxUKwmBFhwSe4wUTx594Qeq5keNHrvdB0kK1fbchFxbgJEUoIPyTB+lhLmWYwwmIVFo8nMN3hetkgP80C5E9BYGcuZLwum2KdrV4hdK0A3Efp840JKARtfUeV5/MAjutU+2llFD/w9r4dN+P0O6ui9848WWpz7z8xnrBomDq/A0YWc/b5J1oCgWZj28v/JjEPD26jHrQhioYgeUhidPNbk0CI6z355WdMRACD0cDbQi5iKq35AGa3b6ICVWXjbAF04bmXnXy+z8nUWmQ6J7+gApCgw+UuKYZ25Sz2w8yjeuQ4AEAAA=="
+  ],
+  "__method__": [
+    "POST"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters"
+  ],
+  "__status__": [
+    "201"
+  ]
+}

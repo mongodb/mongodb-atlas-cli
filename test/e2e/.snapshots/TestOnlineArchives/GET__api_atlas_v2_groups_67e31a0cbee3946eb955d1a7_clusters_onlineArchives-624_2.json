@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "907"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:11:33 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "76"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAMVV72/bNhD9VwZ+6JfF1g/HdiogGFTbLTzYcWApzdZhCCjqbDOhSIGkVLiB//cdJaV1vDQYBnQDbMDW3T2e7t17fCQ0r6lkkE+U3PBtpanlSpLokbDKWFWsSpDGiAkvd6DbnFSYICTRH3+ekYJLXlTFTNJMQI6Ba62sYkqQiKSLJLgLyRmxwhyXL1UOGJ7O3sc3i5QczkhG2UNVdiAk2lBhAJ9yzJfArNKuHTgJa6D5tYYNaMD2EdAAUzKneu8gmcDuQaf70oXWs+vFfBInsxTbYS0qvmViNZdb49CNpa4W4Umh5FblWeR5SgougWq24zWY3ig875kdJvV8Hz/9+n6zyftdei+Hui/BRuHYD8Znr5YG/740fK3U+wWZurS6gje0srtEVZrBJc2RpTcaSsEZTcBeUiuo6d2Hm3JQPUHjXJ5GkOj62xR+Nrp+cRIv99GMHpmxMMUvwoR+OOz5g144TMMg8gdR4H/Cs3JuHhL+BT68I9HA7/vtk1uqsdWnBXl/s1j8fncbr5ezKZYgy3pfOtpiuwZjcdNqngPuBrlaXc0wYytURsWkZT4BsVlSSbeQJ+4VEffr6my1qsq543o0hkFAfZYBDN6ejyB7OxzmAR0jGj+Kw/l4NKAwDvKLLNtcZBTjgmYgTCsDHM6D+/lIdriRWLeztjQ4NyZUlTfD6QbVZ6rwaMm9hgSvDr2mGeN9rxOv22TTcRAfcUCcCkSz+mKDo/+Pj/da3Xoa2VAaflWZ+drRsw6enX6c/b+1bCQtzU7Zf9Lwt9yDczwXmb5b0nulP+IhjVmSi75TUBd79rg/woCkhdvoFxksaWWObK3k9tQIO+k2jlUCaxftlfUcDd2RVdHsPWYHDmKL1a3/tvUoDbG3nJkOEhGlcwAGTpeIvQz8Tqjz1XXiZOqjTCEzH5WoCuicNUnjq2m8dgKVKNuJqqQlkY82gA6kEkZFIzy8TVRRVs4S/u7kpYacoyHXcPrmButhqj7L54FD25czj1O0A8ZAoL27hz/i1QYH1zBXmts9icbuT+tDVy3H8W1C2stpJcX+Rw235bM78ia5m8VJehc0C/pFSZh/fzku3I3scrriT/jzp7ZSK2UnoG13+jxZf1ivVulvQXs52KeS+XTh7NbSbWd/KDb07WZB3f3fXq6nXNatKtbIDjWQ7FGiBYIt0oQc/gLO/UiihggAAA=="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a0cbee3946eb955d1a7/clusters/onlineArchives-624"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

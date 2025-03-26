@@ -1,0 +1,59 @@
+{
+  "Content-Length": [
+    "1238"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:11:50 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sat, 30 May 2026 00:00:00 GMT"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "152"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasDiskBackupScheduleResource::patchSnapshotSchedule"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "eyJhdXRvRXhwb3J0RW5hYmxlZCI6ZmFsc2UsImNsdXN0ZXJJZCI6IjY3ZTMxYTNmNDc2M2FlNzFkOGJjMDNjZCIsImNsdXN0ZXJOYW1lIjoiYmFja3VwU2NoZWR1bGUtNzMxIiwiY29weVNldHRpbmdzIjpbXSwibGlua3MiOlt7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTMxYTNjNDc2M2FlNzFkOGJjMDE1YS9jbHVzdGVycy9iYWNrdXBTY2hlZHVsZS03MzEvYmFja3VwL3NjaGVkdWxlIiwicmVsIjoic2VsZiJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9wdWJsaWMvdjEuMC9ncm91cHMvNjdlMzFhM2M0NzYzYWU3MWQ4YmMwMTVhIiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9ncm91cCJ9XSwibmV4dFNuYXBzaG90IjoiMjAyNS0wMy0yNlQwMzoxMToxNVoiLCJwb2xpY2llcyI6W3siaWQiOiI2N2UzMWJmMmY4YmE0NDc4NzdjOTk4ZDEiLCJwb2xpY3lJdGVtcyI6W3siZnJlcXVlbmN5SW50ZXJ2YWwiOjYsImZyZXF1ZW5jeVR5cGUiOiJob3VybHkiLCJpZCI6IjY3ZTMxYmYyZjhiYTQ0Nzg3N2M5OThkMiIsInJldGVudGlvblVuaXQiOiJkYXlzIiwicmV0ZW50aW9uVmFsdWUiOjd9LHsiZnJlcXVlbmN5SW50ZXJ2YWwiOjEsImZyZXF1ZW5jeVR5cGUiOiJkYWlseSIsImlkIjoiNjdlMzFiZjJmOGJhNDQ3ODc3Yzk5OGQzIiwicmV0ZW50aW9uVW5pdCI6ImRheXMiLCJyZXRlbnRpb25WYWx1ZSI6N30seyJmcmVxdWVuY3lJbnRlcnZhbCI6NiwiZnJlcXVlbmN5VHlwZSI6IndlZWtseSIsImlkIjoiNjdlMzFiZjJmOGJhNDQ3ODc3Yzk5OGQ0IiwicmV0ZW50aW9uVW5pdCI6IndlZWtzIiwicmV0ZW50aW9uVmFsdWUiOjR9LHsiZnJlcXVlbmN5SW50ZXJ2YWwiOjQwLCJmcmVxdWVuY3lUeXBlIjoibW9udGhseSIsImlkIjoiNjdlMzFiZjJmOGJhNDQ3ODc3Yzk5OGQ1IiwicmV0ZW50aW9uVW5pdCI6Im1vbnRocyIsInJldGVudGlvblZhbHVlIjoxMn0seyJmcmVxdWVuY3lJbnRlcnZhbCI6MTIsImZyZXF1ZW5jeVR5cGUiOiJ5ZWFybHkiLCJpZCI6IjY3ZTMxYmYyZjhiYTQ0Nzg3N2M5OThkNiIsInJldGVudGlvblVuaXQiOiJ5ZWFycyIsInJldGVudGlvblZhbHVlIjoxfV19XSwicmVmZXJlbmNlSG91ck9mRGF5IjoyMSwicmVmZXJlbmNlTWludXRlT2ZIb3VyIjoxMSwicmVzdG9yZVdpbmRvd0RheXMiOjcsInVzZU9yZ0FuZEdyb3VwTmFtZXNJbkV4cG9ydFByZWZpeCI6dHJ1ZX0="
+  ],
+  "__method__": [
+    "PATCH"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a3c4763ae71d8bc015a/clusters/backupSchedule-731/backup/schedule"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

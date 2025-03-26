@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "57"
+  ],
+  "Content-Type": [
+    "application/json"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:26 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiPrivateIpInfoResource::getIpInfo"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "X-Xgen-Up-Proto": [
+    "HTTP/2"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAKtWSi4tKkrNK/EsKDNxTEkpSi0uVrJSMjXSMzI20TO20LMwVaoFAKdqBJslAAAA"
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/private/ipinfo"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

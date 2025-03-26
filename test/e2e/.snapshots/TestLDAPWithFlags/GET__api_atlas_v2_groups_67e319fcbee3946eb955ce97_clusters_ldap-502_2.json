@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "892"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:11:33 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "78"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAL1VW2/aSBT+K9U89KUBX7gFS9GKAq2oIETYabpdraKxfYBpxjPWzJiWRPz3nvE4KWG70e5DK0Ayc8755ty+zw+E5jsqMsjHUqzZplLUMClI9ECyShtZLEsQWvMxK7egnE/CdRCS6K+/z0jBBCuqYipoyiFHw5WSRmaSk4gk8zi4DckZMVwfhy9kDmieTN+NrucJOZyRlGZ3VdmAkGhNuQY8ZegvIDNS2XTgxKyA5lcK1qAA00dADZkUOVV7C5lxzB5Usi+taTW9ms/Go3iaYDqZQ8UqY6OY2GiLrg21sQhPCik2Mk8jz+M5LVs9P2zpLZpavo/fdjf9Zmi7cWrlsGsLMFE48IPB2U8Cgv8bEL4U4P2Bs7gwqoLXtDLbWFYqgwua4xxeKyg5y2gM5oIaTnXryzl+ho/QWPljkbHa/ajzjVa7o1p/fnvdUuy4gQn+MDj0w17L77TCXhIGkR9Gve5nvCFn+i5m9/D+LYk6ftt3JzdUYYKPg393PZ//eXszWi2mEwzB6al9accxMivQBjdox3LAmZPL5eUUPTZcppSP3URj4OsFFXQDeWwLQ9ynldgoWZUzO8P+ADrBcJ2lAJ1htw/psNfLYDhANHZkh+6g36EwCPLzNF33uynaOU2Ba7fenIk7+/hAtrhpGLc1ptTYrYzLKq+b0zSqncnCoyXz6tZ7u9Crk9Hev2XiNRuqnzpP7E7zepH5Ghv+Wy71HPc8hZ2XCj7IVD/l8ezeZ3cee//mRLWgpd5K81/S/OF7sFplLZO3C/pFqo8IXcscOW9bZjS2Z8ftPhoELezOHs2opJU+kqGSmVPhaohYK0wJmVugF9auY9dOVEW9z+gdWIgNRju9dPG48nxvWKYbSEQUls8ZWL4h9iLwGwLOllexpZ+P9INUf5S8KqBRwjgZXU5GK0s8gXQcy0oYEvlIb9QTGWeU14RC9ZdFWVmq/1N5SwU5QwHdwWnlGuNhIr+K54aDy8uKwinaAW3AUY7t4a8orXOwCTOpmNmTaGD/OH25dJMd3cTEvUyWgu9/VXPdPJsrr+Pb6ShOboN6Le+lgNkLmtQhzqcJ/oyPr1ykktKMQZnm9lm8er9aLpNPgZN68xgym8ytjBq6aWQNiYV6XC+ofV+7l+HpLHeOCyucDtUQ75GOBYLNk5gcvgM9X8DVNggAAA=="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e319fcbee3946eb955ce97/clusters/ldap-502"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

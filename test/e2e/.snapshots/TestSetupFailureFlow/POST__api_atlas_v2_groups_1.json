@@ -1,0 +1,62 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "281"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:11 GMT"
+  ],
+  "Location": [
+    "https://cloud-dev.mongodb.com//api/atlas/v1.0"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "1958"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasGroupsResource::addGroup"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAALWTsW6DMBBA/8UzxGCD03jt1L1dWnU47AOsGoxskw4R/17SqGlZKhbP9/TuSae7EGXnENE/unmMRBYZUR4hoiaSsILVecFzVj+zUhZclvyVZMRcZ+KIvISibRD5qRLYnOpac6HWuTXjRyDy7UJ6j+3K9jFOQVKqrJt1rvF8GNzYOd0clBsoTIZCtBDomdHOu3kK9B+7R7sqA9qWLFmCFVS5MYIZ0Yf7to19Y/4DJ6q5nWdXyw+apkRDhAYCvoR9OVs+TdOE+1puXKIG7xSGgLs67myals/eRLQmxB0tv+zynpERBvz+qzhPOTLMuahWifPd0/Xda2w1iAcGvGWoGR61FkpjRZYv82RUSEIEAAA="
+  ],
+  "__method__": [
+    "POST"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups"
+  ],
+  "__status__": [
+    "201"
+  ]
+}

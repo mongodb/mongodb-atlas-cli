@@ -1,0 +1,65 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "788"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:16 GMT"
+  ],
+  "Deprecation": [
+    "Mon, 5 Aug 2024 00:00:00 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Sunset": [
+    "Sun, 1 Mar 2026 00:00:00 GMT"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "76"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiAtlasClusterDescriptionV15Resource::getCluster"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAMVVXU/bMBT9K5OfoUn6tZG30BbUqR+oCbAxTZWT3KYejh3ZTqeC+t93XQdGi4b2wvZQKfX1PffY957jR0LzDRUZ5AMpVqyoFTVMChI+kqzWRpbzCoTWfMCqNSi3J+E6aJPw2/cTUjLByrocCZpyyDFwpaSRmeQkJMkkDpZtckIM1y/TpzIHDA9HF9H1JCG7E5LS7L6uGhASrijXgKsM9wvIjFSWDhyFFdD8SsEKFCB9BNSQSZFTtbWQGUf2oJJtZUOL0dVkPIjiUYJ0MoeKp4yNYqLQiG4zENDAEH+Y0PbbvVO/c9ruJe0g9Dth0L/D1Jzp+5g9wOU5CTt+y3crt1ThPTyd6+J6Mvm6vI0W09EQU5Cc2la2WmQWoA1e0IblgEcis/lshDsKLlPKB45wDHw1pYIWkMdrqnLEfT5xoWRdjfEGSP8jdAIa+ClA56zbh/Ss18u73T6isRfx7kG8t0oxzmkKXLvucSbu7ecjWeNFYt7amEqHnpdxWeenOWxapRSFzNNWJkuPVsyjhlPtbdrenoz2/sTEaxqgPZploPVEFvq0e9YhtnF83y2+wkb9w9KeGzNPYRekgs8y1c9sDqofVH65+7/Q1YJWei3N35D9vXdnxWkjw/Mp/SHVDRbY65p8avnkOXaw3LLzI2hpp/hV1ypa6xfqq5g51quCirNsbx9xBZkbrDfGEew4irrczznuDixEgdnOJlw+SoFvDct0A4mIQhtrWFaHiD0N/EaY4/lVbGXpoywh1TeS1yU0BhAn0WwYLawgBcp0IGthSOij7GltZJxRvhcamp4sq9pawGvDqRTkDH1jA8cn15gPQ/lTHAZ2jpc1i2O0HcaAowvZxfc4WmdnCTOpmNmS8KP943xn5vob3cbEeehc8O17Xa7rZ1PyOl6OojhZBvvhfJACxm94lZ05u6dJvsPPDy5TSWkGoExTfRwvLhfzefIlwAxkb55SBotRlIxnl/YFokVjeSg09Or9kNqnyr0Dx/3cOFUssENUQ7xFeZYIOElisvsFmR7GIDEHAAA="
+  ],
+  "__method__": [
+    "GET"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a10bee3946eb955d446/clusters/accessLogs-493"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

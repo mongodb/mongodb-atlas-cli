@@ -1,0 +1,59 @@
+{
+  "Content-Encoding": [
+    "gzip"
+  ],
+  "Content-Length": [
+    "381"
+  ],
+  "Content-Type": [
+    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+  ],
+  "Date": [
+    "Tue, 25 Mar 2025 21:03:50 GMT"
+  ],
+  "Referrer-Policy": [
+    "strict-origin-when-cross-origin"
+  ],
+  "Server": [
+    "mdbws"
+  ],
+  "Strict-Transport-Security": [
+    "max-age=31536000; includeSubdomains;"
+  ],
+  "Vary": [
+    "Accept-Encoding"
+  ],
+  "X-Content-Type-Options": [
+    "nosniff"
+  ],
+  "X-Envoy-Upstream-Service-Time": [
+    "77"
+  ],
+  "X-Frame-Options": [
+    "DENY"
+  ],
+  "X-Java-Method": [
+    "ApiGroupIntegrationsResource::createIntegration"
+  ],
+  "X-Java-Version": [
+    "17.0.14+7"
+  ],
+  "X-Mongodb-Service-Version": [
+    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
+  ],
+  "X-Permitted-Cross-Domain-Policies": [
+    "none"
+  ],
+  "__body__": [
+    "H4sIAAAAAAAAAJVSbWvCMBD+L/ngh+GMXdVqQYaoiOzF4txgjCFpcq1haVKaiyDif1+swmAbst23e32ee+72REn9YUn8tiebCjISkw1iaWNKuTJOXAvYtgqjcyPSFjcFZaWkDBWzdHtD88q40tJeBGHAwrAT9UIGUSD6aZpl0KdSI+QVQ2m0pS/z8WqxXC+Sp1upuXICxsZpHGLloFGyHB5dMQwaEqGwCVSJjwyDdps0SQXK87KgMnJ4P7rWKTxxlsJnzvi9FCAcdHqQDrpdwdJu3Zp7cF/z/OQ9C9VWcriDnY9cXbB2uwbGXQm+MhnNpsv15Hn1Sg7NPfES/GVCFPkJ3Fk0xVSL0ngxSKydUs1LrAfiF9ZajI1SwI9C3jMEzXcPgJXkXoSMKQunoglDljIL33PnNSaj1WiymP19h6OFYb9PLjJmPxmfAf2p17Pp43z6P8iA1+JfOm0NaRxKnZ9mIlj8Av56tfph0CBT9bORuHP4BPaGG6TzAgAA"
+  ],
+  "__method__": [
+    "POST"
+  ],
+  "__path__": [
+    "/api/atlas/v2/groups/67e31a334763ae71d8bbffe8/integrations/VICTOR_OPS"
+  ],
+  "__status__": [
+    "200"
+  ]
+}

@@ -37,20 +37,28 @@ func TestRestores(t *testing.T) {
 	g.generateProjectAndCluster("backupRestores")
 	require.NotEmpty(t, g.clusterName)
 
-	g2 := newAtlasE2ETestGenerator(t, withSnapshot())
-	g2.generateProjectAndCluster("backupRestores2")
-	require.NotEmpty(t, g2.clusterName)
+	projectID := g.projectID
+	clusterName := g.clusterName
+
+	g.projectID = ""
+	g.clusterName = ""
+
+	g.generateProjectAndCluster("backupRestores2")
+	require.NotEmpty(t, g.clusterName)
+
+	projectID2 := g.projectID
+	clusterName2 := g.clusterName
 
 	t.Run("Create snapshot", func(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
 			"create",
-			g.clusterName,
+			clusterName,
 			"--desc",
 			"test-snapshot",
 			"--projectId",
-			g.projectID,
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -70,9 +78,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			g.clusterName,
+			clusterName,
 			"--projectId",
-			g.projectID)
+			projectID)
 		cmd.Env = os.Environ()
 		resp, _ := RunAndGetStdOut(cmd)
 		t.Log(string(resp))
@@ -85,15 +93,15 @@ func TestRestores(t *testing.T) {
 			"start",
 			"automated",
 			"--clusterName",
-			g.clusterName,
+			clusterName,
 			"--snapshotId",
 			snapshotID,
 			"--projectId",
-			g.projectID,
+			projectID,
 			"--targetProjectId",
-			g2.projectID,
+			projectID2,
 			"--targetClusterName",
-			g2.clusterName,
+			clusterName2,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -111,9 +119,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			restoreJobID,
 			"--clusterName",
-			g.clusterName,
+			clusterName,
 			"--projectId",
-			g.projectID,
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -126,9 +134,9 @@ func TestRestores(t *testing.T) {
 			backupsEntity,
 			restoresEntity,
 			"list",
-			g.clusterName,
+			clusterName,
 			"--projectId",
-			g.projectID,
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -146,9 +154,9 @@ func TestRestores(t *testing.T) {
 			"describe",
 			restoreJobID,
 			"--clusterName",
-			g.clusterName,
+			clusterName,
 			"--projectId",
-			g.projectID,
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -167,11 +175,11 @@ func TestRestores(t *testing.T) {
 			"start",
 			"download",
 			"--clusterName",
-			g.clusterName,
+			clusterName,
 			"--snapshotId",
 			snapshotID,
 			"--projectId",
-			g.projectID,
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -189,9 +197,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			restoreJobID,
 			"--clusterName",
-			g.clusterName,
+			clusterName,
 			"--projectId",
-			g.projectID,
+			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -206,9 +214,9 @@ func TestRestores(t *testing.T) {
 			"delete",
 			snapshotID,
 			"--clusterName",
-			g.clusterName,
+			clusterName,
 			"--projectId",
-			g.projectID,
+			projectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -226,9 +234,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			g.clusterName,
+			clusterName,
 			"--projectId",
-			g.projectID)
+			projectID)
 		cmd.Env = os.Environ()
 		resp, _ := RunAndGetStdOut(cmd)
 		t.Log(string(resp))

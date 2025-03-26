@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAD2PPW/CMBiE/4tnEhMcnIQNFYtGajtAWbpE/niNPGBHfp0wVP3vdSrKeKe703PfZHCG7AhvgIFaV6YzwC2XXHW63WhOVsR4PISbdD7HEmAqvLwBjlJDiRBnp0FNWN6dN+GOpYeUO2MMszMQc2X/dTmJbEW4urBsXM6D2J8/h002HwPCmzE4n/oFheKkUEc3ppxHas26ksbaQrEGipp3rGjrrilaBtpWLZNVvaURMExRwzGGaUT6hxmv9B8D6bvTMWCwqRQz+PQ6Kfq88cg/9cKVZILM0h/eFvZcMWE5cxQf4tS/kJ9fwGwbQzgBAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e3eafb989f247d51eb6102/streams/privateLinkConnections/67e3eb01d9de6f6a6b9c82c6",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "248"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 11:54:41 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "37"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiStreamsResource::getPrivateLinkConnection"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

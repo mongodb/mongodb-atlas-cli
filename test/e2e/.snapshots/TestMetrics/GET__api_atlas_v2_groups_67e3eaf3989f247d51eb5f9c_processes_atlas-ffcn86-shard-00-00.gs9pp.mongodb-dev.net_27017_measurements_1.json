@@ -1,0 +1,53 @@
+{
+  "Body": "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",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e3eaf3989f247d51eb5f9c/processes/atlas-ffcn86-shard-00-00.gs9pp.mongodb-dev.net:27017/measurements",
+  "Headers": {
+    "Cache-Control": [
+      "no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0"
+    ],
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 12:02:04 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "456"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasProcessMeasurementsResource::getHostMeasurements"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

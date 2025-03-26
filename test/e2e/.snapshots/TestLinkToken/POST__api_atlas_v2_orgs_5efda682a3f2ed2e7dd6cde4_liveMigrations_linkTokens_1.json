@@ -1,59 +1,53 @@
 {
-  "Content-Encoding": [
-    "gzip"
-  ],
-  "Content-Length": [
-    "198"
-  ],
-  "Content-Type": [
-    "application/vnd.atlas.2023-01-01+json;charset=utf-8"
-  ],
-  "Date": [
-    "Tue, 25 Mar 2025 21:02:59 GMT"
-  ],
-  "Referrer-Policy": [
-    "strict-origin-when-cross-origin"
-  ],
-  "Server": [
-    "mdbws"
-  ],
-  "Strict-Transport-Security": [
-    "max-age=31536000; includeSubdomains;"
-  ],
-  "Vary": [
-    "Accept-Encoding"
-  ],
-  "X-Content-Type-Options": [
-    "nosniff"
-  ],
-  "X-Envoy-Upstream-Service-Time": [
-    "120"
-  ],
-  "X-Frame-Options": [
-    "DENY"
-  ],
-  "X-Java-Method": [
-    "ApiLiveMigrationsLinkTokensResource::createLinkToken"
-  ],
-  "X-Java-Version": [
-    "17.0.14+7"
-  ],
-  "X-Mongodb-Service-Version": [
-    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
-  ],
-  "X-Permitted-Cross-Domain-Policies": [
-    "none"
-  ],
-  "__body__": [
-    "H4sIAAAAAAAAAE3NSw6CMBQAwLtwAoRgookLEcE2UCO2kr6dApHSvkriB9B4d3XnBWZejlFW84uurTN36pE+SqworMiUtAcDmDesPY+SM8zwoDMUPiQ7T3q5YStyJTgbwQ2aUyHUVtGwSoamHMOIr/U55zQmqlflhnYVxi6IuD+Km6n3P3s3SCQBcFBpIXz51DeWUMPURLEC2pTThkVln7XimUVLj+2/lw0nEodOun8OdnfAoD/aeCDWXTjvD1GpcKrQAAAA"
-  ],
-  "__method__": [
-    "POST"
-  ],
-  "__path__": [
-    "/api/atlas/v2/orgs/5efda682a3f2ed2e7dd6cde4/liveMigrations/linkTokens"
-  ],
-  "__status__": [
-    "201"
-  ]
+  "Body": "H4sIAAAAAAAAAE3NUQ6CIAAA0Lt4AtJqq60fKhWWuBQy+CtxAgq55Spq3b366wLvvYJeu45eusYFy6Dx+FZbicUazZE59MIWipjWc0psZg9dZlkkkn3Iw6Ina3RFduEFmKlzxXSuMZTJQ9Uebui2awuKY6Tvuk7xIG0MBIvvJzb2TfmzieGGz4Rpo13Fplm4HUkiTF6CaU6h3lVCESoNf0pDwizKy+/l4ITbx8DBn+OwkikE/IgvyIFV8P4ARj6PmNAAAAA=",
+  "Status": 201,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/orgs/5efda682a3f2ed2e7dd6cde4/liveMigrations/linkTokens",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "197"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 11:54:24 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "142"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiLiveMigrationsLinkTokensResource::createLinkToken"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
 }

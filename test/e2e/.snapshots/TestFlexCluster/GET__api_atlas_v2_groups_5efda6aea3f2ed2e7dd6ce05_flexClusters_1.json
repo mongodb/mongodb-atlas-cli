@@ -1,59 +1,53 @@
 {
-  "Content-Encoding": [
-    "gzip"
-  ],
-  "Content-Length": [
-    "790"
-  ],
-  "Content-Type": [
-    "application/vnd.atlas.2024-11-13+json;charset=utf-8"
-  ],
-  "Date": [
-    "Tue, 25 Mar 2025 21:03:30 GMT"
-  ],
-  "Referrer-Policy": [
-    "strict-origin-when-cross-origin"
-  ],
-  "Server": [
-    "mdbws"
-  ],
-  "Strict-Transport-Security": [
-    "max-age=31536000; includeSubdomains;"
-  ],
-  "Vary": [
-    "Accept-Encoding"
-  ],
-  "X-Content-Type-Options": [
-    "nosniff"
-  ],
-  "X-Envoy-Upstream-Service-Time": [
-    "196"
-  ],
-  "X-Frame-Options": [
-    "DENY"
-  ],
-  "X-Java-Method": [
-    "ApiAtlasFlexClusterResource::getAllFlexClusters"
-  ],
-  "X-Java-Version": [
-    "17.0.14+7"
-  ],
-  "X-Mongodb-Service-Version": [
-    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
-  ],
-  "X-Permitted-Cross-Domain-Policies": [
-    "none"
-  ],
-  "__body__": [
-    "H4sIAAAAAAAAANVW72/bNhD9X/ghX2ZZJPXLEmAUaeIWAYLAiJxtWDEUlHiy1VCiRlJG0iD/e0+2s7ZoncUGhi2ABMg8vrt3j+8IPxBVt7eWZB8eyMpARTKycq6zme+XSvfSk7AeN7pdalmMS934oqt94ZSw/pr7S6P7zvoRVFLEAkRQcZAcEinjEmjkVwruzlRvHRj7pm5L1Us4033rps70cNKJJVz1zZSd1A4aOwczx5Upo5SMiAGFZCyoijz+Ofy0vXJbooUob/suB+fqdolLDwRaUSiQJBvyPo5IuS26uO8Ak1zP5pcXZ6f5bIF5S922ULpat7kzO/yAMCAcnOOLAE555NHA49GCs4wGWUD/QOim3QusQvZ1jJvqIR4nEDDBeZjEgYCEyUlRVDIRGN+Ief72V5QEOeDeyZiOYwy0ohlq76h7cchwsTN6XUsw3zY7tI/f813oaos7/S3H/bK2t3n9Gd6/JVk0pl8T7Ha9u5z9vhF3icV3azf5x9lpvvjICOpgHUqwC5xdz04XF1fvEeDEUPsDHgRya+pWDAIiA7eVcvakfyWUhRFZb7u7BgXCQn6PHTWY8HKRY41/4QAH2q0UZtB+51Z0sCi9ypoq0MyzKwx6lOIzvi9L0Qbpk603Fm/BZTyhLBn9FMSOAfHnQf4ba9V2EETvVrnuTQlTIVHdEwOdqkuBCk03w+YxXtm/0qfkZPR3w7lZf+35F2vWm8ndWiiZTPZRIP9oeXaU5SkUAEEaxlCkUSSDoDjA8sj3v7b8zfz8tVu+KBu8KrvvLL9sIqGadr97fwSxY0D8edBBlv+8rFd9+ULLS91qJ1F7B70FWWkDHL/30fmZ/UMcMo+lC5ZkNDrC/nEY8TAOgZYspgmlKZ+kUfAC+0t9pd35hvsNcn+nzYzPFmDdKxyG4Wz/R7OQ1qpwvP1uFjr96ZO+a/bb+kcQOwbEnwcdNAt3ToCyB17/aTDZR+G56x/9H4YZZwdf/xyKJEpilogigTRMi7IKX+L/b/i+Qse/4Pofcmgn1OavL8nCxy9a0cyydgsAAA=="
-  ],
-  "__method__": [
-    "GET"
-  ],
-  "__path__": [
-    "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters"
-  ],
-  "__status__": [
-    "200"
-  ]
+  "Body": "H4sIAAAAAAAAANVWa2vbMBT9L/7QL4tjyYmdxBBKmrglEEqo3W2sjCJbN4lX2TKSHPqg/33XTkJb1nRNYZSBDbKu7uuco4sfLJEVN9oKrh6slYKFFVgrY0odOE4qZMVtDut2Loul5Ek7lbnDysxhRjDtrF1nqWRVaseDBWc+A9ZZuMBd6HHup0A8ZyHgdiwqbUDp46xIRcVhLKvCDI2q4KhkSziv8iE9ygzkeg5qjjtDSojVshQILEaDWFiPP+tPXQmzKTRh6U1VRmBMVixx68GCgiUCuBXUcR9bVrpJGt+VgEEuwvlsOh5FYYxxU1kUkJpMFpFRO39tWMGZwgDWtlkEgKU26/eLTgK2XqHRJgSftqS3QtDuDpUGoQJM4PYI7bVedaIfcXLfdnKOtRYbHFllVpGsVApDxvOsOFJQiixliNCw4cpemX5n/WsXHFHYNRyp9VPPX7RaN8Q34Nld2tlXglVjrIAZmOCLEVziejbp2K4fUxp43YAOfmCaRiDTGtZ9GsFDWW33e9ABBgkfcPAXPvOTQdonQNHe5J6cfEURIWt4tt8mbR8NBcvr3M/qxc1SyXXGQT2XRy0YXM+3pvON3+hbhOd5pm+i7B7OTqzAa5OnANtTp7PweyPHJSbf7l1G1+Eoiq9pjQNCaWBnmE9G8fT8DB0Mq3NfoXSxNiSF1ZLDCsxGfOFOsQsmNLSs9aa7CxDANER32FGOAWdxhDn+geT/QqAX0P4HCExc/wWBgx45gMAedT+bwPFF+J8QuHdmJWmOo7J8MbOWucdEXuwfP3860Y84uW87HTSz7pfZqkrfObO4LKThiL2BSgNfSAUurveV89r86trUtekgpr2AoPzJofL3u57b9btAUuqTHiEDtz/wOu+QP5fn0kya2i+x9lOpQjeMQZvPvgzTySw84CLUvL59D+oQ0jDR/ANYQefxN4Q5QtR/CAAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "717"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2024-11-13+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 11:55:20 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "191"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFlexClusterResource::getAllFlexClusters"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
 }

@@ -1,59 +1,53 @@
 {
-  "Content-Encoding": [
-    "gzip"
-  ],
-  "Content-Length": [
-    "275"
-  ],
-  "Content-Type": [
-    "application/vnd.atlas.2024-11-13+json;charset=utf-8"
-  ],
-  "Date": [
-    "Tue, 25 Mar 2025 21:04:22 GMT"
-  ],
-  "Referrer-Policy": [
-    "strict-origin-when-cross-origin"
-  ],
-  "Server": [
-    "mdbws"
-  ],
-  "Strict-Transport-Security": [
-    "max-age=31536000; includeSubdomains;"
-  ],
-  "Vary": [
-    "Accept-Encoding"
-  ],
-  "X-Content-Type-Options": [
-    "nosniff"
-  ],
-  "X-Envoy-Upstream-Service-Time": [
-    "274"
-  ],
-  "X-Frame-Options": [
-    "DENY"
-  ],
-  "X-Java-Method": [
-    "ApiAtlasFlexBackupResource::createRestoreJob"
-  ],
-  "X-Java-Version": [
-    "17.0.14+7"
-  ],
-  "X-Mongodb-Service-Version": [
-    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
-  ],
-  "X-Permitted-Cross-Domain-Policies": [
-    "none"
-  ],
-  "__body__": [
-    "H4sIAAAAAAAAAI3PQU+DQBAF4P/C2SbLwi6Fc6nhgk2LF29b5lUwwJLdwdgY/7tLNGr04nXel5d5rxFh6J/hrs11RlREx/LU3B3L6CbCy9w7w72ddobXSAqpNiLZSN2IpBBpIeVDcD2FTGdIYqP0GUjyVOOcK4VY52s+eTZTi9qMawvZ2vIOAxj3HrS3rpRlA8+Bzs4+oeVqbVS4kNEGJrlIkERGpFsIFZgL2jqc2g60DKDf/6lGxt//+cnMvrO876fed390vG3irBC6UPqnrj5WUW4ypAq5oFSEYQkJJcTq2PDigzmU9a6qb8OJjXtEmDYP9jpi4ooxfo5uh8Uz3Cbbbr/g4T9j394BSumN9aEBAAA="
-  ],
-  "__method__": [
-    "POST"
-  ],
-  "__path__": [
-    "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters/doNotDeleteUsedForE2ETest/backup/restoreJobs"
-  ],
-  "__status__": [
-    "200"
-  ]
+  "Body": "H4sIAAAAAAAAAI3PQU+DQBAF4P/C2SbLwi6Fc6nhgk2LF29b5mExlCW7g5EY/7tLNGqiB6/zvrzMe40IQ/8MtzTLhKiIjuWpuTuW0U2El6l3hns77gyvkRRSbUSykbqJs0KlRSofguspZDpDgrOQlBN0p40+5+1Wduc1Hz2bsUVtrmsL2dryDgMY9x60t66UZQPPgU7OPqHlam1U6MhoA5N0EiSREekWQgXmgrYOp/YCmgfQH//F3//50Uz+Ynnfj72//NLxdl0jdKH0T119rKLcZEgVckGpyFOdkFBCrI4Nzz6YQ1nvqvo2nNi4R4Rp02CXK0auGNfP0e0we4bbpHHyBQ//Gfv2DgkbXEmhAQAA",
+  "Status": 200,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters/doNotDeleteUsedForE2ETest/backup/restoreJobs",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "273"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2024-11-13+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 11:54:41 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "261"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFlexBackupResource::createRestoreJob"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
 }

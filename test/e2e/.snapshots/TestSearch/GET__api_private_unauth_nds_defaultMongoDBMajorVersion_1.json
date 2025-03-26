@@ -1,50 +1,44 @@
 {
-  "Content-Length": [
-    "3"
-  ],
-  "Content-Type": [
-    "text/plain"
-  ],
-  "Date": [
-    "Tue, 25 Mar 2025 21:03:17 GMT"
-  ],
-  "Referrer-Policy": [
-    "strict-origin-when-cross-origin"
-  ],
-  "Server": [
-    "mdbws"
-  ],
-  "Strict-Transport-Security": [
-    "max-age=31536000; includeSubdomains;"
-  ],
-  "Vary": [
-    "Accept-Encoding"
-  ],
-  "X-Content-Type-Options": [
-    "nosniff"
-  ],
-  "X-Frame-Options": [
-    "DENY"
-  ],
-  "X-Mongodb-Service-Version": [
-    "gitHash=19a62e5c8766c8233d5272d7c8db79eda5fd2331; versionString=master"
-  ],
-  "X-Permitted-Cross-Domain-Policies": [
-    "none"
-  ],
-  "X-Xgen-Up-Proto": [
-    "HTTP/2"
-  ],
-  "__body__": [
-    "OC4w"
-  ],
-  "__method__": [
-    "GET"
-  ],
-  "__path__": [
-    "/api/private/unauth/nds/defaultMongoDBMajorVersion"
-  ],
-  "__status__": [
-    "200"
-  ]
+  "Body": "OC4w",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/private/unauth/nds/defaultMongoDBMajorVersion",
+  "Headers": {
+    "Content-Length": [
+      "3"
+    ],
+    "Content-Type": [
+      "text/plain"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 11:55:21 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ],
+    "X-Xgen-Up-Proto": [
+      "HTTP/2"
+    ]
+  }
 }

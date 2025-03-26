@@ -1,0 +1,47 @@
+{
+  "Body": "eyJjdXN0b21lclg1MDkiOnt9LCJsZGFwIjp7ImF1dGhlbnRpY2F0aW9uRW5hYmxlZCI6ZmFsc2UsImF1dGhvcml6YXRpb25FbmFibGVkIjpmYWxzZSwiYmluZFVzZXJuYW1lIjoiY249YWRtaW4sZGM9ZXhhbXBsZSxkYz1vcmciLCJob3N0bmFtZSI6ImxvY2FsaG9zdCIsInBvcnQiOjE5NjU3fX0=",
+  "Status": 202,
+  "Method": "DELETE",
+  "Path": "/api/atlas/v2/groups/67e3eaf8989f247d51eb6081/userSecurity/ldap/userToDNMapping",
+  "Headers": {
+    "Content-Length": [
+      "167"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 12:03:49 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "93"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasUserSecurityResource::deleteUserSecurityLdapUserToDNMapping"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

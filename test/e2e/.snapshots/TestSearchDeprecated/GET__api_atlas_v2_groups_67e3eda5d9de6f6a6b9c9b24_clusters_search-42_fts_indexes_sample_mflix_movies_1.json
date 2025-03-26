@@ -1,0 +1,59 @@
+{
+  "Body": "H4sIAAAAAAAAACWOwQ6CMBBE/2XPaExUFM4awwUNHg0hS7tok3ZpaDFW4r9b9DrvZWZuEyCjDm8aIAc9CmJaOmWsJkhA9FqT8KrnEg1FwfRPRS4SiR5bdHPmcLYb02n1ikSxpFdxiCDd0Zo60cpMUtqlmLaZwJXMomTQWsV3B/kEMjAaJSD3w0ifBPg/9etZbDf7qDuPfowyFGVzqc6n6ni9znHgnoOJ4FYn4IP93SEcxAM+9Rd0GcfA2wAAAA==",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e3eda5d9de6f6a6b9c9b24/clusters/search-42/fts/indexes/sample_mflix/movies",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "190"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Wed, 26 Mar 2025 12:15:15 GMT"
+    ],
+    "Deprecation": [
+      "Thu, 30 May 2024 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Mon, 30 Nov 2026 00:00:00 GMT"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "55"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFTSIndexConfigResource::getFTSIndexes"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=442dd88054b83fa37e80a43bd977db7cf299554c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

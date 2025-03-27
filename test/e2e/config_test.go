@@ -51,7 +51,7 @@ func TestConfig(t *testing.T) {
 	require.NoError(t, os.WriteFile(path.Join(dir, "config.toml"), []byte(`[e2e]
   org_id = "test_id"
   public_api_key = "test_pub"
-  service = "cloud"`), os.ModePerm))
+  service = "cloud"`), 0600))
 
 	t.Run("config", func(t *testing.T) {
 		t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "")

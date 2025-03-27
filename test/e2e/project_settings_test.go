@@ -43,7 +43,7 @@ func TestProjectSettings(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var settings map[string]any
@@ -67,7 +67,7 @@ func TestProjectSettings(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var settings atlasv2.GroupSettings

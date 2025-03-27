@@ -11,12 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || brew
+//go:build e2e || e2eSnap || brew
 
 package e2e_test
 
 import (
-	"os"
 	"os/exec"
 	"strings"
 	"testing"
@@ -33,8 +32,14 @@ const (
 func TestAtlasCLIConfig(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
-	tempDirEnv := "XDG_CONFIG_HOME=" + os.TempDir() // make sure no config.toml is detected
 
+	// make sure no config.toml is detected
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("home", t.TempDir())
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	t.Setenv("AppData", t.TempDir())
+
+	// make sure no config is detected on env vars
 	t.Setenv("MONGODB_ATLAS_ORG_ID", "")
 	t.Setenv("MONGODB_ATLAS_PROJECT_ID", "")
 	t.Setenv("MONGODB_ATLAS_PUBLIC_API_KEY", "")
@@ -44,7 +49,6 @@ func TestAtlasCLIConfig(t *testing.T) {
 
 	t.Run("config ls", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "config", "ls")
-		cmd.Env = append(os.Environ(), tempDirEnv)
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		got := strings.TrimSpace(string(resp))
@@ -53,7 +57,6 @@ func TestAtlasCLIConfig(t *testing.T) {
 
 	t.Run("projects ls", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "projects", "ls")
-		cmd.Env = append(os.Environ(), tempDirEnv)
 		resp, err := cmd.CombinedOutput()
 		got := string(resp)
 		require.Error(t, err, got)
@@ -62,7 +65,6 @@ func TestAtlasCLIConfig(t *testing.T) {
 
 	t.Run("help", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "help")
-		cmd.Env = append(os.Environ(), tempDirEnv)
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})

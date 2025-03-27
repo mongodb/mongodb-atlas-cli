@@ -45,7 +45,7 @@ func TestDBUserCerts(t *testing.T) {
 			"--x509Type",
 			dbusers.X509TypeManaged,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var user atlasv2.CloudDatabaseUser
@@ -60,7 +60,7 @@ func TestDBUserCerts(t *testing.T) {
 			"create",
 			"--username", username,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -72,7 +72,7 @@ func TestDBUserCerts(t *testing.T) {
 			"list",
 			username,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -89,7 +89,7 @@ func TestDBUserCerts(t *testing.T) {
 			"--force",
 			"--authDB",
 			"$external")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 

@@ -69,7 +69,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--password", dbUserPassword,
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		var o, e bytes.Buffer
 		cmd.Stdout = &o
@@ -89,7 +89,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--projectId", g.projectID,
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(r))
@@ -120,7 +120,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--type=ATLAS",
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
@@ -134,7 +134,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--type=ATLAS",
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
@@ -158,7 +158,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			collectionNameAtlas,
 			"--watch",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, err := RunAndGetStdOut(cmd)
 		out := string(r)
@@ -178,7 +178,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--watchTimeout", "300",
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 

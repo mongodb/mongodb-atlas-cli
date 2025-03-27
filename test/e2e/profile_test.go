@@ -32,7 +32,7 @@ func validateProfile(t *testing.T, cliPath string, profile string, profileValid 
 		whoami,
 		"--profile", profile)
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 	// Execute the command
 	resp, err := RunAndGetStdOut(cmd)

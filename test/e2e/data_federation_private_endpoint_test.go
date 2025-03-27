@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && datafederation && privatenetwork)
+//go:build e2e || e2eSnap || (atlas && datafederation && privatenetwork)
 
 package e2e_test
 
@@ -48,7 +48,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		a := assert.New(t)
 		resp, err := RunAndGetStdOut(cmd)
@@ -68,7 +68,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
@@ -85,7 +85,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
@@ -104,7 +104,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		a := assert.New(t)

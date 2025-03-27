@@ -74,7 +74,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
@@ -102,7 +102,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
@@ -132,7 +132,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
@@ -160,7 +160,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
@@ -190,7 +190,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		respStr := strings.TrimLeft(string(resp), ".")
 

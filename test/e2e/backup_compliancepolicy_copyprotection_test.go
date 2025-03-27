@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && backup && compliancepolicy)
+//go:build e2e || e2eSnap || (atlas && backup && compliancepolicy)
 
 package e2e_test
 
@@ -48,7 +48,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 			g.projectID,
 			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, outputErr := RunAndGetStdOut(cmd)
 		r.NoError(outputErr, string(resp))
 
@@ -71,7 +71,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 			"--projectId",
 			g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, outputErr := RunAndGetStdOut(cmd)
 		r.NoError(outputErr, string(resp))
 

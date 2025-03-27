@@ -47,7 +47,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			desc,
 			"--role=ORG_READ_ONLY",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
@@ -63,7 +63,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			apiKeysEntity,
 			"ls",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var keys atlasv2.PaginatedApiApiUser
@@ -78,7 +78,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"ls",
 			"-c",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -98,7 +98,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			newDesc,
 			"--role=ORG_READ_ONLY",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
@@ -113,7 +113,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"describe",
 			ID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
@@ -128,7 +128,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"rm",
 			ID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)

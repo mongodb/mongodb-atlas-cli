@@ -41,7 +41,7 @@ func TestCustomDNS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
@@ -60,7 +60,7 @@ func TestCustomDNS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
@@ -79,7 +79,7 @@ func TestCustomDNS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		a := assert.New(t)

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && logs)
+//go:build e2e || e2eSnap || (atlas && logs)
 
 package e2e_test
 
@@ -71,7 +71,7 @@ func downloadLogTmpPath(t *testing.T, cliPath, hostname, logFile, projectID stri
 		projectID,
 	)
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
 		require.Contains(t, string(resp), "returned file is empty")
@@ -94,7 +94,7 @@ func downloadLog(t *testing.T, cliPath, hostname, logFile, projectID string) {
 		projectID,
 	)
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := cmd.CombinedOutput()
 	if err != nil {
 		require.Contains(t, string(resp), "returned file is empty")

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && backup && restores)
+//go:build e2e || e2eSnap || (atlas && backup && restores)
 
 package e2e_test
 
@@ -60,7 +60,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -81,7 +81,7 @@ func TestRestores(t *testing.T) {
 			clusterName,
 			"--projectId",
 			projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, _ := RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
@@ -103,7 +103,7 @@ func TestRestores(t *testing.T) {
 			"--targetClusterName",
 			clusterName2,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -123,7 +123,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -138,7 +138,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -158,7 +158,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -181,7 +181,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -201,7 +201,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -218,7 +218,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			projectID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -237,7 +237,7 @@ func TestRestores(t *testing.T) {
 			clusterName,
 			"--projectId",
 			projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, _ := RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})

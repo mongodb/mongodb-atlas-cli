@@ -53,7 +53,7 @@ func TestAlertConfig(t *testing.T) {
 			"--notificationSmsEnabled=false",
 			"--notificationEmailEnabled=true",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var alert admin.GroupAlertsConfig
@@ -78,7 +78,7 @@ func TestAlertConfig(t *testing.T) {
 			"get",
 			alertID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var config admin.GroupAlertsConfig
@@ -92,7 +92,7 @@ func TestAlertConfig(t *testing.T) {
 			settingsEntity,
 			"ls",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var config admin.PaginatedAlertConfig
@@ -107,7 +107,7 @@ func TestAlertConfig(t *testing.T) {
 			"ls",
 			"-c",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var config []admin.GroupAlertsConfig
@@ -132,7 +132,7 @@ func TestAlertConfig(t *testing.T) {
 			"--notificationSmsEnabled=true",
 			"--notificationEmailEnabled=true",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
@@ -173,7 +173,7 @@ func TestAlertConfig(t *testing.T) {
 			alertID,
 			"--file", fileName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
@@ -188,7 +188,7 @@ func TestAlertConfig(t *testing.T) {
 
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, alertsEntity, settingsEntity, "delete", alertID, "--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -200,7 +200,7 @@ func TestAlertConfig(t *testing.T) {
 			"fields",
 			"type",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 

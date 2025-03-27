@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && clusters && upgrade)
+//go:build e2e || e2eSnap || (atlas && clusters && upgrade)
 
 package e2e_test
 
@@ -44,7 +44,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 			"--projectId", g.projectID,
 			"--tag", "env=e2e",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		require.NoError(t, watchCluster(g.projectID, g.clusterName))
@@ -63,7 +63,7 @@ func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasCl
 		clusterName,
 		"--projectId", projectID,
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	req := require.New(t)
 	req.NoError(err, string(resp))

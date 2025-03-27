@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && ldap)
+//go:build e2e || e2eSnap || (atlas && ldap)
 
 package e2e_test
 
@@ -74,7 +74,7 @@ func TestLDAPWithFlags(t *testing.T) {
 			requestID,
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), "LDAP Configuration request completed.")
@@ -91,7 +91,7 @@ func TestLDAPWithFlags(t *testing.T) {
 			"-o",
 			"json",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -134,7 +134,7 @@ func TestLDAPWithFlags(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o",
 			"json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -221,7 +221,7 @@ func testLDAPDelete(t *testing.T, cliPath, projectID string) {
 		"delete",
 		"--projectId", projectID,
 		"--force")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	assert.Contains(t, string(resp), "LDAP configuration userToDNMapping deleted")
@@ -230,7 +230,7 @@ func testLDAPDelete(t *testing.T, cliPath, projectID string) {
 func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 	t.Helper()
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
@@ -244,7 +244,7 @@ func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 func testLDAPSaveCmd(t *testing.T, cmd *exec.Cmd) {
 	t.Helper()
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 

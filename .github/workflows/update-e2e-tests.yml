@@ -28,7 +28,7 @@ jobs:
           - atlas,datafederation,db
           - atlas,datafederation,privatenetwork
           - atlas,datafederation,querylimits
-          - atlas,decrypt
+          # - atlas,decrypt # requires live calls to GCP/AWS/Azure
           # - atlas,deployments,atlasclusters # one assertion connects to DB (needs live mode)
           # - atlas,deployments,local,auth,deprecated # needs docker to run
           # - atlas,deployments,local,auth,new # needs docker to run
@@ -56,6 +56,7 @@ jobs:
           - brew
           - config
           - iam
+          # - atlas,iam # need to add
           - kubernetes
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
@@ -184,12 +185,6 @@ jobs:
           pattern: snapshots_*
           path: test/e2e/.snapshots
           merge-multiple: true
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: snapshots
-          path: test/e2e/.snapshots
-          include-hidden-files: true
       - name: Find JIRA ticket
         id: find
         uses: mongodb/apix-action/find-jira@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
@@ -250,8 +245,6 @@ jobs:
           base: master
           branch: ${{ env.JIRA_KEY }}
           labels: |
-            dependencies
-            go
             auto_close_jira
           body: |
             ## Proposed changes

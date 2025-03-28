@@ -1,0 +1,47 @@
+{
+  "Body": "eyJjbHVzdGVyQ291bnQiOjAsImNyZWF0ZWQiOiIyMDI1LTAzLTI4VDEyOjE0OjExWiIsImlkIjoiNjdlNjkyOTE0N2ZkNGMwNjc4YjlkMWMxIiwibGlua3MiOlt7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTY5MjkxNDdmZDRjMDY3OGI5ZDFjMSIsInJlbCI6InNlbGYifSx7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTY5MjkxNDdmZDRjMDY3OGI5ZDFjMS9jb250YWluZXJzIiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9jb250YWluZXJzIn0seyJocmVmIjoiaHR0cHM6Ly9jbG91ZC1kZXYubW9uZ29kYi5jb20vYXBpL2F0bGFzL3YyL2dyb3Vwcy82N2U2OTI5MTQ3ZmQ0YzA2NzhiOWQxYzEvY2x1c3RlcnMiLCJyZWwiOiJodHRwczovL2Nsb3VkLm1vbmdvZGIuY29tL2NsdXN0ZXJzIn0seyJocmVmIjoiaHR0cHM6Ly9jbG91ZC1kZXYubW9uZ29kYi5jb20vYXBpL2F0bGFzL3YyL2dyb3Vwcy82N2U2OTI5MTQ3ZmQ0YzA2NzhiOWQxYzEvZGF0YWJhc2VVc2VycyIsInJlbCI6Imh0dHBzOi8vY2xvdWQubW9uZ29kYi5jb20vZGF0YWJhc2VVc2VycyJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9hdGxhcy92Mi9ncm91cHMvNjdlNjkyOTE0N2ZkNGMwNjc4YjlkMWMxL3BlZXJzIiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9wZWVycyJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9hdGxhcy92Mi9ncm91cHMvNjdlNjkyOTE0N2ZkNGMwNjc4YjlkMWMxL3Byb2Nlc3NlcyIsInJlbCI6Imh0dHBzOi8vY2xvdWQubW9uZ29kYi5jb20vcHJvY2Vzc2VzIn0seyJocmVmIjoiaHR0cHM6Ly9jbG91ZC1kZXYubW9uZ29kYi5jb20vYXBpL2F0bGFzL3YyL2dyb3Vwcy82N2U2OTI5MTQ3ZmQ0YzA2NzhiOWQxYzEvd2hpdGVsaXN0IiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS93aGl0ZWxpc3QifV0sIm5hbWUiOiJlMmUtcHJvai05NjQtdXBkYXRlZCIsIm9yZ0lkIjoiNWVmZGE2ODJhM2YyZWQyZTdkZDZjZGU0IiwidGFncyI6W119",
+  "Status": 200,
+  "Method": "PATCH",
+  "Path": "/api/atlas/v2/groups/67e6929147fd4c0678b9d1c1",
+  "Headers": {
+    "Content-Length": [
+      "1107"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 12:14:13 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "134"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasGroupsResource::patchGroup"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

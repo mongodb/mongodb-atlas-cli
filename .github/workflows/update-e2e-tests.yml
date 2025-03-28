@@ -4,9 +4,12 @@ on:
   workflow_dispatch:
   schedule:
     - cron: 0 5 * * 1-5 # weekdays at 5:00 AM UTC
+  pull_request:
+    types: [opened, labeled]
 jobs:
   update-tests:
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' || (github.event.action == 'labeled' && github.event.label.name == 'update-snapshots')
     strategy:
       fail-fast: false
       matrix:
@@ -28,7 +31,7 @@ jobs:
           - atlas,datafederation,db
           - atlas,datafederation,privatenetwork
           - atlas,datafederation,querylimits
-          - atlas,decrypt
+          # - atlas,decrypt # requires live calls to GCP/AWS/Azure
           # - atlas,deployments,atlasclusters # one assertion connects to DB (needs live mode)
           # - atlas,deployments,local,auth,deprecated # needs docker to run
           # - atlas,deployments,local,auth,new # needs docker to run
@@ -56,6 +59,7 @@ jobs:
           - brew
           - config
           - iam
+          # - atlas,iam # need to add
           - kubernetes
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
@@ -165,14 +169,45 @@ jobs:
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
         with:
           paths: e2e-tests.xml
-  pr:
+  commit:
     runs-on: ubuntu-latest
-    if: always()
+    if: always() && github.event_name == 'pull_request'
     needs: update-tests
     steps:
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+      - name: set Apix Bot token
+        id: app-token
+        uses: mongodb/apix-action/token@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
         with:
-          config: ${{ vars.PERMISSIONS_CONFIG }}
+          app-id: ${{ secrets.APIXBOT_APP_ID }}
+          private-key: ${{ secrets.APIXBOT_APP_PEM }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      - run: rm -rf test/e2e/.snapshots && mkdir -p test/e2e/.snapshots
+      - name: Download artifacts
+        uses: actions/download-artifact@v4.2.1
+        with:
+          pattern: snapshots_*
+          path: test/e2e/.snapshots
+          merge-multiple: true
+      - name: commit
+        run: |
+          git config --global user.name "${{ steps.app-token.outputs.user-name }}"
+          git config --global user.email "${{ steps.app-token.outputs.user-email }}"
+          git add test/e2e/.snapshots
+          git commit -m "Update snapshots"
+          git push
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ steps.app-token.outputs.token }}
+          labels: update-snapshots
+  pr:
+    runs-on: ubuntu-latest
+    if: always() && github.event_name != 'pull_request'
+    needs: update-tests
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -184,12 +219,6 @@ jobs:
           pattern: snapshots_*
           path: test/e2e/.snapshots
           merge-multiple: true
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: snapshots
-          path: test/e2e/.snapshots
-          include-hidden-files: true
       - name: Find JIRA ticket
         id: find
         uses: mongodb/apix-action/find-jira@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
@@ -250,8 +279,6 @@ jobs:
           base: master
           branch: ${{ env.JIRA_KEY }}
           labels: |
-            dependencies
-            go
             auto_close_jira
           body: |
             ## Proposed changes

@@ -15,6 +15,7 @@
 package e2e_test
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
@@ -45,44 +46,6 @@ const (
 	snapshotModeSkip
 )
 
-type snapshotData struct {
-	Body   []byte
-	Status int
-	Method string
-	Path   string
-
-	Headers map[string][]string
-}
-
-func (d snapshotData) Compare(v snapshotData) int {
-	methodCmp := strings.Compare(d.Method, v.Method)
-	if methodCmp != 0 {
-		return methodCmp
-	}
-
-	pathCmp := strings.Compare(d.Path, v.Path)
-	if pathCmp != 0 {
-		return pathCmp
-	}
-
-	statusCmp := d.Status - v.Status
-	if statusCmp != 0 {
-		return statusCmp
-	}
-
-	return bytes.Compare(d.Body, v.Body)
-}
-
-func (d snapshotData) Write(w http.ResponseWriter) (int, error) {
-	for k, v := range d.Headers {
-		w.Header()[k] = v
-	}
-
-	w.WriteHeader(d.Status)
-
-	return w.Write(d.Body)
-}
-
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
 type atlasE2ETestGenerator struct {
 	projectID           string
@@ -96,7 +59,7 @@ type atlasE2ETestGenerator struct {
 	t                   *testing.T
 	fileIDs             map[string]int
 	memoryMap           map[string]any
-	lastData            *snapshotData
+	lastData            []byte
 	currentSnapshotMode snapshotMode
 }
 
@@ -487,7 +450,7 @@ func (g *atlasE2ETestGenerator) storeMemory() {
 	}
 }
 
-func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) snapshotData {
+func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) []byte {
 	g.t.Helper()
 
 	filename := g.snapshotName(r)
@@ -502,12 +465,7 @@ func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) snapshotData {
 		g.t.Fatal(err)
 	}
 
-	var data snapshotData
-	if err := json.Unmarshal(buf, &data); err != nil {
-		g.t.Fatal(err)
-	}
-
-	return data
+	return buf
 }
 
 func (g *atlasE2ETestGenerator) snapshotServer() {
@@ -542,37 +500,24 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 			return nil // skip 401
 		}
 
-		data := snapshotData{
-			Path:    resp.Request.URL.Path,
-			Method:  resp.Request.Method,
-			Status:  resp.StatusCode,
-			Headers: resp.Header,
-		}
+		resp.Header.Set("X-Request-Path", resp.Request.URL.Path)
+		resp.Header.Set("X-Request-Method", resp.Request.Method)
 
-		var buf bytes.Buffer
-		if _, err := io.Copy(&buf, resp.Body); err != nil {
-			return err
-		}
-		resp.Body.Close()
-		resp.Body = io.NopCloser(&buf)
-
-		data.Body = buf.Bytes()
-
-		if g.lastData != nil && data.Compare(*g.lastData) == 0 {
-			return nil // skip same content
-		}
-
-		g.lastData = &data
-
-		out, err := json.MarshalIndent(data, "", "  ")
+		buf, err := httputil.DumpResponse(resp, true)
 		if err != nil {
 			return err
 		}
 
+		if bytes.Equal(buf, g.lastData) {
+			return nil // skip same content
+		}
+
+		g.lastData = buf
+
 		filename := g.snapshotName(resp.Request)
 		g.t.Logf("writing snapshot at %q", filename)
 		g.enforceDir(filename)
-		return os.WriteFile(filename, out, 0600)
+		return os.WriteFile(filename, buf, 0600)
 	}
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -582,8 +527,28 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 			return
 		}
 
-		data := g.readSnapshot(r)
-		if _, err := data.Write(w); err != nil {
+		buf := g.readSnapshot(r)
+
+		reader := bufio.NewReader(bytes.NewBuffer(buf))
+
+		resp, err := http.ReadResponse(reader, r)
+		if err != nil {
+			g.t.Fatal(err)
+		}
+		resp.Body = io.NopCloser(reader)
+
+		for k, values := range resp.Header {
+			for _, v := range values {
+				w.Header().Add(k, v)
+			}
+		}
+		w.WriteHeader(resp.StatusCode)
+
+		if _, err := io.Copy(w, resp.Body); err != nil {
+			g.t.Fatal(err)
+		}
+
+		if err := resp.Body.Close(); err != nil {
 			g.t.Fatal(err)
 		}
 	}))

@@ -55,10 +55,12 @@ func TestSearchNodes(t *testing.T) {
 		)
 
 		resp, err := cmd.CombinedOutput()
-		respStr := string(resp)
+		require.NoError(t, err)
+		resp = bytes.TrimLeft(resp, ".")
+		var searchNode atlasv2.ApiSearchDeploymentResponse
+		require.NoError(t, json.Unmarshal(resp, &searchNode))
 
-		require.Error(t, err, respStr)
-		require.Contains(t, respStr, "ATLAS_SEARCH_DEPLOYMENT_DOES_NOT_EXIST", respStr)
+		require.Empty(t, searchNode.GetId(), "Search node already exists")
 	})
 
 	t.Run("Create search node", func(t *testing.T) {

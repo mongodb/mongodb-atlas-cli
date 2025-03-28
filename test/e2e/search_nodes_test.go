@@ -57,8 +57,8 @@ func TestSearchNodes(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		respStr := string(resp)
 
-		require.Error(t, err, respStr)
-		require.Contains(t, respStr, "ATLAS_SEARCH_DEPLOYMENT_DOES_NOT_EXIST", respStr)
+		require.NoError(t, err, respStr)
+		require.Empty(t, respStr)
 	})
 
 	t.Run("Create search node", func(t *testing.T) {

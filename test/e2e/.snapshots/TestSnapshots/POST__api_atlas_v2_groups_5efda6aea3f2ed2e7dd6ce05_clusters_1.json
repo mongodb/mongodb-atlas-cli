@@ -1,5 +1,5 @@
 {
-  "Body": "H4sIAAAAAAAAAL1V227jNhD9lYLPiXVxLWf1prW1gQtfAkvZtFsUAU2ObDYUKZCUF97A/96h6aRxigX6svtggObMnDmcmTN6JpTvqWLAJ1o1Ytsb6oRWJH8mrLdOt6sOlLVyIrodmOBTS5ukJP/zryvSCiXavi0V3UjgaLgz2mmmJclJPa+Sx5RcESft2/CF5oDmafmpuJ/X5HhFNpQ99d0ZhOTO9ICXAt0VMKeNZwMv1oZKi2YDlN8ZaMAAskc8C0wrTs3BIzKJ5MHUh86b1uXdfDYpqrJGNiyg4iMrZ4TaWkT3EQjoYIo/DEjjdHQdD6/Tmzoe5fFNnmRfMJQL+1SJb3D7keRJPIjDzQM1WIaXZ326n8//eHwo1otyiiFIzhw6n61wa7AO67MXHPBJZLlaluixlXpD5SQQrkA2C6roFni1o4Yj7uuLt0b33QwrQEbQcJpRoMMmBZ7CmPOMQTxCNOHt2RiyFFg8usmSLElHcTZskl/5EO2SbkDa0Dwp1JM/PpMdFhLjds51No8iJnXPrznsB61WW803A6bbiHYiok5SG+3T6ETGRt9jEp0bYF8O19mY+KbJU6dkg036SWmjMF2RweprA7/pjX1lcpH5Iutb759O1Sra2Z12/4fov75Hr0dvmX5c0L+1+YzgJymTm0FMXm0X14MMDYq2fnIvOtXR3r5RWyfcO3ka6KRgp2VRdcDCHL2Zvk1zOX3jDz5T357GGr0TD7HF6LAUQjxOvjw4wewZEhGVdX49edkh9iKJzzqcre4qkg/jGFUIG/tZy76Fs96rulhOi7XXn0JVTnSvHMljVDntna4YlSdd4YrTbdd7xf93v3QGuMA1sYfyncViPEz1V3VpOAZefje8RzuiDSQuHX/5I542PHrCQhvhDiQf+z9hzSxDa4uHioSVuVLy8KOKG/p5TnlfPZZFVT8mp7n8phXMvr+aPjASfM7BX/D4S4g0WrsJGHfOPqvWt+vVqv49wQhk715CJuuyqGfLW/+9Ab+QT6PpP0dh2b/v4j7IYI19oRaqA45+izDzuiLHfwBZOdzCFQcAAA==",
+  "Body": "H4sIAAAAAAAAAL1V204bMRD9lcrPkL2EJHTflmRBqXJB2QVaqgo560ni4rVXtjdVQPn3juNACRVVX+AhkuOZc3zsmTP7SChbU1kC6yu54MtGU8uVJMkjKRtjVTWtQRoj+rxegfY5hTBRTJLvP45IxSWvmiqTdC6AYeBSK6tKJUhCilEe3cXkiFhhXsLHigGGB9l5ejUqyPaIzGl539R7EpJY3QBuckyXUFqlnRp4ii6oMBjWQNmlhgVoQPXIZ6BUklG9cYylQPGgi03tQrPscjTsp3lWoJrSs+Ilc6u5XBpkdwgktDDAHwLiMO4ch+3j+LSIwqTdS6LeLUIZN/c5f4CLM5JEYSv0OzdU4zM8Xev8ajT6dneTzsbZACEoTm9qd1pqZ2Asvs+aM8Arkcl0kmHGUqg5FX0vOAexGFNJl8DyFdUMeZ9vvNSqqYf4AqQDC0a7FGh7EQOLocdYt4Swg2zcxbs96PbmjIVR+ySOOp3T+GSBFT7FuKBzEMYXT3B575aPZIUPibiVtbVJgqAUqmHHDNatSsmlYvNWqaqA1jygVlATrONgJ8YEbykJ9gUwT4vjOO4RVzWxK5VYYJU+6tzA91eg8f2Vhi9qbp6lHBx9cOzL7I/XaiStzUrZ/1H6J3frLOkig7Mx/an0NbLv3ExOWyF5jh1st7oYkLRyzXtYrJo25oXjam5fWVRDLXi5Gxh5DaXvpX90YMd1qGyqXWtjduQoloj2g8HjsfvFxvLS7CmRURrrRpSzHnKPo3DvxeH0MidJOwzRiTA310o0Few9nxfpZJDOnAclOrOvGmlJEqLTaWNVXlKx8xaOOVXVjXP93zOm1sA4joo1ZK8iBvEwUL/kYWDrdbn58JptizEQOHjc5ntcrb11grnS3G5I0nN//KiZ+NqmNznxY3Mqxea9HtfXc3/kVX6XpXlxF+0a80FJGL7dHJ9PiM/Zg29x+ckjtVK2D9ruTx/ms4vZdFp8jRCB6u0TpD/L0mI4uXDfHHBDedea7pPkB/7rKq69D2ZYF2og32DvV0gzKnKy/Q2lCkrqGQcAAA==",
   "Status": 201,
   "Method": "POST",
   "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters",
@@ -8,13 +8,13 @@
       "gzip"
     ],
     "Content-Length": [
-      "799"
+      "793"
     ],
     "Content-Type": [
       "application/vnd.atlas.2023-02-01+json;charset=utf-8"
     ],
     "Date": [
-      "Fri, 28 Mar 2025 05:08:15 GMT"
+      "Fri, 28 Mar 2025 10:37:17 GMT"
     ],
     "Deprecation": [
       "Mon, 5 Aug 2024 00:00:00 GMT"
@@ -38,7 +38,7 @@
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "611"
+      "590"
     ],
     "X-Frame-Options": [
       "DENY"

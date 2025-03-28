@@ -1,0 +1,47 @@
+{
+  "Body": "eyJkZXRhaWwiOiJVbmV4cGVjdGVkIGVycm9yLiIsImVycm9yIjo1MDAsImVycm9yQ29kZSI6IlVORVhQRUNURURfRVJST1IiLCJwYXJhbWV0ZXJzIjpbXSwicmVhc29uIjoiSW50ZXJuYWwgU2VydmVyIEVycm9yIn0=",
+  "Status": 500,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/groups/67e67be201342155824fd0bf/clusters/cluster-11/index",
+  "Headers": {
+    "Content-Length": [
+      "122"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:43:12 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "50"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasClustersIndexResource::createRollingIndex"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

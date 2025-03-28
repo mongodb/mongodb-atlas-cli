@@ -1,0 +1,53 @@
+{
+  "Body": "eyJkZXRhaWwiOiJBIHVzZXIgd2l0aCB1c2VybmFtZSBjbGktdGVzdC04MTI2QG1vb25nb2RiLmNvbSBhbHJlYWR5IGV4aXN0cy4iLCJlcnJvciI6NDA5LCJlcnJvckNvZGUiOiJVU0VSX0FMUkVBRFlfRVhJU1RTIiwicGFyYW1ldGVycyI6WyJjbGktdGVzdC04MTI2QG1vb25nb2RiLmNvbSJdLCJyZWFzb24iOiJDb25mbGljdCJ9",
+  "Status": 409,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/users",
+  "Headers": {
+    "Content-Length": [
+      "186"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:38:06 GMT"
+    ],
+    "Deprecation": [
+      "Wed, 19 Feb 2025 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Fri, 31 Jul 2026 00:00:00 GMT"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "45"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiUsersResource::addUser"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

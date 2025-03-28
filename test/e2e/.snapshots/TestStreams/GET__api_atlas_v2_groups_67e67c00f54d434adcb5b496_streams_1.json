@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAABWOsQ6CMBQA/+UNTkqLFogkxMHdsBuH0j6Q2FLS98pC+HdhvFvuVnDj9COo3yt8I/ZQw5d5ploI40KyF4tL5sM0BNtlJnih51FodprEchVDDGkmUVZYVkbKvlBW3ZS2pis6dS8FcUTt6THrAV/JN/lpZPTUYmx30+RSwhkiur1K6HrYPgdScnwc7cCBtXuGNDHUcvsDe6IjFK0AAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e67c00f54d434adcb5b496/streams",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "167"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:37:54 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "62"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiStreamsResource::getGroupTenants"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

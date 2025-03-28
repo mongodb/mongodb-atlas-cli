@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAALWWb2/bNhDGv8qgF32z2OZfSSQQbEnWFR3WJGiVDugwDKR4dLhQkkFRLtYi332UHDitUm8IBgMGDJ5Od/f8fHrkz5l37V2fyd8/Z7cBbCaz2xg3vVytat8NZmFgu2y6dt0Zvay7ZqU2bqWiV/1qS1br0A2bfsXBGpUrUNQSMAQKY/IaEF8NPYT+B+tVjNBWoJr+1CrfwwvX1n4wcNENbTyNYdhHrsL6ZrzpIW+j1nA5NKf4hYvQ9NcQrlPkFCOUnWQBfBq3B2+z+z/GYz/4uJNSj4XD3+ny65cpsw6gIpizmAIEEbRAZIHLCiPJS8mKDynFutDHS9VASjlrTbohBZ1JJw5M1zQv6lwjy7DWQmuNizJdTxji2RBvd2X5AtEFKSskJMGSsw8PGfuqa9d5532X4k2nnR+laQiZbAfvT7IurN/AGOhv3eZdVHHox9suqtfvRxGh8zCqy169vbq5/vPqt8uXb7Oke4Tc7lqoafCl2nf68YufLrs/+S8wZIHwAqMK5xIxyZ+AOXeqrfdgcmxqLohQIHghclMbhkuDzbfBYFZhLtOHlDMwv7rew9GY6Gnm5TZ9KQNqPTgVnokFL1CSkFe4lLiQNJ9juXCbkMrvuSDBKKkRLxnmjGHKrBbpfGBhEu5irIvmC1M5PfgJ93HI1Luxl3HX51+g3Lx7CoUmIhMULtPCMzaH8lOAj3sirLCspqVNm6IMxXkBolQHH6GiwlQy8bCAXxA5h/qugfZoRNLT83Gpd02evyN08hQ8To7JHMfPzrsNPK4IpxRoKXRuS0sMZrnC1OIDQHiFprKEz4BcdG0fVRtd222/ewMtfEoSj0XHThKWza7NM/lMnovYaC0saeFzPq+GJGTbPZouFQJqYTGySmMriGaspOwgIJz8ikg695Zz9Uk93Zfse8ppWRBORJGPW/j/4ax38y/12PCZbNhku3x8H1EiMZ2z+QVCB4/2whVHInlZUbD0PrLKECMwrQ/bLpa0kIzO0LyHsFVwdzzn/Wsae7l96PM1lJQau6j89Bcgk8X9PwXozSGKCAAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/users",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "798"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2025-02-19+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:38:04 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "39"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiGroupUsersResource::getGroupUsers"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "Body": "H4sIAAAAAAAAAE1QXYvCMBD8L3lWSdtL2utb1Z4IImJ6H9yLxGZbgm1aklTw5P77bbHH3UMg7Mzs7MydnGV5GXoB3mtTO5LeCRh5bkCR1NsBvmekbAbnwRa3HkhKjvlht11lIi8IQp0xUHrdGeHtpB8VFqSHNT4UhDRkcxrNw6SgLKVxSqNPlNa2G/otuhAGlZJcgoyqEFQIsVK8BMqQpEecx8BxGrOEBzwIGeVRRc+JQrztTN2tl29gHd6A3GRBFxwBI9vRezp9/hQ847C33VUrsP/DjvHxf5ig/UOXvQvkK+0uQn/BZklStqB/CybWyy7/QJqFGs2n2as45ZkoTgHBHpzHCiZgdcyzYrvfoAAvarWRY23o6x8F5r+tV7JxMCPXR6YjNCAdiBvmaHHNrhDk+wcnlgWHtgEAAA==",
+  "Body": "H4sIAAAAAAAAAE1QXY+CMBD8L31Wg1TA8IbKGRNiDOU+ci+m0IU0QiFtMfGM//22kYv30GTTmdnZmTspeXUZBwbWStUYEt8JKF62IEhs9QiPGana0VjQxW0AEpM8PWWHbcLSgiDUKwWVlb1iVk96p9DALezwocD3/GDu0bm/LpZeTKPYp98obXQ/Dgd0IQHUgoccOK19ED5EQoQVeAGSpMPDCMKoBFoHK7GiKy6qMuAQOrzrVdPvNh+gDd6A3PXCW4QIKN457+n0+ZI69qD7qxSg/4d18XE+TdDxqUs+GfKFNBcmf2C/IXGw8F4LJtZbln4hTUOD5tPfOzunCSvOS4I9GIsVTMA2T5PicNyjAC/qpOKuNvS1zwLTv9Zr3hqYkeszUw4tcAPshjk6XJMVjDx+AX6xT6W2AQAA",
   "Status": 201,
   "Method": "POST",
   "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters",
@@ -8,13 +8,13 @@
       "gzip"
     ],
     "Content-Length": [
-      "316"
+      "315"
     ],
     "Content-Type": [
       "application/vnd.atlas.2024-11-13+json;charset=utf-8"
     ],
     "Date": [
-      "Fri, 28 Mar 2025 05:07:02 GMT"
+      "Fri, 28 Mar 2025 10:37:23 GMT"
     ],
     "Referrer-Policy": [
       "strict-origin-when-cross-origin"
@@ -32,7 +32,7 @@
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "449"
+      "413"
     ],
     "X-Frame-Options": [
       "DENY"

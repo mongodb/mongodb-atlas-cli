@@ -1,0 +1,53 @@
+{
+  "Body": "eyJhdXRvRXhwb3J0RW5hYmxlZCI6ZmFsc2UsImNsdXN0ZXJJZCI6IjY3ZTY3YmUyZjU0ZDQzNGFkY2I1YWQyOCIsImNsdXN0ZXJOYW1lIjoiYmFja3VwU2NoZWR1bGUtOTI2IiwiY29weVNldHRpbmdzIjpbXSwibGlua3MiOlt7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTY3YmRlZjU0ZDQzNGFkY2I1YWI0NC9jbHVzdGVycy9iYWNrdXBTY2hlZHVsZS05MjYvYmFja3VwL3NjaGVkdWxlIiwicmVsIjoic2VsZiJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9wdWJsaWMvdjEuMC9ncm91cHMvNjdlNjdiZGVmNTRkNDM0YWRjYjVhYjQ0IiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9ncm91cCJ9XSwibmV4dFNuYXBzaG90IjoiMjAyNS0wMy0yOFQxNjo0NToxMFoiLCJwb2xpY2llcyI6W3siaWQiOiI2N2U2N2RiNWRlMWM2ZTQ1YTJlMDZmMGUiLCJwb2xpY3lJdGVtcyI6W3siZnJlcXVlbmN5SW50ZXJ2YWwiOjYsImZyZXF1ZW5jeVR5cGUiOiJob3VybHkiLCJpZCI6IjY3ZTY3ZGI1ZGUxYzZlNDVhMmUwNmYwZiIsInJldGVudGlvblVuaXQiOiJkYXlzIiwicmV0ZW50aW9uVmFsdWUiOjd9LHsiZnJlcXVlbmN5SW50ZXJ2YWwiOjEsImZyZXF1ZW5jeVR5cGUiOiJkYWlseSIsImlkIjoiNjdlNjdkYjVkZTFjNmU0NWEyZTA2ZjEwIiwicmV0ZW50aW9uVW5pdCI6ImRheXMiLCJyZXRlbnRpb25WYWx1ZSI6N30seyJmcmVxdWVuY3lJbnRlcnZhbCI6NiwiZnJlcXVlbmN5VHlwZSI6IndlZWtseSIsImlkIjoiNjdlNjdkYjVkZTFjNmU0NWEyZTA2ZjExIiwicmV0ZW50aW9uVW5pdCI6IndlZWtzIiwicmV0ZW50aW9uVmFsdWUiOjR9LHsiZnJlcXVlbmN5SW50ZXJ2YWwiOjQwLCJmcmVxdWVuY3lUeXBlIjoibW9udGhseSIsImlkIjoiNjdlNjdkYjVkZTFjNmU0NWEyZTA2ZjEyIiwicmV0ZW50aW9uVW5pdCI6Im1vbnRocyIsInJldGVudGlvblZhbHVlIjoxMn0seyJmcmVxdWVuY3lJbnRlcnZhbCI6MTIsImZyZXF1ZW5jeVR5cGUiOiJ5ZWFybHkiLCJpZCI6IjY3ZTY3ZGI1ZGUxYzZlNDVhMmUwNmYxMyIsInJldGVudGlvblVuaXQiOiJ5ZWFycyIsInJldGVudGlvblZhbHVlIjoxfV19XSwicmVmZXJlbmNlSG91ck9mRGF5IjoxMCwicmVmZXJlbmNlTWludXRlT2ZIb3VyIjo0NSwicmVzdG9yZVdpbmRvd0RheXMiOjcsInVzZU9yZ0FuZEdyb3VwTmFtZXNJbkV4cG9ydFByZWZpeCI6dHJ1ZX0=",
+  "Status": 200,
+  "Method": "PATCH",
+  "Path": "/api/atlas/v2/groups/67e67bdef54d434adcb5ab44/clusters/backupSchedule-926/backup/schedule",
+  "Headers": {
+    "Content-Length": [
+      "1238"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:45:58 GMT"
+    ],
+    "Deprecation": [
+      "Mon, 5 Aug 2024 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Sat, 30 May 2026 00:00:00 GMT"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "114"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasDiskBackupScheduleResource::patchSnapshotSchedule"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

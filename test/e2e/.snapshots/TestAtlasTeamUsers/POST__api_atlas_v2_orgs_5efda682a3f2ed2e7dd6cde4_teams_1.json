@@ -1,0 +1,56 @@
+{
+  "Body": "H4sIAAAAAAAAAH2OsRKCMBBE/+Vq5SBAQCr/w6E4uQtkDAmTAI3jv4tWVpa7szvvPcEydKAb0c2QV3lRVqqo61ZVhhtu4QTO+keC7vaEKYo5ttO6LqlDHFzY+MyyZ3PwY+B7NoQZabFIq6OEu8IQx4S1GCbdKiqNElbSMOuBpcJVaE74Bx3FHbwkzsCrP4GnWY78ven8cgy2JPHTfvyAPEehjPxog7POheuPF/SvN0g44FXrAAAA",
+  "Status": 201,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/orgs/5efda682a3f2ed2e7dd6cde4/teams",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "183"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:37:56 GMT"
+    ],
+    "Location": [
+      "https://cloud-dev.mongodb.com/orgs/5efda682a3f2ed2e7dd6cde4/teams/67e67c0401342155824fd7d8"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "128"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiOrganizationTeamsResource::createTeam"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

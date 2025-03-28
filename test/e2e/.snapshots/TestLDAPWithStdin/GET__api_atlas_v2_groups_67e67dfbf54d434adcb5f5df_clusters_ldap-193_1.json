@@ -1,0 +1,59 @@
+{
+  "Body": "H4sIAAAAAAAAAL1V247aMBD9lcrPuySBhW3zlgJdUXFZkWy3F1UrJ56Au44d2Q4VXfHvHcfpFqha9aV9QAqZmTPHnjknT4SyHZUFsLGSJd80mlquJImfSNEYq6pVDdIYMeb1FrTPyYSJ+iT+9PmCVFzyqqmmkuYCGAZutbKqUILEJJun0UOfXBArzHH5QjHA8GT6JrmbZ+RwQXJaPDZ1B0LikgoD+JZjvoTCKu3owFlYA2W3GkrQgPQR0EChJKN67yALgexBZ/vahdbT2/lsnKTTDOkUHhVPmVrN5cYguqtAQAsT/GFBP+wPL8PBZf9lFoXx1SjuRx+xlHHzmPJvcPOaxIOwF/o391TjPfw415u7+fzDw32yXkwnWILk9L523RK7BmPxgnacAR6JLFfLKWZshMqpGHvCKYhyQSXdAEu3VDPEfT7xRqumnuENkNE1jK5ZmZfDK3Y1uKKsyIflkJWIxo/i7CQ+Go0wLmgOwvjpCS4f3eMT2eJFYt3W2trEQVAI1bBLBrtepeRGsbxXqCqgNQ+oFdQEu37QkjHB75gE3QBMIBitL6NXA+JGJto5iRJH9F+aBn61Ao03rzS8Vbl55nHS96TncfZ/Jmokrc1W2b+h+TP34KToIpPXC/pF6XcI3aqYvOyF5Dl28rrntkHSyu3s0Yxq2pgjldXcnutSQy140dpEWkPhF+gPazdsGzVVu8+YHTmIDVZ7O/D1uPJib3lhOkhElMY6Y3J6Q+xFFHYCnK1uUye/EOUHuXmnRFNBJ/Q0S5aTZO2EJ1GOY9VIS+IQ5U0bq9KCilZQaG6qqhsn9V+NpdbAOPrDDs5PbrAeJuqrPA0cPC9nCudoB4yBQLdxL//F0QYHR5grze2exNfuj/eXpZ9scp8S75UrKfb/6nL9PLuWd+nDNEmzh6hdy29KwuwPywHE53TFH/Hxha/UStkxaNt1n6Xrm/Vqlb2PsALZ2x8l4/U0yWbLG/eloZvO2lBc6MntkrpPkvf783nuvB7WOCFqIN2jJCsEnGcpOXwHZwVb2xkHAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e67dfbf54d434adcb5f5df/clusters/ldap-193",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "782"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:46:22 GMT"
+    ],
+    "Deprecation": [
+      "Mon, 5 Aug 2024 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Sun, 1 Mar 2026 00:00:00 GMT"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "65"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasClusterDescriptionV15Resource::getCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

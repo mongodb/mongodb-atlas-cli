@@ -1,0 +1,47 @@
+{
+  "Body": "eyJsaW5rcyI6W3siaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9hdGxhcy92Mi9ncm91cHMvNjdlNjdiZjVmNTRkNDM0YWRjYjViMmMzL3RlYW1zLzY3ZTY3YmY3MDEzNDIxNTU4MjRmZDUxMz9wYWdlTnVtPTEmaXRlbXNQZXJQYWdlPTEwMCIsInJlbCI6InNlbGYifV0sInJlc3VsdHMiOlt7ImxpbmtzIjpbeyJocmVmIjoiaHR0cHM6Ly9jbG91ZC1kZXYubW9uZ29kYi5jb20vYXBpL2F0bGFzL3YyL2dyb3Vwcy82N2U2N2JmNWY1NGQ0MzRhZGNiNWIyYzMvdGVhbXMvNjdlNjdiZjcwMTM0MjE1NTgyNGZkNTEzIiwicmVsIjoic2VsZiJ9XSwicm9sZU5hbWVzIjpbIkdST1VQX1JFQURfT05MWSIsIkdST1VQX0RBVEFfQUNDRVNTX1JFQURfT05MWSJdLCJ0ZWFtSWQiOiI2N2U2N2JmNzAxMzQyMTU1ODI0ZmQ1MTMifV0sInRvdGFsQ291bnQiOjF9",
+  "Status": 200,
+  "Method": "PATCH",
+  "Path": "/api/atlas/v2/groups/67e67bf5f54d434adcb5b2c3/teams/67e67bf701342155824fd513",
+  "Headers": {
+    "Content-Length": [
+      "435"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:37:44 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "120"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiGroupTeamsResource::patchTeam"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

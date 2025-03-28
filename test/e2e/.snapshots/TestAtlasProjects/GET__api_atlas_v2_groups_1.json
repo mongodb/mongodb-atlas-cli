@@ -1,0 +1,50 @@
+{
+  "Body": "H4sIAAAAAAAAAM2aXYvbOBSG/0rJRa/qRpIlWTaUZRjapdAtw7bLwi69kKXjjLeOHWwnsJT+95UzQzdyTj6GkYsvE4c30uPzpXP0bVGV9ddukf39bXHfQrHIFvd9v+my5dJUzdZGFnav1029amz+2jTrpd6US91Xulvu2HLVNttN90tZm2pr4bbZ1v2bvt3Cy41ewcft+g19Wfaw7u6gvXPfvKGELF4tWqjc33RQFYvvX4aP3bbqH5bgdLoe2r3SIlOvFqYF3YN1v2eEkYgkEWGfSZrRNOPyLydWDs8EFFZLDTouGFgGibXSABHu+fO3tzyjPtpKrdfgPt8MAi9uP7x/8Za9db9q2tX7/5epmCdkgbuf9Ho1rPLL91djCHQEQUQkjpj6TEkWy0ykPyDIBGSSm5TQmDMqhGK8MJokYSCcUT8BYds3K6ihHZZ+26zXurZdBAwilrIpoSRZzEZQQBeCWx5zbU0ucpLQkFBQdRyKNga67kOz6iLJaQRUyxSKmJs8To3U3DgdylJLlEyUAVPEBU+0mhYXO8JFDjekTZwGxYWpX8Q1GE4sxJQkWMaVT0Ibe7jW1IIOSAJXP0FiEPjUu6WvuygmJOK6oEZQbqHIc1U4e9FSSK2g4LmkmhoGVAmbTGs6hIzDT+693KTgQcMPpn4FsH3UIXRKFvQoFGvnxgfB0r2VkFEHV8dZ5Np83W5+h65vXLKNEpbOwXyY87fYR6YSdviCE05DRh5c/SpkKiUzCdZUjjzO5l5KdosK6XGo+lXIBp+Tik9pQKkDMvI56iUXZVMS0udQ9WtosIjG80j3LCPjOOXi6GEaSpOgSQ5VP8fsk7kHu61cupd8DnFqqJDo2OnAS0Q5D5rmUPWrkA1OJ6ScuLyOj8rrwyBhWVCnw9VxGo+76N6V1RB81Cw8zpkPHwNj3pZIXgQFhqlfAWwfscXUVRIZV0nciw8xmKBVEqZ+gUXlthYxmcwl+IwzPnDv/dKg8RpXP0/sNxIJEc/E2WhyVCB50TTVgQskRP0irsHVEh7/5HO9LbxirtAsKAlM/TyJPzarVluI+FwiNR1Hapt4m8p1UF9D1a9Dts/06tn9EPJUX/KPAzpodxFVx3FY3et3YIfuYtnUd225c3t4W9tNU9Z9d/Pnpz0gnjy7FDoPiI/br4UXDpwpB+pBn1HHAQ3b37TNPxEX5EkMvi2+wr+DQL1zX+50tX2UWwxwHp45YXvwsNBV5x4/md749JYDeLmH0zxoZsPUcXplvSv7vWk9HGQFeRrEADW18ZvKNqghoeo4isrqjYs080jvMhNjmzHKCxppGrS3j6qfAbU3lnjiipAeHUeFn0fikDU0ro4zWEPflqaL4ng2/TI1ZuWZvtYsLCtM/Tyr/WTj55uMdzDSyoatijF1HENTu3+Fm9bclzvoolTMpRZkRyGZ+OdqGtRyUPWrkA0GlPKJZ6rHp9DYe8UQuOmDqeM0NtAWTbvWtYEbuyu7pt0TUXzi2o+Jo66Ot2bLwhLB1E8QOVEOJ/zZUeYcEpnx8Ykz9w84SkNIJKj6dUh+vbuNlBBzafEcTeCpPyNP46CmhKmf4tYMI/hhBMbmMcDAuvGjzgMPemxA1S/R2if1ifvwdDx8t9y/nWODlsKoOs6hA+2SU5TEfC4mc+GKS27D9lAx9bOo9vbCJr3e4s5O41rYSP8+hQxa0aDq5yh8bCwMt1tmYTQkI6NmoGbeJEoXNuioAlW/jEtREglJU3dQLRK3YeemxjCihZSq0IaxtOBACSkSOXEP47gZ5k/uHgaT4ZphmPopXu0O2sqF5oiKZBbmhZ5MvQBr06C4UPWLuIa4RMmUgwrGMkHH14C8a6aplCHno7j6KRL9dhPRmdz+oRkfkdLKa5nncag7z2fUz5ESs7mxMY5F4F1D0QWEragx9ROg7nVrwd4+znMilf68gPTMaQ+EDUiY+nXMHlryU892xjVjIbymOTNBTQhVx3H0Py61yuSpodmp9E2vq0cEnH//D/DzCloDMgAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:37:50 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "298"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasGroupsResource::getAllGroups"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

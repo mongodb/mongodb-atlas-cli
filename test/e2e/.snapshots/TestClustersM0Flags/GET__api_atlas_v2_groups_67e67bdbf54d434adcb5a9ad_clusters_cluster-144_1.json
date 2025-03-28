@@ -1,0 +1,59 @@
+{
+  "Body": "H4sIAAAAAAAAAL1UXW/aMBT9K5OfC0kgFJq3lGYVE9AqSdet01Q58U3wauzINki06n/fdQJd6bRqT31AMvfec+7nyRMpaPmwaRJJCwGMRBUVBk5IwadKSiit0iR6IvDGrYGyaw0VaJAlkIgYKJVkVO/I8wkpxcZY0Pmuca40uZ7PpnGW5ARdHStXMrOay9ogu0MgoYUL/CFg4A9GPX/YG0zywI+G4yiY3CGUcfOQ8Ue4PCeR3x91hluq10izUMwhP9/M59/vb+N0kVwgAmvTu8Yli20Kxl5rteUMsCOyvFomGFELVVAx7erNQFQLKmkNLFtRzZD3peFaq00zwwGQ0zGcjgtWVKOQhcOQsrIY0TPKkI2/8oMfDMNBMBpNBmFVVsEY/YIWILDjHz/xzeWDez6RFc4RcStrGxN5XinUhvUYbPtrJWvFin6p1h5tuEetoMbbDry2GOP9qxJvP39zePSCMCRuaaLdlKhwSR+V1+vuy9M4f6XhiyrMSylHqY/Svo7++FqNpI1ZKfs/lf6Jfcattp6L8wX9pfRXZMfTQ/Sk75MX35G5f4oOSdfueI+X1dCNeSW4htu3EtXQCF7SVksNlN0xvXOC/tDl2qzb28bowFHUiEalV7zu8CBQnS7PnhItVeUEu4WZNJai2p0GMcnC9cT/sqGY3RRROwe1Lbv24tvMtaW50tzuSDR2f44i8mQZL3NyKGtvvcnukzjL74N2wI9KwuydHinpYvbgO3x+6pBaKTsFbfdfpVmWXqZXV/m3ABHYhD1ApmkS57PlJZotrfdqxb3gZ6adNbZluy/Y24Vsu82mOENqINvhNtdIOM8z8vwblSoYh2gFAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e67bdbf54d434adcb5a9ad/clusters/cluster-144",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "638"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:37:19 GMT"
+    ],
+    "Deprecation": [
+      "Mon, 5 Aug 2024 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Sun, 1 Mar 2026 00:00:00 GMT"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "63"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasClusterDescriptionV15Resource::getCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

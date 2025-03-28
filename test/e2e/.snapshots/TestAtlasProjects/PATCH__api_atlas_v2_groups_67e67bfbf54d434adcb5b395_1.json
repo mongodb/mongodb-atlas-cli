@@ -1,0 +1,47 @@
+{
+  "Body": "eyJjbHVzdGVyQ291bnQiOjAsImNyZWF0ZWQiOiIyMDI1LTAzLTI4VDEwOjM3OjQ5WiIsImlkIjoiNjdlNjdiZmJmNTRkNDM0YWRjYjViMzk1IiwibGlua3MiOlt7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTY3YmZiZjU0ZDQzNGFkY2I1YjM5NSIsInJlbCI6InNlbGYifSx7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTY3YmZiZjU0ZDQzNGFkY2I1YjM5NS9jb250YWluZXJzIiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9jb250YWluZXJzIn0seyJocmVmIjoiaHR0cHM6Ly9jbG91ZC1kZXYubW9uZ29kYi5jb20vYXBpL2F0bGFzL3YyL2dyb3Vwcy82N2U2N2JmYmY1NGQ0MzRhZGNiNWIzOTUvY2x1c3RlcnMiLCJyZWwiOiJodHRwczovL2Nsb3VkLm1vbmdvZGIuY29tL2NsdXN0ZXJzIn0seyJocmVmIjoiaHR0cHM6Ly9jbG91ZC1kZXYubW9uZ29kYi5jb20vYXBpL2F0bGFzL3YyL2dyb3Vwcy82N2U2N2JmYmY1NGQ0MzRhZGNiNWIzOTUvZGF0YWJhc2VVc2VycyIsInJlbCI6Imh0dHBzOi8vY2xvdWQubW9uZ29kYi5jb20vZGF0YWJhc2VVc2VycyJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9hdGxhcy92Mi9ncm91cHMvNjdlNjdiZmJmNTRkNDM0YWRjYjViMzk1L3BlZXJzIiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9wZWVycyJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9hdGxhcy92Mi9ncm91cHMvNjdlNjdiZmJmNTRkNDM0YWRjYjViMzk1L3Byb2Nlc3NlcyIsInJlbCI6Imh0dHBzOi8vY2xvdWQubW9uZ29kYi5jb20vcHJvY2Vzc2VzIn0seyJocmVmIjoiaHR0cHM6Ly9jbG91ZC1kZXYubW9uZ29kYi5jb20vYXBpL2F0bGFzL3YyL2dyb3Vwcy82N2U2N2JmYmY1NGQ0MzRhZGNiNWIzOTUvd2hpdGVsaXN0IiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS93aGl0ZWxpc3QifV0sIm5hbWUiOiJlMmUtcHJvai00NTAtdXBkYXRlZCIsIm9yZ0lkIjoiNWVmZGE2ODJhM2YyZWQyZTdkZDZjZGU0IiwidGFncyI6W3sia2V5IjoiZW52IiwidmFsdWUiOiJlMmUifSx7ImtleSI6ImFwcCIsInZhbHVlIjoiY2xpIn1dfQ==",
+  "Status": 200,
+  "Method": "PATCH",
+  "Path": "/api/atlas/v2/groups/67e67bfbf54d434adcb5b395",
+  "Headers": {
+    "Content-Length": [
+      "1162"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:37:52 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "251"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasGroupsResource::patchGroup"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

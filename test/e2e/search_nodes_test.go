@@ -39,7 +39,7 @@ func TestSearchNodes(t *testing.T) {
 	req.NoError(err)
 
 	g.generateProject("searchNodes")
-	g.tier = tierM10
+	g.tier = tierM20
 	g.mDBVer = minSearchNodesMDBVersion
 	g.generateCluster()
 

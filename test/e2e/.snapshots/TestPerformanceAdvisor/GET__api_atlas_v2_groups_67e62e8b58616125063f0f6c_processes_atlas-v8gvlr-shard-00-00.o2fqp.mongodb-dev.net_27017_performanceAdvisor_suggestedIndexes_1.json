@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAKtWKs5ILEgtVrKKjtVRKi5NT08tLklN8cxLSa2AiNYCAM+IOQ0jAAAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e62e8b58616125063f0f6c/processes/atlas-v8gvlr-shard-00-00.o2fqp.mongodb-dev.net:27017/performanceAdvisor/suggestedIndexes",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "51"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 05:15:14 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "83"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasPerformanceAdvisorResource::getSuggestedIndexes"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

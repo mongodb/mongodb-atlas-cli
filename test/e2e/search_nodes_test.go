@@ -186,7 +186,6 @@ func TestSearchNodes(t *testing.T) {
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID,
 			"--force",
-			"-w",
 			"-o=json",
 		)
 

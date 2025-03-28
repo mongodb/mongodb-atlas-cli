@@ -550,10 +550,21 @@ func RandClusterNameWithPrefix(prefix string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	clusterName := fmt.Sprintf("%s-%d", prefix, n)
 	if revision, ok := os.LookupEnv("revision"); ok {
-		return fmt.Sprintf("%s-%v-%s", prefix, n, revision), nil
+		clusterName = fmt.Sprintf("%s-%v-%s", prefix, n, revision)
 	}
-	return fmt.Sprintf("%s-%v", prefix, n), nil
+
+	if len(clusterName) > 23 {
+		clusterName = clusterName[:23]
+	}
+
+	if clusterName[len(clusterName)-1] == '-' {
+		clusterName = clusterName[:len(clusterName)-1]
+	}
+
+	return clusterName, nil
 }
 
 func RandIdentityProviderName() (string, error) {
@@ -583,10 +594,21 @@ func RandProjectName() (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	projectName := fmt.Sprintf("e2e-%v", n)
 	if revision, ok := os.LookupEnv("revision"); ok {
-		return fmt.Sprintf("%v-%s", n, revision), nil
+		projectName = fmt.Sprintf("%v-%s", n, revision)
 	}
-	return fmt.Sprintf("e2e-%v", n), nil
+
+	if len(projectName) > 23 {
+		projectName = projectName[:23]
+	}
+
+	if projectName[len(projectName)-1] == '-' {
+		projectName = projectName[:len(projectName)-1]
+	}
+
+	return projectName, nil
 }
 
 func RandUsername() (string, error) {

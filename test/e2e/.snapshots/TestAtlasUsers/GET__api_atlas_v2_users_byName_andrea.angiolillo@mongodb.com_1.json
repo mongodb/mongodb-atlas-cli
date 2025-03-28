@@ -1,0 +1,59 @@
+{
+  "Body": "H4sIAAAAAAAAALWSwW7CMAyG36VnStvQltLTekAIaYIJMU1imqY0cdtoaYOSlGlCvPsMBUYvaIftFtuff/+Ws3eYahurv5zUmU+dgcM0UAs8s5ggPvFdn7hBsg78NErScLxBBGoqZMa5BmOQog2+6JA2pVBSSKkeatWUiudDpmrEC6GNXdAakM1OLCYFxyiCMGejeMzi3C/CIM8neZ4H4wTrkhqbtbbqXESuP3JJsvYnKQnSKNyciavqZfQxL5oPtPW6dyoNBVYra7cm9TwmVctdDrvhjT+PboVHLYp5O+K1BrTx7tjSIFHRgCycw+DvJ3iflbAghbHXWT3tnu4P+y9WKGN438ffebmBD2+IKwndDZQu592pC07jhNBRQYATGHMeMw6h08HnQy5Xs/fly2K6Oq1UatVub7op9LrBj/rds9Xy+enSjy4s0HrOjz4wOG7bdNz9D3v4BqwxQwATAwAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/users/byName/andrea.angiolillo@mongodb.com",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "354"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 12:14:22 GMT"
+    ],
+    "Deprecation": [
+      "Wed, 19 Feb 2025 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Fri, 31 Jul 2026 00:00:00 GMT"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "70"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiUsersResource::getUserByName"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

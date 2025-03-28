@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAL2W3UvdMBiH/xXphVfWk++0BRlDHAgyZPNqw4s0eVM7+3Fo0gND/N+XqnOnXY9T7Nllm/A0efJ78/Yuqsrm1kXZ97vopgMbZdGN92uXrVa6ansTG9gc121TtCY/1m29UutypXyl3GpDVkXX9mv3oWx01Rs4bfvGn/iuh8O1KuBzX5/gw9JD7S6huwxvTjBC0VHUQRU+46Cy0f318Oj6yj8uIXCch+6BFGXkKNIdKA8mzCeIoBjJGJErlGY4zZj4FmDlMMbBGiUUKGoJGALSGKEB8TD+/u2tXqBPttKoGsLzxwFwcHpxfnBGzsKstivO/ywzISOQARameFUMq7y+P5pKwBMJPEY0JskVRhkVGU+fJQgJQuY6RZgygjlPCLNaIbmMhBfoOyT0vi2ggW5Y+mlb16oxLgYCMUnJPqXIjJCJFECWM8MoU0bnXGmaLilllj4vRWkNzl20xaMJyvneTJAM04zTkYmUSGsJE8gwQSiEIyQLxmMHfYeJAfDVh6XXLmYoidNcUiUMWE6YpkIILvabEoSmpZOPzlFatmjpzNFf4eahYhDeb04wm+SEJ0xawzQSMslTg2SyZE5m6fMucqVv+/UXcL4NjSKYQP87KUmG5DgpGunta9AkQiyYlHn6q+xwwWPGNaMkFRioyinC4v13DHrBDv6rBalwoFvrzwXGC9qZp7/KjiRpzJTFmmMW0pPniU0CMMRHJWBZQCmsCeCEG7nPciPB2qTciN4uCG11vmS5zdLnlT3twn2qwtZiKfZSbTvzFOSwDE/lpHh0W2C9YJ520OflDFfxumt/xKlgb3JwF93CzwHQbMLLjar6J1w0yHkcC2CzNWhV5cLwm+2hqb1EjHtykLWgvVn6vL2y2ZRe+bJtnn5+3v0X+A8TYmrCjE+aLtrTZunzJvxzY+f8rY09UHzrVfX7niH3vwCjQGwCww0AAA==",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "721"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 12:14:11 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "160"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasGroupsResource::getAllGroups"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAALWQvY7CMBCE38UF1R1OTGIukaIr6BH96XQy2XWw8E9kr2kQ734mdBR0lDOj0X47V2aNPyfW/1zZKaJmPTsRzannfLQhwyfgZe2CnwIc12NwXM2GK7Iq8YvgIU6Jt6hByS+hNlogCNwCyBGw4YTKpW/jR5sBdyF7GihmXM1qwn12Q70yhC4dMB6KM9RVxT5YRFsYElrNbr93mbKlB5+Bksgtyk50Ry0aWUEjxQZFW7W6VN/8CX9x+onaK4dFL7WuEX8R7w4sGQVSdlmD9fXtH9F79TKAAQAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/orgs/5efda682a3f2ed2e7dd6cde4/teams",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "225"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 12:14:20 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "23"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiOrganizationTeamsResource::getTeams"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

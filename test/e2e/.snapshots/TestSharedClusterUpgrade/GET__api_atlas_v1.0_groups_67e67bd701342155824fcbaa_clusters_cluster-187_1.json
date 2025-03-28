@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAANVW227jNhD9lYIP+7KxJdnryDUQFE7sDVz4EljOpk1RBJQ4ltnQpEpS6jqB/71DXRo7l0WxRVss4Ad5hnM7M5zDR0Jzq6KECi5TMngkidpmuQX3CZLGAhgZrKkwcEIyDYwnlhcwfqYxaA8j9Yc8VuxPCOPm/vL8hTimyX2ePXcT8wslJSRW6dfia6DsSsMaNMgEMyQGEiUZ1TuCLhORGwt6tcucajm+mk4uhtF4RVBVeeVKRlZjncZ5N5Y6W3RPtkqmisUDz6NJ6/c1yM3nh5bZoLLl+/hr0++LHu/Tdn2wxaBoS7CDTugH4cmrRsHXGHW+bOT9YIw4szqHd9i1TaRyncAZZVsu32nIBE9oBPaMWkFNC1jIu6xxjig0BUe6eKr5vdEF1l2D1wr64VsplBhjCyyMqJsP0vE7vZbfbXX6q8AfdMNB0LslVccj/gCX52Tgt3uV4IZqTDKdKeYsP15Ppz/f3QyXs/EILbCbepe59gztEoy90qrgDHAGyHwxH+OJVKiYiosqyQjEekYlTYFFrrhycOsRSbXKs4nr6WkIp2HMELbuh07Q6/U7H9ZJTCl64wf6+EifxCHqBY1B4Iz88it+c3nvPh/JBicP7TbWZqZETOWsxKbGqY03x6MZ90r4vSJo+16ZjvHeyqWB3RziT9ygi3K6xRpB/+8ie9Wt9DT2QGn4UcXmr2SOgh8FPjz9f2RrJM3MRtm/k+vT2T32ttSMzmf0N6U/oXccQLTut91lqXVH4vZpo7heTr6htXGQ9XXG8PKy125v1789OHjD7WZR3knzDVX6zxakpFu3nY7vosy35ZZBGAKkQJqbQ0bk9jmHZfXyOn+V4RotZmEbImpk8yr8ajwfzh1rvU3MW/p5It06T8BtWjKQuRDYOy5fivc126KXq+NAw5vILd/1GkpOPzStT8wcKvwNuYYUp6OWXEd342G0uus4lqiRdsPzkVZk3j2SRhkkro4nK/yDG13sLE/MHEkCgfExN4GpOQBrUdcByJXmdkcGYfUgWEixayz2+xdhqt39hY0fshdNrioz+BZZ8/TfyvNByQbOW/z8LihXklbKXoC29StmEi0vl4vF6qfA8bcuhozhujVfRd/lA8A2MSejqSNWS9Oa6NAc56fEDefEVs+l5+NbVOtwiQVTA9EOg27R2XQVkf2fi2z8JkoKAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v1.0/groups/67e67bd701342155824fcbaa/clusters/cluster-187",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "899"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:37:32 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasLegacyClusterDescriptionResource::getCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ],
+    "X-Xgen-Up-Proto": [
+      "HTTP/2"
+    ]
+  }
+}

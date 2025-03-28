@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAHWQT08CMRDFv0vPSFlkF9iEg0FMSAzGiCfjYWhn2cZuW/tn40r47s6KkZDorfP6e32vc2B7b5NbS1ayYorFdCdmo+x6Ms7yfDaeVGI+z9iAaWXeAitfDqz2WBFbx+hCybnQNskrie2wsWZv5W4obMPBKQ5RQ+DtmH8HBP7f6zwF9E8oklex41qC4y16VXUnh6yKsyMfZTkI6uNRU4mAumLH1358TxgiKw8MUqw/HxP6bouN0xCRQHLslJHPlGSg6RVhFiAbZQZSLPADiMT+aP2e2NqG+MNpK0D3M8nOeorI5kU+Pf5mnjf3d9MQISZaHbu7Wd+vbklpQSsJUVlz2ugFcXG/7VzfYfmw2ayWW/rp8QsEgUL7rwEAAA==",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e67bc801342155824fc991/userSecurity/ldap/verify/67e67df601342155825015ac",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "292"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:46:18 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "37"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasUserSecurityResource::checkLDAPVerifyConnectivityRequestStatus"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

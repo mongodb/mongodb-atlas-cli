@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAHVSy27bMBD8Fx1yqiJRtmRbgFE4L9R9xEaspGiLHGhyJbOhSJkPG06Qf+9SDtK0QG7i7Gh3Z2afIinUg43KX0/RxkAdldHGuc6WScKk9jzmsDtttWo0X58y3Sa0Ewl1ktpklyU1cDDUCa1W4JxQjU2KvIAhH8OEsPWIZwVfkzWbsCIRHJQT7rA0eoffxn4UvKsOHUy/L26+XC1uzi9POqOdZlpOV7NvX0862sC1b6fkRDho7RLMEpEpSdPoQ2RA4q4WZB0934en9dIddVBmb418o4R6t4m39B8d1urE0lZmSaopGT0K2uSTu8ng84/VIB/jAIoMJqgDfqFbKlToHQnaxg6si3mP9e5gt+j+LX9hmkAOmOcCFINbI96ss9/vT/WDo8c9+h0smJ1gEHcv5iS2e2CU/m4e1UHv9WFrxVbhUsxAmDBz2C5Ls2GcjuJBWpG8JKTMxz+RwsEyI7oQCpICIGwn6eGatoDAFfAKBSAuOD6Lgk7SjKXjMSF8WFDC18PBiNG+3seDpNeAAmqtB3MU5I0qkVVyqCm6j9Uga867eWj9jq8dtFdCwlzVOiqfIgbGiVowlHVMT2k3qx2YXmFOYpLFpKjIsMzGZT4JCpFxBrU28J8Jr5RwEDXOOEpWXspnnPtyW/hTuK7+hLYerTgTiuPpIv6pqpbxcrGq+qLttLKwEo2izhuYyUYb4TZtaPBpFmd5gTQrfXO0GeO/gLVvLhVdS0ADnPHQw3+PEcOXmlG50X0C1mFnVB3Nzqv5XXDXd/y9fLMyT4/SnHZUnmuvkEWe/wB7vokbwgMAAA==",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "616"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 12:14:29 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "24"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiFederationSettingsResource::getAllIdentityProviders"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

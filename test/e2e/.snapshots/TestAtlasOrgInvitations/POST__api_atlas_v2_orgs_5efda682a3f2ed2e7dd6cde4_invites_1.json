@@ -1,0 +1,59 @@
+{
+  "Body": "H4sIAAAAAAAAAFWOUUvDMBRG/8rI8yrNTdt0fbJKkYJTKPriEMl6b0ugSUaSiUz872ZMUJ+/c/jOJxs9qUjYRtYwyKHMcpFB/cSh4aIpxQtbM/o4aE/hD1JkIP8hs3fHw+AWakPQszVkY2DN7nXNNCarklRtoOaFnLAY80rW+w3yXCRT23cdyT8H8lYZSrA9Le5kHKXR+bk/+yVNqKoalJiAEEgiViNScUEeLl4bFxVWt/f9qoMuLT7lnCPY43D3tu22N93AUlAkZXr8qTv+3kYKMQMO18bZ2eH+anSGfX0DksjfHiEBAAA=",
+  "Status": 200,
+  "Method": "POST",
+  "Path": "/api/atlas/v2/orgs/5efda682a3f2ed2e7dd6cde4/invites",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "233"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 12:13:53 GMT"
+    ],
+    "Deprecation": [
+      "Wed, 19 Feb 2025 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Fri, 31 Jul 2026 00:00:00 GMT"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "160"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiOrganizationInvitationResource::createInvitations"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

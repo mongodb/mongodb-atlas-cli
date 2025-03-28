@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAJ1SXWvbMBT9L3roy2LHVuKPGsJIF28EwiiV142NUa6t69TElj1J9pqV/vddNw7tw7aHgQRC59x7dI7uI8uhOPSdQGsrtTcseWSoIK9RssTqHp9mrKh7Y1Fnxw5Zwm7S69323VqkGSOoVQoLW7VKWH2uNxaUBE0NWNOqfSvzZD6HwimHn/lDc3DMPYGO59FyjQI//BG7E9GROLgKbcIjz49mfyzy/6eI/7to/taYejX6vYDe3ou21wWuQDaVutDY1VUBlNAKbA3G4ZeX4fHh3JxSOBsWenjx/MbogXxP4Tnh8q9m2ZixRrC4oU0duMcDx1s4PM58L1lECQ++ksxet323HWMNsJQQAsKi5Cg5RlKGBXoBkaoRDyMMoxyDMljK5WIJssgDKOOY8GftzdUtakO/RtzY9dyQAAXNqP3qvXTZ6XaoJOrX4zEODJ2vJ+jjqW79WRBfVuYgql/44Yolgeu9NJhY73fpF6Jp3JP4dPdJ3KVrkd35Yw4UpcUJ2G52KZEtjLrfvtMJNX0IjONG6vY0eOl5WkuoDc7YcHJ2gzWCQXEkNw0122WCPf0GvcJsze4CAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters/cluster-640",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "446"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2024-11-13+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:37:42 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "47"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFlexClusterResource::getFlexCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

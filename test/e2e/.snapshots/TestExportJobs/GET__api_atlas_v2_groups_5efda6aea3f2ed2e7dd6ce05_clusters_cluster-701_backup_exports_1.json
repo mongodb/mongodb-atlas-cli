@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAIWRT2vjMBDFv4sOPSXVH0u21xCWbXvppRTa0y7LokjjRES2jDUqhZDv3klbLw0s7E0avdH78d6RxTAeMut+Hdl+hp51bI845Y5zF1Pxaw8v10Mad8lvr10auJ0Ctxht5i+K7+ZUpswN9N7WFmzVK/AKGu9rB8LQFyUjzHk5rBsh+da6Q5k4vE5pxvw9jPTo4TaVETc4F7ia7A4eyrCRVwFhyI8wP9JkI4VgKzZDJMYMsWen3+drLhE/+N0MFsH/QBIoocxaVGvVPkvR6aZT9U/adoSRhjuLljZo/QPiprgD4L2nvbqBuvHfeiErraQxrTJCgPds0T6hxUJ+x887+NsUIzgMaaSxWDFMaOPl8LRifRhD3v+DTnaCAM2ZLvwlgAq+Esi2PhNMVFB4Jc1i/SePdsr7hEsHrbrowIP+bznvnVzEpWsuG11J07bakO1i8iUgK3qjva609W5LDrI/6ygaIMlTcQ5y7kt8r+gzD6qXdfL0BizOvuNxAgAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-701/backup/exports",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "390"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 11:00:50 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "72"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasDiskBackupExportJobsResource::getExportRestoreJobs"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

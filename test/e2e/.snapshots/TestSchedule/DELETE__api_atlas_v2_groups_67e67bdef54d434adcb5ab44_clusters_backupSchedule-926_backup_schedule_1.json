@@ -1,0 +1,47 @@
+{
+  "Body": "eyJhdXRvRXhwb3J0RW5hYmxlZCI6ZmFsc2UsImNsdXN0ZXJJZCI6IjY3ZTY3YmUyZjU0ZDQzNGFkY2I1YWQyOCIsImNsdXN0ZXJOYW1lIjoiYmFja3VwU2NoZWR1bGUtOTI2IiwiY29weVNldHRpbmdzIjpbXSwibGlua3MiOlt7ImhyZWYiOiJodHRwczovL2Nsb3VkLWRldi5tb25nb2RiLmNvbS9hcGkvYXRsYXMvdjIvZ3JvdXBzLzY3ZTY3YmRlZjU0ZDQzNGFkY2I1YWI0NC9jbHVzdGVycy9iYWNrdXBTY2hlZHVsZS05MjYvYmFja3VwL3NjaGVkdWxlIiwicmVsIjoic2VsZiJ9LHsiaHJlZiI6Imh0dHBzOi8vY2xvdWQtZGV2Lm1vbmdvZGIuY29tL2FwaS9wdWJsaWMvdjEuMC9ncm91cHMvNjdlNjdiZGVmNTRkNDM0YWRjYjVhYjQ0IiwicmVsIjoiaHR0cHM6Ly9jbG91ZC5tb25nb2RiLmNvbS9ncm91cCJ9XSwicG9saWNpZXMiOlt7ImlkIjoiNjdlNjdkYjVkZTFjNmU0NWEyZTA2ZjBlIiwicG9saWN5SXRlbXMiOltdfV0sInJlZmVyZW5jZUhvdXJPZkRheSI6MTAsInJlZmVyZW5jZU1pbnV0ZU9mSG91ciI6NDUsInJlc3RvcmVXaW5kb3dEYXlzIjo3LCJ1c2VPcmdBbmRHcm91cE5hbWVzSW5FeHBvcnRQcmVmaXgiOnRydWV9",
+  "Status": 200,
+  "Method": "DELETE",
+  "Path": "/api/atlas/v2/groups/67e67bdef54d434adcb5ab44/clusters/backupSchedule-926/backup/schedule",
+  "Headers": {
+    "Content-Length": [
+      "579"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2024-08-05+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:45:59 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "84"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasDiskBackupScheduleResource::deleteSnapshotSchedule"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

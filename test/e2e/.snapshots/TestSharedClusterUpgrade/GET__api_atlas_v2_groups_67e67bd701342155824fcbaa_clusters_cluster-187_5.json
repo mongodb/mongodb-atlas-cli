@@ -1,0 +1,59 @@
+{
+  "Body": "H4sIAAAAAAAAAL1UTW/aQBD9K9VeG2zshJj65oAbUQFB2Cltqipa22Ozjdm1dhdLBOW/d9Y2KVCl6ikHJDMzbz7ezNs9SWj6tK1CTpMSMuLntFRwQRI2EpxDqoUk/p7AmVsCzRYScpDAUyA+UZAKnlG5Iy8XJC23SoOMd5VxLcPFdDIKojAm6GqzMsEjLRkvlMmuNDXYLJI1xm8EL0SWfFSy9m27y9Vzhp5FP9UDNqRWF9HLoLY46KYkdqRhjD/M4PbdQa9/2XOHsdP3Lz3fGTxg7Yypp4g9w+0N8fvWoDWsqNxgHzORGeTn++n0++MqWM7CMSJwOLmrTLeBXoLSCylqlgFSQuZ38xAjilIktBy1TUZQ5jPKaQFZtMZ5MO8rY4UU22qCDJJrD669JPP6zuWV6wwGQ/cqTxNKMRs78icn/jTx0F/SBEqk7MdP/Gb8yXzuyRoXgbi11pVqGBPbrOGm48lKxcamFbOpLqmya9dumlH2W50cSFfH7BOz9bJZdZkj5e9V124P1JbIv5DwRSTqtZWT0idlj6Pfv1fFaaXWQv9Pp39iX3CrjWd8M6O/hPyK2fH0ED20+uTVd2K2rtHB6cYc7+myKrpVR4qtmD7XuISqZCltxFhB2h7TP07Qy0yt7aa5bYx2TIoC0fhU5Kxo8VCivE2dLiVa8twovoYJN0JPwWgQi8zMTOwvG4rZsIjaOaht3o4XrCIzlmRCMr0jvmf+nETE4TyYx+TQVme9jx7DIIof3YbgZ8Fh8vaMw4S0MR34AT8/OA1SCqFHIHX3rE2i5e3y7i7+5iACh9AHyP1iHMST+S2aNS06teJe8JlpuMaxdPsEni+kbje7RA6pgmiH29xgwmkckZff7kaPcakFAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e67bd701342155824fcbaa/clusters/cluster-187",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "662"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-02-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:38:23 GMT"
+    ],
+    "Deprecation": [
+      "Mon, 5 Aug 2024 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Sun, 1 Mar 2026 00:00:00 GMT"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "45"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasClusterDescriptionV15Resource::getCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAALWW/WvcNhjH/5XhH/rLcnd6tS1B2JKsKx1rElqng44xJOvRRYtsH7J8ZS353yf7wqV1ehthHBiMHj16Xj5+/LU/Z961d30mf/+c3QawmcxuY9z0crWqfTeYhYHtsunadWf0su6aldq4lYpe9astWa1DN2z6FQdrVK5AUUvAECiMyWtAfDX0EPofrFcxQluBavpTq3wPL1xb+8HARTe08TSGYW+5Cuub8dCD30at4XJoTvELF6HpryFcJ8spRig7yQL4VG4P3mb3f4zLfvBx10o9Bg5/p+3XL5NnHUBFMGcxGQgiaIHIApcVRpKXkhUfkot1oY+XqoHkctaadCAZnUkrDkzXNC/qXCPLsNZCa42LMu0nDPFsiLe7sHyB6IKUFRKSYMnZhwePfdS167zzvkv2ptPOj61pCJlsB+9Psi6s38Bo6G/d5l1UcejHYxfV6/djE6HzMHaXvXp7dXP959Vvly/fZqnvEXK7S6Gmwpdqn+nHLx5ddn/yX2DIAuEFRhXOJWKSPwFz7lRb78Hk2NRcEKFA8ELkpjYMlwabb4PBrMJcpouUMzC/ut7D0ZjoqeblNt2UAbUenArPxIIXKLWQV7iUuJA0n2O5cJuQwu+5IMEoqREvGeaMYcqsFml9YGAS7mKMi+YDUzk9+An3ccjUu7KXcZfnX6DcvHsKhSYiExQu08AzNofyU4CPeyKssKympU2TogzFeQGiVAdfoaLCVDLxMIBfEDmH+q6B9mhE0tvzcal3SZ4/I3TSFDxWjskcx8/Ouw08jginFGgpdG5LSwxmucLU4oOakqSKMUn4DMhF1/ZRtdG13fa7N9DCp9TisejYqYVls0vzTD6T5iI2SgtLiPicz6shNbLtHkWXCgG1sBhZpbEVRDNWUnYAEK9w0isi6VxbztUn9XResu8pp2VBOBFFPk7h/4ez3tW/1GPCZ7Jhk+zy8SFTIjGds/kFQgeP8sIVRyJpWVGw9D2yyhAjMK0Pyy6WtJCMztC8h7BVcHc85f1rKnu5fcjzNZTkGruo/PQLkMni/h+zAr6uiggAAA==",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/users",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "799"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2025-02-19+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 12:14:21 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "41"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiGroupUsersResource::getGroupUsers"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

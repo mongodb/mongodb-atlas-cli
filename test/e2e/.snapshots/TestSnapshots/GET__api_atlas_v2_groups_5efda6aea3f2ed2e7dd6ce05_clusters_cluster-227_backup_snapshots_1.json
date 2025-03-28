@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAMVSwY7TMBD9Fx/21NSO2yRtpAotcOGyqugKpEUcvPaktTaJjT2uCKv9dyYJXeiFI9zimTfvvcy8Z9ba/imy+sszOwVoWM1OiD7WnOvWJZMZOC871x+deVxq13HlLVfYqsjPkh+DSz7yAhqjSgVq1UgwEipjSg2iIIoUEUK8fGRSVvxR6afkeeyVjyeH8Y3tqW3gnUs97jAkuPHqCHep2+U3FqGLewh7quxyIdiCBWjJZYS2YS9fx2dMLc5/MFneB3e2BgKBbj8faEA7P3yEo3X9iKIRHUAhmFskiBSyyMQqk5v7XNTrsi7WDzRjIOpgPdIQgRAiZhfD1IXv3pLuNcF2IqjqYjsSNAG+Jej1cD94IJjrDXSqN9Syht5lBWVFWxP5ai3zotjIQohGS+r/94vwv5j7c/uLf+XwVfdK50rjF3qKxFz/RCTz+TZLsSyJw7vW6uHDGKk5CAE8VdQB8E5145WuNS8LeT3h+8sJIypMcRxwnW+BwjQVXaCYHuwPeDtQZFidl+vVJt8KsVkwnEl+S05W0aFqp+QT+uUn2DXzRI4DAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-227/backup/snapshots",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "431"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 10:48:02 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "79"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasDiskBackupSnapshotsResource::getSnapshots"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

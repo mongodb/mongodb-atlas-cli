@@ -58,8 +58,7 @@ jobs:
           - atlas,streams_with_cluster
           - brew
           - config
-          - iam
-          # - atlas,iam # need to add
+          - atlas,iam
           - kubernetes
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1

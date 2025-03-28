@@ -28,10 +28,10 @@ import (
 )
 
 func TestEvents(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
-	t.Run("List Project Events", func(t *testing.T) {
+	g.Run("List Project Events", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			eventsEntity,
 			projectEntity,
@@ -48,7 +48,7 @@ func TestEvents(t *testing.T) {
 		assert.NotEmpty(t, events.GetResults())
 	})
 
-	t.Run("List Organization Events", func(t *testing.T) {
+	g.Run("List Organization Events", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			eventsEntity,
 			orgEntity,

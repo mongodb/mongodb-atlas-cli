@@ -26,13 +26,13 @@ import (
 )
 
 func TestSetupFailureFlow(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot(), withSnapshotSkipFunc(neverSkipSnapshots))
 	g.generateProject("setup")
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	t.Run("Invalid Public Key", func(t *testing.T) {
+	g.Run("Invalid Public Key", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		t.Setenv("MONGODB_ATLAS_PUBLIC_API_KEY", "invalid_public_key")
 		cmd := exec.Command(cliPath,
 			setupEntity,
@@ -45,7 +45,7 @@ func TestSetupFailureFlow(t *testing.T) {
 		assert.Contains(t, string(resp), "Unauthorized", "Expected unauthorized error due to invalid public key.")
 	})
 
-	t.Run("Invalid Private Key", func(t *testing.T) {
+	g.Run("Invalid Private Key", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "invalid_private_key")
 		cmd := exec.Command(cliPath,
 			setupEntity,
@@ -58,7 +58,7 @@ func TestSetupFailureFlow(t *testing.T) {
 		assert.Contains(t, string(resp), "Unauthorized", "Expected unauthorized error due to invalid private key.")
 	})
 
-	t.Run("Invalid Project ID", func(t *testing.T) {
+	g.Run("Invalid Project ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		// The invalid ProjectID should be 24 characters long, otherwise
 		// an early error will be thrown about incorrect length.
 		invalidProjectID := "111111111111111111111111"

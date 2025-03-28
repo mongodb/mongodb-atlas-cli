@@ -37,7 +37,7 @@ func TestSchedule(t *testing.T) {
 
 	var policy *atlasClustersPinned.DiskBackupSnapshotSchedule
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			"schedule",
@@ -55,7 +55,7 @@ func TestSchedule(t *testing.T) {
 		assert.Equal(t, g.clusterName, policy.GetClusterName())
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			"schedule",
@@ -72,7 +72,7 @@ func TestSchedule(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			"schedule",

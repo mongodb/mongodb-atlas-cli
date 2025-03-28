@@ -36,7 +36,7 @@ func TestAlertConfig(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -71,7 +71,7 @@ func TestAlertConfig(t *testing.T) {
 		assert.FailNow(t, "Failed to create alert setting")
 	}
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -86,7 +86,7 @@ func TestAlertConfig(t *testing.T) {
 		assert.Equal(t, alertID, config.GetId())
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -100,7 +100,7 @@ func TestAlertConfig(t *testing.T) {
 		assert.NotEmpty(t, config.Results)
 	})
 
-	t.Run("List Compact", func(t *testing.T) {
+	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -115,7 +115,7 @@ func TestAlertConfig(t *testing.T) {
 		assert.NotEmpty(t, config)
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,
@@ -145,7 +145,7 @@ func TestAlertConfig(t *testing.T) {
 		a.True(alert.GetNotifications()[0].GetEmailEnabled())
 	})
 
-	t.Run("Update Setting using file input", func(t *testing.T) {
+	g.Run("Update Setting using file input", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		n := g.memoryRand("rand", 1000)
 		fileName := fmt.Sprintf("%d_alerts.json", n.Int64())
 		fileContent := fmt.Sprintf(`{
@@ -186,14 +186,14 @@ func TestAlertConfig(t *testing.T) {
 		a.True(alert.GetNotifications()[0].GetEmailEnabled())
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath, alertsEntity, settingsEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("List Matcher Fields", func(t *testing.T) {
+	g.Run("List Matcher Fields", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			settingsEntity,

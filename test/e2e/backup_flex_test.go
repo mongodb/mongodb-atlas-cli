@@ -42,7 +42,7 @@ func TestFlexBackup(t *testing.T) {
 	require.NotEmpty(t, clusterName)
 
 	var snapshotID string
-	t.Run("Snapshot List", func(t *testing.T) {
+	g.Run("Snapshot List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -61,7 +61,7 @@ func TestFlexBackup(t *testing.T) {
 		require.NotEmpty(t, snapshotID)
 	})
 
-	t.Run("Snapshot Describe", func(t *testing.T) {
+	g.Run("Snapshot Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -79,7 +79,7 @@ func TestFlexBackup(t *testing.T) {
 		assert.Equal(t, snapshotID, result.GetId())
 	})
 
-	t.Run("Snapshot Watch", func(t *testing.T) {
+	g.Run("Snapshot Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -95,7 +95,7 @@ func TestFlexBackup(t *testing.T) {
 
 	var restoreJobID string
 
-	t.Run("Restores Create - Automated", func(t *testing.T) {
+	g.Run("Restores Create - Automated", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -122,7 +122,7 @@ func TestFlexBackup(t *testing.T) {
 		require.NotEmpty(t, restoreJobID)
 	})
 
-	t.Run("Restores Watch", func(t *testing.T) {
+	g.Run("Restores Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -137,7 +137,7 @@ func TestFlexBackup(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Restores List", func(t *testing.T) {
+	g.Run("Restores List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -153,7 +153,7 @@ func TestFlexBackup(t *testing.T) {
 		assert.NotEmpty(t, result)
 	})
 
-	t.Run("Restores Describe", func(t *testing.T) {
+	g.Run("Restores Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -170,7 +170,7 @@ func TestFlexBackup(t *testing.T) {
 		assert.NotEmpty(t, result)
 	})
 
-	t.Run("Restores Create - Download", func(t *testing.T) {
+	g.Run("Restores Create - Download", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -196,7 +196,7 @@ func TestFlexBackup(t *testing.T) {
 		require.NotEmpty(t, restoreJobID)
 	})
 
-	t.Run("Restores Watch - Download", func(t *testing.T) {
+	g.Run("Restores Watch - Download", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -211,7 +211,7 @@ func TestFlexBackup(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Delete flex cluster", func(t *testing.T) {
+	g.Run("Delete flex cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",

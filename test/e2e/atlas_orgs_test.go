@@ -35,7 +35,7 @@ func TestAtlasOrgs(t *testing.T) {
 
 	var orgID string
 	// This test must run first to grab the ID of the org to later describe
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			"ls",
@@ -51,7 +51,7 @@ func TestAtlasOrgs(t *testing.T) {
 	})
 	require.NotEmpty(t, orgID)
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			"describe",
@@ -63,7 +63,7 @@ func TestAtlasOrgs(t *testing.T) {
 	})
 
 	var userID string
-	t.Run("List Org Users", func(t *testing.T) {
+	g.Run("List Org Users", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			usersEntity,
@@ -82,13 +82,12 @@ func TestAtlasOrgs(t *testing.T) {
 	require.NotEmpty(t, userID)
 
 	n := g.memoryRand("rand", 255)
-	require.NoError(t, err)
 	orgName := fmt.Sprintf("e2e-org-%v", n)
 	var (
 		publicAPIKey  string
 		privateAPIKey string
 	)
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		t.Skip("Skipping create org e2e test, exceeded max number of linked orgs. Will reenable post cleanup")
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -114,7 +113,7 @@ func TestAtlasOrgs(t *testing.T) {
 		require.NotEmpty(t, privateAPIKey)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		t.Skip("Skipping delete org e2e test, exceeded max number of linked orgs. Will re-enable post cleanup")
 		if os.Getenv("MONGODB_ATLAS_SERVICE") == cloudgov {
 			t.Skip("not available for gov")

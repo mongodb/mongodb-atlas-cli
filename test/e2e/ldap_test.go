@@ -42,7 +42,7 @@ func TestLDAPWithFlags(t *testing.T) {
 	require.NoError(t, err)
 
 	var requestID string
-	t.Run("Verify", func(t *testing.T) {
+	g.Run("Verify", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			securityEntity,
 			ldapEntity,
@@ -64,7 +64,7 @@ func TestLDAPWithFlags(t *testing.T) {
 
 	require.NotEmpty(t, requestID)
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			securityEntity,
 			ldapEntity,
@@ -80,7 +80,7 @@ func TestLDAPWithFlags(t *testing.T) {
 		assert.Contains(t, string(resp), "LDAP Configuration request completed.")
 	})
 
-	t.Run("Get Status", func(t *testing.T) {
+	g.Run("Get Status", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			securityEntity,
 			ldapEntity,
@@ -101,7 +101,7 @@ func TestLDAPWithFlags(t *testing.T) {
 		a.Equal(requestID, *configuration.RequestId)
 	})
 
-	t.Run("Save", func(t *testing.T) {
+	g.Run("Save", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			securityEntity,
 			ldapEntity,
@@ -126,7 +126,7 @@ func TestLDAPWithFlags(t *testing.T) {
 		testLDAPSaveCmd(t, cmd)
 	})
 
-	t.Run("Get", func(t *testing.T) {
+	g.Run("Get", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			securityEntity,
 			ldapEntity,
@@ -144,7 +144,7 @@ func TestLDAPWithFlags(t *testing.T) {
 		a.Equal(ldapHostname, *configuration.Ldap.Hostname)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		testLDAPDelete(t, cliPath, g.projectID)
 	})
 }
@@ -158,7 +158,7 @@ func TestLDAPWithStdin(t *testing.T) {
 
 	var requestID string
 
-	t.Run("Verify", func(t *testing.T) {
+	g.Run("Verify", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			securityEntity,
 			ldapEntity,
@@ -181,7 +181,7 @@ func TestLDAPWithStdin(t *testing.T) {
 
 	require.NotEmpty(t, requestID)
 
-	t.Run("Save", func(t *testing.T) {
+	g.Run("Save", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			securityEntity,
 			ldapEntity,
@@ -207,7 +207,7 @@ func TestLDAPWithStdin(t *testing.T) {
 		testLDAPSaveCmd(t, cmd)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		testLDAPDelete(t, cliPath, g.projectID)
 	})
 }

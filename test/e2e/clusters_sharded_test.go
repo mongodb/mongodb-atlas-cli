@@ -44,7 +44,7 @@ func TestShardedCluster(t *testing.T) {
 	mdbVersion, err := MongoDBMajorVersion()
 	req.NoError(err)
 
-	t.Run("Create sharded cluster", func(t *testing.T) {
+	g.Run("Create sharded cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -70,7 +70,7 @@ func TestShardedCluster(t *testing.T) {
 		ensureCluster(t, &cluster, shardedClusterName, mdbVersion, 30, false)
 	})
 
-	t.Run("Delete sharded cluster", func(t *testing.T) {
+	g.Run("Delete sharded cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath, clustersEntity, "delete", shardedClusterName, "--projectId", g.projectID, "--force")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)
@@ -84,7 +84,7 @@ func TestShardedCluster(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch deletion", func(t *testing.T) {
+	g.Run("Watch deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",

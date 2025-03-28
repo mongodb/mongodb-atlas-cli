@@ -30,7 +30,7 @@ import (
 )
 
 func TestPluginRun(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
@@ -41,7 +41,7 @@ func TestPluginRun(t *testing.T) {
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
-	t.Run("Hello", func(t *testing.T) {
+	g.Run("Hello", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"example",
 			"hello")
@@ -55,7 +55,7 @@ func TestPluginRun(t *testing.T) {
 		}
 	})
 
-	t.Run("Echo", func(t *testing.T) {
+	g.Run("Echo", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		echoString := "lorem ipsum dolor sit amet --test=true --debug --profile nunc nunc vel urna"
 		cmd := exec.Command(cliPath,
 			"example",
@@ -71,7 +71,7 @@ func TestPluginRun(t *testing.T) {
 		}
 	})
 
-	t.Run("Printenv", func(t *testing.T) {
+	g.Run("Printenv", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		var sb strings.Builder
 
 		for _, env := range os.Environ() {
@@ -90,7 +90,7 @@ func TestPluginRun(t *testing.T) {
 		}
 	})
 
-	t.Run("Stdinreader", func(t *testing.T) {
+	g.Run("Stdinreader", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		pty, tty, err := pseudotty.Open()
 		if err != nil {
 			t.Fatalf("failed to open pseudotty: %v", err)

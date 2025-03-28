@@ -48,7 +48,7 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 	assert.False(t, res.GetPitEnabled())
 	assert.Zero(t, res.GetRestoreWindowDays())
 
-	t.Run("enable", func(t *testing.T) {
+	g.Run("enable", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,

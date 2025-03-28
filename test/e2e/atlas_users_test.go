@@ -38,7 +38,7 @@ func TestAtlasUsers(t *testing.T) {
 		orgID    string
 	)
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			usersEntity,
@@ -55,7 +55,7 @@ func TestAtlasUsers(t *testing.T) {
 		userID = users.GetResults()[0].GetId()
 	})
 
-	t.Run("Describe by username", func(t *testing.T) {
+	g.Run("Describe by username", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			usersEntity,
 			"describe",
@@ -78,7 +78,7 @@ func TestAtlasUsers(t *testing.T) {
 		require.NotEmpty(t, orgID)
 	})
 
-	t.Run("Describe by ID", func(t *testing.T) {
+	g.Run("Describe by ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			usersEntity,
 			"describe",
@@ -94,7 +94,7 @@ func TestAtlasUsers(t *testing.T) {
 		assert.Equal(t, userID, user.GetId())
 	})
 
-	t.Run("Invite", func(t *testing.T) {
+	g.Run("Invite", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		n := g.memoryRand("rand", 10000)
 		emailUser := fmt.Sprintf("cli-test-%v@moongodb.com", n)
 		if revision, ok := os.LookupEnv("revision"); ok {

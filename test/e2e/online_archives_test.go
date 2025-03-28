@@ -40,7 +40,7 @@ func TestOnlineArchives(t *testing.T) {
 	}
 
 	var archiveID string
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		archiveID = createOnlineArchive(t, cliPath, g.projectID, g.clusterName)
 	})
 
@@ -48,31 +48,31 @@ func TestOnlineArchives(t *testing.T) {
 		t.Fatal("Failed to create archive")
 	}
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		describeOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		listOnlineArchives(t, cliPath, g.projectID, g.clusterName)
 	})
 
-	t.Run("Pause", func(t *testing.T) {
+	g.Run("Pause", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		pauseOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
-	t.Run("Start", func(t *testing.T) {
+	g.Run("Start", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		startOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		updateOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		deleteOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		watchOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
 	})
 }

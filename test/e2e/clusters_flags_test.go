@@ -51,7 +51,7 @@ func TestClustersFlags(t *testing.T) {
 	previousMdbVersion, err := getPreviousMajorVersion(mdbVersion)
 	req.NoError(err)
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -76,7 +76,7 @@ func TestClustersFlags(t *testing.T) {
 		ensureCluster(t, cluster, clusterName, previousMdbVersion, 30, true)
 	})
 
-	t.Run("Load Sample Data", func(t *testing.T) {
+	g.Run("Load Sample Data", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"sampleData",
@@ -93,7 +93,7 @@ func TestClustersFlags(t *testing.T) {
 		assert.Equal(t, clusterName, job.GetClusterName())
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"ls",
@@ -108,7 +108,7 @@ func TestClustersFlags(t *testing.T) {
 		assert.NotEmpty(t, clusters.Results)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"describe",
@@ -124,7 +124,7 @@ func TestClustersFlags(t *testing.T) {
 		assert.Equal(t, clusterName, cluster.GetName())
 	})
 
-	t.Run("Describe Connection String", func(t *testing.T) {
+	g.Run("Describe Connection String", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"cs",
@@ -144,7 +144,7 @@ func TestClustersFlags(t *testing.T) {
 		a.NotEmpty(connectionString.GetStandardSrv())
 	})
 
-	t.Run("Update Advanced Configuration Settings", func(t *testing.T) {
+	g.Run("Update Advanced Configuration Settings", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"advancedSettings",
@@ -159,7 +159,7 @@ func TestClustersFlags(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Describe Advanced Configuration Settings", func(t *testing.T) {
+	g.Run("Describe Advanced Configuration Settings", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"advancedSettings",
@@ -179,7 +179,7 @@ func TestClustersFlags(t *testing.T) {
 		a.Equal(writeConcern, config.GetDefaultWriteConcern())
 	})
 
-	t.Run("Create Rolling Index", func(t *testing.T) {
+	g.Run("Create Rolling Index", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"indexes",
@@ -195,7 +195,7 @@ func TestClustersFlags(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Fail Delete for Termination Protection enabled", func(t *testing.T) {
+	g.Run("Fail Delete for Termination Protection enabled", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",
@@ -208,7 +208,7 @@ func TestClustersFlags(t *testing.T) {
 		require.Error(t, err, string(resp))
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"update",
@@ -228,7 +228,7 @@ func TestClustersFlags(t *testing.T) {
 		ensureCluster(t, &cluster, clusterName, mdbVersion, 40, false)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force", "-w")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)

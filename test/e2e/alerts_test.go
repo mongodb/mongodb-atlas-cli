@@ -32,12 +32,12 @@ const (
 )
 
 func TestAlerts(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	var alertID string
 	// This test should be run before all other tests to grab an alert ID for all others tests
-	t.Run("List with status CLOSED", func(t *testing.T) {
+	g.Run("List with status CLOSED", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
@@ -56,7 +56,7 @@ func TestAlerts(t *testing.T) {
 		}
 	})
 
-	t.Run("List with status OPEN", func(t *testing.T) {
+	g.Run("List with status OPEN", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
@@ -70,7 +70,7 @@ func TestAlerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("List with no status", func(t *testing.T) {
+	g.Run("List with no status", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			alertsEntity,
 			"list",
@@ -82,7 +82,7 @@ func TestAlerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		if alertID == "" {
 			t.Skip("no alert found")
 		}
@@ -103,7 +103,7 @@ func TestAlerts(t *testing.T) {
 		a.Equal(closed, alert.GetStatus())
 	})
 
-	t.Run("Acknowledge", func(t *testing.T) {
+	g.Run("Acknowledge", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		if alertID == "" {
 			t.Skip("no alert found")
 		}
@@ -123,7 +123,7 @@ func TestAlerts(t *testing.T) {
 		assert.Equal(t, alertID, alert.GetId())
 	})
 
-	t.Run("Acknowledge Forever", func(t *testing.T) {
+	g.Run("Acknowledge Forever", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		if alertID == "" {
 			t.Skip("no alert found")
 		}
@@ -142,7 +142,7 @@ func TestAlerts(t *testing.T) {
 		assert.Equal(t, alertID, alert.GetId())
 	})
 
-	t.Run("UnAcknowledge", func(t *testing.T) {
+	g.Run("UnAcknowledge", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		if alertID == "" {
 			t.Skip("no alert found")
 		}

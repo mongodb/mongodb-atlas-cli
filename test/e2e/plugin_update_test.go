@@ -25,24 +25,24 @@ import (
 )
 
 func TestPluginUpdate(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
-	runPluginUpdateTest(t, cliPath, "Update without specifying version", false, examplePluginRepository, "v1.0.38", "")
-	runPluginUpdateTest(t, cliPath, "Update with specifying version", false, examplePluginName, "v1.0.38", "v2.0.3")
-	runPluginUpdateTest(t, cliPath, "Update with specifying latest version", false, examplePluginName, "v1.0.38", "latest")
-	runPluginUpdateTest(t, cliPath, "Update using --all flag", false, "--all", "v1.0.34", "")
-	runPluginUpdateTest(t, cliPath, "Update with lower version", true, examplePluginName, "v1.0.36", "v1.0.34")
-	runPluginUpdateTest(t, cliPath, "Update with same version", true, examplePluginRepository, "v1.0.36", "v1.0.36")
-	runPluginUpdateTest(t, cliPath, "Update with too many arguments", true, examplePluginName+" --all", "v1.0.34", "v2.0.0")
-	runPluginUpdateTest(t, cliPath, "Update without any values", true, "", "v1.0.34", "v2.0.0")
+	runPluginUpdateTest(g, cliPath, "Update without specifying version", false, examplePluginRepository, "v1.0.38", "")
+	runPluginUpdateTest(g, cliPath, "Update with specifying version", false, examplePluginName, "v1.0.38", "v2.0.3")
+	runPluginUpdateTest(g, cliPath, "Update with specifying latest version", false, examplePluginName, "v1.0.38", "latest")
+	runPluginUpdateTest(g, cliPath, "Update using --all flag", false, "--all", "v1.0.34", "")
+	runPluginUpdateTest(g, cliPath, "Update with lower version", true, examplePluginName, "v1.0.36", "v1.0.34")
+	runPluginUpdateTest(g, cliPath, "Update with same version", true, examplePluginRepository, "v1.0.36", "v1.0.36")
+	runPluginUpdateTest(g, cliPath, "Update with too many arguments", true, examplePluginName+" --all", "v1.0.34", "v2.0.0")
+	runPluginUpdateTest(g, cliPath, "Update without any values", true, "", "v1.0.34", "v2.0.0")
 }
 
-func runPluginUpdateTest(t *testing.T, cliPath string, testName string, requireError bool, pluginValue string, initialVersion string, updateVersion string) {
-	t.Helper()
-	installExamplePlugin(t, cliPath, initialVersion)
+func runPluginUpdateTest(g *atlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string, initialVersion string, updateVersion string) {
+	g.t.Helper()
+	installExamplePlugin(g.t, cliPath, initialVersion)
 
-	t.Run(testName, func(t *testing.T) {
+	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		if updateVersion != "" && pluginValue != "--all" {
 			pluginValue = fmt.Sprintf("%s@%s", pluginValue, updateVersion)
 		}
@@ -59,5 +59,5 @@ func runPluginUpdateTest(t *testing.T, cliPath string, testName string, requireE
 		}
 	})
 
-	deleteAllPlugins(t)
+	deleteAllPlugins(g.t)
 }

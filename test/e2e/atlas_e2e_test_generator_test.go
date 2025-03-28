@@ -19,6 +19,7 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -162,8 +163,11 @@ type atlasE2ETestGenerator struct {
 	t                   *testing.T
 	fileIDs             map[string]int
 	memoryMap           map[string]any
-	lastData            *http.Response
+	lastSnapshot        *http.Response
 	currentSnapshotMode snapshotMode
+	testName            string
+	skipSnapshots       func(snapshot *http.Response, prevSnapshot *http.Response) bool
+	snapshotNameFunc    func(r *http.Request) string
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -186,7 +190,15 @@ func (g *atlasE2ETestGenerator) Logf(format string, args ...any) {
 // newAtlasE2ETestGenerator creates a new instance of atlasE2ETestGenerator struct.
 func newAtlasE2ETestGenerator(t *testing.T, opts ...func(g *atlasE2ETestGenerator)) *atlasE2ETestGenerator {
 	t.Helper()
-	g := &atlasE2ETestGenerator{t: t, currentSnapshotMode: snapshotModeSkip, fileIDs: map[string]int{}, memoryMap: map[string]any{}}
+	g := &atlasE2ETestGenerator{
+		t:                   t,
+		testName:            t.Name(),
+		currentSnapshotMode: snapshotModeSkip,
+		skipSnapshots:       defaultSkipSnapshots,
+		fileIDs:             map[string]int{},
+		memoryMap:           map[string]any{},
+		snapshotNameFunc:    defaultSnapshotBaseName,
+	}
 	for _, opt := range opts {
 		opt(g)
 	}
@@ -203,6 +215,39 @@ func withSnapshot() func(g *atlasE2ETestGenerator) {
 	return func(g *atlasE2ETestGenerator) {
 		g.snapshotServer()
 	}
+}
+
+func withSnapshotSkipFunc(f func(*http.Response, *http.Response) bool) func(g *atlasE2ETestGenerator) {
+	return func(g *atlasE2ETestGenerator) {
+		g.skipSnapshots = f
+	}
+}
+
+func withSnapshotNameFunc(f func(*http.Request) string) func(g *atlasE2ETestGenerator) {
+	return func(g *atlasE2ETestGenerator) {
+		g.snapshotNameFunc = f
+	}
+}
+
+func neverSkipSnapshots(_ *http.Response, _ *http.Response) bool {
+	return false
+}
+
+func (g *atlasE2ETestGenerator) Run(name string, f func(t *testing.T)) {
+	g.t.Helper()
+
+	g.t.Run(name, func(t *testing.T) {
+		t.Helper()
+
+		g.testName = t.Name()
+		g.lastSnapshot = nil
+
+		t.Cleanup(func() {
+			g.testName = g.t.Name()
+		})
+
+		f(t)
+	})
 }
 
 // generateProject generates a new project and also registers its deletion on test cleanup.
@@ -453,7 +498,7 @@ func (g *atlasE2ETestGenerator) snapshotDir() string {
 
 	dir := g.snapshotBaseDir()
 
-	dir = path.Join(dir, g.t.Name())
+	dir = path.Join(dir, g.testName)
 
 	return dir
 }
@@ -474,24 +519,26 @@ func (g *atlasE2ETestGenerator) enforceDir(filename string) {
 	}
 }
 
-func (g *atlasE2ETestGenerator) snapshotBaseName(r *http.Request) string {
-	g.t.Helper()
+func defaultSnapshotBaseName(r *http.Request) string {
+	return fmt.Sprintf("%s_%s", r.Method, strings.ReplaceAll(strings.ReplaceAll(r.URL.Path, "/", "_"), ":", "_"))
+}
 
-	dir := g.snapshotDir()
-
-	return fmt.Sprintf("%s/%s_%s", dir, r.Method, strings.ReplaceAll(strings.ReplaceAll(r.URL.Path, "/", "_"), ":", "_"))
+func snapshotHashedName(r *http.Request) string {
+	defaultSnapshotBaseName := defaultSnapshotBaseName(r)
+	hash := fmt.Sprintf("%x", sha1.Sum([]byte(defaultSnapshotBaseName)))
+	return hash
 }
 
 func (g *atlasE2ETestGenerator) snapshotName(r *http.Request) string {
 	g.t.Helper()
 
-	baseName := g.snapshotBaseName(r)
+	baseName := g.snapshotNameFunc(r)
 
 	g.fileIDs[baseName]++
 
 	id := g.fileIDs[baseName]
 
-	fileName := fmt.Sprintf("%s_%d.json", baseName, id)
+	fileName := fmt.Sprintf("%s_%d.snaphost", baseName, id)
 
 	return fileName
 }
@@ -499,7 +546,7 @@ func (g *atlasE2ETestGenerator) snapshotName(r *http.Request) string {
 func (g *atlasE2ETestGenerator) snapshotNameStepBack(r *http.Request) {
 	g.t.Helper()
 
-	baseName := g.snapshotBaseName(r)
+	baseName := g.snapshotNameFunc(r)
 
 	g.fileIDs[baseName] -= 2
 	if g.fileIDs[baseName] < 0 {
@@ -615,6 +662,18 @@ func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	return resp
 }
 
+func defaultSkipSnapshots(snapshot *http.Response, prevSnapshot *http.Response) bool {
+	if snapshot.StatusCode == http.StatusUnauthorized && snapshot.Header.Get("Www-Authenticate") != "" {
+		return true // skip 401
+	}
+
+	if prevSnapshot != nil && compareSnapshots(snapshot, prevSnapshot) == 0 {
+		return true // skip if the response is the same
+	}
+
+	return false
+}
+
 func (g *atlasE2ETestGenerator) snapshotServer() {
 	g.t.Helper()
 
@@ -643,17 +702,13 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
 
 	proxy.ModifyResponse = func(resp *http.Response) error {
-		if resp.StatusCode == http.StatusUnauthorized && resp.Header.Get("Www-Authenticate") != "" {
-			return nil // skip 401
-		}
-
 		snapshot := g.prepareSnapshot(resp)
 
-		if g.lastData != nil && compareSnapshots(snapshot, g.lastData) == 0 {
-			return nil // skip if the response is the same
+		if g.skipSnapshots(snapshot, g.lastSnapshot) {
+			return nil // skip
 		}
 
-		g.lastData = snapshot
+		g.lastSnapshot = snapshot
 
 		g.storeSnapshot(snapshot)
 

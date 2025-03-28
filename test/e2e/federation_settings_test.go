@@ -28,7 +28,7 @@ import (
 )
 
 func TestIdentityProviders(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	req := require.New(t)
 
 	cliPath, err := AtlasCLIBin()
@@ -38,7 +38,7 @@ func TestIdentityProviders(t *testing.T) {
 	var oidcWorkloadIdpID string
 	var oidcIWorkforceIdpID string
 
-	t.Run("Describe an org federation settings", func(t *testing.T) {
+	g.Run("Describe an org federation settings", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -59,7 +59,7 @@ func TestIdentityProviders(t *testing.T) {
 		federationSettingsID = settings.GetId()
 	})
 
-	t.Run("Create OIDC IdP WORKLOAD", func(t *testing.T) {
+	g.Run("Create OIDC IdP WORKLOAD", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		idpName, err := RandIdentityProviderName()
 		req.NoError(err)
 
@@ -100,7 +100,7 @@ func TestIdentityProviders(t *testing.T) {
 		oidcWorkloadIdpID = provider.GetId()
 	})
 
-	t.Run("Connect OIDC IdP WORKLOAD", func(t *testing.T) {
+	g.Run("Connect OIDC IdP WORKLOAD", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -124,7 +124,7 @@ func TestIdentityProviders(t *testing.T) {
 		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
 	})
 
-	t.Run("Create OIDC IdP WORKFORCE", func(t *testing.T) {
+	g.Run("Create OIDC IdP WORKFORCE", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		idpName, err := RandIdentityProviderName()
 		fmt.Println(idpName)
 		req.NoError(err)
@@ -170,7 +170,7 @@ func TestIdentityProviders(t *testing.T) {
 		oidcIWorkforceIdpID = provider.Id
 	})
 
-	t.Run("Describe OIDC IdP WORKFORCE", func(t *testing.T) {
+	g.Run("Describe OIDC IdP WORKFORCE", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -192,7 +192,7 @@ func TestIdentityProviders(t *testing.T) {
 		assert.NotEmpty(t, provider.GetId())
 	})
 
-	t.Run("Connect OIDC IdP WORKFORCE", func(t *testing.T) {
+	g.Run("Connect OIDC IdP WORKFORCE", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -216,7 +216,7 @@ func TestIdentityProviders(t *testing.T) {
 		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
 	})
 
-	t.Run("Describe connectedOrgsConfig", func(t *testing.T) {
+	g.Run("Describe connectedOrgsConfig", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -238,7 +238,7 @@ func TestIdentityProviders(t *testing.T) {
 		assert.Contains(t, config.GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
 	})
 
-	t.Run("Disconnect OIDC IdP WORKLOAD", func(t *testing.T) {
+	g.Run("Disconnect OIDC IdP WORKLOAD", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -261,7 +261,7 @@ func TestIdentityProviders(t *testing.T) {
 		assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
 	})
 
-	t.Run("Disconnect OIDC IdP WORKFORCE", func(t *testing.T) {
+	g.Run("Disconnect OIDC IdP WORKFORCE", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -284,7 +284,7 @@ func TestIdentityProviders(t *testing.T) {
 		assert.NotContains(t, config.GetDataAccessIdentityProviderIds(), oidcIWorkforceIdpID)
 	})
 
-	t.Run("Update connected org config", func(t *testing.T) {
+	g.Run("Update connected org config", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -307,7 +307,7 @@ func TestIdentityProviders(t *testing.T) {
 		assert.NotEmpty(t, config.GetDomainAllowList())
 	})
 
-	t.Run("Update connected org config back", func(t *testing.T) {
+	g.Run("Update connected org config back", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -397,7 +397,7 @@ func TestIdentityProviders(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &provider))
 	})
 
-	t.Run("List connectedOrgsConfig", func(t *testing.T) {
+	g.Run("List connectedOrgsConfig", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,
@@ -421,7 +421,7 @@ func TestIdentityProviders(t *testing.T) {
 		assert.NotContains(t, config.GetResults()[0].GetDataAccessIdentityProviderIds(), oidcWorkloadIdpID)
 	})
 
-	t.Run("Describe OIDC IdP WORKFORCE", func(t *testing.T) {
+	g.Run("Describe OIDC IdP WORKFORCE", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,

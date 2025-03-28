@@ -38,7 +38,7 @@ func TestFlexClustersFile(t *testing.T) {
 
 	clusterFileName := g.memory("clusterFileName", must(RandClusterName())).(string)
 
-	t.Run("Create Flex Cluster via file", func(t *testing.T) {
+	g.Run("Create Flex Cluster via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -55,7 +55,7 @@ func TestFlexClustersFile(t *testing.T) {
 		ensureFlexCluster(t, &cluster, clusterFileName, 5, false)
 	})
 
-	t.Run("Delete Flex Cluster - created via file", func(t *testing.T) {
+	g.Run("Delete Flex Cluster - created via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(
 			cliPath,
 			clustersEntity,

@@ -43,7 +43,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 	n := g.memoryRand("rand", 255)
 	entry := fmt.Sprintf("192.168.0.%d", n)
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -62,7 +62,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		assert.NotEmpty(t, key.Results)
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -78,11 +78,11 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		assert.NotEmpty(t, key.Results)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		deleteAtlasAccessListEntry(t, cliPath, entry, apiKeyID)
 	})
 
-	t.Run("Create Current IP", func(t *testing.T) {
+	g.Run("Create Current IP", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -101,7 +101,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		entry = *key.GetResults()[0].IpAddress
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		deleteAtlasAccessListEntry(t, cliPath, entry, apiKeyID)
 	})
 }

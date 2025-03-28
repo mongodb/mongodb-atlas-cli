@@ -27,7 +27,7 @@ import (
 )
 
 func TestExportBuckets(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -39,7 +39,7 @@ func TestExportBuckets(t *testing.T) {
 	r.NotEmpty(bucketName)
 	var bucketID string
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -62,7 +62,7 @@ func TestExportBuckets(t *testing.T) {
 		bucketID = exportBucket.GetId()
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -77,7 +77,7 @@ func TestExportBuckets(t *testing.T) {
 		assert.NotEmpty(t, buckets)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -94,7 +94,7 @@ func TestExportBuckets(t *testing.T) {
 		assert.Equal(t, bucketName, exportBucket.GetBucketName())
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,

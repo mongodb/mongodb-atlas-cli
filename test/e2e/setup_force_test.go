@@ -29,7 +29,7 @@ import (
 )
 
 func TestSetup(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot(), withSnapshotSkipFunc(neverSkipSnapshots))
 	g.generateProject("setup")
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)
@@ -43,7 +43,7 @@ func TestSetup(t *testing.T) {
 	tagValue := "e2etest"
 	arbitraryAccessListIP := "21.150.105.221"
 
-	t.Run("Run", func(t *testing.T) {
+	g.Run("Run", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			setupEntity,
 			"--clusterName", clusterName,
@@ -62,7 +62,7 @@ func TestSetup(t *testing.T) {
 	t.Cleanup(func() {
 		require.NoError(t, deleteClusterForProject(g.projectID, clusterName))
 	})
-	t.Run("Check accessListIp was correctly added", func(t *testing.T) {
+	g.Run("Check accessListIp was correctly added", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"ls",
@@ -82,7 +82,7 @@ func TestSetup(t *testing.T) {
 
 	require.NoError(t, watchCluster(g.projectID, clusterName))
 
-	t.Run("Describe DB User", func(t *testing.T) {
+	g.Run("Describe DB User", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"describe",
@@ -99,7 +99,7 @@ func TestSetup(t *testing.T) {
 		assert.Equal(t, dbUserUsername, user.GetUsername())
 	})
 
-	t.Run("Describe Cluster", func(t *testing.T) {
+	g.Run("Describe Cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"describe",

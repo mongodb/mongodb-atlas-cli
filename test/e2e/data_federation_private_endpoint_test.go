@@ -37,7 +37,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 	n := g.memoryRand("rand", int64(8000))
 	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%d", 1000+n.Int64())
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			privateEndpointsEntity,
@@ -59,7 +59,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		a.Equal(r.GetResults()[0].GetEndpointId(), vpcID)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			privateEndpointsEntity,
@@ -77,7 +77,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		a.Equal(vpcID, r.GetEndpointId())
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			privateEndpointsEntity,
@@ -95,7 +95,7 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 		a.NotEmpty(r)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			privateEndpointsEntity,

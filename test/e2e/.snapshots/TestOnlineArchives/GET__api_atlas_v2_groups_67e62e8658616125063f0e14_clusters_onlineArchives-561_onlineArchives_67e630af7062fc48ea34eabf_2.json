@@ -1,0 +1,47 @@
+{
+  "Body": "eyJkZXRhaWwiOiJDYW5ub3QgZmluZCByZXNvdXJjZSBPbmxpbmUgYXJjaGl2ZSB3aXRoIGlkIDY3ZTYzMGFmNzA2MmZjNDhlYTM0ZWFiZi4iLCJlcnJvciI6NDA0LCJlcnJvckNvZGUiOiJSRVNPVVJDRV9OT1RfRk9VTkQiLCJwYXJhbWV0ZXJzIjpbIk9ubGluZSBhcmNoaXZlIHdpdGggaWQgNjdlNjMwYWY3MDYyZmM0OGVhMzRlYWJmIl0sInJlYXNvbiI6Ik5vdCBGb3VuZCJ9",
+  "Status": 404,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e62e8658616125063f0e14/clusters/onlineArchives-561/onlineArchives/67e630af7062fc48ea34eabf",
+  "Headers": {
+    "Content-Length": [
+      "213"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 05:16:35 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "37"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasOnlineArchiveResource::getOnlineArchive"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

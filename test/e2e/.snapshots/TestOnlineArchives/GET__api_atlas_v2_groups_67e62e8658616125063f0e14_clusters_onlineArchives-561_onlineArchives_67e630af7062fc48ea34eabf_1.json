@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAFWQQYvCMBCF/0vOXWhtjeIt0LoIS1dsZQ/LIjGdaCA2JUllRfzvO4nK4m345s2bN3MlO9WRBaEzoHnK5SylEymKOfC8AL6XJCFCj86DrfkJUGh6rXpgVhzVGdzblGZBYrR+9D04/yAgvDJ9exkCb1pWl2xThp5V6Kc4WVxJxz0sFejufzQiY0/cI1s1nyVrK8TwOygLTOJoyS+OLPKE+Lt3VNziJF9bI8C5DRxwd9ggtBk7pGfVgUUx+2rQzT76ZNvsKta0uywa7F+vOFgzDqvnfyYwp9M5zWg2maY0lylkBYoGbr0Kl8Y7MNj3lchQvnpFdH9GP2qdEGNjoPT2EzxGB7hHcu0gIU4coRs1hPzPG6sl2360IaXz+CFE66ouV/U7uf0BLPsdN8UBAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e62e8658616125063f0e14/clusters/onlineArchives-561/onlineArchives/67e630af7062fc48ea34eabf",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "311"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 05:16:32 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "41"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasOnlineArchiveResource::getOnlineArchive"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

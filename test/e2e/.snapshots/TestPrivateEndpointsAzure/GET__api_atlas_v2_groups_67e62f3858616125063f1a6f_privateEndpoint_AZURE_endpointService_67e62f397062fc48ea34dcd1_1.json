@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAGWNMQvCMBSE/8ubO6iVVrt1KBrQtsR2UURC8izBmpSXtIv43w2IXZwO7r67e4Hs7ahqspNWSJBBfm55AREgkaUjOic6hMyMfR+BVgFIUkxW93ibLoLI9QZFvFZSLUNnID0Jj4VRg9XGO8gu19k9aPM4IU1aYime8+Z/ytHZkSQy9WMIO23NtwVFy6u6uJUVb/bh03nhx/AErGQNyxtW7uD9AUcTcDfXAAAA",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e62f3858616125063f1a6f/privateEndpoint/AZURE/endpointService/67e62f397062fc48ea34dcd1",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "180"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 05:10:17 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "37"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasPrivateEndpointResource::getEndPointService"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

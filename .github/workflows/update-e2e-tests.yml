@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: 0 5 * * 1-5 # weekdays at 5:00 AM UTC
   pull_request:
-    types: [opened, labeled]
+    types: [labeled]
 jobs:
   update-tests:
     runs-on: ubuntu-latest

@@ -1,5 +1,5 @@
 {
-  "Body": "H4sIAAAAAAAAAE1QXYvCMBD8L3lWadNLlL5V7UmhiJjeB/cisdmWYJuWJBU88b/fFnvcPQSWzMzOztzJWZaXoRfgvTa1I/GdgJHnBhSJvR3gMSNlMzgPtrj1QGJyTA95tklEWhCEOmOg9LozwttJPyosSA9bfCigAWXzIJpTXoQ8jlZxGH2htLbd0GfoQhhUSnIJMqooKApLpXgJAUOSHnG+hBeqlkyqs+QsjOSqZFVFA8TbztTddv0O1uENyF0tggVHwMh29J5On4+7ettdtQL7P+oYHufDBO2fquRDIF9pdxH6G3ZrErNF8LdgYr3m6SfSLNRoPf29iVOaiOIUEmzBeSxgAjbHNCmy/Q4FeE+rjRxLQ1//rC/97bySjYMZuT4THaEB6UDcMEWLa/JCkMcPEvsnTLQBAAA=",
+  "Body": "H4sIAAAAAAAAAE1QXYvCMBD8L3lWSdtL2utb1Z4IImJ6H9yLxGZbgm1aklTw5P77bbHH3UMg7Mzs7MydnGV5GXoB3mtTO5LeCRh5bkCR1NsBvmekbAbnwRa3HkhKjvlht11lIi8IQp0xUHrdGeHtpB8VFqSHNT4UhDRkcxrNw6SgLKVxSqNPlNa2G/otuhAGlZJcgoyqEFQIsVK8BMqQpEecx8BxGrOEBzwIGeVRRc+JQrztTN2tl29gHd6A3GRBFxwBI9vRezp9/hQ847C33VUrsP/DjvHxf5ig/UOXvQvkK+0uQn/BZklStqB/CybWyy7/QJqFGs2n2as45ZkoTgHBHpzHCiZgdcyzYrvfoAAvarWRY23o6x8F5r+tV7JxMCPXR6YjNCAdiBvmaHHNrhDk+wcnlgWHtgEAAA==",
   "Status": 201,
   "Method": "POST",
   "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters",
@@ -8,13 +8,13 @@
       "gzip"
     ],
     "Content-Length": [
-      "314"
+      "316"
     ],
     "Content-Type": [
       "application/vnd.atlas.2024-11-13+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 16:38:13 GMT"
+      "Fri, 28 Mar 2025 05:07:02 GMT"
     ],
     "Referrer-Policy": [
       "strict-origin-when-cross-origin"
@@ -32,7 +32,7 @@
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "690"
+      "449"
     ],
     "X-Frame-Options": [
       "DENY"
@@ -44,7 +44,7 @@
       "17.0.14+7"
     ],
     "X-Mongodb-Service-Version": [
-      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
     ],
     "X-Permitted-Cross-Domain-Policies": [
       "none"

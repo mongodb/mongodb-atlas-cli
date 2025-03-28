@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAANWVXUvDMBSG/0suvLJNmtmuFIaM6cVAZ5neqIhk7WkXTJOYpAWR/XezTW+Uohv4Bb1pz3nDk3Me6DMSXD5YlN0+o6WBCmVo6Zy2GcaFUG0ZlNCFjZK1KhdhoRrMNMfMCWZxR3FtVKstToaQUEgXcZpESURjkgwqUiUF1kYVYC3YYy4L0ZYwUa10I2daONCshlnbjKID7qCxOZjcfxlFhKBDZEB4EguiQqu79atthdtSFgaYg9KXKaFxQAYBTa9InEVH2WB447MbqOm6oY/LNy2VdZI14Ls2twm6tO6ECeySmTIgxD+hotWjfrv8ZhASnM/ycudURockGvqsD7mcy/ojfpyRozX+j+wD74n/bi9aGYe2xXVNC16wS3Cz/sH6M9yThteO+Wl+Np2M7y9PJxezk/H82pdbC2YsOPMzQBpMpUzDZAGs7LhVJkjpl3bUgbFcSX9GGpIwQavDnzMn2sucntR/Mecz/D9mTv+OftMcupc5Pan/Ys5n+N9kTj6fnu/uTf+GPnjjWZ1yTGz+eSgbrF4AAC+EeGwHAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67e62e8b58616125063f0f6c/processes",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "422"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 05:15:14 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "39"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasProcessesResource::getAllAtlasProcesses"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1149
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 28 Mar 2025 12:53:29 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 644
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyServerlessInstanceDescriptionResource::updateServerlessInstance
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Request-Method: PATCH
+X-Request-Path: /api/atlas/v2/groups/67e69ba947fd4c0678ba02bc/serverless/cluster-348
+
+{"connectionStrings":{"standardSrv":"mongodb+srv://cluster-348.gluxpm1.mongodb-dev.net"},"createDate":"2025-03-28T12:52:59Z","groupId":"67e69ba947fd4c0678ba02bc","id":"67e69babf2460d4623e284fc","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67e69ba947fd4c0678ba02bc/serverless/cluster-348","rel":"self"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67e69ba947fd4c0678ba02bc/serverless/cluster-348/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67e69ba947fd4c0678ba02bc/serverless/cluster-348/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBVersion":"8.0.6","name":"cluster-348","providerSettings":{"backingProviderName":"AWS","effectiveDiskSizeGBLimit":5,"effectiveInstanceSizeName":"FLEX","effectiveProviderName":"TENANT","nextBackupDate":"2025-03-29T12:52:59Z","providerName":"SERVERLESS","regionName":"US_EAST_1","tenantBackupEnabled":true},"serverlessBackupOptions":{"serverlessContinuousBackupEnabled":false},"stateName":"UPDATING","tags":[{"key":"env","value":"e2e"}],"terminationProtectionEnabled":false}

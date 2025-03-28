@@ -1,0 +1,18 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 189
+Content-Type: application/json
+Date: Fri, 28 Mar 2025 12:56:13 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 47
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::deleteCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Request-Method: DELETE
+X-Request-Path: /api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-537
+
+{"detail":"Flex cluster cluster-537 cannot be used in the Cluster API.","error":400,"errorCode":"CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API","parameters":["cluster-537"],"reason":"Bad Request"}

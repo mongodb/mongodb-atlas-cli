@@ -1,0 +1,20 @@
+HTTP/2.0 200 OK
+Content-Length: 1238
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 28 Mar 2025 12:59:52 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sat, 30 May 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 192
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupScheduleResource::patchSnapshotSchedule
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Request-Method: PATCH
+X-Request-Path: /api/atlas/v2/groups/67e69b93f2460d4623e2822f/clusters/backupSchedule-885/backup/schedule
+
+{"autoExportEnabled":false,"clusterId":"67e69b9547fd4c0678b9ffc4","clusterName":"backupSchedule-885","copySettings":[],"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67e69b93f2460d4623e2822f/clusters/backupSchedule-885/backup/schedule","rel":"self"},{"href":"https://cloud-dev.mongodb.com/api/public/v1.0/groups/67e69b93f2460d4623e2822f","rel":"https://cloud.mongodb.com/group"}],"nextSnapshot":"2025-03-28T18:59:06Z","policies":[{"id":"67e69d190bf66144490de140","policyItems":[{"frequencyInterval":6,"frequencyType":"hourly","id":"67e69d190bf66144490de141","retentionUnit":"days","retentionValue":7},{"frequencyInterval":1,"frequencyType":"daily","id":"67e69d190bf66144490de142","retentionUnit":"days","retentionValue":7},{"frequencyInterval":6,"frequencyType":"weekly","id":"67e69d190bf66144490de143","retentionUnit":"weeks","retentionValue":4},{"frequencyInterval":40,"frequencyType":"monthly","id":"67e69d190bf66144490de144","retentionUnit":"months","retentionValue":12},{"frequencyInterval":12,"frequencyType":"yearly","id":"67e69d190bf66144490de145","retentionUnit":"years","retentionValue":1}]}],"referenceHourOfDay":12,"referenceMinuteOfHour":59,"restoreWindowDays":7,"useOrgAndGroupNamesInExportPrefix":true}

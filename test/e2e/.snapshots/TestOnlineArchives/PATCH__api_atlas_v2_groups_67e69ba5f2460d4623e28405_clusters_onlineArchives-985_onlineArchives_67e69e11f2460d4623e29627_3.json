@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 453
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 28 Mar 2025 13:03:14 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 59
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasOnlineArchiveResource::updateOnlineArchive
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Request-Method: PATCH
+X-Request-Path: /api/atlas/v2/groups/67e69ba5f2460d4623e28405/clusters/onlineArchives-985/onlineArchives/67e69e11f2460d4623e29627
+
+{"_id":"67e69e11f2460d4623e29627","clusterName":"onlineArchives-985","collName":"test","collectionType":"STANDARD","criteria":{"dateField":"test","dateFormat":"ISODATE","expireAfterDays":4,"type":"DATE"},"dataProcessRegion":{"cloudProvider":"AWS","region":"US_EAST_1"},"dbName":"test","groupId":"67e69ba5f2460d4623e28405","partitionFields":[{"fieldName":"test","fieldType":null,"order":0}],"paused":false,"schedule":{"type":"DEFAULT"},"state":"PENDING"}

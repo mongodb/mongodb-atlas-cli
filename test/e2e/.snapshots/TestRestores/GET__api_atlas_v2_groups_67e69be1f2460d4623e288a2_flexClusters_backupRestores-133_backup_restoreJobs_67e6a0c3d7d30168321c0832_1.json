@@ -1,0 +1,18 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 201
+Content-Type: application/json
+Date: Fri, 28 Mar 2025 13:14:44 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 63
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexBackupResource::getRestoreJob
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=7d76ea2bf66c1ad94e1830aaf568ef0b9795ab60; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Request-Method: GET
+X-Request-Path: /api/atlas/v2/groups/67e69be1f2460d4623e288a2/flexClusters/backupRestores-133/backup/restoreJobs/67e6a0c3d7d30168321c0832
+
+{"detail":"Cannot use non-flex cluster backupRestores-133 in the flex API.","error":400,"errorCode":"CANNOT_USE_NON_FLEX_CLUSTER_IN_FLEX_API","parameters":["backupRestores-133"],"reason":"Bad Request"}

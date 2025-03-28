@@ -1,0 +1,16 @@
+HTTP/2.0 204 No Content
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 28 Mar 2025 13:22:35 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 251
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupSnapshotsResource::deleteSnapshot
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=7d76ea2bf66c1ad94e1830aaf568ef0b9795ab60; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Request-Method: DELETE
+X-Request-Path: /api/atlas/v2/groups/67e69be1f2460d4623e288a2/clusters/backupRestores-133/backup/snapshots/67e69ff5d7d30168321bfeeb
+

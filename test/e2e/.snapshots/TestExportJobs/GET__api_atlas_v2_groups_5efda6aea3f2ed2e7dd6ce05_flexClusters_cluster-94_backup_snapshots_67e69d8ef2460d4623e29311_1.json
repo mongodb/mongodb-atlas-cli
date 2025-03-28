@@ -1,0 +1,18 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 185
+Content-Type: application/json
+Date: Fri, 28 Mar 2025 13:01:02 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 52
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexBackupResource::getSnapshot
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Request-Method: GET
+X-Request-Path: /api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters/cluster-94/backup/snapshots/67e69d8ef2460d4623e29311
+
+{"detail":"Cannot use non-flex cluster cluster-94 in the flex API.","error":400,"errorCode":"CANNOT_USE_NON_FLEX_CLUSTER_IN_FLEX_API","parameters":["cluster-94"],"reason":"Bad Request"}

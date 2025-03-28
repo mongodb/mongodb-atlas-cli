@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 567
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 28 Mar 2025 12:52:49 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 137
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDataFederationResource::updateTenant
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Request-Method: PATCH
+X-Request-Path: /api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/dataFederation/e2e-data-federation-782
+
+{"cloudProviderConfig":{"aws":{"externalId":"c6956c40-f7f3-404e-8123-a122deb6162f","iamAssumedRoleARN":"arn:aws:iam::358363220050:role/mongodb-atlas-apix-atlascli-test","iamUserARN":"arn:aws:iam::299602853325:root","roleId":"67c048c782064d313e883ab9"}},"dataProcessRegion":{"cloudProvider":"AWS","region":"VIRGINIA_USA"},"groupId":"5efda6aea3f2ed2e7dd6ce05","hostnames":["e2e-data-federation-782-g1nxq.virginia-usa.a.query.mongodb-dev.net"],"name":"e2e-data-federation-782","privateEndpointHostnames":[],"state":"ACTIVE","storage":{"stores": null, "databases": null}}

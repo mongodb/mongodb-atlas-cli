@@ -1,0 +1,19 @@
+HTTP/2.0 200 OK
+Content-Length: 18
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 28 Mar 2025 13:01:18 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 115
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPerformanceAdvisorResource::getSlowQueryLogs
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=3e50f9a17487c25f4c212ccc23486556c1a69b45; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Request-Method: GET
+X-Request-Path: /api/atlas/v2/groups/67e69b9247fd4c0678b9ff2e/processes/atlas-wjn686-shard-00-00.vll56.mongodb-dev.net:27017/performanceAdvisor/slowQueryLogs
+
+{"slowQueries":[]}

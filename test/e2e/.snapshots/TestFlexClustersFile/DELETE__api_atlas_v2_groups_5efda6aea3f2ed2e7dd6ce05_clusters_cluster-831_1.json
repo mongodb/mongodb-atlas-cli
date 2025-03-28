@@ -1,0 +1,47 @@
+{
+  "Body": "eyJkZXRhaWwiOiJGbGV4IGNsdXN0ZXIgY2x1c3Rlci04MzEgY2Fubm90IGJlIHVzZWQgaW4gdGhlIENsdXN0ZXIgQVBJLiIsImVycm9yIjo0MDAsImVycm9yQ29kZSI6IkNBTk5PVF9VU0VfRkxFWF9DTFVTVEVSX0lOX0NMVVNURVJfQVBJIiwicGFyYW1ldGVycyI6WyJjbHVzdGVyLTgzMSJdLCJyZWFzb24iOiJCYWQgUmVxdWVzdCJ9",
+  "Status": 400,
+  "Method": "DELETE",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-831",
+  "Headers": {
+    "Content-Length": [
+      "189"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Fri, 28 Mar 2025 05:06:58 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "43"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasClusterDescriptionV15Resource::deleteCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

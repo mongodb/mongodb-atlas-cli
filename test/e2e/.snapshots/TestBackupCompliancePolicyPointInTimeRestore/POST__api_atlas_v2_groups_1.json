@@ -1,5 +1,5 @@
 {
-  "Body": "H4sIAAAAAAAAALWUsU7DMBCG38VzUpdrE0NWJnZYQAwX+5JYOHbkc4pQlXcnUUWhC8oSyZKH/9N/n3Syz0K7kRPFxzD6JKp9JnQkTGREJWAPRb4/5FA+35XVQVUFvIpM2CUrFR3BFOZBqRqUKhuF6thAMefO+g8W1dtZdJGame1SGriSUrswmtzQadcH3wZT73ToJQ5WYnLI8gSyjWEcWP7THsnNlUyuEVO2wQipg09oPUW+Trtpv2n+A29kc1nPKpcfdBsTgwlrZHrhdTq3/DZOA61zuXAbOcSgiZlWeVzZbVw+O5vIWU4rXH7Z6T0THnua8TkYnEWvKR+Cs/prvqxPy+kpEqcQKSegHNTyGENsn5bfoKDGYHkPeGiADJAyptSGjmL6Bu5X5qVhBAAA",
+  "Body": "H4sIAAAAAAAAALWUPW/DIABE/wuzHSj+Srx26t4urToQOCeoGCzAqarI/71YUdN6qbxYQmK4p7snIXEl0owhwj+60UbSsoxIDxGhSEs441XOipzvn1nVsqYtH15JRvSc1Q1qjoNsWM07We4hilJVTKXcaPsRSPt2JWePLrHnGIfQUiqNG1WucNn1zp6cOu6k66kYNBXRiEAvnJ68G4dA/2n3MKkywHRkyjaYoNLZKLSFD/e1Rfui+Q+8kc3teVa5/KDbmCgRxVEEvIR1Okt+G6cB61xu3EYO3kmEgFUed3Ybl8+zjjA6xBUuv+z0nhEreiQ8BYPRwkrkgzNafqVL2zifHh4hOo8cHPnhUKQN509P829QoVOi3nNRdByKo1Gqlgolmb4BASHr+WEEAAA=",
   "Status": 201,
   "Method": "POST",
   "Path": "/api/atlas/v2/groups",
@@ -8,13 +8,13 @@
       "gzip"
     ],
     "Content-Length": [
-      "303"
+      "302"
     ],
     "Content-Type": [
       "application/vnd.atlas.2023-01-01+json;charset=utf-8"
     ],
     "Date": [
-      "Wed, 26 Mar 2025 16:37:49 GMT"
+      "Fri, 28 Mar 2025 05:07:40 GMT"
     ],
     "Location": [
       "https://cloud-dev.mongodb.com//api/atlas/v1.0"
@@ -35,7 +35,7 @@
       "nosniff"
     ],
     "X-Envoy-Upstream-Service-Time": [
-      "2564"
+      "1495"
     ],
     "X-Frame-Options": [
       "DENY"
@@ -47,7 +47,7 @@
       "17.0.14+7"
     ],
     "X-Mongodb-Service-Version": [
-      "gitHash=c4c5f4c109527b4134b47ca49a44e5836cdc5fff; versionString=master"
+      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
     ],
     "X-Permitted-Cross-Domain-Policies": [
       "none"

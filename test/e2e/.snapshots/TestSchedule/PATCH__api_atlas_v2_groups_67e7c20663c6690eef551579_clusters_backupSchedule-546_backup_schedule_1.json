@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 1237
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Sat, 29 Mar 2025 09:57:33 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sat, 30 May 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 150
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupScheduleResource::patchSnapshotSchedule
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=263f66a962bd66c29e769e9b5fcc787d6d241e19; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"autoExportEnabled":false,"clusterId":"67e7c2084c029e4c9f7907ba","clusterName":"backupSchedule-546","copySettings":[],"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67e7c20663c6690eef551579/clusters/backupSchedule-546/backup/schedule","rel":"self"},{"href":"https://cloud-dev.mongodb.com/api/public/v1.0/groups/67e7c20663c6690eef551579","rel":"https://cloud.mongodb.com/group"}],"nextSnapshot":"2025-03-29T15:56:49Z","policies":[{"id":"67e7c3e06783182076193042","policyItems":[{"frequencyInterval":6,"frequencyType":"hourly","id":"67e7c3e06783182076193043","retentionUnit":"days","retentionValue":7},{"frequencyInterval":1,"frequencyType":"daily","id":"67e7c3e06783182076193044","retentionUnit":"days","retentionValue":7},{"frequencyInterval":6,"frequencyType":"weekly","id":"67e7c3e06783182076193045","retentionUnit":"weeks","retentionValue":4},{"frequencyInterval":40,"frequencyType":"monthly","id":"67e7c3e06783182076193046","retentionUnit":"months","retentionValue":12},{"frequencyInterval":12,"frequencyType":"yearly","id":"67e7c3e06783182076193047","retentionUnit":"years","retentionValue":1}]}],"referenceHourOfDay":9,"referenceMinuteOfHour":56,"restoreWindowDays":7,"useOrgAndGroupNamesInExportPrefix":true}

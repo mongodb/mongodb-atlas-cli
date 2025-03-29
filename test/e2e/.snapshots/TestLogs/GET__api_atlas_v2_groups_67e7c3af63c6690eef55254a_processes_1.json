@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1861
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Sat, 29 Mar 2025 10:05:29 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 62
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=263f66a962bd66c29e769e9b5fcc787d6d241e19; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67e7c3af63c6690eef55254a/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-03-29T10:04:44Z","groupId":"67e7c3af63c6690eef55254a","hostname":"atlas-gkfai0-shard-00-00.lbfi3.mongodb-dev.net","id":"atlas-gkfai0-shard-00-00.lbfi3.mongodb-dev.net:27017","lastPing":"2025-03-29T10:05:28Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67e7c3af63c6690eef55254a/processes/atlas-gkfai0-shard-00-00.lbfi3.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-gkfai0-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-643-shard-00-00.lbfi3.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-29T10:04:44Z","groupId":"67e7c3af63c6690eef55254a","hostname":"atlas-gkfai0-shard-00-01.lbfi3.mongodb-dev.net","id":"atlas-gkfai0-shard-00-01.lbfi3.mongodb-dev.net:27017","lastPing":"2025-03-29T10:05:28Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67e7c3af63c6690eef55254a/processes/atlas-gkfai0-shard-00-01.lbfi3.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-gkfai0-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-643-shard-00-01.lbfi3.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-29T10:04:44Z","groupId":"67e7c3af63c6690eef55254a","hostname":"atlas-gkfai0-shard-00-02.lbfi3.mongodb-dev.net","id":"atlas-gkfai0-shard-00-02.lbfi3.mongodb-dev.net:27017","lastPing":"2025-03-29T10:05:28Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67e7c3af63c6690eef55254a/processes/atlas-gkfai0-shard-00-02.lbfi3.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-gkfai0-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-643-shard-00-02.lbfi3.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

@@ -40,7 +40,7 @@ func TestAtlasOrgs(t *testing.T) {
 			orgEntity,
 			"ls",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err2 := RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
 		var orgs admin.PaginatedOrganization
@@ -57,7 +57,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"describe",
 			orgID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err2 := RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
 	})
@@ -71,7 +71,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"--orgId",
 			orgID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err2 := RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
 		var users admin.PaginatedOrgUser
@@ -101,7 +101,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"--apiKeyDescription",
 			"test",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var org admin.CreateOrganizationResponse
@@ -127,7 +127,7 @@ func TestAtlasOrgs(t *testing.T) {
 			orgID,
 			"--force",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})

@@ -64,7 +64,7 @@ func TestCleanup(t *testing.T) {
 		args = append(args, "--orgId", orgID)
 	}
 	cmd := exec.Command(cliPath, args...)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	req.NoError(err, string(resp))
 	var projects admin.PaginatedAtlasGroup

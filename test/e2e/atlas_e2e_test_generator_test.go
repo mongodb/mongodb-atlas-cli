@@ -348,7 +348,7 @@ func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
 	}
 	cmd := exec.Command(cliPath, args...)
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	return RunAndGetStdOut(cmd)
 }
 

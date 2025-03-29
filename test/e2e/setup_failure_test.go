@@ -39,7 +39,7 @@ func TestSetupFailureFlow(t *testing.T) {
 			"--skipMongosh",
 			"--skipSampleData",
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)
 		assert.Contains(t, string(resp), "Unauthorized", "Expected unauthorized error due to invalid public key.")
@@ -52,7 +52,7 @@ func TestSetupFailureFlow(t *testing.T) {
 			"--skipMongosh",
 			"--skipSampleData",
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)
 		assert.Contains(t, string(resp), "Unauthorized", "Expected unauthorized error due to invalid private key.")
@@ -68,7 +68,7 @@ func TestSetupFailureFlow(t *testing.T) {
 			"--skipSampleData",
 			"--projectId", invalidProjectID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := cmd.CombinedOutput()
 		req.Error(err)
 		assert.Contains(t, string(resp), "GROUP_NOT_FOUND", "Expected GROUP_NOT_FOUND (invalid Project ID) error")

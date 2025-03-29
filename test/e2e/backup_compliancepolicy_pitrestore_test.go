@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && backup && compliancepolicy)
+//go:build e2e || e2eSnap || (atlas && backup && compliancepolicy)
 
 package e2e_test
 
@@ -61,7 +61,7 @@ func TestBackupCompliancePolicyPointInTimeRestore(t *testing.T) {
 			"--restoreWindowDays",
 			"1",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, outputErr := RunAndGetStdOut(cmd)
 		r.NoError(outputErr, string(resp))
 

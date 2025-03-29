@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || config
+//go:build e2e || e2eSnap || config
 
 package e2e_test
 
@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 	"testing"
 
@@ -36,6 +37,22 @@ const (
 func TestConfig(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
+
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("home", t.TempDir())
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	t.Setenv("AppData", t.TempDir())
+
+	dir, err := os.UserConfigDir()
+	require.NoError(t, err)
+	dir = path.Join(dir, "atlascli")
+	require.NoError(t, os.MkdirAll(dir, os.ModePerm))
+
+	require.NoError(t, os.WriteFile(path.Join(dir, "config.toml"), []byte(`[e2e]
+  org_id = "test_id"
+  public_api_key = "test_pub"
+  service = "cloud"`), 0600))
+
 	t.Run("config", func(t *testing.T) {
 		t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "")
 		pty, tty, err := pseudotty.Open()
@@ -55,7 +72,7 @@ func TestConfig(t *testing.T) {
 		cmd.Stdin = c.Tty()
 		cmd.Stdout = c.Tty()
 		cmd.Stderr = c.Tty()
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		if err = cmd.Start(); err != nil {
 			t.Fatal(err)
@@ -111,7 +128,7 @@ func TestConfig(t *testing.T) {
 
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "ls")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -129,7 +146,7 @@ func TestConfig(t *testing.T) {
 			"e2e",
 			"-o=json",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -153,7 +170,7 @@ func TestConfig(t *testing.T) {
 			"e2e",
 			"renamed",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -165,7 +182,7 @@ func TestConfig(t *testing.T) {
 	})
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "delete", "renamed", "--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		if err != nil {

@@ -281,7 +281,7 @@ func deployFlexClusterForProject(projectID, clusterName string) error {
 	}
 
 	create := exec.Command(cliPath, args...)
-	create.Env = os.Environ()
+	create.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if resp, err := RunAndGetStdOut(create); err != nil {
 		return fmt.Errorf("error creating flex cluster (%s): %w - %s", clusterName, err, string(resp))
 	}
@@ -297,7 +297,7 @@ func deployFlexClusterForProject(projectID, clusterName string) error {
 	}
 
 	watch := exec.Command(cliPath, watchArgs...)
-	watch.Env = os.Environ()
+	watch.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if resp, err := RunAndGetStdOut(watch); err != nil {
 		return fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
@@ -320,7 +320,7 @@ func watchServerlessInstanceForProject(projectID, clusterName string) error {
 		watchArgs = append(watchArgs, "--projectId", projectID)
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
-	watchCmd.Env = os.Environ()
+	watchCmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if resp, err := RunAndGetStdOut(watchCmd); err != nil {
 		return fmt.Errorf("error watching serverless instance %w: %s", err, string(resp))
 	}
@@ -340,7 +340,7 @@ func deleteServerlessInstanceForProject(t *testing.T, cliPath, projectID, cluste
 		args = append(args, "--projectId", projectID)
 	}
 	deleteCmd := exec.Command(cliPath, args...)
-	deleteCmd.Env = os.Environ()
+	deleteCmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(deleteCmd)
 	require.NoError(t, err, string(resp))
 
@@ -373,7 +373,7 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 		args = append(args, "--projectId", projectID)
 	}
 	create := exec.Command(cliPath, args...)
-	create.Env = os.Environ()
+	create.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if resp, err := RunAndGetStdOut(create); err != nil {
 		return "", fmt.Errorf("error creating cluster %w: %s", err, string(resp))
 	}
@@ -387,7 +387,7 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 		watchArgs = append(watchArgs, "--projectId", projectID)
 	}
 	watch := exec.Command(cliPath, watchArgs...)
-	watch.Env = os.Environ()
+	watch.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if resp, err := RunAndGetStdOut(watch); err != nil {
 		return "", fmt.Errorf("error watching cluster %w: %s", err, string(resp))
 	}
@@ -417,7 +417,7 @@ func internalDeleteClusterForProject(projectID, clusterName string) error {
 		args = append(args, "--projectId", projectID)
 	}
 	deleteCmd := exec.Command(cliPath, args...)
-	deleteCmd.Env = os.Environ()
+	deleteCmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if resp, err := RunAndGetStdOut(deleteCmd); err != nil {
 		return fmt.Errorf("error deleting cluster %w: %s", err, string(resp))
 	}
@@ -442,7 +442,7 @@ func watchCluster(projectID, clusterName string) error {
 		watchArgs = append(watchArgs, "--projectId", projectID)
 	}
 	watchCmd := exec.Command(cliPath, watchArgs...)
-	watchCmd.Env = os.Environ()
+	watchCmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if resp, err := RunAndGetStdOut(watchCmd); err != nil {
 		return fmt.Errorf("error waiting for cluster %w: %s", err, string(resp))
 	}
@@ -464,7 +464,7 @@ func removeTerminationProtectionFromCluster(projectID, clusterName string) error
 		args = append(args, "--projectId", projectID)
 	}
 	updateCmd := exec.Command(cliPath, args...)
-	updateCmd.Env = os.Environ()
+	updateCmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if resp, err := RunAndGetStdOut(updateCmd); err != nil {
 		return fmt.Errorf("error updating cluster %w: %s", err, string(resp))
 	}
@@ -497,7 +497,7 @@ func deleteDatalakeForProject(cliPath, projectID, id string) error {
 		args = append(args, "--projectId", projectID)
 	}
 	deleteCmd := exec.Command(cliPath, args...)
-	deleteCmd.Env = os.Environ()
+	deleteCmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if resp, err := RunAndGetStdOut(deleteCmd); err != nil {
 		return fmt.Errorf("error deleting datalake %w: %s", err, string(resp))
 	}
@@ -521,7 +521,7 @@ func newAvailableRegion(projectID, tier, provider string) (string, error) {
 		args = append(args, "--projectId", projectID)
 	}
 	cmd := exec.Command(cliPath, args...)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 
 	if err != nil {
@@ -704,7 +704,7 @@ func createProject(projectName string) (string, error) {
 		args = append(args, "--govCloudRegionsOnly")
 	}
 	cmd := exec.Command(cliPath, args...)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s (%w)", string(resp), err)
@@ -725,7 +725,7 @@ func listClustersForProject(t *testing.T, cliPath, projectID string) atlasCluste
 		"list",
 		"--projectId", projectID,
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
@@ -758,7 +758,7 @@ func deleteDatapipelinesForProject(t *testing.T, cliPath, projectID string) {
 		"list",
 		"--projectId", projectID,
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
@@ -781,7 +781,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 		projectID,
 		"-o=json",
 	)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	t.Log("available network peers", string(resp))
 	require.NoError(t, err, string(resp))
@@ -799,7 +799,7 @@ func deleteAllNetworkPeers(t *testing.T, cliPath, projectID, provider string) {
 			projectID,
 			"--force",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err = RunAndGetStdOut(cmd)
 		assert.NoError(t, err, string(resp))
 	}
@@ -866,7 +866,7 @@ func listStreamsByProject(t *testing.T, cliPath, projectID string) *atlasv2.Pagi
 		"-o=json",
 	)
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
@@ -889,7 +889,7 @@ func deleteStream(t *testing.T, cliPath, projectID, streamID string) {
 		projectID,
 		"--force",
 	)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }
@@ -904,7 +904,7 @@ func listPrivateEndpointsByProject(t *testing.T, cliPath, projectID, provider st
 		projectID,
 		"-o=json",
 	)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	t.Log(string(resp))
 	require.NoError(t, err, string(resp))
@@ -926,7 +926,7 @@ func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointI
 		projectID,
 		"--force",
 	)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }
@@ -941,7 +941,7 @@ func deleteTeam(teamID string) error {
 		"delete",
 		teamID,
 		"--force")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		return fmt.Errorf("%s (%w)", string(resp), err)
@@ -959,7 +959,7 @@ func deleteProject(projectID string) error {
 		"delete",
 		projectID,
 		"--force")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		return fmt.Errorf("%s (%w)", string(resp), err)
@@ -975,7 +975,7 @@ func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atl
 		"list",
 		"--projectId", projectID,
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	t.Log("available datafederations", string(resp))
 	require.NoError(t, err, string(resp))
@@ -995,7 +995,7 @@ func listServerlessByProject(t *testing.T, cliPath, projectID string) *atlasv2.P
 		"list",
 		"--projectId", projectID,
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
@@ -1045,7 +1045,7 @@ func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedNam
 		dataFedName,
 		"--projectId", projectID,
 		"--force")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }
@@ -1104,7 +1104,7 @@ func enableCompliancePolicy(projectID string) error {
 		"--force",
 		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 	)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	output, outputErr := RunAndGetStdOut(cmd)
 	if outputErr != nil {
 		return fmt.Errorf("%w\n %s", outputErr, string(output))
@@ -1143,7 +1143,7 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 		"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 	)
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, outputErr := RunAndGetStdOut(cmd)
 	if outputErr != nil {
 		return nil, fmt.Errorf("%w\n %s", outputErr, string(resp))
@@ -1195,7 +1195,7 @@ func getFedSettingsID(t *testing.T, cliPath string) string {
 		args = append(args, "--orgId", orgID)
 	}
 	cmd := exec.Command(cliPath, args...)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	var settings *atlasv2.OrgFederationSettings
@@ -1208,7 +1208,7 @@ func getFedSettingsID(t *testing.T, cliPath string) string {
 func listIDPs(t *testing.T, cliPath string, fedSettingsID string) *atlasv2.PaginatedFederationIdentityProvider {
 	t.Helper()
 	cmd := exec.Command(cliPath, "federatedAuthentication", "federationSettings", "identityProvider", "list", "--federationSettingsId", fedSettingsID, "-o", "json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	var idps *atlasv2.PaginatedFederationIdentityProvider
@@ -1219,7 +1219,7 @@ func listIDPs(t *testing.T, cliPath string, fedSettingsID string) *atlasv2.Pagin
 func deleteIDP(t *testing.T, cliPath string, id string, fedSettingsID string) {
 	t.Helper()
 	cmd := exec.Command(cliPath, federatedAuthenticationEntity, federationSettingsEntity, "identityProvider", "delete", id, "--federationSettingsId", fedSettingsID, "--force")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }
@@ -1246,7 +1246,7 @@ func createOrgAPIKey() (string, error) {
 		"--desc=e2e-test-helper",
 		"--role=ORG_READ_ONLY",
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 
 	if err != nil {
@@ -1276,7 +1276,7 @@ func deleteOrgAPIKey(id string) error {
 		"rm",
 		id,
 		"--force")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	return cmd.Run()
 }
 
@@ -1297,7 +1297,7 @@ func createTeam(teamName string) (string, error) {
 		"--username",
 		username,
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%w: %s", err, string(resp))
@@ -1326,7 +1326,7 @@ func OrgNUser(n int) (username, userID string, err error) {
 		"--limit",
 		strconv.Itoa(n+1),
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		return "", "", fmt.Errorf("error loading org users: %w (%s)", err, string(resp))
@@ -1353,7 +1353,7 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 		"ls",
 		"-o=json")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
@@ -1380,7 +1380,7 @@ func deleteKeys(t *testing.T, cliPath string, toDelete map[string]struct{}) {
 			"rm",
 			keyID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		_, err = RunAndGetStdOutAndErr(cmd)
 		if err != nil && !strings.Contains(err.Error(), "API_KEY_NOT_FOUND") {
 			errs = append(errs, err)
@@ -1398,7 +1398,7 @@ func deleteOrgInvitations(t *testing.T, cliPath string) {
 		invitationsEntity,
 		"ls",
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	t.Logf("%s\n", resp)
 	require.NoError(t, err, string(resp))
@@ -1416,7 +1416,7 @@ func deleteOrgTeams(t *testing.T, cliPath string) {
 		teamsEntity,
 		"ls",
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	t.Logf("%s\n", resp)
 	require.NoError(t, err, string(resp))
@@ -1435,7 +1435,7 @@ func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
 		"delete",
 		id,
 		"--force")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 }

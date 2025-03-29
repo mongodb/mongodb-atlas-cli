@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && streams_with_cluster)
+//go:build e2e || e2eSnap || (atlas && streams_with_cluster)
 
 package e2e_test
 
@@ -61,7 +61,7 @@ func TestStreamsWithClusters(t *testing.T) {
 			g.projectID,
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -95,7 +95,7 @@ func TestStreamsWithClusters(t *testing.T) {
 			g.projectID,
 		)
 
-		streamsCmd.Env = os.Environ()
+		streamsCmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		streamsResp, streamsErr := RunAndGetStdOut(streamsCmd)
 		req.NoError(streamsErr, string(streamsResp))
 
@@ -119,7 +119,7 @@ func TestStreamsWithClusters(t *testing.T) {
 			g.projectID,
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})

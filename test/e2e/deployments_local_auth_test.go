@@ -53,7 +53,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 				deploymentName,
 			)
 
-			cmd.Env = os.Environ()
+			cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 			r, errDiag := RunAndGetStdOut(cmd)
 			t.Log("Diagnostics")
@@ -74,7 +74,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--force",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, setupErr := RunAndGetStdOut(cmd)
 		require.NoError(t, setupErr, string(r))
@@ -90,7 +90,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--force",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, delErr := RunAndGetStdOut(cmd)
 		require.NoError(t, delErr, string(r))
@@ -104,7 +104,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"local",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		o, e, err := splitOutput(cmd)
 		require.NoError(t, err, e)
@@ -138,7 +138,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"connectionString",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
@@ -169,7 +169,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--archive="+localFile,
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
@@ -199,7 +199,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"-w",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, err := RunAndGetStdOut(cmd)
 		out := string(r)
@@ -226,7 +226,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"-w",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, err := RunAndGetStdOut(cmd)
 		out := string(r)
@@ -256,7 +256,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			dbUserPassword,
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		o, e, err := splitOutput(cmd)
 		req.NoError(err, e)
 		assert.Contains(t, o, searchIndexName)
@@ -283,7 +283,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			dbUserPassword,
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
@@ -365,7 +365,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--debug",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		var o, e bytes.Buffer
 		cmd.Stdout = &o
@@ -384,7 +384,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"--debug",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		r, err := cmd.CombinedOutput()
 		out := string(r)
@@ -401,7 +401,7 @@ func TestDeploymentsLocalWithAuth(t *testing.T) {
 			"local",
 			"--debug",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		r, err := cmd.CombinedOutput()
 		out := string(r)
 		require.NoError(t, err, out)

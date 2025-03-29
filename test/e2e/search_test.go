@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && search)
+//go:build e2e || e2eSnap || (atlas && search)
 
 package e2e_test
 
@@ -51,7 +51,7 @@ func TestSearch(t *testing.T) {
 			g.clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, resp)
 		var r *atlasv2.SampleDatasetStatus
@@ -63,7 +63,7 @@ func TestSearch(t *testing.T) {
 			"watch",
 			r.GetId(),
 			"--projectId", g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err = RunAndGetStdOut(cmd)
 		require.NoError(t, err, resp)
 	})
@@ -103,7 +103,7 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -122,7 +122,7 @@ func TestSearch(t *testing.T) {
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -168,7 +168,7 @@ func TestSearch(t *testing.T) {
 			fileName,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index *atlasv2.SearchIndexResponse
@@ -189,7 +189,7 @@ func TestSearch(t *testing.T) {
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Index '%s' deleted\n", indexID)
@@ -254,7 +254,7 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -357,7 +357,7 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -416,7 +416,7 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -436,7 +436,7 @@ func TestSearch(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -466,7 +466,7 @@ func TestSearchDeprecated(t *testing.T) {
 			g.clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, resp)
 		var r *atlasv2.SampleDatasetStatus
@@ -478,7 +478,7 @@ func TestSearchDeprecated(t *testing.T) {
 			"watch",
 			r.GetId(),
 			"--projectId", g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		require.NoError(t, cmd.Run())
 	})
 
@@ -515,7 +515,7 @@ func TestSearchDeprecated(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -534,7 +534,7 @@ func TestSearchDeprecated(t *testing.T) {
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -578,7 +578,7 @@ func TestSearchDeprecated(t *testing.T) {
 			fileName,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -598,7 +598,7 @@ func TestSearchDeprecated(t *testing.T) {
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Index '%s' deleted\n", indexID)
@@ -661,7 +661,7 @@ func TestSearchDeprecated(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -764,7 +764,7 @@ func TestSearchDeprecated(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -820,7 +820,7 @@ func TestSearchDeprecated(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
@@ -840,7 +840,7 @@ func TestSearchDeprecated(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 

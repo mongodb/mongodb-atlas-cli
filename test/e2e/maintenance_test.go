@@ -43,7 +43,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			"1",
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window updated.\n"
@@ -58,7 +58,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			"json",
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -76,7 +76,7 @@ func TestMaintenanceWindows(t *testing.T) {
 			"--force",
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window removed.\n"

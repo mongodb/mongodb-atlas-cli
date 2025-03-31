@@ -95,7 +95,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		a := assert.New(t)
 		// Create a unique email for this test
-		nFile := g.memoryRand("randFile", 1000)
+		nFile := g.memoryRand("randFile2", 1000)
 		emailOrgFile := fmt.Sprintf("test-file-%v@mongodb.com", nFile)
 
 		inviteData := admin.OrganizationInvitationRequest{

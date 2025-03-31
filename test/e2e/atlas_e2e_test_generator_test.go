@@ -532,13 +532,14 @@ func snapshotHashedName(r *http.Request) string {
 func (g *atlasE2ETestGenerator) snapshotName(r *http.Request) string {
 	g.t.Helper()
 
+	dir := g.snapshotDir()
 	baseName := g.snapshotNameFunc(r)
 
 	g.fileIDs[baseName]++
 
 	id := g.fileIDs[baseName]
 
-	fileName := fmt.Sprintf("%s_%d.snaphost", baseName, id)
+	fileName := path.Join(dir, fmt.Sprintf("%s_%d.snaphost", baseName, id))
 
 	return fileName
 }

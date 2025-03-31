@@ -40,6 +40,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/vscode"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -61,6 +62,7 @@ const (
 	skipConnect                = "skip"
 	compassConnect             = "compass"
 	mongoshConnect             = "mongosh"
+	vsCodeConnect              = "vscode"
 	deprecateMessageSharedTier = "The '%s' tier is deprecated. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
 )
 
@@ -71,10 +73,11 @@ var (
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel setup",
 	}
-	connectWithOptions     = []string{mongoshConnect, compassConnect, skipConnect}
+	connectWithOptions     = []string{mongoshConnect, compassConnect, vsCodeConnect, skipConnect}
 	connectWithDescription = map[string]string{
 		mongoshConnect: "MongoDB Shell",
 		compassConnect: "MongoDB Compass",
+		vsCodeConnect:  "MongoDB for VsCode in atlas setup btws",
 		skipConnect:    "Skip Connection",
 	}
 )
@@ -539,6 +542,14 @@ func (opts *Opts) runConnectWith() error {
 			return mongosh.ErrMongoshNotInstalled
 		}
 		return mongosh.Run(opts.DBUsername, opts.DBUserPassword, opts.connectionString)
+	case vsCodeConnect:
+		if !vscode.Detect() {
+			return vscode.ErrVsCodeCliNotInstalled
+		}
+		if _, err := log.Warningln("Launching VsCode..."); err != nil {
+			return err
+		}
+		return vscode.SaveConnection(opts.connectionString, opts.ClusterName, "atlas")
 	}
 
 	return nil

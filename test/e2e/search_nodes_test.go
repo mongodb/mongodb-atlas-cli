@@ -39,7 +39,7 @@ func TestSearchNodes(t *testing.T) {
 	req.NoError(err)
 
 	g.generateProject("searchNodes")
-	g.tier = tierM10
+	g.tier = tierM20
 	g.mDBVer = minSearchNodesMDBVersion
 	g.generateCluster()
 
@@ -57,8 +57,8 @@ func TestSearchNodes(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		respStr := string(resp)
 
-		require.Error(t, err, respStr)
-		require.Contains(t, respStr, "ATLAS_SEARCH_DEPLOYMENT_DOES_NOT_EXIST", respStr)
+		require.NoError(t, err, respStr)
+		require.Equal(t, "{}\n", respStr)
 	})
 
 	t.Run("Create search node", func(t *testing.T) {
@@ -186,7 +186,6 @@ func TestSearchNodes(t *testing.T) {
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID,
 			"--force",
-			"-w",
 			"-o=json",
 		)
 

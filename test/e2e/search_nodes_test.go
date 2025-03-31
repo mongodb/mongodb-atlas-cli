@@ -58,7 +58,7 @@ func TestSearchNodes(t *testing.T) {
 		respStr := string(resp)
 
 		require.NoError(t, err, respStr)
-		require.Equal(t, "{}", respStr)
+		require.Equal(t, "{}\n", respStr)
 	})
 
 	t.Run("Create search node", func(t *testing.T) {

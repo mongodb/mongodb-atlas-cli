@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/exec"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -58,20 +59,30 @@ func TestProjectSettings(t *testing.T) {
 		}
 	})
 
-	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			projectsEntity,
-			settingsEntity,
-			"update",
-			"--disableCollectDatabaseSpecificsStatistics",
-			"--projectId",
-			g.projectID,
-			"-o=json")
-		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
-		require.NoError(t, err, string(resp))
+	t.Run("Update", func(t *testing.T) {
 		var settings atlasv2.GroupSettings
-		require.NoError(t, json.Unmarshal(resp, &settings))
+
+		for i := 0; i < 10; i++ { // try again for 10 seconds
+			cmd := exec.Command(cliPath,
+				projectsEntity,
+				settingsEntity,
+				"update",
+				"--disableCollectDatabaseSpecificsStatistics",
+				"--projectId",
+				g.projectID,
+				"-o=json")
+			cmd.Env = os.Environ()
+			resp, err := RunAndGetStdOut(cmd)
+			require.NoError(t, err, string(resp))
+			require.NoError(t, json.Unmarshal(resp, &settings))
+
+			if !settings.GetIsCollectDatabaseSpecificsStatisticsEnabled() {
+				break
+			}
+
+			time.Sleep(time.Second)
+		}
+
 		a := assert.New(t)
 		a.False(settings.GetIsCollectDatabaseSpecificsStatisticsEnabled())
 		a.True(settings.GetIsSchemaAdvisorEnabled())

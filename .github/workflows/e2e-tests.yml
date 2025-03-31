@@ -35,7 +35,7 @@ jobs:
           # - atlas,deployments,local,auth,new # needs docker to run
           # - atlas,deployments,local,nocli # needs docker to run
           # - atlas,deployments,local,noauth # needs docker to run
-          # - atlas,generic # tests are failing in master
+          - atlas,generic
           - atlas,interactive
           - atlas,ldap
           - atlas,livemigrations

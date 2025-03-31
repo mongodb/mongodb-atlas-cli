@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 625
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 31 Mar 2025 09:35:50 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 60
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupExportJobsResource::getExportRestoreJobs
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=d9738db2661ac745595f15987b0c7f16f604cd21; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-443/backup/exports?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"createdAt":"2025-03-31T09:23:22Z","customData":[],"exportBucketId":"67ea5e266257d31a195f2ed2","exportStatus":{"exportedCollections":0,"totalCollections":0},"finishedAt":"2025-03-31T09:35:49Z","id":"67ea5f0ae470643dc2f6f4d0","prefix":"exported_snapshots/5efda682a3f2ed2e7dd6cde4/5efda6aea3f2ed2e7dd6ce05/cluster-443/2025-03-31T0921/1743413002","snapshotId":"67ea5e27e470643dc2f6f1a8","state":"Successful"}],"totalCount":1}

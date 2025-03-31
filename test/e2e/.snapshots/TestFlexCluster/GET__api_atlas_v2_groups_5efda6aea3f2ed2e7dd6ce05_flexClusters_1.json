@@ -1,53 +1,16 @@
-{
-  "Body": "H4sIAAAAAAAAAMVU72vbMBD9X/ShXxbHshI7iSGUNHFLIIRQu9tYGUWxzompLBlJDmtL//ed84P2Q7utgzGwwdbdvbt779lPRJbq3pL49olsDRQkJlvnahv7fi51IzwBu26l1UaLdTfXlc/r0udOcuvvmL8xuqmtH0IheMSB9woGgsFAiCgHGvqFhB9T2VgHxp6XKpeNgKlulBs708BZzTewbKpxcFY6qOwKzApPxgGlpEMMSBzGgizI8/f21TbSHQZd8/y+qVNwrlQbPHoioPhagiBxi/vcIfmhafZQA4JcJ6vFfDpJkwxxc60U5K7UKnXmVG8dV4IbBCDHZZEAnnvrvMK2tWe3GPQoxau7qUIuK3ViZc+QAhezAQ0GnTeLgr8pYr8u8s+tlQceeeO2qW5MDmMuqlKdGahlmXNkaLzXynvclNsmP4EjC6eFU7N72fmTNTvcW2ilnQAJDhoLotAGGD6/Nw5p+TbAHczwRjRGWd8LmBeMsmAQ0zAO6DdsuTfLvKX4Pb9gUtnGo0HUD1k/6gPNg4gOKB2x4SjsYXzfe3bxGQ2FCmLusEu7EQYUr9reQi+1m+1nv8HZL7VJWJKBdZhSG70rBZjXxmmthM+rY2h5QJl8STFflPY+LR/h6oLEYZe+AByzLhfJ171RNzjK8ewmvUsmaXYXtKwgyQ6OgflskWCy423fWzQ02hOl4q0Rsbs7WDJ57eMO2R3WvMZ9uIX0AT1dIdYiSxH+H3wHbygZerTnsWGGMlIUs/dRJSHC00E4jIIoYCGNegVdD8UfKHkc3esHo/+t3fQ6mWTz5dUH9Cu4tL8RsMXQjsv9D5HE7Pknq41mxIwFAAA=",
-  "Status": 200,
-  "Method": "GET",
-  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters",
-  "Headers": {
-    "Content-Encoding": [
-      "gzip"
-    ],
-    "Content-Length": [
-      "638"
-    ],
-    "Content-Type": [
-      "application/vnd.atlas.2024-11-13+json;charset=utf-8"
-    ],
-    "Date": [
-      "Fri, 28 Mar 2025 05:07:03 GMT"
-    ],
-    "Referrer-Policy": [
-      "strict-origin-when-cross-origin"
-    ],
-    "Server": [
-      "mdbws"
-    ],
-    "Strict-Transport-Security": [
-      "max-age=31536000; includeSubdomains;"
-    ],
-    "Vary": [
-      "Accept-Encoding"
-    ],
-    "X-Content-Type-Options": [
-      "nosniff"
-    ],
-    "X-Envoy-Upstream-Service-Time": [
-      "129"
-    ],
-    "X-Frame-Options": [
-      "DENY"
-    ],
-    "X-Java-Method": [
-      "ApiAtlasFlexClusterResource::getAllFlexClusters"
-    ],
-    "X-Java-Version": [
-      "17.0.14+7"
-    ],
-    "X-Mongodb-Service-Version": [
-      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
-    ],
-    "X-Permitted-Cross-Domain-Policies": [
-      "none"
-    ]
-  }
-}
+HTTP/2.0 200 OK
+Content-Length: 1869
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Mon, 31 Mar 2025 09:04:26 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 155
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexClusterResource::getAllFlexClusters
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-bcmsulp-shard-00-00.gm5almn.mongodb-dev.net:27017,ac-bcmsulp-shard-00-01.gm5almn.mongodb-dev.net:27017,ac-bcmsulp-shard-00-02.gm5almn.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-zgihuc-shard-0","standardSrv":"mongodb+srv://donotdeleteusedfore2ete.gm5almn.mongodb-dev.net"},"createDate":"2024-12-19T17:05:10Z","groupId":"5efda6aea3f2ed2e7dd6ce05","id":"676452464e0c160700928953","mongoDBVersion":"8.0.6","name":"doNotDeleteUsedForE2ETest","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"IDLE","tags":[],"terminationProtectionEnabled":true,"versionReleaseSystem":"LTS"},{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2025-03-31T09:04:25Z","groupId":"5efda6aea3f2ed2e7dd6ce05","id":"67ea5a9945e7f051644d3148","mongoDBVersion":"8.0.6","name":"cluster-926","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"CREATING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"},{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2025-03-31T09:04:14Z","groupId":"5efda6aea3f2ed2e7dd6ce05","id":"67ea5a8e3720c31313777a55","mongoDBVersion":"8.0.6","name":"cluster-981","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"CREATING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}],"totalCount":3}

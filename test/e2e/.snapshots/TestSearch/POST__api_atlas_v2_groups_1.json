@@ -1,56 +1,17 @@
-{
-  "Body": "H4sIAAAAAAAAALWTPW/DIBBA/wuzHRD+LGun7u3SqsMFjhgVgwU4HSL/9zqNmtZL5YX5nt496XQXIu0cE4ZHP7tEBCuIDAgJFRGEM96UrCp5/8wawTrB+SspiLnO2g5bjn3dsZZrWfcIVS11h+vcGvcRiXi7kCGgXtkhpSkKSqX1syoVng+jdyevjgfpRwqToZAsRHrm9BT8PEX6jz2gXZURrSZLkWEFld4lMA5DvG/b2DfmP3Cmmtt5drX8oHlKFCQ4QsSXuC9ny+dpmnBfy43L1BC8xBhxV8edzdPyOZiE1sS0o+WXXd4L4mDE77+CIIcSOZb1Q79afDg9Xf+9Qa2g7TlUmqPi2CnVSoU1Wb4AapuKmkMEAAA=",
-  "Status": 201,
-  "Method": "POST",
-  "Path": "/api/atlas/v2/groups",
-  "Headers": {
-    "Content-Encoding": [
-      "gzip"
-    ],
-    "Content-Length": [
-      "281"
-    ],
-    "Content-Type": [
-      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
-    ],
-    "Date": [
-      "Fri, 28 Mar 2025 05:07:16 GMT"
-    ],
-    "Location": [
-      "https://cloud-dev.mongodb.com//api/atlas/v1.0"
-    ],
-    "Referrer-Policy": [
-      "strict-origin-when-cross-origin"
-    ],
-    "Server": [
-      "mdbws"
-    ],
-    "Strict-Transport-Security": [
-      "max-age=31536000; includeSubdomains;"
-    ],
-    "Vary": [
-      "Accept-Encoding"
-    ],
-    "X-Content-Type-Options": [
-      "nosniff"
-    ],
-    "X-Envoy-Upstream-Service-Time": [
-      "5403"
-    ],
-    "X-Frame-Options": [
-      "DENY"
-    ],
-    "X-Java-Method": [
-      "ApiAtlasGroupsResource::addGroup"
-    ],
-    "X-Java-Version": [
-      "17.0.14+7"
-    ],
-    "X-Mongodb-Service-Version": [
-      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
-    ],
-    "X-Permitted-Cross-Domain-Policies": [
-      "none"
-    ]
-  }
-}
+HTTP/2.0 201 Created
+Content-Length: 1091
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 31 Mar 2025 09:05:16 GMT
+Location: https://cloud-dev.mongodb.com//api/atlas/v1.0
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 1136
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasGroupsResource::addGroup
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"clusterCount":0,"created":"2025-03-31T09:05:17Z","id":"67ea5acc3720c313137781b3","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5acc3720c313137781b3","rel":"self"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5acc3720c313137781b3/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5acc3720c313137781b3/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5acc3720c313137781b3/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5acc3720c313137781b3/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5acc3720c313137781b3/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5acc3720c313137781b3/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"search-e2e-651","orgId":"5efda682a3f2ed2e7dd6cde4"}

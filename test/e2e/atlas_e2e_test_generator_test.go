@@ -15,7 +15,10 @@
 package e2e_test
 
 import (
+	"bufio"
 	"bytes"
+	"compress/flate"
+	"compress/gzip"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -28,6 +31,8 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"slices"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -45,42 +50,103 @@ const (
 	snapshotModeSkip
 )
 
-type snapshotData struct {
-	Body   []byte
-	Status int
-	Method string
-	Path   string
+func decompress(r *http.Response) error {
+	var err error
+	shouldRemoveHeaders := false
 
-	Headers map[string][]string
+	for _, encoding := range r.Header["Content-Encoding"] {
+		reader := r.Body
+		decompression := true
+		switch encoding {
+		case "gzip", "x-gzip":
+			reader, err = gzip.NewReader(r.Body)
+			if err != nil {
+				return err
+			}
+		case "deflate":
+			reader = flate.NewReader(r.Body)
+		default:
+			decompression = false
+		}
+
+		if decompression {
+			shouldRemoveHeaders = true
+			buf := new(bytes.Buffer)
+
+			for {
+				const bufferSize = 1024
+				if _, err := io.CopyN(buf, reader, bufferSize); err != nil {
+					if err == io.EOF {
+						break
+					}
+					return err
+				}
+			}
+
+			if err := reader.Close(); err != nil {
+				return err
+			}
+
+			r.Body = io.NopCloser(buf)
+			r.ContentLength = int64(buf.Len())
+			r.Header["Content-Length"] = []string{strconv.FormatInt(r.ContentLength, 10)}
+		}
+	}
+
+	if shouldRemoveHeaders {
+		removeContentEncoding(r)
+	}
+
+	return nil
 }
 
-func (d snapshotData) Compare(v snapshotData) int {
-	methodCmp := strings.Compare(d.Method, v.Method)
+func removeContentEncoding(r *http.Response) {
+	delete(r.Header, "Content-Encoding")
+
+	if len(r.Header["Vary"]) == 0 {
+		return
+	}
+
+	r.Header["Vary"] = slices.DeleteFunc(r.Header["Vary"], func(s string) bool {
+		return strings.EqualFold(s, "accept-encoding")
+	})
+	if len(r.Header["Vary"]) == 0 {
+		delete(r.Header, "Vary")
+		return
+	}
+}
+
+func compareSnapshots(a *http.Response, b *http.Response) int {
+	methodCmp := strings.Compare(a.Request.Method, b.Request.Method)
 	if methodCmp != 0 {
 		return methodCmp
 	}
 
-	pathCmp := strings.Compare(d.Path, v.Path)
+	pathCmp := strings.Compare(a.Request.URL.Path, b.Request.URL.Path)
 	if pathCmp != 0 {
 		return pathCmp
 	}
 
-	statusCmp := d.Status - v.Status
+	statusCmp := a.StatusCode - b.StatusCode
 	if statusCmp != 0 {
 		return statusCmp
 	}
 
-	return bytes.Compare(d.Body, v.Body)
-}
-
-func (d snapshotData) Write(w http.ResponseWriter) (int, error) {
-	for k, v := range d.Headers {
-		w.Header()[k] = v
+	aBody, err := io.ReadAll(a.Body)
+	if err != nil {
+		return 0
 	}
+	a.Body.Close()
+	a.Body = io.NopCloser(bytes.NewReader(aBody))
 
-	w.WriteHeader(d.Status)
+	bBody, err := io.ReadAll(b.Body)
+	if err != nil {
+		return 0
+	}
+	b.Body.Close()
+	b.Body = io.NopCloser(bytes.NewReader(bBody))
 
-	return w.Write(d.Body)
+	return bytes.Compare(aBody, bBody)
 }
 
 // atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
@@ -96,7 +162,7 @@ type atlasE2ETestGenerator struct {
 	t                   *testing.T
 	fileIDs             map[string]int
 	memoryMap           map[string]any
-	lastData            *snapshotData
+	lastData            *http.Response
 	currentSnapshotMode snapshotMode
 }
 
@@ -487,7 +553,45 @@ func (g *atlasE2ETestGenerator) storeMemory() {
 	}
 }
 
-func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) snapshotData {
+func (g *atlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response {
+	g.t.Helper()
+
+	buf, err := httputil.DumpResponse(r, true)
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
+	reader := bufio.NewReader(bytes.NewReader(buf))
+	resp, err := http.ReadResponse(reader, r.Request)
+	if err != nil {
+		g.t.Fatal(err)
+	}
+	resp.Body = io.NopCloser(reader)
+
+	if err := decompress(resp); err != nil {
+		g.t.Fatal(err)
+	}
+
+	return resp
+}
+
+func (g *atlasE2ETestGenerator) storeSnapshot(r *http.Response) {
+	g.t.Helper()
+
+	out, err := httputil.DumpResponse(r, true)
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
+	filename := g.snapshotName(r.Request)
+	g.t.Logf("writing snapshot at %q", filename)
+	g.enforceDir(filename)
+	if err := os.WriteFile(filename, out, 0600); err != nil {
+		g.t.Fatal(err)
+	}
+}
+
+func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	g.t.Helper()
 
 	filename := g.snapshotName(r)
@@ -502,12 +606,13 @@ func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) snapshotData {
 		g.t.Fatal(err)
 	}
 
-	var data snapshotData
-	if err := json.Unmarshal(buf, &data); err != nil {
+	reader := bufio.NewReader(bytes.NewReader(buf))
+	resp, err := http.ReadResponse(reader, r)
+	if err != nil {
 		g.t.Fatal(err)
 	}
 
-	return data
+	return resp
 }
 
 func (g *atlasE2ETestGenerator) snapshotServer() {
@@ -542,37 +647,17 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 			return nil // skip 401
 		}
 
-		data := snapshotData{
-			Path:    resp.Request.URL.Path,
-			Method:  resp.Request.Method,
-			Status:  resp.StatusCode,
-			Headers: resp.Header,
+		snapshot := g.prepareSnapshot(resp)
+
+		if g.lastData != nil && compareSnapshots(snapshot, g.lastData) == 0 {
+			return nil // skip if the response is the same
 		}
 
-		var buf bytes.Buffer
-		if _, err := io.Copy(&buf, resp.Body); err != nil {
-			return err
-		}
-		resp.Body.Close()
-		resp.Body = io.NopCloser(&buf)
+		g.lastData = snapshot
 
-		data.Body = buf.Bytes()
+		g.storeSnapshot(snapshot)
 
-		if g.lastData != nil && data.Compare(*g.lastData) == 0 {
-			return nil // skip same content
-		}
-
-		g.lastData = &data
-
-		out, err := json.MarshalIndent(data, "", "  ")
-		if err != nil {
-			return err
-		}
-
-		filename := g.snapshotName(resp.Request)
-		g.t.Logf("writing snapshot at %q", filename)
-		g.enforceDir(filename)
-		return os.WriteFile(filename, out, 0600)
+		return nil
 	}
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -583,7 +668,16 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 		}
 
 		data := g.readSnapshot(r)
-		if _, err := data.Write(w); err != nil {
+
+		for k, v := range data.Header {
+			w.Header()[k] = v
+		}
+		w.WriteHeader(data.StatusCode)
+
+		if _, err := io.Copy(w, data.Body); err != nil {
+			g.t.Fatal(err)
+		}
+		if err := data.Body.Close(); err != nil {
 			g.t.Fatal(err)
 		}
 	}))

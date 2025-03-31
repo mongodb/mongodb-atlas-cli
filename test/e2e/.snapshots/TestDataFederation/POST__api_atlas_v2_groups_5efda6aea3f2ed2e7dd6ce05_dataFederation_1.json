@@ -1,53 +1,16 @@
-{
-  "Body": "H4sIAAAAAAAAAHWRMU/DMBCF/0rluQ6OnThptqqqRBeEKmBBDNf4EiKldmo7pajKf8dOBWKAySffve/5na+k7s2oHq05dwrtxuima0l1JfDh4oEXj1ZDv1OkIrVc5bLOGG2KRtCMZUjLlAsKKecKDzKVvCFL0sFx7dx4RLU3Pa73D0EKVlcBWYVeVYm8FFJwzljOKhtm7o5Gt0YdKPgeHIWhu9zKuu+oR+dv1GeH9g8cX60k42UuBM8DzsTpSJ3fLIuaZWVdlJzJTIlUYFkKOKzINC2JAg8heo3O7bHtjCaVHvt+SVprxmHW59gokIAgGo6KY6GUrJHlwePdOK/hiGFRrwQ50oijDYY9gg8wKgtJ21RfTgkkpxHtZ/KdU+E50ejJ25JEQvD5Rx9sBtudweNWq8F02t//cg1y50Mv6Nebp93LlsQLY6HF+HmxjHOLOdRijnsA93M1TV8FlHUT/wEAAA==",
-  "Status": 200,
-  "Method": "POST",
-  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/dataFederation",
-  "Headers": {
-    "Content-Encoding": [
-      "gzip"
-    ],
-    "Content-Length": [
-      "355"
-    ],
-    "Content-Type": [
-      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
-    ],
-    "Date": [
-      "Fri, 28 Mar 2025 05:08:16 GMT"
-    ],
-    "Referrer-Policy": [
-      "strict-origin-when-cross-origin"
-    ],
-    "Server": [
-      "mdbws"
-    ],
-    "Strict-Transport-Security": [
-      "max-age=31536000; includeSubdomains;"
-    ],
-    "Vary": [
-      "Accept-Encoding"
-    ],
-    "X-Content-Type-Options": [
-      "nosniff"
-    ],
-    "X-Envoy-Upstream-Service-Time": [
-      "477"
-    ],
-    "X-Frame-Options": [
-      "DENY"
-    ],
-    "X-Java-Method": [
-      "ApiAtlasDataFederationResource::createTenant"
-    ],
-    "X-Java-Version": [
-      "17.0.14+7"
-    ],
-    "X-Mongodb-Service-Version": [
-      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
-    ],
-    "X-Permitted-Cross-Domain-Policies": [
-      "none"
-    ]
-  }
-}
+HTTP/2.0 200 OK
+Content-Length: 511
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 31 Mar 2025 09:04:15 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 486
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDataFederationResource::createTenant
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProviderConfig":{"aws":{"externalId":"c6956c40-f7f3-404e-8123-a122deb6162f","iamAssumedRoleARN":"arn:aws:iam::358363220050:role/mongodb-atlas-apix-atlascli-test","iamUserARN":"arn:aws:iam::299602853325:root","roleId":"67c048c782064d313e883ab9"}},"dataProcessRegion":null,"groupId":"5efda6aea3f2ed2e7dd6ce05","hostnames":["e2e-data-federation-546-g1nxq.a.query.mongodb-dev.net"],"name":"e2e-data-federation-546","privateEndpointHostnames":[],"state":"ACTIVE","storage":{"stores": null, "databases": null}}

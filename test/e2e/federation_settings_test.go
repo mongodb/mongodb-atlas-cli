@@ -39,6 +39,10 @@ func TestIdentityProviders(t *testing.T) {
 	var oidcIWorkforceIdpID string
 
 	g.Run("Describe an org federation settings", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		if IsGov() {
+			t.Skip("Skipping test in Gov environment")
+		}
+
 		cmd := exec.Command(cliPath,
 			federatedAuthenticationEntity,
 			federationSettingsEntity,

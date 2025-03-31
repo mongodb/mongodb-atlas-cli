@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1903
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 31 Mar 2025 09:23:12 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 62
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=d9738db2661ac745595f15987b0c7f16f604cd21; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5ac23720c31313777fbe/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-03-31T09:22:36Z","groupId":"67ea5ac23720c31313777fbe","hostname":"atlas-1489y0-shard-00-00.9uvke.mongodb-dev.net","id":"atlas-1489y0-shard-00-00.9uvke.mongodb-dev.net:27017","lastPing":"2025-03-31T09:23:08Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5ac23720c31313777fbe/processes/atlas-1489y0-shard-00-00.9uvke.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-1489y0-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-907-shard-00-00.9uvke.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-31T09:22:36Z","groupId":"67ea5ac23720c31313777fbe","hostname":"atlas-1489y0-shard-00-01.9uvke.mongodb-dev.net","id":"atlas-1489y0-shard-00-01.9uvke.mongodb-dev.net:27017","lastPing":"2025-03-31T09:23:08Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5ac23720c31313777fbe/processes/atlas-1489y0-shard-00-01.9uvke.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-1489y0-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-907-shard-00-01.9uvke.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-31T09:22:36Z","groupId":"67ea5ac23720c31313777fbe","hostname":"atlas-1489y0-shard-00-02.9uvke.mongodb-dev.net","id":"atlas-1489y0-shard-00-02.9uvke.mongodb-dev.net:27017","lastPing":"2025-03-31T09:23:08Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5ac23720c31313777fbe/processes/atlas-1489y0-shard-00-02.9uvke.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-1489y0-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-907-shard-00-02.9uvke.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1879
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 31 Mar 2025 09:23:02 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 64
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=d9738db2661ac745595f15987b0c7f16f604cd21; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5a7d3720c313137777c9/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-03-31T09:22:26Z","groupId":"67ea5a7d3720c313137777c9","hostname":"atlas-kbnw0p-shard-00-00.raofe.mongodb-dev.net","id":"atlas-kbnw0p-shard-00-00.raofe.mongodb-dev.net:27017","lastPing":"2025-03-31T09:22:51Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5a7d3720c313137777c9/processes/atlas-kbnw0p-shard-00-00.raofe.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-kbnw0p-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-472-shard-00-00.raofe.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-31T09:22:27Z","groupId":"67ea5a7d3720c313137777c9","hostname":"atlas-kbnw0p-shard-00-01.raofe.mongodb-dev.net","id":"atlas-kbnw0p-shard-00-01.raofe.mongodb-dev.net:27017","lastPing":"2025-03-31T09:22:51Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5a7d3720c313137777c9/processes/atlas-kbnw0p-shard-00-01.raofe.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-kbnw0p-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-472-shard-00-01.raofe.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-31T09:22:27Z","groupId":"67ea5a7d3720c313137777c9","hostname":"atlas-kbnw0p-shard-00-02.raofe.mongodb-dev.net","id":"atlas-kbnw0p-shard-00-02.raofe.mongodb-dev.net:27017","lastPing":"2025-03-31T09:22:51Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea5a7d3720c313137777c9/processes/atlas-kbnw0p-shard-00-02.raofe.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-kbnw0p-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-472-shard-00-02.raofe.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

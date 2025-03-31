@@ -1,53 +1,16 @@
-{
-  "Body": "H4sIAAAAAAAAACXMsQrCMBRG4Xe5s4WYhOTq5ugiooOjpDd/JZgYaFMX8d0NuB4+zofuKdKenIczykavnJ7EMoKxcDzRhsZVnminUNBdqa9HlZwGaAwNS1u6kFzXeJ7rO0XMHR1u115TKJeacfzvRVkWz1o5G83WgNmEcUffH8/AB0SBAAAA",
-  "Status": 200,
-  "Method": "POST",
-  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/backup/exportBuckets",
-  "Headers": {
-    "Content-Encoding": [
-      "gzip"
-    ],
-    "Content-Length": [
-      "135"
-    ],
-    "Content-Type": [
-      "application/vnd.atlas.2024-05-30+json;charset=utf-8"
-    ],
-    "Date": [
-      "Fri, 28 Mar 2025 05:14:53 GMT"
-    ],
-    "Referrer-Policy": [
-      "strict-origin-when-cross-origin"
-    ],
-    "Server": [
-      "mdbws"
-    ],
-    "Strict-Transport-Security": [
-      "max-age=31536000; includeSubdomains;"
-    ],
-    "Vary": [
-      "Accept-Encoding"
-    ],
-    "X-Content-Type-Options": [
-      "nosniff"
-    ],
-    "X-Envoy-Upstream-Service-Time": [
-      "302"
-    ],
-    "X-Frame-Options": [
-      "DENY"
-    ],
-    "X-Java-Method": [
-      "ApiAtlasDiskBackupExportBucketsResource::addExportBucket"
-    ],
-    "X-Java-Version": [
-      "17.0.14+7"
-    ],
-    "X-Mongodb-Service-Version": [
-      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
-    ],
-    "X-Permitted-Cross-Domain-Policies": [
-      "none"
-    ]
-  }
-}
+HTTP/2.0 200 OK
+Content-Length: 129
+Content-Type: application/vnd.atlas.2024-05-30+json;charset=utf-8
+Date: Mon, 31 Mar 2025 09:19:34 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 649
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupExportBucketsResource::addExportBucket
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=d9738db2661ac745595f15987b0c7f16f604cd21; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"_id":"67ea5e266257d31a195f2ed2","bucketName":"mongocli-e2e-tests","cloudProvider":"AWS","iamRoleId":"67c048c782064d313e883ab9"}

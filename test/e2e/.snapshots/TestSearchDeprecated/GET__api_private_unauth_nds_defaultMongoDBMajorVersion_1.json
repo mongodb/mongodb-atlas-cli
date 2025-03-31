@@ -1,44 +1,15 @@
-{
-  "Body": "OC4w",
-  "Status": 200,
-  "Method": "GET",
-  "Path": "/api/private/unauth/nds/defaultMongoDBMajorVersion",
-  "Headers": {
-    "Content-Length": [
-      "3"
-    ],
-    "Content-Type": [
-      "text/plain"
-    ],
-    "Date": [
-      "Fri, 28 Mar 2025 05:16:31 GMT"
-    ],
-    "Referrer-Policy": [
-      "strict-origin-when-cross-origin"
-    ],
-    "Server": [
-      "mdbws"
-    ],
-    "Strict-Transport-Security": [
-      "max-age=31536000; includeSubdomains;"
-    ],
-    "Vary": [
-      "Accept-Encoding"
-    ],
-    "X-Content-Type-Options": [
-      "nosniff"
-    ],
-    "X-Frame-Options": [
-      "DENY"
-    ],
-    "X-Mongodb-Service-Version": [
-      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
-    ],
-    "X-Permitted-Cross-Domain-Policies": [
-      "none"
-    ],
-    "X-Xgen-Up-Proto": [
-      "HTTP/2"
-    ]
-  }
-}
+HTTP/2.0 200 OK
+Content-Length: 3
+Content-Type: text/plain
+Date: Mon, 31 Mar 2025 09:26:30 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Mongodb-Service-Version: gitHash=d9738db2661ac745595f15987b0c7f16f604cd21; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Xgen-Up-Proto: HTTP/2
+
+8.0

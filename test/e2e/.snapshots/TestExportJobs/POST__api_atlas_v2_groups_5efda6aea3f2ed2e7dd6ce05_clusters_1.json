@@ -1,59 +1,18 @@
-{
-  "Body": "H4sIAAAAAAAAAL1V227bMAz9lUHPbXxJc5nf3MQrMuRSxG67dRgKxWISrbJkSHKGtMi/j4rSrulQYC/tQwBFJA+PSB76kVC2obIENlByyVeNppYrSZJHUjbGqmpWgzRGDHi9Bu19CmGimCQ/fp6QikteNVUm6UIAQ8OlVlaVSpCEFOM8uovJCbHCvAyfKAZoHmZf0qtxQXYnZEHL+6Y+gJDE6gbwkqO7hNIq7djAk3VJhUGzBsouNSxBA7JHPAOlkozqrUMsBZIHXWxrZ5pnl+PRIM2zAtmUHhUfmVvN5coguotAQAtD/GFAHMad07B9GveLsJOEvSTq32Io4+Y+5w9wcU6SKGyF/uaGaizD07O+XI3H3+9u0vkkG2IIktPb2mVL7RyMxfpsOAN8EpnOphl6rIRaUDHwhHMQywmVdAUsX1PNEPf5xSutmnqEFSAdWDLapUDbyxhYDD3GuiWEHUTjzt7tQTeGfrcXduNledZHxzMWdRjaBV2AML55gst7d3wkaywkxq2trU0SBKVQDTtlsGlVSq4UW7RKVQW05gG1gppgEwd7MiZ4i0lwaIB5OpzG3TPiuib2rRJL7NJH5Q38fAUa6680fFUL80zlKPVR2pfeH8/VSFqbtbL/w/Sv785J0lmG5xP6S+lrRN+rmfRbIXm2HV23umiQtHLDe9ysmjbmheJqbl9JVEMteLlfGHkNpZ+ltycw/AwuVVPtRxu9Iwexwmi/GHw8Tr/YWl6aAyQiSmPdinLSQ+xJFB60OJpd5iRphyEqERbmWommgoPm8yKdDtO506BEZQ5UIy1JQlQ6bazKSyr22sI1p6q6car/d8fUGhjHVbGB7JXFYDwM1W95bNh5Xm4/vEbboQ0ELh53+R5Pa+8cYa40t1uS9Nwfv2qmvrfpTU782pxJsX2v4vp+HlJe5XdZmhd30X4wH5SE0dvDAW3ifQ7Bt3j85CO1UnYA2h6yj/L5xXw2K75FGIHs7VPIYJ6lxWh64b454JbyfjTdJ8kv/Ndd3HgdzLEv1EC+xdmvEGZc5GT3B2KFCoEZBwAA",
-  "Status": 201,
-  "Method": "POST",
-  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters",
-  "Headers": {
-    "Content-Encoding": [
-      "gzip"
-    ],
-    "Content-Length": [
-      "792"
-    ],
-    "Content-Type": [
-      "application/vnd.atlas.2023-02-01+json;charset=utf-8"
-    ],
-    "Date": [
-      "Fri, 28 Mar 2025 05:07:18 GMT"
-    ],
-    "Deprecation": [
-      "Mon, 5 Aug 2024 00:00:00 GMT"
-    ],
-    "Referrer-Policy": [
-      "strict-origin-when-cross-origin"
-    ],
-    "Server": [
-      "mdbws"
-    ],
-    "Strict-Transport-Security": [
-      "max-age=31536000; includeSubdomains;"
-    ],
-    "Sunset": [
-      "Sun, 1 Mar 2026 00:00:00 GMT"
-    ],
-    "Vary": [
-      "Accept-Encoding"
-    ],
-    "X-Content-Type-Options": [
-      "nosniff"
-    ],
-    "X-Envoy-Upstream-Service-Time": [
-      "716"
-    ],
-    "X-Frame-Options": [
-      "DENY"
-    ],
-    "X-Java-Method": [
-      "ApiAtlasClusterDescriptionV15Resource::createCluster"
-    ],
-    "X-Java-Version": [
-      "17.0.14+7"
-    ],
-    "X-Mongodb-Service-Version": [
-      "gitHash=6940c8e13d6a29893dbafad827d54c5c384bd623; versionString=master"
-    ],
-    "X-Permitted-Cross-Domain-Policies": [
-      "none"
-    ]
-  }
-}
+HTTP/2.0 201 Created
+Content-Length: 1817
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Mon, 31 Mar 2025 09:04:10 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 659
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::createCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"advancedConfiguration":{"customOpensslCipherConfigTls12":[],"minimumEnabledTlsProtocol":"TLS1_2","tlsCipherConfigMode":"DEFAULT"},"backupEnabled":true,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2025-03-31T09:04:10Z","diskSizeGB":10.0,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"5efda6aea3f2ed2e7dd6ce05","id":"67ea5a8a3720c31313777945","labels":[],"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-443","rel":"self"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-443/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-443/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.6","name":"cluster-443","paused":false,"pitEnabled":true,"replicationSpecs":[{"id":"67ea5a8a3720c313137778ea","numShards":1,"regionConfigs":[{"analyticsSpecs":{"instanceSize":"M10","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":false}},"electableSpecs":{"instanceSize":"M10","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":3},"priority":7,"providerName":"AWS","readOnlySpecs":{"instanceSize":"M10","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"regionName":"US_EAST_1"}],"zoneId":"67ea5a8a3720c3131377790a","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"CREATING","terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

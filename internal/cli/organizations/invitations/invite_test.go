@@ -23,11 +23,9 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	"github.com/stretchr/testify/assert"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
-
-	"github.com/spf13/afero"
 )
 
 func TestCreate_Run(t *testing.T) {
@@ -72,7 +70,7 @@ func TestInvite_Run_WithFile(t *testing.T) {
 		}),
 	}
 	invitationJSON, err := json.Marshal(invitation)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	_ = afero.WriteFile(fs, testFile, invitationJSON, 0600)
 
 	expectedResult := &admin.OrganizationInvitation{}

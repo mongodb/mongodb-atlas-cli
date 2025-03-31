@@ -201,6 +201,8 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 	})
 
+	const OrgGroupCreator = "ORG_GROUP_CREATOR"
+
 	g.Run("Update with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
@@ -208,7 +210,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		nFile := g.memoryRand("randFile", 1000)
 
 		// Define the update data, including GroupRoleAssignments if desired
-		updateRole := "ORG_GROUP_CREATOR"
+		updateRole := OrgGroupCreator
 		updateData := admin.OrganizationInvitationRequest{
 			Roles: pointer.Get([]string{updateRole}),
 		}
@@ -240,7 +242,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		nFile := g.memoryRand("randFile", 1000)
 
 		// Define the update data, including GroupRoleAssignments if desired
-		updateRole := "ORG_GROUP_CREATOR"
+		updateRole := OrgGroupCreator
 		updateData := admin.OrganizationInvitationRequest{
 			Roles: pointer.Get([]string{updateRole}),
 		}

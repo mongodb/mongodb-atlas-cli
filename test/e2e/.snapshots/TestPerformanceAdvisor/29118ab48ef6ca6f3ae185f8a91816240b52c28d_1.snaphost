@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1903
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 31 Mar 2025 14:27:01 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 53
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=cfe2c65b603088ca4ca8cfc3d63bace4020256a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67eaa49b4d846165b11452f6/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-03-31T14:26:24Z","groupId":"67eaa49b4d846165b11452f6","hostname":"atlas-kd7fll-shard-00-00.8idcj.mongodb-dev.net","id":"atlas-kd7fll-shard-00-00.8idcj.mongodb-dev.net:27017","lastPing":"2025-03-31T14:26:55Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67eaa49b4d846165b11452f6/processes/atlas-kd7fll-shard-00-00.8idcj.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-kd7fll-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-106-shard-00-00.8idcj.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-31T14:26:24Z","groupId":"67eaa49b4d846165b11452f6","hostname":"atlas-kd7fll-shard-00-01.8idcj.mongodb-dev.net","id":"atlas-kd7fll-shard-00-01.8idcj.mongodb-dev.net:27017","lastPing":"2025-03-31T14:26:55Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67eaa49b4d846165b11452f6/processes/atlas-kd7fll-shard-00-01.8idcj.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-kd7fll-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-106-shard-00-01.8idcj.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-31T14:26:24Z","groupId":"67eaa49b4d846165b11452f6","hostname":"atlas-kd7fll-shard-00-02.8idcj.mongodb-dev.net","id":"atlas-kd7fll-shard-00-02.8idcj.mongodb-dev.net:27017","lastPing":"2025-03-31T14:26:55Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67eaa49b4d846165b11452f6/processes/atlas-kd7fll-shard-00-02.8idcj.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-kd7fll-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-106-shard-00-02.8idcj.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

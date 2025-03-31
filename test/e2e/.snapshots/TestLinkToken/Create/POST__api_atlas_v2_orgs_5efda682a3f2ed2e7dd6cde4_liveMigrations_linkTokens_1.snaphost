@@ -1,16 +1,16 @@
 HTTP/2.0 201 Created
 Content-Length: 208
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 31 Mar 2025 12:44:36 GMT
+Date: Mon, 31 Mar 2025 14:19:59 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 117
+X-Envoy-Upstream-Service-Time: 120
 X-Frame-Options: DENY
 X-Java-Method: ApiLiveMigrationsLinkTokensResource::createLinkToken
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=2d549c805065c765810442bca5a24f63ca5de3db; versionString=master
+X-Mongodb-Service-Version: gitHash=cfe2c65b603088ca4ca8cfc3d63bace4020256a0; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"linkToken":"eyJvcmdJZCI6IjVlZmRhNjgyYTNmMmVkMmU3ZGQ2Y2RlNCIsIm9yZ05hbWUiOiJBdGxhcyBDTEkgRTJFIiwicHJpdmF0ZUFwaUtleSI6ImY3MDk2MzM2LTE2OGItNDBlYS04M2FhLTE4Y2IyNDRkODZiYSIsInB1YmxpY0FwaUtleSI6ImpvZXZ1d2txIn0="}
+{"linkToken":"eyJvcmdJZCI6IjVlZmRhNjgyYTNmMmVkMmU3ZGQ2Y2RlNCIsIm9yZ05hbWUiOiJBdGxhcyBDTEkgRTJFIiwicHJpdmF0ZUFwaUtleSI6IjJhMjM3NDQ5LWZhMWEtNGExMy05YjQ1LTZmZWFkZGU4MmJhOSIsInB1YmxpY0FwaUtleSI6Im1hZmlqZmthIn0="}

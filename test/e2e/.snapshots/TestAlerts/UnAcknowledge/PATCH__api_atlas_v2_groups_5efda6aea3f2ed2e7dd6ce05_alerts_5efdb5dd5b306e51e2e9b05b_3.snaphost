@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 851
+Content-Type: application/vnd.atlas.2024-05-30+json;charset=utf-8
+Date: Mon, 31 Mar 2025 14:21:14 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 55
+X-Frame-Options: DENY
+X-Java-Method: ApiAlertsResource20240530::patchAlert
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=cfe2c65b603088ca4ca8cfc3d63bace4020256a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"alertConfigId":"5efdb59f93fc35705f337179","created":"2020-07-02T10:24:29Z","eventTypeName":"USERS_WITHOUT_MULTI_FACTOR_AUTH","groupId":"5efda6aea3f2ed2e7dd6ce05","id":"5efdb5dd5b306e51e2e9b05b","lastNotified":"2025-03-31T14:21:14Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/alerts/5efdb5dd5b306e51e2e9b05b","rel":"self"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/alertConfigs/5efdb59f93fc35705f337179","rel":"https://cloud-dev.mongodb.com/alertConfig"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/alerts/5efdb5dd5b306e51e2e9b05b/alertConfigs","rel":"https://cloud-dev.mongodb.com/alertConfigs"}],"orgId":"5efda682a3f2ed2e7dd6cde4","resolved":"2022-03-16T18:39:26Z","status":"CLOSED","updated":"2025-03-31T14:21:14Z"}

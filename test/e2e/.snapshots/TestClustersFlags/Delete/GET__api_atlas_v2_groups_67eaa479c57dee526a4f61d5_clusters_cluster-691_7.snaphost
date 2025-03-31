@@ -1,0 +1,18 @@
+HTTP/2.0 404 Not Found
+Content-Length: 204
+Content-Type: application/json
+Date: Mon, 31 Mar 2025 14:31:46 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 50
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::getCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=cfe2c65b603088ca4ca8cfc3d63bace4020256a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"No cluster named cluster-691 exists in group 67eaa479c57dee526a4f61d5.","error":404,"errorCode":"CLUSTER_NOT_FOUND","parameters":["cluster-691","67eaa479c57dee526a4f61d5"],"reason":"Not Found"}

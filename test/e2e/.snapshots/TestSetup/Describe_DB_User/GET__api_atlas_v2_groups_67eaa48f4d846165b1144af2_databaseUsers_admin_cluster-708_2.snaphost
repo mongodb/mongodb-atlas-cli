@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 392
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 31 Mar 2025 14:20:21 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 40
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::getUserByName
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=cfe2c65b603088ca4ca8cfc3d63bace4020256a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"awsIAMType":"NONE","databaseName":"admin","groupId":"67eaa48f4d846165b1144af2","labels":[],"ldapAuthType":"NONE","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67eaa48f4d846165b1144af2/databaseUsers/admin/cluster-708","rel":"self"}],"oidcAuthType":"NONE","roles":[{"databaseName":"admin","roleName":"atlasAdmin"}],"scopes":[],"username":"cluster-708","x509Type":"NONE"}

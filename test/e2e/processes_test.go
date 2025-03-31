@@ -35,7 +35,7 @@ func TestProcesses(t *testing.T) {
 
 	var processes *atlasv2.PaginatedHostViewAtlas
 
-	t.Run("list", func(t *testing.T) {
+	g.Run("list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			processesEntity,
 			"list",
@@ -49,7 +49,7 @@ func TestProcesses(t *testing.T) {
 		require.NotEmpty(t, processes.Results)
 	})
 
-	t.Run("list compact", func(t *testing.T) {
+	g.Run("list compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			processesEntity,
 			"list",
@@ -65,7 +65,7 @@ func TestProcesses(t *testing.T) {
 		require.NotEmpty(t, hostViewsCompact)
 	})
 
-	t.Run("describe", func(t *testing.T) {
+	g.Run("describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			processesEntity,
 			"describe",

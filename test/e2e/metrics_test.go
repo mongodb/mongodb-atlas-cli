@@ -37,20 +37,20 @@ func TestMetrics(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("processes", func(t *testing.T) {
+	g.Run("processes", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		process(t, cliPath, hostname, g.projectID)
 	})
 
-	t.Run("processes with type", func(t *testing.T) {
+	g.Run("processes with type", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		processWithType(t, cliPath, hostname, g.projectID)
 	})
 
-	t.Run("databases", func(t *testing.T) {
-		databases(t, cliPath, hostname, g.projectID)
+	g.Run("databases", func(_ *testing.T) {
+		databases(g, cliPath, hostname, g.projectID)
 	})
 
-	t.Run("disks", func(t *testing.T) {
-		disks(t, cliPath, hostname, g.projectID)
+	g.Run("disks", func(_ *testing.T) {
+		disks(g, cliPath, hostname, g.projectID)
 	})
 }
 
@@ -93,9 +93,9 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 	assert.NotEmpty(t, metrics.Measurements)
 }
 
-func databases(t *testing.T, cliPath, hostname, projectID string) {
-	t.Helper()
-	t.Run("databases list", func(t *testing.T) {
+func databases(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
+	g.t.Helper()
+	g.Run("databases list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			metricsEntity,
 			"databases",
@@ -112,7 +112,7 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 		assert.NotEmpty(t, db.GetTotalCount())
 	})
 
-	t.Run("databases describe", func(t *testing.T) {
+	g.Run("databases describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			metricsEntity,
 			"databases",
@@ -133,9 +133,9 @@ func databases(t *testing.T, cliPath, hostname, projectID string) {
 	})
 }
 
-func disks(t *testing.T, cliPath, hostname, projectID string) {
-	t.Helper()
-	t.Run("disks list", func(t *testing.T) {
+func disks(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
+	g.t.Helper()
+	g.Run("disks list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			metricsEntity,
 			"disks",
@@ -152,7 +152,7 @@ func disks(t *testing.T, cliPath, hostname, projectID string) {
 		assert.Positive(t, d.GetTotalCount())
 	})
 
-	t.Run("disks describe", func(t *testing.T) {
+	g.Run("disks describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			metricsEntity,
 			"disks",

@@ -70,16 +70,16 @@ func generateTestPlugin(directoryName string, binaryName string, manifestContent
 }
 
 func TestPluginInstall(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	runPluginInstallTest(t, cliPath, "Invalid version for plugin", true, examplePluginRepository+"@2.3.4.5.6")
-	runPluginInstallTest(t, cliPath, "Plugin version does not exist", true, examplePluginRepository+"@300.200.100")
-	runPluginInstallTest(t, cliPath, "Repository Values invalid", true, "invalid-repository")
-	runPluginInstallTest(t, cliPath, "Plugin does not exist", true, "github-repo/does-not-exist")
-	runPluginInstallTest(t, cliPath, "Install Successful", false, examplePluginRepository)
-	runPluginInstallTest(t, cliPath, "Plugin already installed", true, examplePluginRepository)
+	runPluginInstallTest(g, cliPath, "Invalid version for plugin", true, examplePluginRepository+"@2.3.4.5.6")
+	runPluginInstallTest(g, cliPath, "Plugin version does not exist", true, examplePluginRepository+"@300.200.100")
+	runPluginInstallTest(g, cliPath, "Repository Values invalid", true, "invalid-repository")
+	runPluginInstallTest(g, cliPath, "Plugin does not exist", true, "github-repo/does-not-exist")
+	runPluginInstallTest(g, cliPath, "Install Successful", false, examplePluginRepository)
+	runPluginInstallTest(g, cliPath, "Plugin already installed", true, examplePluginRepository)
 
 	deleteAllPlugins(t)
 
@@ -91,7 +91,7 @@ commands:
     example:
         description: command with same name as plugin command`)
 	require.NoError(t, err)
-	runPluginInstallTest(t, cliPath, "Plugin with same command already installed", true, examplePluginRepository)
+	runPluginInstallTest(g, cliPath, "Plugin with same command already installed", true, examplePluginRepository)
 
 	deleteAllPlugins(t)
 
@@ -103,12 +103,12 @@ commands:
     testplugin:
         description: this is the a test command`)
 	require.NoError(t, err)
-	runPluginInstallTest(t, cliPath, "Plugin with same name already installed", true, examplePluginRepository)
+	runPluginInstallTest(g, cliPath, "Plugin with same name already installed", true, examplePluginRepository)
 }
 
-func runPluginInstallTest(t *testing.T, cliPath string, testName string, requireError bool, pluginValue string) {
-	t.Helper()
-	t.Run(testName, func(t *testing.T) {
+func runPluginInstallTest(g *atlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string) {
+	g.t.Helper()
+	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"plugin",
 			"install",

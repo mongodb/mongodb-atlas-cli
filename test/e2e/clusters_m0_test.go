@@ -37,7 +37,7 @@ func TestClustersM0Flags(t *testing.T) {
 
 	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -59,7 +59,7 @@ func TestClustersM0Flags(t *testing.T) {
 		ensureCluster(t, cluster, clusterName, "8.0", 0.5, false)
 	})
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",
@@ -74,7 +74,7 @@ func TestClustersM0Flags(t *testing.T) {
 		a.Contains(string(resp), "Cluster available")
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"describe",
@@ -94,7 +94,7 @@ func TestClustersM0Flags(t *testing.T) {
 		a.Equal(clusterName, cluster.GetName())
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",
@@ -115,7 +115,7 @@ func TestClustersM0Flags(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",

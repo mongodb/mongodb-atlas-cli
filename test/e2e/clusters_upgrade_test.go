@@ -34,7 +34,7 @@ func TestSharedClusterUpgrade(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Upgrade to dedicated tier", func(t *testing.T) {
+	g.Run("Upgrade to dedicated tier", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"upgrade",

@@ -36,7 +36,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 	g.generateProject("copyprotection-compliance-policy")
 	r.NoError(enableCompliancePolicy(g.projectID))
 
-	t.Run("enable", func(t *testing.T) {
+	g.Run("enable", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,
@@ -60,7 +60,7 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 		assert.True(t, *compliancepolicy.CopyProtectionEnabled)
 	})
 
-	t.Run("disable", func(t *testing.T) {
+	g.Run("disable", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(
 			cliPath,
 			backupsEntity,

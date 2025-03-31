@@ -33,7 +33,7 @@ func TestAuditing(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			auditingEntity,
 			"describe",
@@ -46,7 +46,7 @@ func TestAuditing(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &setting), string(resp))
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			auditingEntity,
 			"update",
@@ -65,7 +65,7 @@ func TestAuditing(t *testing.T) {
 		assert.JSONEq(t, "{\"atype\": \"authenticate\"}", *setting.AuditFilter)
 	})
 
-	t.Run("Update via file", func(t *testing.T) {
+	g.Run("Update via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			auditingEntity,
 			"update",

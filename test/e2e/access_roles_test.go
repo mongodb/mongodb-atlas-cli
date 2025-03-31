@@ -35,7 +35,7 @@ func TestAccessRoles(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			cloudProvidersEntity,
 			accessRolesEntity,
@@ -53,7 +53,7 @@ func TestAccessRoles(t *testing.T) {
 		assert.Equal(t, aws, iamRole.ProviderName)
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			cloudProvidersEntity,
 			accessRolesEntity,

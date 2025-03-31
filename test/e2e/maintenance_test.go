@@ -33,7 +33,7 @@ func TestMaintenanceWindows(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("update", func(t *testing.T) {
+	g.Run("update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			maintenanceEntity,
 			"update",
@@ -50,7 +50,7 @@ func TestMaintenanceWindows(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
-	t.Run("describe", func(t *testing.T) {
+	g.Run("describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			maintenanceEntity,
 			"describe",
@@ -69,7 +69,7 @@ func TestMaintenanceWindows(t *testing.T) {
 		a.Equal(1, maintenanceWindow.GetHourOfDay())
 	})
 
-	t.Run("clear", func(t *testing.T) {
+	g.Run("clear", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			maintenanceEntity,
 			"clear",

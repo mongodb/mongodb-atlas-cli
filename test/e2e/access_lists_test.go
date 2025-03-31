@@ -41,7 +41,7 @@ func TestAccessList(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	req.NoError(err)
 
-	t.Run("Create Forever", func(t *testing.T) {
+	g.Run("Create Forever", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"create",
@@ -68,7 +68,7 @@ func TestAccessList(t *testing.T) {
 		assert.True(t, found)
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"ls",
@@ -82,7 +82,7 @@ func TestAccessList(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &entries))
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"describe",
@@ -97,7 +97,7 @@ func TestAccessList(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &entry))
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"delete",
@@ -113,7 +113,7 @@ func TestAccessList(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
-	t.Run("Create Delete After", func(t *testing.T) {
+	g.Run("Create Delete After", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"create",
@@ -140,7 +140,7 @@ func TestAccessList(t *testing.T) {
 		assert.True(t, found)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"delete",
@@ -156,7 +156,7 @@ func TestAccessList(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
-	t.Run("Create with CurrentIp", func(t *testing.T) {
+	g.Run("Create with CurrentIp", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"create",
@@ -179,7 +179,7 @@ func TestAccessList(t *testing.T) {
 		currentIPEntry = entries.GetResults()[0].GetIpAddress()
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"delete",

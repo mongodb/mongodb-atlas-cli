@@ -45,7 +45,7 @@ func TestStreams(t *testing.T) {
 
 	connectionName := g.memory("connectionName", must(RandEntityWithRevision("connection"))).(string)
 
-	t.Run("List all streams in the e2e project", func(t *testing.T) {
+	g.Run("List all streams in the e2e project", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"instance",
@@ -66,7 +66,7 @@ func TestStreams(t *testing.T) {
 		assert.Empty(t, instances.Results, "A new project should have no instances")
 	})
 
-	t.Run("Creating a streams instance", func(t *testing.T) {
+	g.Run("Creating a streams instance", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"instance",
@@ -93,7 +93,7 @@ func TestStreams(t *testing.T) {
 		assert.Equal(t, instance.GetName(), instanceName)
 	})
 
-	t.Run("Downloading streams instance logs instance", func(t *testing.T) {
+	g.Run("Downloading streams instance logs instance", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"instance",
@@ -115,7 +115,7 @@ func TestStreams(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("List all streams in the e2e project after creating", func(t *testing.T) {
+	g.Run("List all streams in the e2e project after creating", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"instance",
@@ -139,7 +139,7 @@ func TestStreams(t *testing.T) {
 		a.Equal("VIRGINIA_USA", instances.GetResults()[0].DataProcessRegion.Region)
 	})
 
-	t.Run("Describing a streams instance", func(t *testing.T) {
+	g.Run("Describing a streams instance", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"instance",
@@ -163,7 +163,7 @@ func TestStreams(t *testing.T) {
 		a.Equal("VIRGINIA_USA", instance.DataProcessRegion.Region)
 	})
 
-	t.Run("Updating a streams instance", func(t *testing.T) {
+	g.Run("Updating a streams instance", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		// Have to set the same values as with create, as streams currently only supports one region
 		cmd := exec.Command(cliPath,
 			"streams",
@@ -194,7 +194,7 @@ func TestStreams(t *testing.T) {
 
 	// Endpoints
 	var endpointID string
-	t.Run("Creating a streams privateLink endpoint", func(t *testing.T) {
+	g.Run("Creating a streams privateLink endpoint", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		streamsCmd := exec.Command(cliPath,
 			"streams",
 			"privateLink",
@@ -223,7 +223,7 @@ func TestStreams(t *testing.T) {
 		endpointID = privateLinkEndpoint.GetId()
 	})
 
-	t.Run("Describing a streams privateLink endpoint", func(t *testing.T) {
+	g.Run("Describing a streams privateLink endpoint", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		streamsCmd := exec.Command(cliPath,
 			"streams",
 			"privateLink",
@@ -249,7 +249,7 @@ func TestStreams(t *testing.T) {
 		a.Equal("test-namespace.servicebus.windows.net", privateLinkEndpoint.GetDnsDomain())
 	})
 
-	t.Run("List all streams privateLink endpoints", func(t *testing.T) {
+	g.Run("List all streams privateLink endpoints", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		streamsCmd := exec.Command(cliPath,
 			"streams",
 			"privateLinks",
@@ -274,7 +274,7 @@ func TestStreams(t *testing.T) {
 		a.Equal("test-namespace.servicebus.windows.net", privateLinkEndpoints.GetResults()[0].GetDnsDomain())
 	})
 
-	t.Run("Deleting a streams privateLink endpoint", func(t *testing.T) {
+	g.Run("Deleting a streams privateLink endpoint", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		streamsCmd := exec.Command(cliPath,
 			"streams",
 			"privateLink",
@@ -294,7 +294,7 @@ func TestStreams(t *testing.T) {
 	})
 
 	// Connections
-	t.Run("Creating a streams connection", func(t *testing.T) {
+	g.Run("Creating a streams connection", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"connection",
@@ -319,7 +319,7 @@ func TestStreams(t *testing.T) {
 		assert.Equal(t, connection.GetName(), connectionName)
 	})
 
-	t.Run("Describing a streams connection", func(t *testing.T) {
+	g.Run("Describing a streams connection", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"connection",
@@ -345,7 +345,7 @@ func TestStreams(t *testing.T) {
 		a.Equal("example.com:8080,fraud.example.com:8000", *connection.BootstrapServers)
 	})
 
-	t.Run("Listing streams connections", func(t *testing.T) {
+	g.Run("Listing streams connections", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"connection",
@@ -382,7 +382,7 @@ func TestStreams(t *testing.T) {
 		a.ElementsMatch(expected, got)
 	})
 
-	t.Run("Updating a streams connection", func(t *testing.T) {
+	g.Run("Updating a streams connection", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"connection",
@@ -408,7 +408,7 @@ func TestStreams(t *testing.T) {
 		a.Equal("SSL", connection.Security.GetProtocol())
 	})
 
-	t.Run("Deleting a streams connection", func(t *testing.T) {
+	g.Run("Deleting a streams connection", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"connection",
@@ -431,7 +431,7 @@ func TestStreams(t *testing.T) {
 
 	// Runs last after the connection work
 
-	t.Run("Deleting a streams instance", func(t *testing.T) {
+	g.Run("Deleting a streams instance", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"instance",

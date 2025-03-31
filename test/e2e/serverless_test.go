@@ -37,7 +37,7 @@ func TestServerless(t *testing.T) {
 
 	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			serverlessEntity,
 			"create",
@@ -59,7 +59,7 @@ func TestServerless(t *testing.T) {
 		a.Equal(clusterName, *cluster.Name)
 	})
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			serverlessEntity,
 			"watch",
@@ -74,7 +74,7 @@ func TestServerless(t *testing.T) {
 		a.Contains(string(resp), "Instance available")
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			serverlessEntity,
 			"update",
@@ -95,7 +95,7 @@ func TestServerless(t *testing.T) {
 		a.Equal(clusterName, *cluster.Name)
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			serverlessEntity,
 			"ls",
@@ -113,7 +113,7 @@ func TestServerless(t *testing.T) {
 		a.NotEmpty(clusters.Results)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			serverlessEntity,
 			"describe",
@@ -132,7 +132,7 @@ func TestServerless(t *testing.T) {
 		a.Equal(clusterName, *cluster.Name)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(
 			cliPath,
 			serverlessEntity,
@@ -153,7 +153,7 @@ func TestServerless(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch deletion", func(t *testing.T) {
+	g.Run("Watch deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			serverlessEntity,
 			"watch",

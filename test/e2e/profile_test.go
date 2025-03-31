@@ -52,17 +52,17 @@ func validateProfile(t *testing.T, cliPath string, profile string, profileValid 
 }
 
 func TestProfile(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("profile name valid", func(t *testing.T) {
+	g.Run("profile name valid", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		validateProfile(t, cliPath, "default", true)
 		validateProfile(t, cliPath, "default-123", true)
 		validateProfile(t, cliPath, "default-test", true)
 	})
 
-	t.Run("profile name invalid", func(t *testing.T) {
+	g.Run("profile name invalid", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		validateProfile(t, cliPath, "d.efault", false)
 		validateProfile(t, cliPath, "default.123", false)
 		validateProfile(t, cliPath, "default.test", false)

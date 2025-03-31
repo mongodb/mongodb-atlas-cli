@@ -38,7 +38,7 @@ func TestFlexCluster(t *testing.T) {
 
 	flexClusterName := g.memory("flexClusterName", must(RandClusterName())).(string)
 
-	t.Run("Create flex cluster", func(t *testing.T) {
+	g.Run("Create flex cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -58,7 +58,7 @@ func TestFlexCluster(t *testing.T) {
 		ensureFlexCluster(t, &cluster, flexClusterName, 5, false)
 	})
 
-	t.Run("Get flex cluster", func(t *testing.T) {
+	g.Run("Get flex cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"get",
@@ -75,7 +75,7 @@ func TestFlexCluster(t *testing.T) {
 		ensureFlexCluster(t, &cluster, flexClusterName, 5, false)
 	})
 
-	t.Run("List flex cluster", func(t *testing.T) {
+	g.Run("List flex cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"list",
@@ -92,7 +92,7 @@ func TestFlexCluster(t *testing.T) {
 		assert.NotEmpty(t, clusters.Results)
 	})
 
-	t.Run("Delete flex cluster", func(t *testing.T) {
+	g.Run("Delete flex cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",

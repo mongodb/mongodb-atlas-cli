@@ -39,11 +39,11 @@ func TestSearchNodes(t *testing.T) {
 	req.NoError(err)
 
 	g.generateProject("searchNodes")
-	g.tier = tierM10
+	g.tier = tierM20
 	g.mDBVer = minSearchNodesMDBVersion
 	g.generateCluster()
 
-	t.Run("Verify no search node setup yet", func(t *testing.T) {
+	g.Run("Verify no search node setup yet", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -57,11 +57,11 @@ func TestSearchNodes(t *testing.T) {
 		resp, err := cmd.CombinedOutput()
 		respStr := string(resp)
 
-		require.Error(t, err, respStr)
-		require.Contains(t, respStr, "ATLAS_SEARCH_DEPLOYMENT_DOES_NOT_EXIST", respStr)
+		require.NoError(t, err, respStr)
+		require.Equal(t, "{}\n", respStr)
 	})
 
-	t.Run("Create search node", func(t *testing.T) {
+	g.Run("Create search node", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -91,7 +91,7 @@ func TestSearchNodes(t *testing.T) {
 		}, searchNode.GetSpecs())
 	})
 
-	t.Run("List + verify created", func(t *testing.T) {
+	g.Run("List + verify created", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -119,7 +119,7 @@ func TestSearchNodes(t *testing.T) {
 		}, searchNode.GetSpecs())
 	})
 
-	t.Run("Update search node", func(t *testing.T) {
+	g.Run("Update search node", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -149,7 +149,7 @@ func TestSearchNodes(t *testing.T) {
 		}, searchNode.GetSpecs())
 	})
 
-	t.Run("List + verify updated", func(t *testing.T) {
+	g.Run("List + verify updated", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -177,7 +177,7 @@ func TestSearchNodes(t *testing.T) {
 		}, searchNode.GetSpecs())
 	})
 
-	t.Run("Delete search nodes", func(t *testing.T) {
+	g.Run("Delete search nodes", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -186,7 +186,6 @@ func TestSearchNodes(t *testing.T) {
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID,
 			"--force",
-			"-w",
 			"-o=json",
 		)
 

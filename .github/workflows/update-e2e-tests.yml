@@ -23,7 +23,7 @@ jobs:
           - atlas,backup,schedule
           - atlas,backup,snapshot
           - atlas,clusters,file
-          # - atlas,clusters,flags  # does not work well with snapshots
+          - atlas,clusters,flags
           - atlas,clusters,flex
           - atlas,clusters,m0
           - atlas,clusters,sharded
@@ -38,7 +38,7 @@ jobs:
           # - atlas,deployments,local,nocli # needs docker to run
           # - atlas,deployments,local,noauth # needs docker to run
           # - atlas,generic # tests are failing in master
-          # - atlas,interactive # does not work well with snapshots
+          - atlas,interactive
           - atlas,ldap
           - atlas,livemigrations
           - atlas,logs
@@ -52,14 +52,13 @@ jobs:
           - atlas,plugin,update
           - atlas,processes
           - atlas,search
-          # - atlas,search_nodes # tests are failing in master
+          - atlas,search_nodes
           - atlas,serverless,instance
           - atlas,streams
           - atlas,streams_with_cluster
           - brew
           - config
-          - iam
-          # - atlas,iam # need to add
+          - atlas,iam
           - kubernetes
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1

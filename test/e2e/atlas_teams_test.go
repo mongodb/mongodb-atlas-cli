@@ -40,7 +40,7 @@ func TestAtlasTeams(t *testing.T) {
 	teamName := fmt.Sprintf("teams%v", n)
 	var teamID string
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		username, _, err := OrgNUser(0)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
@@ -66,7 +66,7 @@ func TestAtlasTeams(t *testing.T) {
 	})
 	require.NotEmpty(t, teamID)
 
-	t.Run("Describe By ID", func(t *testing.T) {
+	g.Run("Describe By ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"describe",
@@ -82,7 +82,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.Equal(t, teamID, team.GetId())
 	})
 
-	t.Run("Describe By Name", func(t *testing.T) {
+	g.Run("Describe By Name", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"describe",
@@ -97,7 +97,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.Equal(t, teamName, team.GetName())
 	})
 
-	t.Run("Rename", func(t *testing.T) {
+	g.Run("Rename", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		teamName += "_renamed"
 		cmd := exec.Command(cliPath,
 			teamsEntity,
@@ -116,7 +116,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.Equal(t, teamName, team.GetName())
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"ls",
@@ -130,7 +130,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.NotEmpty(t, teams.Results)
 	})
 
-	t.Run("List Compact", func(t *testing.T) {
+	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"ls",
@@ -145,7 +145,7 @@ func TestAtlasTeams(t *testing.T) {
 		assert.NotEmpty(t, teams)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			"delete",

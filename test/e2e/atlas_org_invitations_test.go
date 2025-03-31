@@ -39,7 +39,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	var orgInvitationID string
 	var orgInvitationIDFile string // For the file-based invite test
 
-	t.Run("Invite", func(t *testing.T) {
+	g.Run("Invite", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -61,7 +61,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		orgInvitationID = invitation.GetId()
 	})
 
-	t.Run("Invite with File", func(t *testing.T) {
+	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		a := assert.New(t)
 		// Create a unique email for this test
 		nFile := g.memoryRand("randFile", 1000)
@@ -92,7 +92,38 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		orgInvitationIDFile = invitation.GetId() // Save ID for cleanup
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		a := assert.New(t)
+		// Create a unique email for this test
+		nFile := g.memoryRand("randFile", 1000)
+		emailOrgFile := fmt.Sprintf("test-file-%v@mongodb.com", nFile)
+
+		inviteData := admin.OrganizationInvitationRequest{
+			Username: pointer.Get(emailOrgFile),
+			Roles:    pointer.Get([]string{"ORG_READ_ONLY"}),
+		}
+		inviteFilename := fmt.Sprintf("%s/update-%s.json", t.TempDir(), nFile)
+		createJSONFile(t, inviteData, inviteFilename)
+
+		cmd := exec.Command(cliPath,
+			orgEntity,
+			invitationsEntity,
+			"invite",
+			"--file", inviteFilename,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+
+		var invitation admin.OrganizationInvitation
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(emailOrgFile, invitation.GetUsername())
+		a.Equal(inviteData.GetRoles(), invitation.GetRoles())
+		require.NotEmpty(t, invitation.GetId())
+		orgInvitationIDFile = invitation.GetId() // Save ID for cleanup
+	})
+
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -109,7 +140,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.NotEmpty(invitations)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -128,7 +159,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.Equal([]string{"ORG_MEMBER"}, invitation.GetRoles())
 	})
 
-	t.Run("Update by email", func(t *testing.T) {
+	g.Run("Update by email", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -150,7 +181,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 	})
 
-	t.Run("Update by ID", func(t *testing.T) {
+	g.Run("Update by ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -170,7 +201,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 	})
 
-	t.Run("Update with File", func(t *testing.T) {
+	g.Run("Update with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
@@ -202,7 +233,39 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		// Add assertions for GroupRoleAssignments if included in updateData
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Update with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
+		a := assert.New(t)
+
+		nFile := g.memoryRand("randFile", 1000)
+
+		// Define the update data, including GroupRoleAssignments if desired
+		updateRole := "ORG_GROUP_CREATOR"
+		updateData := admin.OrganizationInvitationRequest{
+			Roles: pointer.Get([]string{updateRole}),
+		}
+		updateFilename := fmt.Sprintf("%s/update-%s.json", t.TempDir(), nFile)
+		createJSONFile(t, updateData, updateFilename)
+
+		cmd := exec.Command(cliPath,
+			orgEntity,
+			invitationsEntity,
+			"update",
+			orgInvitationID, // Use ID from the original Invite test
+			"--file", updateFilename,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := RunAndGetStdOut(cmd)
+		require.NoError(t, err, string(resp))
+
+		var invitation admin.OrganizationInvitation
+		require.NoError(t, json.Unmarshal(resp, &invitation))
+		a.Equal(orgInvitationID, invitation.GetId())
+		a.ElementsMatch(updateData.GetRoles(), invitation.GetRoles()) // Check if roles were updated
+		// Add assertions for GroupRoleAssignments if included in updateData
+	})
+
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -217,7 +280,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.Equal(expected, string(resp))
 	})
 
-	t.Run("Delete Invitation from File Test", func(t *testing.T) {
+	g.Run("Delete Invitation from File Test", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		require.NotEmpty(t, orgInvitationIDFile, "orgInvitationIDFile must be set by Invite with File test")
 		cmd := exec.Command(cliPath,
 			orgEntity,

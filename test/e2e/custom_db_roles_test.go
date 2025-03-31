@@ -47,7 +47,7 @@ func TestDBRoles(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"create",
@@ -73,7 +73,7 @@ func TestDBRoles(t *testing.T) {
 		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"ls",
@@ -88,7 +88,7 @@ func TestDBRoles(t *testing.T) {
 		assert.NotEmpty(t, roles)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"describe",
@@ -111,7 +111,7 @@ func TestDBRoles(t *testing.T) {
 		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})
 
-	t.Run("Update with append", func(t *testing.T) {
+	g.Run("Update with append", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"update",
@@ -139,7 +139,7 @@ func TestDBRoles(t *testing.T) {
 			[]string{role.GetInheritedRoles()[0].Role, role.GetInheritedRoles()[1].Role})
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"update",
@@ -162,7 +162,7 @@ func TestDBRoles(t *testing.T) {
 		a.Equal(enableShardingRole, role.GetInheritedRoles()[0].Role)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			customDBRoleEntity,
 			"delete",

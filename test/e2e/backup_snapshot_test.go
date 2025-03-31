@@ -40,7 +40,7 @@ func TestSnapshots(t *testing.T) {
 
 	var snapshotID string
 
-	t.Run("Create cluster", func(t *testing.T) {
+	g.Run("Create cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -64,7 +64,7 @@ func TestSnapshots(t *testing.T) {
 	})
 	require.NoError(t, watchCluster("", clusterName))
 
-	t.Run("Create snapshot", func(t *testing.T) {
+	g.Run("Create snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -84,7 +84,7 @@ func TestSnapshots(t *testing.T) {
 		snapshotID = snapshot.GetId()
 	})
 
-	t.Run("Watch creation", func(t *testing.T) {
+	g.Run("Watch creation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -97,7 +97,7 @@ func TestSnapshots(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -113,7 +113,7 @@ func TestSnapshots(t *testing.T) {
 		assert.NotEmpty(t, backups)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -132,7 +132,7 @@ func TestSnapshots(t *testing.T) {
 		assert.Equal(t, snapshotID, result.GetId())
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -150,7 +150,7 @@ func TestSnapshots(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch deletion", func(t *testing.T) {
+	g.Run("Watch deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,

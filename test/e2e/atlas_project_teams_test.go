@@ -44,7 +44,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 		require.NoError(t, e)
 	})
 
-	t.Run("Add", func(t *testing.T) {
+	g.Run("Add", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			teamsEntity,
@@ -72,7 +72,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 		a.True(found)
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			teamsEntity,
@@ -100,7 +100,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 		a.ElementsMatch([]string{roleName1, roleName2}, role.GetRoleNames())
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			teamsEntity,
@@ -118,7 +118,7 @@ func TestAtlasProjectTeams(t *testing.T) {
 		a.NotEmpty(teams.GetResults())
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			teamsEntity,

@@ -49,7 +49,7 @@ func TestRestores(t *testing.T) {
 	projectID2 := g.projectID
 	clusterName2 := g.clusterName
 
-	t.Run("Create snapshot", func(t *testing.T) {
+	g.Run("Create snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -71,7 +71,7 @@ func TestRestores(t *testing.T) {
 		snapshotID = snapshot.GetId()
 	})
 
-	t.Run("Watch snapshot creation", func(t *testing.T) {
+	g.Run("Watch snapshot creation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -86,7 +86,7 @@ func TestRestores(t *testing.T) {
 		t.Log(string(resp))
 	})
 
-	t.Run("Restores Create - Automated", func(t *testing.T) {
+	g.Run("Restores Create - Automated", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -112,7 +112,7 @@ func TestRestores(t *testing.T) {
 		restoreJobID = result.GetId()
 	})
 
-	t.Run("Restores Watch", func(t *testing.T) {
+	g.Run("Restores Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -129,7 +129,7 @@ func TestRestores(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Restores List", func(t *testing.T) {
+	g.Run("Restores List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -147,7 +147,7 @@ func TestRestores(t *testing.T) {
 		assert.NotEmpty(t, result)
 	})
 
-	t.Run("Restores Describe", func(t *testing.T) {
+	g.Run("Restores Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -168,7 +168,7 @@ func TestRestores(t *testing.T) {
 		assert.NotEmpty(t, result)
 	})
 
-	t.Run("Restores Create - Download", func(t *testing.T) {
+	g.Run("Restores Create - Download", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -190,7 +190,7 @@ func TestRestores(t *testing.T) {
 		restoreJobID = result.GetId()
 	})
 
-	t.Run("Restores Watch - Download", func(t *testing.T) {
+	g.Run("Restores Watch - Download", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			restoresEntity,
@@ -207,7 +207,7 @@ func TestRestores(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Delete snapshot", func(t *testing.T) {
+	g.Run("Delete snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -227,7 +227,7 @@ func TestRestores(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch snapshot deletion", func(t *testing.T) {
+	g.Run("Watch snapshot deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,

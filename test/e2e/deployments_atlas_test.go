@@ -50,7 +50,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 	var client *mongo.Client
 	ctx := context.Background()
 
-	t.Run("Setup", func(t *testing.T) {
+	g.Run("Setup", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"setup",
@@ -79,7 +79,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 	})
 	require.NoError(t, watchCluster(g.projectID, clusterName))
 
-	t.Run("Connect to database", func(t *testing.T) {
+	g.Run("Connect to database", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"connect",
@@ -112,7 +112,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		require.NoError(t, client.Disconnect(ctx))
 	})
 
-	t.Run("Pause Cluster", func(t *testing.T) {
+	g.Run("Pause Cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"pause",
@@ -126,7 +126,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		assert.Contains(t, string(resp), fmt.Sprintf("Pausing deployment '%s'", clusterName))
 	})
 
-	t.Run("Start Cluster", func(t *testing.T) {
+	g.Run("Start Cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"start",
@@ -141,7 +141,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 	})
 	require.NoError(t, watchCluster(g.projectID, clusterName))
 
-	t.Run("Create Search Index", func(t *testing.T) {
+	g.Run("Create Search Index", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			searchEntity,
@@ -166,7 +166,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		assert.Contains(t, out, "Search index created")
 	})
 
-	t.Run("Delete Cluster", func(t *testing.T) {
+	g.Run("Delete Cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			deploymentEntity,
 			"delete",

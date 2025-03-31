@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAMWTPW/bMBCG/8vNVihRXy63IgGKdMgQuEuCDDR1tIhQIkFSRg3D/72ULctVkSFLW2gh7uN9nzvojiB4L1BrbIBJrj2uoEGt9ugOm4NFYMCHYDoeYsEt9cNpYK9vY8Arh81GdegD7yywI6heOOywD8D6QesVhJi9vpuodHmfVoA/7dg9O0uufgeRqle+xeZrVAKa0jJJ8yTPNmnJ6JqV9CUSqVgOVY2c1kVdlFjLtMyqohCiLnjMa9W/+8h6hNahjLVtCNYzQoQ2Q5M0uL/rTL8zzfZOmI5wqwgPmnuyp2TnzGA9OavnGc9rmoo8i19dybLIosTgAzpPtly8D/Y5rsA49ElR51OIuEvsu9lOOh9TOoz7BI9awmn1n1B9z61vTZhUKkEXoNW6nEEXYAuoq8i/H+MTcFP332H7hP9ZAU7xbK5repz/3o/XHbjbYbi/cD/x8YxgOTpN1lU1Vz6g1eYw3t5jwG5qOE+QtG7Ahs+V30aWm30hxcI+lWf721n/eX8Fy768wOkXdgDnakAEAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67ea231a3720c3131376f541/clusters/backupRestores-473/backup/restoreJobs/67ea274745e7f051644cc74a",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "410"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Mon, 31 Mar 2025 05:28:55 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "45"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasDiskBackupRestoreJobsResource::getRestoreJob"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

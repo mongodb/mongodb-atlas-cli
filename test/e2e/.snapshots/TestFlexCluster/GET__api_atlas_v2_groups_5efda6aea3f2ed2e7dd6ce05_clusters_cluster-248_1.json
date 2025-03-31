@@ -1,0 +1,53 @@
+{
+  "Body": "eyJkZXRhaWwiOiJGbGV4IGNsdXN0ZXIgY2x1c3Rlci0yNDggY2Fubm90IGJlIHVzZWQgaW4gdGhlIENsdXN0ZXIgQVBJLiIsImVycm9yIjo0MDAsImVycm9yQ29kZSI6IkNBTk5PVF9VU0VfRkxFWF9DTFVTVEVSX0lOX0NMVVNURVJfQVBJIiwicGFyYW1ldGVycyI6WyJjbHVzdGVyLTI0OCJdLCJyZWFzb24iOiJCYWQgUmVxdWVzdCJ9",
+  "Status": 400,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/clusters/cluster-248",
+  "Headers": {
+    "Content-Length": [
+      "189"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Date": [
+      "Mon, 31 Mar 2025 05:07:40 GMT"
+    ],
+    "Deprecation": [
+      "Mon, 5 Aug 2024 00:00:00 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Sunset": [
+      "Sun, 1 Mar 2026 00:00:00 GMT"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "53"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasClusterDescriptionV15Resource::getCluster"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

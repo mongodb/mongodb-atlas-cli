@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAHXOPw+CMBCH4e/SWcjRsxQ7KmwaHYiDG8IVmgiYtiQmxu9u/Zc46Pw+ud9dGV3OxlbejANTjAMXEWCESZlIBUIlcGAzps1gXFeanr4Mx6dJ1Vw8jGlCSyUBapEBQk0VR1EfF5I0hd6PQzvmyz1Z99rKYojTEFzdUTOdqPl9//OD85X1/wjim/jJhb7abnbroixydrsDbNRZ9OEAAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/flexClusters/doNotDeleteUsedForE2ETest/backup/snapshots/67e03f58030cea235cb97efe",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "167"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2024-11-13+json;charset=utf-8"
+    ],
+    "Date": [
+      "Mon, 31 Mar 2025 05:08:01 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "68"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasFlexBackupResource::getSnapshot"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "Body": "eyJfaWQiOiI2N2VhMjUyNDM3MjBjMzEzMTM3NzA3ZmQiLCJjbHVzdGVyTmFtZSI6Im9ubGluZUFyY2hpdmVzLTM2NSIsImNvbGxOYW1lIjoidGVzdCIsImNvbGxlY3Rpb25UeXBlIjoiU1RBTkRBUkQiLCJjcml0ZXJpYSI6eyJkYXRlRmllbGQiOiJ0ZXN0IiwiZGF0ZUZvcm1hdCI6IklTT0RBVEUiLCJleHBpcmVBZnRlckRheXMiOjQsInR5cGUiOiJEQVRFIn0sImRhdGFQcm9jZXNzUmVnaW9uIjp7ImNsb3VkUHJvdmlkZXIiOiJBV1MiLCJyZWdpb24iOiJVU19FQVNUXzEifSwiZGJOYW1lIjoidGVzdCIsImdyb3VwSWQiOiI2N2VhMjMxZjQ1ZTdmMDUxNjQ0Y2IwZTUiLCJwYXJ0aXRpb25GaWVsZHMiOlt7ImZpZWxkTmFtZSI6InRlc3QiLCJmaWVsZFR5cGUiOm51bGwsIm9yZGVyIjowfV0sInBhdXNlZCI6ZmFsc2UsInNjaGVkdWxlIjp7InR5cGUiOiJERUZBVUxUIn0sInN0YXRlIjoiUEVORElORyJ9",
+  "Status": 200,
+  "Method": "PATCH",
+  "Path": "/api/atlas/v2/groups/67ea231f45e7f051644cb0e5/clusters/onlineArchives-365/onlineArchives/67ea25243720c313137707fd",
+  "Headers": {
+    "Content-Length": [
+      "453"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Mon, 31 Mar 2025 05:16:23 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "93"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasOnlineArchiveResource::updateOnlineArchive"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

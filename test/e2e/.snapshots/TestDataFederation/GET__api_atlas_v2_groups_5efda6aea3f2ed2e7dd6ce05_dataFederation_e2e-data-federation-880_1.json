@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAHWRMW/DIBCF/0rEHFIMNibeoihSs1RV1HapOpzN2bXkQAI4TRX5vxcSterQTpy4e9/jHRfSDHbUj86eeo1ubU3bd6S6EPjw6cBzQGdg2GpSkUYuC9nkjLZlK2jOcqQq44JCxrnGWmaSt2ROetivvB/3qHd2wNXuIUrBmSoiq9irKlEoIQXnjBWscnHmbm9NZ3VNIQzgKRz6861shp4G9OFGffbo/sDx5VIyrgoheBFxNk0n6vXNsmxYrppScSZzLTKBSgmol2Sa5kRDgBi9Qe932PXWkMqMwzAnnbPj4aovsNUgAUG0HDXHUmvZICuix7v1wcAe46JeCXKkCUdbjHuEEGFUKUa7zJyPC1gcR3Sfi++cGk8Lg4G8zUkiRJ9/9NHm4PoTBNwYfbC9Cfe/XKPch9iL+tX6afuyIenCOugwfV4q09zsGmp2jVuD/7mapi+Hwi6c/wEAAA==",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/5efda6aea3f2ed2e7dd6ce05/dataFederation/e2e-data-federation-880",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "355"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Mon, 31 Mar 2025 05:08:30 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "56"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasDataFederationResource::getTenant"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "Body": "H4sIAAAAAAAAAJWUW2vCMBSA/0sefHKml6lQKKNIhwNvWMXBEIn2VMPSpiSpDxP/+2JF1CltRp9y8vWcLzlJDojR7Fsi7+uAdgIS5KGdUrn0MN4wXsQvMexbKc+2PF63NjzFJKeYKEYk3jt4K3iRS9zpAnFcu+12HWvj2vrrdhIHXJ2ikAqExLngexqDwAK2lGfyjWZ6LoYeLzLlK1FA44JIP1hEDUVB+EPbauRkC6Mi9e0GVZDKCYiJjvi2ZaEmEsC0sASWoOPyNJQFU+fF0Ewqkm0goj9wjpA9oYysGUzPDmUwhoTof5B3cmiijKSgM86jVRhEs5WNjs0bJiFMPkJODbQIHzP9rVYylYl6waoXjmbTYFBtFc5Xo/F01q+lnmk9hyq9LpBbA5nKX7jKolFg0J9gYgZF4/msX9/JO7JytXfkaw1ZNsvI80rWeV5Jc0+jXTKkKv2GodlZ0JxJzXcTSp+r/1CV/h8DM399Yeuv2F0L2sZkt3LjPm8Fl9e4bZXDy0N7SrqIypDiirDyLUaeffwFzVx77xQGAAA=",
+  "Status": 200,
+  "Method": "GET",
+  "Path": "/api/atlas/v2/groups/67ea23153720c3131376f2e3/clusters/provider/regions",
+  "Headers": {
+    "Content-Encoding": [
+      "gzip"
+    ],
+    "Content-Length": [
+      "413"
+    ],
+    "Content-Type": [
+      "application/vnd.atlas.2023-01-01+json;charset=utf-8"
+    ],
+    "Date": [
+      "Mon, 31 Mar 2025 05:07:36 GMT"
+    ],
+    "Referrer-Policy": [
+      "strict-origin-when-cross-origin"
+    ],
+    "Server": [
+      "mdbws"
+    ],
+    "Strict-Transport-Security": [
+      "max-age=31536000; includeSubdomains;"
+    ],
+    "Vary": [
+      "Accept-Encoding"
+    ],
+    "X-Content-Type-Options": [
+      "nosniff"
+    ],
+    "X-Envoy-Upstream-Service-Time": [
+      "59"
+    ],
+    "X-Frame-Options": [
+      "DENY"
+    ],
+    "X-Java-Method": [
+      "ApiAtlasCloudProviderRegionsResource::availableRegions"
+    ],
+    "X-Java-Version": [
+      "17.0.14+7"
+    ],
+    "X-Mongodb-Service-Version": [
+      "gitHash=deb0d5da73b5311fa0e520fdae5055ba77d9372c; versionString=master"
+    ],
+    "X-Permitted-Cross-Domain-Policies": [
+      "none"
+    ]
+  }
+}

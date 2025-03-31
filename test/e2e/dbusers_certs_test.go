@@ -35,7 +35,7 @@ func TestDBUserCerts(t *testing.T) {
 
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
-	t.Run("Create DBUser", func(t *testing.T) {
+	g.Run("Create DBUser", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"create",
@@ -53,7 +53,7 @@ func TestDBUserCerts(t *testing.T) {
 		assert.Equal(t, username, user.Username)
 	})
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			certsEntity,
@@ -65,7 +65,7 @@ func TestDBUserCerts(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			certsEntity,
@@ -81,7 +81,7 @@ func TestDBUserCerts(t *testing.T) {
 		assert.NotEmpty(t, users.Results)
 	})
 
-	t.Run("Delete User", func(t *testing.T) {
+	g.Run("Delete User", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"delete",

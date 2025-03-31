@@ -37,7 +37,7 @@ func TestAccessLogs(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	req.NoError(err)
 
-	t.Run("List by clusterName", func(t *testing.T) {
+	g.Run("List by clusterName", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessLogsEntity,
 			"ls",
@@ -51,7 +51,7 @@ func TestAccessLogs(t *testing.T) {
 		require.NoError(t, json.Unmarshal(resp, &entries))
 	})
 
-	t.Run("List by hostname", func(t *testing.T) {
+	g.Run("List by hostname", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessLogsEntity,
 			"ls",

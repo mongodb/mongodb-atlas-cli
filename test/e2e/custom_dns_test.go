@@ -33,7 +33,7 @@ func TestCustomDNS(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Enable", func(t *testing.T) {
+	g.Run("Enable", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			customDNSEntity,
 			awsEntity,
@@ -52,7 +52,7 @@ func TestCustomDNS(t *testing.T) {
 		a.True(dns.Enabled)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			customDNSEntity,
 			awsEntity,
@@ -71,7 +71,7 @@ func TestCustomDNS(t *testing.T) {
 		a.True(dns.Enabled)
 	})
 
-	t.Run("Disable", func(t *testing.T) {
+	g.Run("Disable", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			customDNSEntity,
 			awsEntity,

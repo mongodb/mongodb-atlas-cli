@@ -24,7 +24,7 @@ import (
 )
 
 func TestPerformanceAdvisor(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot(), withSnapshotNameFunc(snapshotHashedName))
 	g.generateProjectAndCluster("performanceAdvisor")
 
 	cliPath, err := AtlasCLIBin()
@@ -33,7 +33,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 	hostname, err := g.getHostnameAndPort()
 	require.NoError(t, err)
 
-	t.Run("List namespaces", func(t *testing.T) {
+	g.Run("List namespaces", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			performanceAdvisorEntity,
 			namespacesEntity,
@@ -48,7 +48,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("List slow query logs", func(t *testing.T) {
+	g.Run("List slow query logs", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			performanceAdvisorEntity,
 			slowQueryLogsEntity,
@@ -63,7 +63,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("List suggested indexes", func(t *testing.T) {
+	g.Run("List suggested indexes", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			performanceAdvisorEntity,
 			suggestedIndexesEntity,
@@ -78,7 +78,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Enable Managed Slow Operation Threshold", func(t *testing.T) {
+	g.Run("Enable Managed Slow Operation Threshold", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			performanceAdvisorEntity,
 			slowOperationThresholdEntity,
@@ -91,7 +91,7 @@ func TestPerformanceAdvisor(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Disable Managed Slow Operation Threshold", func(t *testing.T) {
+	g.Run("Disable Managed Slow Operation Threshold", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			performanceAdvisorEntity,
 			slowOperationThresholdEntity,

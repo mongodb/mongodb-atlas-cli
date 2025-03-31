@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"slices"
 	"testing"
 	"text/template"
 
@@ -40,7 +41,7 @@ func TestAtlasProjects(t *testing.T) {
 	projectName := fmt.Sprintf("e2e-proj-%d", n)
 
 	var projectID string
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		// This depends on a ORG_ID ENV
 		cmd := exec.Command(cliPath,
 			projectsEntity,
@@ -62,7 +63,7 @@ func TestAtlasProjects(t *testing.T) {
 		projectID = project.GetId()
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			"ls",
@@ -73,7 +74,7 @@ func TestAtlasProjects(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			"describe",
@@ -85,7 +86,7 @@ func TestAtlasProjects(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Tags", func(t *testing.T) {
+	g.Run("Tags", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			"describe",
@@ -101,7 +102,19 @@ func TestAtlasProjects(t *testing.T) {
 
 		a := assert.New(t)
 		expectedTags := []admin.ResourceTag{{Key: "env", Value: "e2e"}, {Key: "prod", Value: "false"}}
-		a.ElementsMatch(expectedTags, project.GetTags())
+		gotTags := project.GetTags()
+		slices.SortFunc(gotTags, func(a, b admin.ResourceTag) int {
+			if a.Key < b.Key {
+				return -1
+			}
+
+			if a.Key > b.Key {
+				return 1
+			}
+
+			return 0
+		})
+		a.ElementsMatch(expectedTags, gotTags)
 	})
 
 	updatedProjectName := projectName + "-updated"
@@ -117,7 +130,7 @@ func TestAtlasProjects(t *testing.T) {
 			"data/update_project_name_and_tags.json",
 			&updatedProjectName,
 			updatedProjectName,
-			[]admin.ResourceTag{{Key: "env", Value: "e2e"}, {Key: "app", Value: "cli"}},
+			[]admin.ResourceTag{{Key: "app", Value: "cli"}, {Key: "env", Value: "e2e"}},
 		},
 		{
 			"resetTags",
@@ -128,7 +141,7 @@ func TestAtlasProjects(t *testing.T) {
 		},
 	}
 	for _, tt := range updateTests {
-		t.Run("Update_"+tt.name, func(t *testing.T) {
+		g.Run("Update_"+tt.name, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 			filename := fmt.Sprintf("update_project_%s.json", tt.name)
 			testTmpl, err := os.ReadFile(tt.filename)
 			tpl := template.Must(template.New("").Parse(string(testTmpl)))
@@ -168,11 +181,23 @@ func TestAtlasProjects(t *testing.T) {
 
 			a := assert.New(t)
 			a.Equal(tt.expectedProjectName, project.Name)
-			a.ElementsMatch(tt.expectedProjectTags, project.GetTags())
+			gotTags := project.GetTags()
+			slices.SortFunc(gotTags, func(a, b admin.ResourceTag) int {
+				if a.Key < b.Key {
+					return -1
+				}
+
+				if a.Key > b.Key {
+					return 1
+				}
+
+				return 0
+			})
+			a.ElementsMatch(tt.expectedProjectTags, gotTags)
 		})
 	}
 
-	t.Run("Users", func(t *testing.T) {
+	g.Run("Users", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			usersEntity,
@@ -185,7 +210,7 @@ func TestAtlasProjects(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			"delete",

@@ -44,7 +44,7 @@ func TestDataFederation(t *testing.T) {
 	roleID := os.Getenv("E2E_CLOUD_ROLE_ID")
 	r.NotEmpty(roleID)
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"create",
@@ -79,7 +79,7 @@ func TestDataFederation(t *testing.T) {
 		t.Log("finished cleaning up created datafederation")
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"describe",
@@ -94,7 +94,7 @@ func TestDataFederation(t *testing.T) {
 		assert.Equal(t, dataFederationName, dataLake.GetName())
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"ls",
@@ -108,7 +108,7 @@ func TestDataFederation(t *testing.T) {
 		assert.NotEmpty(t, r)
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		const updateRegion = "VIRGINIA_USA"
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
@@ -126,7 +126,7 @@ func TestDataFederation(t *testing.T) {
 		assert.Equal(t, updateRegion, dataLake.GetDataProcessRegion().Region)
 	})
 
-	t.Run("Log", func(t *testing.T) {
+	g.Run("Log", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"logs",
@@ -144,7 +144,7 @@ func TestDataFederation(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Download Logs", func(t *testing.T) {
+	g.Run("Download Logs", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"logs",
@@ -157,7 +157,7 @@ func TestDataFederation(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"delete",

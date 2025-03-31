@@ -42,12 +42,12 @@ func TestLogs(t *testing.T) {
 	}
 	for _, logType := range logTypes {
 		lt := logType
-		t.Run("Download "+lt, func(t *testing.T) {
+		g.Run("Download "+lt, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 			downloadLogTmpPath(t, cliPath, hostname, lt, g.projectID)
 		})
 	}
 
-	t.Run("Download mongodb.gz no output path", func(t *testing.T) {
+	g.Run("Download mongodb.gz no output path", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		downloadLog(t, cliPath, hostname, "mongodb.gz", g.projectID)
 	})
 }

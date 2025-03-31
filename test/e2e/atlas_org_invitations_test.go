@@ -37,7 +37,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	emailOrg := fmt.Sprintf("test-%v@mongodb.com", n)
 	var orgInvitationID string
 
-	t.Run("Invite", func(t *testing.T) {
+	g.Run("Invite", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -58,7 +58,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		orgInvitationID = invitation.GetId()
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -75,7 +75,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.NotEmpty(invitations)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -94,7 +94,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.Equal([]string{"ORG_MEMBER"}, invitation.GetRoles())
 	})
 
-	t.Run("Update by email", func(t *testing.T) {
+	g.Run("Update by email", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -116,7 +116,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 	})
 
-	t.Run("Update by ID", func(t *testing.T) {
+	g.Run("Update by ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,
@@ -136,7 +136,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		a.ElementsMatch([]string{roleNameOrg}, invitation.GetRoles())
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			invitationsEntity,

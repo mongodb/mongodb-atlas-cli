@@ -24,7 +24,7 @@ import (
 )
 
 func TestLinkToken(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
@@ -42,7 +42,7 @@ func TestLinkToken(t *testing.T) {
 	}
 	t.Logf("Cleanup complete.")
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			liveMigrationsEntity,
 			"link",
@@ -55,7 +55,7 @@ func TestLinkToken(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			liveMigrationsEntity,
 			"link",

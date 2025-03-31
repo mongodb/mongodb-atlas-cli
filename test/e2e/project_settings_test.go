@@ -35,7 +35,7 @@ func TestProjectSettings(t *testing.T) {
 
 	g.generateProject("settings")
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			settingsEntity,
@@ -58,7 +58,7 @@ func TestProjectSettings(t *testing.T) {
 		}
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			settingsEntity,

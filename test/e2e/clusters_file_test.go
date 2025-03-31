@@ -49,7 +49,7 @@ func TestClustersFile(t *testing.T) {
 		os.Remove(clusterFile)
 	})
 
-	t.Run("Create via file", func(t *testing.T) {
+	g.Run("Create via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -67,7 +67,7 @@ func TestClustersFile(t *testing.T) {
 		ensureCluster(t, &cluster, clusterFileName, mdbVersion, 30, false)
 	})
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",
@@ -80,7 +80,7 @@ func TestClustersFile(t *testing.T) {
 		assert.Contains(t, string(resp), "Cluster available")
 	})
 
-	t.Run("Create Partial Index", func(t *testing.T) {
+	g.Run("Create Partial Index", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		t.Skip("Skipping as part of CLOUDP-272716 until fix is made for flaky test in CLOUDP-280777.")
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -95,7 +95,7 @@ func TestClustersFile(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Create Sparse Index", func(t *testing.T) {
+	g.Run("Create Sparse Index", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		t.Skip("Skipping as part of CLOUDP-272716 until fix is made for flaky test in CLOUDP-280777.")
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -110,7 +110,7 @@ func TestClustersFile(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Create 2dspere Index", func(t *testing.T) {
+	g.Run("Create 2dspere Index", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		t.Skip("Skipping as part of CLOUDP-272716 until fix is made for flaky test in CLOUDP-280777.")
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -125,7 +125,7 @@ func TestClustersFile(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Create index with unknown fields", func(t *testing.T) {
+	g.Run("Create index with unknown fields", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		var stdErr bytes.Buffer
 
 		cmd := exec.Command(cliPath,
@@ -143,7 +143,7 @@ func TestClustersFile(t *testing.T) {
 		assert.Contains(t, stdErr.String(), `json: unknown field "unique"`)
 	})
 
-	t.Run("Update via file", func(t *testing.T) {
+	g.Run("Update via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"update",
@@ -163,7 +163,7 @@ func TestClustersFile(t *testing.T) {
 		assert.Empty(t, cluster.GetTags())
 	})
 
-	t.Run("Delete file creation", func(t *testing.T) {
+	g.Run("Delete file creation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(
 			cliPath,
 			clustersEntity,
@@ -183,7 +183,7 @@ func TestClustersFile(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch deletion", func(t *testing.T) {
+	g.Run("Watch deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",

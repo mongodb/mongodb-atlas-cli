@@ -42,7 +42,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 
 	limitName := "bytesProcessed.query"
 
-	t.Run("Create Data Federation", func(t *testing.T) {
+	g.Run("Create Data Federation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"create",
@@ -63,7 +63,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.Equal(dataFederationName, dataLake.GetName())
 	})
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			queryLimitsEntity,
@@ -86,7 +86,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.Equal(dataFederationName, *r.TenantName)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			queryLimitsEntity,
@@ -104,7 +104,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.Equal(limitName, r.Name)
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			queryLimitsEntity,
@@ -122,7 +122,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.NotEmpty(r)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			queryLimitsEntity,
@@ -140,7 +140,7 @@ func TestDataFederationQueryLimit(t *testing.T) {
 		a.Equal(expected, string(resp))
 	})
 
-	t.Run("Delete Data Federation", func(t *testing.T) {
+	g.Run("Delete Data Federation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"delete",

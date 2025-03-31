@@ -28,7 +28,7 @@ import (
 )
 
 func TestAtlasOrgAPIKeys(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -37,7 +37,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	var ID string
 
 	// This test must run first to grab the ID of the org to later describe
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		desc := "e2e-test-atlas-org"
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -57,7 +57,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 	})
 	require.NotEmpty(t, ID)
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -71,7 +71,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys.Results)
 	})
 
-	t.Run("List Compact", func(t *testing.T) {
+	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -87,7 +87,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		assert.NotEmpty(t, keys)
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		const newDesc = "e2e-test-atlas-org-updated"
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -106,7 +106,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		assert.Equal(t, newDesc, *key.Desc)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,
@@ -121,7 +121,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 		assert.Equal(t, ID, *key.Id)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			orgEntity,
 			apiKeysEntity,

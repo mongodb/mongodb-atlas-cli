@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1861
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 31 Mar 2025 13:03:25 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 51
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=2d549c805065c765810442bca5a24f63ca5de3db; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea9078b31ead384fc6b856/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-03-31T13:02:41Z","groupId":"67ea9078b31ead384fc6b856","hostname":"atlas-12lfq1-shard-00-00.4n9cp.mongodb-dev.net","id":"atlas-12lfq1-shard-00-00.4n9cp.mongodb-dev.net:27017","lastPing":"2025-03-31T13:03:21Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea9078b31ead384fc6b856/processes/atlas-12lfq1-shard-00-00.4n9cp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-12lfq1-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-720-shard-00-00.4n9cp.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-31T13:02:41Z","groupId":"67ea9078b31ead384fc6b856","hostname":"atlas-12lfq1-shard-00-01.4n9cp.mongodb-dev.net","id":"atlas-12lfq1-shard-00-01.4n9cp.mongodb-dev.net:27017","lastPing":"2025-03-31T13:03:21Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea9078b31ead384fc6b856/processes/atlas-12lfq1-shard-00-01.4n9cp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-12lfq1-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-720-shard-00-01.4n9cp.mongodb-dev.net","version":"8.0.6"},{"created":"2025-03-31T13:02:41Z","groupId":"67ea9078b31ead384fc6b856","hostname":"atlas-12lfq1-shard-00-02.4n9cp.mongodb-dev.net","id":"atlas-12lfq1-shard-00-02.4n9cp.mongodb-dev.net:27017","lastPing":"2025-03-31T13:03:21Z","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ea9078b31ead384fc6b856/processes/atlas-12lfq1-shard-00-02.4n9cp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-12lfq1-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-720-shard-00-02.4n9cp.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

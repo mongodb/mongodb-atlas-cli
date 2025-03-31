@@ -50,7 +50,7 @@ func TestExportJobs(t *testing.T) {
 	var exportJobID string
 	var snapshotID string
 
-	t.Run("Create cluster", func(t *testing.T) {
+	g.Run("Create cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"create",
@@ -74,7 +74,7 @@ func TestExportJobs(t *testing.T) {
 	})
 	require.NoError(t, watchCluster("", clusterName))
 
-	t.Run("Create bucket", func(t *testing.T) {
+	g.Run("Create bucket", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -95,7 +95,7 @@ func TestExportJobs(t *testing.T) {
 		bucketID = exportBucket.GetId()
 	})
 
-	t.Run("Create snapshot", func(t *testing.T) {
+	g.Run("Create snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -116,7 +116,7 @@ func TestExportJobs(t *testing.T) {
 		snapshotID = snapshot.GetId()
 	})
 
-	t.Run("Watch snapshot creation", func(t *testing.T) {
+	g.Run("Watch snapshot creation", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -129,7 +129,7 @@ func TestExportJobs(t *testing.T) {
 		t.Log(string(resp))
 	})
 
-	t.Run("Create job", func(t *testing.T) {
+	g.Run("Create job", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -152,7 +152,7 @@ func TestExportJobs(t *testing.T) {
 		exportJobID = job.GetId()
 	})
 
-	t.Run("Watch create job", func(t *testing.T) {
+	g.Run("Watch create job", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -166,7 +166,7 @@ func TestExportJobs(t *testing.T) {
 		t.Log(string(resp))
 	})
 
-	t.Run("Describe job", func(t *testing.T) {
+	g.Run("Describe job", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -187,7 +187,7 @@ func TestExportJobs(t *testing.T) {
 		assert.Equal(t, job.GetExportBucketId(), bucketID)
 	})
 
-	t.Run("List jobs", func(t *testing.T) {
+	g.Run("List jobs", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			exportsEntity,
@@ -204,7 +204,7 @@ func TestExportJobs(t *testing.T) {
 		assert.NotEmpty(t, jobs)
 	})
 
-	t.Run("Delete snapshot", func(t *testing.T) {
+	g.Run("Delete snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
@@ -222,7 +222,7 @@ func TestExportJobs(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch snapshot deletion", func(t *testing.T) {
+	g.Run("Watch snapshot deletion", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,

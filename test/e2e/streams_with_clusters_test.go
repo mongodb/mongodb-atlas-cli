@@ -44,7 +44,7 @@ func TestStreamsWithClusters(t *testing.T) {
 
 	g.generateCluster()
 
-	t.Run("Creating a streams instance", func(t *testing.T) {
+	g.Run("Creating a streams instance", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"streams",
 			"instance",
@@ -71,7 +71,7 @@ func TestStreamsWithClusters(t *testing.T) {
 		assert.Equal(t, instance.GetName(), instanceName)
 	})
 
-	t.Run("Create a streams connection with an atlas cluster", func(t *testing.T) {
+	g.Run("Create a streams connection with an atlas cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		configFile, err := generateAtlasConnectionConfigFile(g.clusterName)
 		req.NoError(err)
 

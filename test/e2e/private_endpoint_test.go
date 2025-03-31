@@ -49,7 +49,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	region := regionsAWS[n.Int64()]
 	var id string
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			awsEntity,
@@ -68,7 +68,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 	})
 	require.NotEmpty(t, id)
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			awsEntity,
@@ -82,7 +82,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		require.NoError(t, err, string(resp))
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			awsEntity,
@@ -99,7 +99,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		assert.Equal(t, id, r.GetId())
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			awsEntity,
@@ -115,7 +115,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		assert.NotEmpty(t, r)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			awsEntity,
@@ -136,7 +136,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			awsEntity,
@@ -172,7 +172,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 	region := regionsAzure[n.Int64()]
 	var id string
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			azureEntity,
@@ -194,7 +194,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		assert.FailNow(t, "Failed to create private endpoint")
 	}
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			azureEntity,
@@ -207,7 +207,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			azureEntity,
@@ -224,7 +224,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		assert.Equal(t, id, r.GetId())
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			azureEntity,
@@ -240,7 +240,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		assert.NotEmpty(t, r)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			azureEntity,
@@ -261,7 +261,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			azureEntity,
@@ -304,7 +304,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 	require.NoError(t, err)
 	var id string
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			gcpEntity,
@@ -322,7 +322,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		assert.NotEmpty(t, id)
 	})
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			gcpEntity,
@@ -336,7 +336,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			gcpEntity,
@@ -353,7 +353,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		assert.Equal(t, id, r.GetId())
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			gcpEntity,
@@ -369,7 +369,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		assert.NotEmpty(t, r)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			gcpEntity,
@@ -390,7 +390,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 		return
 	}
 
-	t.Run("Watch", func(t *testing.T) {
+	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			gcpEntity,
@@ -414,7 +414,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Enable regionalized private endpoint setting", func(t *testing.T) {
+	g.Run("Enable regionalized private endpoint setting", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			regionalModeEntity,
@@ -428,7 +428,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 		assert.Equal(t, "Regionalized private endpoint setting enabled.\n", string(resp))
 	})
 
-	t.Run("Disable regionalized private endpoint setting", func(t *testing.T) {
+	g.Run("Disable regionalized private endpoint setting", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			regionalModeEntity,
@@ -442,7 +442,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 		assert.Equal(t, "Regionalized private endpoint setting disabled.\n", string(resp))
 	})
 
-	t.Run("Get regionalized private endpoint setting", func(t *testing.T) {
+	g.Run("Get regionalized private endpoint setting", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			privateEndpointsEntity,
 			regionalModeEntity,

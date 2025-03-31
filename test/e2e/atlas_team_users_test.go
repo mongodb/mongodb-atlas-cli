@@ -47,7 +47,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 	username, userID, err := OrgNUser(1)
 	require.NoError(t, err)
 
-	t.Run("Add", func(t *testing.T) {
+	g.Run("Add", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			usersEntity,
@@ -74,7 +74,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		a.True(found)
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			usersEntity,
@@ -91,7 +91,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		a.NotEmpty(teams.Results)
 	})
 
-	t.Run("List Compact", func(t *testing.T) {
+	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			usersEntity,
@@ -109,7 +109,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 		a.NotEmpty(teams)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			teamsEntity,
 			usersEntity,

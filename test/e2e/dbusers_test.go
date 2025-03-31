@@ -47,7 +47,7 @@ func TestDBUserWithFlags(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
@@ -64,7 +64,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		testCreateUserCmd(t, cmd, username)
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"ls",
@@ -81,7 +81,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		}
 	})
 
-	t.Run("List Compact", func(t *testing.T) {
+	g.Run("List Compact", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"ls",
@@ -99,11 +99,11 @@ func TestDBUserWithFlags(t *testing.T) {
 		}
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		testDescribeUser(t, cliPath, username)
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
@@ -121,7 +121,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		testUpdateUserCmd(t, cmd, username)
 	})
 
-	t.Run("Update only password", func(t *testing.T) {
+	g.Run("Update only password", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
@@ -135,7 +135,7 @@ func TestDBUserWithFlags(t *testing.T) {
 		testUpdateUserCmd(t, cmd, username)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		testDeleteUser(t, cliPath, dbusersEntity, username)
 	})
 }
@@ -153,7 +153,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	t.Run("Create", func(t *testing.T) {
+	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		pwd, err := generateRandomBase64String()
 		require.NoError(t, err)
 		cmd := exec.Command(cliPath,
@@ -171,7 +171,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 		testCreateUserCmd(t, cmd, username)
 	})
 
-	t.Run("Create OIDC user", func(t *testing.T) {
+	g.Run("Create OIDC user", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"create",
@@ -186,12 +186,12 @@ func TestDBUsersWithStdin(t *testing.T) {
 		testCreateUserCmd(t, cmd, oidcUsername)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		testDescribeUser(t, cliPath, username)
 		testDescribeUser(t, cliPath, oidcUsername)
 	})
 
-	t.Run("Update", func(t *testing.T) {
+	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			dbusersEntity,
 			"update",
@@ -205,7 +205,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 		testUpdateUserCmd(t, cmd, username)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		testDeleteUser(t, cliPath, dbusersEntity, username)
 		testDeleteUser(t, cliPath, dbusersEntity, oidcUsername)
 	})

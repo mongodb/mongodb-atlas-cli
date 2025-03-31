@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (iam && !atlas)
+//go:build e2e || (iam && atlas)
 
 package e2e_test
 
@@ -40,7 +40,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 
 	emailProject := fmt.Sprintf("test-%v@mongodb.com", n)
 
-	t.Run("Invite", func(t *testing.T) {
+	g.Run("Invite", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			invitationsEntity,
@@ -63,7 +63,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		invitationID = invitation.GetId()
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			invitationsEntity,
@@ -81,7 +81,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		a.NotEmpty(invitations)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			invitationsEntity,
@@ -101,7 +101,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		a.Equal([]string{"GROUP_READ_ONLY"}, invitation.GetRoles())
 	})
 
-	t.Run("Update by email", func(t *testing.T) {
+	g.Run("Update by email", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			invitationsEntity,
@@ -126,7 +126,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		a.ElementsMatch([]string{roleName1, roleName2}, invitation.GetRoles())
 	})
 
-	t.Run("Update by ID", func(t *testing.T) {
+	g.Run("Update by ID", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			invitationsEntity,
@@ -150,7 +150,7 @@ func TestAtlasProjectInvitations(t *testing.T) {
 		a.ElementsMatch([]string{roleName1, roleName2}, invitation.GetRoles())
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			projectsEntity,
 			invitationsEntity,

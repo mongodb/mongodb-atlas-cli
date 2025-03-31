@@ -37,7 +37,7 @@ func TestIntegrations(t *testing.T) {
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 
-	t.Run("Create DATADOG", func(t *testing.T) {
+	g.Run("Create DATADOG", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		n := g.memoryRand("datadog_rand", 9)
 		datadogKey := "000000000000000000000000000000" + n.String() + n.String()
 		if IsGov() {
@@ -62,7 +62,7 @@ func TestIntegrations(t *testing.T) {
 		a.True(integrationExists(datadogEntity, thirdPartyIntegrations))
 	})
 
-	t.Run("Create OPSGENIE", func(t *testing.T) {
+	g.Run("Create OPSGENIE", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		n := g.memoryRand("opsgenie_rand", 9)
 		opsGenieKey := "00000000-aaaa-2222-bbbb-3333333333" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
@@ -85,7 +85,7 @@ func TestIntegrations(t *testing.T) {
 		a.True(integrationExists(opsGenieEntity, thirdPartyIntegrations))
 	})
 
-	t.Run("Create PAGER_DUTY", func(t *testing.T) {
+	g.Run("Create PAGER_DUTY", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		n := g.memoryRand("pager_duty_rand", 9)
 		pagerDutyKey := "000000000000000000000000000000" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
@@ -108,7 +108,7 @@ func TestIntegrations(t *testing.T) {
 		a.True(integrationExists(pagerDutyEntity, thirdPartyIntegrations))
 	})
 
-	t.Run("Create VICTOR_OPS", func(t *testing.T) {
+	g.Run("Create VICTOR_OPS", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		n := g.memoryRand("victor_ops_rand", 9)
 		victorOpsKey := "fa07bbc8-eab2-4085-81af-daed47dc1c" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
@@ -133,7 +133,7 @@ func TestIntegrations(t *testing.T) {
 		a.True(integrationExists(victorOpsEntity, thirdPartyIntegrations))
 	})
 
-	t.Run("Create WEBHOOK", func(t *testing.T) {
+	g.Run("Create WEBHOOK", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"create",
@@ -156,7 +156,7 @@ func TestIntegrations(t *testing.T) {
 		a.True(integrationExists(webhookEntity, thirdPartyIntegrations))
 	})
 
-	t.Run("List", func(t *testing.T) {
+	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"ls",
@@ -173,7 +173,7 @@ func TestIntegrations(t *testing.T) {
 		a.NotEmpty(thirdPartyIntegrations.Results)
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"describe",
@@ -191,7 +191,7 @@ func TestIntegrations(t *testing.T) {
 		a.Equal(webhookEntity, thirdPartyIntegration.GetType())
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
 			"delete",

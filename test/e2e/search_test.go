@@ -43,7 +43,7 @@ func TestSearch(t *testing.T) {
 	indexName := fmt.Sprintf("index-%v", n)
 	var indexID string
 
-	t.Run("Load Sample data", func(t *testing.T) {
+	g.Run("Load Sample data", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"sampleData",
@@ -68,7 +68,7 @@ func TestSearch(t *testing.T) {
 		require.NoError(t, err, resp)
 	})
 
-	t.Run("Create via file", func(t *testing.T) {
+	g.Run("Create via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
@@ -112,7 +112,7 @@ func TestSearch(t *testing.T) {
 		indexID = index.GetIndexID()
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -130,7 +130,7 @@ func TestSearch(t *testing.T) {
 		assert.Equal(t, indexID, index.GetIndexID())
 	})
 
-	t.Run("Update via file", func(t *testing.T) {
+	g.Run("Update via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		fileName := fmt.Sprintf("update_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
@@ -179,7 +179,7 @@ func TestSearch(t *testing.T) {
 		a.Equal(analyzer, *index.GetLatestDefinition().Analyzer)
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -196,7 +196,7 @@ func TestSearch(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
-	t.Run("Create combinedMapping", func(t *testing.T) {
+	g.Run("Create combinedMapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
@@ -262,7 +262,7 @@ func TestSearch(t *testing.T) {
 		assert.Equal(t, indexName, index.Name)
 	})
 
-	t.Run("Create staticMapping", func(t *testing.T) {
+	g.Run("Create staticMapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
 
 		file, err := os.Create(fileName)
@@ -365,7 +365,7 @@ func TestSearch(t *testing.T) {
 		assert.Equal(t, indexName, index.Name)
 	})
 
-	t.Run("Create array mapping", func(t *testing.T) {
+	g.Run("Create array mapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		n := g.memoryRand("arrayRand", 1000)
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
@@ -424,7 +424,7 @@ func TestSearch(t *testing.T) {
 		assert.Equal(t, indexName, index.Name)
 	})
 
-	t.Run("list", func(t *testing.T) {
+	g.Run("list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -458,7 +458,7 @@ func TestSearchDeprecated(t *testing.T) {
 	indexName := fmt.Sprintf("index-%v", n)
 	var indexID string
 
-	t.Run("Load Sample data", func(t *testing.T) {
+	g.Run("Load Sample data", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"sampleData",
@@ -482,7 +482,7 @@ func TestSearchDeprecated(t *testing.T) {
 		require.NoError(t, cmd.Run())
 	})
 
-	t.Run("Create via file", func(t *testing.T) {
+	g.Run("Create via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
@@ -524,7 +524,7 @@ func TestSearchDeprecated(t *testing.T) {
 		indexID = index.GetIndexID()
 	})
 
-	t.Run("Describe", func(t *testing.T) {
+	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -542,7 +542,7 @@ func TestSearchDeprecated(t *testing.T) {
 		assert.Equal(t, indexID, index.GetIndexID())
 	})
 
-	t.Run("Update via file", func(t *testing.T) {
+	g.Run("Update via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		fileName := fmt.Sprintf("update_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
@@ -588,7 +588,7 @@ func TestSearchDeprecated(t *testing.T) {
 		a.Equal(analyzer, index.GetAnalyzer())
 	})
 
-	t.Run("Delete", func(t *testing.T) {
+	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,
@@ -605,7 +605,7 @@ func TestSearchDeprecated(t *testing.T) {
 		assert.Equal(t, expected, string(resp))
 	})
 
-	t.Run("Create combinedMapping", func(t *testing.T) {
+	g.Run("Create combinedMapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		fileName := fmt.Sprintf("create_index_search_test-%v.json", n)
 
 		file, err := os.Create(fileName)
@@ -669,7 +669,7 @@ func TestSearchDeprecated(t *testing.T) {
 		assert.Equal(t, indexName, index.Name)
 	})
 
-	t.Run("Create staticMapping", func(t *testing.T) {
+	g.Run("Create staticMapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
 
 		file, err := os.Create(fileName)
@@ -772,7 +772,7 @@ func TestSearchDeprecated(t *testing.T) {
 		assert.Equal(t, indexName, index.Name)
 	})
 
-	t.Run("Create array mapping", func(t *testing.T) {
+	g.Run("Create array mapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		n := g.memoryRand("arrayRand", 1000)
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
@@ -828,7 +828,7 @@ func TestSearchDeprecated(t *testing.T) {
 		assert.Equal(t, indexName, index.Name)
 	})
 
-	t.Run("list", func(t *testing.T) {
+	g.Run("list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			searchEntity,

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && onlinearchive)
+//go:build e2e || e2eSnap || (atlas && onlinearchive)
 
 package e2e_test
 
@@ -88,7 +88,7 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 		"--projectId", projectID,
 		"--force")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
@@ -105,7 +105,7 @@ func watchOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 		"--clusterName", clusterName,
 		"--projectId", projectID,
 	)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	_ = cmd.Run()
 }
 
@@ -120,7 +120,7 @@ func startOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 		"--projectId", projectID,
 		"-o=json")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := cmd.CombinedOutput()
 	// online archive never reaches goal state as the db and collection must exist
 	const expectedError = "ONLINE_ARCHIVE_CANNOT_MODIFY_FIELD"
@@ -140,7 +140,7 @@ func pauseOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveID
 		"--projectId", projectID,
 		"-o=json")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := cmd.CombinedOutput()
 	// online archive never reaches goal state as the db and collection must exist
 	const expectedError = "ONLINE_ARCHIVE_MUST_BE_ACTIVE_TO_PAUSE"
@@ -163,7 +163,7 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 		"--archiveAfter", expireAfterDaysStr,
 		"-o=json")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -186,7 +186,7 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 		"--projectId", projectID,
 		"-o=json")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -209,7 +209,7 @@ func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 		"--projectId", projectID,
 		"-o=json")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
@@ -237,7 +237,7 @@ func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) s
 		"--projectId", projectID,
 		"-o=json")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && plugin && install)
+//go:build e2e || e2eSnap || (atlas && plugin && install)
 
 package e2e_test
 
@@ -73,6 +73,11 @@ func TestPluginInstall(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
+
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("home", t.TempDir())
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	t.Setenv("AppData", t.TempDir())
 
 	runPluginInstallTest(g, cliPath, "Invalid version for plugin", true, examplePluginRepository+"@2.3.4.5.6")
 	runPluginInstallTest(g, cliPath, "Plugin version does not exist", true, examplePluginRepository+"@300.200.100")

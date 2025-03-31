@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && atlas)
+//go:build e2e || e2eSnap || (iam && atlas)
 
 package e2e_test
 
@@ -44,7 +44,7 @@ func TestAtlasUsers(t *testing.T) {
 			usersEntity,
 			"list",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -62,7 +62,7 @@ func TestAtlasUsers(t *testing.T) {
 			"--username",
 			username,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -85,7 +85,7 @@ func TestAtlasUsers(t *testing.T) {
 			"--id",
 			userID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -116,7 +116,7 @@ func TestAtlasUsers(t *testing.T) {
 			"--lastName", "TestLastName",
 			"--orgRole", orgID+":ORG_READ_ONLY",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 

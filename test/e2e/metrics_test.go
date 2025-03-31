@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && metrics)
+//go:build e2e || e2eSnap || (atlas && metrics)
 
 package e2e_test
 
@@ -65,7 +65,7 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 		"--projectId", projectID,
 		"-o=json")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	var metrics *atlasv2.ApiMeasurementsGeneralViewAtlas
@@ -85,7 +85,7 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 		"--projectId", projectID,
 		"-o=json")
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	var metrics *atlasv2.ApiMeasurementsGeneralViewAtlas
@@ -104,7 +104,7 @@ func databases(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
 			"--projectId", projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var db atlasv2.PaginatedDatabase
@@ -124,7 +124,7 @@ func databases(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
 			"--projectId", projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var metrics atlasv2.ApiMeasurementsGeneralViewAtlas
@@ -144,7 +144,7 @@ func disks(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
 			"--projectId", projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var d atlasv2.PaginatedDiskPartition
@@ -164,7 +164,7 @@ func disks(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
 			"--projectId", projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var metrics atlasv2.ApiMeasurementsGeneralViewAtlas

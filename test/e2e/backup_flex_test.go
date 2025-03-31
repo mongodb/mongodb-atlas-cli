@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && backup && flex)
+//go:build e2e || e2eSnap || (atlas && backup && flex)
 
 package e2e_test
 
@@ -49,7 +49,7 @@ func TestFlexBackup(t *testing.T) {
 			"list",
 			clusterName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -70,7 +70,7 @@ func TestFlexBackup(t *testing.T) {
 			"--clusterName",
 			clusterName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -87,7 +87,7 @@ func TestFlexBackup(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -110,7 +110,7 @@ func TestFlexBackup(t *testing.T) {
 			"--targetProjectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -131,7 +131,7 @@ func TestFlexBackup(t *testing.T) {
 			"--clusterName",
 			clusterName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -144,7 +144,7 @@ func TestFlexBackup(t *testing.T) {
 			"list",
 			clusterName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -162,7 +162,7 @@ func TestFlexBackup(t *testing.T) {
 			"--clusterName",
 			clusterName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var result atlasv2.FlexBackupRestoreJob20241113
@@ -185,7 +185,7 @@ func TestFlexBackup(t *testing.T) {
 			"--targetProjectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -205,7 +205,7 @@ func TestFlexBackup(t *testing.T) {
 			"--clusterName",
 			clusterName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -218,7 +218,7 @@ func TestFlexBackup(t *testing.T) {
 			g.clusterName,
 			"--force",
 			"--watch")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 

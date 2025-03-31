@@ -168,6 +168,7 @@ type atlasE2ETestGenerator struct {
 	testName            string
 	skipSnapshots       func(snapshot *http.Response, prevSnapshot *http.Response) bool
 	snapshotNameFunc    func(r *http.Request) string
+	snapshotTargetURI   string
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -198,6 +199,7 @@ func newAtlasE2ETestGenerator(t *testing.T, opts ...func(g *atlasE2ETestGenerato
 		fileIDs:             map[string]int{},
 		memoryMap:           map[string]any{},
 		snapshotNameFunc:    defaultSnapshotBaseName,
+		snapshotTargetURI:   os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL"),
 	}
 	for _, opt := range opts {
 		opt(g)
@@ -459,7 +461,7 @@ func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
 	}
 	cmd := exec.Command(cliPath, args...)
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	return RunAndGetStdOut(cmd)
 }
 
@@ -527,6 +529,15 @@ func snapshotHashedName(r *http.Request) string {
 	defaultSnapshotBaseName := defaultSnapshotBaseName(r)
 	hash := fmt.Sprintf("%x", sha1.Sum([]byte(defaultSnapshotBaseName))) //nolint:gosec // no need to be secure just replacing long filenames for windows
 	return hash
+}
+
+func (g *atlasE2ETestGenerator) prepareRequest(r *http.Request) {
+	g.t.Helper()
+	var err error
+	r.URL, err = url.Parse(g.maskString(r.URL.String()))
+	if err != nil {
+		g.t.Fatal(err)
+	}
 }
 
 func (g *atlasE2ETestGenerator) snapshotName(r *http.Request) string {
@@ -601,6 +612,18 @@ func (g *atlasE2ETestGenerator) storeMemory() {
 	}
 }
 
+func (g *atlasE2ETestGenerator) maskString(s string) string {
+	o := s
+	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_ORG_ID"), "0123456789abcdef01234567")
+	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_PROJECT_ID"), "0123456789abcdef01234567")
+	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), "0123456789abcdef01234567")
+	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), "0123456789abcdef01234567")
+	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), "test-flex")
+	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), "test-bucket")
+	o = strings.ReplaceAll(o, g.snapshotTargetURI, "http://localhost:8080/")
+	return o
+}
+
 func (g *atlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response {
 	g.t.Helper()
 
@@ -609,15 +632,36 @@ func (g *atlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 		g.t.Fatal(err)
 	}
 
+	req := r.Request
+	g.prepareRequest(req)
+
 	reader := bufio.NewReader(bytes.NewReader(buf))
-	resp, err := http.ReadResponse(reader, r.Request)
+	resp, err := http.ReadResponse(reader, req)
 	if err != nil {
 		g.t.Fatal(err)
 	}
 	resp.Body = io.NopCloser(reader)
 
-	if err := decompress(resp); err != nil {
-		g.t.Fatal(err)
+	if resp.ContentLength > 0 && strings.Contains(resp.Header.Get("Content-Type"), "json") {
+		if err := decompress(resp); err != nil {
+			g.t.Fatal(err)
+		}
+
+		buf, err := io.ReadAll(resp.Body)
+		if err != nil {
+			g.t.Fatal(err)
+		}
+
+		buf = []byte(g.maskString(string(buf)))
+		resp.Body = io.NopCloser(bytes.NewReader(buf))
+		resp.ContentLength = int64(len(buf))
+		resp.Header["Content-Length"] = []string{strconv.FormatInt(resp.ContentLength, 10)}
+
+		for k, mv := range resp.Header {
+			for i, v := range mv {
+				resp.Header[k][i] = g.maskString(v)
+			}
+		}
 	}
 
 	return resp
@@ -641,6 +685,8 @@ func (g *atlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 
 func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	g.t.Helper()
+
+	g.prepareRequest(r)
 
 	filename := g.snapshotName(r)
 
@@ -682,9 +728,7 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 		return
 	}
 
-	targetURI := os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL")
-
-	targetURL, err := url.Parse(targetURI)
+	targetURL, err := url.Parse(g.snapshotTargetURI)
 	if err != nil {
 		g.t.Fatal(err)
 	}

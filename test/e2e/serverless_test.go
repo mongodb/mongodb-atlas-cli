@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && serverless && instance)
+//go:build e2e || e2eSnap || (atlas && serverless && instance)
 
 package e2e_test
 
@@ -47,7 +47,7 @@ func TestServerless(t *testing.T) {
 			"--tag", "env=test",
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -66,7 +66,7 @@ func TestServerless(t *testing.T) {
 			"--projectId", g.projectID,
 			clusterName,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -83,7 +83,7 @@ func TestServerless(t *testing.T) {
 			"--tag", "env=e2e",
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -101,7 +101,7 @@ func TestServerless(t *testing.T) {
 			"ls",
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -120,7 +120,7 @@ func TestServerless(t *testing.T) {
 			clusterName,
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -140,7 +140,7 @@ func TestServerless(t *testing.T) {
 			clusterName,
 			"--projectId", g.projectID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -160,7 +160,7 @@ func TestServerless(t *testing.T) {
 			clusterName,
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
 		resp, _ := RunAndGetStdOut(cmd)

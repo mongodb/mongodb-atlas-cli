@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && datafederation && db)
+//go:build e2e || e2eSnap || (atlas && datafederation && db)
 
 package e2e_test
 
@@ -54,7 +54,7 @@ func TestDataFederation(t *testing.T) {
 			"--awsTestS3Bucket",
 			testBucket,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
@@ -71,7 +71,7 @@ func TestDataFederation(t *testing.T) {
 			"delete",
 			dataFederationName,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		// this command will only succeed in case one of the tests after this one fails
 		// not printing the output, because it might cause confusion
@@ -85,7 +85,7 @@ func TestDataFederation(t *testing.T) {
 			"describe",
 			dataFederationName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
@@ -99,7 +99,7 @@ func TestDataFederation(t *testing.T) {
 			datafederationEntity,
 			"ls",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
@@ -117,7 +117,7 @@ func TestDataFederation(t *testing.T) {
 			"--region",
 			updateRegion,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
@@ -138,20 +138,24 @@ func TestDataFederation(t *testing.T) {
 			"--end",
 			strconv.FormatInt(time.Now().Unix(), 10),
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
 	g.Run("Download Logs", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		t.Cleanup(func() {
+			require.NoError(t, os.Remove("testLogFile"))
+		})
+
 		cmd := exec.Command(cliPath,
 			datafederationEntity,
 			"logs",
 			dataFederationName,
 			"--out",
 			"testLogFile")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -163,7 +167,7 @@ func TestDataFederation(t *testing.T) {
 			"delete",
 			dataFederationName,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))

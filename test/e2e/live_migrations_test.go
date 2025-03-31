@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && livemigrations)
+//go:build e2e || e2eSnap || (atlas && livemigrations)
 
 package e2e_test
 
@@ -36,7 +36,7 @@ func TestLinkToken(t *testing.T) {
 		"link",
 		"delete",
 		"--force")
-	deleteCleanup.Env = os.Environ()
+	deleteCleanup.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	if err := deleteCleanup.Run(); err == nil {
 		t.Logf("Warning: Deleted link-token.")
 	}
@@ -49,7 +49,7 @@ func TestLinkToken(t *testing.T) {
 			"create",
 			"--accessListIp",
 			"1.2.3.4,5.6.7.8")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -61,7 +61,7 @@ func TestLinkToken(t *testing.T) {
 			"link",
 			"delete",
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))

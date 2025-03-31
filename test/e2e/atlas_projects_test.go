@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && atlas)
+//go:build e2e || e2eSnap || (iam && atlas)
 
 package e2e_test
 
@@ -50,7 +50,7 @@ func TestAtlasProjects(t *testing.T) {
 			"--tag", "env=e2e",
 			"--tag", "prod=false",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -68,7 +68,7 @@ func TestAtlasProjects(t *testing.T) {
 			projectsEntity,
 			"ls",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -80,7 +80,7 @@ func TestAtlasProjects(t *testing.T) {
 			"describe",
 			projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -92,7 +92,7 @@ func TestAtlasProjects(t *testing.T) {
 			"describe",
 			projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var project admin.Group
@@ -162,7 +162,7 @@ func TestAtlasProjects(t *testing.T) {
 				"--file",
 				filename,
 				"-o=json")
-			cmd.Env = os.Environ()
+			cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 			resp, err := RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
 
@@ -171,7 +171,7 @@ func TestAtlasProjects(t *testing.T) {
 				"describe",
 				projectID,
 				"-o=json")
-			cmd.Env = os.Environ()
+			cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 			resp, err = RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
 			var project admin.Group
@@ -205,7 +205,7 @@ func TestAtlasProjects(t *testing.T) {
 			"--projectId",
 			projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -216,7 +216,7 @@ func TestAtlasProjects(t *testing.T) {
 			"delete",
 			projectID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))

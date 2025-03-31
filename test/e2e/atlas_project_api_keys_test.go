@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && atlas)
+//go:build e2e || e2eSnap || (iam && atlas)
 
 package e2e_test
 
@@ -48,7 +48,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			desc,
 			"--role=GROUP_READ_ONLY",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -73,7 +73,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			ID,
 			"--role=GROUP_DATA_ACCESS_READ_ONLY",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -84,7 +84,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			apiKeysEntity,
 			"ls",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		if err != nil {
@@ -104,7 +104,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"ls",
 			"-c",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		if err != nil {
@@ -124,7 +124,7 @@ func TestAtlasProjectAPIKeys(t *testing.T) {
 			"rm",
 			ID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)

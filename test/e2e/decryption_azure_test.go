@@ -52,7 +52,7 @@ func TestDecryptWithAzure(t *testing.T) {
 		"--file",
 		inputFile,
 	)
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 	gotContents, err := RunAndGetStdOut(cmd)
 	req.NoError(err, string(gotContents))

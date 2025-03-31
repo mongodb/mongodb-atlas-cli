@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && networking)
+//go:build e2e || e2eSnap || (atlas && networking)
 
 package e2e_test
 
@@ -59,7 +59,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
@@ -76,7 +76,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			id,
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -91,7 +91,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
@@ -107,7 +107,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r []atlasv2.EndpointService
@@ -124,7 +124,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -144,7 +144,7 @@ func TestPrivateEndpointsAWS(t *testing.T) {
 			id,
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := cmd.CombinedOutput()
 		// We expect a 404 error once the private endpoint has been completely deleted
@@ -182,7 +182,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -202,7 +202,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			id,
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		_, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 	})
@@ -216,7 +216,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
@@ -232,7 +232,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r []atlasv2.EndpointService
@@ -249,7 +249,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			"--force",
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -269,7 +269,7 @@ func TestPrivateEndpointsAzure(t *testing.T) {
 			id,
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := cmd.CombinedOutput()
 		// We expect a 404 error once the private endpoint has been completely deleted
 		require.Error(t, err)
@@ -313,7 +313,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
@@ -330,7 +330,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			id,
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		_, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err)
@@ -345,7 +345,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.EndpointService
@@ -361,7 +361,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r []atlasv2.EndpointService
@@ -378,7 +378,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			"--force",
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -398,7 +398,7 @@ func TestPrivateEndpointsGCP(t *testing.T) {
 			id,
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := cmd.CombinedOutput()
 		// We expect a 404 error once the private endpoint has been completely deleted
@@ -421,7 +421,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			"enable",
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -435,7 +435,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			"disable",
 			"--projectId",
 			g.projectID)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
@@ -450,7 +450,7 @@ func TestRegionalizedPrivateEndpointsSettings(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))

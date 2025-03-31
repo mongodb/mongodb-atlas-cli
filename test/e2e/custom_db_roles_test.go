@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && generic)
+//go:build e2e || e2eSnap || (atlas && generic)
 
 package e2e_test
 
@@ -56,7 +56,7 @@ func TestDBRoles(t *testing.T) {
 			"--inheritedRole", enableShardingInheritedRole,
 			"-o=json",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -78,7 +78,7 @@ func TestDBRoles(t *testing.T) {
 			customDBRoleEntity,
 			"ls",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -94,7 +94,7 @@ func TestDBRoles(t *testing.T) {
 			"describe",
 			roleName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -121,7 +121,7 @@ func TestDBRoles(t *testing.T) {
 			"--privilege", createPrivilege+"@db2.collection",
 			"--append",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -147,7 +147,7 @@ func TestDBRoles(t *testing.T) {
 			"--inheritedRole", enableShardingInheritedRole,
 			"--privilege", updatePrivilege,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -168,7 +168,7 @@ func TestDBRoles(t *testing.T) {
 			"delete",
 			roleName,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 

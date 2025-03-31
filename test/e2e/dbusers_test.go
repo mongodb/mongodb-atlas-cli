@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && generic)
+//go:build e2e || e2eSnap || (atlas && generic)
 
 package e2e_test
 
@@ -69,7 +69,7 @@ func TestDBUserWithFlags(t *testing.T) {
 			dbusersEntity,
 			"ls",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -87,7 +87,7 @@ func TestDBUserWithFlags(t *testing.T) {
 			"ls",
 			"-c",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -214,7 +214,7 @@ func TestDBUsersWithStdin(t *testing.T) {
 func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	t.Helper()
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
@@ -240,7 +240,7 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 		"describe",
 		username,
 		"-o=json")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
@@ -254,7 +254,7 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	t.Helper()
 
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
@@ -283,7 +283,7 @@ func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
 		"--force",
 		"--authDB",
 		"admin")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 

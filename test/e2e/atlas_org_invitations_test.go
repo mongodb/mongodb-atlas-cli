@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (iam && atlas)
+//go:build e2e || e2eSnap || (iam && atlas)
 
 package e2e_test
 
@@ -48,7 +48,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"--role",
 			"ORG_MEMBER",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -129,7 +129,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			invitationsEntity,
 			"ls",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -147,7 +147,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"get",
 			orgInvitationID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -169,7 +169,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"--role",
 			roleNameOrg,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -190,7 +190,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"--role",
 			roleNameOrg,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -207,7 +207,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.memoryRand("randFile", 1000)
+		nFile := g.memoryRand("randFile3", 1000)
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator
@@ -239,7 +239,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.memoryRand("randFile", 1000)
+		nFile := g.memoryRand("randFile4", 1000)
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator
@@ -274,7 +274,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"delete",
 			orgInvitationID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))

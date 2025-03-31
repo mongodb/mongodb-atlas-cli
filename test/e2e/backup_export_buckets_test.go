@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && backup && exports && buckets)
+//go:build e2e || e2eSnap || (atlas && backup && exports && buckets)
 
 package e2e_test
 
@@ -51,7 +51,7 @@ func TestExportBuckets(t *testing.T) {
 			"--iamRoleId",
 			iamRoleID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
@@ -69,7 +69,7 @@ func TestExportBuckets(t *testing.T) {
 			bucketsEntity,
 			"list",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 		var buckets atlasv2.PaginatedBackupSnapshotExportBuckets
@@ -86,7 +86,7 @@ func TestExportBuckets(t *testing.T) {
 			"--bucketId",
 			bucketID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 		var exportBucket atlasv2.DiskBackupSnapshotExportBucketResponse
@@ -103,7 +103,7 @@ func TestExportBuckets(t *testing.T) {
 			"--bucketId",
 			bucketID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))

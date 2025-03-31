@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && clusters && m0)
+//go:build e2e || e2eSnap || (atlas && clusters && m0)
 
 package e2e_test
 
@@ -48,7 +48,7 @@ func TestClustersM0Flags(t *testing.T) {
 			"--provider", e2eClusterProvider,
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -66,7 +66,7 @@ func TestClustersM0Flags(t *testing.T) {
 			clusterName,
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -82,7 +82,7 @@ func TestClustersM0Flags(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json",
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -102,7 +102,7 @@ func TestClustersM0Flags(t *testing.T) {
 			"--force",
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -122,7 +122,7 @@ func TestClustersM0Flags(t *testing.T) {
 			clusterName,
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
 		resp, _ := RunAndGetStdOut(cmd)

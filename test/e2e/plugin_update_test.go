@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && plugin && update)
+//go:build e2e || e2eSnap || (atlas && plugin && update)
 
 package e2e_test
 
@@ -28,6 +28,12 @@ func TestPluginUpdate(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
+
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("home", t.TempDir())
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	t.Setenv("AppData", t.TempDir())
+
 	runPluginUpdateTest(g, cliPath, "Update without specifying version", false, examplePluginRepository, "v1.0.38", "")
 	runPluginUpdateTest(g, cliPath, "Update with specifying version", false, examplePluginName, "v1.0.38", "v2.0.3")
 	runPluginUpdateTest(g, cliPath, "Update with specifying latest version", false, examplePluginName, "v1.0.38", "latest")

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && clusters && file)
+//go:build e2e || e2eSnap || (atlas && clusters && file)
 
 package e2e_test
 
@@ -57,7 +57,7 @@ func TestClustersFile(t *testing.T) {
 			"--file", clusterFile,
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -74,7 +74,7 @@ func TestClustersFile(t *testing.T) {
 			"--projectId", g.projectID,
 			clusterFileName,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 		assert.Contains(t, string(resp), "Cluster available")
@@ -90,7 +90,7 @@ func TestClustersFile(t *testing.T) {
 			"--file=data/create_partial_index.json",
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -105,7 +105,7 @@ func TestClustersFile(t *testing.T) {
 			"--file=data/create_sparse_index.json",
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -120,7 +120,7 @@ func TestClustersFile(t *testing.T) {
 			"--file=data/create_2dspere_index.json",
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -137,7 +137,7 @@ func TestClustersFile(t *testing.T) {
 			"--projectId", g.projectID,
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		cmd.Stderr = &stdErr
 		_ = cmd.Run()
 		assert.Contains(t, stdErr.String(), `json: unknown field "unique"`)
@@ -152,7 +152,7 @@ func TestClustersFile(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -171,7 +171,7 @@ func TestClustersFile(t *testing.T) {
 			clusterFileName,
 			"--projectId", g.projectID,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -190,7 +190,7 @@ func TestClustersFile(t *testing.T) {
 			clusterFileName,
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
 		resp, _ := RunAndGetStdOut(cmd)

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && generic)
+//go:build e2e || e2eSnap || (atlas && generic)
 
 package e2e_test
 
@@ -39,7 +39,7 @@ func TestAuditing(t *testing.T) {
 			"describe",
 			"--projectId", g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var setting *atlasv2.AuditLog
@@ -55,7 +55,7 @@ func TestAuditing(t *testing.T) {
 			"--auditAuthorizationSuccess",
 			"--auditFilter", "{\"atype\": \"authenticate\"}",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var setting *atlasv2.AuditLog
@@ -74,7 +74,7 @@ func TestAuditing(t *testing.T) {
 			"--auditAuthorizationSuccess",
 			"-f", "data/update_auditing.json",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var setting *atlasv2.AuditLog

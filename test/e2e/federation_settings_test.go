@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (iam && atlas)
+//go:build e2e || e2eSnap || (iam && atlas)
 
 package e2e_test
 
@@ -50,7 +50,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -93,7 +93,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -117,7 +117,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -163,7 +163,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -186,7 +186,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -209,7 +209,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -231,7 +231,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -255,7 +255,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -278,7 +278,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -301,7 +301,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -324,7 +324,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -349,7 +349,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -372,7 +372,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -393,7 +393,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -412,7 +412,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -437,7 +437,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -458,7 +458,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})
@@ -476,7 +476,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})
@@ -493,7 +493,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})
@@ -511,7 +511,7 @@ func TestIdentityProviders(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})

@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && backup && snapshot)
+//go:build e2e || e2eSnap || (atlas && backup && snapshot)
 
 package e2e_test
 
@@ -51,7 +51,7 @@ func TestSnapshots(t *testing.T) {
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", mdbVersion,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -73,7 +73,7 @@ func TestSnapshots(t *testing.T) {
 			"--desc",
 			"test-snapshot",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -92,7 +92,7 @@ func TestSnapshots(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -104,7 +104,7 @@ func TestSnapshots(t *testing.T) {
 			"list",
 			clusterName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -122,7 +122,7 @@ func TestSnapshots(t *testing.T) {
 			"--clusterName",
 			clusterName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
@@ -141,7 +141,7 @@ func TestSnapshots(t *testing.T) {
 			"--clusterName",
 			clusterName,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -158,7 +158,7 @@ func TestSnapshots(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, _ := RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})

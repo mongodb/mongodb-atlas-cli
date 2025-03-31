@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && search_nodes)
+//go:build e2e || e2eSnap || (atlas && search_nodes)
 
 package e2e_test
 
@@ -74,7 +74,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
@@ -102,7 +102,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
@@ -132,7 +132,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
@@ -160,7 +160,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
@@ -189,7 +189,7 @@ func TestSearchNodes(t *testing.T) {
 			"-o=json",
 		)
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		respStr := strings.TrimLeft(string(resp), ".")
 

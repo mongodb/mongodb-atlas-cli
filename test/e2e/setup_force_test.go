@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && interactive)
+//go:build e2e || e2eSnap || (atlas && interactive)
 
 package e2e_test
 
@@ -54,7 +54,7 @@ func TestSetup(t *testing.T) {
 			"--tag", tagKey+"="+tagValue,
 			"--accessListIp", arbitraryAccessListIP,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), "Cluster created.", string(resp))
@@ -69,7 +69,7 @@ func TestSetup(t *testing.T) {
 			"--projectId",
 			g.projectID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -90,7 +90,7 @@ func TestSetup(t *testing.T) {
 			"-o=json",
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
@@ -107,7 +107,7 @@ func TestSetup(t *testing.T) {
 			"-o=json",
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 

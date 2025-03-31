@@ -23,7 +23,7 @@ ATLAS_E2E_BINARY?=../../bin/${ATLAS_BINARY_NAME}
 
 DEBUG_FLAGS=all=-N -l
 
-TEST_CMD?=go test
+TEST_CMD?=gotestsum --format standard-verbose --
 UNIT_TAGS?=unit,e2eSnap
 E2E_TAGS?=e2e
 E2E_TIMEOUT?=60m
@@ -122,10 +122,6 @@ gen-docs-metadata: apply-overlay ## Generate docs metadata
 	@echo "==> Generating docs metadata"
 	go run ./tools/cmd/api-generator --spec ./tools/internal/specs/spec-with-overlays.yaml --output-type metadata > ./tools/cmd/docs/metadata.go
 
-.PHONY: otel
-otel: ## Generate code
-	go run ./tools/cmd/otel $(SPAN) --attr $(ATTRS)
-
 .PHONY: gen-mocks
 gen-mocks: ## Generate mocks
 	@echo "==> Generating mocks"
@@ -158,19 +154,24 @@ unit-test: ## Run unit-tests
 unit-test: export DO_NOT_TRACK=1
 unit-test: export E2E_SKIP_CLEANUP=true
 unit-test: export UPDATE_SNAPSHOTS=false
-unit-test: export MONGODB_ATLAS_ORG_ID=5f0f5b3e0f2912c8b8f3b9b9
-unit-test: export MONGODB_ATLAS_PROJECT_ID=5f0f5b3e0f2912c8b8f3b9b9
+unit-test: export MONGODB_ATLAS_ORG_ID=0123456789abcdef01234567
+unit-test: export MONGODB_ATLAS_PROJECT_ID=0123456789abcdef01234567
 unit-test: export MONGODB_ATLAS_PRIVATE_API_KEY=12345678-abcd-ef01-2345-6789abcdef01
 unit-test: export MONGODB_ATLAS_PUBLIC_API_KEY=ABCDEF01
-unit-test: export MONGODB_ATLAS_OPS_MANAGER_URL=http://localhost:8080
+unit-test: export MONGODB_ATLAS_OPS_MANAGER_URL=http://localhost:8080/
 unit-test: export MONGODB_ATLAS_SERVICE=cloud
-unit-test: export IDENTITY_PROVIDER_ID=5f0f5b3e0f2912c8b8f3b9b9
-unit-test: export E2E_CLOUD_ROLE_ID=5f0f5b3e0f2912c8b8f3b9b9
+unit-test: export IDENTITY_PROVIDER_ID=0123456789abcdef01234567
+unit-test: export E2E_CLOUD_ROLE_ID=0123456789abcdef01234567
 unit-test: export E2E_TEST_BUCKET=test-bucket
-unit-test: export E2E_FLEX_INSTANCE_NAME=instance_name
+unit-test: export E2E_FLEX_INSTANCE_NAME=test-flex
+unit-test: export BINGOCOVERDIR?=$(GOCOVERDIR)
+unit-test: export MONGODB_ATLAS_SKIP_UPDATE_CHECK=yes
 unit-test: build-debug
 	@echo "==> Running unit tests..."
-	$(TEST_CMD) -parallel $(E2E_PARALLEL) --tags="$(UNIT_TAGS)" -cover -coverprofile $(COVERAGE) -count=1 ./...
+	@rm -rf $(GOCOVERDIR)/*
+	@touch $(GOCOVERDIR)/.gitkeep
+	$(TEST_CMD) --tags="$(UNIT_TAGS)" -cover ./... -test.gocoverdir=$(GOCOVERDIR)
+	@go tool covdata textfmt -i=$(GOCOVERDIR) -o $(COVERAGE)
 
 .PHONY: install
 install: ## Install a binary in $GOPATH/bin

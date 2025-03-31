@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && clusters && sharded)
+//go:build e2e || e2eSnap || (atlas && clusters && sharded)
 
 package e2e_test
 
@@ -60,7 +60,7 @@ func TestShardedCluster(t *testing.T) {
 			"--projectId", g.projectID,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -72,7 +72,7 @@ func TestShardedCluster(t *testing.T) {
 
 	g.Run("Delete sharded cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath, clustersEntity, "delete", shardedClusterName, "--projectId", g.projectID, "--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -91,7 +91,7 @@ func TestShardedCluster(t *testing.T) {
 			shardedClusterName,
 			"--projectId", g.projectID,
 		)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
 		resp, _ := RunAndGetStdOut(cmd)

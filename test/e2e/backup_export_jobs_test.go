@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && backup && exports && jobs)
+//go:build e2e || e2eSnap || (atlas && backup && exports && jobs)
 
 package e2e_test
 
@@ -61,7 +61,7 @@ func TestExportJobs(t *testing.T) {
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", mdbVersion,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
@@ -86,7 +86,7 @@ func TestExportJobs(t *testing.T) {
 			"--iamRoleId",
 			iamRoleID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 		var exportBucket atlasv2.DiskBackupSnapshotExportBucketResponse
@@ -104,7 +104,7 @@ func TestExportJobs(t *testing.T) {
 			"--desc",
 			"test-snapshot",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
@@ -124,7 +124,7 @@ func TestExportJobs(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, _ := RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
@@ -142,7 +142,7 @@ func TestExportJobs(t *testing.T) {
 			"--snapshotId",
 			snapshotID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
@@ -161,7 +161,7 @@ func TestExportJobs(t *testing.T) {
 			exportJobID,
 			"--clusterName",
 			clusterName)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, _ := RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
@@ -177,7 +177,7 @@ func TestExportJobs(t *testing.T) {
 			"--exportId",
 			exportJobID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
@@ -195,7 +195,7 @@ func TestExportJobs(t *testing.T) {
 			"ls",
 			clusterName,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
@@ -213,7 +213,7 @@ func TestExportJobs(t *testing.T) {
 			"--clusterName",
 			clusterName,
 			"--force")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
@@ -230,7 +230,7 @@ func TestExportJobs(t *testing.T) {
 			snapshotID,
 			"--clusterName",
 			clusterName)
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, _ := RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})

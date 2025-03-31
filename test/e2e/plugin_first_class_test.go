@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || kubernetes
+//go:build e2e || e2eSnap || kubernetes
 
 package e2e_test
 
@@ -36,7 +36,7 @@ func TestPluginKubernetes(t *testing.T) {
 
 		cmd := exec.Command(cliPath,
 			"kubernetes")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := cmd.CombinedOutput()
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), "Plugin mongodb/atlas-cli-plugin-kubernetes successfully installed\n")

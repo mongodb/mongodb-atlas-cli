@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && plugin && uninstall)
+//go:build e2e || e2eSnap || (atlas && plugin && uninstall)
 
 package e2e_test
 
@@ -27,6 +27,11 @@ func TestPluginUninstall(t *testing.T) {
 	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
+
+	t.Setenv("HOME", t.TempDir())
+	t.Setenv("home", t.TempDir())
+	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
+	t.Setenv("AppData", t.TempDir())
 
 	runPluginUninstallTest(g, cliPath, "Uninstall Successful with repository values", false, examplePluginRepository)
 	runPluginUninstallTest(g, cliPath, "Uninstall Successful with plugin name", false, examplePluginName)

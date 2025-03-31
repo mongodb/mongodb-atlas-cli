@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (iam && atlas)
+//go:build e2e || e2eSnap || (iam && atlas)
 
 package e2e_test
 
@@ -54,7 +54,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			"--ip",
 			entry,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.PaginatedApiUserAccessListResponse
@@ -70,7 +70,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			"list",
 			apiKeyID,
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.PaginatedApiUserAccessListResponse
@@ -92,7 +92,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			apiKeyID,
 			"--currentIp",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.PaginatedApiUserAccessListResponse
@@ -117,7 +117,7 @@ func deleteAtlasAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
 		"--apiKey",
 		apiKeyID,
 		"--force")
-	cmd.Env = os.Environ()
+	cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 	resp, err := RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	expected := fmt.Sprintf("Access list entry '%s' deleted\n", entry)

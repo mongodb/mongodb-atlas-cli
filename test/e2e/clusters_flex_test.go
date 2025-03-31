@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || (atlas && clusters && flex)
+//go:build e2e || e2eSnap || (atlas && clusters && flex)
 
 package e2e_test
 
@@ -48,7 +48,7 @@ func TestFlexCluster(t *testing.T) {
 			"--provider", e2eClusterProvider,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -65,7 +65,7 @@ func TestFlexCluster(t *testing.T) {
 			flexClusterName,
 			"-o=json")
 
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -81,7 +81,7 @@ func TestFlexCluster(t *testing.T) {
 			"list",
 			"--tier=FLEX",
 			"-o=json")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
@@ -99,7 +99,7 @@ func TestFlexCluster(t *testing.T) {
 			flexClusterName,
 			"--force",
 			"--watch")
-		cmd.Env = os.Environ()
+		cmd.Env = append(os.Environ(), "GOCOVERDIR="+os.Getenv("BINGOCOVERDIR"))
 		resp, err := RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 

@@ -92,6 +92,7 @@ func (opts *UpdateOpts) validate() error {
 // atlas organization(s) invitation(s) updates [invitationId] --role role  [--orgId orgId] [--email email].
 func UpdateBuilder() *cobra.Command {
 	opts := &UpdateOpts{}
+	opts.fs = afero.NewOsFs()
 	cmd := &cobra.Command{
 		Use:     "update [invitationId]",
 		Aliases: []string{"updates"},
@@ -132,7 +133,8 @@ func UpdateBuilder() *cobra.Command {
 	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
 
-	_ = cmd.MarkFlagRequired(flag.Role)
+	_ = cmd.MarkFlagFilename(flag.File)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Role)
 
 	return cmd
 }

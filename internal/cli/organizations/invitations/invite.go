@@ -85,6 +85,7 @@ func (opts *InviteOpts) newInvitation() (*atlasv2.OrganizationInvitationRequest,
 func InviteBuilder() *cobra.Command {
 	opts := new(InviteOpts)
 	opts.Template = createTemplate
+	opts.fs = afero.NewOsFs() // Initialize the filesystem
 	cmd := &cobra.Command{
 		Use:     "invite <email>",
 		Short:   "Invite the specified MongoDB user to your organization.",

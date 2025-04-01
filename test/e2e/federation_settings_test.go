@@ -28,6 +28,10 @@ import (
 )
 
 func TestIdentityProviders(t *testing.T) {
+	if IsGov() {
+		t.Skip("Skipping test in Gov environment")
+	}
+
 	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	req := require.New(t)
 

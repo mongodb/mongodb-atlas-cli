@@ -780,6 +780,10 @@ func (g *atlasE2ETestGenerator) memoryFunc(key string, value any, marshal func(v
 	case snapshotModeSkip:
 		return value
 	case snapshotModeUpdate:
+		_, ok := g.memoryMap[key]
+		if ok {
+			g.t.Fatalf("memory key %q already exists", key)
+		}
 		data, err := marshal(value)
 		if err != nil {
 			g.t.Fatalf("marshal: %v", err)

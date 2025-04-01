@@ -2,6 +2,8 @@ module github.com/mongodb/mongodb-atlas-cli/atlascli
 
 go 1.23.6
 
+toolchain go1.24.1
+
 require (
 	cloud.google.com/go/kms v1.21.1
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -39,7 +41,7 @@ require (
 	github.com/spf13/afero v1.14.0
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
-	github.com/spf13/viper v1.20.0
+	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
 	github.com/tangzero/inflector v1.0.0
 	github.com/yuin/goldmark v1.7.8

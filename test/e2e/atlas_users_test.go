@@ -95,11 +95,11 @@ func TestAtlasUsers(t *testing.T) {
 	})
 
 	g.Run("Invite", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.memoryRand("rand", 10000)
 		if IsGov() {
 			t.Skip("Skipping test in Gov environment")
 		}
 
+		n := g.memoryRand("rand", 10000)
 		emailUser := fmt.Sprintf("cli-test-%v@moongodb.com", n)
 		if revision, ok := os.LookupEnv("revision"); ok {
 			emailUser = fmt.Sprintf("cli-test-%v-%s@moongodb.com", n, revision)

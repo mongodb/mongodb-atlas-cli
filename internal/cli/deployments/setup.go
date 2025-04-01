@@ -46,6 +46,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/templatewriter"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/vscode"
 	"github.com/spf13/cobra"
 )
 
@@ -98,10 +99,11 @@ var (
 		customSettings:  "With custom settings",
 		cancelSettings:  "Cancel setup",
 	}
-	connectWithOptions     = []string{options.MongoshConnect, options.CompassConnect, skipConnect}
+	connectWithOptions     = []string{options.MongoshConnect, options.CompassConnect, options.VsCodeConnect, skipConnect}
 	connectWithDescription = map[string]string{
 		options.MongoshConnect: "MongoDB Shell",
 		options.CompassConnect: "MongoDB Compass",
+		options.VsCodeConnect:  "MongoDB for VsCode",
 		skipConnect:            "Skip Connection",
 	}
 	mdbVersions = []string{mdb7, mdb8}
@@ -552,6 +554,14 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 			return mongosh.ErrMongoshNotInstalled
 		}
 		return mongosh.Run("", "", cs)
+	case options.VsCodeConnect:
+		if !vscode.Detect() {
+			return vscode.ErrVsCodeCliNotInstalled
+		}
+		if _, err := log.Warningln("Launching VsCode..."); err != nil {
+			return err
+		}
+		return vscode.SaveConnection(cs, opts.DeploymentName, opts.DeploymentType)
 	}
 
 	return nil

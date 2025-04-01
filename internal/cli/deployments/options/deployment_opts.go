@@ -54,6 +54,7 @@ const (
 	AtlasCluster       = "atlas"
 	CompassConnect     = "compass"
 	MongoshConnect     = "mongosh"
+	VsCodeConnect      = "vscode"
 	PromptTypeMessage  = "What type of deployment would you like to work with?"
 	MaxItemsPerPage    = 500
 	ContainerFilter    = "mongodb-atlas-local=container"

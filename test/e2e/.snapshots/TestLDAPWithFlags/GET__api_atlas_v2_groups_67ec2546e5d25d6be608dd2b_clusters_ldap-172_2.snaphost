@@ -1,0 +1,14 @@
+HTTP/2.0 502 Bad Gateway
+Connection: close
+Content-Type: text/html
+Server: mitmproxy 11.0.0
+
+<html>
+<head>
+    <title>502 Bad Gateway</title>
+</head>
+<body>
+    <h1>502 Bad Gateway</h1>
+    <p>HTTP/2 protocol error: Invalid input ConnectionInputs.RECV_HEADERS in state ConnectionState.CLOSED</p>
+</body>
+</html>

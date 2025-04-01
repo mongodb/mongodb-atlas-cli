@@ -1,0 +1,16 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 334
+Content-Type: application/json
+Date: Tue, 01 Apr 2025 17:42:56 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 36
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasUserSecurityResource::createLDAPVerifyConnectivityRequest
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=71cb61e3b30cf2c7accfe959792aefa856078301; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"No clusters available to perform LDAP connectivity verification for groupId: 67ec2546e5d25d6be608dd2b.  At least one active cluster running MongoDB version 3.6 or greater is required.","error":400,"errorCode":"LDAP_VERIFY_CONNECTIVITY_NO_AVAILABLE_CLUSTERS","parameters":["67ec2546e5d25d6be608dd2b"],"reason":"Bad Request"}

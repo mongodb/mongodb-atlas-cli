@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 481
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Tue, 01 Apr 2025 17:41:45 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 95
+X-Frame-Options: DENY
+X-Java-Method: ApiStreamsResource::getConnections
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=71cb61e3b30cf2c7accfe959792aefa856078301; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/67ec2552c884b924829e79d1/streams/instance-252/connections?pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"authentication":{"mechanism":"SCRAM-256","username":"admin"},"bootstrapServers":"example.com:8080,fraud.example.com:8000","config":{"auto.offset.reset":"earliest"},"name":"connection-313","networking":{"access":{"type":"PUBLIC"}},"security":{"protocol":"PLAINTEXT"},"type":"Kafka"}],"totalCount":1}

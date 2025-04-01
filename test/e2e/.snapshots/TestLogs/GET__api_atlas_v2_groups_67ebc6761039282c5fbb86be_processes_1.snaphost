@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1829
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 01 Apr 2025 11:08:01 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 70
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=35ad773d35445e53338af543e7770045e5861a5e; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ebc6761039282c5fbb86be/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-04-01T11:06:43Z","groupId":"67ebc6761039282c5fbb86be","hostname":"atlas-9mty4m-shard-00-00.wzh1e.mongodb-dev.net","id":"atlas-9mty4m-shard-00-00.wzh1e.mongodb-dev.net:27017","lastPing":"2025-04-01T11:07:54Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ebc6761039282c5fbb86be/processes/atlas-9mty4m-shard-00-00.wzh1e.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-9mty4m-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-896-shard-00-00.wzh1e.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-01T11:06:43Z","groupId":"67ebc6761039282c5fbb86be","hostname":"atlas-9mty4m-shard-00-01.wzh1e.mongodb-dev.net","id":"atlas-9mty4m-shard-00-01.wzh1e.mongodb-dev.net:27017","lastPing":"2025-04-01T11:07:54Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ebc6761039282c5fbb86be/processes/atlas-9mty4m-shard-00-01.wzh1e.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-9mty4m-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-896-shard-00-01.wzh1e.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-01T11:06:43Z","groupId":"67ebc6761039282c5fbb86be","hostname":"atlas-9mty4m-shard-00-02.wzh1e.mongodb-dev.net","id":"atlas-9mty4m-shard-00-02.wzh1e.mongodb-dev.net:27017","lastPing":"2025-04-01T11:07:54Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ebc6761039282c5fbb86be/processes/atlas-9mty4m-shard-00-02.wzh1e.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-9mty4m-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-896-shard-00-02.wzh1e.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

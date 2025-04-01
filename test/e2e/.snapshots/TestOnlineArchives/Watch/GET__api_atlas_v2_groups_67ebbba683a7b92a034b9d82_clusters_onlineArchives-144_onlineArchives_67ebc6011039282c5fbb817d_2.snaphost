@@ -1,0 +1,16 @@
+HTTP/2.0 404 Not Found
+Content-Length: 213
+Content-Type: application/json
+Date: Tue, 01 Apr 2025 10:55:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 23
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasOnlineArchiveResource::getOnlineArchive
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6333652d70d6697372fd50c09a2770b6f68e43d6; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"Cannot find resource Online archive with id 67ebc6011039282c5fbb817d.","error":404,"errorCode":"RESOURCE_NOT_FOUND","parameters":["Online archive with id 67ebc6011039282c5fbb817d"],"reason":"Not Found"}

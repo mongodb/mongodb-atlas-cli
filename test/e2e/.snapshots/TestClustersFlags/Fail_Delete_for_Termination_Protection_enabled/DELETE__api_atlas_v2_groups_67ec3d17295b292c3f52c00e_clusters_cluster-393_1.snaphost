@@ -1,0 +1,16 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 412
+Content-Type: application/json
+Date: Tue, 01 Apr 2025 19:32:02 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 88
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::deleteCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=ccbedc595934247a8bec3231d4327b548cf4edd3; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"Cannot terminate a cluster when termination protection is enabled. Disable termination protection and try again.","error":400,"errorCode":"CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED","parameters":["Cannot terminate cluster cluster-393 in group 67ec3d17295b292c3f52c00e because termination protection is enabled. Disable termination protection and try again."],"reason":"Bad Request"}

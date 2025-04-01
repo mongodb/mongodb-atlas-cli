@@ -1,19 +1,19 @@
 HTTP/2.0 201 Created
 Content-Length: 609
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 01 Apr 2025 09:08:00 GMT
+Date: Tue, 01 Apr 2025 09:24:18 GMT
 Deprecation: Wed, 19 Feb 2025 00:00:00 GMT
-Location: http://localhost:8080/api/atlas/v1.0/users/67ebacf155f98903febe3907
+Location: http://localhost:8080/api/atlas/v1.0/users/67ebb0c383a7b92a034b0f14
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 Sunset: Fri, 31 Jul 2026 00:00:00 GMT
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 1544
+X-Envoy-Upstream-Service-Time: 1568
 X-Frame-Options: DENY
 X-Java-Method: ApiUsersResource::addUser
 X-Java-Version: 17.0.14+7
 X-Mongodb-Service-Version: gitHash=aebae60f59443e571f6c6be433d47ce819a0aadb; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"country":"US","createdAt":"2025-04-01T09:08:01Z","emailAddress":"cli-test-4297@moongodb.com","firstName":"TestFirstName","id":"67ebacf155f98903febe3907","lastName":"TestLastName","links":[{"href":"http://localhost:8080/api/atlas/v2/users/67ebacf155f98903febe3907","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/users/67ebacf155f98903febe3907/whitelist","rel":"https://cloud.mongodb.com/whitelist"},{"href":"http://localhost:8080/api/atlas/v2/users/67ebacf155f98903febe3907/accessList","rel":"https://cloud.mongodb.com/accessList"}],"roles":[],"teamIds":[],"username":"cli-test-4297@moongodb.com"}
+{"country":"US","createdAt":"2025-04-01T09:24:19Z","emailAddress":"cli-test-5847@moongodb.com","firstName":"TestFirstName","id":"67ebb0c383a7b92a034b0f14","lastName":"TestLastName","links":[{"href":"http://localhost:8080/api/atlas/v2/users/67ebb0c383a7b92a034b0f14","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/users/67ebb0c383a7b92a034b0f14/whitelist","rel":"https://cloud.mongodb.com/whitelist"},{"href":"http://localhost:8080/api/atlas/v2/users/67ebb0c383a7b92a034b0f14/accessList","rel":"https://cloud.mongodb.com/accessList"}],"roles":[],"teamIds":[],"username":"cli-test-5847@moongodb.com"}

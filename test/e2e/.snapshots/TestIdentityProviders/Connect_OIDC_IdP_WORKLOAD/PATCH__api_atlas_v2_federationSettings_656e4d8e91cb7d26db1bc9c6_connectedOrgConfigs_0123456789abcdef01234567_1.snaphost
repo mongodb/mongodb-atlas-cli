@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 251
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 01 Apr 2025 09:08:04 GMT
+Date: Tue, 01 Apr 2025 09:24:20 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 107
+X-Envoy-Upstream-Service-Time: 63
 X-Frame-Options: DENY
 X-Java-Method: ApiConnectedOrgConfigsResource::updateConnectedOrgConfig
 X-Java-Version: 17.0.14+7
 X-Mongodb-Service-Version: gitHash=aebae60f59443e571f6c6be433d47ce819a0aadb; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"dataAccessIdentityProviderIds":["67ebacf355f98903febe3925"],"domainAllowList":[],"domainRestrictionEnabled":false,"identityProviderId":null,"orgId":"0123456789abcdef01234567","postAuthRoleGrants":["ORG_OWNER"],"roleMappings":[],"userConflicts":null}
+{"dataAccessIdentityProviderIds":["67ebb0c455f98903febe7b4e"],"domainAllowList":[],"domainRestrictionEnabled":false,"identityProviderId":null,"orgId":"0123456789abcdef01234567","postAuthRoleGrants":["ORG_OWNER"],"roleMappings":[],"userConflicts":null}

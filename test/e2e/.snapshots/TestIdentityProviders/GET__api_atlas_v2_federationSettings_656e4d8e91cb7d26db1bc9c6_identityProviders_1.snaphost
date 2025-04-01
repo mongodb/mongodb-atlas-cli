@@ -1,7 +1,7 @@
 HTTP/2.0 200 OK
 Content-Length: 665
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 01 Apr 2025 09:08:09 GMT
+Date: Tue, 01 Apr 2025 09:24:23 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
@@ -13,4 +13,4 @@ X-Java-Version: 17.0.14+7
 X-Mongodb-Service-Version: gitHash=aebae60f59443e571f6c6be433d47ce819a0aadb; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-361","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-04-01T09:08:04Z","description":"CLI TEST Provider","displayName":"idp-361","groupsClaim":"groups","id":"67ebacf483a7b92a034ad287","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":1}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-525","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-04-01T09:24:20Z","description":"CLI TEST Provider","displayName":"idp-525","groupsClaim":"groups","id":"67ebb0c455f98903febe7b54","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":1}

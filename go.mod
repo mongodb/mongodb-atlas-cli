@@ -2,8 +2,6 @@ module github.com/mongodb/mongodb-atlas-cli/atlascli
 
 go 1.23.6
 
-toolchain go1.24.1
-
 require (
 	cloud.google.com/go/kms v1.21.1
 	github.com/AlecAivazis/survey/v2 v2.3.7

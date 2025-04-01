@@ -77,7 +77,7 @@ var (
 	connectWithDescription = map[string]string{
 		mongoshConnect: "MongoDB Shell",
 		compassConnect: "MongoDB Compass",
-		vsCodeConnect:  "MongoDB for VsCode in atlas setup btws",
+		vsCodeConnect:  "MongoDB for VsCode",
 		skipConnect:    "Skip Connection",
 	}
 )

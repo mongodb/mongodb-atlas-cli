@@ -1,0 +1,17 @@
+HTTP/2.0 201 Created
+Content-Length: 232
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 01 Apr 2025 09:07:37 GMT
+Location: http://localhost:8080/orgs/0123456789abcdef01234567/teams/67ebacd983a7b92a034ad0e9
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 186
+X-Frame-Options: DENY
+X-Java-Method: ApiOrganizationTeamsResource::createTeam
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=aebae60f59443e571f6c6be433d47ce819a0aadb; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"id":"67ebacd983a7b92a034ad0e9","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/0123456789abcdef01234567/teams/67ebacd983a7b92a034ad0e9","rel":"self"}],"name":"e2e-teams-497","usernames":["andrea.angiolillo@mongodb.com"]}

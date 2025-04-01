@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 345
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 01 Apr 2025 09:07:17 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 43
+X-Frame-Options: DENY
+X-Java-Method: ApiOrganizationApiUsersResource::updateApiUserDescAndRoles
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=aebae60f59443e571f6c6be433d47ce819a0aadb; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"desc":"e2e-test-atlas-org-updated","id":"67ebacc383a7b92a034acde8","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/0123456789abcdef01234567/apiKeys/67ebacc383a7b92a034acde8","rel":"self"}],"privateKey":"********-****-****-c998a9a78b28","publicKey":"tgqmizri","roles":[{"orgId":"0123456789abcdef01234567","roleName":"ORG_READ_ONLY"}]}

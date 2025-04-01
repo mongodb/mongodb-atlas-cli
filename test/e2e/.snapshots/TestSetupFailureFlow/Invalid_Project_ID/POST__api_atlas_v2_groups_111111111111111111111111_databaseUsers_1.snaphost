@@ -1,10 +1,10 @@
 HTTP/2.0 401 Unauthorized
 Content-Length: 106
 Content-Type: application/json
-Date: Mon, 31 Mar 2025 14:19:58 GMT
+Date: Tue, 01 Apr 2025 09:06:40 GMT
 Server: mdbws
-Www-Authenticate: Digest realm="MMS Public API", domain="", nonce="rAQ58JW9QXy9euw6pyVdbveZi+bsdT1Z", algorithm=MD5, qop="auth", stale=false
-X-Envoy-Upstream-Service-Time: 4
+Www-Authenticate: Digest realm="MMS Public API", domain="", nonce="2OIPh5Y+C6vVvYNVR4Et7cO4ftrqRy+I", algorithm=MD5, qop="auth", stale=false
+X-Envoy-Upstream-Service-Time: 5
 
 {
   "error" : 401,

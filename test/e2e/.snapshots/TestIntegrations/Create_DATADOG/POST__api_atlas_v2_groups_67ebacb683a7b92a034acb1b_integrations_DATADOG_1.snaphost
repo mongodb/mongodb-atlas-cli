@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 391
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 01 Apr 2025 09:07:04 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 60
+X-Frame-Options: DENY
+X-Java-Method: ApiGroupIntegrationsResource::createIntegration
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=aebae60f59443e571f6c6be433d47ce819a0aadb; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ebacb683a7b92a034acb1b/integrations/DATADOG?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"apiKey":"****************************0000","customEndpoint":null,"id":"67ebacb883a7b92a034acb87","region":"US","sendCollectionLatencyMetrics":false,"sendDatabaseMetrics":false,"type":"DATADOG"}],"totalCount":1}

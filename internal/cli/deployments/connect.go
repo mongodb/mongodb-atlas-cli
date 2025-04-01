@@ -41,8 +41,7 @@ var (
 	connectionStringTypeOptions              = []string{ConnectionStringTypeStandard, connectionStringTypePrivate}
 	errConnectionStringTypeNotImplemented    = errors.New("connection string type not implemented")
 	errNetworkPeeringConnectionNotConfigured = errors.New("network peering connection is not configured for this deployment")
-	errCouldNotConnectClusterNotIdle         = errors.New("could not connect: cluster is not in an idle state yet, try again in a few moments")
-	errCouldNotConnectNoConnectionString     = errors.New("could not connect: server did not return connectionstring")
+	errConnectionError                       = errors.New("could not connect")
 	promptConnectionStringType               = "What type of connection string type would you like to use?"
 )
 
@@ -291,25 +290,25 @@ func (opts *ConnectOpts) connectToAtlas() error {
 
 	// Connectionstrings are empty when the server is not in IDLE
 	// r.ConnectionStrings.PrivateSrv == nil and r.ConnectionStrings.StandardSrv == nil
-	if r.StateName == nil || *r.StateName != "IDLE" {
-		return errCouldNotConnectClusterNotIdle
+	if r.GetStateName() != "IDLE" {
+		return fmt.Errorf("%w: cluster is not in an idle state yet, try again in a few moments", errConnectionError)
 	}
 
 	// This field is optional, if not set, throw an error
 	if r.ConnectionStrings == nil {
-		return errCouldNotConnectNoConnectionString
+		return fmt.Errorf("%w: server did not return connectionstrings", errConnectionError)
 	}
 
 	if opts.ConnectionStringType == connectionStringTypePrivate {
-		if r.ConnectionStrings.PrivateSrv == nil {
+		if r.GetConnectionStrings().PrivateSrv == nil {
 			return errNetworkPeeringConnectionNotConfigured
 		}
-		return opts.connectToDeployment(*r.ConnectionStrings.PrivateSrv)
+		return opts.connectToDeployment(*r.GetConnectionStrings().PrivateSrv)
 	}
 
 	// Make sure the string pointer is not nil before dereferencing
 	if r.ConnectionStrings.StandardSrv == nil {
-		return errCouldNotConnectNoConnectionString
+		return fmt.Errorf("%w: server did not return connectionstring", errConnectionError)
 	}
 	return opts.connectToDeployment(*r.ConnectionStrings.StandardSrv)
 }

@@ -1,6 +1,7 @@
 module github.com/mongodb/mongodb-atlas-cli/atlascli
 
 go 1.23.6
+toolchain go1.24.1
 
 require (
 	cloud.google.com/go/kms v1.21.1
@@ -55,7 +56,7 @@ require (
 	golang.org/x/net v0.37.0
 	golang.org/x/sys v0.31.0
 	golang.org/x/tools v0.31.0
-	google.golang.org/api v0.227.0
+	google.golang.org/api v0.228.0
 	google.golang.org/grpc v1.71.0
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/yaml.v3 v3.0.1
@@ -66,7 +67,7 @@ require go.mongodb.org/atlas-sdk/v20250312001 v20250312001.0.0
 require (
 	cloud.google.com/go v0.118.3 // indirect
 	cloud.google.com/go/auth v0.15.0 // indirect
-	cloud.google.com/go/auth/oauth2adapt v0.2.7 // indirect
+	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
 	cloud.google.com/go/iam v1.4.1 // indirect
 	cloud.google.com/go/longrunning v0.6.5 // indirect

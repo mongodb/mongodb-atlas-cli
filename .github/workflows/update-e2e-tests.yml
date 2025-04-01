@@ -175,7 +175,7 @@ jobs:
     steps:
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
+        uses: mongodb/apix-action/token@95298ca9c5b2dffcdf79efaae59b9d2d1ac245e2
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
@@ -220,7 +220,7 @@ jobs:
           merge-multiple: true
       - name: Find JIRA ticket
         id: find
-        uses: mongodb/apix-action/find-jira@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
+        uses: mongodb/apix-action/find-jira@95298ca9c5b2dffcdf79efaae59b9d2d1ac245e2
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}
           jql: project = CLOUDP AND status NOT IN (Closed, Resolved) AND summary ~ "Update Test Snapshots"
@@ -229,7 +229,7 @@ jobs:
         run: |
           echo "JIRA_KEY=${{steps.find.outputs.issue-key}}" >> "$GITHUB_ENV"
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
+        uses: mongodb/apix-action/create-jira@95298ca9c5b2dffcdf79efaae59b9d2d1ac245e2
         id: create
         if: steps.find.outputs.found == 'false'
         with:
@@ -264,7 +264,7 @@ jobs:
           echo "JIRA_KEY=${{steps.create.outputs.issue-key}}" >> "$GITHUB_ENV"
       - name: set Apix Bot token
         id: app-token
-        uses: mongodb/apix-action/token@dd1d8b713effb9ac4972a3318b8e2f03b8a6d8ce
+        uses: mongodb/apix-action/token@95298ca9c5b2dffcdf79efaae59b9d2d1ac245e2
         with:
           app-id: ${{ secrets.APIXBOT_APP_ID }}
           private-key: ${{ secrets.APIXBOT_APP_PEM }}

@@ -1,6 +1,7 @@
 module github.com/mongodb/mongodb-atlas-cli/atlascli
 
 go 1.23.6
+toolchain go1.24.1
 
 require (
 	cloud.google.com/go/kms v1.21.1
@@ -52,7 +53,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.35.0
 	golang.org/x/exp v0.0.0-20241004190924-225e2abe05e6
 	golang.org/x/mod v0.24.0
-	golang.org/x/net v0.37.0
+	golang.org/x/net v0.38.0
 	golang.org/x/sys v0.31.0
 	golang.org/x/tools v0.31.0
 	google.golang.org/api v0.227.0

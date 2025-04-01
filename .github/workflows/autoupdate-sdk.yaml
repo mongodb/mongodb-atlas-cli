@@ -90,6 +90,8 @@ jobs:
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         with:
           token: ${{ steps.app-token.outputs.token }}
+          committer: "${{ steps.app-token.outputs.user-name }} <${{ steps.app-token.outputs.user-email }}>"
+          author: "${{ steps.app-token.outputs.user-name }} <${{ steps.app-token.outputs.user-email }}>"
           title: "${{ env.JIRA_KEY }}: Bump Atlas GO SDK to ${{ steps.version.outputs.VERSION }}"
           commit-message: "${{ env.JIRA_KEY }}: Bump Atlas GO SDK to ${{ steps.version.outputs.VERSION }}"
           delete-branch: true

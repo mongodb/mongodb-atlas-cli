@@ -32,6 +32,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/vscode"
 	"github.com/spf13/cobra"
 )
 
@@ -185,6 +186,14 @@ func (opts *ConnectOpts) connectToDeployment(connectionString string) error {
 			return mongosh.ErrMongoshNotInstalled
 		}
 		return mongosh.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
+	case options.VsCodeConnect:
+		if !vscode.Detect() {
+			return vscode.ErrVsCodeCliNotInstalled
+		}
+		if _, err := log.Warningln("Launching VsCode..."); err != nil {
+			return err
+		}
+		return vscode.SaveConnection(connectionString, opts.DeploymentName, opts.DeploymentType)
 	}
 
 	return nil

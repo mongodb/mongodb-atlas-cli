@@ -371,7 +371,7 @@ dbName and collection are required only for built-in roles.`
 	MongodPort                                    = "Port that the MongoDB server listens to for client connections."
 	ConnectWithAtlasSetup                         = "Method for connecting to the cluster. Valid values are compass, mongosh, vscode and skip."
 	ConnectWithSetup                              = "Method for connecting to the deployment. Valid values are compass, mongosh, vscode, and skip."
-	ConnectWithConnect                            = "Method for connecting to the deployment. Valid values are compass, connectionString and mongosh."
+	ConnectWithConnect                            = "Method for connecting to the deployment. Valid values are compass, connectionString, mongosh, and vscode."
 	AlertConfigFilename                           = "Path to the JSON configuration file that defines alert configuration settings. Note: Unsupported fields in the JSON file are ignored. To learn more about alert configuration files for the Atlas CLI, see https://dochub.mongodb.org/core/alert-config-atlas-cli."
 	DeploymentName                                = "Name of the deployment."
 	LogName                                       = "Name of the log file (e.g. mongodb.gz|mongos.gz|mongosqld.gz|mongodb-audit-log.gz|mongos-audit-log.gz)."

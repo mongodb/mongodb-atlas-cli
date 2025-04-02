@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1847
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 02 Apr 2025 15:44:39 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 38
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=fc6c89f2083752779568a2630910698cf2fd01a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed59a5f28ef118c539fef9/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-04-02T15:44:03Z","groupId":"67ed59a5f28ef118c539fef9","hostname":"atlas-kbomlh-shard-00-00.dl8rc.mongodb-dev.net","id":"atlas-kbomlh-shard-00-00.dl8rc.mongodb-dev.net:27017","lastPing":"2025-04-02T15:44:26Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed59a5f28ef118c539fef9/processes/atlas-kbomlh-shard-00-00.dl8rc.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-kbomlh-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-795-shard-00-00.dl8rc.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-02T15:44:03Z","groupId":"67ed59a5f28ef118c539fef9","hostname":"atlas-kbomlh-shard-00-01.dl8rc.mongodb-dev.net","id":"atlas-kbomlh-shard-00-01.dl8rc.mongodb-dev.net:27017","lastPing":"2025-04-02T15:44:26Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed59a5f28ef118c539fef9/processes/atlas-kbomlh-shard-00-01.dl8rc.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-kbomlh-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-795-shard-00-01.dl8rc.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-02T15:44:03Z","groupId":"67ed59a5f28ef118c539fef9","hostname":"atlas-kbomlh-shard-00-02.dl8rc.mongodb-dev.net","id":"atlas-kbomlh-shard-00-02.dl8rc.mongodb-dev.net:27017","lastPing":"2025-04-02T15:44:26Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed59a5f28ef118c539fef9/processes/atlas-kbomlh-shard-00-02.dl8rc.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-kbomlh-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-795-shard-00-02.dl8rc.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

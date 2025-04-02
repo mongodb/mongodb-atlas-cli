@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2251
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 02 Apr 2025 15:37:27 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 51
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasCustomDBRoleResource::getCustomDBRoles
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=fc6c89f2083752779568a2630910698cf2fd01a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+[{"actions":[{"action":"UPDATE","resources":[{"db":"db"}]}],"inheritedRoles":[],"roleName":"role-282"},{"actions":[{"action":"UPDATE","resources":[{"db":"db"}]}],"inheritedRoles":[],"roleName":"role-159"},{"actions":[{"action":"LIST_SESSIONS","resources":[{"cluster":true}]}],"inheritedRoles":[],"roleName":"role-913"},{"actions":[{"action":"LIST_SESSIONS","resources":[{"cluster":true}]}],"inheritedRoles":[],"roleName":"role-79"},{"actions":[{"action":"LIST_SESSIONS","resources":[{"cluster":true}]}],"inheritedRoles":[],"roleName":"role-578"},{"actions":[{"action":"LIST_SESSIONS","resources":[{"cluster":true}]}],"inheritedRoles":[],"roleName":"role-858"},{"actions":[{"action":"LIST_SESSIONS","resources":[{"cluster":true}]}],"inheritedRoles":[],"roleName":"role-166"},{"actions":[{"action":"LIST_SESSIONS","resources":[{"cluster":true}]}],"inheritedRoles":[],"roleName":"role-612"},{"actions":[{"action":"LIST_SESSIONS","resources":[{"cluster":true}]},{"action":"UPDATE","resources":[{"collection":"collection","db":"db2"},{"collection":"collection","db":"db"}]}],"inheritedRoles":[{"db":"admin","role":"enableSharding"},{"db":"mydb","role":"read"}],"roleName":"role-485"},{"actions":[{"action":"CREATE_INDEX","resources":[{"collection":"test1","db":"sample_restaurants"}]},{"action":"FIND","resources":[{"collection":"test2","db":"sample_restaurants"}]}],"inheritedRoles":[],"roleName":"testnew"},{"actions":[{"action":"FIND","resources":[{"collection":"test4","db":"sample_restaurants"},{"collection":"test3","db":"sample_restaurants"}]}],"inheritedRoles":[],"roleName":"testnew21"},{"actions":[{"action":"FIND","resources":[{"collection":"test4","db":"sample_restaurants"},{"collection":"test3","db":"sample_restaurants"}]}],"inheritedRoles":[],"roleName":"testnew2"},{"actions":[{"action":"UPDATE","resources":[{"collection":"collection","db":"db"}]},{"action":"FIND","resources":[{"collection":"collection2","db":"db"}]}],"inheritedRoles":[{"db":"admin","role":"enableSharding"}],"roleName":"role-695"},{"actions":[{"action":"UPDATE","resources":[{"collection":"collection","db":"db"}]},{"action":"FIND","resources":[{"collection":"collection2","db":"db"}]}],"inheritedRoles":[{"db":"admin","role":"enableSharding"}],"roleName":"role-518"}]

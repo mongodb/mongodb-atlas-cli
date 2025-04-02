@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2145
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Wed, 02 Apr 2025 15:37:26 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 180
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexClusterResource::getAllFlexClusters
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=fc6c89f2083752779568a2630910698cf2fd01a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/flexClusters?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-achugev-shard-00-00.mzzmlor.mongodb-dev.net:27017,ac-achugev-shard-00-01.mzzmlor.mongodb-dev.net:27017,ac-achugev-shard-00-02.mzzmlor.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-onyscd-shard-0","standardSrv":"mongodb+srv://cluster-85.mzzmlor.mongodb-dev.net"},"createDate":"2025-04-02T15:37:05Z","groupId":"b0123456789abcdef012345b","id":"67ed59a1fb7d3d1a01b710ad","mongoDBVersion":"8.0.6","name":"cluster-85","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"},{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2025-04-02T15:37:25Z","groupId":"b0123456789abcdef012345b","id":"67ed59b5f28ef118c53a0415","mongoDBVersion":"8.0.6","name":"cluster-735","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"CREATING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"},{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-bcmsulp-shard-00-00.gm5almn.mongodb-dev.net:27017,ac-bcmsulp-shard-00-01.gm5almn.mongodb-dev.net:27017,ac-bcmsulp-shard-00-02.gm5almn.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-zgihuc-shard-0","standardSrv":"mongodb+srv://donotdeleteusedfore2ete.gm5almn.mongodb-dev.net"},"createDate":"2024-12-19T17:05:10Z","groupId":"b0123456789abcdef012345b","id":"676452464e0c160700928953","mongoDBVersion":"8.0.6","name":"test-flex","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"IDLE","tags":[],"terminationProtectionEnabled":true,"versionReleaseSystem":"LTS"}],"totalCount":3}

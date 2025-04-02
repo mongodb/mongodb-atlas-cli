@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 414
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Wed, 02 Apr 2025 10:44:12 GMT
+Date: Wed, 02 Apr 2025 15:37:20 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 24
+X-Envoy-Upstream-Service-Time: 26
 X-Frame-Options: DENY
 X-Java-Method: ApiConnectedOrgConfigsResource::getAllConnectedOrgConfigs
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=31c99bb81f9c4a62ada9f7bce997430c97d67edb; versionString=master
+X-Mongodb-Service-Version: gitHash=fc6c89f2083752779568a2630910698cf2fd01a0; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/connectedOrgConfigs?pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"dataAccessIdentityProviderIds":[],"domainAllowList":[],"domainRestrictionEnabled":false,"identityProviderId":null,"orgId":"0123456789abcdef01234567","postAuthRoleGrants":["ORG_OWNER"],"roleMappings":[],"userConflicts":null}],"totalCount":1}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/connectedOrgConfigs?pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"dataAccessIdentityProviderIds":[],"domainAllowList":[],"domainRestrictionEnabled":false,"identityProviderId":null,"orgId":"a0123456789abcdef012345a","postAuthRoleGrants":["ORG_OWNER"],"roleMappings":[],"userConflicts":null}],"totalCount":1}

@@ -1,0 +1,16 @@
+HTTP/2.0 201 Created
+Content-Length: 480
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Wed, 02 Apr 2025 15:37:02 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 996
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexClusterResource::createFlexCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=fc6c89f2083752779568a2630910698cf2fd01a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2025-04-02T15:37:03Z","groupId":"b0123456789abcdef012345b","id":"67ed599ff28ef118c539fbd3","mongoDBVersion":"8.0.6","name":"cluster-386","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"CREATING","tags":[{"key":"e2e_test","value":"yes"}],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

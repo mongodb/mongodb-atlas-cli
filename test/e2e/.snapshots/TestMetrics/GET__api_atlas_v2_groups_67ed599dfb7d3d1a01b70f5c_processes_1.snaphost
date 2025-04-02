@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1838
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 02 Apr 2025 15:44:40 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 42
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=fc6c89f2083752779568a2630910698cf2fd01a0; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed599dfb7d3d1a01b70f5c/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-04-02T15:44:04Z","groupId":"67ed599dfb7d3d1a01b70f5c","hostname":"atlas-11dwq9-shard-00-00.vdg8o.mongodb-dev.net","id":"atlas-11dwq9-shard-00-00.vdg8o.mongodb-dev.net:27017","lastPing":"2025-04-02T15:44:29Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed599dfb7d3d1a01b70f5c/processes/atlas-11dwq9-shard-00-00.vdg8o.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-11dwq9-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-593-shard-00-00.vdg8o.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-02T15:44:04Z","groupId":"67ed599dfb7d3d1a01b70f5c","hostname":"atlas-11dwq9-shard-00-01.vdg8o.mongodb-dev.net","id":"atlas-11dwq9-shard-00-01.vdg8o.mongodb-dev.net:27017","lastPing":"2025-04-02T15:44:29Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed599dfb7d3d1a01b70f5c/processes/atlas-11dwq9-shard-00-01.vdg8o.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-11dwq9-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-593-shard-00-01.vdg8o.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-02T15:44:04Z","groupId":"67ed599dfb7d3d1a01b70f5c","hostname":"atlas-11dwq9-shard-00-02.vdg8o.mongodb-dev.net","id":"atlas-11dwq9-shard-00-02.vdg8o.mongodb-dev.net:27017","lastPing":"2025-04-02T15:44:29Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed599dfb7d3d1a01b70f5c/processes/atlas-11dwq9-shard-00-02.vdg8o.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-11dwq9-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-593-shard-00-02.vdg8o.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

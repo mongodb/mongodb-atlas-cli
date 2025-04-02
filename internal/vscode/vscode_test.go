@@ -39,11 +39,19 @@ func TestVscode_BuildDeeplink(t *testing.T) {
 		},
 		{
 			name:           "local deployment with telemetry disabled",
-			uri:            "mongodb://user:123@localhost:11111/?directConnection=true",
+			uri:            "mongodb://localhost:11111/?directConnection=true",
 			deploymentName: "testDeployment",
 			deploymentType: "local",
 			telemetry:      false,
-			expected:       "vscode://mongodb.mongodb-vscode/connectWithURI?connectionString=mongodb%253A%252F%252Fuser%253A123%2540localhost%253A11111%252F%253FdirectConnection%253Dtrue&name=testDeployment+%2528Local%2529&reuseExisting=true",
+			expected:       "vscode://mongodb.mongodb-vscode/connectWithURI?connectionString=mongodb%253A%252F%252Flocalhost%253A11111%252F%253FdirectConnection%253Dtrue&name=testDeployment+%2528Local%2529&reuseExisting=true",
+		},
+		{
+			name:           "special characters present in password",
+			uri:            "mongodb://user:123%%%@localhost:11111/?directConnection=true",
+			deploymentName: "testDeployment",
+			deploymentType: "local",
+			telemetry:      false,
+			expected:       "vscode://mongodb.mongodb-vscode/connectWithURI?connectionString=mongodb%253A%252F%252Fuser%253A123%2525%2525%2525%2540localhost%253A11111%252F%253FdirectConnection%253Dtrue&name=testDeployment+%2528Local%2529&reuseExisting=true",
 		},
 	}
 	for _, testCase := range testCases {

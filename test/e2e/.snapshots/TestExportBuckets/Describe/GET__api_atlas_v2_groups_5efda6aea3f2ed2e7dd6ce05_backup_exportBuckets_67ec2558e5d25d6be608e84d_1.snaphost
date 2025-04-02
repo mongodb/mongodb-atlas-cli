@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 129
+Content-Type: application/vnd.atlas.2024-05-30+json;charset=utf-8
+Date: Tue, 01 Apr 2025 17:41:45 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 59
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupExportBucketsResource::getExportBucketById
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=71cb61e3b30cf2c7accfe959792aefa856078301; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"_id":"67ec2558e5d25d6be608e84d","bucketName":"mongocli-e2e-tests","cloudProvider":"AWS","iamRoleId":"67c048c782064d313e883ab9"}

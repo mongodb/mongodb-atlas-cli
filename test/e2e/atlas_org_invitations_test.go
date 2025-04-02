@@ -207,7 +207,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.memoryRand("randFile", 1000)
+		nFile := g.memoryRand("randFile3", 1000)
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator
@@ -239,7 +239,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.memoryRand("randFile", 1000)
+		nFile := g.memoryRand("randFile4", 1000)
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator

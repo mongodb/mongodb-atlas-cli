@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1006
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 01 Apr 2025 19:32:38 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 30
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=ccbedc595934247a8bec3231d4327b548cf4edd3; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"67ec3e1cddf36722973f4c55","regionName":"AUSTRALIA_SOUTHEAST_2","serviceAttachmentNames":["projects/p-tkmip9ddhf3hgitearkzom7c/regions/australia-southeast2/serviceAttachments/sa-australia-southeast2-67ec3e1addf36722973f4bb9-0","projects/p-tkmip9ddhf3hgitearkzom7c/regions/australia-southeast2/serviceAttachments/sa-australia-southeast2-67ec3e1addf36722973f4bb9-1","projects/p-tkmip9ddhf3hgitearkzom7c/regions/australia-southeast2/serviceAttachments/sa-australia-southeast2-67ec3e1addf36722973f4bb9-2","projects/p-tkmip9ddhf3hgitearkzom7c/regions/australia-southeast2/serviceAttachments/sa-australia-southeast2-67ec3e1addf36722973f4bb9-3","projects/p-tkmip9ddhf3hgitearkzom7c/regions/australia-southeast2/serviceAttachments/sa-australia-southeast2-67ec3e1addf36722973f4bb9-4","projects/p-tkmip9ddhf3hgitearkzom7c/regions/australia-southeast2/serviceAttachments/sa-australia-southeast2-67ec3e1addf36722973f4bb9-5"],"status":"AVAILABLE"}

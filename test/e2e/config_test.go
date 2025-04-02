@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 	"testing"
 
@@ -34,6 +35,17 @@ const (
 )
 
 func TestConfig(t *testing.T) {
+	dir := tempConfigFolder(t)
+
+	configPath := path.Join(dir, "config.toml")
+
+	err := os.WriteFile(configPath, []byte(`[e2e]
+  org_id = "test_id"
+  public_api_key = "test_pub"
+  service = "cloud"
+`), 0600)
+	require.NoError(t, err)
+
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)
 	t.Run("config", func(t *testing.T) {

@@ -70,6 +70,8 @@ func generateTestPlugin(directoryName string, binaryName string, manifestContent
 }
 
 func TestPluginInstall(t *testing.T) {
+	_ = tempConfigFolder(t)
+
 	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)

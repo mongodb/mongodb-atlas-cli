@@ -1,18 +1,18 @@
 HTTP/2.0 200 OK
-Content-Length: 787
+Content-Length: 763
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 01 Apr 2025 17:42:56 GMT
+Date: Wed, 02 Apr 2025 15:37:15 GMT
 Deprecation: Wed, 19 Feb 2025 00:00:00 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 Sunset: Fri, 31 Jul 2026 00:00:00 GMT
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 60
+X-Envoy-Upstream-Service-Time: 68
 X-Frame-Options: DENY
 X-Java-Method: ApiUsersResource::getUserByName
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=71cb61e3b30cf2c7accfe959792aefa856078301; versionString=master
+X-Mongodb-Service-Version: gitHash=fc6c89f2083752779568a2630910698cf2fd01a0; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"country":"IE","createdAt":"2020-02-18T10:58:47Z","emailAddress":"andrea.angiolillo@mongodb.com","firstName":"Andrea","id":"5e4bc367c6b0f41bb9bbb178","lastAuth":"2025-04-01T10:49:19Z","lastName":"Angiolillo","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/users/5e4bc367c6b0f41bb9bbb178","rel":"self"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/users/5e4bc367c6b0f41bb9bbb178/whitelist","rel":"https://cloud.mongodb.com/whitelist"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/users/5e4bc367c6b0f41bb9bbb178/accessList","rel":"https://cloud.mongodb.com/accessList"}],"roles":[{"orgId":"5efda682a3f2ed2e7dd6cde4","roleName":"ORG_OWNER"},{"groupId":"5efda6aea3f2ed2e7dd6ce05","roleName":"GROUP_OWNER"}],"teamIds":[],"username":"andrea.angiolillo@mongodb.com"}
+{"country":"IE","createdAt":"2020-02-18T10:58:47Z","emailAddress":"andrea.angiolillo@mongodb.com","firstName":"Andrea","id":"5e4bc367c6b0f41bb9bbb178","lastAuth":"2025-04-01T10:49:19Z","lastName":"Angiolillo","links":[{"href":"http://localhost:8080/api/atlas/v2/users/5e4bc367c6b0f41bb9bbb178","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/users/5e4bc367c6b0f41bb9bbb178/whitelist","rel":"https://cloud.mongodb.com/whitelist"},{"href":"http://localhost:8080/api/atlas/v2/users/5e4bc367c6b0f41bb9bbb178/accessList","rel":"https://cloud.mongodb.com/accessList"}],"roles":[{"orgId":"a0123456789abcdef012345a","roleName":"ORG_OWNER"},{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_OWNER"}],"teamIds":[],"username":"andrea.angiolillo@mongodb.com"}

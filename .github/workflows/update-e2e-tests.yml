@@ -115,7 +115,7 @@ jobs:
         with:
           paths: e2e-tests.xml
   cleanup:
-    if: always()
+    if: always() && github.event_name != 'pull_request' || (github.event.action == 'labeled' && github.event.label.name == 'update-snapshots')
     needs: update-tests
     runs-on: ubuntu-latest
     steps:
@@ -160,7 +160,7 @@ jobs:
           paths: e2e-tests.xml
   commit:
     runs-on: ubuntu-latest
-    if: always() && github.event_name == 'pull_request'
+    if: always() && github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'update-snapshots'
     needs: update-tests
     steps:
       - name: set Apix Bot token

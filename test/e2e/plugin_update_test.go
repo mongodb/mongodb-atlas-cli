@@ -25,6 +25,8 @@ import (
 )
 
 func TestPluginUpdate(t *testing.T) {
+	_ = tempConfigFolder(t)
+
 	g := newAtlasE2ETestGenerator(t, withSnapshot())
 	cliPath, err := AtlasCLIBin()
 	require.NoError(t, err)

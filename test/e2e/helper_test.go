@@ -690,6 +690,28 @@ func IsGov() bool {
 	return os.Getenv("MONGODB_ATLAS_SERVICE") == cloudgov
 }
 
+func tempConfigFolder(t *testing.T) string {
+	tmpDir := t.TempDir()
+	t.Setenv("HOME", tmpDir)
+	t.Setenv("home", tmpDir)
+	t.Setenv("XDG_CONFIG_HOME", tmpDir)
+	t.Setenv("AppData", tmpDir)
+
+	dir, err := os.UserConfigDir()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	dir = filepath.Join(dir, "atlascli")
+
+	err = os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	return dir
+}
+
 func createProject(projectName string) (string, error) {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {

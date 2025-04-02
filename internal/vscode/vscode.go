@@ -43,30 +43,34 @@ func binPath() string {
 	return ""
 }
 
-func SaveConnection(connStr, deploymentName, deploymentType string) error {
-	params := url.Values{}
-
-	connectionName := connectionNameBuilder(deploymentName, deploymentType)
-
-	params.Add("connectionString", connStr)
-	params.Add("name", connectionName)
-	params.Add("reuseExisting", "true")
-	if config.TelemetryEnabled() {
-		// telemetry event will be seen within the extension's telemetry with "AtlasCLI" as the identifying name that the event origin is AtlasCLI
-		params.Add("utm_source", "AtlasCLI")
-	}
-	doubleEncodedParams := url.PathEscape(params.Encode())
-	deeplink := "vscode://mongodb.mongodb-vscode/connectWithURI?" + doubleEncodedParams
+func SaveConnection(mongoURI, deploymentName, deploymentType string) error {
+	deeplink := buildDeeplink(mongoURI, deploymentName, deploymentType, config.TelemetryEnabled())
 
 	return execCommand("--open-url", deeplink)
 }
 
-func connectionNameBuilder(deploymentName, deploymentType string) string {
+func buildDeeplink(mongoURI, deploymentName, deploymentType string, telemetryEnabled bool) string {
+	// build connection name
 	typeSuffix := "Atlas"
 	if strings.EqualFold(deploymentType, "local") {
 		typeSuffix = "Local"
 	}
-	return fmt.Sprintf("%s (%s)", deploymentName, typeSuffix)
+	connName := fmt.Sprintf("%s (%s)", deploymentName, typeSuffix)
+
+	// set deeplink parameters
+	params := url.Values{}
+	params.Add("connectionString", mongoURI)
+	params.Add("name", connName)
+	params.Add("reuseExisting", "true")
+	// telemetry event will be seen within the extension's telemetry with "AtlasCLI" as the identifying name that the event originated from AtlasCLI
+	if telemetryEnabled {
+		params.Add("utm_source", "AtlasCLI")
+	}
+	doubleEncodedParams := url.PathEscape(params.Encode())
+
+	deeplink := "vscode://mongodb.mongodb-vscode/connectWithURI?" + doubleEncodedParams
+
+	return deeplink
 }
 
 func execCommand(args ...string) error {

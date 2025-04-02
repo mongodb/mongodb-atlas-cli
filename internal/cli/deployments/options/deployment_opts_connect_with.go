@@ -27,15 +27,17 @@ const (
 	ConnectWithConnectionString = "connectionString"
 	ConnectWithMongosh          = "mongosh"
 	ConnectWithCompass          = "compass"
+	ConnectWithVsCode           = "vscode"
 )
 
 var (
 	ErrInvalidConnectWith  = errors.New("invalid --connectWith option")
-	ConnectWithOptions     = []string{ConnectWithMongosh, ConnectWithCompass, ConnectWithConnectionString}
+	ConnectWithOptions     = []string{ConnectWithMongosh, ConnectWithCompass, ConnectWithVsCode, ConnectWithConnectionString}
 	connectWithDescription = map[string]string{
 		ConnectWithConnectionString: "Connection String",
 		ConnectWithMongosh:          "MongoDB Shell",
 		ConnectWithCompass:          "MongoDB Compass",
+		ConnectWithVsCode:           "MongoDB for VsCode",
 	}
 )
 

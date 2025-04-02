@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 811
+Content-Type: application/vnd.atlas.2024-05-30+json;charset=utf-8
+Date: Wed, 02 Apr 2025 10:44:35 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 52
+X-Frame-Options: DENY
+X-Java-Method: ApiAlertsResource20240530::patchAlert
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=31c99bb81f9c4a62ada9f7bce997430c97d67edb; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"alertConfigId":"5efdb59f93fc35705f337179","created":"2020-07-02T10:24:29Z","eventTypeName":"USERS_WITHOUT_MULTI_FACTOR_AUTH","groupId":"0123456789abcdef01234567","id":"5efdb5dd5b306e51e2e9b05b","lastNotified":"2025-04-02T10:44:35Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/0123456789abcdef01234567/alerts/5efdb5dd5b306e51e2e9b05b","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/0123456789abcdef01234567/alertConfigs/5efdb59f93fc35705f337179","rel":"http://localhost:8080/alertConfig"},{"href":"http://localhost:8080/api/atlas/v2/groups/0123456789abcdef01234567/alerts/5efdb5dd5b306e51e2e9b05b/alertConfigs","rel":"http://localhost:8080/alertConfigs"}],"orgId":"0123456789abcdef01234567","resolved":"2022-03-16T18:39:26Z","status":"CLOSED","updated":"2025-04-02T10:44:35Z"}

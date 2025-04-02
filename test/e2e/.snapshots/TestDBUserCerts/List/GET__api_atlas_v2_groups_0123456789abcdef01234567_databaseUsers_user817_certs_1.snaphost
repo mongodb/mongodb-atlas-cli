@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 673
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 02 Apr 2025 10:44:48 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 36
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::getValidCertsByUsername
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=31c99bb81f9c4a62ada9f7bce997430c97d67edb; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/0123456789abcdef01234567/databaseUsers/user817/certs?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"_id":7346314743056890485,"createdAt":"2025-01-21T11:11:34Z","groupId":"0123456789abcdef01234567","notAfter":"2025-04-21T12:11:34Z","subject":"CN=user817"},{"_id":6127834134969564314,"createdAt":"2025-03-04T00:22:33Z","groupId":"0123456789abcdef01234567","notAfter":"2025-06-04T01:22:33Z","subject":"CN=user817"},{"_id":8915338647877199109,"createdAt":"2025-04-02T09:44:47Z","groupId":"0123456789abcdef01234567","notAfter":"2025-07-02T10:44:47Z","subject":"CN=user817"}],"totalCount":3}

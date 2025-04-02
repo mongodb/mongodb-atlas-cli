@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1847
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 02 Apr 2025 10:51:42 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 49
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=31c99bb81f9c4a62ada9f7bce997430c97d67edb; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed14e43f4c6234b47712fb/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-04-02T10:50:58Z","groupId":"67ed14e43f4c6234b47712fb","hostname":"atlas-2ams79-shard-00-00.d2tsm.mongodb-dev.net","id":"atlas-2ams79-shard-00-00.d2tsm.mongodb-dev.net:27017","lastPing":"2025-04-02T10:51:40Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed14e43f4c6234b47712fb/processes/atlas-2ams79-shard-00-00.d2tsm.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-2ams79-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-280-shard-00-00.d2tsm.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-02T10:50:58Z","groupId":"67ed14e43f4c6234b47712fb","hostname":"atlas-2ams79-shard-00-01.d2tsm.mongodb-dev.net","id":"atlas-2ams79-shard-00-01.d2tsm.mongodb-dev.net:27017","lastPing":"2025-04-02T10:51:40Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed14e43f4c6234b47712fb/processes/atlas-2ams79-shard-00-01.d2tsm.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-2ams79-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-280-shard-00-01.d2tsm.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-02T10:50:58Z","groupId":"67ed14e43f4c6234b47712fb","hostname":"atlas-2ams79-shard-00-02.d2tsm.mongodb-dev.net","id":"atlas-2ams79-shard-00-02.d2tsm.mongodb-dev.net:27017","lastPing":"2025-04-02T10:51:40Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ed14e43f4c6234b47712fb/processes/atlas-2ams79-shard-00-02.d2tsm.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-2ams79-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-280-shard-00-02.d2tsm.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

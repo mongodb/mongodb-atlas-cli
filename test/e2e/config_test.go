@@ -43,7 +43,7 @@ func TestConfig(t *testing.T) {
   org_id = "test_id"
   public_api_key = "test_pub"
   service = "cloud"
-`), os.ModePerm)
+`), 0600)
 	require.NoError(t, err)
 
 	cliPath, err := AtlasCLIBin()

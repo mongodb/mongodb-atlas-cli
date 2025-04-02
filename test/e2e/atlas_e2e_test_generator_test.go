@@ -727,7 +727,7 @@ func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	return resp
 }
 
-func skip401Snapshots(snapshot *http.Response, prevSnapshot *http.Response) bool {
+func skip401Snapshots(snapshot *http.Response, _ *http.Response) bool {
 	return snapshot.StatusCode == http.StatusUnauthorized && snapshot.Header.Get("Www-Authenticate") != ""
 }
 

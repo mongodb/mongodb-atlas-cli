@@ -691,6 +691,8 @@ func IsGov() bool {
 }
 
 func tempConfigFolder(t *testing.T) string {
+	t.Helper()
+
 	tmpDir := t.TempDir()
 	t.Setenv("HOME", tmpDir)
 	t.Setenv("home", tmpDir)

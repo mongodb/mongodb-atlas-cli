@@ -125,7 +125,7 @@ func DeleteBuilder() *cobra.Command {
 		
 Deleting an Atlas deployment also deletes any backup snapshots for that cluster.
 Deleting a Local deployment also deletes any local data volumes.
-Deleting a deployment will not remove saved connections from MongoDB for VsCode. This must be done manually, see https://www.mongodb.com/docs/mongodb-vscode/connect/#remove-a-connection
+Deleting a deployment will not remove saved connections from MongoDB for VS Code. This must be done manually. To learn more, see https://www.mongodb.com/docs/mongodb-vscode/connect/#remove-a-connection.
 
 ` + fmt.Sprintf(usage.RequiredRole, "Project Owner"),
 		Example: `  # Remove an Atlas deployment named myDeployment after prompting for a confirmation:

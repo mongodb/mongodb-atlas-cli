@@ -543,10 +543,10 @@ func snapshotHashedName(r *http.Request) string {
 
 func (g *atlasE2ETestGenerator) maskString(s string) string {
 	o := s
-	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_ORG_ID"), "0123456789abcdef01234567")
-	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_PROJECT_ID"), "0123456789abcdef01234567")
-	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), "0123456789abcdef01234567")
-	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), "0123456789abcdef01234567")
+	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_ORG_ID"), "a0123456789abcdef012345a")
+	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_PROJECT_ID"), "b0123456789abcdef012345b")
+	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), "d0123456789abcdef012345d")
+	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), "c0123456789abcdef012345c")
 	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), "test-flex")
 	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), "test-bucket")
 	o = strings.ReplaceAll(o, g.snapshotTargetURI, "http://localhost:8080/")

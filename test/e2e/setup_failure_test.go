@@ -26,7 +26,7 @@ import (
 )
 
 func TestSetupFailureFlow(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot(), withSnapshotSkipFunc(neverSkipSnapshots))
+	g := newAtlasE2ETestGenerator(t, withSnapshot(), withSnapshotSkip(skipSimilarSnapshots))
 	g.generateProject("setup")
 	cliPath, err := AtlasCLIBin()
 	req := require.New(t)

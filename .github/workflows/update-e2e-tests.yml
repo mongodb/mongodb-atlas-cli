@@ -73,16 +73,6 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - run: go install gotest.tools/gotestsum@latest
-      - name: write config file
-        run: |
-          set -Eeou pipefail
-          mkdir "$XDG_CONFIG_HOME/atlascli"
-          cat <<EOF > "$XDG_CONFIG_HOME/atlascli/config.toml"
-          [e2e]
-            org_id = "test_id"
-            public_api_key = "test_pub"
-            service = "cloud"
-          EOF
       - run: rm -rf test/e2e/.snapshots
       - run: make e2e-test
         env:

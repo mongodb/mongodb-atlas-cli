@@ -168,6 +168,7 @@ type atlasE2ETestGenerator struct {
 	testName            string
 	skipSnapshots       func(snapshot *http.Response, prevSnapshot *http.Response) bool
 	snapshotNameFunc    func(r *http.Request) string
+	snapshotTargetURI   string
 }
 
 // Log formats its arguments using default formatting, analogous to Println,
@@ -194,10 +195,11 @@ func newAtlasE2ETestGenerator(t *testing.T, opts ...func(g *atlasE2ETestGenerato
 		t:                   t,
 		testName:            t.Name(),
 		currentSnapshotMode: snapshotModeSkip,
-		skipSnapshots:       defaultSkipSnapshots,
+		skipSnapshots:       compositeSnapshotSkipFunc(skip401Snapshots, skipSimilarSnapshots),
 		fileIDs:             map[string]int{},
 		memoryMap:           map[string]any{},
 		snapshotNameFunc:    defaultSnapshotBaseName,
+		snapshotTargetURI:   os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL"),
 	}
 	for _, opt := range opts {
 		opt(g)
@@ -217,9 +219,23 @@ func withSnapshot() func(g *atlasE2ETestGenerator) {
 	}
 }
 
-func withSnapshotSkipFunc(f func(*http.Response, *http.Response) bool) func(g *atlasE2ETestGenerator) {
+func withSnapshotSkip(f ...func(*http.Response, *http.Response) bool) func(g *atlasE2ETestGenerator) {
 	return func(g *atlasE2ETestGenerator) {
-		g.skipSnapshots = f
+		g.skipSnapshots = compositeSnapshotSkipFunc(f...)
+	}
+}
+
+func compositeSnapshotSkipFunc(f ...func(*http.Response, *http.Response) bool) func(*http.Response, *http.Response) bool {
+	return func(snapshot *http.Response, prevSnapshot *http.Response) bool {
+		for _, fn := range f {
+			if fn == nil {
+				continue
+			}
+			if fn(snapshot, prevSnapshot) {
+				return true
+			}
+		}
+		return false
 	}
 }
 
@@ -227,10 +243,6 @@ func withSnapshotNameFunc(f func(*http.Request) string) func(g *atlasE2ETestGene
 	return func(g *atlasE2ETestGenerator) {
 		g.snapshotNameFunc = f
 	}
-}
-
-func neverSkipSnapshots(_ *http.Response, _ *http.Response) bool {
-	return false
 }
 
 func (g *atlasE2ETestGenerator) Run(name string, f func(t *testing.T)) {
@@ -529,15 +541,44 @@ func snapshotHashedName(r *http.Request) string {
 	return hash
 }
 
+func (g *atlasE2ETestGenerator) maskString(s string) string {
+	o := s
+	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_ORG_ID"), "0123456789abcdef01234567")
+	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_PROJECT_ID"), "0123456789abcdef01234567")
+	o = strings.ReplaceAll(o, os.Getenv("IDENTITY_PROVIDER_ID"), "0123456789abcdef01234567")
+	o = strings.ReplaceAll(o, os.Getenv("E2E_CLOUD_ROLE_ID"), "0123456789abcdef01234567")
+	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), "test-flex")
+	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), "test-bucket")
+	o = strings.ReplaceAll(o, g.snapshotTargetURI, "http://localhost:8080/")
+	return o
+}
+
+func (g *atlasE2ETestGenerator) prepareRequest(r *http.Request) {
+	g.t.Helper()
+	var err error
+	r.URL, err = url.Parse(g.maskString(r.URL.String()))
+	if err != nil {
+		g.t.Fatal(err)
+	}
+}
+
+func (g *atlasE2ETestGenerator) fileKey(r *http.Request) string {
+	g.t.Helper()
+
+	return fmt.Sprintf("%s/%s", g.testName, g.snapshotNameFunc(r))
+}
+
 func (g *atlasE2ETestGenerator) snapshotName(r *http.Request) string {
 	g.t.Helper()
 
 	dir := g.snapshotDir()
 	baseName := g.snapshotNameFunc(r)
 
-	g.fileIDs[baseName]++
+	key := g.fileKey(r)
 
-	id := g.fileIDs[baseName]
+	g.fileIDs[key]++
+
+	id := g.fileIDs[key]
 
 	fileName := path.Join(dir, fmt.Sprintf("%s_%d.snaphost", baseName, id))
 
@@ -547,10 +588,10 @@ func (g *atlasE2ETestGenerator) snapshotName(r *http.Request) string {
 func (g *atlasE2ETestGenerator) snapshotNameStepBack(r *http.Request) {
 	g.t.Helper()
 
-	baseName := g.snapshotNameFunc(r)
+	key := g.fileKey(r)
 
-	g.fileIDs[baseName] -= 2
-	if g.fileIDs[baseName] < 0 {
+	g.fileIDs[key] -= 2
+	if g.fileIDs[key] < 0 {
 		g.t.Fatal("no previous snapshot")
 	}
 }
@@ -609,8 +650,11 @@ func (g *atlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 		g.t.Fatal(err)
 	}
 
+	req := r.Request
+	g.prepareRequest(req)
+
 	reader := bufio.NewReader(bytes.NewReader(buf))
-	resp, err := http.ReadResponse(reader, r.Request)
+	resp, err := http.ReadResponse(reader, req)
 	if err != nil {
 		g.t.Fatal(err)
 	}
@@ -618,6 +662,24 @@ func (g *atlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 
 	if err := decompress(resp); err != nil {
 		g.t.Fatal(err)
+	}
+
+	if resp.ContentLength > 0 && strings.Contains(resp.Header.Get("Content-Type"), "json") {
+		buf, err := io.ReadAll(resp.Body)
+		if err != nil {
+			g.t.Fatal(err)
+		}
+
+		buf = []byte(g.maskString(string(buf)))
+		resp.Body = io.NopCloser(bytes.NewReader(buf))
+		resp.ContentLength = int64(len(buf))
+		resp.Header["Content-Length"] = []string{strconv.FormatInt(resp.ContentLength, 10)}
+
+		for k, mv := range resp.Header {
+			for i, v := range mv {
+				resp.Header[k][i] = g.maskString(v)
+			}
+		}
 	}
 
 	return resp
@@ -642,6 +704,8 @@ func (g *atlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	g.t.Helper()
 
+	g.prepareRequest(r)
+
 	filename := g.snapshotName(r)
 
 	g.t.Logf("reading snapshot from %q", filename)
@@ -663,16 +727,12 @@ func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	return resp
 }
 
-func defaultSkipSnapshots(snapshot *http.Response, prevSnapshot *http.Response) bool {
-	if snapshot.StatusCode == http.StatusUnauthorized && snapshot.Header.Get("Www-Authenticate") != "" {
-		return true // skip 401
-	}
+func skip401Snapshots(snapshot *http.Response, prevSnapshot *http.Response) bool {
+	return snapshot.StatusCode == http.StatusUnauthorized && snapshot.Header.Get("Www-Authenticate") != ""
+}
 
-	if prevSnapshot != nil && compareSnapshots(snapshot, prevSnapshot) == 0 {
-		return true // skip if the response is the same
-	}
-
-	return false
+func skipSimilarSnapshots(snapshot *http.Response, prevSnapshot *http.Response) bool {
+	return prevSnapshot != nil && compareSnapshots(snapshot, prevSnapshot) == 0
 }
 
 func (g *atlasE2ETestGenerator) snapshotServer() {
@@ -682,9 +742,7 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 		return
 	}
 
-	targetURI := os.Getenv("MONGODB_ATLAS_OPS_MANAGER_URL")
-
-	targetURL, err := url.Parse(targetURI)
+	targetURL, err := url.Parse(g.snapshotTargetURI)
 	if err != nil {
 		g.t.Fatal(err)
 	}
@@ -751,6 +809,12 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 func (g *atlasE2ETestGenerator) memory(key string, value any) any {
 	g.t.Helper()
 
+	if key == "" {
+		g.t.Fatal("key cannot be empty")
+	}
+
+	key = fmt.Sprintf("%s/%s", g.testName, key)
+
 	switch g.currentSnapshotMode {
 	case snapshotModeSkip:
 		return value
@@ -775,6 +839,12 @@ func (g *atlasE2ETestGenerator) memory(key string, value any) any {
 
 func (g *atlasE2ETestGenerator) memoryFunc(key string, value any, marshal func(value any) ([]byte, error), unmarshal func([]byte) (any, error)) any {
 	g.t.Helper()
+
+	if key == "" {
+		g.t.Fatal("key cannot be empty")
+	}
+
+	key = fmt.Sprintf("%s/%s", g.testName, key)
 
 	switch g.currentSnapshotMode {
 	case snapshotModeSkip:

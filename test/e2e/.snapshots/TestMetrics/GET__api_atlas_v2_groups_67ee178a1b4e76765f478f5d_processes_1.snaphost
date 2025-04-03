@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1838
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 03 Apr 2025 05:32:06 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 31
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=660b729a16fe64cb84159fabca767acc36df01df; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ee178a1b4e76765f478f5d/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-04-03T05:31:20Z","groupId":"67ee178a1b4e76765f478f5d","hostname":"atlas-s4yibx-shard-00-00.s4yvd.mongodb-dev.net","id":"atlas-s4yibx-shard-00-00.s4yvd.mongodb-dev.net:27017","lastPing":"2025-04-03T05:32:04Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ee178a1b4e76765f478f5d/processes/atlas-s4yibx-shard-00-00.s4yvd.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-s4yibx-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-249-shard-00-00.s4yvd.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-03T05:31:20Z","groupId":"67ee178a1b4e76765f478f5d","hostname":"atlas-s4yibx-shard-00-01.s4yvd.mongodb-dev.net","id":"atlas-s4yibx-shard-00-01.s4yvd.mongodb-dev.net:27017","lastPing":"2025-04-03T05:32:04Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ee178a1b4e76765f478f5d/processes/atlas-s4yibx-shard-00-01.s4yvd.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-s4yibx-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"metrics-249-shard-00-01.s4yvd.mongodb-dev.net","version":"8.0.6"},{"created":"2025-04-03T05:31:20Z","groupId":"67ee178a1b4e76765f478f5d","hostname":"atlas-s4yibx-shard-00-02.s4yvd.mongodb-dev.net","id":"atlas-s4yibx-shard-00-02.s4yvd.mongodb-dev.net:27017","lastPing":"2025-04-03T05:32:04Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ee178a1b4e76765f478f5d/processes/atlas-s4yibx-shard-00-02.s4yvd.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-s4yibx-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"metrics-249-shard-00-02.s4yvd.mongodb-dev.net","version":"8.0.6"}],"totalCount":3}

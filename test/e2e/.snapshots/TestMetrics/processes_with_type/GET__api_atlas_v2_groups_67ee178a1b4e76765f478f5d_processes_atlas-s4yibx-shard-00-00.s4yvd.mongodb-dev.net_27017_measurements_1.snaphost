@@ -1,0 +1,17 @@
+HTTP/2.0 200 OK
+Content-Length: 809
+Cache-Control: no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 03 Apr 2025 05:32:07 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 45
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getHostMeasurements
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=660b729a16fe64cb84159fabca767acc36df01df; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"end":"2025-04-03T05:31:08Z","granularity":"PT30M","groupId":"67ee178a1b4e76765f478f5d","hostId":"atlas-s4yibx-shard-00-00.s4yvd.mongodb-dev.net:27017","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67ee178a1b4e76765f478f5d/processes/atlas-s4yibx-shard-00-00.s4yvd.mongodb-dev.net:27017/measurements?granularity=PT30M&m=MAX_PROCESS_CPU_USER&period=P1DT12H","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/67ee178a1b4e76765f478f5d/processes/atlas-s4yibx-shard-00-00.s4yvd.mongodb-dev.net:27017","rel":"https://cloud.mongodb.com/host"}],"measurements":[{"dataPoints":[{"timestamp":"2025-04-03T05:31:08Z","value":86.12975391498881}],"name":"MAX_PROCESS_CPU_USER","units":"PERCENT"}],"processId":"atlas-s4yibx-shard-00-00.s4yvd.mongodb-dev.net:27017","start":"2025-04-03T05:31:08Z"}

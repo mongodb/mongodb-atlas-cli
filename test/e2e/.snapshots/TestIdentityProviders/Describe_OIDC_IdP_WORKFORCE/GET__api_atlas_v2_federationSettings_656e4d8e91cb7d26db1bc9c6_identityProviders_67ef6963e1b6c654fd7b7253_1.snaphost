@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 446
+Content-Type: application/vnd.atlas.2023-11-15+json;charset=utf-8
+Date: Fri, 04 Apr 2025 05:08:51 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 36
+X-Frame-Options: DENY
+X-Java-Method: ApiFederationSettingsResource::getIdentityProviderById
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=26aff4972720aaa39f11a6e7fc96fede57702e5a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-905","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-04-04T05:08:51Z","description":"CLI TEST Provider","displayName":"idp-905","groupsClaim":"groups","id":"67ef6963e1b6c654fd7b7253","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}

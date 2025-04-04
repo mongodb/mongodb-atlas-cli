@@ -28,7 +28,7 @@ import (
 	"strings"
 	"testing"
 
-	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options" //nolint:importas //unique of this test
+	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
@@ -229,7 +229,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"--type",
 			"local",
 			"--file",
-			"data/sample_vector_search.json",
+			"testdata/sample_vector_search.json",
 			"-w",
 		)
 
@@ -330,7 +330,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 	})
 
 	t.Run("Test vectorSearch Index", func(t *testing.T) {
-		b, err := os.ReadFile("data/sample_vector_search_pipeline.json")
+		b, err := os.ReadFile("testdata/sample_vector_search_pipeline.json")
 		req.NoError(err)
 
 		var pipeline []map[string]any

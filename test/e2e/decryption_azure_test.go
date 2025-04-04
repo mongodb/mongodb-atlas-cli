@@ -26,10 +26,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//go:embed decryption/azure/*
+//go:embed testdata/decryption/fixtures/azure/*
 var filesAzure embed.FS
 
-const azureTestsInputDir = "decryption/azure"
+const azureTestsInputDir = "testdata/decryption/fixtures/azure"
 
 func TestDecryptWithAzure(t *testing.T) {
 	_ = newAtlasE2ETestGenerator(t, withSnapshot())

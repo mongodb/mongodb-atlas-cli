@@ -87,7 +87,7 @@ func TestClustersFile(t *testing.T) {
 			"indexes",
 			"create",
 			"--clusterName", clusterFileName,
-			"--file=data/create_partial_index.json",
+			"--file=testdata/create_partial_index.json",
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
@@ -102,7 +102,7 @@ func TestClustersFile(t *testing.T) {
 			"indexes",
 			"create",
 			"--clusterName", clusterFileName,
-			"--file=data/create_sparse_index.json",
+			"--file=testdata/create_sparse_index.json",
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
@@ -117,7 +117,7 @@ func TestClustersFile(t *testing.T) {
 			"indexes",
 			"create",
 			"--clusterName", clusterFileName,
-			"--file=data/create_2dspere_index.json",
+			"--file=testdata/create_2dspere_index.json",
 			"--projectId", g.projectID,
 		)
 		cmd.Env = os.Environ()
@@ -133,7 +133,7 @@ func TestClustersFile(t *testing.T) {
 			indexEntity,
 			"create",
 			"--clusterName", clusterFileName,
-			"--file=data/create_index_test-unknown-fields.json",
+			"--file=testdata/create_index_test-unknown-fields.json",
 			"--projectId", g.projectID,
 		)
 
@@ -148,7 +148,7 @@ func TestClustersFile(t *testing.T) {
 			clustersEntity,
 			"update",
 			clusterFileName,
-			"--file=data/update_cluster_test.json",
+			"--file=testdata/update_cluster_test.json",
 			"--projectId", g.projectID,
 			"-o=json")
 
@@ -205,10 +205,10 @@ func generateClusterFile(mdbVersion string) (string, error) {
 		MongoDBMajorVersion: mdbVersion,
 	}
 
-	templateFile := "data/create_cluster_test.json"
+	templateFile := "testdata/create_cluster_test.json"
 
 	if IsGov() {
-		templateFile = "data/create_cluster_gov_test.json"
+		templateFile = "testdata/create_cluster_gov_test.json"
 	}
 
 	tmpl, err := template.ParseFiles(templateFile)
@@ -221,7 +221,7 @@ func generateClusterFile(mdbVersion string) (string, error) {
 		return "", err
 	}
 
-	const clusterFile = "data/create_cluster.json"
+	const clusterFile = "testdata/create_cluster.json"
 	file, err := os.Create(clusterFile)
 	if err != nil {
 		return "", err

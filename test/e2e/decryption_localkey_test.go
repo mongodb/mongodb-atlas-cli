@@ -26,10 +26,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//go:embed decryption/localKey/*
+//go:embed testdata/decryption/fixtures/localKey/*
 var filesLocalKey embed.FS
 
-const localKeyTestsInputDir = "decryption/localKey"
+const localKeyTestsInputDir = "testdata/decryption/fixtures/localKey"
 
 func TestDecryptWithLocalKey(t *testing.T) {
 	_ = newAtlasE2ETestGenerator(t, withSnapshot())

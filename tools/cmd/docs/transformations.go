@@ -129,7 +129,7 @@ func countExamples(examples map[string][]metadatatypes.Example) int {
 	return count
 }
 
-func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Example) string { //nolint:gocyclo // code used by CI
+func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Example) string {
 	if len(examples) == 0 {
 		return ""
 	}

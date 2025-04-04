@@ -127,14 +127,14 @@ func TestAtlasProjects(t *testing.T) {
 	}{
 		{
 			"setNameAndTags",
-			"data/update_project_name_and_tags.json",
+			"testdata/update_project_name_and_tags.json",
 			&updatedProjectName,
 			updatedProjectName,
 			[]admin.ResourceTag{{Key: "app", Value: "cli"}, {Key: "env", Value: "e2e"}},
 		},
 		{
 			"resetTags",
-			"data/update_project_reset_tags.json",
+			"testdata/update_project_reset_tags.json",
 			nil,
 			updatedProjectName,
 			[]admin.ResourceTag{},

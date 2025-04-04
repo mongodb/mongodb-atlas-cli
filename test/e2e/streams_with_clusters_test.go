@@ -132,7 +132,7 @@ func generateAtlasConnectionConfigFile(clusterName string) (string, error) {
 		ClusterName: clusterName,
 	}
 
-	templateFile := "data/create_streams_connection_atlas_test.json"
+	templateFile := "testdata/create_streams_connection_atlas_test.json"
 	tmpl, err := template.ParseFiles(templateFile)
 	if err != nil {
 		return "", err
@@ -143,7 +143,7 @@ func generateAtlasConnectionConfigFile(clusterName string) (string, error) {
 		return "", err
 	}
 
-	const configFile = "data/create_streams_connection_atlas.json"
+	const configFile = "testdata/create_streams_connection_atlas.json"
 	file, err := os.Create(configFile)
 	if err != nil {
 		return "", err

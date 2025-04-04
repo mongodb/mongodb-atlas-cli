@@ -222,7 +222,7 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 			"--type",
 			"local",
 			"--file",
-			"data/sample_vector_search_deprecated.json",
+			"testdata/sample_vector_search_deprecated.json",
 			"-w",
 		)
 
@@ -323,7 +323,7 @@ func TestDeploymentsLocalWithAuthIndexDeprecated(t *testing.T) {
 	})
 
 	t.Run("Test vectorSearch Index", func(t *testing.T) {
-		b, err := os.ReadFile("data/sample_vector_search_pipeline.json")
+		b, err := os.ReadFile("testdata/sample_vector_search_pipeline.json")
 		req.NoError(err)
 
 		var pipeline []map[string]any

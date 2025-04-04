@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && deployments && atlasclusters)
 
-package e2e_test
+package e2e
 
 import (
 	"bytes"
@@ -24,6 +24,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -36,14 +37,14 @@ const (
 )
 
 func TestDeploymentsAtlas(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("setup")
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("setup")
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
-	dbUserUsername := g.memory("dbUserUsername", must(RandUsername())).(string)
+	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
+	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandUsername())).(string)
 
 	dbUserPassword := dbUserUsername + "~PwD"
 
@@ -64,7 +65,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--skipMongosh",
 			"--force",
 			"--debug",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"--username", dbUserUsername,
 			"--password", dbUserPassword,
 		)
@@ -77,7 +78,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		err = cmd.Run()
 		require.NoError(t, err, e.String())
 	})
-	require.NoError(t, watchCluster(g.projectID, clusterName))
+	require.NoError(t, internal.WatchCluster(g.ProjectID, clusterName))
 
 	g.Run("Connect to database", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -86,12 +87,12 @@ func TestDeploymentsAtlas(t *testing.T) {
 			clusterName,
 			"--type", "atlas",
 			"--connectWith", "connectionString",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
 
-		r, err := RunAndGetStdOut(cmd)
+		r, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(r))
 
 		connectionString := strings.TrimSpace(string(r))
@@ -118,7 +119,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"pause",
 			clusterName,
 			"--type=ATLAS",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
 		resp, err := cmd.CombinedOutput()
@@ -132,14 +133,14 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"start",
 			clusterName,
 			"--type=ATLAS",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), fmt.Sprintf("Starting deployment '%s'", clusterName))
 	})
-	require.NoError(t, watchCluster(g.projectID, clusterName))
+	require.NoError(t, internal.WatchCluster(g.ProjectID, clusterName))
 
 	g.Run("Create Search Index", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -150,7 +151,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"testIndex",
 			"--type",
 			"atlas",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"--deploymentName", clusterName,
 			"--db",
 			databaseNameAtlas,
@@ -160,7 +161,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 		)
 		cmd.Env = os.Environ()
 
-		r, err := RunAndGetStdOut(cmd)
+		r, err := internal.RunAndGetStdOut(cmd)
 		out := string(r)
 		require.NoError(t, err, out)
 		assert.Contains(t, out, "Search index created")
@@ -176,10 +177,10 @@ func TestDeploymentsAtlas(t *testing.T) {
 			"--force",
 			"--watch",
 			"--watchTimeout", "300",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := "Deployment '" + clusterName + "' deleted\n<nil>\n"

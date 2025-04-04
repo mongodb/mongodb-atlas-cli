@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || brew
 
-package e2e_test
+package e2e
 
 import (
 	"os"
@@ -21,6 +21,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -31,7 +32,7 @@ const (
 )
 
 func TestAtlasCLIConfig(t *testing.T) {
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	tempDirEnv := "XDG_CONFIG_HOME=" + os.TempDir() // make sure no config.toml is detected
 
@@ -45,7 +46,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 	t.Run("config ls", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "config", "ls")
 		cmd.Env = append(os.Environ(), tempDirEnv)
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		got := strings.TrimSpace(string(resp))
 		assert.Equal(t, profileString, got)
@@ -63,7 +64,7 @@ func TestAtlasCLIConfig(t *testing.T) {
 	t.Run("help", func(t *testing.T) {
 		cmd := exec.Command(cliPath, "help")
 		cmd.Env = append(os.Environ(), tempDirEnv)
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 }

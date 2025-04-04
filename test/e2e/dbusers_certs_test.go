@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,17 +23,19 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/dbusers"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestDBUserCerts(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	n := g.memoryRand("rand", 1000)
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	n := g.MemoryRand("rand", 1000)
 	username := fmt.Sprintf("user%v", n)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	g.Run("Create DBUser", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -46,7 +48,7 @@ func TestDBUserCerts(t *testing.T) {
 			dbusers.X509TypeManaged,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var user atlasv2.CloudDatabaseUser
 		require.NoError(t, json.Unmarshal(resp, &user), string(resp))
@@ -61,7 +63,7 @@ func TestDBUserCerts(t *testing.T) {
 			"--username", username,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -73,7 +75,7 @@ func TestDBUserCerts(t *testing.T) {
 			username,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var users atlasv2.PaginatedUserCert
@@ -90,7 +92,7 @@ func TestDBUserCerts(t *testing.T) {
 			"--authDB",
 			"$external")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("DB user '%s' deleted\n", username)

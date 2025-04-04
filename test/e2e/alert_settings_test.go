@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -24,16 +24,17 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAlertConfig(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	var alertID string
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -54,7 +55,7 @@ func TestAlertConfig(t *testing.T) {
 			"--notificationEmailEnabled=true",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var alert admin.GroupAlertsConfig
 		require.NoError(t, json.Unmarshal(resp, &alert))
@@ -79,7 +80,7 @@ func TestAlertConfig(t *testing.T) {
 			alertID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var config admin.GroupAlertsConfig
 		require.NoError(t, json.Unmarshal(resp, &config))
@@ -93,7 +94,7 @@ func TestAlertConfig(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var config admin.PaginatedAlertConfig
 		require.NoError(t, json.Unmarshal(resp, &config))
@@ -108,7 +109,7 @@ func TestAlertConfig(t *testing.T) {
 			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var config []admin.GroupAlertsConfig
 		require.NoError(t, json.Unmarshal(resp, &config))
@@ -133,7 +134,7 @@ func TestAlertConfig(t *testing.T) {
 			"--notificationEmailEnabled=true",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -146,7 +147,7 @@ func TestAlertConfig(t *testing.T) {
 	})
 
 	g.Run("Update Setting using file input", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.memoryRand("rand", 1000)
+		n := g.MemoryRand("rand", 1000)
 		fileName := fmt.Sprintf("%d_alerts.json", n.Int64())
 		fileContent := fmt.Sprintf(`{
 			"eventTypeName": %q,
@@ -174,7 +175,7 @@ func TestAlertConfig(t *testing.T) {
 			"--file", fileName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -189,7 +190,7 @@ func TestAlertConfig(t *testing.T) {
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath, alertsEntity, settingsEntity, "delete", alertID, "--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -201,7 +202,7 @@ func TestAlertConfig(t *testing.T) {
 			"type",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var fields []string

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package e2e_test
+package internal
 
 import (
 	"bytes"
@@ -42,10 +42,10 @@ import (
 var (
 	errNoRegions    = errors.New("no regions available")
 	errInvalidIndex = errors.New("invalid index")
-	errNoAPIKey     = errors.New("the apiKey ID is empty")
 )
 
 const (
+	//entities
 	eventsEntity                  = "events"
 	clustersEntity                = "clusters"
 	processesEntity               = "processes"
@@ -90,12 +90,6 @@ const (
 	networkPeeringEntity          = "peering"
 	suggestedIndexesEntity        = "suggestedIndexes"
 	slowOperationThresholdEntity  = "slowOperationThreshold"
-	tierM10                       = "M10"
-	tierM20                       = "M20"
-	tierM0                        = "M0"
-	tierM2                        = "M2"
-	diskSizeGB40                  = "40"
-	diskSizeGB30                  = "30"
 	projectsEntity                = "projects"
 	settingsEntity                = "settings"
 	backupsEntity                 = "backups"
@@ -113,38 +107,23 @@ const (
 	federationSettingsEntity      = "federationSettings"
 	identityProviderEntity        = "identityProvider"
 	connectedOrgsConfigsEntity    = "connectedOrgConfigs"
-	deletingState                 = "DELETING"
 	authEntity                    = "auth"
 	streamsEntity                 = "streams"
 	apiKeysEntity                 = "apikeys"
 	apiKeyAccessListEntity        = "accessLists"
 	usersEntity                   = "users"
-)
 
-// AlertConfig constants.
-const (
-	group         = "GROUP"
-	eventTypeName = "NO_PRIMARY"
-	intervalMin   = 5
-	delayMin      = 0
-)
+	deletingState = "DELETING"
 
-// Auth constants.
-const (
-	whoami = "whoami"
-)
+	maxRetryAttempts   = 10
+	sleepTimeInSeconds = 30
+	cloudgov           = "cloudgov"
 
-// Integration constants.
-const (
-	datadogEntity   = "DATADOG"
-	opsGenieEntity  = "OPS_GENIE"
-	pagerDutyEntity = "PAGER_DUTY"
-	victorOpsEntity = "VICTOR_OPS"
-	webhookEntity   = "WEBHOOK"
-)
+	// CLI Plugins System constants.
+	examplePluginRepository = "mongodb/atlas-cli-plugin-example"
+	examplePluginName       = "atlas-cli-plugin-example"
 
-// Cluster settings.
-const (
+	// Cluster settings.
 	e2eClusterTier       = "M10"
 	e2eGovClusterTier    = "M20"
 	e2eSharedClusterTier = "M2"
@@ -156,34 +135,6 @@ const (
 	authorizedUserFirstName = "firstname"
 	authorizedUserLastName  = "lastname"
 	authorizedEmail         = "firstname.lastname@example.com"
-)
-
-// Local Development constants.
-const (
-	collectionName  = "movies"
-	databaseName    = "sample_mflix"
-	searchIndexName = "indexTest"
-	vectorSearchDB  = "sample_mflix"
-	vectorSearchCol = "embedded_movies"
-)
-
-// CLI Plugins System constants.
-const (
-	examplePluginRepository = "mongodb/atlas-cli-plugin-example"
-	examplePluginName       = "atlas-cli-plugin-example"
-)
-
-// Roles constants.
-const (
-	roleName1   = "GROUP_READ_ONLY"
-	roleName2   = "GROUP_DATA_ACCESS_READ_ONLY"
-	roleNameOrg = "ORG_READ_ONLY"
-)
-
-const (
-	maxRetryAttempts   = 10
-	sleepTimeInSeconds = 30
-	cloudgov           = "cloudgov"
 )
 
 func AtlasCLIBin() (string, error) {
@@ -255,55 +206,12 @@ func RunAndGetSeparateStdOutAndErr(cmd *exec.Cmd) ([]byte, []byte, error) {
 	return stdOut.Bytes(), stdErr.Bytes(), err
 }
 
-func splitOutput(cmd *exec.Cmd) (string, string, error) {
+func SplitOutput(cmd *exec.Cmd) (string, string, error) {
 	var o, e bytes.Buffer
 	cmd.Stdout = &o
 	cmd.Stderr = &e
 	err := cmd.Run()
 	return o.String(), e.String(), err
-}
-
-func deployFlexClusterForProject(projectID, clusterName string) error {
-	cliPath, err := AtlasCLIBin()
-	if err != nil {
-		return err
-	}
-
-	args := []string{
-		clustersEntity,
-		"create",
-		clusterName,
-		"--region", "US_EAST_1",
-		"--provider", "AWS",
-	}
-
-	if projectID != "" {
-		args = append(args, "--projectId", projectID)
-	}
-
-	create := exec.Command(cliPath, args...)
-	create.Env = os.Environ()
-	if resp, err := RunAndGetStdOut(create); err != nil {
-		return fmt.Errorf("error creating flex cluster (%s): %w - %s", clusterName, err, string(resp))
-	}
-
-	watchArgs := []string{
-		clustersEntity,
-		"watch",
-		clusterName,
-	}
-
-	if projectID != "" {
-		watchArgs = append(watchArgs, "--projectId", projectID)
-	}
-
-	watch := exec.Command(cliPath, watchArgs...)
-	watch.Env = os.Environ()
-	if resp, err := RunAndGetStdOut(watch); err != nil {
-		return fmt.Errorf("error watching cluster %w: %s", err, string(resp))
-	}
-
-	return nil
 }
 
 func watchServerlessInstanceForProject(projectID, clusterName string) error {
@@ -353,7 +261,7 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 	if err != nil {
 		return "", err
 	}
-	region, err := newAvailableRegion(projectID, tier, e2eClusterProvider)
+	region, err := NewAvailableRegion(projectID, tier, e2eClusterProvider)
 	if err != nil {
 		return "", err
 	}
@@ -395,7 +303,7 @@ func deployClusterForProject(projectID, clusterName, tier, mDBVersion string, en
 	return region, nil
 }
 
-func e2eTier() string {
+func E2eTier() string {
 	tier := e2eClusterTier
 	if IsGov() {
 		tier = e2eGovClusterTier
@@ -425,11 +333,11 @@ func internalDeleteClusterForProject(projectID, clusterName string) error {
 
 	// this command will fail with 404 once the cluster is deleted
 	// we just need to wait for this to close the project
-	_ = watchCluster(projectID, clusterName)
+	_ = WatchCluster(projectID, clusterName)
 	return nil
 }
 
-func watchCluster(projectID, clusterName string) error {
+func WatchCluster(projectID, clusterName string) error {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return err
@@ -470,10 +378,10 @@ func removeTerminationProtectionFromCluster(projectID, clusterName string) error
 		return fmt.Errorf("error updating cluster %w: %s", err, string(resp))
 	}
 
-	return watchCluster(projectID, clusterName)
+	return WatchCluster(projectID, clusterName)
 }
 
-func deleteClusterForProject(projectID, clusterName string) error {
+func DeleteClusterForProject(projectID, clusterName string) error {
 	if err := internalDeleteClusterForProject(projectID, clusterName); err != nil {
 		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED") {
 			return err
@@ -505,7 +413,7 @@ func deleteDatalakeForProject(cliPath, projectID, id string) error {
 	return nil
 }
 
-func newAvailableRegion(projectID, tier, provider string) (string, error) {
+func NewAvailableRegion(projectID, tier, provider string) (string, error) {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return "", err
@@ -671,26 +579,11 @@ func MongoDBMajorVersion() (string, error) {
 	return version, nil
 }
 
-func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedIntegration) bool {
-	services := thirdPartyIntegrations.GetResults()
-	for i := range services {
-		iType := getIntegrationType(services[i])
-		if iType == name {
-			return true
-		}
-	}
-	return false
-}
-
-func getIntegrationType(val atlasv2.ThirdPartyIntegration) string {
-	return val.GetType()
-}
-
 func IsGov() bool {
 	return os.Getenv("MONGODB_ATLAS_SERVICE") == cloudgov
 }
 
-func tempConfigFolder(t *testing.T) string {
+func TempConfigFolder(t *testing.T) string {
 	t.Helper()
 
 	tmpDir := t.TempDir()
@@ -767,10 +660,10 @@ func deleteAllClustersForProject(t *testing.T, cliPath, projectID string) {
 			t.Run("delete cluster "+clusterName, func(t *testing.T) {
 				t.Parallel()
 				if state == deletingState {
-					_ = watchCluster(projectID, clusterName)
+					_ = WatchCluster(projectID, clusterName)
 					return
 				}
-				assert.NoError(t, deleteClusterForProject(projectID, clusterName))
+				assert.NoError(t, DeleteClusterForProject(projectID, clusterName))
 			})
 		}(cluster.GetName(), cluster.GetStateName())
 	}
@@ -956,7 +849,7 @@ func deletePrivateEndpoint(t *testing.T, cliPath, projectID, provider, endpointI
 	require.NoError(t, err, string(resp))
 }
 
-func deleteTeam(teamID string) error {
+func DeleteTeam(teamID string) error {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return err
@@ -1075,7 +968,7 @@ func deleteDataFederationForProject(t *testing.T, cliPath, projectID, dataFedNam
 	require.NoError(t, err, string(resp))
 }
 
-func ensureCluster(t *testing.T, cluster *atlasClustersPinned.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
+func EnsureCluster(t *testing.T, cluster *atlasClustersPinned.AdvancedClusterDescription, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.GetName())
@@ -1084,7 +977,7 @@ func ensureCluster(t *testing.T, cluster *atlasClustersPinned.AdvancedClusterDes
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
-func ensureFlexCluster(t *testing.T, cluster *atlasv2.FlexClusterDescription20241113, clusterName string, diskSizeGB float64, terminationProtection bool) {
+func EnsureFlexCluster(t *testing.T, cluster *atlasv2.FlexClusterDescription20241113, clusterName string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)
 	setting, ok := cluster.GetProviderSettingsOk()
@@ -1095,9 +988,9 @@ func ensureFlexCluster(t *testing.T, cluster *atlasv2.FlexClusterDescription2024
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
-// createJSONFile creates a new JSON file at the specified path with the specified data
+// CreateJSONFile creates a new JSON file at the specified path with the specified data
 // and also registers its deletion on test cleanup.
-func createJSONFile(t *testing.T, data any, path string) {
+func CreateJSONFile(t *testing.T, data any, path string) {
 	t.Helper()
 	jsonData, err := json.Marshal(data)
 	require.NoError(t, err)
@@ -1108,7 +1001,7 @@ func createJSONFile(t *testing.T, data any, path string) {
 	})
 }
 
-func enableCompliancePolicy(projectID string) error {
+func EnableCompliancePolicy(projectID string) error {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return fmt.Errorf("%w: invalid bin", err)
@@ -1137,7 +1030,7 @@ func enableCompliancePolicy(projectID string) error {
 	return nil
 }
 
-func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error) {
+func SetupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error) {
 	t.Helper()
 	compliancePolicy.SetAuthorizedEmail(authorizedEmail)
 	compliancePolicy.SetAuthorizedUserFirstName(authorizedUserFirstName)
@@ -1149,7 +1042,7 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 		return nil, fmt.Errorf("could not generate random int for setting up a compliance policy: %w", err)
 	}
 	randomPath := fmt.Sprintf("setup_compliance_policy_%d.json", n)
-	createJSONFile(t, compliancePolicy, randomPath)
+	CreateJSONFile(t, compliancePolicy, randomPath)
 
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
@@ -1173,7 +1066,7 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 	if outputErr != nil {
 		return nil, fmt.Errorf("%w\n %s", outputErr, string(resp))
 	}
-	trimmedResponse := removeDotsFromWatching(resp)
+	trimmedResponse := RemoveDotsFromWatching(resp)
 
 	var result atlasv2.DataProtectionSettings20231001
 	if err := json.Unmarshal(trimmedResponse, &result); err != nil {
@@ -1184,11 +1077,11 @@ func setupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 
 // If we watch a command in a testing environment,
 // the output has some dots in the beginning (depending on how long it took to finish) that need to be removed.
-func removeDotsFromWatching(consoleOutput []byte) []byte {
+func RemoveDotsFromWatching(consoleOutput []byte) []byte {
 	return []byte(strings.TrimLeft(string(consoleOutput), "."))
 }
 
-func deleteAllPlugins(t *testing.T) {
+func DeleteAllPlugins(t *testing.T) {
 	t.Helper()
 	defaultPluginDir, err := plugin.GetDefaultPluginDirectory()
 	require.NoError(t, err)
@@ -1197,7 +1090,7 @@ func deleteAllPlugins(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func installExamplePlugin(t *testing.T, cliPath string, version string) {
+func InstallExamplePlugin(t *testing.T, cliPath string, version string) {
 	t.Helper()
 	// this is a test
 	// #nosec G204
@@ -1258,54 +1151,7 @@ func deleteAllIDPs(t *testing.T, cliPath string) {
 	}
 }
 
-func createOrgAPIKey() (string, error) {
-	cliPath, err := AtlasCLIBin()
-	if err != nil {
-		return "", err
-	}
-
-	cmd := exec.Command(cliPath,
-		orgEntity,
-		apiKeysEntity,
-		"create",
-		"--desc=e2e-test-helper",
-		"--role=ORG_READ_ONLY",
-		"-o=json")
-	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
-
-	if err != nil {
-		return "", fmt.Errorf("%w: %s", err, string(resp))
-	}
-
-	var key atlasv2.ApiKeyUserDetails
-	if err := json.Unmarshal(resp, &key); err != nil {
-		return "", err
-	}
-
-	if key.GetId() != "" {
-		return key.GetId(), nil
-	}
-
-	return "", errNoAPIKey
-}
-
-func deleteOrgAPIKey(id string) error {
-	cliPath, err := AtlasCLIBin()
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command(cliPath,
-		orgEntity,
-		apiKeysEntity,
-		"rm",
-		id,
-		"--force")
-	cmd.Env = os.Environ()
-	return cmd.Run()
-}
-
-func createTeam(teamName string) (string, error) {
+func CreateTeam(teamName string) (string, error) {
 	cliPath, err := AtlasCLIBin()
 	if err != nil {
 		return "", err
@@ -1448,7 +1294,7 @@ func deleteOrgTeams(t *testing.T, cliPath string) {
 	var teams atlasv2.PaginatedTeam
 	require.NoError(t, json.Unmarshal(resp, &teams), string(resp))
 	for _, team := range teams.GetResults() {
-		assert.NoError(t, deleteTeam(team.GetId()))
+		assert.NoError(t, DeleteTeam(team.GetId()))
 	}
 }
 
@@ -1465,7 +1311,7 @@ func deleteOrgInvitation(t *testing.T, cliPath string, id string) {
 	require.NoError(t, err, string(resp))
 }
 
-func must[T any](value T, err error) T {
+func Must[T any](value T, err error) T {
 	if err != nil {
 		panic(err)
 	}

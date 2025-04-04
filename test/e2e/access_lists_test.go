@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,22 +23,24 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAccessList(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("accessList")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("accessList")
 
-	n := g.memoryRand("rand", 255)
+	n := g.MemoryRand("rand", 255)
 	req := require.New(t)
 
 	entry := fmt.Sprintf("192.168.0.%d", n)
 	currentIPEntry := ""
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
 
 	g.Run("Create Forever", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -48,10 +50,10 @@ func TestAccessList(t *testing.T) {
 			entry,
 			"--comment=test",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 
 		var entries *atlasv2.PaginatedNetworkAccess
@@ -73,10 +75,10 @@ func TestAccessList(t *testing.T) {
 			accessListEntity,
 			"ls",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var entries *atlasv2.PaginatedNetworkAccess
 		require.NoError(t, json.Unmarshal(resp, &entries))
@@ -88,10 +90,10 @@ func TestAccessList(t *testing.T) {
 			"describe",
 			entry,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var entry *atlasv2.NetworkPermissionEntry
 		require.NoError(t, json.Unmarshal(resp, &entry))
@@ -103,10 +105,10 @@ func TestAccessList(t *testing.T) {
 			"delete",
 			entry,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
@@ -121,10 +123,10 @@ func TestAccessList(t *testing.T) {
 			"--deleteAfter="+time.Now().Add(time.Minute*time.Duration(5)).Format(time.RFC3339),
 			"--comment=test",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
@@ -146,10 +148,10 @@ func TestAccessList(t *testing.T) {
 			"delete",
 			entry,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", entry)
@@ -163,10 +165,10 @@ func TestAccessList(t *testing.T) {
 			"--currentIp",
 			"--comment=test",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
@@ -185,10 +187,10 @@ func TestAccessList(t *testing.T) {
 			"delete",
 			currentIPEntry,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Project access list entry '%s' deleted\n", currentIPEntry)

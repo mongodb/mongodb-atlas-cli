@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && cleanup)
 
-package e2e_test
+package internal
 
 import (
 	"encoding/json"

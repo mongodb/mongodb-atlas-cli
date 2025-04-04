@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && processes)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -21,16 +21,18 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestProcesses(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProjectAndCluster("processes")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProjectAndCluster("processes")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var processes *atlasv2.PaginatedHostViewAtlas
@@ -39,11 +41,11 @@ func TestProcesses(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			processesEntity,
 			"list",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		require.NoError(t, json.Unmarshal(resp, &processes))
 		require.NotEmpty(t, processes.Results)
@@ -54,11 +56,11 @@ func TestProcesses(t *testing.T) {
 			processesEntity,
 			"list",
 			"-c",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var hostViewsCompact []atlasv2.ApiHostViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &hostViewsCompact))
@@ -70,11 +72,11 @@ func TestProcesses(t *testing.T) {
 			processesEntity,
 			"describe",
 			processes.GetResults()[0].GetId(),
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var p *atlasv2.ApiHostViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &p))

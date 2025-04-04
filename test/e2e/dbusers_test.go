@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"bytes"
@@ -27,8 +27,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
@@ -41,10 +43,10 @@ const (
 )
 
 func TestDBUserWithFlags(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	username := g.memory("username", must(RandUsername())).(string)
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -70,7 +72,7 @@ func TestDBUserWithFlags(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var users atlasv2.PaginatedApiAtlasDatabaseUser
@@ -88,7 +90,7 @@ func TestDBUserWithFlags(t *testing.T) {
 			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var users []atlasv2.CloudDatabaseUser
@@ -141,14 +143,14 @@ func TestDBUserWithFlags(t *testing.T) {
 }
 
 func TestDBUsersWithStdin(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	username := g.memory("username", must(RandUsername())).(string)
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	username := g.Memory("username", internal.Must(internal.RandUsername())).(string)
 
 	idpID, _ := os.LookupEnv("IDENTITY_PROVIDER_ID")
 	require.NotEmpty(t, idpID)
 	oidcUsername := idpID + "/" + username
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -216,7 +218,7 @@ func testCreateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 
 	cmd.Env = os.Environ()
 
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	var user atlasv2.CloudDatabaseUser
@@ -241,7 +243,7 @@ func testDescribeUser(t *testing.T, cliPath, username string) {
 		username,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	var user atlasv2.CloudDatabaseUser
@@ -255,7 +257,7 @@ func testUpdateUserCmd(t *testing.T, cmd *exec.Cmd, username string) {
 	t.Helper()
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	var user atlasv2.CloudDatabaseUser
@@ -284,7 +286,7 @@ func testDeleteUser(t *testing.T, cliPath, dbusersEntity, username string) {
 		"--authDB",
 		"admin")
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	expected := fmt.Sprintf("DB user '%s' deleted\n", username)

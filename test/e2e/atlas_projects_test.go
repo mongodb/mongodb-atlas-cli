@@ -14,7 +14,7 @@
 
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -25,19 +25,20 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAtlasProjects(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	n := g.memoryRand("rand", 1000)
+	n := g.MemoryRand("rand", 1000)
 	projectName := fmt.Sprintf("e2e-proj-%d", n)
 
 	var projectID string
@@ -51,7 +52,7 @@ func TestAtlasProjects(t *testing.T) {
 			"--tag", "prod=false",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 
@@ -69,7 +70,7 @@ func TestAtlasProjects(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -81,7 +82,7 @@ func TestAtlasProjects(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -93,7 +94,7 @@ func TestAtlasProjects(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var project admin.Group
 		if err := json.Unmarshal(resp, &project); err != nil {
@@ -163,7 +164,7 @@ func TestAtlasProjects(t *testing.T) {
 				filename,
 				"-o=json")
 			cmd.Env = os.Environ()
-			resp, err := RunAndGetStdOut(cmd)
+			resp, err := internal.RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
 
 			cmd = exec.Command(cliPath,
@@ -172,7 +173,7 @@ func TestAtlasProjects(t *testing.T) {
 				projectID,
 				"-o=json")
 			cmd.Env = os.Environ()
-			resp, err = RunAndGetStdOut(cmd)
+			resp, err = internal.RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
 			var project admin.Group
 			if err := json.Unmarshal(resp, &project); err != nil {
@@ -206,7 +207,7 @@ func TestAtlasProjects(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -217,7 +218,7 @@ func TestAtlasProjects(t *testing.T) {
 			projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 

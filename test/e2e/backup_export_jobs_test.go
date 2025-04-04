@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && backup && exports && jobs)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,22 +23,25 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestExportJobs(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
+	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
 	fmt.Println(clusterName)
 
-	mdbVersion, err := MongoDBMajorVersion()
+	mdbVersion, err := internal.MongoDBMajorVersion()
 	r.NoError(err)
 
 	const cloudProvider = "AWS"
@@ -62,17 +65,17 @@ func TestExportJobs(t *testing.T) {
 			"--mdbVersion", mdbVersion,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		var cluster *atlasClustersPinned.AdvancedClusterDescription
 		r.NoError(json.Unmarshal(resp, &cluster))
-		ensureCluster(t, cluster, clusterName, mdbVersion, 10, false)
+		internal.EnsureCluster(t, cluster, clusterName, mdbVersion, 10, false)
 	})
 	t.Cleanup(func() {
-		require.NoError(t, deleteClusterForProject("", clusterName))
+		require.NoError(t, internal.DeleteClusterForProject("", clusterName))
 	})
-	require.NoError(t, watchCluster("", clusterName))
+	require.NoError(t, internal.WatchCluster("", clusterName))
 
 	g.Run("Create bucket", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -87,7 +90,7 @@ func TestExportJobs(t *testing.T) {
 			iamRoleID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 		var exportBucket atlasv2.DiskBackupSnapshotExportBucketResponse
 		r.NoError(json.Unmarshal(resp, &exportBucket))
@@ -105,7 +108,7 @@ func TestExportJobs(t *testing.T) {
 			"test-snapshot",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 
@@ -125,7 +128,7 @@ func TestExportJobs(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, _ := RunAndGetStdOut(cmd)
+		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 
@@ -143,7 +146,7 @@ func TestExportJobs(t *testing.T) {
 			snapshotID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 		var job atlasv2.DiskBackupExportJob
@@ -162,7 +165,7 @@ func TestExportJobs(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, _ := RunAndGetStdOut(cmd)
+		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 
@@ -178,7 +181,7 @@ func TestExportJobs(t *testing.T) {
 			exportJobID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 
@@ -196,7 +199,7 @@ func TestExportJobs(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		var jobs atlasv2.PaginatedApiAtlasDiskBackupExportJob
@@ -214,11 +217,11 @@ func TestExportJobs(t *testing.T) {
 			clusterName,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
-	if skipCleanup() {
+	if internal.SkipCleanup() {
 		return
 	}
 
@@ -231,7 +234,7 @@ func TestExportJobs(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, _ := RunAndGetStdOut(cmd)
+		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

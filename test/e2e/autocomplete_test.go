@@ -13,20 +13,21 @@
 // limitations under the License.
 //go:build e2e || config
 
-package e2e_test
+package e2e
 
 import (
 	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
 const completionEntity = "completion"
 
 func TestAtlasCLIAutocomplete(t *testing.T) {
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	options := []string{"zsh", "bash", "fish", "powershell"}
 	for _, option := range options {
@@ -35,7 +36,7 @@ func TestAtlasCLIAutocomplete(t *testing.T) {
 			t.Parallel()
 			cmd := exec.Command(cliPath, completionEntity, o)
 			cmd.Env = os.Environ()
-			resp, err := RunAndGetStdOut(cmd)
+			resp, err := internal.RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
 		})
 	}

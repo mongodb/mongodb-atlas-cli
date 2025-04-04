@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && metrics)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,35 +22,37 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestMetrics(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProjectAndCluster("metrics")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProjectAndCluster("metrics")
 
-	hostname, err := g.getHostnameAndPort()
+	hostname, err := g.GetHostnameAndPort()
 	require.NoError(t, err)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("processes", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		process(t, cliPath, hostname, g.projectID)
+		process(t, cliPath, hostname, g.ProjectID)
 	})
 
 	g.Run("processes with type", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		processWithType(t, cliPath, hostname, g.projectID)
+		processWithType(t, cliPath, hostname, g.ProjectID)
 	})
 
 	g.Run("databases", func(_ *testing.T) {
-		databases(g, cliPath, hostname, g.projectID)
+		databases(g, cliPath, hostname, g.ProjectID)
 	})
 
 	g.Run("disks", func(_ *testing.T) {
-		disks(g, cliPath, hostname, g.projectID)
+		disks(g, cliPath, hostname, g.ProjectID)
 	})
 }
 
@@ -66,7 +68,7 @@ func process(t *testing.T, cliPath, hostname, projectID string) {
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	var metrics *atlasv2.ApiMeasurementsGeneralViewAtlas
 	require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
@@ -86,15 +88,14 @@ func processWithType(t *testing.T, cliPath, hostname, projectID string) {
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	var metrics *atlasv2.ApiMeasurementsGeneralViewAtlas
 	require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
 	assert.NotEmpty(t, metrics.Measurements)
 }
 
-func databases(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
-	g.t.Helper()
+func databases(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID string) {
 	g.Run("databases list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			metricsEntity,
@@ -105,7 +106,7 @@ func databases(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var db atlasv2.PaginatedDatabase
 		require.NoError(t, json.Unmarshal(resp, &db), string(resp))
@@ -125,7 +126,7 @@ func databases(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var metrics atlasv2.ApiMeasurementsGeneralViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))
@@ -133,8 +134,7 @@ func databases(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
 	})
 }
 
-func disks(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
-	g.t.Helper()
+func disks(g *internal.AtlasE2ETestGenerator, cliPath, hostname, projectID string) {
 	g.Run("disks list", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			metricsEntity,
@@ -145,7 +145,7 @@ func disks(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var d atlasv2.PaginatedDiskPartition
 		require.NoError(t, json.Unmarshal(resp, &d), string(resp))
@@ -165,7 +165,7 @@ func disks(g *atlasE2ETestGenerator, cliPath, hostname, projectID string) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var metrics atlasv2.ApiMeasurementsGeneralViewAtlas
 		require.NoError(t, json.Unmarshal(resp, &metrics), string(resp))

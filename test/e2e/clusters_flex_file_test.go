@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && clusters && flex)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
@@ -31,12 +32,12 @@ import (
 // They will be fully enabled in https://jira.mongodb.org/browse/CLOUDP-291186. We will be able to move these e2e tests
 // to create their project once the ticket is completed.
 func TestFlexClustersFile(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterFileName := g.memory("clusterFileName", must(RandClusterName())).(string)
+	clusterFileName := g.Memory("clusterFileName", internal.Must(internal.RandClusterName())).(string)
 
 	g.Run("Create Flex Cluster via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -47,12 +48,12 @@ func TestFlexClustersFile(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster admin.FlexClusterDescription20241113
 		req.NoError(json.Unmarshal(resp, &cluster))
-		ensureFlexCluster(t, &cluster, clusterFileName, 5, false)
+		internal.EnsureFlexCluster(t, &cluster, clusterFileName, 5, false)
 	})
 
 	g.Run("Delete Flex Cluster - created via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -65,7 +66,7 @@ func TestFlexClustersFile(t *testing.T) {
 			"--force")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", clusterFileName)

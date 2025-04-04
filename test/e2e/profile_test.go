@@ -13,13 +13,14 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
@@ -35,7 +36,7 @@ func validateProfile(t *testing.T, cliPath string, profile string, profileValid 
 	cmd.Env = os.Environ()
 
 	// Execute the command
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 
 	// We only care about errors that happened due to something other than a non-zero exit code
 	if err != nil {
@@ -52,8 +53,8 @@ func validateProfile(t *testing.T, cliPath string, profile string, profileValid 
 }
 
 func TestProfile(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("profile name valid", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

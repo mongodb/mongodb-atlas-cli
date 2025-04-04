@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && backup && restores)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,32 +22,34 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestRestores(t *testing.T) {
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var snapshotID, restoreJobID string
 
-	g := newAtlasE2ETestGenerator(t, withSnapshot(), withBackup())
-	g.generateProjectAndCluster("backupRestores")
-	require.NotEmpty(t, g.clusterName)
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithBackup())
+	g.GenerateProjectAndCluster("backupRestores")
+	require.NotEmpty(t, g.ClusterName)
 
-	projectID := g.projectID
-	clusterName := g.clusterName
+	projectID := g.ProjectID
+	clusterName := g.ClusterName
 
-	g.projectID = ""
-	g.clusterName = ""
+	g.ProjectID = ""
+	g.ClusterName = ""
 
-	g.generateProjectAndCluster("backupRestores2")
-	require.NotEmpty(t, g.clusterName)
+	g.GenerateProjectAndCluster("backupRestores2")
+	require.NotEmpty(t, g.ClusterName)
 
-	projectID2 := g.projectID
-	clusterName2 := g.clusterName
+	projectID2 := g.ProjectID
+	clusterName2 := g.ClusterName
 
 	g.Run("Create snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -61,7 +63,7 @@ func TestRestores(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 
@@ -82,7 +84,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			projectID)
 		cmd.Env = os.Environ()
-		resp, _ := RunAndGetStdOut(cmd)
+		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 
@@ -104,7 +106,7 @@ func TestRestores(t *testing.T) {
 			clusterName2,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.DiskBackupSnapshotRestoreJob
@@ -124,7 +126,7 @@ func TestRestores(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -139,7 +141,7 @@ func TestRestores(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.PaginatedCloudBackupRestoreJob
@@ -159,7 +161,7 @@ func TestRestores(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 
@@ -182,7 +184,7 @@ func TestRestores(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.DiskBackupSnapshotRestoreJob
@@ -202,7 +204,7 @@ func TestRestores(t *testing.T) {
 			projectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -219,11 +221,11 @@ func TestRestores(t *testing.T) {
 			projectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
-	if skipCleanup() {
+	if internal.SkipCleanup() {
 		return
 	}
 
@@ -238,7 +240,7 @@ func TestRestores(t *testing.T) {
 			"--projectId",
 			projectID)
 		cmd.Env = os.Environ()
-		resp, _ := RunAndGetStdOut(cmd)
+		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

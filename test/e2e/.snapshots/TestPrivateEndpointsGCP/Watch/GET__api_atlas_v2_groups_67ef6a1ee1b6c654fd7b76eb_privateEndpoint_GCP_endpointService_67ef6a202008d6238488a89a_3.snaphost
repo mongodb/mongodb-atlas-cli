@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 887
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 04 Apr 2025 05:15:52 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 44
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=26aff4972720aaa39f11a6e7fc96fede57702e5a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"67ef6a202008d6238488a89a","regionName":"CENTRAL_US","serviceAttachmentNames":["projects/p-hlstwdhuidfpybmeq25qg4sp/regions/us-central1/serviceAttachments/sa-us-central1-67ef6a1ee1b6c654fd7b76eb-0","projects/p-hlstwdhuidfpybmeq25qg4sp/regions/us-central1/serviceAttachments/sa-us-central1-67ef6a1ee1b6c654fd7b76eb-1","projects/p-hlstwdhuidfpybmeq25qg4sp/regions/us-central1/serviceAttachments/sa-us-central1-67ef6a1ee1b6c654fd7b76eb-2","projects/p-hlstwdhuidfpybmeq25qg4sp/regions/us-central1/serviceAttachments/sa-us-central1-67ef6a1ee1b6c654fd7b76eb-3","projects/p-hlstwdhuidfpybmeq25qg4sp/regions/us-central1/serviceAttachments/sa-us-central1-67ef6a1ee1b6c654fd7b76eb-4","projects/p-hlstwdhuidfpybmeq25qg4sp/regions/us-central1/serviceAttachments/sa-us-central1-67ef6a1ee1b6c654fd7b76eb-5"],"status":"AVAILABLE"}

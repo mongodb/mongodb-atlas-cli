@@ -201,7 +201,8 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 func (opts *SetupOpts) configureContainer(ctx context.Context) error {
 	envVars := map[string]string{
-		"TOOL": "ATLASCLI",
+		"TOOL":            "ATLASCLI",
+		"RUNNER_LOG_FILE": "/dev/stdout",
 	}
 
 	if !config.TelemetryEnabled() {
@@ -254,9 +255,22 @@ func (opts *SetupOpts) configureContainer(ctx context.Context) error {
 	}
 
 	// This can be a high number because the container will become unhealthy before the 10 minutes is reached
-	const healthyDeploymentTimeout = 3 * time.Minute
+	const healthyDeploymentTimeout = 10 * time.Minute
 
-	return opts.WaitForHealthyDeployment(ctx, healthyDeploymentTimeout)
+	err = opts.WaitForHealthyDeployment(ctx, healthyDeploymentTimeout)
+	if err != nil {
+		logs, err := opts.ContainerEngine.ContainerLogs(ctx, opts.LocalMongodHostname())
+		if err != nil {
+			_, _ = log.Debugf("Container unhealthy (hostname=%s), failed to get container logs : %s\n", opts.LocalMongodHostname(), err)
+		} else {
+			_, _ = log.Debugf("Container unhealthy (hostname=%s), container logs:\n", opts.LocalMongodHostname())
+			for _, logLine := range logs {
+				_, _ = log.Debugln(logLine)
+			}
+		}
+	}
+
+	return err
 }
 
 func (opts *SetupOpts) WaitForHealthyDeployment(ctx context.Context, duration time.Duration) error {

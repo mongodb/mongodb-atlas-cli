@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && clusters && upgrade)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -21,34 +21,36 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestSharedClusterUpgrade(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("clustersUpgrade")
-	g.tier = tierM0
-	g.generateCluster()
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("clustersUpgrade")
+	g.Tier = tierM0
+	g.GenerateCluster()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("Upgrade to dedicated tier", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"upgrade",
-			g.clusterName,
+			g.ClusterName,
 			"--tier", tierM10,
 			"--diskSizeGB", diskSizeGB40,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"--tag", "env=e2e",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
-		require.NoError(t, watchCluster(g.projectID, g.clusterName))
-		cluster := fetchCluster(t, cliPath, g.projectID, g.clusterName)
+		require.NoError(t, internal.WatchCluster(g.ProjectID, g.ClusterName))
+		cluster := fetchCluster(t, cliPath, g.ProjectID, g.ClusterName)
 		ensureClusterTier(t, cluster, tierM10)
 		assert.InDelta(t, 40, cluster.GetDiskSizeGB(), 0.01)
 		assert.Contains(t, cluster.GetTags(), atlasClustersPinned.ResourceTag{Key: "env", Value: "e2e"})
@@ -64,7 +66,7 @@ func fetchCluster(t *testing.T, cliPath, projectID, clusterName string) *atlasCl
 		"--projectId", projectID,
 		"-o=json")
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	req := require.New(t)
 	req.NoError(err, string(resp))
 	var c *atlasClustersPinned.AdvancedClusterDescription

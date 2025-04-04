@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && logs)
 
-package e2e_test
+package e2e
 
 import (
 	"os"
@@ -21,18 +21,19 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
 func TestLogs(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 
-	g.generateProjectAndCluster("logs")
+	g.GenerateProjectAndCluster("logs")
 
-	hostname, err := g.getHostname()
+	hostname, err := g.GetHostname()
 	require.NoError(t, err)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	logTypes := []string{
 		"mongodb.gz",
@@ -43,12 +44,12 @@ func TestLogs(t *testing.T) {
 	for _, logType := range logTypes {
 		lt := logType
 		g.Run("Download "+lt, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-			downloadLogTmpPath(t, cliPath, hostname, lt, g.projectID)
+			downloadLogTmpPath(t, cliPath, hostname, lt, g.ProjectID)
 		})
 	}
 
 	g.Run("Download mongodb.gz no output path", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		downloadLog(t, cliPath, hostname, "mongodb.gz", g.projectID)
+		downloadLog(t, cliPath, hostname, "mongodb.gz", g.ProjectID)
 	})
 }
 

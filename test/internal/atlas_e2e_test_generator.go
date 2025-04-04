@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package e2e_test
+package internal
 
 import (
 	"bufio"
@@ -150,14 +150,14 @@ func compareSnapshots(a *http.Response, b *http.Response) int {
 	return bytes.Compare(aBody, bBody)
 }
 
-// atlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
-type atlasE2ETestGenerator struct {
-	projectID           string
+// AtlasE2ETestGenerator is about providing capabilities to provide projects and clusters for our e2e tests.
+type AtlasE2ETestGenerator struct {
+	ProjectID           string
 	projectName         string
-	clusterName         string
+	ClusterName         string
 	clusterRegion       string
-	tier                string
-	mDBVer              string
+	Tier                string
+	MDBVer              string
 	enableBackup        bool
 	firstProcess        *atlasv2.ApiHostViewAtlas
 	t                   *testing.T
@@ -175,7 +175,7 @@ type atlasE2ETestGenerator struct {
 // and records the text in the error log. For tests, the text will be printed only if
 // the test fails or the -test.v flag is set. For benchmarks, the text is always
 // printed to avoid having performance depend on the value of the -test.v flag.
-func (g *atlasE2ETestGenerator) Log(args ...any) {
+func (g *AtlasE2ETestGenerator) Log(args ...any) {
 	g.t.Log(args...)
 }
 
@@ -184,18 +184,18 @@ func (g *atlasE2ETestGenerator) Log(args ...any) {
 // tests, the text will be printed only if the test fails or the -test.v flag is
 // set. For benchmarks, the text is always printed to avoid having performance
 // depend on the value of the -test.v flag.
-func (g *atlasE2ETestGenerator) Logf(format string, args ...any) {
+func (g *AtlasE2ETestGenerator) Logf(format string, args ...any) {
 	g.t.Logf(format, args...)
 }
 
-// newAtlasE2ETestGenerator creates a new instance of atlasE2ETestGenerator struct.
-func newAtlasE2ETestGenerator(t *testing.T, opts ...func(g *atlasE2ETestGenerator)) *atlasE2ETestGenerator {
+// newAtlasE2ETestGenerator creates a new instance of AtlasE2ETestGenerator struct.
+func NewAtlasE2ETestGenerator(t *testing.T, opts ...func(g *AtlasE2ETestGenerator)) *AtlasE2ETestGenerator {
 	t.Helper()
-	g := &atlasE2ETestGenerator{
+	g := &AtlasE2ETestGenerator{
 		t:                   t,
 		testName:            t.Name(),
 		currentSnapshotMode: snapshotModeSkip,
-		skipSnapshots:       compositeSnapshotSkipFunc(skip401Snapshots, skipSimilarSnapshots),
+		skipSnapshots:       compositeSnapshotSkipFunc(Skip401Snapshots, SkipSimilarSnapshots),
 		fileIDs:             map[string]int{},
 		memoryMap:           map[string]any{},
 		snapshotNameFunc:    defaultSnapshotBaseName,
@@ -207,20 +207,20 @@ func newAtlasE2ETestGenerator(t *testing.T, opts ...func(g *atlasE2ETestGenerato
 	return g
 }
 
-func withBackup() func(g *atlasE2ETestGenerator) {
-	return func(g *atlasE2ETestGenerator) {
+func WithBackup() func(g *AtlasE2ETestGenerator) {
+	return func(g *AtlasE2ETestGenerator) {
 		g.enableBackup = true
 	}
 }
 
-func withSnapshot() func(g *atlasE2ETestGenerator) {
-	return func(g *atlasE2ETestGenerator) {
+func WithSnapshot() func(g *AtlasE2ETestGenerator) {
+	return func(g *AtlasE2ETestGenerator) {
 		g.snapshotServer()
 	}
 }
 
-func withSnapshotSkip(f ...func(*http.Response, *http.Response) bool) func(g *atlasE2ETestGenerator) {
-	return func(g *atlasE2ETestGenerator) {
+func WithSnapshotSkip(f ...func(*http.Response, *http.Response) bool) func(g *AtlasE2ETestGenerator) {
+	return func(g *AtlasE2ETestGenerator) {
 		g.skipSnapshots = compositeSnapshotSkipFunc(f...)
 	}
 }
@@ -239,13 +239,13 @@ func compositeSnapshotSkipFunc(f ...func(*http.Response, *http.Response) bool) f
 	}
 }
 
-func withSnapshotNameFunc(f func(*http.Request) string) func(g *atlasE2ETestGenerator) {
-	return func(g *atlasE2ETestGenerator) {
+func WithSnapshotNameFunc(f func(*http.Request) string) func(g *AtlasE2ETestGenerator) {
+	return func(g *AtlasE2ETestGenerator) {
 		g.snapshotNameFunc = f
 	}
 }
 
-func (g *atlasE2ETestGenerator) Run(name string, f func(t *testing.T)) {
+func (g *AtlasE2ETestGenerator) Run(name string, f func(t *testing.T)) {
 	g.t.Helper()
 
 	g.t.Run(name, func(t *testing.T) {
@@ -262,11 +262,11 @@ func (g *atlasE2ETestGenerator) Run(name string, f func(t *testing.T)) {
 	})
 }
 
-// generateProject generates a new project and also registers its deletion on test cleanup.
-func (g *atlasE2ETestGenerator) generateProject(prefix string) {
+// GenerateProject generates a new project and also registers its deletion on test cleanup.
+func (g *AtlasE2ETestGenerator) GenerateProject(prefix string) {
 	g.t.Helper()
 
-	if g.projectID != "" {
+	if g.ProjectID != "" {
 		g.t.Fatal("unexpected error: project was already generated")
 	}
 
@@ -280,115 +280,91 @@ func (g *atlasE2ETestGenerator) generateProject(prefix string) {
 		g.t.Fatalf("unexpected error: %v", err)
 	}
 
-	g.projectID, err = createProject(g.projectName)
+	g.ProjectID, err = createProject(g.projectName)
 	if err != nil {
 		g.t.Fatalf("unexpected error creating project: %v", err)
 	}
-	g.Logf("projectID=%s", g.projectID)
+	g.Logf("projectID=%s", g.ProjectID)
 	g.Logf("projectName=%s", g.projectName)
-	if g.projectID == "" {
+	if g.ProjectID == "" {
 		g.t.Fatal("projectID not created")
 	}
 
-	if skipCleanup() {
+	if SkipCleanup() {
 		return
 	}
 
 	g.t.Cleanup(func() {
-		deleteProjectWithRetry(g.t, g.projectID)
+		deleteProjectWithRetry(g.t, g.ProjectID)
 	})
 }
 
-func (g *atlasE2ETestGenerator) generateFlexCluster() {
+func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 	g.t.Helper()
 
-	if g.projectID == "" {
-		g.t.Fatal("unexpected error: project must be generated")
-	}
-
-	g.clusterName = g.memory("generateFlexClusterName", must(RandClusterName())).(string)
-
-	err := deployFlexClusterForProject(g.projectID, g.clusterName)
-	if err != nil {
-		g.t.Fatalf("unexpected error deploying flex cluster: %v", err)
-	}
-	g.t.Logf("flexClusterName=%s", g.clusterName)
-
-	if skipCleanup() {
-		return
-	}
-
-	g.t.Cleanup(func() {
-		_ = deleteClusterForProject(g.projectID, g.clusterName)
-	})
-}
-
-func (g *atlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
-	g.t.Helper()
-
-	if g.projectID == "" {
+	if g.ProjectID == "" {
 		g.t.Fatal("unexpected error: project must be generated")
 	}
 
 	var err error
-	if g.tier == "" {
-		g.tier = e2eTier()
+	if g.Tier == "" {
+		g.Tier = E2eTier()
 	}
 
-	if g.mDBVer == "" {
+	if g.MDBVer == "" {
 		mdbVersion, e := MongoDBMajorVersion()
 		require.NoError(g.t, e)
 
-		g.mDBVer = mdbVersion
+		g.MDBVer = mdbVersion
 	}
 
-	g.clusterName = g.memory(prefix+"GenerateClusterName", must(RandClusterNameWithPrefix(prefix))).(string)
+	g.ClusterName = g.Memory(prefix+"GenerateClusterName", Must(RandClusterNameWithPrefix(prefix))).(string)
 
-	g.clusterRegion, err = deployClusterForProject(g.projectID, g.clusterName, g.tier, g.mDBVer, g.enableBackup)
+	g.clusterRegion, err = deployClusterForProject(g.ProjectID, g.ClusterName, g.Tier, g.MDBVer, g.enableBackup)
 	if err != nil {
-		g.Logf("projectID=%q, clusterName=%q", g.projectID, g.clusterName)
+		g.Logf("projectID=%q, clusterName=%q", g.ProjectID, g.ClusterName)
 		g.t.Errorf("unexpected error deploying cluster: %v", err)
 	}
-	g.t.Logf("clusterName=%s", g.clusterName)
+	g.t.Logf("clusterName=%s", g.ClusterName)
 
-	if skipCleanup() {
+	if SkipCleanup() {
 		return
 	}
 
 	g.t.Cleanup(func() {
-		g.Logf("Cluster cleanup %q\n", g.projectID)
-		if e := deleteClusterForProject(g.projectID, g.clusterName); e != nil {
+		g.Logf("Cluster cleanup %q\n", g.ProjectID)
+		if e := DeleteClusterForProject(g.ProjectID, g.ClusterName); e != nil {
 			g.t.Errorf("unexpected error deleting cluster: %v", e)
 		}
 	})
 }
 
-// generateCluster generates a new cluster and also registers its deletion on test cleanup.
-func (g *atlasE2ETestGenerator) generateCluster() {
+// GenerateCluster generates a new cluster and also registers its deletion on test cleanup.
+func (g *AtlasE2ETestGenerator) GenerateCluster() {
 	g.generateClusterWithPrefix("cluster")
 }
 
 // generateProjectAndCluster calls both generateProject and generateCluster.
-func (g *atlasE2ETestGenerator) generateProjectAndCluster(prefix string) {
+func (g *AtlasE2ETestGenerator) GenerateProjectAndCluster(prefix string) {
 	g.t.Helper()
 
-	g.generateProject(prefix)
+	g.GenerateProject(prefix)
 	g.generateClusterWithPrefix(prefix)
 }
 
-// newAvailableRegion returns the first region for the provider/tier.
-func (g *atlasE2ETestGenerator) newAvailableRegion(tier, provider string) (string, error) {
+// NewAvailableRegion returns the first region for the provider/tier.
+func (g *AtlasE2ETestGenerator) NewAvailableRegion(tier, provider string) (string, error) {
 	g.t.Helper()
 
-	if g.projectID == "" {
+	if g.ProjectID == "" {
 		g.t.Fatal("unexpected error: project must be generated")
 	}
 
-	return newAvailableRegion(g.projectID, tier, provider)
+	return NewAvailableRegion(g.ProjectID, tier, provider)
 }
 
-// getHostnameAndPort returns hostname:port from the first process.
-func (g *atlasE2ETestGenerator) getHostnameAndPort() (string, error) {
+// GetHostnameAndPort returns hostname:port from the first process.
+func (g *AtlasE2ETestGenerator) GetHostnameAndPort() (string, error) {
 	g.t.Helper()
 
 	p, err := g.getFirstProcess()
@@ -401,8 +377,8 @@ func (g *atlasE2ETestGenerator) getHostnameAndPort() (string, error) {
 	return *p.Id, nil
 }
 
-// getHostname returns the hostname of first process.
-func (g *atlasE2ETestGenerator) getHostname() (string, error) {
+// GetHostname returns the hostname of first process.
+func (g *AtlasE2ETestGenerator) GetHostname() (string, error) {
 	g.t.Helper()
 
 	p, err := g.getFirstProcess()
@@ -414,7 +390,7 @@ func (g *atlasE2ETestGenerator) getHostname() (string, error) {
 }
 
 // getFirstProcess returns the first process of the project.
-func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.ApiHostViewAtlas, error) {
+func (g *AtlasE2ETestGenerator) getFirstProcess() (*atlasv2.ApiHostViewAtlas, error) {
 	g.t.Helper()
 
 	if g.firstProcess != nil {
@@ -431,18 +407,18 @@ func (g *atlasE2ETestGenerator) getFirstProcess() (*atlasv2.ApiHostViewAtlas, er
 }
 
 // getHostname returns the list of processes.
-func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, error) {
+func (g *AtlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, error) {
 	g.t.Helper()
 
-	if g.projectID == "" {
+	if g.ProjectID == "" {
 		g.t.Fatal("unexpected error: project must be generated")
 	}
 
-	resp, err := g.runCommand(
+	resp, err := g.RunCommand(
 		processesEntity,
 		"list",
 		"--projectId",
-		g.projectID,
+		g.ProjectID,
 		"-o=json",
 	)
 	if err != nil {
@@ -461,8 +437,8 @@ func (g *atlasE2ETestGenerator) getProcesses() ([]atlasv2.ApiHostViewAtlas, erro
 	return processes.GetResults(), nil
 }
 
-// runCommand runs a command on atlascli.
-func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
+// RunCommand runs a command on atlascli.
+func (g *AtlasE2ETestGenerator) RunCommand(args ...string) ([]byte, error) {
 	g.t.Helper()
 
 	cliPath, err := AtlasCLIBin()
@@ -475,7 +451,7 @@ func (g *atlasE2ETestGenerator) runCommand(args ...string) ([]byte, error) {
 	return RunAndGetStdOut(cmd)
 }
 
-func skipCleanup() bool {
+func SkipCleanup() bool {
 	return isTrue(os.Getenv("E2E_SKIP_CLEANUP"))
 }
 
@@ -488,7 +464,7 @@ func isTrue(s string) bool {
 	}
 }
 
-func (g *atlasE2ETestGenerator) snapshotBaseDir() string {
+func (g *AtlasE2ETestGenerator) snapshotBaseDir() string {
 	g.t.Helper()
 
 	dir, err := os.Getwd()
@@ -505,7 +481,7 @@ func (g *atlasE2ETestGenerator) snapshotBaseDir() string {
 	return dir
 }
 
-func (g *atlasE2ETestGenerator) snapshotDir() string {
+func (g *AtlasE2ETestGenerator) snapshotDir() string {
 	g.t.Helper()
 
 	dir := g.snapshotBaseDir()
@@ -515,7 +491,7 @@ func (g *atlasE2ETestGenerator) snapshotDir() string {
 	return dir
 }
 
-func (g *atlasE2ETestGenerator) enforceDir(filename string) {
+func (g *AtlasE2ETestGenerator) enforceDir(filename string) {
 	g.t.Helper()
 
 	dir := path.Dir(filename)
@@ -535,13 +511,13 @@ func defaultSnapshotBaseName(r *http.Request) string {
 	return fmt.Sprintf("%s_%s", r.Method, strings.ReplaceAll(strings.ReplaceAll(r.URL.Path, "/", "_"), ":", "_"))
 }
 
-func snapshotHashedName(r *http.Request) string {
+func SnapshotHashedName(r *http.Request) string {
 	defaultSnapshotBaseName := defaultSnapshotBaseName(r)
 	hash := fmt.Sprintf("%x", sha1.Sum([]byte(defaultSnapshotBaseName))) //nolint:gosec // no need to be secure just replacing long filenames for windows
 	return hash
 }
 
-func (g *atlasE2ETestGenerator) maskString(s string) string {
+func (g *AtlasE2ETestGenerator) maskString(s string) string {
 	o := s
 	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_ORG_ID"), "a0123456789abcdef012345a")
 	o = strings.ReplaceAll(o, os.Getenv("MONGODB_ATLAS_PROJECT_ID"), "b0123456789abcdef012345b")
@@ -553,7 +529,7 @@ func (g *atlasE2ETestGenerator) maskString(s string) string {
 	return o
 }
 
-func (g *atlasE2ETestGenerator) prepareRequest(r *http.Request) {
+func (g *AtlasE2ETestGenerator) prepareRequest(r *http.Request) {
 	g.t.Helper()
 	var err error
 	r.URL, err = url.Parse(g.maskString(r.URL.String()))
@@ -562,13 +538,13 @@ func (g *atlasE2ETestGenerator) prepareRequest(r *http.Request) {
 	}
 }
 
-func (g *atlasE2ETestGenerator) fileKey(r *http.Request) string {
+func (g *AtlasE2ETestGenerator) fileKey(r *http.Request) string {
 	g.t.Helper()
 
 	return fmt.Sprintf("%s/%s", g.testName, g.snapshotNameFunc(r))
 }
 
-func (g *atlasE2ETestGenerator) snapshotName(r *http.Request) string {
+func (g *AtlasE2ETestGenerator) snapshotName(r *http.Request) string {
 	g.t.Helper()
 
 	dir := g.snapshotDir()
@@ -585,7 +561,7 @@ func (g *atlasE2ETestGenerator) snapshotName(r *http.Request) string {
 	return fileName
 }
 
-func (g *atlasE2ETestGenerator) snapshotNameStepBack(r *http.Request) {
+func (g *AtlasE2ETestGenerator) snapshotNameStepBack(r *http.Request) {
 	g.t.Helper()
 
 	key := g.fileKey(r)
@@ -604,7 +580,7 @@ func skipSnapshots() bool {
 	return os.Getenv(updateSnapshotsEnvVarKey) == "skip"
 }
 
-func (g *atlasE2ETestGenerator) loadMemory() {
+func (g *AtlasE2ETestGenerator) loadMemory() {
 	g.t.Helper()
 
 	dir := g.snapshotDir()
@@ -624,7 +600,7 @@ func (g *atlasE2ETestGenerator) loadMemory() {
 	}
 }
 
-func (g *atlasE2ETestGenerator) storeMemory() {
+func (g *AtlasE2ETestGenerator) storeMemory() {
 	g.t.Helper()
 
 	dir := g.snapshotDir()
@@ -642,7 +618,7 @@ func (g *atlasE2ETestGenerator) storeMemory() {
 	}
 }
 
-func (g *atlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response {
+func (g *AtlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response {
 	g.t.Helper()
 
 	buf, err := httputil.DumpResponse(r, true)
@@ -685,7 +661,7 @@ func (g *atlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 	return resp
 }
 
-func (g *atlasE2ETestGenerator) storeSnapshot(r *http.Response) {
+func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 	g.t.Helper()
 
 	out, err := httputil.DumpResponse(r, true)
@@ -701,7 +677,7 @@ func (g *atlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 	}
 }
 
-func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
+func (g *AtlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	g.t.Helper()
 
 	g.prepareRequest(r)
@@ -727,15 +703,15 @@ func (g *atlasE2ETestGenerator) readSnapshot(r *http.Request) *http.Response {
 	return resp
 }
 
-func skip401Snapshots(snapshot *http.Response, _ *http.Response) bool {
+func Skip401Snapshots(snapshot *http.Response, _ *http.Response) bool {
 	return snapshot.StatusCode == http.StatusUnauthorized && snapshot.Header.Get("Www-Authenticate") != ""
 }
 
-func skipSimilarSnapshots(snapshot *http.Response, prevSnapshot *http.Response) bool {
+func SkipSimilarSnapshots(snapshot *http.Response, prevSnapshot *http.Response) bool {
 	return prevSnapshot != nil && compareSnapshots(snapshot, prevSnapshot) == 0
 }
 
-func (g *atlasE2ETestGenerator) snapshotServer() {
+func (g *AtlasE2ETestGenerator) snapshotServer() {
 	g.t.Helper()
 
 	if skipSnapshots() {
@@ -806,7 +782,7 @@ func (g *atlasE2ETestGenerator) snapshotServer() {
 	g.t.Setenv("MONGODB_ATLAS_OPS_MANAGER_URL", server.URL)
 }
 
-func (g *atlasE2ETestGenerator) memory(key string, value any) any {
+func (g *AtlasE2ETestGenerator) Memory(key string, value any) any {
 	g.t.Helper()
 
 	if key == "" {
@@ -837,7 +813,7 @@ func (g *atlasE2ETestGenerator) memory(key string, value any) any {
 	}
 }
 
-func (g *atlasE2ETestGenerator) memoryFunc(key string, value any, marshal func(value any) ([]byte, error), unmarshal func([]byte) (any, error)) any {
+func (g *AtlasE2ETestGenerator) MemoryFunc(key string, value any, marshal func(value any) ([]byte, error), unmarshal func([]byte) (any, error)) any {
 	g.t.Helper()
 
 	if key == "" {
@@ -880,10 +856,10 @@ func (g *atlasE2ETestGenerator) memoryFunc(key string, value any, marshal func(v
 	}
 }
 
-func (g *atlasE2ETestGenerator) memoryRand(key string, n int64) *big.Int {
+func (g *AtlasE2ETestGenerator) MemoryRand(key string, n int64) *big.Int {
 	g.t.Helper()
 
-	r, ok := g.memoryFunc(key, must(RandInt(n)), func(value any) ([]byte, error) {
+	r, ok := g.MemoryFunc(key, Must(RandInt(n)), func(value any) ([]byte, error) {
 		i := value.(*big.Int)
 		return i.Bytes(), nil
 	}, func(buf []byte) (any, error) {

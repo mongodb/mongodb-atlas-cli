@@ -14,7 +14,7 @@
 
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,25 +23,27 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAtlasTeams(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	n := g.memoryRand("rand", 1000)
+	n := g.MemoryRand("rand", 1000)
 
 	teamName := fmt.Sprintf("teams%v", n)
 	var teamID string
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		username, _, err := OrgNUser(0)
+		username, _, err := internal.OrgNUser(0)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -54,7 +56,7 @@ func TestAtlasTeams(t *testing.T) {
 			username,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -74,7 +76,7 @@ func TestAtlasTeams(t *testing.T) {
 			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var team atlasv2.TeamResponse
@@ -90,7 +92,7 @@ func TestAtlasTeams(t *testing.T) {
 			teamName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var team atlasv2.TeamResponse
 		require.NoError(t, json.Unmarshal(resp, &team))
@@ -107,7 +109,7 @@ func TestAtlasTeams(t *testing.T) {
 			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var team atlasv2.TeamResponse
@@ -122,7 +124,7 @@ func TestAtlasTeams(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var teams atlasv2.PaginatedTeam
@@ -137,7 +139,7 @@ func TestAtlasTeams(t *testing.T) {
 			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var teams []atlasv2.TeamResponse
@@ -152,7 +154,7 @@ func TestAtlasTeams(t *testing.T) {
 			teamID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Team '%s' deleted\n", teamID)
 		assert.Equal(t, expected, string(resp))

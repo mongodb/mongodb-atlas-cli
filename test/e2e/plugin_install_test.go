@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && plugin && install)
 
-package e2e_test
+package e2e
 
 import (
 	"fmt"
@@ -24,6 +24,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
@@ -70,10 +71,10 @@ func generateTestPlugin(directoryName string, binaryName string, manifestContent
 }
 
 func TestPluginInstall(t *testing.T) {
-	_ = tempConfigFolder(t)
+	_ = internal.TempConfigFolder(t)
 
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	runPluginInstallTest(g, cliPath, "Invalid version for plugin", true, examplePluginRepository+"@2.3.4.5.6")
@@ -83,7 +84,7 @@ func TestPluginInstall(t *testing.T) {
 	runPluginInstallTest(g, cliPath, "Install Successful", false, examplePluginRepository)
 	runPluginInstallTest(g, cliPath, "Plugin already installed", true, examplePluginRepository)
 
-	deleteAllPlugins(t)
+	internal.DeleteAllPlugins(t)
 
 	err = generateTestPlugin("testplugin", "binary", `name: testplugin
 description: description
@@ -95,7 +96,7 @@ commands:
 	require.NoError(t, err)
 	runPluginInstallTest(g, cliPath, "Plugin with same command already installed", true, examplePluginRepository)
 
-	deleteAllPlugins(t)
+	internal.DeleteAllPlugins(t)
 
 	err = generateTestPlugin("testplugin", "binary", `name: atlas-cli-plugin-example
 description: description
@@ -108,14 +109,13 @@ commands:
 	runPluginInstallTest(g, cliPath, "Plugin with same name already installed", true, examplePluginRepository)
 }
 
-func runPluginInstallTest(g *atlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string) {
-	g.t.Helper()
+func runPluginInstallTest(g *internal.AtlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string) {
 	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"plugin",
 			"install",
 			pluginValue)
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		if requireError {
 			require.Error(t, err, string(resp))
 		} else {

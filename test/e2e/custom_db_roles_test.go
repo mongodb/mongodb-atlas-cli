@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,8 +23,10 @@ import (
 	"slices"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
@@ -39,12 +41,12 @@ const (
 )
 
 func TestDBRoles(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	n := g.memoryRand("rand", 1000)
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	n := g.MemoryRand("rand", 1000)
 
 	roleName := fmt.Sprintf("role-%v", n)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -57,7 +59,7 @@ func TestDBRoles(t *testing.T) {
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var role atlasv2.UserCustomDBRole
@@ -79,7 +81,7 @@ func TestDBRoles(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var roles []atlasv2.UserCustomDBRole
@@ -95,7 +97,7 @@ func TestDBRoles(t *testing.T) {
 			roleName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var role atlasv2.UserCustomDBRole
@@ -122,7 +124,7 @@ func TestDBRoles(t *testing.T) {
 			"--append",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var role atlasv2.UserCustomDBRole
@@ -148,7 +150,7 @@ func TestDBRoles(t *testing.T) {
 			"--privilege", updatePrivilege,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var role atlasv2.UserCustomDBRole
@@ -169,7 +171,7 @@ func TestDBRoles(t *testing.T) {
 			roleName,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)

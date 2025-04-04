@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && serverless && instance)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,20 +22,22 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestServerless(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("serverless")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("serverless")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
+	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -45,10 +47,10 @@ func TestServerless(t *testing.T) {
 			"--region=US_EAST_1",
 			"--provider=AWS",
 			"--tag", "env=test",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.ServerlessInstanceDescription
@@ -63,11 +65,11 @@ func TestServerless(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			serverlessEntity,
 			"watch",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			clusterName,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
@@ -81,10 +83,10 @@ func TestServerless(t *testing.T) {
 			clusterName,
 			"--disableTerminationProtection",
 			"--tag", "env=e2e",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.ServerlessInstanceDescription
@@ -99,10 +101,10 @@ func TestServerless(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			serverlessEntity,
 			"ls",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var clusters atlasv2.PaginatedServerlessInstanceDescription
@@ -118,10 +120,10 @@ func TestServerless(t *testing.T) {
 			serverlessEntity,
 			"describe",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster atlasv2.ServerlessInstanceDescription
@@ -138,10 +140,10 @@ func TestServerless(t *testing.T) {
 			serverlessEntity,
 			"delete",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Serverless instance '%s' deleted\n", clusterName)
@@ -149,7 +151,7 @@ func TestServerless(t *testing.T) {
 		a.Equal(expected, string(resp))
 	})
 
-	if skipCleanup() {
+	if internal.SkipCleanup() {
 		return
 	}
 
@@ -158,12 +160,12 @@ func TestServerless(t *testing.T) {
 			serverlessEntity,
 			"watch",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
-		resp, _ := RunAndGetStdOut(cmd)
+		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

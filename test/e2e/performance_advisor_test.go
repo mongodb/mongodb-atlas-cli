@@ -13,24 +13,25 @@
 // limitations under the License.
 //go:build e2e || (atlas && performanceAdvisor)
 
-package e2e_test
+package e2e
 
 import (
 	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
 func TestPerformanceAdvisor(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot(), withSnapshotNameFunc(snapshotHashedName))
-	g.generateProjectAndCluster("performanceAdvisor")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithSnapshotNameFunc(internal.SnapshotHashedName))
+	g.GenerateProjectAndCluster("performanceAdvisor")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	hostname, err := g.getHostnameAndPort()
+	hostname, err := g.GetHostnameAndPort()
 	require.NoError(t, err)
 
 	g.Run("List namespaces", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -39,12 +40,12 @@ func TestPerformanceAdvisor(t *testing.T) {
 			namespacesEntity,
 			"list",
 			"--processName", hostname,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -54,12 +55,12 @@ func TestPerformanceAdvisor(t *testing.T) {
 			slowQueryLogsEntity,
 			"list",
 			"--processName", hostname,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -69,12 +70,12 @@ func TestPerformanceAdvisor(t *testing.T) {
 			suggestedIndexesEntity,
 			"list",
 			"--processName", hostname,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -83,11 +84,11 @@ func TestPerformanceAdvisor(t *testing.T) {
 			performanceAdvisorEntity,
 			slowOperationThresholdEntity,
 			"enable",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -96,11 +97,11 @@ func TestPerformanceAdvisor(t *testing.T) {
 			performanceAdvisorEntity,
 			slowOperationThresholdEntity,
 			"disable",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 }

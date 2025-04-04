@@ -14,7 +14,7 @@
 
 //go:build e2e || config
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -25,6 +25,8 @@ import (
 	"testing"
 
 	"github.com/Netflix/go-expect"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
+
 	pseudotty "github.com/creack/pty"
 	"github.com/hinshun/vt10x"
 	"github.com/stretchr/testify/require"
@@ -35,7 +37,7 @@ const (
 )
 
 func TestConfig(t *testing.T) {
-	dir := tempConfigFolder(t)
+	dir := internal.TempConfigFolder(t)
 
 	configPath := path.Join(dir, "config.toml")
 
@@ -46,7 +48,7 @@ func TestConfig(t *testing.T) {
 `), 0600)
 	require.NoError(t, err)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	t.Run("config", func(t *testing.T) {
 		t.Setenv("MONGODB_ATLAS_PRIVATE_API_KEY", "")
@@ -124,7 +126,7 @@ func TestConfig(t *testing.T) {
 	t.Run("List", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "ls")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -142,7 +144,7 @@ func TestConfig(t *testing.T) {
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -166,7 +168,7 @@ func TestConfig(t *testing.T) {
 			"renamed",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -178,7 +180,7 @@ func TestConfig(t *testing.T) {
 	t.Run("Delete", func(t *testing.T) {
 		cmd := exec.Command(cliPath, configEntity, "delete", "renamed", "--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))

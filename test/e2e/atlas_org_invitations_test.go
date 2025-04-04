@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,17 +23,18 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAtlasOrgInvitations(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n := g.memoryRand("rand", 1000)
+	n := g.MemoryRand("rand", 1000)
 
 	emailOrg := fmt.Sprintf("test-%v@mongodb.com", n)
 	var orgInvitationID string
@@ -49,7 +50,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"ORG_MEMBER",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
@@ -64,7 +65,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		a := assert.New(t)
 		// Create a unique email for this test
-		nFile := g.memoryRand("randFile", 1000)
+		nFile := g.MemoryRand("randFile", 1000)
 		emailOrgFile := fmt.Sprintf("test-file-%v@mongodb.com", nFile)
 
 		inviteData := admin.OrganizationInvitationRequest{
@@ -72,7 +73,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			Roles:    pointer.Get([]string{"ORG_READ_ONLY"}),
 		}
 		inviteFilename := fmt.Sprintf("%s/update-%s.json", t.TempDir(), nFile)
-		createJSONFile(t, inviteData, inviteFilename)
+		internal.CreateJSONFile(t, inviteData, inviteFilename)
 
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -81,7 +82,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"--file", inviteFilename,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var invitation admin.OrganizationInvitation
@@ -95,7 +96,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 	g.Run("Invite with File", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		a := assert.New(t)
 		// Create a unique email for this test
-		nFile := g.memoryRand("randFile2", 1000)
+		nFile := g.MemoryRand("randFile2", 1000)
 		emailOrgFile := fmt.Sprintf("test-file-%v@mongodb.com", nFile)
 
 		inviteData := admin.OrganizationInvitationRequest{
@@ -103,7 +104,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			Roles:    pointer.Get([]string{"ORG_READ_ONLY"}),
 		}
 		inviteFilename := fmt.Sprintf("%s/update-%s.json", t.TempDir(), nFile)
-		createJSONFile(t, inviteData, inviteFilename)
+		internal.CreateJSONFile(t, inviteData, inviteFilename)
 
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -112,7 +113,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"--file", inviteFilename,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var invitation admin.OrganizationInvitation
@@ -130,7 +131,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -148,7 +149,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			orgInvitationID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -170,7 +171,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -191,7 +192,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			roleNameOrg,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -207,7 +208,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.memoryRand("randFile3", 1000)
+		nFile := g.MemoryRand("randFile3", 1000)
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator
@@ -215,7 +216,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			Roles: pointer.Get([]string{updateRole}),
 		}
 		updateFilename := fmt.Sprintf("%s/update-%s.json", t.TempDir(), nFile)
-		createJSONFile(t, updateData, updateFilename)
+		internal.CreateJSONFile(t, updateData, updateFilename)
 
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -225,7 +226,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"--file", updateFilename,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var invitation admin.OrganizationInvitation
@@ -239,7 +240,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 		require.NotEmpty(t, orgInvitationID, "orgInvitationID must be set by Invite test")
 		a := assert.New(t)
 
-		nFile := g.memoryRand("randFile4", 1000)
+		nFile := g.MemoryRand("randFile4", 1000)
 
 		// Define the update data, including GroupRoleAssignments if desired
 		updateRole := OrgGroupCreator
@@ -247,7 +248,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			Roles: pointer.Get([]string{updateRole}),
 		}
 		updateFilename := fmt.Sprintf("%s/update-%s.json", t.TempDir(), nFile)
-		createJSONFile(t, updateData, updateFilename)
+		internal.CreateJSONFile(t, updateData, updateFilename)
 
 		cmd := exec.Command(cliPath,
 			orgEntity,
@@ -257,7 +258,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			"--file", updateFilename,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var invitation admin.OrganizationInvitation
@@ -275,7 +276,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			orgInvitationID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Invitation '%s' deleted\n", orgInvitationID)
@@ -291,7 +292,7 @@ func TestAtlasOrgInvitations(t *testing.T) {
 			orgInvitationIDFile,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Invitation '%s' deleted\n", orgInvitationIDFile)

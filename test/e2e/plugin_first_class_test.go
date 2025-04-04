@@ -14,23 +14,24 @@
 
 //go:build e2e || kubernetes
 
-package e2e_test
+package e2e
 
 import (
 	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestPluginKubernetes(t *testing.T) {
-	_ = tempConfigFolder(t)
+	_ = internal.TempConfigFolder(t)
 
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("should install kubernetes plugin", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

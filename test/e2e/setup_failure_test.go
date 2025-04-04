@@ -14,21 +14,22 @@
 
 //go:build e2e || (atlas && interactive)
 
-package e2e_test
+package e2e
 
 import (
 	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestSetupFailureFlow(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot(), withSnapshotSkip(skipSimilarSnapshots))
-	g.generateProject("setup")
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithSnapshotSkip(internal.SkipSimilarSnapshots))
+	g.GenerateProject("setup")
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 

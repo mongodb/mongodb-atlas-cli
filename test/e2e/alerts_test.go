@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,8 +22,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
@@ -32,8 +34,8 @@ const (
 )
 
 func TestAlerts(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	var alertID string
 	// This test should be run before all other tests to grab an alert ID for all others tests
@@ -47,7 +49,7 @@ func TestAlerts(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var alerts atlasv2.PaginatedAlert
 		require.NoError(t, json.Unmarshal(resp, &alerts))
@@ -66,7 +68,7 @@ func TestAlerts(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -78,7 +80,7 @@ func TestAlerts(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -94,7 +96,7 @@ func TestAlerts(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
@@ -116,7 +118,7 @@ func TestAlerts(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
 		require.NoError(t, json.Unmarshal(resp, &alert))
@@ -135,7 +137,7 @@ func TestAlerts(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup
 		require.NoError(t, json.Unmarshal(resp, &alert))
@@ -153,7 +155,7 @@ func TestAlerts(t *testing.T) {
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		var alert atlasv2.AlertViewForNdsGroup

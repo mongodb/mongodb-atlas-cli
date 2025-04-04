@@ -14,35 +14,35 @@
 
 //go:build e2e || (atlas && plugin && update)
 
-package e2e_test
+package e2e
 
 import (
 	"fmt"
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
 func TestPluginUpdate(t *testing.T) {
-	_ = tempConfigFolder(t)
+	_ = internal.TempConfigFolder(t)
 
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
-	runPluginUpdateTest(g, cliPath, "Update without specifying version", false, examplePluginRepository, "v1.0.38", "")
-	runPluginUpdateTest(g, cliPath, "Update with specifying version", false, examplePluginName, "v1.0.38", "v2.0.3")
-	runPluginUpdateTest(g, cliPath, "Update with specifying latest version", false, examplePluginName, "v1.0.38", "latest")
-	runPluginUpdateTest(g, cliPath, "Update using --all flag", false, "--all", "v1.0.34", "")
-	runPluginUpdateTest(g, cliPath, "Update with lower version", true, examplePluginName, "v1.0.36", "v1.0.34")
-	runPluginUpdateTest(g, cliPath, "Update with same version", true, examplePluginRepository, "v1.0.36", "v1.0.36")
-	runPluginUpdateTest(g, cliPath, "Update with too many arguments", true, examplePluginName+" --all", "v1.0.34", "v2.0.0")
-	runPluginUpdateTest(g, cliPath, "Update without any values", true, "", "v1.0.34", "v2.0.0")
+	runPluginUpdateTest(t, g, cliPath, "Update without specifying version", false, examplePluginRepository, "v1.0.38", "")
+	runPluginUpdateTest(t, g, cliPath, "Update with specifying version", false, examplePluginName, "v1.0.38", "v2.0.3")
+	runPluginUpdateTest(t, g, cliPath, "Update with specifying latest version", false, examplePluginName, "v1.0.38", "latest")
+	runPluginUpdateTest(t, g, cliPath, "Update using --all flag", false, "--all", "v1.0.34", "")
+	runPluginUpdateTest(t, g, cliPath, "Update with lower version", true, examplePluginName, "v1.0.36", "v1.0.34")
+	runPluginUpdateTest(t, g, cliPath, "Update with same version", true, examplePluginRepository, "v1.0.36", "v1.0.36")
+	runPluginUpdateTest(t, g, cliPath, "Update with too many arguments", true, examplePluginName+" --all", "v1.0.34", "v2.0.0")
+	runPluginUpdateTest(t, g, cliPath, "Update without any values", true, "", "v1.0.34", "v2.0.0")
 }
 
-func runPluginUpdateTest(g *atlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string, initialVersion string, updateVersion string) {
-	g.t.Helper()
-	installExamplePlugin(g.t, cliPath, initialVersion)
+func runPluginUpdateTest(t *testing.T, g *internal.AtlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string, initialVersion string, updateVersion string) {
+	internal.InstallExamplePlugin(t, cliPath, initialVersion)
 
 	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		if updateVersion != "" && pluginValue != "--all" {
@@ -53,7 +53,7 @@ func runPluginUpdateTest(g *atlasE2ETestGenerator, cliPath string, testName stri
 			"plugin",
 			"update",
 			pluginValue)
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		if requireError {
 			require.Error(t, err, string(resp))
 		} else {
@@ -61,5 +61,5 @@ func runPluginUpdateTest(g *atlasE2ETestGenerator, cliPath string, testName stri
 		}
 	})
 
-	deleteAllPlugins(g.t)
+	internal.DeleteAllPlugins(t)
 }

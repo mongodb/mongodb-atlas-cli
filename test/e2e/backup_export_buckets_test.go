@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && backup && exports && buckets)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -21,14 +21,16 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestExportBuckets(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
@@ -52,7 +54,7 @@ func TestExportBuckets(t *testing.T) {
 			iamRoleID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 
@@ -70,7 +72,7 @@ func TestExportBuckets(t *testing.T) {
 			"list",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 		var buckets atlasv2.PaginatedBackupSnapshotExportBuckets
 		r.NoError(json.Unmarshal(resp, &buckets))
@@ -87,7 +89,7 @@ func TestExportBuckets(t *testing.T) {
 			bucketID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 		var exportBucket atlasv2.DiskBackupSnapshotExportBucketResponse
 		r.NoError(json.Unmarshal(resp, &exportBucket))
@@ -104,7 +106,7 @@ func TestExportBuckets(t *testing.T) {
 			bucketID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})

@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && backup && compliancepolicy)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,19 +22,21 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	g.generateProject("copyprotection-compliance-policy")
-	r.NoError(enableCompliancePolicy(g.projectID))
+	g.GenerateProject("copyprotection-compliance-policy")
+	r.NoError(internal.EnableCompliancePolicy(g.ProjectID))
 
 	g.Run("enable", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(
@@ -45,14 +47,14 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 			"enable",
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"--watch", // avoiding HTTP 400 Bad Request "CANNOT_UPDATE_BACKUP_COMPLIANCE_POLICY_SETTINGS_WITH_PENDING_ACTION".
 		)
 		cmd.Env = os.Environ()
-		resp, outputErr := RunAndGetStdOut(cmd)
+		resp, outputErr := internal.RunAndGetStdOut(cmd)
 		r.NoError(outputErr, string(resp))
 
-		trimmedResponse := removeDotsFromWatching(resp)
+		trimmedResponse := internal.RemoveDotsFromWatching(resp)
 
 		var compliancepolicy atlasv2.DataProtectionSettings20231001
 		r.NoError(json.Unmarshal(trimmedResponse, &compliancepolicy), string(trimmedResponse))
@@ -69,10 +71,10 @@ func TestBackupCompliancePolicyCopyProtection(t *testing.T) {
 			"disable",
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, outputErr := RunAndGetStdOut(cmd)
+		resp, outputErr := internal.RunAndGetStdOut(cmd)
 		r.NoError(outputErr, string(resp))
 
 		var compliancepolicy atlasv2.DataProtectionSettings20231001

@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,14 +22,16 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAtlasOrgAPIKeys(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -48,7 +50,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"--role=ORG_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -64,7 +66,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var keys atlasv2.PaginatedApiApiUser
 		require.NoError(t, json.Unmarshal(resp, &keys))
@@ -79,7 +81,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"-c",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var keys []atlasv2.ApiKeyUserDetails
@@ -99,7 +101,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			"--role=ORG_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -114,7 +116,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			ID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.ApiKeyUserDetails
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -129,7 +131,7 @@ func TestAtlasOrgAPIKeys(t *testing.T) {
 			ID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("API Key '%s' deleted\n", ID)
 		assert.Equal(t, expected, string(resp))

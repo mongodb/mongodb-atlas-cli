@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,20 +22,21 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAtlasProjectInvitations(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.generateProject("invitations")
+	g.GenerateProject("invitations")
 
 	var invitationID string
-	n := g.memoryRand("rand", 1000)
+	n := g.MemoryRand("rand", 1000)
 	require.NoError(t, err)
 
 	emailProject := fmt.Sprintf("test-%v@mongodb.com", n)
@@ -49,10 +50,10 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			"--role",
 			"GROUP_READ_ONLY",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -69,10 +70,10 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			invitationsEntity,
 			"ls",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -88,10 +89,10 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			"get",
 			invitationID,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -113,10 +114,10 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			"--role",
 			roleName2,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -137,10 +138,10 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			"--role",
 			roleName2,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -158,9 +159,9 @@ func TestAtlasProjectInvitations(t *testing.T) {
 			invitationID,
 			"--force",
 			"--projectId",
-			g.projectID)
+			g.ProjectID)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Invitation '%s' deleted\n", invitationID)

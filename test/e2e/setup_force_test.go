@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && interactive)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,22 +22,25 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestSetup(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot(), withSnapshotSkip(skipSimilarSnapshots))
-	g.generateProject("setup")
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithSnapshotSkip(internal.SkipSimilarSnapshots))
+	g.GenerateProject("setup")
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
+	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
 
-	dbUserUsername := g.memory("dbUserUsername", must(RandClusterName())).(string)
+	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandClusterName())).(string)
 
 	tagKey := "env"
 	tagValue := "e2etest"
@@ -50,27 +53,27 @@ func TestSetup(t *testing.T) {
 			"--username", dbUserUsername,
 			"--skipMongosh",
 			"--skipSampleData",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"--tag", tagKey+"="+tagValue,
 			"--accessListIp", arbitraryAccessListIP,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), "Cluster created.", string(resp))
 	})
 	t.Cleanup(func() {
-		require.NoError(t, deleteClusterForProject(g.projectID, clusterName))
+		require.NoError(t, internal.DeleteClusterForProject(g.ProjectID, clusterName))
 	})
 	g.Run("Check accessListIp was correctly added", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessListEntity,
 			"ls",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var entries *atlasv2.PaginatedNetworkAccess
@@ -80,7 +83,7 @@ func TestSetup(t *testing.T) {
 		assert.Contains(t, entries.GetResults()[0].GetIpAddress(), arbitraryAccessListIP, "IP from list does not match added IP")
 	})
 
-	require.NoError(t, watchCluster(g.projectID, clusterName))
+	require.NoError(t, internal.WatchCluster(g.ProjectID, clusterName))
 
 	g.Run("Describe DB User", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -88,10 +91,10 @@ func TestSetup(t *testing.T) {
 			"describe",
 			dbUserUsername,
 			"-o=json",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudDatabaseUser
@@ -105,10 +108,10 @@ func TestSetup(t *testing.T) {
 			"describe",
 			clusterName,
 			"-o=json",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var cluster atlasClustersPinned.AdvancedClusterDescription

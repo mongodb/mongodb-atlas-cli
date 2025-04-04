@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && streams_with_cluster)
 
-package e2e_test
+package e2e
 
 import (
 	"bytes"
@@ -23,26 +23,28 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestStreamsWithClusters(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	if IsGov() {
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	if internal.IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}
 
-	g.generateProject("atlasStreams")
+	g.GenerateProject("atlasStreams")
 	req := require.New(t)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
 
-	instanceName := g.memory("instanceName", must(RandEntityWithRevision("instance"))).(string)
+	instanceName := g.Memory("instanceName", internal.Must(internal.RandEntityWithRevision("instance"))).(string)
 
-	g.generateCluster()
+	g.GenerateCluster()
 
 	g.Run("Creating a streams instance", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -58,11 +60,11 @@ func TestStreamsWithClusters(t *testing.T) {
 			instanceName,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
@@ -72,7 +74,7 @@ func TestStreamsWithClusters(t *testing.T) {
 	})
 
 	g.Run("Create a streams connection with an atlas cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		configFile, err := generateAtlasConnectionConfigFile(g.clusterName)
+		configFile, err := generateAtlasConnectionConfigFile(g.ClusterName)
 		req.NoError(err)
 
 		t.Cleanup(func() {
@@ -92,11 +94,11 @@ func TestStreamsWithClusters(t *testing.T) {
 			instanceName,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		streamsCmd.Env = os.Environ()
-		streamsResp, streamsErr := RunAndGetStdOut(streamsCmd)
+		streamsResp, streamsErr := internal.RunAndGetStdOut(streamsCmd)
 		req.NoError(streamsErr, string(streamsResp))
 
 		var connection atlasv2.StreamsConnection
@@ -116,11 +118,11 @@ func TestStreamsWithClusters(t *testing.T) {
 			"--force",
 			instanceName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 	})
 }

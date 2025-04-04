@@ -69,7 +69,7 @@ func TestSearchNodes(t *testing.T) {
 			"create",
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID,
-			"--file", "data/search_nodes_spec.json",
+			"--file", "testdata/search_nodes_spec.json",
 			"-w",
 			"-o=json",
 		)
@@ -127,7 +127,7 @@ func TestSearchNodes(t *testing.T) {
 			"update",
 			"--clusterName", g.clusterName,
 			"--projectId", g.projectID,
-			"--file", "data/search_nodes_spec_update.json",
+			"--file", "testdata/search_nodes_spec_update.json",
 			"-w",
 			"-o=json",
 		)

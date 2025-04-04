@@ -497,9 +497,9 @@ func (g *atlasE2ETestGenerator) snapshotBaseDir() string {
 	}
 
 	if strings.HasSuffix(dir, "test/e2e") {
-		dir = path.Join(dir, ".snapshots")
+		dir = path.Join(dir, "testdata/.snapshots")
 	} else {
-		dir = path.Join(dir, "test/e2e/.snapshots")
+		dir = path.Join(dir, "test/e2e/testdata/.snapshots")
 	}
 
 	return dir

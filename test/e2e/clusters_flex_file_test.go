@@ -43,7 +43,7 @@ func TestFlexClustersFile(t *testing.T) {
 			clustersEntity,
 			"create",
 			clusterFileName,
-			"--file", "data/create_flex_cluster_test.json",
+			"--file", "testdata/create_flex_cluster_test.json",
 			"-o=json")
 
 		cmd.Env = os.Environ()

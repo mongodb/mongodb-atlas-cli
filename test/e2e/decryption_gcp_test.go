@@ -28,10 +28,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//go:embed decryption/gcp/*
+//go:embed testdata/decryption/fixtures/gcp/*
 var filesGCP embed.FS
 
-const gcpTestsInputDir = "decryption/gcp"
+const gcpTestsInputDir = "testdata/decryption/fixtures/gcp"
 
 func TestDecryptWithGCP(t *testing.T) {
 	_ = newAtlasE2ETestGenerator(t, withSnapshot())

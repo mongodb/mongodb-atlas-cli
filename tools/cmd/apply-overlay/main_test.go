@@ -25,9 +25,9 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".snapshot"))
+	snapshotter := cupaloy.New(cupaloy.SnapshotSubdirectory("testdata/.snapshots"), cupaloy.SnapshotFileExtension(".snapshot"))
 
-	const FixtureDirectory = "./fixtures/"
+	const FixtureDirectory = "./testdata/fixtures/"
 	files, err := os.ReadDir(FixtureDirectory)
 	if err != nil {
 		t.Fatalf("failed to load fixtures: %s", err)

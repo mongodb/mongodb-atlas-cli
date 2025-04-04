@@ -1540,6 +1540,26 @@ tasks:
           E2E_TAGS: atlas,deployments,local,noauth
           E2E_TIMEOUT: 3h
           LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
+  - name: atlas_deployments_local_seed
+    tags: ["e2e","deployments","local","seed"]
+    must_have_test_results: true
+    exec_timeout_secs: 11400 # 3 hours 10 minutes
+    commands:
+      - func: "install gotestsum"
+      - func: "install mongodb database tools"
+      - func: "increase inotify limits"
+      - func: "e2e test"
+        timeout_secs: 11400 # 3 hours 10 minutes
+        vars:
+          MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
+          MONGODB_ATLAS_PROJECT_ID: ${atlas_project_id}
+          MONGODB_ATLAS_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MONGODB_ATLAS_SERVICE: cloud
+          E2E_TAGS: atlas,deployments,local,seed
+          E2E_TIMEOUT: 3h
+          LOCALDEV_IMAGE: artifactory.corp.mongodb.com/dockerhub/mongodb/mongodb-atlas-local
   - name: atlas_deployments_local_nocli_e2e
     tags: ["e2e","deployments","local","nocli"]
     must_have_test_results: true

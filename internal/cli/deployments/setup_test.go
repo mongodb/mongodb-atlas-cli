@@ -300,6 +300,9 @@ func TestSetupOpts_LocalDev_RemoveUnhealthyDeployment(t *testing.T) {
 	// Container is unhealthy
 	deploymentTest.MockContainerEngine.EXPECT().ContainerHealthStatus(ctx, deploymentName).Return(container.DockerHealthcheckStatusUnhealthy, nil).Times(1)
 
+	// Docker logs
+	deploymentTest.MockContainerEngine.EXPECT().ContainerLogs(ctx, deploymentName).Return([]string{"something", "went", "wrong"}, nil).Times(1)
+
 	// Container is removed
 	deploymentTest.MockContainerEngine.EXPECT().ContainerRm(ctx, deploymentName).Return(nil).Times(1)
 

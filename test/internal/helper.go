@@ -113,6 +113,8 @@ const (
 	apiKeyAccessListEntity        = "accessLists"
 	usersEntity                   = "users"
 
+	deletingState = "DELETING"
+
 	maxRetryAttempts   = 10
 	sleepTimeInSeconds = 30
 	cloudgov           = "cloudgov"

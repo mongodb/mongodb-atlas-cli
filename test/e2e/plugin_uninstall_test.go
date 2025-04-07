@@ -37,6 +37,8 @@ func TestPluginUninstall(t *testing.T) {
 }
 
 func runPluginUninstallTest(t *testing.T, g *internal.AtlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string) {
+	t.Helper()
+
 	internal.InstallExamplePlugin(t, cliPath, "latest")
 	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

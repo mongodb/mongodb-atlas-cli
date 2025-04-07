@@ -42,6 +42,8 @@ func TestPluginUpdate(t *testing.T) {
 }
 
 func runPluginUpdateTest(t *testing.T, g *internal.AtlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string, initialVersion string, updateVersion string) {
+	t.Helper()
+
 	internal.InstallExamplePlugin(t, cliPath, initialVersion)
 
 	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

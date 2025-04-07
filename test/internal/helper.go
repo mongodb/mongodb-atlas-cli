@@ -45,7 +45,7 @@ var (
 )
 
 const (
-	//entities
+	// entities
 	eventsEntity                  = "events"
 	clustersEntity                = "clusters"
 	processesEntity               = "processes"
@@ -112,8 +112,6 @@ const (
 	apiKeysEntity                 = "apikeys"
 	apiKeyAccessListEntity        = "accessLists"
 	usersEntity                   = "users"
-
-	deletingState = "DELETING"
 
 	maxRetryAttempts   = 10
 	sleepTimeInSeconds = 30

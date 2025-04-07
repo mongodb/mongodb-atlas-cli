@@ -13,13 +13,14 @@
 // limitations under the License.
 //go:build e2e || (atlas && deployments && local && seed)
 
-package e2e_test
+package e2e
 
 import (
 	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
@@ -30,7 +31,7 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 		dbUserPassword = "testpwd"
 	)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
@@ -49,7 +50,7 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 
 			cmd.Env = os.Environ()
 
-			_, _ = RunAndGetStdOutAndErr(cmd)
+			_, _ = internal.RunAndGetStdOutAndErr(cmd)
 		})
 
 		cmd := exec.Command(cliPath,
@@ -67,7 +68,7 @@ func TestDeploymentsLocalSeedFail(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		_, setupErr := RunAndGetStdOutAndErr(cmd)
+		_, setupErr := internal.RunAndGetStdOutAndErr(cmd)
 		require.Error(t, setupErr, "expected seeding to fail")
 		require.Contains(t, setupErr.Error(), "CATASTROPHIC_SEED_FAILURE_PANIC_DONT_PANIC")
 	})

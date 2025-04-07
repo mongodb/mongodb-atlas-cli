@@ -29,7 +29,7 @@ import (
 func testSpec(t *testing.T, name, specPath string) {
 	t.Helper()
 
-	snapshotter := cupaloy.New(cupaloy.SnapshotFileExtension(".snapshot"))
+	snapshotter := cupaloy.New(cupaloy.SnapshotSubdirectory("testdata/.snapshots"), cupaloy.SnapshotFileExtension(".snapshot"))
 
 	outputFunctions := map[OutputType]func(ctx context.Context, r io.Reader, w io.Writer) error{
 		Commands: convertSpecToAPICommands,
@@ -58,7 +58,7 @@ func testSpec(t *testing.T, name, specPath string) {
 
 // To update snapshots run: UPDATE_SNAPSHOTS=true go test ./...
 func TestSnapshots(t *testing.T) {
-	const FixtureDirectory = "./fixtures/"
+	const FixtureDirectory = "./testdata/fixtures/"
 	files, err := os.ReadDir(FixtureDirectory)
 	if err != nil {
 		t.Fatalf("failed to load fixtures: %s", err)

@@ -26,10 +26,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//go:embed decryption/aws/*
+//go:embed testdata/decryption/fixtures/aws/*
 var filesAWS embed.FS
 
-const awsTestsInputDir = "decryption/aws"
+const awsTestsInputDir = "testdata/decryption/fixtures/aws"
 
 func TestDecryptWithAWS(t *testing.T) {
 	_ = newAtlasE2ETestGenerator(t, withSnapshot())

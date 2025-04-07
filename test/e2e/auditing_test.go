@@ -72,7 +72,7 @@ func TestAuditing(t *testing.T) {
 			"--projectId", g.projectID,
 			"--enabled",
 			"--auditAuthorizationSuccess",
-			"-f", "data/update_auditing.json",
+			"-f", "testdata/update_auditing.json",
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := RunAndGetStdOut(cmd)

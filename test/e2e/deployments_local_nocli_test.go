@@ -28,9 +28,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
-
 	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options" //nolint:importas //unique of this test
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"

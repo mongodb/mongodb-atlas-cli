@@ -45,7 +45,7 @@ var (
 )
 
 const (
-	// entities
+	// entities.
 	eventsEntity                  = "events"
 	clustersEntity                = "clusters"
 	processesEntity               = "processes"
@@ -455,7 +455,7 @@ func RandClusterName() (string, error) {
 }
 
 func RandClusterNameWithPrefix(prefix string) (string, error) {
-	n, err := RandInt(1000)
+	n, err := RandInt(1000) //nolint:mnd // RandInt is used to generate a random number
 	if err != nil {
 		return "", err
 	}
@@ -465,7 +465,7 @@ func RandClusterNameWithPrefix(prefix string) (string, error) {
 		clusterName = fmt.Sprintf("%s-%v-%s", prefix, n, revision)
 	}
 
-	if len(clusterName) > 23 {
+	if len(clusterName) > 23 { //nolint:mnd // internal validation of cluster name
 		clusterName = clusterName[:23]
 	}
 
@@ -477,7 +477,7 @@ func RandClusterNameWithPrefix(prefix string) (string, error) {
 }
 
 func RandIdentityProviderName() (string, error) {
-	n, err := RandInt(1000)
+	n, err := RandInt(1000) //nolint:mnd // RandInt is used to generate a random number
 	if err != nil {
 		return "", err
 	}
@@ -488,7 +488,7 @@ func RandIdentityProviderName() (string, error) {
 }
 
 func RandTeamName() (string, error) {
-	n, err := RandInt(1000)
+	n, err := RandInt(1000) //nolint:mnd // RandInt is used to generate a random number
 	if err != nil {
 		return "", err
 	}
@@ -499,7 +499,7 @@ func RandTeamName() (string, error) {
 }
 
 func RandProjectName() (string, error) {
-	n, err := RandInt(1000)
+	n, err := RandInt(1000) //nolint:mnd // RandInt is used to generate a random number
 	if err != nil {
 		return "", err
 	}
@@ -509,7 +509,7 @@ func RandProjectName() (string, error) {
 		projectName = fmt.Sprintf("%v-%s", n, revision)
 	}
 
-	if len(projectName) > 23 {
+	if len(projectName) > 23 { //nolint:mnd // internal validation of project name
 		projectName = projectName[:23]
 	}
 
@@ -521,7 +521,7 @@ func RandProjectName() (string, error) {
 }
 
 func RandUsername() (string, error) {
-	n, err := RandInt(1000)
+	n, err := RandInt(1000) //nolint:mnd // RandInt is used to generate a random number
 	if err != nil {
 		return "", err
 	}
@@ -534,7 +534,7 @@ func RandTeamNameWithPrefix(prefix string) (string, error) {
 		return "", err
 	}
 	prefixedName := fmt.Sprintf("%s-%s", prefix, name)
-	if len(prefixedName) > 64 {
+	if len(prefixedName) > 64 { //nolint:mnd // internal validation of team name
 		return prefixedName[:64], nil
 	}
 	return prefixedName, nil
@@ -546,14 +546,14 @@ func RandProjectNameWithPrefix(prefix string) (string, error) {
 		return "", err
 	}
 	prefixedName := fmt.Sprintf("%s-%s", prefix, name)
-	if len(prefixedName) > 64 {
+	if len(prefixedName) > 64 { //nolint:mnd // internal validation of project name
 		return prefixedName[:64], nil
 	}
 	return prefixedName, nil
 }
 
 func RandEntityWithRevision(entity string) (string, error) {
-	n, err := RandInt(1000)
+	n, err := RandInt(1000) //nolint:mnd // RandInt is used to generate a random number
 	if err != nil {
 		return "", err
 	}
@@ -973,7 +973,7 @@ func EnsureCluster(t *testing.T, cluster *atlasClustersPinned.AdvancedClusterDes
 	a := assert.New(t)
 	a.Equal(clusterName, cluster.GetName())
 	a.Equal(version, cluster.GetMongoDBMajorVersion())
-	a.InDelta(diskSizeGB, cluster.GetDiskSizeGB(), 0.01)
+	a.InDelta(diskSizeGB, cluster.GetDiskSizeGB(), 0.01) //nolint:mnd // ensure disk size is within 0.01 of expected value
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
@@ -984,7 +984,7 @@ func EnsureFlexCluster(t *testing.T, cluster *atlasv2.FlexClusterDescription2024
 
 	a.True(ok)
 	a.Equal(clusterName, cluster.GetName())
-	a.InDelta(diskSizeGB, setting.GetDiskSizeGB(), 0.01)
+	a.InDelta(diskSizeGB, setting.GetDiskSizeGB(), 0.01) //nolint:mnd // ensure disk size is within 0.01 of expected value
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
@@ -994,7 +994,8 @@ func CreateJSONFile(t *testing.T, data any, path string) {
 	t.Helper()
 	jsonData, err := json.Marshal(data)
 	require.NoError(t, err)
-	require.NoError(t, os.WriteFile(path, jsonData, 0600))
+	const permission = 0600
+	require.NoError(t, os.WriteFile(path, jsonData, permission))
 
 	t.Cleanup(func() {
 		require.NoError(t, os.Remove(path))
@@ -1037,7 +1038,7 @@ func SetupCompliancePolicy(t *testing.T, projectID string, compliancePolicy *atl
 	compliancePolicy.SetAuthorizedUserLastName(authorizedUserLastName)
 	compliancePolicy.SetProjectId(projectID)
 
-	n, err := RandInt(255)
+	n, err := RandInt(255) //nolint:mnd // RandInt is used to generate a random number
 	if err != nil {
 		return nil, fmt.Errorf("could not generate random int for setting up a compliance policy: %w", err)
 	}

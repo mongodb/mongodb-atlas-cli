@@ -24,10 +24,9 @@ import (
 	"testing"
 
 	"github.com/Netflix/go-expect"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
-
 	pseudotty "github.com/creack/pty"
 	"github.com/hinshun/vt10x"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 

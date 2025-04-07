@@ -613,7 +613,8 @@ func (g *AtlasE2ETestGenerator) storeMemory() {
 
 	g.enforceDir(filename)
 
-	if err := os.WriteFile(filename, buf, 0600); err != nil {
+	const permission = 0600
+	if err := os.WriteFile(filename, buf, permission); err != nil {
 		g.t.Fatal(err)
 	}
 }
@@ -672,7 +673,8 @@ func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 	filename := g.snapshotName(r.Request)
 	g.t.Logf("writing snapshot at %q", filename)
 	g.enforceDir(filename)
-	if err := os.WriteFile(filename, out, 0600); err != nil {
+	const permission = 0600
+	if err := os.WriteFile(filename, out, permission); err != nil {
 		g.t.Fatal(err)
 	}
 }

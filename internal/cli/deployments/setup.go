@@ -201,8 +201,11 @@ func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 
 func (opts *SetupOpts) configureContainer(ctx context.Context) error {
 	envVars := map[string]string{
-		"TOOL":            "ATLASCLI",
-		"RUNNER_LOG_FILE": "/dev/stdout",
+		"TOOL": "ATLASCLI",
+	}
+
+	if log.IsDebugLevel() {
+		envVars["RUNNER_LOG_FILE"] = "/dev/stdout"
 	}
 
 	if !config.TelemetryEnabled() {
@@ -258,7 +261,7 @@ func (opts *SetupOpts) configureContainer(ctx context.Context) error {
 	const healthyDeploymentTimeout = 10 * time.Minute
 
 	err = opts.WaitForHealthyDeployment(ctx, healthyDeploymentTimeout)
-	if err != nil {
+	if err != nil && log.IsDebugLevel() {
 		logs, err := opts.ContainerEngine.ContainerLogs(ctx, opts.LocalMongodHostname())
 		if err != nil {
 			_, _ = log.Debugf("Container unhealthy (hostname=%s), failed to get container logs : %s\n", opts.LocalMongodHostname(), err)

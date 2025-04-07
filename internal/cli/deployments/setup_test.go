@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 )
 
 func TestSetupOpts_PostRun(t *testing.T) {
@@ -266,6 +267,7 @@ func TestSetupOpts_LocalDev_RemoveUnhealthyDeployment(t *testing.T) {
 	ctx := context.Background()
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
 	buf := new(bytes.Buffer)
+	log.SetLevel(log.DebugLevel)
 
 	opts := &SetupOpts{
 		DeploymentOpts: *deploymentTest.Opts,

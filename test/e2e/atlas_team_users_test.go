@@ -14,7 +14,7 @@
 
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,28 +23,29 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAtlasTeamUsers(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n := g.memoryRand("rand", 1000)
+	n := g.MemoryRand("rand", 1000)
 
 	teamName := fmt.Sprintf("teams%v", n)
-	teamID, err := createTeam(teamName)
+	teamID, err := internal.CreateTeam(teamName)
 	require.NoError(t, err)
 	defer func() {
-		if e := deleteTeam(teamID); e != nil {
+		if e := internal.DeleteTeam(teamID); e != nil {
 			t.Errorf("error deleting project: %v", e)
 		}
 	}()
 
-	username, userID, err := OrgNUser(1)
+	username, userID, err := internal.OrgNUser(1)
 	require.NoError(t, err)
 
 	g.Run("Add", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -58,7 +59,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 
@@ -83,7 +84,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var teams atlasv2.PaginatedOrgGroup
@@ -101,7 +102,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 			teamID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var teams []atlasv2.PaginatedOrgGroup
@@ -119,7 +120,7 @@ func TestAtlasTeamUsers(t *testing.T) {
 			teamID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)

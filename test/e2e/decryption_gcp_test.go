@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && decrypt)
 
-package e2e_test
+package e2e
 
 import (
 	"embed"
@@ -24,7 +24,8 @@ import (
 	"path"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/e2e/decryption"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal/decryption"
 	"github.com/stretchr/testify/require"
 )
 
@@ -34,10 +35,10 @@ var filesGCP embed.FS
 const gcpTestsInputDir = "testdata/decryption/fixtures/gcp"
 
 func TestDecryptWithGCP(t *testing.T) {
-	_ = newAtlasE2ETestGenerator(t, withSnapshot())
+	_ = internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	req := require.New(t)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
 
 	tmpDir := t.TempDir()
@@ -64,7 +65,7 @@ func TestDecryptWithGCP(t *testing.T) {
 	)
 	cmd.Env = os.Environ()
 
-	gotContents, err := RunAndGetStdOut(cmd)
+	gotContents, err := internal.RunAndGetStdOut(cmd)
 	req.NoError(err, string(gotContents))
 
 	decryption.LogsAreEqual(t, expectedContents, gotContents)

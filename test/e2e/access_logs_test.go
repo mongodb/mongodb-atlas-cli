@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && logs)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -21,31 +21,32 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAccessLogs(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	req := require.New(t)
 
-	g.generateProjectAndCluster("accessLogs")
+	g.GenerateProjectAndCluster("accessLogs")
 
-	h, err := g.getHostname()
+	h, err := g.GetHostname()
 	req.NoError(err)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
 
 	g.Run("List by clusterName", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			accessLogsEntity,
 			"ls",
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var entries *atlasv2.MongoDBAccessLogsList
 		require.NoError(t, json.Unmarshal(resp, &entries))
@@ -56,10 +57,10 @@ func TestAccessLogs(t *testing.T) {
 			accessLogsEntity,
 			"ls",
 			"--hostname", h,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var entries *atlasv2.MongoDBAccessLogsList
 		require.NoError(t, json.Unmarshal(resp, &entries))

@@ -14,7 +14,7 @@
 
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,24 +23,25 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAtlasProjectTeams(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.generateProject("teams")
+	g.GenerateProject("teams")
 
-	n := g.memoryRand("rand", 1000)
+	n := g.MemoryRand("rand", 1000)
 	teamName := fmt.Sprintf("e2e-teams-%v", n)
-	teamID, err := createTeam(teamName)
+	teamID, err := internal.CreateTeam(teamName)
 	require.NoError(t, err)
 	t.Cleanup(func() {
-		e := deleteTeam(teamID)
+		e := internal.DeleteTeam(teamID)
 		require.NoError(t, e)
 	})
 
@@ -53,10 +54,10 @@ func TestAtlasProjectTeams(t *testing.T) {
 			"--role",
 			"GROUP_READ_ONLY",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
@@ -83,10 +84,10 @@ func TestAtlasProjectTeams(t *testing.T) {
 			"--role",
 			roleName2,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
@@ -106,10 +107,10 @@ func TestAtlasProjectTeams(t *testing.T) {
 			teamsEntity,
 			"ls",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 
@@ -126,9 +127,9 @@ func TestAtlasProjectTeams(t *testing.T) {
 			teamID,
 			"--force",
 			"--projectId",
-			g.projectID)
+			g.ProjectID)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Team '%s' deleted\n", teamID)

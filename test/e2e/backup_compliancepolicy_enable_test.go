@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && backup && compliancepolicy)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,25 +22,26 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestBackupCompliancePolicyEnable(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	g.generateProject("enable-compliance-policy")
+	g.GenerateProject("enable-compliance-policy")
 
 	cmd := exec.Command(cliPath,
 		backupsEntity,
 		compliancePolicyEntity,
 		"enable",
 		"--projectId",
-		g.projectID,
+		g.ProjectID,
 		"--authorizedUserFirstName",
 		authorizedUserFirstName,
 		"--authorizedUserLastName",
@@ -51,7 +52,7 @@ func TestBackupCompliancePolicyEnable(t *testing.T) {
 		"--force",
 	)
 	cmd.Env = os.Environ()
-	resp, outputErr := RunAndGetStdOut(cmd)
+	resp, outputErr := internal.RunAndGetStdOut(cmd)
 	r.NoError(outputErr, string(resp))
 	var result atlasv2.DataProtectionSettings20231001
 	r.NoError(json.Unmarshal(resp, &result), string(resp))

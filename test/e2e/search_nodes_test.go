@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && search_nodes)
 
-package e2e_test
+package e2e
 
 import (
 	"bytes"
@@ -25,6 +25,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
@@ -33,15 +34,15 @@ import (
 const minSearchNodesMDBVersion = "6.0"
 
 func TestSearchNodes(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	g.generateProject("searchNodes")
-	g.tier = tierM20
-	g.mDBVer = minSearchNodesMDBVersion
-	g.generateCluster()
+	g.GenerateProject("searchNodes")
+	g.Tier = tierM20
+	g.MDBVer = minSearchNodesMDBVersion
+	g.GenerateCluster()
 
 	g.Run("Verify no search node setup yet", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -49,8 +50,8 @@ func TestSearchNodes(t *testing.T) {
 			searchEntity,
 			nodesEntity,
 			"list",
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json",
 		)
 
@@ -67,22 +68,22 @@ func TestSearchNodes(t *testing.T) {
 			searchEntity,
 			nodesEntity,
 			"create",
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"--file", "testdata/search_nodes_spec.json",
 			"-w",
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
 		require.NoError(t, err, resp)
 		var searchNode atlasv2.ApiSearchDeploymentResponse
 		require.NoError(t, json.Unmarshal(resp, &searchNode))
 
-		assert.Equal(t, g.projectID, searchNode.GetGroupId())
+		assert.Equal(t, g.ProjectID, searchNode.GetGroupId())
 		assert.Equal(t, []atlasv2.ApiSearchDeploymentSpec{
 			{
 				InstanceSize: "S30_LOWCPU_NVME",
@@ -97,20 +98,20 @@ func TestSearchNodes(t *testing.T) {
 			searchEntity,
 			nodesEntity,
 			"list",
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
 		require.NoError(t, err, resp)
 		var searchNode atlasv2.ApiSearchDeploymentResponse
 		require.NoError(t, json.Unmarshal(resp, &searchNode))
 
-		assert.Equal(t, g.projectID, searchNode.GetGroupId())
+		assert.Equal(t, g.ProjectID, searchNode.GetGroupId())
 		assert.Equal(t, []atlasv2.ApiSearchDeploymentSpec{
 			{
 				InstanceSize: "S30_LOWCPU_NVME",
@@ -125,22 +126,22 @@ func TestSearchNodes(t *testing.T) {
 			searchEntity,
 			nodesEntity,
 			"update",
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"--file", "testdata/search_nodes_spec_update.json",
 			"-w",
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
 		require.NoError(t, err, resp)
 		var searchNode atlasv2.ApiSearchDeploymentResponse
 		require.NoError(t, json.Unmarshal(resp, &searchNode))
 
-		assert.Equal(t, g.projectID, searchNode.GetGroupId())
+		assert.Equal(t, g.ProjectID, searchNode.GetGroupId())
 		assert.Equal(t, []atlasv2.ApiSearchDeploymentSpec{
 			{
 				InstanceSize: "S20_HIGHCPU_NVME",
@@ -155,20 +156,20 @@ func TestSearchNodes(t *testing.T) {
 			searchEntity,
 			nodesEntity,
 			"list",
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		resp = bytes.TrimLeft(resp, ".")
 
 		require.NoError(t, err, resp)
 		var searchNode atlasv2.ApiSearchDeploymentResponse
 		require.NoError(t, json.Unmarshal(resp, &searchNode))
 
-		assert.Equal(t, g.projectID, searchNode.GetGroupId())
+		assert.Equal(t, g.ProjectID, searchNode.GetGroupId())
 		assert.Equal(t, []atlasv2.ApiSearchDeploymentSpec{
 			{
 				InstanceSize: "S20_HIGHCPU_NVME",
@@ -183,19 +184,19 @@ func TestSearchNodes(t *testing.T) {
 			searchEntity,
 			nodesEntity,
 			"delete",
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"--force",
 			"-o=json",
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		respStr := strings.TrimLeft(string(resp), ".")
 
 		require.NoError(t, err, respStr)
 
-		expected := fmt.Sprintf("\"%s\"\n", g.clusterName)
+		expected := fmt.Sprintf("\"%s\"\n", g.ClusterName)
 		assert.Equal(t, expected, respStr)
 	})
 }

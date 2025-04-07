@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && onlinearchive)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -25,23 +25,24 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestOnlineArchives(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProjectAndCluster("onlineArchives")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProjectAndCluster("onlineArchives")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
 	var archiveID string
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		archiveID = createOnlineArchive(t, cliPath, g.projectID, g.clusterName)
+		archiveID = createOnlineArchive(t, cliPath, g.ProjectID, g.ClusterName)
 	})
 
 	if archiveID == "" {
@@ -49,31 +50,31 @@ func TestOnlineArchives(t *testing.T) {
 	}
 
 	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		describeOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
+		describeOnlineArchive(t, cliPath, g.ProjectID, g.ClusterName, archiveID)
 	})
 
 	g.Run("List", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		listOnlineArchives(t, cliPath, g.projectID, g.clusterName)
+		listOnlineArchives(t, cliPath, g.ProjectID, g.ClusterName)
 	})
 
 	g.Run("Pause", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		pauseOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
+		pauseOnlineArchive(t, cliPath, g.ProjectID, g.ClusterName, archiveID)
 	})
 
 	g.Run("Start", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		startOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
+		startOnlineArchive(t, cliPath, g.ProjectID, g.ClusterName, archiveID)
 	})
 
 	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		updateOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
+		updateOnlineArchive(t, cliPath, g.ProjectID, g.ClusterName, archiveID)
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		deleteOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
+		deleteOnlineArchive(t, cliPath, g.ProjectID, g.ClusterName, archiveID)
 	})
 
 	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		watchOnlineArchive(t, cliPath, g.projectID, g.clusterName, archiveID)
+		watchOnlineArchive(t, cliPath, g.ProjectID, g.ClusterName, archiveID)
 	})
 }
 
@@ -89,7 +90,7 @@ func deleteOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 		"--force")
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	expected := fmt.Sprintf("Archive '%s' deleted\n", archiveID)
 	assert.Equal(t, expected, string(resp))
@@ -164,7 +165,7 @@ func updateOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiveI
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
@@ -187,7 +188,7 @@ func describeOnlineArchive(t *testing.T, cliPath, projectID, clusterName, archiv
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
@@ -210,7 +211,7 @@ func listOnlineArchives(t *testing.T, cliPath, projectID, clusterName string) {
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}
@@ -238,7 +239,7 @@ func createOnlineArchive(t *testing.T, cliPath, projectID, clusterName string) s
 		"-o=json")
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	if err != nil {
 		t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 	}

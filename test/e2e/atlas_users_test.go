@@ -14,7 +14,7 @@
 
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,14 +23,15 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAtlasUsers(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 	var (
 		username string
@@ -45,7 +46,7 @@ func TestAtlasUsers(t *testing.T) {
 			"list",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var users atlasv2.PaginatedGroupUser
@@ -63,7 +64,7 @@ func TestAtlasUsers(t *testing.T) {
 			username,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudAppUser
@@ -86,7 +87,7 @@ func TestAtlasUsers(t *testing.T) {
 			userID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudAppUser
@@ -95,11 +96,11 @@ func TestAtlasUsers(t *testing.T) {
 	})
 
 	g.Run("Invite", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		if IsGov() {
+		if internal.IsGov() {
 			t.Skip("Skipping test in Gov environment")
 		}
 
-		n := g.memoryRand("rand", 10000)
+		n := g.MemoryRand("rand", 10000)
 		emailUser := fmt.Sprintf("cli-test-%v@moongodb.com", n)
 		if revision, ok := os.LookupEnv("revision"); ok {
 			emailUser = fmt.Sprintf("cli-test-%v-%s@moongodb.com", n, revision)
@@ -117,7 +118,7 @@ func TestAtlasUsers(t *testing.T) {
 			"--orgRole", orgID+":ORG_READ_ONLY",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var user atlasv2.CloudAppUser

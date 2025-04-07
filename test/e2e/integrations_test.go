@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,25 +22,26 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestIntegrations(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("integrations")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("integrations")
 
-	n := g.memoryRand("rand", 255)
+	n := g.MemoryRand("rand", 255)
 	key := "51c0ef87e9951c3e147accf0e12" + n.String()
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("Create DATADOG", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.memoryRand("datadog_rand", 9)
+		n := g.MemoryRand("datadog_rand", 9)
 		datadogKey := "000000000000000000000000000000" + n.String() + n.String()
-		if IsGov() {
+		if internal.IsGov() {
 			t.Skip("Skipping DATADOG integration test, cloudgov does not have an available datadog region")
 		}
 		cmd := exec.Command(cliPath,
@@ -50,10 +51,10 @@ func TestIntegrations(t *testing.T) {
 			"--apiKey",
 			datadogKey,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -63,7 +64,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	g.Run("Create OPSGENIE", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.memoryRand("opsgenie_rand", 9)
+		n := g.MemoryRand("opsgenie_rand", 9)
 		opsGenieKey := "00000000-aaaa-2222-bbbb-3333333333" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
@@ -72,10 +73,10 @@ func TestIntegrations(t *testing.T) {
 			"--apiKey",
 			opsGenieKey,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -86,7 +87,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	g.Run("Create PAGER_DUTY", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.memoryRand("pager_duty_rand", 9)
+		n := g.MemoryRand("pager_duty_rand", 9)
 		pagerDutyKey := "000000000000000000000000000000" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
@@ -95,10 +96,10 @@ func TestIntegrations(t *testing.T) {
 			"--serviceKey",
 			pagerDutyKey,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -109,7 +110,7 @@ func TestIntegrations(t *testing.T) {
 	})
 
 	g.Run("Create VICTOR_OPS", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.memoryRand("victor_ops_rand", 9)
+		n := g.MemoryRand("victor_ops_rand", 9)
 		victorOpsKey := "fa07bbc8-eab2-4085-81af-daed47dc1c" + n.String() + n.String()
 		cmd := exec.Command(cliPath,
 			integrationsEntity,
@@ -120,10 +121,10 @@ func TestIntegrations(t *testing.T) {
 			"--routingKey",
 			"test",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -143,10 +144,10 @@ func TestIntegrations(t *testing.T) {
 			"--secret",
 			key,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -161,10 +162,10 @@ func TestIntegrations(t *testing.T) {
 			integrationsEntity,
 			"ls",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -179,10 +180,10 @@ func TestIntegrations(t *testing.T) {
 			"describe",
 			webhookEntity,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -198,13 +199,28 @@ func TestIntegrations(t *testing.T) {
 			webhookEntity,
 			"--force",
 			"--projectId",
-			g.projectID)
+			g.ProjectID)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Integration '%s' deleted\n", webhookEntity)
 		a.Equal(expected, string(resp))
 	})
+}
+
+func getIntegrationType(val atlasv2.ThirdPartyIntegration) string {
+	return val.GetType()
+}
+
+func integrationExists(name string, thirdPartyIntegrations atlasv2.PaginatedIntegration) bool {
+	services := thirdPartyIntegrations.GetResults()
+	for i := range services {
+		iType := getIntegrationType(services[i])
+		if iType == name {
+			return true
+		}
+	}
+	return false
 }

@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && plugin && run)
 
-package e2e_test
+package e2e
 
 import (
 	"fmt"
@@ -26,28 +26,29 @@ import (
 	"github.com/Netflix/go-expect"
 	pseudotty "github.com/creack/pty"
 	"github.com/hinshun/vt10x"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
 func TestPluginRun(t *testing.T) {
-	_ = tempConfigFolder(t)
+	_ = internal.TempConfigFolder(t)
 
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	cmd := exec.Command(cliPath,
 		"plugin",
 		"install",
 		"mongodb/atlas-cli-plugin-example")
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	g.Run("Hello", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"example",
 			"hello")
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -63,7 +64,7 @@ func TestPluginRun(t *testing.T) {
 			"example",
 			"echo",
 			echoString)
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}
@@ -83,7 +84,7 @@ func TestPluginRun(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			"example",
 			"printenv")
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		if err != nil {
 			t.Fatalf("unexpected error: %v, resp: %v", err, string(resp))
 		}

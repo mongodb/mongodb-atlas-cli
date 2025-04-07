@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && deployments && local && nocli)
 
-package e2e_test
+package e2e
 
 import (
 	"bytes"
@@ -29,6 +29,7 @@ import (
 	"testing"
 
 	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options" //nolint:importas //unique of this test
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
@@ -43,7 +44,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 		dbUserPassword = "testpwd"
 	)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
@@ -66,7 +67,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 			"pull",
 			image,
 		)
-		r, setupErr := RunAndGetStdOut(cmd)
+		r, setupErr := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, setupErr, string(r))
 	})
 
@@ -83,7 +84,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, setupErr := RunAndGetStdOut(cmd)
+		r, setupErr := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, setupErr, string(r))
 	})
 
@@ -99,7 +100,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, delErr := RunAndGetStdOut(cmd)
+		r, delErr := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, delErr, string(r))
 	})
 
@@ -113,7 +114,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		o, e, err := splitOutput(cmd)
+		o, e, err := internal.SplitOutput(cmd)
 		require.NoError(t, err, e)
 
 		outputLines := strings.Split(o, "\n")
@@ -147,7 +148,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := RunAndGetStdOut(cmd)
+		r, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
 
 		connectionString = strings.TrimSpace(string(r))
@@ -178,7 +179,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := RunAndGetStdOut(cmd)
+		r, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
 	})
 
@@ -208,7 +209,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := RunAndGetStdOut(cmd)
+		r, err := internal.RunAndGetStdOut(cmd)
 		out := string(r)
 		req.NoError(err, out)
 		assert.Contains(t, out, "Search index created with ID:")
@@ -235,7 +236,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := RunAndGetStdOut(cmd)
+		r, err := internal.RunAndGetStdOut(cmd)
 		out := string(r)
 		require.NoError(t, err, out)
 		assert.Contains(t, out, "Search index created with ID:")
@@ -264,7 +265,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 		)
 
 		cmd.Env = os.Environ()
-		o, e, err := splitOutput(cmd)
+		o, e, err := internal.SplitOutput(cmd)
 		req.NoError(err, e)
 		assert.Contains(t, o, searchIndexName)
 
@@ -292,7 +293,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 
 		cmd.Env = os.Environ()
 
-		r, err := RunAndGetStdOut(cmd)
+		r, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(r))
 	})
 

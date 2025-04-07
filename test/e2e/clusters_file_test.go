@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && clusters && file)
 
-package e2e_test
+package e2e
 
 import (
 	"bytes"
@@ -24,22 +24,23 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestClustersFile(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("clustersFile")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("clustersFile")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterFileName := g.memory("clusterFileName", must(RandClusterName())).(string)
+	clusterFileName := g.Memory("clusterFileName", internal.Must(internal.RandClusterName())).(string)
 
-	mdbVersion, err := MongoDBMajorVersion()
+	mdbVersion, err := internal.MongoDBMajorVersion()
 	req.NoError(err)
 
 	clusterFile, err := generateClusterFile(mdbVersion)
@@ -55,27 +56,27 @@ func TestClustersFile(t *testing.T) {
 			"create",
 			clusterFileName,
 			"--file", clusterFile,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster atlasClustersPinned.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &cluster))
 
-		ensureCluster(t, &cluster, clusterFileName, mdbVersion, 30, false)
+		internal.EnsureCluster(t, &cluster, clusterFileName, mdbVersion, 30, false)
 	})
 
 	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"watch",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			clusterFileName,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 		assert.Contains(t, string(resp), "Cluster available")
 	})
@@ -88,10 +89,10 @@ func TestClustersFile(t *testing.T) {
 			"create",
 			"--clusterName", clusterFileName,
 			"--file=testdata/create_partial_index.json",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -103,10 +104,10 @@ func TestClustersFile(t *testing.T) {
 			"create",
 			"--clusterName", clusterFileName,
 			"--file=testdata/create_sparse_index.json",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -118,10 +119,10 @@ func TestClustersFile(t *testing.T) {
 			"create",
 			"--clusterName", clusterFileName,
 			"--file=testdata/create_2dspere_index.json",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -134,7 +135,7 @@ func TestClustersFile(t *testing.T) {
 			"create",
 			"--clusterName", clusterFileName,
 			"--file=testdata/create_index_test-unknown-fields.json",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
@@ -149,17 +150,17 @@ func TestClustersFile(t *testing.T) {
 			"update",
 			clusterFileName,
 			"--file=testdata/update_cluster_test.json",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster atlasClustersPinned.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &cluster))
 		t.Logf("%v\n", cluster)
-		ensureCluster(t, &cluster, clusterFileName, mdbVersion, 40, false)
+		internal.EnsureCluster(t, &cluster, clusterFileName, mdbVersion, 40, false)
 		assert.Empty(t, cluster.GetTags())
 	})
 
@@ -169,17 +170,17 @@ func TestClustersFile(t *testing.T) {
 			clustersEntity,
 			"delete",
 			clusterFileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", clusterFileName)
 		assert.Equal(t, expected, string(resp))
 	})
 
-	if skipCleanup() {
+	if internal.SkipCleanup() {
 		return
 	}
 
@@ -188,12 +189,12 @@ func TestClustersFile(t *testing.T) {
 			clustersEntity,
 			"watch",
 			clusterFileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
-		resp, _ := RunAndGetStdOut(cmd)
+		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }
@@ -207,7 +208,7 @@ func generateClusterFile(mdbVersion string) (string, error) {
 
 	templateFile := "testdata/create_cluster_test.json"
 
-	if IsGov() {
+	if internal.IsGov() {
 		templateFile = "testdata/create_cluster_gov_test.json"
 	}
 

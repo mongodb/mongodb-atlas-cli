@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && clusters && m0)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,20 +22,21 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestClustersM0Flags(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("clustersM0")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("clustersM0")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
+	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -46,17 +47,17 @@ func TestClustersM0Flags(t *testing.T) {
 			"--members=3",
 			"--tier", tierM0,
 			"--provider", e2eClusterProvider,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster *atlasClustersPinned.AdvancedClusterDescription
 		err = json.Unmarshal(resp, &cluster)
 		req.NoError(err)
 
-		ensureCluster(t, cluster, clusterName, "8.0", 0.5, false)
+		internal.EnsureCluster(t, cluster, clusterName, "8.0", 0.5, false)
 	})
 
 	g.Run("Watch", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -64,10 +65,10 @@ func TestClustersM0Flags(t *testing.T) {
 			clustersEntity,
 			"watch",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		a := assert.New(t)
@@ -79,11 +80,11 @@ func TestClustersM0Flags(t *testing.T) {
 			clustersEntity,
 			"describe",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster atlasClustersPinned.AdvancedClusterDescription
@@ -100,10 +101,10 @@ func TestClustersM0Flags(t *testing.T) {
 			"delete",
 			clusterName,
 			"--force",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", clusterName)
@@ -111,7 +112,7 @@ func TestClustersM0Flags(t *testing.T) {
 		a.Equal(expected, string(resp))
 	})
 
-	if skipCleanup() {
+	if internal.SkipCleanup() {
 		return
 	}
 
@@ -120,12 +121,12 @@ func TestClustersM0Flags(t *testing.T) {
 			clustersEntity,
 			"watch",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
-		resp, _ := RunAndGetStdOut(cmd)
+		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

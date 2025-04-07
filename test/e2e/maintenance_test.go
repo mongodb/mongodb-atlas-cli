@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -21,16 +21,17 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestMaintenanceWindows(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("maintenance")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("maintenance")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -42,9 +43,9 @@ func TestMaintenanceWindows(t *testing.T) {
 			"--hourOfDay",
 			"1",
 			"--projectId",
-			g.projectID)
+			g.ProjectID)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window updated.\n"
 		assert.Equal(t, expected, string(resp))
@@ -57,9 +58,9 @@ func TestMaintenanceWindows(t *testing.T) {
 			"-o",
 			"json",
 			"--projectId",
-			g.projectID)
+			g.ProjectID)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var maintenanceWindow atlasv2.GroupMaintenanceWindow
@@ -75,9 +76,9 @@ func TestMaintenanceWindows(t *testing.T) {
 			"clear",
 			"--force",
 			"--projectId",
-			g.projectID)
+			g.ProjectID)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := "Maintenance window removed.\n"
 		assert.Equal(t, expected, string(resp))

@@ -14,41 +14,43 @@
 
 //go:build e2e || (atlas && plugin && uninstall)
 
-package e2e_test
+package e2e
 
 import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
 func TestPluginUninstall(t *testing.T) {
-	_ = tempConfigFolder(t)
+	_ = internal.TempConfigFolder(t)
 
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	runPluginUninstallTest(g, cliPath, "Uninstall Successful with repository values", false, examplePluginRepository)
-	runPluginUninstallTest(g, cliPath, "Uninstall Successful with plugin name", false, examplePluginName)
-	runPluginUninstallTest(g, cliPath, "Plugin could not be found", true, "invalid plugin")
+	runPluginUninstallTest(t, g, cliPath, "Uninstall Successful with repository values", false, examplePluginRepository)
+	runPluginUninstallTest(t, g, cliPath, "Uninstall Successful with plugin name", false, examplePluginName)
+	runPluginUninstallTest(t, g, cliPath, "Plugin could not be found", true, "invalid plugin")
 }
 
-func runPluginUninstallTest(g *atlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string) {
-	g.t.Helper()
-	installExamplePlugin(g.t, cliPath, "latest")
+func runPluginUninstallTest(t *testing.T, g *internal.AtlasE2ETestGenerator, cliPath string, testName string, requireError bool, pluginValue string) {
+	t.Helper()
+
+	internal.InstallExamplePlugin(t, cliPath, "latest")
 	g.Run(testName, func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			"plugin",
 			"uninstall",
 			pluginValue)
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		if requireError {
 			require.Error(t, err, string(resp))
 		} else {
 			require.NoError(t, err, string(resp))
 		}
 	})
-	deleteAllPlugins(g.t)
+	internal.DeleteAllPlugins(t)
 }

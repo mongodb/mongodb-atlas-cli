@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -21,6 +21,7 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
@@ -29,10 +30,10 @@ import (
 const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("accessRoles")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("accessRoles")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -42,10 +43,10 @@ func TestAccessRoles(t *testing.T) {
 			awsEntity,
 			"create",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var iamRole atlasv2.CloudProviderAccessRole
@@ -59,10 +60,10 @@ func TestAccessRoles(t *testing.T) {
 			accessRolesEntity,
 			"list",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var roles atlasv2.CloudProviderAccessRoles
 		require.NoError(t, json.Unmarshal(resp, &roles))

@@ -15,7 +15,7 @@
 
 // TODO: fix the test and add snapshots
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -24,17 +24,18 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestProjectSettings(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.generateProject("settings")
+	g.GenerateProject("settings")
 
 	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -42,10 +43,10 @@ func TestProjectSettings(t *testing.T) {
 			settingsEntity,
 			"get",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var settings map[string]any
 		if err := json.Unmarshal(resp, &settings); err != nil {
@@ -69,10 +70,10 @@ func TestProjectSettings(t *testing.T) {
 				"update",
 				"--disableCollectDatabaseSpecificsStatistics",
 				"--projectId",
-				g.projectID,
+				g.ProjectID,
 				"-o=json")
 			cmd.Env = os.Environ()
-			resp, err := RunAndGetStdOut(cmd)
+			resp, err := internal.RunAndGetStdOut(cmd)
 			require.NoError(t, err, string(resp))
 			require.NoError(t, json.Unmarshal(resp, &settings))
 

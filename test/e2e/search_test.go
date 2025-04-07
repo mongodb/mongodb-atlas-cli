@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && search)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -24,6 +24,7 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
@@ -32,14 +33,14 @@ import (
 const analyzer = "lucene.simple"
 
 func TestSearch(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProjectAndCluster("search")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProjectAndCluster("search")
 	r := require.New(t)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	r.NoError(err)
 
-	n := g.memoryRand("rand", 1000)
+	n := g.MemoryRand("rand", 1000)
 	indexName := fmt.Sprintf("index-%v", n)
 	var indexID string
 
@@ -48,11 +49,11 @@ func TestSearch(t *testing.T) {
 			clustersEntity,
 			"sampleData",
 			"load",
-			g.clusterName,
-			"--projectId", g.projectID,
+			g.ClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, resp)
 		var r *atlasv2.SampleDatasetStatus
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -62,9 +63,9 @@ func TestSearch(t *testing.T) {
 			"sampleData",
 			"watch",
 			r.GetId(),
-			"--projectId", g.projectID)
+			"--projectId", g.ProjectID)
 		cmd.Env = os.Environ()
-		resp, err = RunAndGetStdOut(cmd)
+		resp, err = internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, resp)
 	})
 
@@ -97,14 +98,14 @@ func TestSearch(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--file",
 			fileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -119,11 +120,11 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"describe",
 			indexID,
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -162,14 +163,14 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"update",
 			indexID,
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"--file",
 			fileName,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index *atlasv2.SearchIndexResponse
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -186,11 +187,11 @@ func TestSearch(t *testing.T) {
 			indexEntity,
 			"delete",
 			indexID,
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Index '%s' deleted\n", indexID)
 		assert.Equal(t, expected, string(resp))
@@ -248,14 +249,14 @@ func TestSearch(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--file",
 			fileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -351,14 +352,14 @@ func TestSearch(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--file",
 			fileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -366,7 +367,7 @@ func TestSearch(t *testing.T) {
 	})
 
 	g.Run("Create array mapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.memoryRand("arrayRand", 1000)
+		n := g.MemoryRand("arrayRand", 1000)
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
@@ -410,14 +411,14 @@ func TestSearch(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--file",
 			fileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -430,14 +431,14 @@ func TestSearch(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"list",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--db=sample_mflix",
 			"--collection=movies",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var indexes []atlasv2.ClusterSearchIndex
@@ -447,14 +448,14 @@ func TestSearch(t *testing.T) {
 }
 
 func TestSearchDeprecated(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProjectAndCluster("search")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProjectAndCluster("search")
 	r := require.New(t)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	r.NoError(err)
 
-	n := g.memoryRand("rand", 1000)
+	n := g.MemoryRand("rand", 1000)
 	indexName := fmt.Sprintf("index-%v", n)
 	var indexID string
 
@@ -463,11 +464,11 @@ func TestSearchDeprecated(t *testing.T) {
 			clustersEntity,
 			"sampleData",
 			"load",
-			g.clusterName,
-			"--projectId", g.projectID,
+			g.ClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, resp)
 		var r *atlasv2.SampleDatasetStatus
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -477,7 +478,7 @@ func TestSearchDeprecated(t *testing.T) {
 			"sampleData",
 			"watch",
 			r.GetId(),
-			"--projectId", g.projectID)
+			"--projectId", g.ProjectID)
 		cmd.Env = os.Environ()
 		require.NoError(t, cmd.Run())
 	})
@@ -509,14 +510,14 @@ func TestSearchDeprecated(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--file",
 			fileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -531,11 +532,11 @@ func TestSearchDeprecated(t *testing.T) {
 			indexEntity,
 			"describe",
 			indexID,
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -572,14 +573,14 @@ func TestSearchDeprecated(t *testing.T) {
 			indexEntity,
 			"update",
 			indexID,
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"--file",
 			fileName,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -595,11 +596,11 @@ func TestSearchDeprecated(t *testing.T) {
 			indexEntity,
 			"delete",
 			indexID,
-			"--clusterName", g.clusterName,
-			"--projectId", g.projectID,
+			"--clusterName", g.ClusterName,
+			"--projectId", g.ProjectID,
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("Index '%s' deleted\n", indexID)
 		assert.Equal(t, expected, string(resp))
@@ -655,14 +656,14 @@ func TestSearchDeprecated(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--file",
 			fileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -758,14 +759,14 @@ func TestSearchDeprecated(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--file",
 			fileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -773,7 +774,7 @@ func TestSearchDeprecated(t *testing.T) {
 	})
 
 	g.Run("Create array mapping", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		n := g.memoryRand("arrayRand", 1000)
+		n := g.MemoryRand("arrayRand", 1000)
 		r.NoError(err)
 		indexName := fmt.Sprintf("index-array-%v", n)
 		fileName := fmt.Sprintf("create_index_search_test-array-%v.json", n)
@@ -814,14 +815,14 @@ func TestSearchDeprecated(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"create",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--file",
 			fileName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var index atlasv2.ClusterSearchIndex
 		require.NoError(t, json.Unmarshal(resp, &index))
@@ -834,14 +835,14 @@ func TestSearchDeprecated(t *testing.T) {
 			searchEntity,
 			indexEntity,
 			"list",
-			"--clusterName", g.clusterName,
+			"--clusterName", g.ClusterName,
 			"--db=sample_mflix",
 			"--collection=movies",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var indexes []atlasv2.ClusterSearchIndex

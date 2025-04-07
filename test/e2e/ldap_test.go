@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && ldap)
 
-package e2e_test
+package e2e
 
 import (
 	"bytes"
@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
@@ -35,10 +36,10 @@ const (
 )
 
 func TestLDAPWithFlags(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProjectAndCluster("ldap")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProjectAndCluster("ldap")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var requestID string
@@ -55,7 +56,7 @@ func TestLDAPWithFlags(t *testing.T) {
 			"cn=admin,dc=example,dc=org",
 			"--bindPassword",
 			ldapBindPassword,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o",
 			"json")
 
@@ -72,10 +73,10 @@ func TestLDAPWithFlags(t *testing.T) {
 			"status",
 			"watch",
 			requestID,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		assert.Contains(t, string(resp), "LDAP Configuration request completed.")
 	})
@@ -87,12 +88,12 @@ func TestLDAPWithFlags(t *testing.T) {
 			"verify",
 			"status",
 			requestID,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o",
 			"json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -118,7 +119,7 @@ func TestLDAPWithFlags(t *testing.T) {
 			"(.+)@ENGINEERING.EXAMPLE.COM",
 			"--mappingSubstitution",
 			"cn={0},ou=engineering,dc=example,dc=com",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o",
 			"json",
 		)
@@ -131,11 +132,11 @@ func TestLDAPWithFlags(t *testing.T) {
 			securityEntity,
 			ldapEntity,
 			"get",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o",
 			"json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		a := assert.New(t)
@@ -145,15 +146,15 @@ func TestLDAPWithFlags(t *testing.T) {
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		testLDAPDelete(t, cliPath, g.projectID)
+		testLDAPDelete(t, cliPath, g.ProjectID)
 	})
 }
 
 func TestLDAPWithStdin(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProjectAndCluster("ldap")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProjectAndCluster("ldap")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var requestID string
@@ -169,7 +170,7 @@ func TestLDAPWithStdin(t *testing.T) {
 			ldapPort,
 			"--bindUsername",
 			"cn=admin,dc=example,dc=org",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o",
 			"json")
 
@@ -196,7 +197,7 @@ func TestLDAPWithStdin(t *testing.T) {
 			"(.+)@ENGINEERING.EXAMPLE.COM",
 			"--mappingSubstitution",
 			"cn={0},ou=engineering,dc=example,dc=com",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o",
 			"json",
 		)
@@ -208,7 +209,7 @@ func TestLDAPWithStdin(t *testing.T) {
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		testLDAPDelete(t, cliPath, g.projectID)
+		testLDAPDelete(t, cliPath, g.ProjectID)
 	})
 }
 
@@ -222,7 +223,7 @@ func testLDAPDelete(t *testing.T, cliPath, projectID string) {
 		"--projectId", projectID,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	assert.Contains(t, string(resp), "LDAP configuration userToDNMapping deleted")
 }
@@ -231,7 +232,7 @@ func testLDAPVerifyCmd(t *testing.T, cmd *exec.Cmd) string {
 	t.Helper()
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	a := assert.New(t)
@@ -245,7 +246,7 @@ func testLDAPSaveCmd(t *testing.T, cmd *exec.Cmd) {
 	t.Helper()
 
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 
 	a := assert.New(t)

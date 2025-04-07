@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && streams)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -24,26 +24,27 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestStreams(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	if IsGov() {
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	if internal.IsGov() {
 		t.Skip("Skipping Streams integration test, Streams processing is not enabled in cloudgov")
 	}
 
-	g.generateProject("atlasStreams")
+	g.GenerateProject("atlasStreams")
 	req := require.New(t)
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req.NoError(err)
 
-	instanceName := g.memory("instanceName", must(RandEntityWithRevision("instance"))).(string)
+	instanceName := g.Memory("instanceName", internal.Must(internal.RandEntityWithRevision("instance"))).(string)
 
-	connectionName := g.memory("connectionName", must(RandEntityWithRevision("connection"))).(string)
+	connectionName := g.Memory("connectionName", internal.Must(internal.RandEntityWithRevision("connection"))).(string)
 
 	g.Run("List all streams in the e2e project", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -52,11 +53,11 @@ func TestStreams(t *testing.T) {
 			"list",
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instances atlasv2.PaginatedApiStreamsTenant
@@ -80,11 +81,11 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
@@ -107,11 +108,11 @@ func TestStreams(t *testing.T) {
 			strconv.FormatInt(time.Now().Unix(), 10),
 			"--force",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 		cmd.Env = os.Environ()
 
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -122,11 +123,11 @@ func TestStreams(t *testing.T) {
 			"list",
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var instances atlasv2.PaginatedApiStreamsTenant
@@ -147,11 +148,11 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
@@ -176,11 +177,11 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var instance atlasv2.StreamsTenant
@@ -203,11 +204,11 @@ func TestStreams(t *testing.T) {
 			"testdata/create_streams_privateLink_test.json",
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		streamsCmd.Env = os.Environ()
-		streamsResp, err := RunAndGetStdOut(streamsCmd)
+		streamsResp, err := internal.RunAndGetStdOut(streamsCmd)
 		req.NoError(err, string(streamsResp))
 
 		var privateLinkEndpoint atlasv2.StreamsPrivateLinkConnection
@@ -231,11 +232,11 @@ func TestStreams(t *testing.T) {
 			endpointID,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		streamsCmd.Env = os.Environ()
-		streamsResp, err := RunAndGetStdOut(streamsCmd)
+		streamsResp, err := internal.RunAndGetStdOut(streamsCmd)
 		req.NoError(err, string(streamsResp))
 
 		var privateLinkEndpoint atlasv2.StreamsPrivateLinkConnection
@@ -256,11 +257,11 @@ func TestStreams(t *testing.T) {
 			"list",
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		streamsCmd.Env = os.Environ()
-		streamsResp, err := RunAndGetStdOut(streamsCmd)
+		streamsResp, err := internal.RunAndGetStdOut(streamsCmd)
 		req.NoError(err, string(streamsResp))
 
 		var privateLinkEndpoints atlasv2.PaginatedApiStreamsPrivateLink
@@ -282,11 +283,11 @@ func TestStreams(t *testing.T) {
 			endpointID,
 			"--force",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		streamsCmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(streamsCmd)
+		resp, err := internal.RunAndGetStdOut(streamsCmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Atlas Stream Processing PrivateLink endpoint '%s' deleted.\n", endpointID)
@@ -306,11 +307,11 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var connection atlasv2.StreamsConnection
@@ -329,11 +330,11 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var connection atlasv2.StreamsConnection
@@ -354,11 +355,11 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var response atlasv2.PaginatedApiStreamsConnection
@@ -394,11 +395,11 @@ func TestStreams(t *testing.T) {
 			instanceName,
 			"-o=json",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var connection atlasv2.StreamsConnection
@@ -418,11 +419,11 @@ func TestStreams(t *testing.T) {
 			"--force",
 			connectionName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Atlas Stream Processing connection '%s' deleted\n", connectionName)
@@ -439,11 +440,11 @@ func TestStreams(t *testing.T) {
 			"--force",
 			instanceName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 		)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := fmt.Sprintf("Atlas Streams processor instance '%s' deleted\n", instanceName)

@@ -14,23 +14,27 @@
 
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+var errNoAPIKey = errors.New("the apiKey ID is empty")
+
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, er := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, er := internal.AtlasCLIBin()
 	require.NoError(t, er)
 
 	apiKeyID, e := createOrgAPIKey()
@@ -40,7 +44,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 		require.NoError(t, deleteOrgAPIKey(apiKeyID))
 	})
 
-	n := g.memoryRand("rand", 255)
+	n := g.MemoryRand("rand", 255)
 	entry := fmt.Sprintf("192.168.0.%d", n)
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -55,7 +59,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			entry,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.PaginatedApiUserAccessListResponse
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -71,7 +75,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			apiKeyID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.PaginatedApiUserAccessListResponse
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -93,7 +97,7 @@ func TestAtlasOrgAPIKeyAccessList(t *testing.T) {
 			"--currentIp",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var key atlasv2.PaginatedApiUserAccessListResponse
 		require.NoError(t, json.Unmarshal(resp, &key))
@@ -118,8 +122,55 @@ func deleteAtlasAccessListEntry(t *testing.T, cliPath, entry, apiKeyID string) {
 		apiKeyID,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := internal.RunAndGetStdOut(cmd)
 	require.NoError(t, err, string(resp))
 	expected := fmt.Sprintf("Access list entry '%s' deleted\n", entry)
 	assert.Equal(t, expected, string(resp))
+}
+
+func createOrgAPIKey() (string, error) {
+	cliPath, err := internal.AtlasCLIBin()
+	if err != nil {
+		return "", err
+	}
+
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		apiKeysEntity,
+		"create",
+		"--desc=e2e-test-helper",
+		"--role=ORG_READ_ONLY",
+		"-o=json")
+	cmd.Env = os.Environ()
+	resp, err := internal.RunAndGetStdOut(cmd)
+
+	if err != nil {
+		return "", fmt.Errorf("%w: %s", err, string(resp))
+	}
+
+	var key atlasv2.ApiKeyUserDetails
+	if err := json.Unmarshal(resp, &key); err != nil {
+		return "", err
+	}
+
+	if key.GetId() != "" {
+		return key.GetId(), nil
+	}
+
+	return "", errNoAPIKey
+}
+
+func deleteOrgAPIKey(id string) error {
+	cliPath, err := internal.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		apiKeysEntity,
+		"rm",
+		id,
+		"--force")
+	cmd.Env = os.Environ()
+	return cmd.Run()
 }

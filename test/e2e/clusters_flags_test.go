@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && clusters && flags)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -32,20 +33,20 @@ import (
 const writeConcern = "majority"
 
 func TestClustersFlags(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("clustersFlags")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("clustersFlags")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterName := g.memory("clusterName", must(RandClusterName())).(string)
+	clusterName := g.Memory("clusterName", internal.Must(internal.RandClusterName())).(string)
 
-	tier := e2eTier()
-	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
+	tier := internal.E2eTier()
+	region, err := g.NewAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
-	mdbVersion, err := MongoDBMajorVersion()
+	mdbVersion, err := internal.MongoDBMajorVersion()
 	req.NoError(err)
 
 	previousMdbVersion, err := getPreviousMajorVersion(mdbVersion)
@@ -63,17 +64,17 @@ func TestClustersFlags(t *testing.T) {
 			"--mdbVersion", previousMdbVersion,
 			"--diskSizeGB", diskSizeGB30,
 			"--enableTerminationProtection",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"--tag", "env=test", "-w",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var cluster *atlasClustersPinned.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster))
 
-		ensureCluster(t, cluster, clusterName, previousMdbVersion, 30, true)
+		internal.EnsureCluster(t, cluster, clusterName, previousMdbVersion, 30, true)
 	})
 
 	g.Run("Load Sample Data", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -82,10 +83,10 @@ func TestClustersFlags(t *testing.T) {
 			"sampleData",
 			"load",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var job *atlasv2.SampleDatasetStatus
@@ -97,10 +98,10 @@ func TestClustersFlags(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"ls",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var clusters atlasClustersPinned.PaginatedAdvancedClusterDescription
@@ -113,10 +114,10 @@ func TestClustersFlags(t *testing.T) {
 			clustersEntity,
 			"describe",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var cluster atlasClustersPinned.AdvancedClusterDescription
@@ -130,10 +131,10 @@ func TestClustersFlags(t *testing.T) {
 			"cs",
 			"describe",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var connectionString atlasv2.ClusterConnectionStrings
@@ -152,10 +153,10 @@ func TestClustersFlags(t *testing.T) {
 			clusterName,
 			"--writeConcern",
 			writeConcern,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -165,10 +166,10 @@ func TestClustersFlags(t *testing.T) {
 			"advancedSettings",
 			"describe",
 			clusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var config atlasClustersPinned.ClusterDescriptionProcessArgs
@@ -188,10 +189,10 @@ func TestClustersFlags(t *testing.T) {
 			"--db=tes",
 			"--collection=tes",
 			"--key=name:1",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -201,10 +202,10 @@ func TestClustersFlags(t *testing.T) {
 			"delete",
 			clusterName,
 			"--force",
-			"--projectId", g.projectID)
+			"--projectId", g.ProjectID)
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.Error(t, err, string(resp))
 	})
 
@@ -216,22 +217,22 @@ func TestClustersFlags(t *testing.T) {
 			"--diskSizeGB", diskSizeGB40,
 			"--mdbVersion", mdbVersion,
 			"--disableTerminationProtection",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var cluster atlasClustersPinned.AdvancedClusterDescription
 		require.NoError(t, json.Unmarshal(resp, &cluster))
 
-		ensureCluster(t, &cluster, clusterName, mdbVersion, 40, false)
+		internal.EnsureCluster(t, &cluster, clusterName, mdbVersion, 40, false)
 	})
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.projectID, "--force", "-w")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", clusterName, "--projectId", g.ProjectID, "--force", "-w")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		expected := "Cluster deleted"

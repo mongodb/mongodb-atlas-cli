@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && clusters && sharded)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,26 +22,27 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestShardedCluster(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("shardedClusters")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("shardedClusters")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
 
-	shardedClusterName := g.memory("shardedClusterName", must(RandClusterName())).(string)
+	shardedClusterName := g.Memory("shardedClusterName", internal.Must(internal.RandClusterName())).(string)
 
-	tier := e2eTier()
-	region, err := g.newAvailableRegion(tier, e2eClusterProvider)
+	tier := internal.E2eTier()
+	region, err := g.NewAvailableRegion(tier, e2eClusterProvider)
 	req.NoError(err)
 
-	mdbVersion, err := MongoDBMajorVersion()
+	mdbVersion, err := internal.MongoDBMajorVersion()
 	req.NoError(err)
 
 	g.Run("Create sharded cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -57,30 +58,30 @@ func TestShardedCluster(t *testing.T) {
 			"--provider", e2eClusterProvider,
 			"--mdbVersion", mdbVersion,
 			"--diskSizeGB", diskSizeGB30,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		var cluster atlasClustersPinned.AdvancedClusterDescription
 		req.NoError(json.Unmarshal(resp, &cluster))
 
-		ensureCluster(t, &cluster, shardedClusterName, mdbVersion, 30, false)
+		internal.EnsureCluster(t, &cluster, shardedClusterName, mdbVersion, 30, false)
 	})
 
 	g.Run("Delete sharded cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath, clustersEntity, "delete", shardedClusterName, "--projectId", g.projectID, "--force")
+		cmd := exec.Command(cliPath, clustersEntity, "delete", shardedClusterName, "--projectId", g.ProjectID, "--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("Deleting cluster '%s'", shardedClusterName)
 		assert.Equal(t, expected, string(resp))
 	})
 
-	if skipCleanup() {
+	if internal.SkipCleanup() {
 		return
 	}
 
@@ -89,12 +90,12 @@ func TestShardedCluster(t *testing.T) {
 			clustersEntity,
 			"watch",
 			shardedClusterName,
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 		)
 		cmd.Env = os.Environ()
 		// this command will fail with 404 once the cluster is deleted
 		// we just need to wait for this to close the project
-		resp, _ := RunAndGetStdOut(cmd)
+		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
 }

@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && backup && schedule)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -21,19 +21,19 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 func TestSchedule(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithBackup())
+	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	g.enableBackup = true
-	g.generateProjectAndCluster("backupSchedule")
+	g.GenerateProjectAndCluster("backupSchedule")
 
 	var policy *atlasClustersPinned.DiskBackupSnapshotSchedule
 
@@ -42,17 +42,17 @@ func TestSchedule(t *testing.T) {
 			backupsEntity,
 			"schedule",
 			"describe",
-			g.clusterName,
+			g.ClusterName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err)
 		require.NoError(t, json.Unmarshal(resp, &policy))
 
-		assert.Equal(t, g.clusterName, policy.GetClusterName())
+		assert.Equal(t, g.ClusterName, policy.GetClusterName())
 	})
 
 	g.Run("Update", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -61,14 +61,14 @@ func TestSchedule(t *testing.T) {
 			"schedule",
 			"update",
 			"--clusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--useOrgAndGroupNamesInExportPrefix",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -77,13 +77,13 @@ func TestSchedule(t *testing.T) {
 			backupsEntity,
 			"schedule",
 			"delete",
-			g.clusterName,
+			g.ClusterName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"--force",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 }

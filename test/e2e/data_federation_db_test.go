@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && datafederation && db)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -25,18 +25,19 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestDataFederation(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
-	n := g.memoryRand("rand", 1000)
+	n := g.MemoryRand("rand", 1000)
 
 	dataFederationName := fmt.Sprintf("e2e-data-federation-%v", n)
 	testBucket := os.Getenv("E2E_TEST_BUCKET")
@@ -55,7 +56,7 @@ func TestDataFederation(t *testing.T) {
 			testBucket,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 
@@ -86,7 +87,7 @@ func TestDataFederation(t *testing.T) {
 			dataFederationName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		r.NoError(err, string(resp))
 		var dataLake atlasv2.DataLakeTenant
@@ -100,7 +101,7 @@ func TestDataFederation(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		var r []atlasv2.DataLakeTenant
@@ -118,7 +119,7 @@ func TestDataFederation(t *testing.T) {
 			updateRegion,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		var dataLake atlasv2.DataLakeTenant
@@ -140,7 +141,7 @@ func TestDataFederation(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -153,7 +154,7 @@ func TestDataFederation(t *testing.T) {
 			"testLogFile")
 		cmd.Env = os.Environ()
 
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 
@@ -165,7 +166,7 @@ func TestDataFederation(t *testing.T) {
 			"--force")
 		cmd.Env = os.Environ()
 
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		r.NoError(err, string(resp))
 
 		expected := fmt.Sprintf("'%s' deleted\n", dataFederationName)

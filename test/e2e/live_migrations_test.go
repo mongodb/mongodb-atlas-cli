@@ -13,19 +13,20 @@
 // limitations under the License.
 //go:build e2e || (atlas && livemigrations)
 
-package e2e_test
+package e2e
 
 import (
 	"os"
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/require"
 )
 
 func TestLinkToken(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	r := require.New(t)
 	r.NoError(err)
 
@@ -50,7 +51,7 @@ func TestLinkToken(t *testing.T) {
 			"--accessListIp",
 			"1.2.3.4,5.6.7.8")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -62,7 +63,7 @@ func TestLinkToken(t *testing.T) {
 			"delete",
 			"--force")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})

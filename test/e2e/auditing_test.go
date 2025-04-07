@@ -14,7 +14,7 @@
 
 //go:build e2e || (atlas && generic)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,25 +22,26 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAuditing(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("auditing")
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("auditing")
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	g.Run("Describe", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			auditingEntity,
 			"describe",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var setting *atlasv2.AuditLog
 		require.NoError(t, json.Unmarshal(resp, &setting), string(resp))
@@ -50,13 +51,13 @@ func TestAuditing(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			auditingEntity,
 			"update",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"--enabled",
 			"--auditAuthorizationSuccess",
 			"--auditFilter", "{\"atype\": \"authenticate\"}",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var setting *atlasv2.AuditLog
 		require.NoError(t, json.Unmarshal(resp, &setting), string(resp))
@@ -69,13 +70,13 @@ func TestAuditing(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			auditingEntity,
 			"update",
-			"--projectId", g.projectID,
+			"--projectId", g.ProjectID,
 			"--enabled",
 			"--auditAuthorizationSuccess",
 			"-f", "testdata/update_auditing.json",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var setting *atlasv2.AuditLog
 		require.NoError(t, json.Unmarshal(resp, &setting), string(resp))

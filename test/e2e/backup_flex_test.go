@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && backup && flex)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
@@ -31,12 +32,12 @@ import (
 // They will be fully enabled in https://jira.mongodb.org/browse/CLOUDP-291186. We will be able to move these e2e tests
 // to create their project once the ticket is completed.
 func TestFlexBackup(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	g.projectID = os.Getenv("MONGODB_ATLAS_PROJECT_ID")
-	g.generateFlexCluster()
+	g.ProjectID = os.Getenv("MONGODB_ATLAS_PROJECT_ID")
+	generateFlexCluster(t, g)
 
 	clusterName := os.Getenv("E2E_FLEX_INSTANCE_NAME")
 	require.NotEmpty(t, clusterName)
@@ -50,7 +51,7 @@ func TestFlexBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var r atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113
@@ -71,7 +72,7 @@ func TestFlexBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.FlexBackupSnapshot20241113
@@ -88,7 +89,7 @@ func TestFlexBackup(t *testing.T) {
 			"--clusterName",
 			clusterName)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -106,12 +107,12 @@ func TestFlexBackup(t *testing.T) {
 			"--snapshotId",
 			snapshotID,
 			"--targetClusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--targetProjectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.FlexBackupRestoreJob20241113
@@ -132,7 +133,7 @@ func TestFlexBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -145,7 +146,7 @@ func TestFlexBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
 		var result atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113
@@ -163,7 +164,7 @@ func TestFlexBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var result atlasv2.FlexBackupRestoreJob20241113
 		require.NoError(t, json.Unmarshal(resp, &result))
@@ -181,12 +182,12 @@ func TestFlexBackup(t *testing.T) {
 			"--snapshotId",
 			snapshotID,
 			"--targetClusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--targetProjectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 		var result atlasv2.FlexBackupRestoreJob20241113
@@ -206,7 +207,7 @@ func TestFlexBackup(t *testing.T) {
 			clusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		require.NoError(t, err, string(resp))
 	})
@@ -215,14 +216,81 @@ func TestFlexBackup(t *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"delete",
-			g.clusterName,
+			g.ClusterName,
 			"--force",
 			"--watch")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", g.clusterName)
+		expected := fmt.Sprintf("Deleting cluster '%s'Cluster deleted\n", g.ClusterName)
 		assert.Equal(t, expected, string(resp))
 	})
+}
+
+func generateFlexCluster(t *testing.T, g *internal.AtlasE2ETestGenerator) {
+	t.Helper()
+
+	if g.ProjectID == "" {
+		t.Fatal("unexpected error: project must be generated")
+	}
+
+	g.ClusterName = g.Memory("generateFlexClusterName", internal.Must(internal.RandClusterName())).(string)
+
+	err := deployFlexClusterForProject(g.ProjectID, g.ClusterName)
+	if err != nil {
+		t.Fatalf("unexpected error deploying flex cluster: %v", err)
+	}
+	t.Logf("flexClusterName=%s", g.ClusterName)
+
+	if internal.SkipCleanup() {
+		return
+	}
+
+	t.Cleanup(func() {
+		_ = internal.DeleteClusterForProject(g.ProjectID, g.ClusterName)
+	})
+}
+
+func deployFlexClusterForProject(projectID, clusterName string) error {
+	cliPath, err := internal.AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+
+	args := []string{
+		clustersEntity,
+		"create",
+		clusterName,
+		"--region", "US_EAST_1",
+		"--provider", "AWS",
+	}
+
+	if projectID != "" {
+		args = append(args, "--projectId", projectID)
+	}
+
+	create := exec.Command(cliPath, args...)
+	create.Env = os.Environ()
+	if resp, err := internal.RunAndGetStdOut(create); err != nil {
+		return fmt.Errorf("error creating flex cluster (%s): %w - %s", clusterName, err, string(resp))
+	}
+
+	watchArgs := []string{
+		clustersEntity,
+		"watch",
+		clusterName,
+	}
+
+	if projectID != "" {
+		watchArgs = append(watchArgs, "--projectId", projectID)
+	}
+
+	watch := exec.Command(cliPath, watchArgs...)
+	watch.Env = os.Environ()
+	if resp, err := internal.RunAndGetStdOut(watch); err != nil {
+		return fmt.Errorf("error watching cluster %w: %s", err, string(resp))
+	}
+
+	return nil
 }

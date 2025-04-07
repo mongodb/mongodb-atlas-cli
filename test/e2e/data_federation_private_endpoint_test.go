@@ -13,7 +13,7 @@
 // limitations under the License.
 //go:build e2e || (atlas && datafederation && privatenetwork)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -22,19 +22,20 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	g.generateProject("dataFederationPrivateEndpointsAWS")
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("dataFederationPrivateEndpointsAWS")
 
-	cliPath, err := AtlasCLIBin()
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
-	n := g.memoryRand("rand", int64(8000))
+	n := g.MemoryRand("rand", int64(8000))
 	vpcID := fmt.Sprintf("vpce-0fcd9d80bbafe%d", 1000+n.Int64())
 
 	g.Run("Create", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -46,12 +47,12 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"--comment",
 			"comment",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 
 		a := assert.New(t)
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var r atlasv2.PaginatedPrivateNetworkEndpointIdEntry
 		require.NoError(t, json.Unmarshal(resp, &r))
@@ -66,10 +67,10 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"describe",
 			vpcID,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		a := assert.New(t)
 		var r atlasv2.PrivateNetworkEndpointIdEntry
@@ -83,10 +84,10 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			privateEndpointsEntity,
 			"ls",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
@@ -102,11 +103,11 @@ func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 			"delete",
 			vpcID,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"--force")
 		cmd.Env = os.Environ()
 
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		a := assert.New(t)
 		require.NoError(t, err, string(resp))
 		expected := fmt.Sprintf("'%s' deleted\n", vpcID)

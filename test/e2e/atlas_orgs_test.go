@@ -14,7 +14,7 @@
 
 //go:build e2e || (iam && atlas)
 
-package e2e_test
+package e2e
 
 import (
 	"encoding/json"
@@ -23,14 +23,15 @@ import (
 	"os/exec"
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
 func TestAtlasOrgs(t *testing.T) {
-	g := newAtlasE2ETestGenerator(t, withSnapshot())
-	cliPath, err := AtlasCLIBin()
+	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)
 
 	var orgID string
@@ -41,7 +42,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"ls",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err2 := RunAndGetStdOut(cmd)
+		resp, err2 := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
 		var orgs admin.PaginatedOrganization
 		err = json.Unmarshal(resp, &orgs)
@@ -58,7 +59,7 @@ func TestAtlasOrgs(t *testing.T) {
 			orgID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err2 := RunAndGetStdOut(cmd)
+		resp, err2 := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
 	})
 
@@ -72,7 +73,7 @@ func TestAtlasOrgs(t *testing.T) {
 			orgID,
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err2 := RunAndGetStdOut(cmd)
+		resp, err2 := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err2, string(resp))
 		var users admin.PaginatedOrgUser
 		require.NoError(t, json.Unmarshal(resp, &users), string(resp))
@@ -81,7 +82,7 @@ func TestAtlasOrgs(t *testing.T) {
 	})
 	require.NotEmpty(t, userID)
 
-	n := g.memoryRand("rand", 255)
+	n := g.MemoryRand("rand", 255)
 	orgName := fmt.Sprintf("e2e-org-%v", n)
 	var (
 		publicAPIKey  string
@@ -101,7 +102,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"test",
 			"-o=json")
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 		var org admin.CreateOrganizationResponse
 		require.NoError(t, json.Unmarshal(resp, &org), string(resp))
@@ -115,7 +116,7 @@ func TestAtlasOrgs(t *testing.T) {
 
 	g.Run("Delete", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		t.Skip("Skipping delete org e2e test, exceeded max number of linked orgs. Will re-enable post cleanup")
-		if os.Getenv("MONGODB_ATLAS_SERVICE") == cloudgov {
+		if internal.IsGov() {
 			t.Skip("not available for gov")
 		}
 		t.Setenv("MONGODB_ATLAS_PUBLIC_API_KEY", publicAPIKey)
@@ -127,7 +128,7 @@ func TestAtlasOrgs(t *testing.T) {
 			"--force",
 		)
 		cmd.Env = os.Environ()
-		resp, err := RunAndGetStdOut(cmd)
+		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 	})
 }

@@ -16,14 +16,8 @@
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-      - name: Install npm dependencies
-        run: npm install
       - name: Create JIRA ticket
-        uses: mongodb/apix-action/create-jira@v7
+        uses: mongodb/apix-action/create-jira@v6
         id: create
         with:
           token: ${{ secrets.JIRA_API_TOKEN }}

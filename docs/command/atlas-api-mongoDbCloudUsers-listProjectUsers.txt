@@ -14,7 +14,7 @@ atlas api mongoDbCloudUsers listProjectUsers
 
 `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details about the pending and active MongoDB Cloud users associated with the specified project.
 
-To use this resource, the requesting API Key must have the Project Read Only role.
+To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
 
 Note: This resource cannot be used to view details about users invited via the deprecated Invite One MongoDB Cloud User to Join One Project endpoint.
@@ -96,7 +96,7 @@ Options
    * - --pretty
      - 
      - false
-     - Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
+     - Flag that indicates whether the response body should be in the prettyprint format.
    * - --username
      - string
      - false
@@ -129,7 +129,7 @@ Run the command below.
 
 .. code-block::
 
-   atlas api mongoDbCloudUsers listProjectUsers --version 2025-02-19 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --includeCount true --itemsPerPage 100 --orgMembershipStatus ACTIVE --pageNum 1 --pretty false
+   atlas api mongoDbCloudUsers listProjectUsers --version 2025-02-19 --groupId 32b6e34b3d91647abb20e7b8 --orgMembershipStatus ACTIVE
 
 .. Code end marker, please don't delete this comment
 

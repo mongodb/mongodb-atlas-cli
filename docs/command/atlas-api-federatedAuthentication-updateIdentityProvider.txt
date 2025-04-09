@@ -14,7 +14,7 @@ atlas api federatedAuthentication updateIdentityProvider
 
 `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one identity provider in the specified federation.
 
-To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations.
+To use this resource, the requesting Service Account or API Key must have the Organization Owner role in one of the connected organizations.
 
 
 Note: Changing authorization types and/or updating authorization claims can prevent current users and/or groups from accessing the database.

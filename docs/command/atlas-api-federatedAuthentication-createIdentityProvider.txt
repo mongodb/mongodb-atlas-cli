@@ -14,7 +14,7 @@ atlas api federatedAuthentication createIdentityProvider
 
 `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one identity provider within the specified federation.
 
-To use this resource, the requesting API Key must have the Organization Owner role in one of the connected organizations.
+To use this resource, the requesting Service Account or API Key must have the Organization Owner role in one of the connected organizations.
 
 
 Note: This resource only supports the creation of OIDC identity providers.

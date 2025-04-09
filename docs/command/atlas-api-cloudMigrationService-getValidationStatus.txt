@@ -95,7 +95,7 @@ Run the command below.
 
 .. code-block::
 
-   atlas api cloudMigrationService getValidationStatus --version 2023-01-01 --envelope false --groupId 32b6e34b3d91647abb20e7b8 --validationId 507f1f77bcf86cd799439011
+   atlas api cloudMigrationService getValidationStatus --version 2023-01-01 --groupId 32b6e34b3d91647abb20e7b8 --validationId 507f1f77bcf86cd799439011
 
 .. Code end marker, please don't delete this comment
 

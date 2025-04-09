@@ -14,7 +14,7 @@ atlas api clusters createCluster
 
 `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one cluster in the specified project.
 
-Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting API Key must have the Project Owner role. This feature is not available for serverless clusters.
+Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting Service Account or API Key must have the Project Owner role. This feature is not available for serverless clusters.
 
 
 Please note that using an instanceSize of M2 or M5 will create a Flex cluster instead. Support for the instanceSize of M2 or M5 will be discontinued in January 2026. We recommend using the createFlexCluster API for such configurations moving forward.
@@ -73,7 +73,7 @@ Options
    * - --pretty
      - 
      - false
-     - Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
+     - Flag that indicates whether the response body should be in the prettyprint format.
    * - --version
      - string
      - false
@@ -223,7 +223,7 @@ Examples
 
       .. code-block::
 
-         atlas api clusters createCluster --version 2024-08-05 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+         atlas api clusters createCluster --version 2024-08-05 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
 
@@ -355,7 +355,7 @@ Examples
 
       .. code-block::
 
-         atlas api clusters createCluster --version 2024-10-23 --file payload.json --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+         atlas api clusters createCluster --version 2024-10-23 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
 
@@ -395,7 +395,7 @@ Examples
 
       .. code-block::
 
-         atlas api clusters createCluster --version 2024-10-23 --file payload.json --envelope false --groupId [your-project-id] --pretty false
+         atlas api clusters createCluster --version 2024-10-23 --file payload.json --groupId [your-project-id]
 
       .. Code end marker, please don't delete this comment
 

@@ -14,7 +14,7 @@ atlas api mongoDbCloudUsers createOrganizationUser
 
 `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Invites one new or existing MongoDB Cloud user to join the organization.
 
-The invitation to join the organization will be sent to the username provided and must be accepted within 30 days. To use this resource, the requesting API Key must have the Organization Owner role.
+The invitation to join the organization will be sent to the username provided and must be accepted within 30 days. To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 
 
 Note: If the user does not have an existing MongoDB Cloud account, they will be prompted to finish setting up an account upon accepting the invitation. If the user already has an account, they will still receive an invitation to access the organization.
@@ -71,7 +71,7 @@ Options
    * - --pretty
      - 
      - false
-     - Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
+     - Flag that indicates whether the response body should be in the prettyprint format.
    * - --version
      - string
      - false

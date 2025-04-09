@@ -39,7 +39,7 @@ var metadata = metadatatypes.Metadata{
 	`acknowledgeAlert`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`alertId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the alert. Use the [/alerts](#tag/Alerts/operation/listAlerts) endpoint to retrieve all alerts to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the alert.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -50,7 +50,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -66,7 +66,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -80,7 +80,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
@@ -102,7 +102,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -118,7 +118,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
@@ -140,7 +140,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -156,7 +156,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -170,7 +170,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal character string that identifies the team to which you want to add MongoDB Cloud users.`,
@@ -189,7 +189,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -203,7 +203,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the team to add the MongoDB Cloud user to.`,
@@ -222,7 +222,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`roleId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the role.`,
@@ -244,7 +244,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -253,9 +253,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -275,7 +273,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`restoreJobId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the restore job to remove.`,
@@ -287,9 +285,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`pretty`:       `false`,
 					`restoreJobId`: `[restoreJobId]`,
 				},
 			},
@@ -307,7 +303,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -321,7 +317,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -347,7 +343,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -361,7 +357,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -380,7 +376,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -399,7 +395,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -418,7 +414,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -453,7 +449,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -469,7 +465,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -485,7 +481,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -594,9 +590,7 @@ var metadata = metadatatypes.Metadata{
   ]
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -717,9 +711,7 @@ var metadata = metadatatypes.Metadata{
   ]
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			}, {
 				Source:      `create_cluster`,
@@ -746,9 +738,7 @@ var metadata = metadatatypes.Metadata{
   ]
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `[your-project-id]`,
-					`pretty`:   `false`,
+					`groupId`: `[your-project-id]`,
 				},
 			},
 			},
@@ -776,7 +766,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -795,7 +785,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -811,7 +801,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -827,7 +817,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -858,9 +848,7 @@ var metadata = metadatatypes.Metadata{
   "username": "arn:aws:iam::358363220050:user/mongodb-aws-iam-auth-test-user"
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			}, {
 				Source: `LDAP Authentication`,
@@ -889,9 +877,7 @@ var metadata = metadatatypes.Metadata{
   "username": "CN=marketing,OU=groups,DC=example,DC=com"
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			}, {
 				Source: `OIDC Workforce Federated Authentication`,
@@ -920,9 +906,7 @@ var metadata = metadatatypes.Metadata{
   "username": "5dd7496c7a3e5a648454341c/sales"
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			}, {
 				Source: `OIDC Workload Federated Authentication`,
@@ -951,9 +935,7 @@ var metadata = metadatatypes.Metadata{
   "username": "5dd7496c7a3e5a648454341c/sales"
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			}, {
 				Source: `SCRAM-SHA Authentication`,
@@ -982,9 +964,7 @@ var metadata = metadatatypes.Metadata{
   "username": "david"
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			}, {
 				Source: `X509 Authentication`,
@@ -1013,9 +993,7 @@ var metadata = metadatatypes.Metadata{
   "x509Type": "CUSTOMER"
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -1032,7 +1010,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`username`: {
 				Usage: `Human-readable label that represents the MongoDB database user account for whom to create a certificate.`,
@@ -1054,7 +1032,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1070,7 +1048,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -1084,9 +1062,7 @@ var metadata = metadatatypes.Metadata{
   "iamRoleId": "668c5f0ed436263134491592"
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -1100,23 +1076,20 @@ var metadata = metadatatypes.Metadata{
   "iamRoleId": "668c5f0ed436263134491592"
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			}, {
 				Source: `Azure`,
 
 				Description: `Azure`,
 				Value: `{
+  "bucketName": "examplecontainer",
   "cloudProvider": "AZURE",
   "roleId": "668c5f0ed436263134491592",
   "serviceUrl": "https://examplestorageaccount.blob.core.windows.net/examplecontainer"
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -1133,7 +1106,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`skipRoleValidation`: {
 				Usage: `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`,
@@ -1155,7 +1128,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the flex cluster whose snapshot you want to restore.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1171,7 +1144,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1201,7 +1174,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1215,7 +1188,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1234,7 +1207,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1280,7 +1253,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1291,7 +1264,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1305,7 +1278,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1319,7 +1292,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1335,7 +1308,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1351,7 +1324,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1386,7 +1359,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1402,7 +1375,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1418,7 +1391,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1429,7 +1402,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`projectOwnerId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the MongoDB Cloud user to whom to grant the Project Owner role on the specified project. If you set this parameter, it overrides the default value of the oldest Organization Owner.`,
@@ -1450,10 +1423,6 @@ var metadata = metadatatypes.Metadata{
     }
   ]
 }`,
-				Flags: map[string]string{
-					`envelope`: `false`,
-					`pretty`:   `false`,
-				},
 			},
 			},
 		},
@@ -1469,7 +1438,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1485,7 +1454,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1510,7 +1479,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -1529,12 +1498,7 @@ var metadata = metadatatypes.Metadata{
   }
 ]`,
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `[your-project-id]`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `[your-project-id]`,
 				},
 			},
 			},
@@ -1551,7 +1515,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1579,7 +1543,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1598,7 +1562,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1614,7 +1578,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1630,7 +1594,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1663,7 +1627,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -1701,9 +1665,7 @@ var metadata = metadatatypes.Metadata{
 }`,
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			}, {
 				Source: `Partial Index`,
@@ -1739,9 +1701,7 @@ var metadata = metadatatypes.Metadata{
 }`,
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			}, {
 				Source: `Sparse Index`,
@@ -1773,9 +1733,7 @@ var metadata = metadatatypes.Metadata{
 }`,
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -1795,7 +1753,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1811,7 +1769,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1841,7 +1799,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1867,7 +1825,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1884,7 +1842,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1903,7 +1861,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1919,7 +1877,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the stream instance.`,
@@ -1938,7 +1896,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1954,7 +1912,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -1970,7 +1928,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the stream instance.`,
@@ -1987,7 +1945,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -2015,7 +1973,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -2026,7 +1984,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -2045,7 +2003,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the migration.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2053,10 +2011,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:        `false`,
 					`groupId`:         `32b6e34b3d91647abb20e7b8`,
 					`liveMigrationId`: `6296fb4c7c7aa997cf94e9a8`,
-					`pretty`:          `false`,
 				},
 			},
 			},
@@ -2076,7 +2032,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`roleId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the role.`,
@@ -2088,9 +2044,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 					`roleId`:        `[roleId]`,
 				},
 			},
@@ -2113,8 +2067,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -2123,7 +2076,7 @@ var metadata = metadatatypes.Metadata{
 	`deleteAlertConfiguration`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`alertConfigId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -2134,7 +2087,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2143,9 +2096,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`alertConfigId`: `32b6e34b3d91647abb20e7b8`,
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 				},
 			},
 			},
@@ -2171,7 +2122,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
@@ -2192,7 +2142,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2201,9 +2151,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -2221,7 +2169,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2230,9 +2178,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
-					`envelope`:  `false`,
 					`orgId`:     `4888442a3354817a7320eb61`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -2253,7 +2199,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2262,10 +2208,8 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
-					`envelope`:  `false`,
 					`ipAddress`: `192.0.2.0%2F24`,
 					`orgId`:     `4888442a3354817a7320eb61`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -2280,7 +2224,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`resourcePolicyId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
@@ -2291,9 +2235,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:         `false`,
 					`orgId`:            `4888442a3354817a7320eb61`,
-					`pretty`:           `false`,
 					`resourcePolicyId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
@@ -2314,7 +2256,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2323,9 +2265,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -2348,7 +2288,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2357,10 +2297,8 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`indexId`:     `[indexId]`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -2389,7 +2327,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Name of the Atlas Search index to delete.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2400,10 +2338,8 @@ var metadata = metadatatypes.Metadata{
 					`clusterName`:    `[clusterName]`,
 					`collectionName`: `[collectionName]`,
 					`databaseName`:   `[databaseName]`,
-					`envelope`:       `false`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 					`indexName`:      `[indexName]`,
-					`pretty`:         `false`,
 				},
 			},
 			},
@@ -2426,7 +2362,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the Atlas Search index. Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2435,10 +2371,8 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`indexId`:     `[indexId]`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -2458,7 +2392,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`retainBackups`: {
 				Usage: `Flag that indicates whether to retain backup snapshots for the deleted dedicated cluster.`,
@@ -2472,9 +2406,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[your-cluster-name]`,
-					`envelope`:    `false`,
 					`groupId`:     `[your-project-id]`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -2491,7 +2423,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`roleName`: {
 				Usage: `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`,
@@ -2502,9 +2434,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
 					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
 					`roleName`: `[roleName]`,
 				},
 			},
@@ -2525,7 +2455,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2534,9 +2464,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`endpointId`: `[endpointId]`,
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
-					`pretty`:     `false`,
 				},
 			},
 			},
@@ -2556,7 +2484,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`username`: {
 				Usage: `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
@@ -2581,9 +2509,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`databaseName`: `[databaseName]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`pretty`:       `false`,
 					`username`:     `SCRAM-SHA: dylan or AWS IAM: arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs or x.509/LDAP: CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM or OIDC: IdPIdentifier/IdPGroupName`,
 				},
 			},
@@ -2609,7 +2535,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:       `false`,
 					`exportBucketId`: `32b6e34b3d91647abb20e7b8`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 				},
@@ -2628,7 +2553,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the federated database instance to remove.`,
@@ -2639,9 +2564,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
-					`pretty`:     `false`,
 					`tenantName`: `[tenantName]`,
 				},
 			},
@@ -2679,7 +2602,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the flex cluster.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2687,10 +2610,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`name`:     `[name]`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`name`:    `[name]`,
 				},
 			},
 			},
@@ -2713,7 +2634,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
 					`identityProviderId`:   `32b6e34b3d91647abb20e7b8`,
 				},
@@ -2732,7 +2652,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2740,9 +2660,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -2762,7 +2680,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`snapshotId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
@@ -2774,9 +2692,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 					`snapshotId`:  `[snapshotId]`,
 				},
 			},
@@ -2797,8 +2713,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -2824,7 +2739,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2833,9 +2748,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -2871,7 +2784,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
 					`limitName`:  `[limitName]`,
 					`tenantName`: `[tenantName]`,
@@ -2897,7 +2809,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2907,9 +2819,7 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`archiveId`:   `[archiveId]`,
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -2929,8 +2839,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -2948,7 +2857,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2956,10 +2865,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`invitationId`: `[invitationId]`,
 					`orgId`:        `4888442a3354817a7320eb61`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -2979,7 +2886,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the network peering connection that you want to delete.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -2987,10 +2894,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`peerId`:   `[peerId]`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`peerId`:  `[peerId]`,
 				},
 			},
 			},
@@ -3010,7 +2915,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3019,9 +2924,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`containerId`: `32b6e34b3d91647abb20e7b8`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -3046,7 +2949,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`pipelineName`: `[pipelineName]`,
 				},
@@ -3071,7 +2973,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3079,11 +2981,9 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
 					`pipelineName`:  `[pipelineName]`,
 					`pipelineRunId`: `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 				},
 			},
 			},
@@ -3109,7 +3009,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3120,9 +3020,7 @@ var metadata = metadatatypes.Metadata{
 					`cloudProvider`:     `[cloudProvider]`,
 					`endpointId`:        `[endpointId]`,
 					`endpointServiceId`: `[endpointServiceId]`,
-					`envelope`:          `false`,
 					`groupId`:           `32b6e34b3d91647abb20e7b8`,
-					`pretty`:            `false`,
 				},
 			},
 			},
@@ -3145,7 +3043,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3155,9 +3053,7 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`cloudProvider`:     `[cloudProvider]`,
 					`endpointServiceId`: `[endpointServiceId]`,
-					`envelope`:          `false`,
 					`groupId`:           `32b6e34b3d91647abb20e7b8`,
-					`pretty`:            `false`,
 				},
 			},
 			},
@@ -3177,7 +3073,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3186,9 +3082,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`connectionId`: `[connectionId]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -3205,7 +3099,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3215,9 +3109,7 @@ var metadata = metadatatypes.Metadata{
 				Description: `Deletes an existing project`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -3242,7 +3134,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`invitationId`: `[invitationId]`,
 				},
@@ -3268,7 +3159,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3279,9 +3170,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`entryValue`: `10.0.0.0/16`,
-					`envelope`:   `false`,
 					`groupId`:    `[your-project-id]`,
-					`pretty`:     `false`,
 				},
 			},
 			},
@@ -3318,7 +3207,7 @@ var metadata = metadatatypes.Metadata{
 `,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3326,10 +3215,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
 					`limitName`: `[limitName]`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -3349,7 +3236,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3358,9 +3245,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`: `false`,
 					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
 				},
 			},
 			},
@@ -3383,7 +3268,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `One IP address or multiple IP addresses represented as one CIDR block. When specifying a CIDR block with a subnet mask, such as 192.0.2.0/24, use the URL-encoded value %2F for the forward slash /.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3392,10 +3277,8 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clientId`:  `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
 					`ipAddress`: `192.0.2.0%2F24`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -3415,7 +3298,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`secretId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the secret.`,
@@ -3427,9 +3310,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`: `false`,
 					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
 					`secretId`: `[secretId]`,
 				},
 			},
@@ -3447,7 +3328,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3455,9 +3336,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -3477,7 +3356,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`snapshotId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
@@ -3489,9 +3368,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 					`snapshotId`:  `[snapshotId]`,
 				},
 			},
@@ -3518,7 +3395,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
 					`id`:                   `32b6e34b3d91647abb20e7b8`,
 					`orgId`:                `4888442a3354817a7320eb61`,
@@ -3541,7 +3417,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the serverless instance.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3549,10 +3425,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`name`:     `[name]`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`name`:    `[name]`,
 				},
 			},
 			},
@@ -3581,7 +3455,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`endpointId`:   `[endpointId]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`instanceName`: `[instanceName]`,
 				},
@@ -3601,7 +3474,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3610,9 +3483,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`: `false`,
 					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
 				},
 			},
 			},
@@ -3633,7 +3504,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3642,10 +3513,8 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clientId`:  `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`:  `false`,
 					`ipAddress`: `192.0.2.0%2F24`,
 					`orgId`:     `4888442a3354817a7320eb61`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -3663,7 +3532,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`secretId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the secret.`,
@@ -3675,9 +3544,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`: `false`,
 					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
 					`secretId`: `[secretId]`,
 				},
 			},
@@ -3698,7 +3565,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`snapshotId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
@@ -3710,9 +3577,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 					`snapshotId`:  `[snapshotId]`,
 				},
 			},
@@ -3733,7 +3598,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the stream instance.`,
@@ -3745,9 +3610,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`connectionName`: `[connectionName]`,
-					`envelope`:       `false`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
-					`pretty`:         `false`,
 					`tenantName`:     `[tenantName]`,
 				},
 			},
@@ -3765,7 +3628,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the stream instance to delete.`,
@@ -3776,9 +3639,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
-					`pretty`:     `false`,
 					`tenantName`: `[tenantName]`,
 				},
 			},
@@ -3796,7 +3657,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
 				Usage: `Human-readable label that identifies the stream processor.`,
@@ -3810,9 +3671,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 					`processorName`: `[processorName]`,
 					`tenantName`:    `[tenantName]`,
 				},
@@ -3829,7 +3688,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the team that you want to delete.`,
@@ -3840,10 +3699,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
-					`teamId`:   `[teamId]`,
+					`orgId`:  `4888442a3354817a7320eb61`,
+					`teamId`: `[teamId]`,
 				},
 			},
 			},
@@ -3863,7 +3720,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3871,10 +3728,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:        `false`,
 					`groupId`:         `32b6e34b3d91647abb20e7b8`,
 					`integrationType`: `[integrationType]`,
-					`pretty`:          `false`,
 				},
 			},
 			},
@@ -3899,9 +3754,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`id`:       `[id]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`id`:      `[id]`,
 				},
 			},
 			},
@@ -3923,8 +3777,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -3941,7 +3794,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3949,9 +3802,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -3968,7 +3819,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -3984,7 +3835,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -3992,9 +3843,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -4045,7 +3894,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the flex cluster.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -4062,7 +3911,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4070,10 +3919,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`invoiceId`: `[invoiceId]`,
 					`orgId`:     `4888442a3354817a7320eb61`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -4109,7 +3956,6 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
 					`endDate`:     `1.636481348e+09`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`startDate`:   `1.636481348e+09`,
 				},
@@ -4131,7 +3977,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -4162,7 +4008,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`endDate`:    `1.636481348e+09`,
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
 					`startDate`:  `1.636466948e+09`,
 					`tenantName`: `[tenantName]`,
@@ -4182,7 +4027,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4190,9 +4035,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -4212,7 +4055,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4221,9 +4064,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -4252,7 +4093,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
 					`regionName`:    `[regionName]`,
 				},
@@ -4277,7 +4117,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4285,11 +4125,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -4298,7 +4134,7 @@ var metadata = metadatatypes.Metadata{
 	`getAlert`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`alertId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the alert. Use the [/alerts](#tag/Alerts/operation/listAlerts) endpoint to retrieve all alerts to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the alert.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -4309,7 +4145,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4317,10 +4153,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`alertId`:  `[alertId]`,
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`alertId`: `[alertId]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -4329,7 +4163,7 @@ var metadata = metadatatypes.Metadata{
 	`getAlertConfiguration`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`alertConfigId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -4340,7 +4174,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4349,9 +4183,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`alertConfigId`: `32b6e34b3d91647abb20e7b8`,
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 				},
 			},
 			},
@@ -4369,7 +4201,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4378,9 +4210,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
-					`envelope`:  `false`,
 					`orgId`:     `4888442a3354817a7320eb61`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -4401,7 +4231,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4410,10 +4240,8 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
-					`envelope`:  `false`,
 					`ipAddress`: `192.0.2.0%2F24`,
 					`orgId`:     `4888442a3354817a7320eb61`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -4430,7 +4258,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -4441,9 +4269,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
-					`pretty`:    `false`,
 					`processId`: `mongodb.example.com:27017`,
 				},
 			},
@@ -4459,7 +4285,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4467,9 +4293,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -4484,7 +4308,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`resourcePolicyId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
@@ -4495,9 +4319,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:         `false`,
 					`orgId`:            `4888442a3354817a7320eb61`,
-					`pretty`:           `false`,
 					`resourcePolicyId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
@@ -4518,7 +4340,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4527,9 +4349,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -4552,7 +4372,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the Application Search [index](https://dochub.mongodb.org/core/index-definitions-fts). Use the [Get All Application Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Application Search indexes.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4561,10 +4381,8 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`indexId`:     `[indexId]`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -4593,7 +4411,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Name of the Atlas Search index to return.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4604,10 +4422,8 @@ var metadata = metadatatypes.Metadata{
 					`clusterName`:    `[clusterName]`,
 					`collectionName`: `[collectionName]`,
 					`databaseName`:   `[databaseName]`,
-					`envelope`:       `false`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 					`indexName`:      `[indexName]`,
-					`pretty`:         `false`,
 				},
 			},
 			},
@@ -4630,7 +4446,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the Application Search [index](https://dochub.mongodb.org/core/index-definitions-fts). Use the [Get All Application Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Application Search indexes.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4639,10 +4455,8 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`indexId`:     `[indexId]`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -4659,7 +4473,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4667,9 +4481,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -4686,7 +4498,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4694,9 +4506,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -4725,7 +4535,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`exportId`:    `32b6e34b3d91647abb20e7b8`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
@@ -4747,7 +4556,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`restoreJobId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the restore job to return.`,
@@ -4759,9 +4568,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`pretty`:       `false`,
 					`restoreJobId`: `[restoreJobId]`,
 				},
 			},
@@ -4782,7 +4589,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4791,9 +4598,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -4810,7 +4615,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`roleId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the role.`,
@@ -4821,10 +4626,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
-					`roleId`:   `[roleId]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`roleId`:  `[roleId]`,
 				},
 			},
 			},
@@ -4844,7 +4647,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4855,9 +4658,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[your-cluster-name]`,
-					`envelope`:    `false`,
 					`groupId`:     `[your-project-id]`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -4877,7 +4678,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4886,9 +4687,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -4908,7 +4707,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -4917,9 +4716,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -4969,7 +4766,6 @@ var metadata = metadatatypes.Metadata{
 					`clusterView`:    `[clusterView]`,
 					`collectionName`: `mycoll`,
 					`databaseName`:   `mydb`,
-					`envelope`:       `false`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 					`period`:         `PT10H`,
 				},
@@ -5016,7 +4812,6 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`collectionName`: `mycoll`,
 					`databaseName`:   `mydb`,
-					`envelope`:       `false`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 					`period`:         `PT10H`,
 					`processId`:      `my.host.name.com:27017`,
@@ -5041,8 +4836,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -5081,7 +4875,6 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
 					`clusterView`: `[clusterView]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`period`:      `PT10H`,
 				},
@@ -5117,7 +4910,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
 					`period`:    `PT10H`,
 					`processId`: `my.host.name.com:27017`,
@@ -5143,7 +4935,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
 					`orgId`:                `32b6e34b3d91647abb20e7b8`,
 				},
@@ -5168,9 +4959,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`token`:    `4ABBE973862346D40F3AE859D4BE96E0F895764EB14EAB039E7B82F9D638C05C`,
+					`orgId`: `4888442a3354817a7320eb61`,
+					`token`: `4ABBE973862346D40F3AE859D4BE96E0F895764EB14EAB039E7B82F9D638C05C`,
 				},
 			},
 			},
@@ -5187,7 +4977,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`roleName`: {
 				Usage: `Human-readable label that identifies the role for the request. This name must be unique for this custom role in this project.`,
@@ -5198,9 +4988,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
 					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
 					`roleName`: `[roleName]`,
 				},
 			},
@@ -5221,7 +5009,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5230,9 +5018,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`endpointId`: `[endpointId]`,
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
-					`pretty`:     `false`,
 				},
 			},
 			},
@@ -5249,7 +5035,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5257,9 +5043,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -5279,7 +5063,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -5291,9 +5075,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`databaseName`: `[databaseName]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`pretty`:       `false`,
 					`processId`:    `mongodb.example.com:27017`,
 				},
 			},
@@ -5326,7 +5108,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -5341,11 +5123,9 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`databaseName`: `[databaseName]`,
-					`envelope`:     `false`,
 					`granularity`:  `PT1M`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`period`:       `PT10H`,
-					`pretty`:       `false`,
 					`processId`:    `mongodb.example.com:27017`,
 				},
 			},
@@ -5366,7 +5146,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`username`: {
 				Usage: `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
@@ -5391,9 +5171,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`databaseName`: `[databaseName]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`pretty`:       `false`,
 					`username`:     `SCRAM-SHA: dylan or AWS IAM: arn:aws:iam::123456789012:user/sales/enterprise/DylanBloggs or x.509/LDAP: CN=Dylan Bloggs,OU=Enterprise,OU=Sales,DC=Example,DC=COM or OIDC: IdPIdentifier/IdPGroupName`,
 				},
 			},
@@ -5426,7 +5204,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -5440,12 +5218,10 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:      `false`,
 					`granularity`:   `PT1M`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
 					`partitionName`: `[partitionName]`,
 					`period`:        `PT10H`,
-					`pretty`:        `false`,
 					`processId`:     `mongodb.example.com:27017`,
 				},
 			},
@@ -5463,7 +5239,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5471,9 +5247,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -5496,7 +5270,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5506,9 +5280,7 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
 					`endpointId`:    `[endpointId]`,
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 				},
 			},
 			},
@@ -5537,7 +5309,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5546,12 +5318,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`includeCount`:  `true`,
-					`itemsPerPage`:  `100`,
-					`pageNum`:       `1`,
-					`pretty`:        `false`,
 				},
 			},
 			},
@@ -5576,7 +5343,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:       `false`,
 					`exportBucketId`: `32b6e34b3d91647abb20e7b8`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 				},
@@ -5603,7 +5369,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
 					`tenantName`: `[tenantName]`,
 				},
@@ -5620,7 +5385,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5628,9 +5393,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -5658,7 +5421,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
 					`name`:       `[name]`,
 					`snapshotId`: `32b6e34b3d91647abb20e7b8`,
@@ -5681,7 +5443,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the flex cluster.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`restoreJobId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the restore job to return.`,
@@ -5692,10 +5454,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`name`:         `[name]`,
-					`pretty`:       `false`,
 					`restoreJobId`: `[restoreJobId]`,
 				},
 			},
@@ -5716,7 +5476,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the flex cluster.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5724,10 +5484,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`name`:     `[name]`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`name`:    `[name]`,
 				},
 			},
 			},
@@ -5764,7 +5522,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`endDate`:   `1609545600`,
-					`envelope`:  `false`,
 					`groupId`:   `[your-project-id]`,
 					`hostName`:  `[your-host-name]`,
 					`logName`:   `mongodb`,
@@ -5797,7 +5554,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Duration over which Atlas reports the metrics. This parameter expresses its value in the ISO 8601 duration format in UTC. Include this parameter when you do not set **start** and **end**.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -5811,11 +5568,9 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:    `false`,
 					`granularity`: `PT1M`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`period`:      `PT10H`,
-					`pretty`:      `false`,
 					`processId`:   `mongodb.example.com:27017`,
 				},
 			},
@@ -5839,7 +5594,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
 					`identityProviderId`:   `32b6e34b3d91647abb20e7b8`,
 				},
@@ -5913,7 +5667,6 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`collectionName`: `mycoll`,
 					`databaseName`:   `mydb`,
-					`envelope`:       `false`,
 					`granularity`:    `PT1M`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 					`indexName`:      `myindex`,
@@ -5937,7 +5690,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5945,10 +5698,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`invoiceId`: `[invoiceId]`,
 					`orgId`:     `4888442a3354817a7320eb61`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -5965,7 +5716,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -5973,9 +5724,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -5992,10 +5741,10 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`requestId`: {
-				Usage: `Unique string that identifies the request to verify an <abbr title="Lightweight Directory Access Protocol">LDAP</abbr> configuration.`,
+				Usage: `Unique string that identifies the request to verify an Lightweight Directory Access Protocol (LDAP) configuration.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6003,9 +5752,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
-					`pretty`:    `false`,
 					`requestId`: `[requestId]`,
 				},
 			},
@@ -6029,7 +5776,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6039,9 +5786,7 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`checkpointId`: `[checkpointId]`,
 					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -6064,7 +5809,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the restore job.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6073,10 +5818,8 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`jobId`:       `[jobId]`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -6096,7 +5839,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`snapshotId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
@@ -6108,9 +5851,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 					`snapshotId`:  `[snapshotId]`,
 				},
 			},
@@ -6131,7 +5872,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6140,9 +5881,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -6159,7 +5898,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6167,9 +5906,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -6189,7 +5926,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6198,9 +5935,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -6217,7 +5952,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6225,9 +5960,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -6267,7 +6000,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:    `false`,
 					`granularity`: `PT1M`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`metrics`:     `[metrics]`,
@@ -6295,7 +6027,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6305,9 +6037,7 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`archiveId`:   `[archiveId]`,
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -6322,7 +6052,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6330,9 +6060,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -6344,7 +6072,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`eventId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listOrganizationEvents) endpoint to retrieve all events to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the event that you want to return.`,
 			},
 			`includeRaw`: {
 				Usage: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
@@ -6353,7 +6081,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6361,10 +6089,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`eventId`:  `[eventId]`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
+					`eventId`: `[eventId]`,
+					`orgId`:   `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -6387,7 +6113,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`invitationId`: `[invitationId]`,
 					`orgId`:        `4888442a3354817a7320eb61`,
 				},
@@ -6404,7 +6129,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6412,9 +6137,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -6429,7 +6152,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
@@ -6440,10 +6163,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
-					`userId`:   `[userId]`,
+					`orgId`:  `4888442a3354817a7320eb61`,
+					`userId`: `[userId]`,
 				},
 			},
 			},
@@ -6463,7 +6184,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6472,9 +6193,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -6494,7 +6213,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the network peering connection that you want to retrieve.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6502,10 +6221,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`peerId`:   `[peerId]`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`peerId`:  `[peerId]`,
 				},
 			},
 			},
@@ -6525,7 +6242,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6534,9 +6251,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`containerId`: `32b6e34b3d91647abb20e7b8`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -6562,7 +6277,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
@@ -6583,7 +6297,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the Data Lake Pipeline.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6591,10 +6305,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`pipelineName`: `[pipelineName]`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -6617,7 +6329,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal character string that identifies a Data Lake Pipeline run.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6625,11 +6337,9 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
 					`pipelineName`:  `[pipelineName]`,
 					`pipelineRunId`: `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 				},
 			},
 			},
@@ -6655,7 +6365,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6666,9 +6376,7 @@ var metadata = metadatatypes.Metadata{
 					`cloudProvider`:     `[cloudProvider]`,
 					`endpointId`:        `[endpointId]`,
 					`endpointServiceId`: `[endpointServiceId]`,
-					`envelope`:          `false`,
 					`groupId`:           `32b6e34b3d91647abb20e7b8`,
-					`pretty`:            `false`,
 				},
 			},
 			},
@@ -6691,7 +6399,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6701,9 +6409,7 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`cloudProvider`:     `[cloudProvider]`,
 					`endpointServiceId`: `[endpointServiceId]`,
-					`envelope`:          `false`,
 					`groupId`:           `32b6e34b3d91647abb20e7b8`,
-					`pretty`:            `false`,
 				},
 			},
 			},
@@ -6729,7 +6435,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`connectionId`: `[connectionId]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 				},
 			},
@@ -6747,7 +6452,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6757,9 +6462,7 @@ var metadata = metadatatypes.Metadata{
 				Description: `Get a project using a project id`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -6774,21 +6477,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies this project.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`:  `false`,
-					`groupName`: `[groupName]`,
-					`pretty`:    `false`,
-				},
-			},
-			},
-		},
+		Examples: nil,
 	},
 	`getProjectEvent`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -6796,7 +6488,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`eventId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the event that you want to return. Use the [/events](#tag/Events/operation/listProjectEvents) endpoint to retrieve all events to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the event that you want to return.`,
 			},
 			`groupId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
@@ -6807,7 +6499,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether to include the raw document in the output. The raw document contains additional meta information about the event.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6815,10 +6507,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`eventId`:  `[eventId]`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`eventId`: `[eventId]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -6838,7 +6528,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the invitation.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6846,10 +6536,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`invitationId`: `[invitationId]`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -6869,7 +6557,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6880,9 +6568,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`entryValue`: `10.0.0.0/16`,
-					`envelope`:   `false`,
 					`groupId`:    `[your-project-id]`,
-					`pretty`:     `false`,
 				},
 			},
 			},
@@ -6902,7 +6588,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6913,9 +6599,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`entryValue`: `10.0.0.0/16`,
-					`envelope`:   `false`,
 					`groupId`:    `[your-project-id]`,
-					`pretty`:     `false`,
 				},
 			},
 			},
@@ -6952,7 +6636,7 @@ var metadata = metadatatypes.Metadata{
 `,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -6960,10 +6644,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
 					`limitName`: `[limitName]`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -6995,7 +6677,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7003,12 +6685,9 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`instanceSize`: `M10`,
 					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -7028,7 +6707,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7037,9 +6716,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`: `false`,
 					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
 				},
 			},
 			},
@@ -7056,7 +6733,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7064,9 +6741,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -7083,7 +6758,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
@@ -7094,10 +6769,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
-					`userId`:   `[userId]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`userId`:  `[userId]`,
 				},
 			},
 			},
@@ -7114,7 +6787,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7122,9 +6795,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -7144,7 +6815,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the migration.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7152,10 +6823,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:        `false`,
 					`groupId`:         `32b6e34b3d91647abb20e7b8`,
 					`liveMigrationId`: `6296fb4c7c7aa997cf94e9a8`,
-					`pretty`:          `false`,
 				},
 			},
 			},
@@ -7172,7 +6841,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7180,9 +6849,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -7202,7 +6869,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`snapshotId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
@@ -7214,9 +6881,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 					`snapshotId`:  `[snapshotId]`,
 				},
 			},
@@ -7232,7 +6897,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7240,9 +6905,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -7268,7 +6931,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
 					`id`:                   `32b6e34b3d91647abb20e7b8`,
 					`orgId`:                `4888442a3354817a7320eb61`,
@@ -7296,7 +6958,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:        `false`,
 					`groupId`:         `32b6e34b3d91647abb20e7b8`,
 					`sampleDatasetId`: `[sampleDatasetId]`,
 				},
@@ -7318,7 +6979,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7327,9 +6988,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -7358,7 +7017,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 					`snapshotId`:  `32b6e34b3d91647abb20e7b8`,
 				},
@@ -7380,7 +7038,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`restoreJobId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the restore job to return.`,
@@ -7392,9 +7050,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`pretty`:       `false`,
 					`restoreJobId`: `[restoreJobId]`,
 				},
 			},
@@ -7415,7 +7071,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the serverless instance.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7423,10 +7079,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`name`:     `[name]`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`name`:    `[name]`,
 				},
 			},
 			},
@@ -7455,7 +7109,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`endpointId`:   `[endpointId]`,
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`instanceName`: `[instanceName]`,
 				},
@@ -7475,7 +7128,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7484,9 +7137,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`: `false`,
 					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
 				},
 			},
 			},
@@ -7506,7 +7157,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`snapshotId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
@@ -7518,9 +7169,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 					`snapshotId`:  `[snapshotId]`,
 				},
 			},
@@ -7541,7 +7190,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`snapshotId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
@@ -7553,9 +7202,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 					`snapshotId`:  `[snapshotId]`,
 				},
 			},
@@ -7576,7 +7223,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`restoreId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the restore job to return.`,
@@ -7588,9 +7235,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 					`restoreId`:   `[restoreId]`,
 				},
 			},
@@ -7620,7 +7265,6 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`connectionName`: `[connectionName]`,
-					`envelope`:       `false`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 					`tenantName`:     `[tenantName]`,
 				},
@@ -7650,7 +7294,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
 					`tenantName`: `[tenantName]`,
 				},
@@ -7669,7 +7312,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
 				Usage: `Human-readable label that identifies the stream processor.`,
@@ -7683,9 +7326,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 					`processorName`: `[processorName]`,
 					`tenantName`:    `[tenantName]`,
 				},
@@ -7699,20 +7340,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`: `false`,
-					`pretty`:   `false`,
-				},
-			},
-			},
-		},
+		Examples: nil,
 	},
 	`getTeamById`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -7723,7 +7354,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the team whose information you want to return.`,
@@ -7734,10 +7365,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
-					`teamId`:   `[teamId]`,
+					`orgId`:  `4888442a3354817a7320eb61`,
+					`teamId`: `[teamId]`,
 				},
 			},
 			},
@@ -7752,7 +7381,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamName`: {
 				Usage: `Name of the team whose information you want to return.`,
@@ -7763,9 +7392,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
 					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
 					`teamName`: `[teamName]`,
 				},
 			},
@@ -7786,7 +7413,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the service which you want to integrate with MongoDB Cloud.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -7794,10 +7421,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:        `false`,
 					`groupId`:         `32b6e34b3d91647abb20e7b8`,
 					`integrationType`: `[integrationType]`,
-					`pretty`:          `false`,
 				},
 			},
 			},
@@ -7809,24 +7434,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies this user.`,
 			},
 		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`: `false`,
-					`pretty`:   `false`,
-					`userId`:   `[userId]`,
-				},
-			},
-			},
-		},
+		Examples: nil,
 	},
 	`getUserByUsername`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -7834,24 +7448,13 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userName`: {
 				Usage: `Email address that belongs to the MongoDB Cloud user account. You cannot modify this address after creating the user.`,
 			},
 		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`: `false`,
-					`pretty`:   `false`,
-					`userName`: `[userName]`,
-				},
-			},
-			},
-		},
+		Examples: nil,
 	},
 	`getValidationStatus`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -7872,7 +7475,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`validationId`: `507f1f77bcf86cd799439011`,
 				},
@@ -7897,7 +7499,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`requesterAccountId`: {
 				Usage: `The Account ID of the VPC Peering connection/s.`,
@@ -7908,11 +7510,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:           `false`,
 					`groupId`:            `32b6e34b3d91647abb20e7b8`,
-					`itemsPerPage`:       `100`,
-					`pageNum`:            `1`,
-					`pretty`:             `false`,
 					`requesterAccountId`: `[requesterAccountId]`,
 				},
 			},
@@ -7933,7 +7531,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -7964,7 +7562,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Maximum number of lines from the log to return.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`start`: {
 				Usage: `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`,
@@ -7976,9 +7574,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -8010,7 +7606,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Maximum number of lines from the log to return.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`start`: {
 				Usage: `Date and time when MongoDB Cloud begins retrieving database history. If you specify **start**, you must also specify **end**. This parameter uses UNIX epoch time in milliseconds.`,
@@ -8021,10 +7617,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
 					`groupId`:  `32b6e34b3d91647abb20e7b8`,
 					`hostname`: `[hostname]`,
-					`pretty`:   `false`,
 				},
 			},
 			},
@@ -8036,20 +7630,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`: `false`,
-					`pretty`:   `false`,
-				},
-			},
-			},
-		},
+		Examples: nil,
 	},
 	`listAlertConfigurations`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -8071,7 +7655,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8079,12 +7663,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8093,7 +7672,7 @@ var metadata = metadatatypes.Metadata{
 	`listAlertConfigurationsByAlertId`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`alertId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the alert. Use the [/alerts](#tag/Alerts/operation/listAlerts) endpoint to retrieve all alerts to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the alert.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -8113,7 +7692,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8121,13 +7700,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`alertId`:      `[alertId]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`alertId`: `[alertId]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8153,7 +7727,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`status`: {
 				Usage: `Status of the alerts to return. Omit to return all alerts in all statuses.`,
@@ -8164,12 +7738,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8178,7 +7747,7 @@ var metadata = metadatatypes.Metadata{
 	`listAlertsByAlertConfigurationId`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`alertConfigId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -8198,7 +7767,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8207,12 +7776,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`alertConfigId`: `32b6e34b3d91647abb20e7b8`,
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`includeCount`:  `true`,
-					`itemsPerPage`:  `100`,
-					`pageNum`:       `1`,
-					`pretty`:        `false`,
 				},
 			},
 			},
@@ -8239,7 +7803,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8247,13 +7811,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`apiUserId`:    `[apiUserId]`,
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`apiUserId`: `[apiUserId]`,
+					`orgId`:     `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -8277,7 +7836,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8285,12 +7844,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -8316,7 +7870,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8326,12 +7880,7 @@ var metadata = metadatatypes.Metadata{
 				Description: `Returns details of all processes for the specified project`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `[your-project-id]`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `[your-project-id]`,
 				},
 			},
 			},
@@ -8357,7 +7906,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8368,9 +7917,7 @@ var metadata = metadatatypes.Metadata{
 					`clusterName`:    `[clusterName]`,
 					`collectionName`: `[collectionName]`,
 					`databaseName`:   `[databaseName]`,
-					`envelope`:       `false`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
-					`pretty`:         `false`,
 				},
 			},
 			},
@@ -8390,7 +7937,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8399,9 +7946,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -8427,7 +7972,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8438,9 +7983,7 @@ var metadata = metadatatypes.Metadata{
 					`clusterName`:    `[clusterName]`,
 					`collectionName`: `[collectionName]`,
 					`databaseName`:   `[databaseName]`,
-					`envelope`:       `false`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
-					`pretty`:         `false`,
 				},
 			},
 			},
@@ -8469,7 +8012,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8477,13 +8020,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8512,7 +8050,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8520,13 +8058,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8543,7 +8076,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8551,9 +8084,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8579,7 +8110,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`providers`: {
 				Usage: `Cloud providers whose regions to retrieve. When you specify multiple providers, the response can return only tiers and regions that support multi-cloud clusters.`,
@@ -8593,12 +8124,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8668,7 +8194,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8678,12 +8204,7 @@ var metadata = metadatatypes.Metadata{
 				Description: `Returns all clusters in the specified project`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `[your-project-id]`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `[your-project-id]`,
 				},
 			},
 			},
@@ -8704,23 +8225,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-				},
-			},
-			},
-		},
+		Examples: nil,
 	},
 	`listConnectedOrgConfigs`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -8742,10 +8250,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
-					`itemsPerPage`:         `100`,
-					`pageNum`:              `1`,
 				},
 			},
 			},
@@ -8762,7 +8267,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8770,9 +8275,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8798,7 +8301,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8806,12 +8309,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8837,7 +8335,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`username`: {
 				Usage: `Human-readable label that represents the MongoDB database user account whose certificates you want to return.`,
@@ -8848,13 +8346,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-					`username`:     `[username]`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`username`: `[username]`,
 				},
 			},
 			},
@@ -8880,7 +8373,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -8888,12 +8381,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -8919,7 +8407,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -8930,13 +8418,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-					`processId`:    `mongodb.example.com:27017`,
+					`groupId`:   `32b6e34b3d91647abb20e7b8`,
+					`processId`: `mongodb.example.com:27017`,
 				},
 			},
 			},
@@ -8964,7 +8447,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
 					`partitionName`: `[partitionName]`,
 					`processId`:     `mongodb.example.com:27017`,
@@ -8993,7 +8475,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of hostname and Internet Assigned Numbers Authority (IANA) port that serves the MongoDB process. The host must be the hostname, fully qualified domain name (FQDN), or Internet Protocol address (IPv4 or IPv6) of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -9004,13 +8486,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-					`processId`:    `mongodb.example.com:27017`,
+					`groupId`:   `32b6e34b3d91647abb20e7b8`,
+					`processId`: `mongodb.example.com:27017`,
 				},
 			},
 			},
@@ -9054,23 +8531,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-				},
-			},
-			},
-		},
+		Examples: nil,
 	},
 	`listExportBuckets`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -9092,7 +8556,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9100,12 +8564,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -9122,7 +8581,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`type`: {
 				Usage: `Type of Federated Database Instances to return.`,
@@ -9133,9 +8592,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -9164,7 +8621,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9172,13 +8629,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`name`:         `[name]`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`name`:    `[name]`,
 				},
 			},
 			},
@@ -9207,7 +8659,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9215,13 +8667,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`name`:         `[name]`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`name`:    `[name]`,
 				},
 			},
 			},
@@ -9247,7 +8694,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9255,12 +8702,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -9292,10 +8734,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
-					`itemsPerPage`:         `100`,
-					`pageNum`:              `1`,
 				},
 			},
 			},
@@ -9343,7 +8782,6 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`collectionName`: `mycoll`,
 					`databaseName`:   `mydb`,
-					`envelope`:       `false`,
 					`granularity`:    `PT1M`,
 					`groupId`:        `32b6e34b3d91647abb20e7b8`,
 					`metrics`:        `[metrics]`,
@@ -9378,7 +8816,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`sortBy`: {
 				Usage: `Field used to sort the returned invoices by. Use in combination with orderBy parameter to control the order of the result.`,
@@ -9398,15 +8836,10 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`fromDate`:     `2023-01-01`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`orderBy`:      `desc`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-					`toDate`:       `2023-01-01`,
+					`fromDate`: `2023-01-01`,
+					`orderBy`:  `desc`,
+					`orgId`:    `4888442a3354817a7320eb61`,
+					`toDate`:   `2023-01-01`,
 				},
 			},
 			},
@@ -9435,7 +8868,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9443,13 +8876,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -9481,7 +8909,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9489,13 +8917,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -9527,7 +8950,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9535,13 +8958,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -9566,7 +8984,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
 					`processId`: `my.host.name.com:27017`,
 				},
@@ -9597,7 +9014,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9605,13 +9022,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -9649,7 +9061,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9657,12 +9069,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -9677,7 +9084,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`username`: {
 				Usage: `Email address of the user account invited to this organization. If you exclude this parameter, this resource returns all pending invitations.`,
@@ -9688,9 +9095,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -9717,7 +9122,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9725,12 +9130,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -9754,7 +9154,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9762,12 +9162,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -9794,7 +9189,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`username`: {
 				Usage: `Email address to filter users by. Not supported in deprecated versions.`,
@@ -9805,13 +9200,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:            `false`,
-					`includeCount`:        `true`,
-					`itemsPerPage`:        `100`,
 					`orgId`:               `4888442a3354817a7320eb61`,
 					`orgMembershipStatus`: `ACTIVE`,
-					`pageNum`:             `1`,
-					`pretty`:              `false`,
 				},
 			},
 			},
@@ -9835,23 +9225,10 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-01-01`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-				},
-			},
-			},
-		},
+		Examples: nil,
 	},
 	`listPeeringConnections`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -9873,7 +9250,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`providerName`: {
 				Usage: `Cloud service provider to use for this VPC peering connection.`,
@@ -9884,12 +9261,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -9915,7 +9287,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`providerName`: {
 				Usage: `Cloud service provider that serves the desired network peering containers.`,
@@ -9926,12 +9298,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
 					`providerName`: `[providerName]`,
 				},
 			},
@@ -9958,7 +9325,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9966,12 +9333,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -9986,7 +9348,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -9994,9 +9356,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -10028,7 +9388,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the Data Lake Pipeline.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10036,13 +9396,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
 					`pipelineName`: `[pipelineName]`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -10062,7 +9417,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the Data Lake Pipeline.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10070,10 +9425,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`pipelineName`: `[pipelineName]`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -10105,7 +9458,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the Data Lake Pipeline.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10113,13 +9466,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
 					`pipelineName`: `[pipelineName]`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -10141,8 +9489,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10162,7 +9509,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10171,9 +9518,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 				},
 			},
 			},
@@ -10196,7 +9541,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10204,11 +9549,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10234,7 +9575,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10242,12 +9583,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10295,7 +9631,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10303,12 +9639,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10325,7 +9656,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`username`: {
 				Usage: `Email address of the user account invited to this project.`,
@@ -10336,9 +9667,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10364,7 +9693,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10374,12 +9703,7 @@ var metadata = metadatatypes.Metadata{
 				Description: `Returns all access list entries from the specified project's IP access list.`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `[your-project-id]`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `[your-project-id]`,
 				},
 			},
 			},
@@ -10396,7 +9720,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10404,9 +9728,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10435,7 +9757,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10443,13 +9765,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clientId`:     `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
+					`groupId`:  `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10472,7 +9789,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10480,11 +9797,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10510,7 +9823,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10518,12 +9831,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10558,7 +9866,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`username`: {
 				Usage: `Email address to filter users by. Not supported in deprecated versions.`,
@@ -10569,13 +9877,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:            `false`,
 					`groupId`:             `32b6e34b3d91647abb20e7b8`,
-					`includeCount`:        `true`,
-					`itemsPerPage`:        `100`,
 					`orgMembershipStatus`: `ACTIVE`,
-					`pageNum`:             `1`,
-					`pretty`:              `false`,
 				},
 			},
 			},
@@ -10596,7 +9899,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10604,14 +9907,6 @@ var metadata = metadatatypes.Metadata{
 				Source:      `list_projects`,
 				Name:        `Get a list of all projects`,
 				Description: `Get a list of all projects inside of the organisation`,
-
-				Flags: map[string]string{
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-				},
 			},
 			},
 		},
@@ -10639,7 +9934,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10647,13 +9942,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10676,7 +9966,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
 					`orgId`:                `4888442a3354817a7320eb61`,
 				},
@@ -10730,7 +10019,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10738,13 +10027,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10773,7 +10057,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10781,13 +10065,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clusterName`:  `[clusterName]`,
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clusterName`: `[clusterName]`,
+					`groupId`:     `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10813,7 +10092,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10821,12 +10100,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -10851,7 +10125,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`instanceName`: `[instanceName]`,
 				},
@@ -10880,7 +10153,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10888,13 +10161,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clientId`:     `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`:     `false`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
+					`orgId`:    `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -10918,7 +10186,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10926,12 +10194,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`clientId`:     `mdb_sa_id_1234567890abcdef12345678`,
-					`envelope`:     `false`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`clientId`: `mdb_sa_id_1234567890abcdef12345678`,
+					`orgId`:    `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -10952,7 +10216,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10960,11 +10224,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`itemsPerPage`: `100`,
-					`orgId`:        `4888442a3354817a7320eb61`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -10984,7 +10244,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -10993,9 +10253,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -11015,7 +10273,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11024,9 +10282,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -11046,7 +10302,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11055,9 +10311,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -11086,7 +10340,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Namespaces from which to retrieve slow queries. A namespace consists of one database and one collection resource written as ` + "`" + `.` + "`" + `: ` + "`" + `<database>.<collection>` + "`" + `. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (` + "`" + `&` + "`" + `) between each namespace. Omit this parameter to return results for all namespaces.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -11103,9 +10357,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
-					`pretty`:    `false`,
 					`processId`: `[processId]`,
 				},
 			},
@@ -11129,7 +10381,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -11146,9 +10398,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
-					`pretty`:    `false`,
 					`processId`: `[processId]`,
 				},
 			},
@@ -11164,7 +10414,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11172,9 +10422,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
+					`orgId`: `4888442a3354817a7320eb61`,
 				},
 			},
 			},
@@ -11197,7 +10445,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the stream instance.`,
@@ -11208,12 +10456,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-					`tenantName`:   `[tenantName]`,
+					`groupId`:    `32b6e34b3d91647abb20e7b8`,
+					`tenantName`: `[tenantName]`,
 				},
 			},
 			},
@@ -11236,7 +10480,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11244,11 +10488,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -11274,7 +10514,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the stream instance.`,
@@ -11285,13 +10525,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-					`tenantName`:   `[tenantName]`,
+					`groupId`:    `32b6e34b3d91647abb20e7b8`,
+					`tenantName`: `[tenantName]`,
 				},
 			},
 			},
@@ -11332,7 +10567,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processId`: {
 				Usage: `Combination of host and port that serves the MongoDB process. The host must be the hostname, FQDN, IPv4 address, or IPv6 address of the host that runs the MongoDB process (` + "`" + `mongod` + "`" + ` or ` + "`" + `mongos` + "`" + `). The port must be the IANA port on which the MongoDB process listens for requests.`,
@@ -11349,13 +10584,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
-					`processId`:    `[processId]`,
+					`groupId`:   `32b6e34b3d91647abb20e7b8`,
+					`processId`: `[processId]`,
 				},
 			},
 			},
@@ -11379,7 +10609,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the team whose application users you want to return.`,
@@ -11393,12 +10623,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:            `false`,
-					`itemsPerPage`:        `100`,
 					`orgId`:               `4888442a3354817a7320eb61`,
 					`orgMembershipStatus`: `ACTIVE`,
-					`pageNum`:             `1`,
-					`pretty`:              `false`,
 					`teamId`:              `[teamId]`,
 				},
 			},
@@ -11425,7 +10651,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11433,12 +10659,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
-					`groupId`:      `32b6e34b3d91647abb20e7b8`,
-					`includeCount`: `true`,
-					`itemsPerPage`: `100`,
-					`pageNum`:      `1`,
-					`pretty`:       `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -11463,9 +10684,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`name`:     `[name]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`name`:    `[name]`,
 				},
 			},
 			},
@@ -11495,7 +10715,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
 				Usage: `Human-readable label that identifies the stream processor.`,
@@ -11520,7 +10740,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the Data Lake Pipeline.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11528,10 +10748,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`pipelineName`: `[pipelineName]`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -11551,7 +10769,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -11627,9 +10845,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`id`:       `[id]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`id`:      `[id]`,
 				},
 			},
 			},
@@ -11652,7 +10869,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
 					`orgId`:                `32b6e34b3d91647abb20e7b8`,
 				},
@@ -11669,7 +10885,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
@@ -11686,7 +10902,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the [Return All MongoDB Cloud Users in One Organization](#tag/MongoDB-Cloud-Users/operation/listOrganizationUsers) resource and filter by username.`,
@@ -11697,10 +10913,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
-					`userId`:   `[userId]`,
+					`orgId`:  `4888442a3354817a7320eb61`,
+					`userId`: `[userId]`,
 				},
 			},
 			},
@@ -11720,7 +10934,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11729,9 +10943,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`apiUserId`: `[apiUserId]`,
-					`envelope`:  `false`,
 					`groupId`:   `32b6e34b3d91647abb20e7b8`,
-					`pretty`:    `false`,
 				},
 			},
 			},
@@ -11748,7 +10960,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Project resource and filter by username.`,
@@ -11775,9 +10987,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`teamId`:   `[teamId]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`teamId`:  `[teamId]`,
 				},
 			},
 			},
@@ -11794,7 +11005,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the project. If you need to lookup a user's userId or verify a user's status in the organization, use the [Return All MongoDB Cloud Users in One Project](#tag/MongoDB-Cloud-Users/operation/listProjectUsers) resource and filter by username.`,
@@ -11805,10 +11016,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
-					`userId`:   `[userId]`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+					`userId`:  `[userId]`,
 				},
 			},
 			},
@@ -11823,7 +11032,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the team from which you want to remove one database application user.`,
@@ -11837,11 +11046,9 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`orgId`:    `4888442a3354817a7320eb61`,
-					`pretty`:   `false`,
-					`teamId`:   `[teamId]`,
-					`userId`:   `[userId]`,
+					`orgId`:  `4888442a3354817a7320eb61`,
+					`teamId`: `[teamId]`,
+					`userId`: `[userId]`,
 				},
 			},
 			},
@@ -11856,7 +11063,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the team to remove the MongoDB user from.`,
@@ -11873,7 +11080,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the team that you want to rename.`,
@@ -11898,7 +11105,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11908,9 +11115,7 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`cloudProvider`: `[cloudProvider]`,
 					`endpointId`:    `[endpointId]`,
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 				},
 			},
 			},
@@ -11932,8 +11137,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -11953,7 +11157,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the Data Lake Pipeline.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -11961,10 +11165,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:     `false`,
 					`groupId`:      `32b6e34b3d91647abb20e7b8`,
 					`pipelineName`: `[pipelineName]`,
-					`pretty`:       `false`,
 				},
 			},
 			},
@@ -11976,16 +11178,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
 			},
 		},
-		Examples: map[string][]metadatatypes.Example{
-			`2023-11-15`: {{
-				Source: `-`,
-
-				Flags: map[string]string{
-					`envelope`: `false`,
-				},
-			},
-			},
-		},
+		Examples: nil,
 	},
 	`returnAllIpAddresses`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
@@ -11998,7 +11191,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -12006,9 +11199,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -12036,7 +11227,7 @@ var metadata = metadatatypes.Metadata{
 `,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the federated database instance to which the query limit applies.`,
@@ -12047,10 +11238,8 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
 					`limitName`:  `[limitName]`,
-					`pretty`:     `false`,
 					`tenantName`: `[tenantName]`,
 				},
 			},
@@ -12068,7 +11257,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the federated database instance for which you want to retrieve query limits.`,
@@ -12079,9 +11268,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:   `false`,
 					`groupId`:    `32b6e34b3d91647abb20e7b8`,
-					`pretty`:     `false`,
 					`tenantName`: `[tenantName]`,
 				},
 			},
@@ -12105,7 +11292,6 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:             `false`,
 					`federationSettingsId`: `55fa922fb343282757d9554e`,
 					`identityProviderId`:   `32b6e34b3d91647abb20e7b8`,
 				},
@@ -12127,7 +11313,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -12136,9 +11322,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -12155,7 +11339,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12191,7 +11375,7 @@ var metadata = metadatatypes.Metadata{
 `,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12210,7 +11394,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -12221,7 +11405,6 @@ var metadata = metadatatypes.Metadata{
 					`clusterName`: `[clusterName]`,
 					`enable`:      `[enable]`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -12241,7 +11424,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12257,7 +11440,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
 				Usage: `Human-readable label that identifies the stream processor.`,
@@ -12271,9 +11454,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 					`processorName`: `[processorName]`,
 					`tenantName`:    `[tenantName]`,
 				},
@@ -12292,7 +11473,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`processorName`: {
 				Usage: `Human-readable label that identifies the stream processor.`,
@@ -12306,9 +11487,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`:      `false`,
 					`groupId`:       `32b6e34b3d91647abb20e7b8`,
-					`pretty`:        `false`,
 					`processorName`: `[processorName]`,
 					`tenantName`:    `[tenantName]`,
 				},
@@ -12330,7 +11509,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12349,7 +11528,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -12358,9 +11537,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -12369,7 +11546,7 @@ var metadata = metadatatypes.Metadata{
 	`toggleAlertConfiguration`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`alertConfigId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration that triggered this alert. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration that triggered this alert.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -12380,7 +11557,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12396,7 +11573,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12417,8 +11594,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -12435,7 +11611,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12454,7 +11630,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the Data Lake Pipeline.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12473,7 +11649,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -12482,9 +11658,7 @@ var metadata = metadatatypes.Metadata{
 
 				Flags: map[string]string{
 					`clusterName`: `[clusterName]`,
-					`envelope`:    `false`,
 					`groupId`:     `32b6e34b3d91647abb20e7b8`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -12509,7 +11683,7 @@ var metadata = metadatatypes.Metadata{
 	`updateAlertConfiguration`: {
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`alertConfigId`: {
-				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration. Use the [/alertConfigs](#tag/Alert-Configurations/operation/listAlertConfigurations) endpoint to retrieve all alert configurations to which the authenticated user has access.`,
+				Usage: `Unique 24-hexadecimal digit string that identifies the alert configuration.`,
 			},
 			`envelope`: {
 				Usage: `Flag that indicates whether Application wraps the response in an ` + "`" + `envelope` + "`" + ` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
@@ -12520,7 +11694,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12537,7 +11711,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12565,7 +11739,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12579,7 +11753,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`resourcePolicyId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies an atlas resource policy.`,
@@ -12601,7 +11775,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12623,7 +11797,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the Atlas Search [index](https://dochub.mongodb.org/core/index-definitions-fts). Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12651,7 +11825,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Name of the Atlas Search index to update.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12673,7 +11847,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the Atlas Search [index](https://dochub.mongodb.org/core/index-definitions-fts). Use the [Get All Atlas Search Indexes for a Collection API](https://docs.atlas.mongodb.com/reference/api/fts-indexes-get-all/) endpoint to find the IDs of all Atlas Search indexes.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12689,7 +11863,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12708,7 +11882,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12727,7 +11901,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -12755,9 +11929,7 @@ var metadata = metadatatypes.Metadata{
 }`,
 				Flags: map[string]string{
 					`clusterName`: `[your-cluster-name]`,
-					`envelope`:    `false`,
 					`groupId`:     `[your-project-id]`,
-					`pretty`:      `false`,
 				},
 			},
 			},
@@ -12777,7 +11949,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12807,7 +11979,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`roleName`: {
 				Usage: `Human-readable label that identifies the role for the request. This name must beunique for this custom role in this project.`,
@@ -12829,7 +12001,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Flag that indicates whether to overwrite non complying backup policies with the new data protection settings or not.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12848,7 +12020,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`username`: {
 				Usage: `Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
@@ -12880,7 +12052,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12896,7 +12068,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`skipRoleValidation`: {
 				Usage: `Flag that indicates whether this request should check if the requesting IAM role can read from the S3 bucket. AWS checks if the role can list the objects in the bucket before writing to it. Some IAM roles only need write permissions. This flag allows you to skip that check.`,
@@ -12921,7 +12093,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the flex cluster.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -12954,7 +12126,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`snapshotId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
@@ -12976,7 +12148,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13011,7 +12183,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13025,7 +12197,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13039,7 +12211,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13056,7 +12228,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13070,7 +12242,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the user to modify.`,
@@ -13087,7 +12259,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13101,7 +12273,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the pending or active user in the organization. If you need to lookup a user's userId or verify a user's status in the organization, use the Return All MongoDB Cloud Users in One Organization resource and filter by username.`,
@@ -13123,7 +12295,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the network peering connection that you want to update.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13142,7 +12314,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13174,7 +12346,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -13192,9 +12364,7 @@ var metadata = metadatatypes.Metadata{
   ]
 }`,
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -13211,7 +12381,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13243,7 +12413,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`userId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the user to modify.`,
@@ -13265,7 +12435,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13281,7 +12451,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13297,7 +12467,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13333,7 +12503,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Human-readable label that identifies the serverless instance.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13369,7 +12539,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13388,7 +12558,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`snapshotId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the desired snapshot.`,
@@ -13410,7 +12580,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the stream instance.`,
@@ -13429,7 +12599,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`tenantName`: {
 				Usage: `Human-readable label that identifies the stream instance to update.`,
@@ -13448,7 +12618,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 			`teamId`: {
 				Usage: `Unique 24-hexadecimal digit string that identifies the team for which you want to update roles.`,
@@ -13479,7 +12649,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Number of the page that displays the current set of the total objects that the response returns.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13495,7 +12665,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13511,7 +12681,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13527,7 +12697,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13541,7 +12711,7 @@ var metadata = metadatatypes.Metadata{
 				Usage: `Unique 24-hexadecimal digit string that identifies the organization that contains your projects. Use the [/orgs](#tag/Organizations/operation/listOrganizations) endpoint to retrieve all organizations to which the authenticated user has access.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13557,7 +12727,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,
@@ -13573,7 +12743,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: map[string][]metadatatypes.Example{
@@ -13581,9 +12751,7 @@ var metadata = metadatatypes.Metadata{
 				Source: `-`,
 
 				Flags: map[string]string{
-					`envelope`: `false`,
-					`groupId`:  `32b6e34b3d91647abb20e7b8`,
-					`pretty`:   `false`,
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
 			},
 			},
@@ -13600,7 +12768,7 @@ var metadata = metadatatypes.Metadata{
 **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
 			},
 			`pretty`: {
-				Usage: `Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.`,
+				Usage: `Flag that indicates whether the response body should be in the prettyprint format.`,
 			},
 		},
 		Examples: nil,

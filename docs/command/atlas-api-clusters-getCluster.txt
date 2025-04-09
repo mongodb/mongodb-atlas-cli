@@ -14,7 +14,7 @@ atlas api clusters getCluster
 
 `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details for one cluster in the specified project.
 
-Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting API Key must have the Project Read Only role. This feature is not available for serverless clusters.
+Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting Service Account or API Key must have the Project Read Only role. This feature is not available for serverless clusters.
 
 
 This endpoint can also be used on Flex clusters that were created using the createCluster endpoint or former M2/M5 clusters that have been migrated to Flex clusters until January 2026. Please use the getFlexCluster endpoint for Flex clusters instead.
@@ -73,7 +73,7 @@ Options
    * - --pretty
      - 
      - false
-     - Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
+     - Flag that indicates whether the response body should be in the prettyprint format.
    * - --version
      - string
      - false
@@ -104,7 +104,7 @@ Run the command below.
 
 .. code-block::
 
-   atlas api clusters getCluster --version 2024-08-05 --clusterName [your-cluster-name] --envelope false --groupId [your-project-id] --pretty false
+   atlas api clusters getCluster --version 2024-08-05 --clusterName [your-cluster-name] --groupId [your-project-id]
 
 .. Code end marker, please don't delete this comment
 

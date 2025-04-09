@@ -14,7 +14,7 @@ atlas api organizations getOrganizationInvitation
 
 `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details of one pending invitation to the specified organization.
 
-To use this resource, the requesting API Key must have the Organization Owner role.
+To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 
 
 Note: Invitation management APIs are deprecated. Use Return One MongoDB Cloud User in One Organization to return a pending user.
@@ -96,7 +96,7 @@ Run the command below.
 
 .. code-block::
 
-   atlas api organizations getOrganizationInvitation --version 2023-01-01 --envelope false --invitationId [invitationId] --orgId 4888442a3354817a7320eb61
+   atlas api organizations getOrganizationInvitation --version 2023-01-01 --invitationId [invitationId] --orgId 4888442a3354817a7320eb61
 
 .. Code end marker, please don't delete this comment
 

@@ -70,7 +70,7 @@ Options
    * - --pretty
      - 
      - false
-     - Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
+     - Flag that indicates whether the response body should be in the prettyprint format.
    * - --version
      - string
      - false
@@ -101,7 +101,7 @@ Run the command below.
 
 .. code-block::
 
-   atlas api projectIpAccessList getProjectIpAccessListStatus --version 2023-01-01 --entryValue 10.0.0.0/16 --envelope false --groupId [your-project-id] --pretty false
+   atlas api projectIpAccessList getProjectIpAccessListStatus --version 2023-01-01 --entryValue 10.0.0.0/16 --groupId [your-project-id]
 
 .. Code end marker, please don't delete this comment
 

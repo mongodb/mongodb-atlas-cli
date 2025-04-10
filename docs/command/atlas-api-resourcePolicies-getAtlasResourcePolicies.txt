@@ -62,7 +62,7 @@ Options
    * - --pretty
      - 
      - false
-     - Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
+     - Flag that indicates whether the response body should be in the prettyprint format.
    * - --version
      - string
      - false
@@ -91,7 +91,7 @@ Run the command below.
 
 .. code-block::
 
-   atlas api resourcePolicies getAtlasResourcePolicies --version 2024-08-05 --envelope false --orgId 4888442a3354817a7320eb61 --pretty false
+   atlas api resourcePolicies getAtlasResourcePolicies --version 2024-08-05 --orgId 4888442a3354817a7320eb61
 
 .. Code end marker, please don't delete this comment
 

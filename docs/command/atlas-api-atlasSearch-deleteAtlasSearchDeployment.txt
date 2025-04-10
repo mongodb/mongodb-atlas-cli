@@ -68,7 +68,7 @@ Options
    * - --pretty
      - 
      - false
-     - Flag that indicates whether the response body should be in the <a href="https://en.wikipedia.org/wiki/Prettyprint" target="_blank" rel="noopener noreferrer">prettyprint</a> format.
+     - Flag that indicates whether the response body should be in the prettyprint format.
    * - --version
      - string
      - false
@@ -105,7 +105,7 @@ Run the command below.
 
 .. code-block::
 
-   atlas api atlasSearch deleteAtlasSearchDeployment --version 2023-01-01 --clusterName [clusterName] --envelope false --groupId 32b6e34b3d91647abb20e7b8 --pretty false
+   atlas api atlasSearch deleteAtlasSearchDeployment --version 2023-01-01 --clusterName [clusterName] --groupId 32b6e34b3d91647abb20e7b8
 
 .. Code end marker, please don't delete this comment
 

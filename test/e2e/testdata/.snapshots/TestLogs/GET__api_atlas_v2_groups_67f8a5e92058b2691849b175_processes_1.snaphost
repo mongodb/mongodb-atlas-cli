@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1841
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 11 Apr 2025 05:25:31 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 80
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=72397239476bc17f00312eb5b2954672c016d28a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67f8a5e92058b2691849b175/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-04-11T05:24:45Z","groupId":"67f8a5e92058b2691849b175","hostname":"atlas-bt7rl7-shard-00-00.kcvnwk.mongodb-dev.net","id":"atlas-bt7rl7-shard-00-00.kcvnwk.mongodb-dev.net:27017","lastPing":"2025-04-11T05:25:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67f8a5e92058b2691849b175/processes/atlas-bt7rl7-shard-00-00.kcvnwk.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-bt7rl7-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-512-shard-00-00.kcvnwk.mongodb-dev.net","version":"8.0.8"},{"created":"2025-04-11T05:24:45Z","groupId":"67f8a5e92058b2691849b175","hostname":"atlas-bt7rl7-shard-00-01.kcvnwk.mongodb-dev.net","id":"atlas-bt7rl7-shard-00-01.kcvnwk.mongodb-dev.net:27017","lastPing":"2025-04-11T05:25:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67f8a5e92058b2691849b175/processes/atlas-bt7rl7-shard-00-01.kcvnwk.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-bt7rl7-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-512-shard-00-01.kcvnwk.mongodb-dev.net","version":"8.0.8"},{"created":"2025-04-11T05:24:45Z","groupId":"67f8a5e92058b2691849b175","hostname":"atlas-bt7rl7-shard-00-02.kcvnwk.mongodb-dev.net","id":"atlas-bt7rl7-shard-00-02.kcvnwk.mongodb-dev.net:27017","lastPing":"2025-04-11T05:25:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/67f8a5e92058b2691849b175/processes/atlas-bt7rl7-shard-00-02.kcvnwk.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-bt7rl7-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-512-shard-00-02.kcvnwk.mongodb-dev.net","version":"8.0.8"}],"totalCount":3}

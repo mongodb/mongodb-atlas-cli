@@ -12,7 +12,11 @@ atlas api dataFederation createDataFederationPrivateEndpoint
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Adds one private endpoint for Federated Database Instances and Online Archives to the specified projects.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Adds one private endpoint for Federated Database Instances and Online Archives to the specified projects.
 
 If the endpoint ID already exists and the associated comment is unchanged, Atlas Data Federation makes no change to the endpoint ID list. If the endpoint ID already exists and the associated comment is changed, Atlas Data Federation updates the comment value only in the endpoint ID list. If the endpoint ID doesn't exist, Atlas Data Federation appends the new endpoint to the list of endpoints in the endpoint ID list. Each region has an associated service name for the various endpoints in each region.
 

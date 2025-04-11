@@ -12,7 +12,11 @@ atlas api teams deleteTeam
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one team specified using its unique 24-hexadecimal digit identifier from the organization specified using its unique 24-hexadecimal digit identifier.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Removes one team specified using its unique 24-hexadecimal digit identifier from the organization specified using its unique 24-hexadecimal digit identifier.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

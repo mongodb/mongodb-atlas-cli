@@ -12,7 +12,11 @@ atlas api networkPeering verifyConnectViaPeeringOnlyModeForOneProject
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Verifies if someone set the specified project to Connect via Peering Only mode.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Verifies if someone set the specified project to Connect via Peering Only mode.
 
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

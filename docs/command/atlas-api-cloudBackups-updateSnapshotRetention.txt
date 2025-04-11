@@ -12,7 +12,11 @@ atlas api cloudBackups updateSnapshotRetention
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Changes the expiration date for one cloud backup snapshot for one cluster in the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Changes the expiration date for one cloud backup snapshot for one cluster in the specified project.
 
 The requesting API Key must have the Project Backup Manager role.
 

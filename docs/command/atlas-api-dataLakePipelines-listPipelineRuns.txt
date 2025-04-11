@@ -12,7 +12,11 @@ atlas api dataLakePipelines listPipelineRuns
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns a list of past Data Lake Pipeline runs.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns a list of past Data Lake Pipeline runs.
 
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

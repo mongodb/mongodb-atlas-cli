@@ -12,7 +12,11 @@ atlas api programmaticApiKeys updateApiKeyRoles
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the roles of the organization API key that you specify for the project that you specify.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the roles of the organization API key that you specify for the project that you specify.
 
 You must specify at least one valid role for the project. The application removes any roles that you do not include in this request if they were previously set in the organization API key that you specify for the project.
 

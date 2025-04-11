@@ -12,7 +12,11 @@ atlas api networkPeering listPeeringContainers
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details about all network peering containers in the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns details about all network peering containers in the specified project.
 
 Network peering containers contain network peering connections. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

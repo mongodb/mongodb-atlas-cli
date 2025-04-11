@@ -12,7 +12,11 @@ atlas api collectionLevelMetrics
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, and edits pinned namespaces for the specified cluster or process.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns, adds, and edits pinned namespaces for the specified cluster or process.
 
 Also returns collection level latency metric data.
 
@@ -51,15 +55,51 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceClusterMeasurements` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Get a list of the Coll Stats Latency cluster-level measurements for the given namespace.
-* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceHostMeasurements` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Get a list of the Coll Stats Latency process-level measurements for the given namespace.
-* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceMetrics` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all available Coll Stats Latency metric names and their respective units for the specified project at the time of request.
-* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespacesForCluster` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Return the subset of namespaces from the given cluster sorted by highest total execution time (descending) within the given time window.
-* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespacesForHost` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Return the subset of namespaces from the given process ranked by highest total execution time (descending) within the given time window.
-* :ref:`atlas-api-collectionLevelMetrics-getPinnedNamespaces` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns a list of given cluster's pinned namespaces, a set of namespaces manually selected by users to collect query latency metrics on.
-* :ref:`atlas-api-collectionLevelMetrics-pinNamespacesPatch` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Add provided list of namespaces to existing pinned namespaces list for collection-level latency metrics collection for the given Group and Cluster.
-* :ref:`atlas-api-collectionLevelMetrics-pinNamespacesPut` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Pin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster.
-* :ref:`atlas-api-collectionLevelMetrics-unpinNamespaces` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Unpin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster.
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceClusterMeasurements` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Get a list of the Coll Stats Latency cluster-level measurements for the given namespace.
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceHostMeasurements` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Get a list of the Coll Stats Latency process-level measurements for the given namespace.
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceMetrics` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all available Coll Stats Latency metric names and their respective units for the specified project at the time of request.
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespacesForCluster` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Return the subset of namespaces from the given cluster sorted by highest total execution time (descending) within the given time window.
+* :ref:`atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespacesForHost` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Return the subset of namespaces from the given process ranked by highest total execution time (descending) within the given time window.
+* :ref:`atlas-api-collectionLevelMetrics-getPinnedNamespaces` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns a list of given cluster's pinned namespaces, a set of namespaces manually selected by users to collect query latency metrics on.
+* :ref:`atlas-api-collectionLevelMetrics-pinNamespacesPatch` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Add provided list of namespaces to existing pinned namespaces list for collection-level latency metrics collection for the given Group and Cluster.
+* :ref:`atlas-api-collectionLevelMetrics-pinNamespacesPut` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Pin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster.
+* :ref:`atlas-api-collectionLevelMetrics-unpinNamespaces` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Unpin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster.
 
 
 .. toctree::

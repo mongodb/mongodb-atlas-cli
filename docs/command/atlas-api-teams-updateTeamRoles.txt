@@ -12,7 +12,11 @@ atlas api teams updateTeamRoles
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the project roles assigned to the specified team.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the project roles assigned to the specified team.
 
 You can grant team roles for specific projects and grant project access roles to users in the team. All members of the team share the same project access. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

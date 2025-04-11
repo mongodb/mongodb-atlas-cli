@@ -12,7 +12,11 @@ atlas api auditing updateAuditingConfiguration
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the auditing configuration for the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the auditing configuration for the specified project.
 
 The auditing configuration defines the events that MongoDB Cloud records in the audit log. To use this resource, the requesting Service Account or API Key must have the Project Owner role. This feature isn't available for M0, M2, M5, or serverless clusters.
 

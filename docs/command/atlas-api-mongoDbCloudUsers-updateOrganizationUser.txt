@@ -12,7 +12,11 @@ atlas api mongoDbCloudUsers updateOrganizationUser
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one MongoDB Cloud user in the specified organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one MongoDB Cloud user in the specified organization.
 
 You can update an active user or a user that has not yet accepted the invitation to join the organization. To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

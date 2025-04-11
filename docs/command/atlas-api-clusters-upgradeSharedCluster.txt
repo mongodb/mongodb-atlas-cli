@@ -12,7 +12,11 @@ atlas api clusters upgradeSharedCluster
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Upgrades a shared-tier cluster to a Flex or Dedicated (M10+) cluster in the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Upgrades a shared-tier cluster to a Flex or Dedicated (M10+) cluster in the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Cluster Manager role. Each project supports up to 25 clusters.
 

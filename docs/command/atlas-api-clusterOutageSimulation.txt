@@ -12,7 +12,11 @@ atlas api clusterOutageSimulation
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, starts, or ends a cluster outage simulation.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns, starts, or ends a cluster outage simulation.
 
 Options
 -------
@@ -49,9 +53,21 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-clusterOutageSimulation-endOutageSimulation` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Ends a cluster outage simulation.
-* :ref:`atlas-api-clusterOutageSimulation-getOutageSimulation` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one outage simulation for one cluster.
-* :ref:`atlas-api-clusterOutageSimulation-startOutageSimulation` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Starts a cluster outage simulation.
+* :ref:`atlas-api-clusterOutageSimulation-endOutageSimulation` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Ends a cluster outage simulation.
+* :ref:`atlas-api-clusterOutageSimulation-getOutageSimulation` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns one outage simulation for one cluster.
+* :ref:`atlas-api-clusterOutageSimulation-startOutageSimulation` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Starts a cluster outage simulation.
 
 
 .. toctree::

@@ -12,7 +12,11 @@ atlas api programmaticApiKeys createProjectApiKey
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates and assigns the specified organization API key to the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates and assigns the specified organization API key to the specified project.
 
 Users with the Project Owner role in the project associated with the API key can use the organization API key to access the resources. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

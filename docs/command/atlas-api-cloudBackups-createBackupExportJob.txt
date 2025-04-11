@@ -12,7 +12,11 @@ atlas api cloudBackups createBackupExportJob
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Exports one backup Snapshot for dedicated Atlas cluster using Cloud Backups to an Export Bucket.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Exports one backup Snapshot for dedicated Atlas cluster using Cloud Backups to an Export Bucket.
 
 To use this resource, the requesting Service Account or API Key must have the Project Atlas Admin role.
 

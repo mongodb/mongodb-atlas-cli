@@ -12,7 +12,11 @@ atlas api programmaticApiKeys createApiKey
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one API key for the specified organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates one API key for the specified organization.
 
 An organization API key grants programmatic access to an organization. You can't use the API key to log into the console. To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

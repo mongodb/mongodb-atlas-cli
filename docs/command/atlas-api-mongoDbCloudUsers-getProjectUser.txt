@@ -12,7 +12,11 @@ atlas api mongoDbCloudUsers getProjectUser
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns information about the specified MongoDB Cloud user within the context of the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns information about the specified MongoDB Cloud user within the context of the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

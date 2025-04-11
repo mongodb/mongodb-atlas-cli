@@ -12,7 +12,11 @@ atlas api projects createProjectInvitation
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Invites one MongoDB Cloud user to join the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Invites one MongoDB Cloud user to join the specified project.
 
 The MongoDB Cloud user must accept the invitation to access information within the specified project. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

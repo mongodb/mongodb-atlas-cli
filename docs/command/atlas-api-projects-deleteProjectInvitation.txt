@@ -12,7 +12,11 @@ atlas api projects deleteProjectInvitation
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Cancels one pending invitation sent to the specified MongoDB Cloud user to join a project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Cancels one pending invitation sent to the specified MongoDB Cloud user to join a project.
 
 You can't cancel an invitation that the user accepted. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

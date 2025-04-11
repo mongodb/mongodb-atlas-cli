@@ -12,7 +12,11 @@ atlas api cloudBackups createBackupRestoreJob
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Restores one snapshot of one cluster from the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Restores one snapshot of one cluster from the specified project.
 
 Atlas takes on-demand snapshots immediately and scheduled snapshots at regular intervals. If an on-demand snapshot with a status of queued or inProgress exists, before taking another snapshot, wait until Atlas completes completes processing the previously taken on-demand snapshot.
 

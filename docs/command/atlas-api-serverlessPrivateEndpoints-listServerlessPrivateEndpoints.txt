@@ -12,7 +12,11 @@ atlas api serverlessPrivateEndpoints listServerlessPrivateEndpoints
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all private endpoints for one serverless instance.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all private endpoints for one serverless instance.
 
 You must have at least the Project Read Only role for the project to successfully call this resource.
 

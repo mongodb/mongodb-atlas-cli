@@ -12,7 +12,11 @@ atlas api onlineArchive getOnlineArchive
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one online archive for one cluster.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns one online archive for one cluster.
 
 This archive stores data from one cluster within one project. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

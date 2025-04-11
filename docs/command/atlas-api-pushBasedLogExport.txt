@@ -12,7 +12,11 @@ atlas api pushBasedLogExport
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+You can continually push logs from mongod, mongos, and audit logs to an AWS S3 bucket.
 
 Atlas exports logs every 5 minutes.
 
@@ -51,10 +55,26 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-pushBasedLogExport-createPushBasedLogConfiguration` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Configures the project level settings for the push-based log export feature.
-* :ref:`atlas-api-pushBasedLogExport-deletePushBasedLogConfiguration` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Disables the push-based log export feature by resetting the project level settings to its default configuration.
-* :ref:`atlas-api-pushBasedLogExport-getPushBasedLogConfiguration` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Fetches the current project level settings for the push-based log export feature.
-* :ref:`atlas-api-pushBasedLogExport-updatePushBasedLogConfiguration` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the project level settings for the push-based log export feature.
+* :ref:`atlas-api-pushBasedLogExport-createPushBasedLogConfiguration` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Configures the project level settings for the push-based log export feature.
+* :ref:`atlas-api-pushBasedLogExport-deletePushBasedLogConfiguration` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Disables the push-based log export feature by resetting the project level settings to its default configuration.
+* :ref:`atlas-api-pushBasedLogExport-getPushBasedLogConfiguration` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Fetches the current project level settings for the push-based log export feature.
+* :ref:`atlas-api-pushBasedLogExport-updatePushBasedLogConfiguration` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the project level settings for the push-based log export feature.
 
 
 .. toctree::

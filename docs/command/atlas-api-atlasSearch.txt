@@ -12,7 +12,11 @@ atlas api atlasSearch
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, edits, and removes Atlas Search indexes for the specified cluster.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns, adds, edits, and removes Atlas Search indexes for the specified cluster.
 
 Also returns and updates user-defined analyzers for the specified cluster.
 
@@ -51,24 +55,96 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-atlasSearch-createAtlasSearchDeployment` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates Search Nodes for the specified cluster.
-* :ref:`atlas-api-atlasSearch-createAtlasSearchIndex` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one Atlas Search index on the specified collection.
-* :ref:`atlas-api-atlasSearch-createAtlasSearchIndexDeprecated` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one Atlas Search index on the specified collection.
-* :ref:`atlas-api-atlasSearch-deleteAtlasSearchDeployment` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Deletes the Search Nodes for the specified cluster.
-* :ref:`atlas-api-atlasSearch-deleteAtlasSearchIndex` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one Atlas Search index that you identified with its unique ID.
-* :ref:`atlas-api-atlasSearch-deleteAtlasSearchIndexByName` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one Atlas Search index that you identified with its database, collection, and name.
-* :ref:`atlas-api-atlasSearch-deleteAtlasSearchIndexDeprecated` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one Atlas Search index that you identified with its unique ID.
-* :ref:`atlas-api-atlasSearch-getAtlasSearchDeployment` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the Search Nodes for the specified cluster.
-* :ref:`atlas-api-atlasSearch-getAtlasSearchIndex` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one Atlas Search index that you identified with its unique ID.
-* :ref:`atlas-api-atlasSearch-getAtlasSearchIndexByName` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one Atlas Search index that you identified with its database, collection name, and index name.
-* :ref:`atlas-api-atlasSearch-getAtlasSearchIndexDeprecated` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one Atlas Search index in the specified project.
-* :ref:`atlas-api-atlasSearch-listAtlasSearchIndexes` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all Atlas Search indexes on the specified collection.
-* :ref:`atlas-api-atlasSearch-listAtlasSearchIndexesCluster` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all Atlas Search indexes on the specified cluster.
-* :ref:`atlas-api-atlasSearch-listAtlasSearchIndexesDeprecated` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all Atlas Search indexes on the specified collection.
-* :ref:`atlas-api-atlasSearch-updateAtlasSearchDeployment` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the Search Nodes for the specified cluster.
-* :ref:`atlas-api-atlasSearch-updateAtlasSearchIndex` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one Atlas Search index that you identified with its unique ID.
-* :ref:`atlas-api-atlasSearch-updateAtlasSearchIndexByName` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one Atlas Search index that you identified with its database, collection name, and index name.
-* :ref:`atlas-api-atlasSearch-updateAtlasSearchIndexDeprecated` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one Atlas Search index that you identified with its unique ID.
+* :ref:`atlas-api-atlasSearch-createAtlasSearchDeployment` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates Search Nodes for the specified cluster.
+* :ref:`atlas-api-atlasSearch-createAtlasSearchIndex` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates one Atlas Search index on the specified collection.
+* :ref:`atlas-api-atlasSearch-createAtlasSearchIndexDeprecated` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates one Atlas Search index on the specified collection.
+* :ref:`atlas-api-atlasSearch-deleteAtlasSearchDeployment` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Deletes the Search Nodes for the specified cluster.
+* :ref:`atlas-api-atlasSearch-deleteAtlasSearchIndex` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Removes one Atlas Search index that you identified with its unique ID.
+* :ref:`atlas-api-atlasSearch-deleteAtlasSearchIndexByName` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Removes one Atlas Search index that you identified with its database, collection, and name.
+* :ref:`atlas-api-atlasSearch-deleteAtlasSearchIndexDeprecated` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Removes one Atlas Search index that you identified with its unique ID.
+* :ref:`atlas-api-atlasSearch-getAtlasSearchDeployment` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns the Search Nodes for the specified cluster.
+* :ref:`atlas-api-atlasSearch-getAtlasSearchIndex` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns one Atlas Search index that you identified with its unique ID.
+* :ref:`atlas-api-atlasSearch-getAtlasSearchIndexByName` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns one Atlas Search index that you identified with its database, collection name, and index name.
+* :ref:`atlas-api-atlasSearch-getAtlasSearchIndexDeprecated` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns one Atlas Search index in the specified project.
+* :ref:`atlas-api-atlasSearch-listAtlasSearchIndexes` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all Atlas Search indexes on the specified collection.
+* :ref:`atlas-api-atlasSearch-listAtlasSearchIndexesCluster` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all Atlas Search indexes on the specified cluster.
+* :ref:`atlas-api-atlasSearch-listAtlasSearchIndexesDeprecated` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all Atlas Search indexes on the specified collection.
+* :ref:`atlas-api-atlasSearch-updateAtlasSearchDeployment` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the Search Nodes for the specified cluster.
+* :ref:`atlas-api-atlasSearch-updateAtlasSearchIndex` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one Atlas Search index that you identified with its unique ID.
+* :ref:`atlas-api-atlasSearch-updateAtlasSearchIndexByName` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one Atlas Search index that you identified with its database, collection name, and index name.
+* :ref:`atlas-api-atlasSearch-updateAtlasSearchIndexDeprecated` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one Atlas Search index that you identified with its unique ID.
 
 
 .. toctree::

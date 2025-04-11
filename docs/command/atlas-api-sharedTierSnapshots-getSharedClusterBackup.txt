@@ -12,7 +12,11 @@ atlas api sharedTierSnapshots getSharedClusterBackup
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for one snapshot for the specified shared cluster.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns details for one snapshot for the specified shared cluster.
 
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

@@ -12,7 +12,11 @@ atlas api databaseUsers updateDatabaseUser
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one database user that belongs to the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one database user that belongs to the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role, Project Charts Admin role, Project Stream Processing Owner role, or the Project Database Access Admin role.
 

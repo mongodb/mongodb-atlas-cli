@@ -12,7 +12,11 @@ atlas api encryptionAtRestUsingCustomerKeyManagement updateEncryptionAtRest
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the configuration for encryption at rest using the keys you manage through your cloud provider.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the configuration for encryption at rest using the keys you manage through your cloud provider.
 
 MongoDB Cloud encrypts all storage even if you don't use your own key management. This resource requires the requesting Service Account or API Key to have the Project Owner role. This feature isn't available for M0 free clusters, M2, M5, or serverless clusters.
 

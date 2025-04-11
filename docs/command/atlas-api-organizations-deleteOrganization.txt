@@ -12,7 +12,11 @@ atlas api organizations deleteOrganization
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one specified organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Removes one specified organization.
 
 MongoDB Cloud imposes the following limits on this resource:
 

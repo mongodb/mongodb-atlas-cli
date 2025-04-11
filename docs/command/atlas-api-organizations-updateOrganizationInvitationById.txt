@@ -12,7 +12,11 @@ atlas api organizations updateOrganizationInvitationById
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the details of one pending invitation, identified by its unique ID, to the specified organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the details of one pending invitation, identified by its unique ID, to the specified organization.
 
 Use the Return All Organization Invitations endpoint to retrieve IDs for all pending organization invitations. To use this resource, the requesting API Key must have the Organization Owner role.
 

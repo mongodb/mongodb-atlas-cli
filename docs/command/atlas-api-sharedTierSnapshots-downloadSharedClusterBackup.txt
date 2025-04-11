@@ -12,7 +12,11 @@ atlas api sharedTierSnapshots downloadSharedClusterBackup
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Requests one snapshot for the specified shared cluster.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Requests one snapshot for the specified shared cluster.
 
 This resource returns a snapshotURL that you can use to download the snapshot. This snapshotURL remains active for four hours after you make the request. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

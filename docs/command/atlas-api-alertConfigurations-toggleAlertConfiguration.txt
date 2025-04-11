@@ -12,7 +12,11 @@ atlas api alertConfigurations toggleAlertConfiguration
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Enables or disables the specified alert configuration in the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Enables or disables the specified alert configuration in the specified project.
 
 The resource enables the specified alert configuration if currently enabled. The resource disables the specified alert configuration if currently disabled. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role.
 

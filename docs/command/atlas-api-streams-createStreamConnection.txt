@@ -12,7 +12,11 @@ atlas api streams createStreamConnection
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one connection for a stream instance in the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates one connection for a stream instance in the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner or Project Stream Processing Owner role.
 

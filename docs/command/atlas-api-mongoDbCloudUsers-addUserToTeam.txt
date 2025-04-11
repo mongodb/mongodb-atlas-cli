@@ -12,7 +12,11 @@ atlas api mongoDbCloudUsers addUserToTeam
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Adds one MongoDB Cloud user to one team.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Adds one MongoDB Cloud user to one team.
 
 You can add an active user or a user that has not yet accepted the invitation to join the organization. To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

@@ -12,7 +12,11 @@ atlas api atlasSearch updateAtlasSearchIndexByName
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one Atlas Search index that you identified with its database, collection name, and index name.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one Atlas Search index that you identified with its database, collection name, and index name.
 
 Atlas Search indexes define the fields on which to create the index and the analyzers to use when creating the index. To use this resource, the requesting Service Account or API Key must have the Project Data Access Admin role.
 

@@ -12,7 +12,11 @@ atlas api flexRestoreJobs listFlexBackupRestoreJobs
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all restore jobs for one flex cluster from the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all restore jobs for one flex cluster from the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

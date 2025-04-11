@@ -12,7 +12,11 @@ atlas api privateEndpointServices toggleRegionalizedPrivateEndpointSetting
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Enables or disables the ability to create multiple private endpoints per region in all cloud service providers in one project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Enables or disables the ability to create multiple private endpoints per region in all cloud service providers in one project.
 
 The cloud service provider manages the private endpoints for the project. Connection strings to existing multi-region and global sharded clusters change when you enable this setting. You must update your applications to use the new connection strings. This might cause downtime. To use this resource, the requesting Service Account or API Key must have the Project Owner role and all clusters in the deployment must be sharded clusters. Once enabled, you cannot create replica sets.
 

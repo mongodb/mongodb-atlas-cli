@@ -12,7 +12,11 @@ atlas api rollingIndex createRollingIndex
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates an index on the cluster identified by its name in a rolling manner.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates an index on the cluster identified by its name in a rolling manner.
 
 Creating the index in this way allows index builds on one replica set member as a standalone at a time, starting with the secondary members. Creating indexes in this way requires at least one replica set election. To use this resource, the requesting Service Account or API Key must have the Project Data Access Admin role.
 

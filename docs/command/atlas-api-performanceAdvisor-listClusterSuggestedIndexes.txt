@@ -12,7 +12,11 @@ atlas api performanceAdvisor listClusterSuggestedIndexes
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the indexes that the Performance Advisor suggests.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns the indexes that the Performance Advisor suggests.
 
 The Performance Advisor monitors queries that MongoDB considers slow and suggests new indexes to improve query performance. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

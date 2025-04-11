@@ -12,7 +12,11 @@ atlas api sharedTierSnapshots
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns and requests to download shared-tier database deployment snapshots.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns and requests to download shared-tier database deployment snapshots.
 
 Options
 -------
@@ -49,9 +53,21 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-sharedTierSnapshots-downloadSharedClusterBackup` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Requests one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-getSharedClusterBackup` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for one snapshot for the specified shared cluster.
-* :ref:`atlas-api-sharedTierSnapshots-listSharedClusterBackups` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for all snapshots for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-downloadSharedClusterBackup` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Requests one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-getSharedClusterBackup` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns details for one snapshot for the specified shared cluster.
+* :ref:`atlas-api-sharedTierSnapshots-listSharedClusterBackups` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns details for all snapshots for the specified shared cluster.
 
 
 .. toctree::

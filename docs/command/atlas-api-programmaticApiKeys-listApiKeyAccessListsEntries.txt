@@ -12,7 +12,11 @@ atlas api programmaticApiKeys listApiKeyAccessListsEntries
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all access list entries that you configured for the specified organization API key.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all access list entries that you configured for the specified organization API key.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Member role.
 

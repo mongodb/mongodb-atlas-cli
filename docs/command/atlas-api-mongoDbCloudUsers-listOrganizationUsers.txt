@@ -12,7 +12,11 @@ atlas api mongoDbCloudUsers listOrganizationUsers
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details about the pending and active MongoDB Cloud users associated with the specified organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns details about the pending and active MongoDB Cloud users associated with the specified organization.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Member role.
 

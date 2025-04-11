@@ -12,7 +12,11 @@ atlas api organizations updateOrganizationSettings
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the organization's settings.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the organization's settings.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

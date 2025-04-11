@@ -12,7 +12,11 @@ atlas api onlineArchive createOnlineArchive
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one online archive.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates one online archive.
 
 This archive stores data from one cluster within one project. To use this resource, the requesting Service Account or API Key must have the Project Data Access Admin role.
 

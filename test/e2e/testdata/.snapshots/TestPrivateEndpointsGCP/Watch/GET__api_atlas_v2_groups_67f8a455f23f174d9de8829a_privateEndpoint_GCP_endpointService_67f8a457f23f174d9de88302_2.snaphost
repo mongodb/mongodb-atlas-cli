@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 287
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 11 Apr 2025 05:14:32 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 48
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=72397239476bc17f00312eb5b2954672c016d28a; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"67f8a457f23f174d9de88302","regionName":"WESTERN_US","serviceAttachmentNames":["projects/p-2g12zzywszpt6hbsm3goeqib/regions/us-west1/serviceAttachments/sa-us-west1-67f8a455f23f174d9de8829a-0"],"status":"INITIATING"}

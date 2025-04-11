@@ -112,7 +112,7 @@ Examples
 
       Cluster
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -232,7 +232,7 @@ Examples
 
       Cluster
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -364,7 +364,7 @@ Examples
 
       Creates a new M10 replica set cluster in AWS US East region running MongoDB 6.0
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 

@@ -109,7 +109,7 @@ Examples
 
    Updates the cluster to increase disk size to 20GB and increase node count to 5
 
-Create the file below and save it as `payload.json`
+Create the file below and save it as ``payload.json``
 
 .. code-block::
 

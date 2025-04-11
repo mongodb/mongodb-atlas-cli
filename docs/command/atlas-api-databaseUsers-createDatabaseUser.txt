@@ -101,7 +101,7 @@ Examples
 
       AWS IAM Authentication
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -143,7 +143,7 @@ Examples
 
       LDAP Authentication
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -185,7 +185,7 @@ Examples
 
       OIDC Workforce Federated Authentication
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -227,7 +227,7 @@ Examples
 
       OIDC Workload Federated Authentication
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -269,7 +269,7 @@ Examples
 
       SCRAM-SHA Authentication
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -311,7 +311,7 @@ Examples
 
       X509 Authentication
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 

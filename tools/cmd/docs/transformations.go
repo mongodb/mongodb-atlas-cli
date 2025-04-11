@@ -182,7 +182,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				if tabs {
 					sb.WriteString("      ")
 				}
-				sb.WriteString("Create the file below and save it as `payload.json`\n\n")
+				sb.WriteString("Create the file below and save it as ``payload.json``\n\n")
 
 				if tabs {
 					sb.WriteString("      ")

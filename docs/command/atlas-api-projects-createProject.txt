@@ -95,7 +95,7 @@ Examples
 
    Creates a new project named "MongoTube" with an environment tag set to "e2e"
 
-Create the file below and save it as `payload.json`
+Create the file below and save it as ``payload.json``
 
 .. code-block::
 

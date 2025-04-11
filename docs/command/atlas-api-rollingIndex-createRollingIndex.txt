@@ -105,7 +105,7 @@ Examples
 
       2dspere Index
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -153,7 +153,7 @@ Examples
 
       Partial Index
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -201,7 +201,7 @@ Examples
 
       Sparse Index
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 

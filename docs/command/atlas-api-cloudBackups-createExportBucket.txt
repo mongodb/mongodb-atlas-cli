@@ -101,7 +101,7 @@ Examples
 
       AWS
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -126,7 +126,7 @@ Examples
 
       AWS
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -151,7 +151,7 @@ Examples
 
       Azure
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 

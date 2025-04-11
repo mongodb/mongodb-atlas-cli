@@ -12,7 +12,11 @@ atlas api projects updateProject
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the human-readable label that identifies the specified project, or the tags associated with the project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the human-readable label that identifies the specified project, or the tags associated with the project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
@@ -97,7 +101,7 @@ Examples
 
    Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"
 
-Create the file below and save it as `payload.json`
+Create the file below and save it as ``payload.json``
 
 .. code-block::
 

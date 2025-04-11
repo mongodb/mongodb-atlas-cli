@@ -12,7 +12,11 @@ atlas api mongoDbCloudUsers addProjectRole
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Adds one project-level role to the MongoDB Cloud user.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Adds one project-level role to the MongoDB Cloud user.
 
 You can add a role to an active user or a user that has been invited to join the project. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

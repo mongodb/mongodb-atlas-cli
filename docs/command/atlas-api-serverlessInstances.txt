@@ -12,7 +12,11 @@ atlas api serverlessInstances
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, adds, edits, and removes serverless instances.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns, adds, edits, and removes serverless instances.
 
 Options
 -------
@@ -49,11 +53,31 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-serverlessInstances-createServerlessInstance` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Update as of Feb 2025: This endpoint now creates a Flex cluster instead.
-* :ref:`atlas-api-serverlessInstances-deleteServerlessInstance` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one serverless instance from the specified project.
-* :ref:`atlas-api-serverlessInstances-getServerlessInstance` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for one serverless instance in the specified project.
-* :ref:`atlas-api-serverlessInstances-listServerlessInstances` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details for all serverless instances in the specified project.
-* :ref:`atlas-api-serverlessInstances-updateServerlessInstance` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one serverless instance in the specified project.
+* :ref:`atlas-api-serverlessInstances-createServerlessInstance` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Update as of Feb 2025: This endpoint now creates a Flex cluster instead.
+* :ref:`atlas-api-serverlessInstances-deleteServerlessInstance` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Removes one serverless instance from the specified project.
+* :ref:`atlas-api-serverlessInstances-getServerlessInstance` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns details for one serverless instance in the specified project.
+* :ref:`atlas-api-serverlessInstances-listServerlessInstances` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns details for all serverless instances in the specified project.
+* :ref:`atlas-api-serverlessInstances-updateServerlessInstance` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one serverless instance in the specified project.
 
 
 .. toctree::

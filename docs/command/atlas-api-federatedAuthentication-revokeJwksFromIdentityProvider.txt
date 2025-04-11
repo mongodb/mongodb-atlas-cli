@@ -12,7 +12,11 @@ atlas api federatedAuthentication revokeJwksFromIdentityProvider
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Revokes the JWKS tokens from the requested OIDC identity provider.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Revokes the JWKS tokens from the requested OIDC identity provider.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Owner role in one of the connected organizations.
 

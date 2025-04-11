@@ -12,7 +12,11 @@ atlas api federatedAuthentication getFederationSettings
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns information about the federation settings for the specified organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns information about the federation settings for the specified organization.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Owner role in the connected org.
 

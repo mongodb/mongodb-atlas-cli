@@ -12,7 +12,11 @@ atlas api networkPeering disablePeering
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Disables Connect via Peering Only mode for the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Disables Connect via Peering Only mode for the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

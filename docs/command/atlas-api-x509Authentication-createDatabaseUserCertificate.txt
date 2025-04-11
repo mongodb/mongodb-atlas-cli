@@ -12,7 +12,11 @@ atlas api x509Authentication createDatabaseUserCertificate
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Generates one X.509 certificate for the specified MongoDB user.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Generates one X.509 certificate for the specified MongoDB user.
 
 Atlas manages the certificate and MongoDB user that belong to one project. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

@@ -12,7 +12,11 @@ atlas api cloudMigrationService createPushMigration
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Migrate one cluster that Cloud or Ops Manager manages to MongoDB Atlas.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Migrate one cluster that Cloud or Ops Manager manages to MongoDB Atlas.
 
 Please make sure to validate your migration before initiating it.
 

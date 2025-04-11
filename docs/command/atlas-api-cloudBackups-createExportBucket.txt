@@ -12,7 +12,11 @@ atlas api cloudBackups createExportBucket
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates a Snapshot Export Bucket for an AWS S3 Bucket or Azure Blob Storage Container.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates a Snapshot Export Bucket for an AWS S3 Bucket or Azure Blob Storage Container.
 
 Once created, an snapshots can be exported to the Export Bucket and its referenced AWS S3 Bucket or Azure Blob Storage Container. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
@@ -101,7 +105,7 @@ Examples
 
       AWS
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -126,7 +130,7 @@ Examples
 
       AWS
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -151,7 +155,7 @@ Examples
 
       Azure
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 

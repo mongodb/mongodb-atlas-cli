@@ -12,7 +12,11 @@ atlas api organizations createOrganization
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one organization in MongoDB Cloud and links it to the requesting Service Account's or API Key's organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates one organization in MongoDB Cloud and links it to the requesting Service Account's or API Key's organization.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Owner role. The requesting Service Account's or API Key's organization must be a paying organization. To learn more, see Configure a Paying Organization in the MongoDB Atlas documentation.
 

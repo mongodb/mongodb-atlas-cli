@@ -12,7 +12,11 @@ atlas api clusters createCluster
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one cluster in the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates one cluster in the specified project.
 
 Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting Service Account or API Key must have the Project Owner role. This feature is not available for serverless clusters.
 
@@ -112,7 +116,7 @@ Examples
 
       Cluster
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -232,7 +236,7 @@ Examples
 
       Cluster
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 
@@ -364,7 +368,7 @@ Examples
 
       Creates a new M10 replica set cluster in AWS US East region running MongoDB 6.0
 
-      Create the file below and save it as `payload.json`
+      Create the file below and save it as ``payload.json``
 
       .. code-block::
 

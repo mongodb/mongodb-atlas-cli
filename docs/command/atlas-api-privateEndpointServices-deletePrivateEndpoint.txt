@@ -12,7 +12,11 @@ atlas api privateEndpointServices deletePrivateEndpoint
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one private endpoint from the specified project and private endpoint service, as managed by the specified cloud service provider.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Removes one private endpoint from the specified project and private endpoint service, as managed by the specified cloud service provider.
 
 When the last private endpoint is removed from a given private endpoint service, that private endpoint service is also removed. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

@@ -12,7 +12,11 @@ atlas api collectionLevelMetrics pinNamespacesPut
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Pin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Pin provided list of namespaces for collection-level latency metrics collection for the given Group and Cluster.
 
 This initializes a pinned namespaces list or replaces any existing pinned namespaces list for the Group and Cluster.
 

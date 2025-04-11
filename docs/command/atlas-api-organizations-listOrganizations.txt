@@ -12,7 +12,11 @@ atlas api organizations listOrganizations
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all organizations to which the requesting Service Account or API Key has access.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all organizations to which the requesting Service Account or API Key has access.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Member role.
 

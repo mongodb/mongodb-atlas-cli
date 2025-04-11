@@ -12,7 +12,11 @@ atlas api federatedAuthentication listRoleMappings
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all role mappings from the specified organization in the specified federation.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all role mappings from the specified organization in the specified federation.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

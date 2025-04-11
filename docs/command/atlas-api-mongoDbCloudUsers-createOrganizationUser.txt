@@ -12,7 +12,11 @@ atlas api mongoDbCloudUsers createOrganizationUser
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Invites one new or existing MongoDB Cloud user to join the organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Invites one new or existing MongoDB Cloud user to join the organization.
 
 The invitation to join the organization will be sent to the username provided and must be accepted within 30 days. To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

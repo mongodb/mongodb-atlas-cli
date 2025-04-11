@@ -12,7 +12,11 @@ atlas api sharedTierRestoreJobs getSharedClusterBackupRestoreJob
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the specified restore job for the specified M2 or M5 cluster.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns the specified restore job for the specified M2 or M5 cluster.
 
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

@@ -12,7 +12,11 @@ atlas api federatedAuthentication updateConnectedOrgConfig
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one connected organization configuration from the specified federation.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one connected organization configuration from the specified federation.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

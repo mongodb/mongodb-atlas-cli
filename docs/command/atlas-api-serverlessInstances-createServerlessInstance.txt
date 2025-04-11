@@ -12,7 +12,11 @@ atlas api serverlessInstances createServerlessInstance
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Update as of Feb 2025: This endpoint now creates a Flex cluster instead.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Update as of Feb 2025: This endpoint now creates a Flex cluster instead.
 
 This endpoint will no longer be supported starting January 2026. Continuous backups are not supported and serverlessContinuousBackupEnabled will not take effect. Please use the createFlexCluster endpoint instead.
 

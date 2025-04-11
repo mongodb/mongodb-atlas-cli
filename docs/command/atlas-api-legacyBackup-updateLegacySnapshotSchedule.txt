@@ -12,7 +12,11 @@ atlas api legacyBackup updateLegacySnapshotSchedule
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the snapshot schedule for one cluster in the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates the snapshot schedule for one cluster in the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

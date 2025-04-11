@@ -12,7 +12,11 @@ atlas api clusters loadSampleDataset
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Requests loading the MongoDB sample dataset into the specified cluster.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Requests loading the MongoDB sample dataset into the specified cluster.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

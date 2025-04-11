@@ -12,7 +12,11 @@ atlas api projects setProjectLimit
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Sets the specified project limit.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Sets the specified project limit.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

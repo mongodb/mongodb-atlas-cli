@@ -12,7 +12,11 @@ atlas api accessTracking
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns access logs for authentication attempts made to Atlas database deployments.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns access logs for authentication attempts made to Atlas database deployments.
 
 To view database access history, you must have either the Project Owner or Organization Owner role.
 
@@ -51,8 +55,16 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-accessTracking-listAccessLogsByClusterName` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the access logs of one cluster identified by the cluster's name.
-* :ref:`atlas-api-accessTracking-listAccessLogsByHostname` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the access logs of one cluster identified by the cluster's hostname.
+* :ref:`atlas-api-accessTracking-listAccessLogsByClusterName` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns the access logs of one cluster identified by the cluster's name.
+* :ref:`atlas-api-accessTracking-listAccessLogsByHostname` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns the access logs of one cluster identified by the cluster's hostname.
 
 
 .. toctree::

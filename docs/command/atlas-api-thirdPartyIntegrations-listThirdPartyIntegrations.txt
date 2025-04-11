@@ -12,7 +12,11 @@ atlas api thirdPartyIntegrations listThirdPartyIntegrations
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the settings that permit integrations with all configured third-party services.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns the settings that permit integrations with all configured third-party services.
 
 These settings apply to all databases managed in one MongoDB Cloud project. To use this resource, the requesting Service Account or API Key must have the Organization Owner or Project Owner role.
 

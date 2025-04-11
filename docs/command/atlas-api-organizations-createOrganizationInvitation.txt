@@ -12,7 +12,11 @@ atlas api organizations createOrganizationInvitation
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Invites one MongoDB Cloud user to join the specified organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Invites one MongoDB Cloud user to join the specified organization.
 
 The user must accept the invitation to access information within the specified organization. To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

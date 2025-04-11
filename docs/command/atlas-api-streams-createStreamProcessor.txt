@@ -12,7 +12,11 @@ atlas api streams createStreamProcessor
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Create one Stream Processor within the specified stream instance.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Create one Stream Processor within the specified stream instance.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role or Project Stream Processing Owner role.
 

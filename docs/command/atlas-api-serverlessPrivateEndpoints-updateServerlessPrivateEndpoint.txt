@@ -12,7 +12,11 @@ atlas api serverlessPrivateEndpoints updateServerlessPrivateEndpoint
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one private endpoint for one serverless instance.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one private endpoint for one serverless instance.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

@@ -12,7 +12,11 @@ atlas api monitoringAndLogs listDiskMeasurements
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns measurement details for one disk or partition for the specified host for the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns measurement details for one disk or partition for the specified host for the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

@@ -12,7 +12,11 @@ atlas api databaseUsers listDatabaseUsers
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all database users that belong to the specified project.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns all database users that belong to the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

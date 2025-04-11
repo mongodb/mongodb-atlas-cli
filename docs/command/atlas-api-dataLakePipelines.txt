@@ -12,7 +12,11 @@ atlas api dataLakePipelines
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns, edits, and removes Atlas Data Lake Pipelines and associated runs.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns, edits, and removes Atlas Data Lake Pipelines and associated runs.
 
 Options
 -------
@@ -49,19 +53,71 @@ Inherited Options
 Related Commands
 ----------------
 
-* :ref:`atlas-api-dataLakePipelines-createPipeline` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one Data Lake Pipeline.
-* :ref:`atlas-api-dataLakePipelines-deletePipeline` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one Data Lake Pipeline.
-* :ref:`atlas-api-dataLakePipelines-deletePipelineRunDataset` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Deletes dataset that Atlas generated during the specified pipeline run.
-* :ref:`atlas-api-dataLakePipelines-getPipeline` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details of one Data Lake Pipeline within the specified project.
-* :ref:`atlas-api-dataLakePipelines-getPipelineRun` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details of one Data Lake Pipeline run within the specified project.
-* :ref:`atlas-api-dataLakePipelines-listPipelineRuns` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns a list of past Data Lake Pipeline runs.
-* :ref:`atlas-api-dataLakePipelines-listPipelineSchedules` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns a list of backup schedule policy items that you can use as a Data Lake Pipeline source.
-* :ref:`atlas-api-dataLakePipelines-listPipelineSnapshots` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns a list of backup snapshots that you can use to trigger an on demand pipeline run.
-* :ref:`atlas-api-dataLakePipelines-listPipelines` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns a list of Data Lake Pipelines.
-* :ref:`atlas-api-dataLakePipelines-pausePipeline` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Pauses ingestion for a Data Lake Pipeline within the specified project.
-* :ref:`atlas-api-dataLakePipelines-resumePipeline` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Resumes ingestion for a Data Lake Pipeline within the specified project.
-* :ref:`atlas-api-dataLakePipelines-triggerSnapshotIngestion` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Triggers a Data Lake Pipeline ingestion of a specified snapshot.
-* :ref:`atlas-api-dataLakePipelines-updatePipeline` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one Data Lake Pipeline.
+* :ref:`atlas-api-dataLakePipelines-createPipeline` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Creates one Data Lake Pipeline.
+* :ref:`atlas-api-dataLakePipelines-deletePipeline` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Removes one Data Lake Pipeline.
+* :ref:`atlas-api-dataLakePipelines-deletePipelineRunDataset` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Deletes dataset that Atlas generated during the specified pipeline run.
+* :ref:`atlas-api-dataLakePipelines-getPipeline` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns the details of one Data Lake Pipeline within the specified project.
+* :ref:`atlas-api-dataLakePipelines-getPipelineRun` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns the details of one Data Lake Pipeline run within the specified project.
+* :ref:`atlas-api-dataLakePipelines-listPipelineRuns` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns a list of past Data Lake Pipeline runs.
+* :ref:`atlas-api-dataLakePipelines-listPipelineSchedules` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns a list of backup schedule policy items that you can use as a Data Lake Pipeline source.
+* :ref:`atlas-api-dataLakePipelines-listPipelineSnapshots` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns a list of backup snapshots that you can use to trigger an on demand pipeline run.
+* :ref:`atlas-api-dataLakePipelines-listPipelines` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns a list of Data Lake Pipelines.
+* :ref:`atlas-api-dataLakePipelines-pausePipeline` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Pauses ingestion for a Data Lake Pipeline within the specified project.
+* :ref:`atlas-api-dataLakePipelines-resumePipeline` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Resumes ingestion for a Data Lake Pipeline within the specified project.
+* :ref:`atlas-api-dataLakePipelines-triggerSnapshotIngestion` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Triggers a Data Lake Pipeline ingestion of a specified snapshot.
+* :ref:`atlas-api-dataLakePipelines-updatePipeline` - .. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Updates one Data Lake Pipeline.
 
 
 .. toctree::

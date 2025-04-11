@@ -12,7 +12,11 @@ atlas api mongoDbCloudUsers listTeamUsers
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns details about the pending and active MongoDB Cloud users associated with the specified team in the organization.
+.. blockquote::
+
+   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
+
+Returns details about the pending and active MongoDB Cloud users associated with the specified team in the organization.
 
 Teams enable you to grant project access roles to MongoDB Cloud users. To use this resource, the requesting Service Account or API Key must have the Organization Member role.
 

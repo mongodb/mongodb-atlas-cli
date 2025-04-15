@@ -199,9 +199,6 @@ linters:
       - linters:
           - gocyclo
         path: e2e
-      - linters:
-          - mnd
-        path: internal/test/fixture
     paths:
       - third_party$
       - builtin$

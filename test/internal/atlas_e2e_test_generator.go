@@ -32,6 +32,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"slices"
 	"strconv"
 	"strings"
@@ -467,15 +468,12 @@ func isTrue(s string) bool {
 func (g *AtlasE2ETestGenerator) snapshotBaseDir() string {
 	g.t.Helper()
 
-	dir, err := os.Getwd()
+	if os.Getenv("SNAPSHOTS_DIR") == "" {
+		g.t.Fatal("missing env var SNAPSHOTS_DIR")
+	}
+	dir, err := filepath.Abs(os.Getenv("SNAPSHOTS_DIR"))
 	if err != nil {
 		g.t.Fatal(err)
-	}
-
-	if strings.HasSuffix(dir, "test/e2e") {
-		dir = path.Join(dir, "testdata/.snapshots")
-	} else {
-		dir = path.Join(dir, "test/e2e/testdata/.snapshots")
 	}
 
 	return dir
@@ -568,6 +566,7 @@ func (g *AtlasE2ETestGenerator) snapshotNameStepBack(r *http.Request) {
 
 	g.fileIDs[key] -= 2
 	if g.fileIDs[key] < 0 {
+		g.fileIDs[key] = 0
 		g.t.Fatal("no previous snapshot")
 	}
 }

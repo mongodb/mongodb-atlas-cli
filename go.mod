@@ -61,7 +61,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require go.mongodb.org/atlas-sdk/v20250312001 v20250312001.0.0
+require go.mongodb.org/atlas-sdk/v20250312002 v20250312002.0.0
 
 require (
 	cloud.google.com/go v0.118.3 // indirect

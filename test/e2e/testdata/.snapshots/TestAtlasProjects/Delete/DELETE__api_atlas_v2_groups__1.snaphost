@@ -1,0 +1,11 @@
+HTTP/2.0 405 Method Not Allowed
+Allow: POST,GET,OPTIONS
+Date: Tue, 15 Apr 2025 05:07:20 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 27
+X-Permitted-Cross-Domain-Policies: none
+Content-Length: 0
+

@@ -1,16 +1,16 @@
 HTTP/2.0 201 Created
 Content-Length: 492
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Thu, 03 Apr 2025 05:08:12 GMT
+Date: Tue, 15 Apr 2025 05:07:26 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 290
+X-Envoy-Upstream-Service-Time: 391
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasV2DatabaseUsersResource::addUser
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=660b729a16fe64cb84159fabca767acc36df01df; versionString=master
+X-Mongodb-Service-Version: gitHash=2bbe10bf0b9f7f0b3b753ab2d888d3efa4dfaf8b; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"awsIAMType":"NONE","databaseName":"admin","deleteAfterDate":"2025-04-04T05:08:12Z","groupId":"b0123456789abcdef012345b","labels":[],"ldapAuthType":"NONE","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/admin/user-338","rel":"self"}],"oidcAuthType":"NONE","roles":[{"databaseName":"admin","roleName":"atlasAdmin"}],"scopes":[{"name":"Cluster0","type":"CLUSTER"},{"name":"Cluster1","type":"CLUSTER"}],"username":"user-338","x509Type":"NONE"}
+{"awsIAMType":"NONE","databaseName":"admin","deleteAfterDate":"2025-04-16T05:07:26Z","groupId":"b0123456789abcdef012345b","labels":[],"ldapAuthType":"NONE","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/admin/user-188","rel":"self"}],"oidcAuthType":"NONE","roles":[{"databaseName":"admin","roleName":"atlasAdmin"}],"scopes":[{"name":"Cluster0","type":"CLUSTER"},{"name":"Cluster1","type":"CLUSTER"}],"username":"user-188","x509Type":"NONE"}

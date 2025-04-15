@@ -19,7 +19,8 @@ ATLAS_INSTALL_PATH="${GOPATH}/bin/$(ATLAS_BINARY_NAME)"
 
 LOCALDEV_IMAGE?=docker.io/mongodb/mongodb-atlas-local
 LINKER_FLAGS=-s -w -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.GitCommit=${GIT_SHA} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version.Version=${ATLAS_VERSION} -X github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options.LocalDevImage=${LOCALDEV_IMAGE}
-ATLAS_E2E_BINARY?=../../bin/${ATLAS_BINARY_NAME}
+ATLAS_E2E_BINARY?=$(abspath bin/${ATLAS_BINARY_NAME})
+export SNAPSHOTS_DIR?=$(abspath test/e2e/testdata/.snapshots)
 
 DEBUG_FLAGS=all=-N -l
 
@@ -161,6 +162,12 @@ build-debug: ## Generate a binary in ./bin for debugging atlascli
 e2e-test: build-debug ## Run E2E tests
 # the target assumes the MCLI_* environment variables are exported
 	@echo "==> Running E2E tests..."
+	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
+
+.PHONY: e2e-test-snapshots
+e2e-test-snapshots: export UPDATE_SNAPSHOTS=false
+e2e-test-snapshots: export E2E_SKIP_CLEANUP=true 
+e2e-test-snapshots: build-debug ## Run E2E tests
 	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
 
 .PHONY: unit-test

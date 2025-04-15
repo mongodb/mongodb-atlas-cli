@@ -1318,3 +1318,18 @@ func Must[T any](value T, err error) T {
 	}
 	return value
 }
+
+func DeleteOrgAPIKey(id string) error {
+	cliPath, err := AtlasCLIBin()
+	if err != nil {
+		return err
+	}
+	cmd := exec.Command(cliPath,
+		orgEntity,
+		apiKeysEntity,
+		"rm",
+		id,
+		"--force")
+	cmd.Env = os.Environ()
+	return cmd.Run()
+}

@@ -34,7 +34,7 @@ require (
 	github.com/mongodb-labs/cobra2snooty v1.19.1
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
-	github.com/shirou/gopsutil/v4 v4.25.2
+	github.com/shirou/gopsutil/v4 v4.25.3
 	github.com/speakeasy-api/openapi-overlay v0.10.1
 	github.com/spf13/afero v1.14.0
 	github.com/spf13/cobra v1.9.1

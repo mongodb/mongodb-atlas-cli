@@ -61,7 +61,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require go.mongodb.org/atlas-sdk/v20250312001 v20250312001.0.0
+require go.mongodb.org/atlas-sdk/v20250312002 v20250312002.0.0
 
 require github.com/minio/minlz v1.0.0 // indirect
 

@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         tags:
-          - e2e
+          - e2eSnap
           - atlas,autogeneration
           - atlas,backup,compliancepolicy
           - atlas,backup,flex

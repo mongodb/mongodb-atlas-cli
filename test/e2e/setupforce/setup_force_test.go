@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && interactive)
+//go:build e2e || e2eSnap || (atlas && interactive)
 
 package setupforce
 

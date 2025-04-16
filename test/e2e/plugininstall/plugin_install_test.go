@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build e2e || (atlas && plugin && install)
+//go:build e2e || e2eSnap || (atlas && plugin && install)
 
 package plugininstall
 

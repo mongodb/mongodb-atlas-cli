@@ -168,7 +168,7 @@ e2e-test: build-debug ## Run E2E tests
 e2e-test-snapshots: export UPDATE_SNAPSHOTS=false
 e2e-test-snapshots: export E2E_SKIP_CLEANUP=true 
 e2e-test-snapshots: build-debug ## Run E2E tests
-	$(TEST_CMD) -v -p 1 -parallel $(E2E_PARALLEL) -v -timeout $(E2E_TIMEOUT) -tags="$(E2E_TAGS)" ./test/e2e... $(E2E_EXTRA_ARGS)
+	$(TEST_CMD) -v -v -timeout $(E2E_TIMEOUT) -tags="e2eSnap" ./test/e2e... $(E2E_EXTRA_ARGS)
 
 .PHONY: unit-test
 unit-test: build-debug ## Run unit-tests

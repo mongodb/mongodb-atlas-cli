@@ -55,7 +55,7 @@ Related Commands
 
 * :ref:`mongocli-cloud-manager-dbusers-create` - Create a database user for your project.
 * :ref:`mongocli-cloud-manager-dbusers-delete` - Delete a database user for your project.
-* :ref:`mongocli-cloud-manager-dbusers-list` - List Atlas database users for your project.
+* :ref:`mongocli-cloud-manager-dbusers-list` - List database users for your project.
 
 
 .. toctree::

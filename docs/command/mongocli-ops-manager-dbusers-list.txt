@@ -12,7 +12,7 @@ mongocli ops-manager dbusers list
    :depth: 1
    :class: singlecol
 
-List Atlas database users for your project.
+List database users for your project.
 
 Syntax
 ------

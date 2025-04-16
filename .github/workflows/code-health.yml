@@ -379,7 +379,6 @@ jobs:
       - run: go install gotest.tools/gotestsum@latest
       - run: make e2e-test-snapshots
         env:
-          DO_NOT_TRACK: 1
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
       - name: Test Summary
         if: always()

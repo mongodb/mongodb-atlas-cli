@@ -360,7 +360,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: mongodb/atlas:test
           file: Dockerfile
-  snapshot_tests:
+  e2e-tests:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -379,6 +379,7 @@ jobs:
       - run: go install gotest.tools/gotestsum@latest
       - run: make e2e-test-snapshots
         env:
+          DO_NOT_TRACK: 1
           TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
       - name: Test Summary
         if: always()

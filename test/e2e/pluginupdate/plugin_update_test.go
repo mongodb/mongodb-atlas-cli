@@ -25,6 +25,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	examplePluginRepository = "mongodb/atlas-cli-plugin-example"
+	examplePluginName       = "atlas-cli-plugin-example"
+)
+
 func TestPluginUpdate(t *testing.T) {
 	_ = internal.TempConfigFolder(t)
 

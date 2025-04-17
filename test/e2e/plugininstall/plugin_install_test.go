@@ -28,6 +28,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	examplePluginRepository = "mongodb/atlas-cli-plugin-example"
+)
+
 func generateTestPluginDirectory(directoryName string) (string, error) {
 	defaultPluginDir, err := plugin.GetDefaultPluginDirectory()
 	if err != nil {

@@ -27,6 +27,11 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	awsEntity       = "aws"
+	customDNSEntity = "customDns"
+)
+
 func TestCustomDNS(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("customDNS")

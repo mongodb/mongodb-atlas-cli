@@ -32,6 +32,10 @@ import (
 )
 
 const (
+	configEntity = "config"
+)
+
+const (
 	existingProfile = "e2e"
 )
 

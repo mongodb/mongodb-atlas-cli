@@ -28,6 +28,14 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	privateEndpointsEntity = "privateendpoints"
+	awsEntity              = "aws"
+	azureEntity            = "azure"
+	gcpEntity              = "gcp"
+	regionalModeEntity     = "regionalModes"
+)
+
 var regionsAWS = []string{
 	"us-east-1",
 	"us-east-2",

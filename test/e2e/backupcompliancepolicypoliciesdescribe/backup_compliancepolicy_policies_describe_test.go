@@ -28,6 +28,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	backupsEntity          = "backups"
+	compliancePolicyEntity = "compliancepolicy"
+	policiesEntity         = "policies"
+)
+
 func TestBackupCompliancePolicyPoliciesDescribe(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()

@@ -24,6 +24,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	performanceAdvisorEntity     = "performanceAdvisor"
+	slowQueryLogsEntity          = "slowQueryLogs"
+	namespacesEntity             = "namespaces"
+	suggestedIndexesEntity       = "suggestedIndexes"
+	slowOperationThresholdEntity = "slowOperationThreshold"
+)
+
 func TestPerformanceAdvisor(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithSnapshotNameFunc(internal.SnapshotHashedName))
 	g.GenerateProjectAndCluster("performanceAdvisor")

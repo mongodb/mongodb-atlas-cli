@@ -31,6 +31,11 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	clustersEntity      = "clusters"
+	onlineArchiveEntity = "onlineArchives"
+)
+
 func TestOnlineArchives(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProjectAndCluster("onlineArchives")

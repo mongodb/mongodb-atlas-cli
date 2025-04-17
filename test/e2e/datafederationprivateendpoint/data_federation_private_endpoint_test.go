@@ -28,6 +28,11 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	datafederationEntity   = "datafederation"
+	privateEndpointsEntity = "privateendpoints"
+)
+
 func TestDataFederationPrivateEndpointsAWS(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("dataFederationPrivateEndpointsAWS")

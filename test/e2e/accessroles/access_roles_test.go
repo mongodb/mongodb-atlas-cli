@@ -27,6 +27,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	awsEntity            = "aws"
+	cloudProvidersEntity = "cloudProviders"
+	accessRolesEntity    = "accessRoles"
+)
+
 const aws = "AWS"
 
 func TestAccessRoles(t *testing.T) {

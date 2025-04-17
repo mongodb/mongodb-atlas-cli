@@ -28,6 +28,13 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	federatedAuthenticationEntity = "federatedAuthentication"
+	federationSettingsEntity      = "federationSettings"
+	identityProviderEntity        = "identityProvider"
+	connectedOrgsConfigsEntity    = "connectedOrgConfigs"
+)
+
 func TestIdentityProviders(t *testing.T) {
 	if internal.IsGov() {
 		t.Skip("Skipping test in Gov environment")

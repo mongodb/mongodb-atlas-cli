@@ -30,6 +30,17 @@ import (
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	alertsEntity   = "alerts"
+	settingsEntity = "settings"
+
+	// AlertConfig constants.
+	group         = "GROUP"
+	eventTypeName = "NO_PRIMARY"
+	intervalMin   = 5
+	delayMin      = 0
+)
+
 func TestAlertConfig(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	var alertID string

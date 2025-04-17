@@ -28,6 +28,16 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	clustersEntity  = "clusters"
+	tierM10         = "M10"
+	backupsEntity   = "backups"
+	snapshotsEntity = "snapshots"
+
+	// Cluster settings.
+	e2eClusterProvider = "AWS"
+)
+
 func TestSnapshots(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()

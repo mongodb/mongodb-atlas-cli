@@ -28,6 +28,14 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
+const (
+	clustersEntity = "clusters"
+	tierM0         = "M0"
+
+	// Cluster settings.
+	e2eClusterProvider = "AWS"
+)
+
 func TestClustersM0Flags(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("clustersM0")

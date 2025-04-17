@@ -25,6 +25,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	logsEntity = "logs"
+)
+
 func TestLogs(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 

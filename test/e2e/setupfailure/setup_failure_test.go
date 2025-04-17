@@ -26,6 +26,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	setupEntity = "setup"
+)
+
 func TestSetupFailureFlow(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithSnapshotSkip(internal.SkipSimilarSnapshots))
 	g.GenerateProject("setup")

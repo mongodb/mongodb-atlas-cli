@@ -29,6 +29,10 @@ import (
 )
 
 const (
+	alertsEntity = "alerts"
+)
+
+const (
 	closed = "CLOSED"
 )
 

@@ -27,6 +27,10 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
+const (
+	backupsEntity = "backups"
+)
+
 func TestSchedule(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithBackup())
 	cliPath, err := internal.AtlasCLIBin()

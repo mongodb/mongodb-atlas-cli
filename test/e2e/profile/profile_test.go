@@ -24,6 +24,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	authEntity = "auth"
+
+	// Auth constants.
+	whoami = "whoami"
+)
+
 func validateProfile(t *testing.T, cliPath string, profile string, profileValid bool) {
 	t.Helper()
 

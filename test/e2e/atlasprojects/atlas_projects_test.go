@@ -31,6 +31,11 @@ import (
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	projectsEntity = "projects"
+	usersEntity    = "users"
+)
+
 func TestAtlasProjects(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()

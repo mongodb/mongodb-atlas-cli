@@ -24,6 +24,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	deploymentEntity = "deployments"
+)
+
 func TestDeploymentsLocalSeedFail(t *testing.T) {
 	const (
 		deploymentName = "test-seed-fail"

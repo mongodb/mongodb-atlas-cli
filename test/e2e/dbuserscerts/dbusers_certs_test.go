@@ -29,6 +29,11 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	dbusersEntity = "dbusers"
+	certsEntity   = "certs"
+)
+
 func TestDBUserCerts(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	n := g.MemoryRand("rand", 1000)

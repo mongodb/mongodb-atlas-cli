@@ -30,6 +30,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	orgEntity              = "org"
+	apiKeysEntity          = "apikeys"
+	apiKeyAccessListEntity = "accessLists"
+)
+
 var errNoAPIKey = errors.New("the apiKey ID is empty")
 
 func TestAtlasOrgAPIKeyAccessList(t *testing.T) {

@@ -28,6 +28,17 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	integrationsEntity = "integrations"
+
+	// Integration constants.
+	datadogEntity   = "DATADOG"
+	opsGenieEntity  = "OPS_GENIE"
+	pagerDutyEntity = "PAGER_DUTY"
+	victorOpsEntity = "VICTOR_OPS"
+	webhookEntity   = "WEBHOOK"
+)
+
 func TestIntegrations(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("integrations")

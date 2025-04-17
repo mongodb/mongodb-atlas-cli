@@ -28,6 +28,11 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	datafederationEntity = "datafederation"
+	queryLimitsEntity    = "querylimits"
+)
+
 func TestDataFederationQueryLimit(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()

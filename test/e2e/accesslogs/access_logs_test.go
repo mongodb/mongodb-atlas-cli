@@ -26,6 +26,10 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	accessLogsEntity = "accessLogs"
+)
+
 func TestAccessLogs(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	req := require.New(t)

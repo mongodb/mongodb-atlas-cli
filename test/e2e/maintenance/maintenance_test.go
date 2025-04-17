@@ -27,6 +27,10 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	maintenanceEntity = "maintenanceWindows"
+)
+
 func TestMaintenanceWindows(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("maintenance")

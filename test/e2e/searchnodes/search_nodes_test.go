@@ -31,6 +31,13 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	clustersEntity = "clusters"
+	searchEntity   = "search"
+	nodesEntity    = "nodes"
+	tierM20        = "M20"
+)
+
 const minSearchNodesMDBVersion = "6.0"
 
 func TestSearchNodes(t *testing.T) {

@@ -29,6 +29,11 @@ import (
 )
 
 const (
+	securityEntity = "security"
+	ldapEntity     = "ldap"
+)
+
+const (
 	pending          = "PENDING"
 	ldapHostname     = "localhost"
 	ldapPort         = "19657"

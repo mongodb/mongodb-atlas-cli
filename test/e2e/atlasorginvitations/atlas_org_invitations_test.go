@@ -29,6 +29,14 @@ import (
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	orgEntity         = "org"
+	invitationsEntity = "invitations"
+)
+const (
+	roleNameOrg = "ORG_READ_ONLY"
+)
+
 func TestAtlasOrgInvitations(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()

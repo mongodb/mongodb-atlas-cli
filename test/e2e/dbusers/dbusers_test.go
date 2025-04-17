@@ -34,6 +34,10 @@ import (
 )
 
 const (
+	dbusersEntity = "dbusers"
+)
+
+const (
 	roleReadWrite        = "readWrite"
 	scopeClusterDataLake = "Cluster0,Cluster1:CLUSTER"
 	clusterName0         = "Cluster0"

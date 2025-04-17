@@ -30,6 +30,11 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
+const (
+	clustersEntity = "clusters"
+	indexEntity    = "index"
+)
+
 func TestClustersFile(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("clustersFile")

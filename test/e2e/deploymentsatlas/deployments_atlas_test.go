@@ -32,6 +32,12 @@ import (
 )
 
 const (
+	searchEntity     = "search"
+	indexEntity      = "index"
+	deploymentEntity = "deployments"
+)
+
+const (
 	collectionNameAtlas = "movies"
 	databaseNameAtlas   = "sample_mflix"
 )

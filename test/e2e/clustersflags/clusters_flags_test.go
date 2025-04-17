@@ -30,6 +30,15 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	clustersEntity = "clusters"
+	diskSizeGB40   = "40"
+	diskSizeGB30   = "30"
+
+	// Cluster settings.
+	e2eClusterProvider = "AWS"
+)
+
 const writeConcern = "majority"
 
 func TestClustersFlags(t *testing.T) {

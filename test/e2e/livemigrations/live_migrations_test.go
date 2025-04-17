@@ -24,6 +24,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	liveMigrationsEntity = "liveMigrations"
+)
+
 func TestLinkToken(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()

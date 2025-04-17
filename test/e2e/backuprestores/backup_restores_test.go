@@ -28,6 +28,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	backupsEntity   = "backups"
+	snapshotsEntity = "snapshots"
+	restoresEntity  = "restores"
+)
+
 func TestRestores(t *testing.T) {
 	cliPath, err := internal.AtlasCLIBin()
 	require.NoError(t, err)

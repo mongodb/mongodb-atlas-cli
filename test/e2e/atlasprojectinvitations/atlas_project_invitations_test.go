@@ -28,6 +28,16 @@ import (
 	"go.mongodb.org/atlas-sdk/v20250312001/admin"
 )
 
+const (
+	invitationsEntity = "invitations"
+	projectsEntity    = "projects"
+
+	// Roles constants.
+	roleName1   = "GROUP_READ_ONLY"
+	roleName2   = "GROUP_DATA_ACCESS_READ_ONLY"
+	roleNameOrg = "ORG_READ_ONLY"
+)
+
 func TestAtlasProjectInvitations(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	cliPath, err := internal.AtlasCLIBin()

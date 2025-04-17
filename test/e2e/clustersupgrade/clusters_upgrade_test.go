@@ -27,6 +27,13 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
+const (
+	clustersEntity = "clusters"
+	tierM10        = "M10"
+	tierM0         = "M0"
+	diskSizeGB40   = "40"
+)
+
 func TestSharedClusterUpgrade(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
 	g.GenerateProject("clustersUpgrade")

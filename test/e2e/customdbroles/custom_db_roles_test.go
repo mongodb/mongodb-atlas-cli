@@ -30,6 +30,10 @@ import (
 )
 
 const (
+	customDBRoleEntity = "customDbRoles"
+)
+
+const (
 	createPrivilege             = "UPDATE"
 	findPrivilege               = "FIND"
 	updatePrivilege             = "LIST_SESSIONS"

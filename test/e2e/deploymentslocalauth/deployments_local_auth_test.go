@@ -35,6 +35,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const (
+	searchEntity     = "search"
+	indexEntity      = "index"
+	deploymentEntity = "deployments"
+
+	// Local Development constants.
+	collectionName  = "movies"
+	databaseName    = "sample_mflix"
+	searchIndexName = "indexTest"
+	vectorSearchDB  = "sample_mflix"
+	vectorSearchCol = "embedded_movies"
+)
+
 func TestDeploymentsLocalWithAuth(t *testing.T) {
 	const (
 		deploymentName = "test-auth"

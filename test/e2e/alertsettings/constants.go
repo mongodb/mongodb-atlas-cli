@@ -17,10 +17,8 @@ package alertsettings
 const (
 	alertsEntity   = "alerts"
 	settingsEntity = "settings"
-)
 
-// AlertConfig constants.
-const (
+	// AlertConfig constants.
 	group         = "GROUP"
 	eventTypeName = "NO_PRIMARY"
 	intervalMin   = 5

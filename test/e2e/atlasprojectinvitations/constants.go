@@ -17,10 +17,8 @@ package atlasprojectinvitations
 const (
 	invitationsEntity = "invitations"
 	projectsEntity    = "projects"
-)
 
-// Roles constants.
-const (
+	// Roles constants.
 	roleName1   = "GROUP_READ_ONLY"
 	roleName2   = "GROUP_DATA_ACCESS_READ_ONLY"
 	roleNameOrg = "ORG_READ_ONLY"

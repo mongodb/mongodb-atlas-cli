@@ -16,9 +16,7 @@ package profile
 
 const (
 	authEntity = "auth"
-)
 
-// Auth constants.
-const (
+	// Auth constants.
 	whoami = "whoami"
 )

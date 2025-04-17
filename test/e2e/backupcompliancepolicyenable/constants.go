@@ -17,10 +17,8 @@ package backupcompliancepolicyenable
 const (
 	backupsEntity          = "backups"
 	compliancePolicyEntity = "compliancepolicy"
-)
 
-// Backup compliance policy constants.
-const (
+	// Backup compliance policy constants.
 	authorizedUserFirstName = "firstname"
 	authorizedUserLastName  = "lastname"
 	authorizedEmail         = "firstname.lastname@example.com"

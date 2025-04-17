@@ -18,10 +18,8 @@ const (
 	searchEntity     = "search"
 	indexEntity      = "index"
 	deploymentEntity = "deployments"
-)
 
-// Local Development constants.
-const (
+	// Local Development constants.
 	collectionName  = "movies"
 	databaseName    = "sample_mflix"
 	searchIndexName = "indexTest"

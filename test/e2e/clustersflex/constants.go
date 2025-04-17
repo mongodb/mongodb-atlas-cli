@@ -16,12 +16,7 @@ package clustersflex
 
 const (
 	clustersEntity = "clusters"
-)
 
-// Cluster settings.
-const (
-	// 	e2eClusterTier       = "M10"
-	// 	e2eGovClusterTier    = "M20"
-	// 	e2eSharedClusterTier = "M2"
+	// Cluster settings.
 	e2eClusterProvider = "AWS"
 )

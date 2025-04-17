@@ -16,10 +16,8 @@ package integrations
 
 const (
 	integrationsEntity = "integrations"
-)
 
-// Integration constants.
-const (
+	// Integration constants.
 	datadogEntity   = "DATADOG"
 	opsGenieEntity  = "OPS_GENIE"
 	pagerDutyEntity = "PAGER_DUTY"

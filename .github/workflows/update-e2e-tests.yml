@@ -153,6 +153,7 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
           E2E_TIMEOUT: 3h
+          E2E_TEST_PACKAGES: ./test/internal..
       - name: Test Summary
         if: always()
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86

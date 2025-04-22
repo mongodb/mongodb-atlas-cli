@@ -122,6 +122,7 @@ functions:
           - MONGODB_ATLAS_PRIVATE_API_KEY
           - MONGODB_ATLAS_SERVICE
           - TEST_CMD
+          - E2E_TEST_PACKAGES
           - E2E_TAGS
           - E2E_TEST_BUCKET
           - E2E_CLOUD_ROLE_ID
@@ -1474,6 +1475,7 @@ tasks:
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
           E2E_TAGS: atlas,cleanup
+          E2E_TEST_PACKAGES: ./test/internal..
           E2E_PARALLEL: 16
           E2E_TIMEOUT: 3h
   - name: atlas_gov_cleanup_e2e
@@ -1497,6 +1499,7 @@ tasks:
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_cloud_gov_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloudgov
           E2E_TAGS: atlas,cleanup
+          E2E_TEST_PACKAGES: ./test/internal..
           E2E_TIMEOUT: 3h
           E2E_PARALLEL: 16
   - name: atlas_deployments_atlas_clusters_e2e

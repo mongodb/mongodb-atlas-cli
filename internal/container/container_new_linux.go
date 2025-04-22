@@ -22,10 +22,10 @@ import "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 func New() Engine {
 	docker := newDockerEngine()
 	if err := docker.Ready(); err != nil {
-		_, _ = log.Debug("Using Podman engine")
+		log.Debug("Using Podman engine")
 		return newPodmanEngine()
 	}
 
-	_, _ = log.Debug("Using Docker engine")
+	log.Debug("Using Docker engine")
 	return docker
 }

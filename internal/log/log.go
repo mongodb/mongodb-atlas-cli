@@ -28,82 +28,94 @@ const (
 	DebugLevel
 )
 
-type Logger struct {
+type Logger interface {
+	SetLevel(level Level)
+	IsDebugLevel() bool
+	IsWarningLevel() bool
+	Debug(a ...any)
+	Debugln(a ...any)
+	Debugf(format string, a ...any)
+	Warning(a ...any)
+	Warningln(a ...any)
+	Warningf(format string, a ...any)
+}
+
+type IOLogger struct {
 	w     io.Writer
 	level Level
 }
 
-func New(w io.Writer, l Level) *Logger {
-	return &Logger{
+func New(w io.Writer, l Level) *IOLogger {
+	return &IOLogger{
 		level: l,
 		w:     w,
 	}
 }
 
-func (l *Logger) Writer() io.Writer {
+func (l *IOLogger) Writer() io.Writer {
 	return l.w
 }
 
-func (l *Logger) SetWriter(w io.Writer) {
+func (l *IOLogger) SetWriter(w io.Writer) {
 	l.w = w
 }
 
-func (l *Logger) SetLevel(level Level) {
+func (l *IOLogger) SetLevel(level Level) {
 	l.level = level
 }
 
-func (l *Logger) Level() Level {
+func (l *IOLogger) Level() Level {
 	return l.level
 }
 
-func (l *Logger) IsDebugLevel() bool {
+func (l *IOLogger) IsDebugLevel() bool {
 	return l.level >= DebugLevel
 }
 
-func (l *Logger) IsWarningLevel() bool {
+func (l *IOLogger) IsWarningLevel() bool {
 	return l.level >= WarningLevel
 }
 
-func (l *Logger) Debug(a ...any) (int, error) {
+func (l *IOLogger) Debug(a ...any) {
 	if !l.IsDebugLevel() {
-		return 0, nil
+		return
 	}
-	return fmt.Fprint(l.w, a...)
+	fmt.Fprint(l.w, a...)
 }
 
-func (l *Logger) Debugln(a ...any) (int, error) {
+func (l *IOLogger) Debugln(a ...any) {
 	if !l.IsDebugLevel() {
-		return 0, nil
+		return
 	}
-	return fmt.Fprintln(l.w, a...)
+	fmt.Fprintln(l.w, a...)
 }
 
-func (l *Logger) Debugf(format string, a ...any) (int, error) {
+func (l *IOLogger) Debugf(format string, a ...any) {
 	if !l.IsDebugLevel() {
-		return 0, nil
+		return
 	}
-	return fmt.Fprintf(l.w, format, a...)
+	fmt.Fprintf(l.w, format, a...)
 }
 
-func (l *Logger) Warning(a ...any) (int, error) {
+func (l *IOLogger) Warning(a ...any) {
 	if !l.IsWarningLevel() {
-		return 0, nil
+		return
 	}
-	return fmt.Fprint(l.w, a...)
+	fmt.Fprint(l.w, a...)
 }
 
-func (l *Logger) Warningln(a ...any) (int, error) {
+func (l *IOLogger) Warningln(a ...any) {
 	if !l.IsWarningLevel() {
-		return 0, nil
+		return
 	}
-	return fmt.Fprintln(l.w, a...)
+	fmt.Fprintln(l.w, a...)
 }
 
-func (l *Logger) Warningf(format string, a ...any) (int, error) {
+func (l *IOLogger) Warningf(format string, a ...any) {
 	if !l.IsWarningLevel() {
-		return 0, nil
+		return
 	}
-	return fmt.Fprintf(l.w, format, a...)
+	fmt.Fprintf(l.w, format, a...)
 }
 
 var std = New(os.Stderr, WarningLevel)
@@ -128,30 +140,30 @@ func IsWarningLevel() bool {
 	return std.IsWarningLevel()
 }
 
-func Default() *Logger {
+func Default() *IOLogger {
 	return std
 }
 
-func Debug(a ...any) (int, error) {
-	return std.Debug(a...)
+func Debug(a ...any) {
+	std.Debug(a...)
 }
 
-func Debugln(a ...any) (int, error) {
-	return std.Debugln(a...)
+func Debugln(a ...any) {
+	std.Debugln(a...)
 }
 
-func Debugf(format string, a ...any) (int, error) {
-	return std.Debugf(format, a...)
+func Debugf(format string, a ...any) {
+	std.Debugf(format, a...)
 }
 
-func Warning(a ...any) (int, error) {
-	return std.Warning(a...)
+func Warning(a ...any) {
+	std.Warning(a...)
 }
 
-func Warningln(a ...any) (int, error) {
-	return std.Warningln(a...)
+func Warningln(a ...any) {
+	std.Warningln(a...)
 }
 
-func Warningf(format string, a ...any) (int, error) {
-	return std.Warningf(format, a...)
+func Warningf(format string, a ...any) {
+	std.Warningf(format, a...)
 }

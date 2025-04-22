@@ -65,7 +65,7 @@ func (opts *UpdateOpts) Run() error {
 
 		return opts.Print(r)
 	case *admin.ClusterSearchIndex:
-		_, _ = log.Warningln("you're using an old search index definition")
+		log.Warningln("you're using an old search index definition")
 		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 		r, err := opts.store.UpdateSearchIndexesDeprecated(opts.ConfigProjectID(), opts.clusterName, opts.id, index)
 		if err != nil {

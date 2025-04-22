@@ -56,7 +56,7 @@ func (ki *GCPKeyIdentifier) ValidateCredentials() error {
 
 	ki.client, err = kmsv1.NewKeyManagementClient(context.Background())
 	if err != nil {
-		_, _ = log.Warningf(`No credentials found for resource: GCP location="%v" projectID="%v" keyRing="%v" keyName="%v"
+		log.Warningf(`No credentials found for resource: GCP location="%v" projectID="%v" keyRing="%v" keyName="%v"
 `, ki.Location, ki.ProjectID, ki.KeyRing, ki.KeyName)
 
 		var json string

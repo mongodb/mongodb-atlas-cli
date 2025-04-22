@@ -157,7 +157,7 @@ func (p *Plugin) Run(cmd *cobra.Command, args []string) error {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
 			cmd.SilenceErrors = true
-			_, _ = log.Debugf("Silenced error: %v", exitErr)
+			log.Debugf("Silenced error: %v", exitErr)
 		}
 		return err
 	}
@@ -194,7 +194,7 @@ func (p *Plugin) GetCobraCommands() []*cobra.Command {
 			// args contains all arguments + the name of the command
 			// we don't need the name of the subcommand
 			if err := p.Run(cmd, args[1:]); err != nil {
-				_, _ = log.Warningf("failed to generate help for plugin command '%v': %v", args[0], err)
+				log.Warningf("failed to generate help for plugin command '%v': %v", args[0], err)
 			}
 		})
 
@@ -250,7 +250,7 @@ func createPluginFromManifest(manifest *Manifest) (*Plugin, error) {
 }
 
 func logPluginWarning(message string, args ...any) {
-	_, _ = log.Warningf(fmt.Sprintf("-- plugin warning: %s\n", message), args...)
+	log.Warningf(fmt.Sprintf("-- plugin warning: %s\n", message), args...)
 }
 
 func (p *Plugin) setTelemetry() {

@@ -32,9 +32,7 @@ func ListKeyProviders(logReader io.ReadSeeker) ([]*AuditLogLineKeyStoreIdentifie
 		lineNb := idx + 1
 		logLine, err := logLineScanner.AuditLogLine()
 		if err != nil {
-			if _, printErr := log.Warningf("error parsing line %d, %v", lineNb, err); printErr != nil {
-				return nil, printErr
-			}
+			log.Warningf("error parsing line %d, %v", lineNb, err)
 			continue
 		}
 
@@ -46,9 +44,7 @@ func ListKeyProviders(logReader io.ReadSeeker) ([]*AuditLogLineKeyStoreIdentifie
 	}
 	if err := logLineScanner.Err(); err != nil {
 		lineNb := idx + 1
-		if _, printErr := log.Warningf("error parsing line %d, %v", lineNb, err); printErr != nil {
-			return nil, printErr
-		}
+		log.Warningf("error parsing line %d, %v", lineNb, err)
 	}
 
 	return ret, nil

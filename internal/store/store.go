@@ -189,7 +189,7 @@ func (s *Store) setAtlasClient(client *http.Client) error {
 			respHeaders += fmt.Sprintf("%v: %v\n", key, strings.Join(value, " "))
 		}
 
-		_, _ = log.Debugf(`request:
+		log.Debugf(`request:
 %v %v
 response:
 %v %v

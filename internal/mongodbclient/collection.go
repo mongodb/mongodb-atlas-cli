@@ -18,7 +18,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -65,7 +64,6 @@ func (c *collection) CreateSearchIndex(ctx context.Context, name, indexType stri
 
 	_, err := c.collection.SearchIndexes().CreateOne(ctx, model)
 
-	_, _ = log.Debugln("Creating search index with definition: ", model)
 	if err != nil {
 		return nil, err
 	}

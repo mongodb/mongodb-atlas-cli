@@ -51,7 +51,7 @@ func withHelpCommand(cmd *cobra.Command, args []string) EventOpt {
 
 		helpCmd, _, err := cmd.Root().Find(args)
 		if err != nil {
-			_, _ = log.Debugf("telemetry: failed to find help command: %v\n", err)
+			log.Debugf("telemetry: failed to find help command: %v\n", err)
 			return
 		}
 
@@ -130,13 +130,13 @@ func withCommandPath(cmd CmdName) EventOpt {
 func withDuration(cmd *cobra.Command) EventOpt {
 	return func(event Event) {
 		if cmd.Context() == nil {
-			_, _ = log.Debugln("telemetry: context not found")
+			log.Debugln("telemetry: context not found")
 			return
 		}
 
 		ctxValue, found := cmd.Context().Value(contextKey).(telemetryContextValue)
 		if !found {
-			_, _ = log.Debugln("telemetry: context not found")
+			log.Debugln("telemetry: context not found")
 			return
 		}
 
@@ -156,7 +156,7 @@ func withAnonymousID() EventOpt {
 		id, err := machineid.ProtectedID(config.AtlasCLI)
 		if err != nil {
 			event.Properties["device_id_err"] = err.Error()
-			_, _ = log.Debugf("error generating machine id: %v\n", err)
+			log.Debugf("error generating machine id: %v\n", err)
 			return
 		}
 		event.Properties["device_id"] = id

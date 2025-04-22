@@ -23,15 +23,11 @@ import (
 
 func (opts *DeploymentOpts) PostRunMessages() error {
 	if !opts.IsCliAuthenticated() {
-		if _, err := log.Warningln("\nTo list both local and cloud Atlas deployments, authenticate to your Atlas account using the \"atlas login\" command."); err != nil {
-			return err
-		}
+		log.Warningln("\nTo list both local and cloud Atlas deployments, authenticate to your Atlas account using the \"atlas login\" command.")
 	}
 
 	if err := opts.ContainerEngine.Ready(); errors.Is(err, container.ErrContainerEngineNotFound) {
-		if _, err = log.Warningln("\nTo get output for both local and Atlas deployments, install " + opts.ContainerEngine.Name()); err != nil {
-			return err
-		}
+		log.Warningln("\nTo get output for both local and Atlas deployments, install " + opts.ContainerEngine.Name())
 	}
 	return nil
 }

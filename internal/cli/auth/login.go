@@ -218,7 +218,7 @@ func (opts *LoginOpts) handleBrowser(uri string) {
 	}
 
 	if errBrowser := browser.OpenURL(uri); errBrowser != nil {
-		_, _ = log.Warningln("There was an issue opening your browser")
+		log.Warningln("There was an issue opening your browser")
 	}
 }
 

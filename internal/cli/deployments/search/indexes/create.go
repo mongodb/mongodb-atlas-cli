@@ -114,7 +114,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 
 		definition = index.Definition
 	case *admin.ClusterSearchIndex:
-		_, _ = log.Warningln("you're using an old search index definition")
+		log.Warningln("you're using an old search index definition")
 		idxType = index.Type
 
 		opts.indexID.Database = index.Database
@@ -221,7 +221,7 @@ func (opts *CreateOpts) RunAtlas() error {
 
 		return nil
 	case *admin.ClusterSearchIndex:
-		_, _ = log.Warningln("you're using an old search index definition")
+		log.Warningln("you're using an old search index definition")
 		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 		r, err := opts.store.CreateSearchIndexesDeprecated(opts.ConfigProjectID(), opts.DeploymentName, index)
 		if err != nil {

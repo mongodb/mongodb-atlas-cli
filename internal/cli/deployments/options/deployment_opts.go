@@ -199,7 +199,7 @@ func (*DeploymentOpts) ValidateMinimumRequirements() error {
 
 	if v.Available < minimumRAM {
 		gbOfRAMAvailable := v.Available / (bytesInGb)
-		_, _ = log.Warningf("system does not meet the minimum system requirements: required to have 2GB of ram available. %vGb available.\n", gbOfRAMAvailable)
+		log.Warningf("system does not meet the minimum system requirements: required to have 2GB of ram available. %vGb available.\n", gbOfRAMAvailable)
 	}
 
 	numberOfCores, err := cpu.Counts(true)
@@ -208,7 +208,7 @@ func (*DeploymentOpts) ValidateMinimumRequirements() error {
 	}
 
 	if numberOfCores < minimumCores {
-		_, _ = log.Warningf("system does not meet the minimum system requirements: required to have at least 2 cpu cores. %v cpu cores available.\n", numberOfCores)
+		log.Warningf("system does not meet the minimum system requirements: required to have at least 2 cpu cores. %v cpu cores available.\n", numberOfCores)
 	}
 
 	return nil

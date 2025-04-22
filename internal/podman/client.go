@@ -127,7 +127,7 @@ func (o *client) VerifyVersion(ctx context.Context) error {
 	}
 
 	if version.Compare(minPodmanVersion) == -1 {
-		_, _ = log.Warningf("Detected podman version %s, the minimum supported podman version is %s.\n", version.String(), minPodmanVersion.String())
+		log.Warningf("Detected podman version %s, the minimum supported podman version is %s.\n", version.String(), minPodmanVersion.String())
 	}
 
 	return nil
@@ -143,17 +143,17 @@ func extractErrorMessage(exitErr *exec.ExitError) error {
 }
 
 func (*client) runPodman(ctx context.Context, arg ...string) ([]byte, error) {
-	_, _ = log.Debug(fmt.Sprintln(append([]string{"podman"}, arg...)))
+	log.Debug(fmt.Sprintln(append([]string{"podman"}, arg...)))
 
 	cmd := exec.CommandContext(ctx, "podman", arg...)
 
 	output, err := cmd.Output() // ignore stderr
 
-	_, _ = log.Debug(string(output))
+	log.Debug(string(output))
 
 	var exitErr *exec.ExitError
 	if errors.As(err, &exitErr) {
-		_, _ = log.Debug(string(exitErr.Stderr))
+		log.Debug(string(exitErr.Stderr))
 		err = extractErrorMessage(exitErr)
 	}
 

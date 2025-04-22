@@ -29,7 +29,7 @@ func TrackAsk(qs []*survey.Question, response any, opts ...survey.AskOpt) error 
 	for _, q := range qs {
 		answer, _ := readAnswer(response, q.Name)
 		if e := currentTracker.trackSurvey(q.Prompt, answer, err); e != nil {
-			_, _ = log.Debugf("telemetry: failed to track survey: %v\n", e)
+			log.Debugf("telemetry: failed to track survey: %v\n", e)
 		}
 	}
 	return err
@@ -42,7 +42,7 @@ func TrackAskOne(p survey.Prompt, response any, opts ...survey.AskOpt) error {
 	}
 
 	if e := currentTracker.trackSurvey(p, response, err); e != nil {
-		_, _ = log.Debugf("telemetry: failed to track survey: %v\n", e)
+		log.Debugf("telemetry: failed to track survey: %v\n", e)
 	}
 	return err
 }

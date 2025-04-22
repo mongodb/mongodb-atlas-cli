@@ -228,7 +228,7 @@ func getSignatureAssetandKeyID(name string, assets []*github.ReleaseAsset) (int6
 
 	// If no signature package is found, provide warning
 	if signatureAsset == nil {
-		_, _ = log.Warningf("-- plugin warning: no corresponding signature asset found for package %s\n", name)
+		log.Warningf("-- plugin warning: no corresponding signature asset found for package %s\n", name)
 		return 0, 0, nil
 	}
 

@@ -55,7 +55,7 @@ func Builder() *cobra.Command {
 			// err should always be nil, errors happening here should be covered by the generate api commands tool
 			// if err != nil there is a bug in the converter tool
 			if err != nil {
-				_, _ = log.Warningf("failed to add command for operationId: %s, err: %s", command.OperationID, err)
+				log.Warningf("failed to add command for operationId: %s, err: %s", command.OperationID, err)
 				continue
 			}
 

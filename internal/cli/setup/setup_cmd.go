@@ -235,7 +235,7 @@ func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			values.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = log.Warning(setupTemplateIPNotFound)
+			log.Warning(setupTemplateIPNotFound)
 		}
 	}
 
@@ -443,7 +443,7 @@ func (opts *Opts) setupCluster() error {
 		if publicIP := store.IPAddress(); publicIP != "" {
 			opts.IPAddresses = []string{publicIP}
 		} else {
-			_, _ = log.Warning(setupTemplateIPNotFound)
+			log.Warning(setupTemplateIPNotFound)
 		}
 	}
 
@@ -533,9 +533,7 @@ func (opts *Opts) runConnectWith() error {
 		if !compass.Detect() {
 			return compass.ErrCompassNotInstalled
 		}
-		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
-			return err
-		}
+		log.Warningln("Launching MongoDB Compass...")
 		return compass.Run(opts.DBUsername, opts.DBUserPassword, opts.connectionString)
 	case mongoshConnect:
 		if !mongosh.Detect() {
@@ -546,9 +544,7 @@ func (opts *Opts) runConnectWith() error {
 		if !vscode.Detect() {
 			return vscode.ErrVsCodeCliNotInstalled
 		}
-		if _, err := log.Warningln("Launching VsCode..."); err != nil {
-			return err
-		}
+		log.Warningln("Launching VsCode...")
 		return vscode.SaveConnection(opts.connectionString, opts.ClusterName, "atlas")
 	}
 

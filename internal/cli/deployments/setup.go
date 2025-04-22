@@ -132,7 +132,7 @@ func (opts *SetupOpts) initMongoDBClient() error {
 
 func (opts *SetupOpts) logStepStarted(msg string, currentStep int, totalSteps int) {
 	fullMessage := fmt.Sprintf("%d/%d: %s", currentStep, totalSteps, msg)
-	_, _ = log.Warningln(fullMessage)
+	log.Warningln(fullMessage)
 	opts.start()
 }
 
@@ -169,7 +169,7 @@ func (opts *SetupOpts) startEnvironment(ctx context.Context, currentStep int, st
 func (opts *SetupOpts) createLocalDeployment(ctx context.Context) error {
 	currentStep := 1
 
-	_, _ = log.Warningf("Creating your cluster %s\n", opts.DeploymentName)
+	log.Warningf("Creating your cluster %s\n", opts.DeploymentName)
 
 	// verify that the host meets the minimum requirements, if not, print a warning
 	if err := opts.ValidateMinimumRequirements(); err != nil {
@@ -264,11 +264,11 @@ func (opts *SetupOpts) configureContainer(ctx context.Context) error {
 	if err != nil && log.IsDebugLevel() {
 		logs, err := opts.ContainerEngine.ContainerLogs(ctx, opts.LocalMongodHostname())
 		if err != nil {
-			_, _ = log.Debugf("Container unhealthy (hostname=%s), failed to get container logs : %s\n", opts.LocalMongodHostname(), err)
+			log.Debugf("Container unhealthy (hostname=%s), failed to get container logs : %s\n", opts.LocalMongodHostname(), err)
 		} else {
-			_, _ = log.Debugf("Container unhealthy (hostname=%s), container logs:\n", opts.LocalMongodHostname())
+			log.Debugf("Container unhealthy (hostname=%s), container logs:\n", opts.LocalMongodHostname())
 			for _, logLine := range logs {
-				_, _ = log.Debugln(logLine)
+				log.Debugln(logLine)
 			}
 		}
 	}
@@ -557,14 +557,12 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 
 	switch opts.connectWith {
 	case skipConnect:
-		_, _ = fmt.Fprintln(os.Stderr, "connection skipped")
+		fmt.Fprintln(os.Stderr, "connection skipped")
 	case options.CompassConnect:
 		if !compass.Detect() {
 			return compass.ErrCompassNotInstalled
 		}
-		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
-			return err
-		}
+		log.Warningln("Launching MongoDB Compass...")
 		return compass.Run("", "", cs)
 	case options.MongoshConnect:
 		if !mongosh.Detect() {
@@ -575,9 +573,7 @@ func (opts *SetupOpts) runConnectWith(cs string) error {
 		if !vscode.Detect() {
 			return vscode.ErrVsCodeCliNotInstalled
 		}
-		if _, err := log.Warningln("Launching VsCode..."); err != nil {
-			return err
-		}
+		log.Warningln("Launching VsCode...")
 		return vscode.SaveConnection(cs, opts.DeploymentName, opts.DeploymentType)
 	}
 
@@ -646,10 +642,10 @@ func (opts *SetupOpts) runLocal(ctx context.Context) error {
 		return err
 	}
 
-	_, _ = log.Warningln("Deployment created!")
-	_, _ = fmt.Fprintf(opts.OutWriter, `Connection string: "%s"
+	log.Warningln("Deployment created!")
+	fmt.Fprintf(opts.OutWriter, `Connection string: "%s"
 `, cs)
-	_, _ = log.Warningln("")
+	log.Warningln("")
 
 	return opts.runConnectWith(cs)
 }
@@ -659,7 +655,7 @@ func (opts *SetupOpts) runAtlas(ctx context.Context) error {
 
 	// remove global flags and unknown flags
 	var newArgs []string
-	_, _ = log.Debugf("Removing flags and args from original args %s\n", os.Args)
+	log.Debugf("Removing flags and args from original args %s\n", os.Args)
 
 	flagstoRemove := map[string]string{
 		flag.TypeFlag: "1",
@@ -679,7 +675,7 @@ func (opts *SetupOpts) runAtlas(ctx context.Context) error {
 	s.SetArgs(newArgs)
 
 	// run atlas setup
-	_, _ = log.Debugf("Starting to run atlas setup with args %s\n", newArgs)
+	log.Debugf("Starting to run atlas setup with args %s\n", newArgs)
 	_, err = s.ExecuteContextC(ctx)
 	return err
 }
@@ -687,7 +683,7 @@ func (opts *SetupOpts) runAtlas(ctx context.Context) error {
 func (opts *SetupOpts) Run(ctx context.Context) error {
 	if err := opts.validateAndPrompt(); err != nil {
 		if errors.Is(err, errCancel) {
-			_, _ = log.Warningln(err)
+			log.Warningln(err)
 			return nil
 		}
 
@@ -709,7 +705,7 @@ func (opts *SetupOpts) PostRun() {
 func (opts *SetupOpts) validateTier() error {
 	opts.atlasSetup.Tier = strings.ToUpper(opts.atlasSetup.Tier)
 	if opts.atlasSetup.Tier == atlasM2 || opts.atlasSetup.Tier == atlasM5 {
-		_, _ = fmt.Fprintf(os.Stderr, deprecateMessageSharedTier, opts.atlasSetup.Tier)
+		fmt.Fprintf(os.Stderr, deprecateMessageSharedTier, opts.atlasSetup.Tier)
 	}
 	return nil
 }

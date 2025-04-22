@@ -67,9 +67,9 @@ func (ki *AWSKeyIdentifier) ValidateCredentials() error {
 		if !errors.As(err, &target) {
 			return err
 		}
-		_, _ = log.Warningf(`No credentials found for resource: AWS region="%v" endpoint="%v" key="%v"
+		log.Warningf(`No credentials found for resource: AWS region="%v" endpoint="%v" key="%v"
 `, ki.Region, ki.Endpoint, ki.Key)
-		_, _ = log.Warningf("Note: if you have an AWS session token leave AWS access key and AWS secret access key empty")
+		log.Warningf("Note: if you have an AWS session token leave AWS access key and AWS secret access key empty")
 		ki.AccessKey, err = provideInput("Provide AWS access key:", ki.AccessKey)
 		if err != nil {
 			return err

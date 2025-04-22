@@ -51,7 +51,7 @@ type UpdateOpts struct {
 }
 
 func printPluginUpdateWarning(p *plugin.Plugin, err error) {
-	_, _ = log.Warningf("could not update plugin %s because: %v\n", p.Name, err)
+	log.Warningf("could not update plugin %s because: %v\n", p.Name, err)
 }
 
 // extract plugin specifier and version given the input argument of the update command.

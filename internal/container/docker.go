@@ -75,7 +75,7 @@ func (e *dockerImpl) VerifyVersion(ctx context.Context) error {
 	}
 
 	if version.Compare(minDockerVersion) == -1 {
-		_, _ = log.Warningf("Detected docker version %s, the minimum supported docker version is %s.\n", version.String(), minDockerVersion.String())
+		log.Warningf("Detected docker version %s, the minimum supported docker version is %s.\n", version.String(), minDockerVersion.String())
 	}
 
 	return nil
@@ -270,7 +270,7 @@ func (e *dockerImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 }
 
 func parseContainers(buf []byte) ([]Container, error) {
-	_, _ = log.Debugf("parsing containers: %s", string(buf))
+	log.Debugf("parsing containers: %s", string(buf))
 	result := []Container{}
 	decoder := json.NewDecoder(bytes.NewBuffer(buf))
 	for decoder.More() {
@@ -454,7 +454,7 @@ func (e *dockerImpl) ImageHealthCheck(ctx context.Context, name string) (*ImageH
 
 	var inspectOutput []PartialImageInspect
 	if err := json.Unmarshal(b, &inspectOutput); err != nil {
-		_, _ = log.Debug("failed json parsing: " + string(b))
+		log.Debug("failed json parsing: " + string(b))
 		return nil, fmt.Errorf("%w: %w", errParseHealthCheck, err)
 	}
 

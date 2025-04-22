@@ -20,6 +20,6 @@ package container
 import "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 
 func New() Engine {
-	_, _ = log.Debug("Using Docker engine")
+	log.Debug("Using Docker engine")
 	return newDockerEngine()
 }

@@ -63,23 +63,19 @@ func TestLogger(t *testing.T) {
 		t.Run(fmt.Sprintf("%v %v", i, testCase.f), func(t *testing.T) {
 			buf := new(bytes.Buffer)
 			logger := New(buf, testCase.level)
-			var err error
 			switch testCase.f {
 			case debugF:
-				_, err = logger.Debug(testCase.input...)
+				logger.Debug(testCase.input...)
 			case debuglnF:
-				_, err = logger.Debugln(testCase.input...)
+				logger.Debugln(testCase.input...)
 			case debugfF:
-				_, err = logger.Debugf(testCase.input[0].(string), testCase.input[1:]...)
+				logger.Debugf(testCase.input[0].(string), testCase.input[1:]...)
 			case warningF:
-				_, err = logger.Warning(testCase.input...)
+				logger.Warning(testCase.input...)
 			case warninglnF:
-				_, err = logger.Warningln(testCase.input...)
+				logger.Warningln(testCase.input...)
 			case warningfF:
-				_, err = logger.Warningf(testCase.input[0].(string), testCase.input[1:]...)
-			}
-			if err != nil {
-				t.Fatal(err)
+				logger.Warningf(testCase.input[0].(string), testCase.input[1:]...)
 			}
 			got := buf.String()
 			if got != testCase.expected {
@@ -127,23 +123,19 @@ func TestPackage(t *testing.T) {
 			buf := new(bytes.Buffer)
 			SetWriter(buf)
 			SetLevel(testCase.level)
-			var err error
 			switch testCase.f {
 			case debugF:
-				_, err = Debug(testCase.input...)
+				Debug(testCase.input...)
 			case debuglnF:
-				_, err = Debugln(testCase.input...)
+				Debugln(testCase.input...)
 			case debugfF:
-				_, err = Debugf(testCase.input[0].(string), testCase.input[1:]...)
+				Debugf(testCase.input[0].(string), testCase.input[1:]...)
 			case warningF:
-				_, err = Warning(testCase.input...)
+				Warning(testCase.input...)
 			case warninglnF:
-				_, err = Warningln(testCase.input...)
+				Warningln(testCase.input...)
 			case warningfF:
-				_, err = Warningf(testCase.input[0].(string), testCase.input[1:]...)
-			}
-			if err != nil {
-				t.Fatal(err)
+				Warningf(testCase.input[0].(string), testCase.input[1:]...)
 			}
 			got := buf.String()
 			if got != testCase.expected {

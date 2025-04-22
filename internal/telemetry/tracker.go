@@ -74,7 +74,7 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 
 	t.storeSet = true
 	if t.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry()); err != nil {
-		_, _ = log.Debugf("telemetry: failed to set store: %v\n", err)
+		log.Debugf("telemetry: failed to set store: %v\n", err)
 		t.storeSet = false
 	}
 
@@ -82,7 +82,7 @@ func newTracker(ctx context.Context, cmd *cobra.Command, args []string) (*tracke
 		o := []store.Option{store.UnauthenticatedPreset(config.Default()), store.WithContext(ctx), store.Telemetry(), store.Service(config.CloudService)}
 
 		if t.unauthStore, err = store.New(o...); err != nil {
-			_, _ = log.Debugf("telemetry: failed to set unauth store: %v\n", err)
+			log.Debugf("telemetry: failed to set unauth store: %v\n", err)
 		}
 	}
 
@@ -125,10 +125,10 @@ func (t *tracker) trackCommand(data TrackOptions, opt ...EventOpt) error {
 	event := newEvent(o...)
 	events, err := t.read()
 	if err != nil {
-		_, _ = log.Debugf("telemetry: failed to read cache: %v\n", err)
+		log.Debugf("telemetry: failed to read cache: %v\n", err)
 	}
 	events = append(events, event)
-	_, _ = log.Debugf("telemetry: events: %v\n", events)
+	log.Debugf("telemetry: events: %v\n", events)
 	if !t.storeSet {
 		err = t.unauthStore.SendUnauthEvents(events)
 	} else {

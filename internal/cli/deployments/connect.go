@@ -177,9 +177,7 @@ func (opts *ConnectOpts) connectToDeployment(connectionString string) error {
 		if !compass.Detect() {
 			return compass.ErrCompassNotInstalled
 		}
-		if _, err := log.Warningln("Launching MongoDB Compass..."); err != nil {
-			return err
-		}
+		log.Warningln("Launching MongoDB Compass...")
 		return compass.Run(opts.DBUsername, opts.DBUserPassword, connectionString)
 	case options.MongoshConnect:
 		if !mongosh.Detect() {
@@ -190,9 +188,7 @@ func (opts *ConnectOpts) connectToDeployment(connectionString string) error {
 		if !vscode.Detect() {
 			return vscode.ErrVsCodeCliNotInstalled
 		}
-		if _, err := log.Warningln("Launching VsCode..."); err != nil {
-			return err
-		}
+		log.Warningln("Launching VsCode...")
 		return vscode.SaveConnection(connectionString, opts.DeploymentName, opts.DeploymentType)
 	}
 

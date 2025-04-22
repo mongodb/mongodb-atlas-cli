@@ -106,6 +106,6 @@ func (opts *DeploymentOpts) AppendDeploymentUUID() {
 	}
 
 	if err := opts.collectUUID(context.TODO()); err != nil {
-		_, _ = log.Debugf("error collecting deployment uuid: %v", err)
+		log.Debugf("error collecting deployment uuid: %v", err)
 	}
 }

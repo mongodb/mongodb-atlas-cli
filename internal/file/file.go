@@ -123,7 +123,7 @@ type Decoder interface {
 func decodePrintWarning[T Decoder](file []byte, out any, createDecoder func(io.Reader) T, setStrictSettings func(T)) error {
 	warning, err := decodeWithWarning(file, out, createDecoder, setStrictSettings)
 	if warning != "" {
-		_, _ = log.Warningln(warning)
+		log.Warningln(warning)
 	}
 
 	return err

@@ -39,7 +39,7 @@ func StartTrackingCommand(cmd *cobra.Command, args []string) {
 	var err error
 	currentTracker, err = newTracker(cmd.Context(), cmd, args)
 	if err != nil {
-		_, _ = log.Debugf("telemetry: failed to create tracker: %v\n", err)
+		log.Debugf("telemetry: failed to create tracker: %v\n", err)
 		return
 	}
 }
@@ -54,6 +54,6 @@ func FinishTrackingCommand(opt TrackOptions) {
 	}
 
 	if err := currentTracker.trackCommand(opt, options...); err != nil {
-		_, _ = log.Debugf("telemetry: failed to track command: %v\n", err)
+		log.Debugf("telemetry: failed to track command: %v\n", err)
 	}
 }

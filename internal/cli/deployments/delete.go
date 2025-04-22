@@ -82,7 +82,7 @@ func (opts *DeleteOpts) runLocal(ctx context.Context) error {
 	opts.DeploymentTelemetry.AppendDeploymentUUID()
 
 	return opts.Delete(func() error {
-		_, _ = log.Warningln("deleting deployment...")
+		log.Warningln("deleting deployment...")
 		opts.StartSpinner()
 
 		defer opts.StopSpinner()

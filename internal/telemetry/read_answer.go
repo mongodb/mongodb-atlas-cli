@@ -35,7 +35,7 @@ func listFields(target reflect.Value) []fieldValue {
 	targetType := target.Type()
 	numFields := targetType.NumField()
 	ret := make([]fieldValue, numFields)
-	for i := 0; i < numFields; i++ {
+	for i := range numFields {
 		ret[i] = fieldValue{
 			field: targetType.Field(i),
 			value: target.Field(i),

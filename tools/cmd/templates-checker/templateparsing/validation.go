@@ -176,7 +176,7 @@ func getTemplateFields(namedTypeInfo *types.Named) (map[string]types.Type, error
 	structStructure := make(map[string]types.Type)
 
 	// Add fields and embedded fields
-	for i := 0; i < structInfo.NumFields(); i++ {
+	for i := range structInfo.NumFields() {
 		field := structInfo.Field(i)
 		fieldName := field.Name()
 		lowerCaseFieldName := strings.ToLower(fieldName)
@@ -204,7 +204,7 @@ func getTemplateFields(namedTypeInfo *types.Named) (map[string]types.Type, error
 	}
 
 	// Add method names
-	for i := 0; i < namedTypeInfo.NumMethods(); i++ {
+	for i := range namedTypeInfo.NumMethods() {
 		method := namedTypeInfo.Method(i)
 
 		// Only check public fields

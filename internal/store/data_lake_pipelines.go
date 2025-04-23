@@ -91,7 +91,7 @@ func (s *Store) UpdatePipeline(projectID, id string, opts atlasv2.DataLakeIngest
 
 // DeletePipeline encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePipeline(projectID, id string) error {
-	_, _, err := s.clientv2.DataLakePipelinesApi.DeletePipeline(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.DataLakePipelinesApi.DeletePipeline(s.ctx, projectID, id).Execute()
 	return err
 }
 

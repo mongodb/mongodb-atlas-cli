@@ -80,7 +80,7 @@ func (s *Store) UpdateDataFederation(projectID, id string, opts *admin.DataLakeT
 
 // DeleteDataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteDataFederation(projectID, id string) error {
-	_, _, err := s.clientv2.DataFederationApi.DeleteFederatedDatabase(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.DataFederationApi.DeleteFederatedDatabase(s.ctx, projectID, id).Execute()
 	return err
 }
 

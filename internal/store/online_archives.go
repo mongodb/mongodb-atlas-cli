@@ -86,6 +86,6 @@ func (s *Store) DeleteOnlineArchive(projectID, clusterName, archiveID string) er
 	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	_, _, err := s.clientv2.OnlineArchiveApi.DeleteOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
+	_, err := s.clientv2.OnlineArchiveApi.DeleteOnlineArchive(s.ctx, projectID, archiveID, clusterName).Execute()
 	return err
 }

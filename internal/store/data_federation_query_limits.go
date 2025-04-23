@@ -58,6 +58,6 @@ func (s *Store) CreateDataFederationQueryLimit(projectID, tenantName, limitName 
 
 // DeleteDataFederationQueryLimit encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteDataFederationQueryLimit(projectID, tenantName, limitName string) error {
-	_, _, err := s.clientv2.DataFederationApi.DeleteOneDataFederationInstanceQueryLimit(s.ctx, projectID, tenantName, limitName).Execute()
+	_, err := s.clientv2.DataFederationApi.DeleteOneDataFederationInstanceQueryLimit(s.ctx, projectID, tenantName, limitName).Execute()
 	return err
 }

@@ -51,7 +51,7 @@ func (s *Store) Integrations(projectID string) (*atlasv2.PaginatedIntegration, e
 
 // DeleteIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteIntegration(projectID, integrationType string) error {
-	_, _, err := s.clientv2.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegration(s.ctx, integrationType, projectID).Execute()
+	_, err := s.clientv2.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegration(s.ctx, integrationType, projectID).Execute()
 	return err
 }
 

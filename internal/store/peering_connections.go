@@ -173,7 +173,7 @@ func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atla
 
 // DeleteContainer encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteContainer(projectID, containerID string) error {
-	_, _, err := s.clientv2.NetworkPeeringApi.DeletePeeringContainer(s.ctx, projectID, containerID).Execute()
+	_, err := s.clientv2.NetworkPeeringApi.DeletePeeringContainer(s.ctx, projectID, containerID).Execute()
 	return err
 }
 

@@ -55,6 +55,6 @@ func (s *Store) ListConnectedOrgConfigs(opts *atlasv2.ListConnectedOrgConfigsApi
 
 // DeleteConnectedOrgConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteConnectedOrgConfig(federationSettingsID string, orgID string) error {
-	_, _, err := s.clientv2.FederatedAuthenticationApi.RemoveConnectedOrgConfig(s.ctx, federationSettingsID, orgID).Execute()
+	_, err := s.clientv2.FederatedAuthenticationApi.RemoveConnectedOrgConfig(s.ctx, federationSettingsID, orgID).Execute()
 	return err
 }

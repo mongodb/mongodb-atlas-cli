@@ -54,7 +54,7 @@ func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEn
 
 // DeleteProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectIPAccessList(projectID, entry string) error {
-	_, _, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
+	_, err := s.clientv2.ProjectIPAccessListApi.DeleteProjectIpAccessList(s.ctx, projectID, entry).Execute()
 	return err
 }
 

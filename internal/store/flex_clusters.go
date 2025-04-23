@@ -77,6 +77,6 @@ func (s *Store) DeleteFlexCluster(groupID, name string) error {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
 
-	_, _, err := s.clientv2.FlexClustersApi.DeleteFlexCluster(s.ctx, groupID, name).Execute()
+	_, err := s.clientv2.FlexClustersApi.DeleteFlexCluster(s.ctx, groupID, name).Execute()
 	return err
 }

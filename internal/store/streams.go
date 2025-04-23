@@ -99,7 +99,7 @@ func (s *Store) CreateStream(projectID string, processor *atlasv2.StreamsTenant)
 }
 
 func (s *Store) DeleteStream(projectID, name string) error {
-	_, _, err := s.clientv2.StreamsApi.DeleteStreamInstance(s.ctx, projectID, name).Execute()
+	_, err := s.clientv2.StreamsApi.DeleteStreamInstance(s.ctx, projectID, name).Execute()
 	return err
 }
 
@@ -145,7 +145,7 @@ func (s *Store) UpdateConnection(projectID, tenantName, connectionsName string, 
 
 // DeleteConnection encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteConnection(projectID, tenantName, connectionName string) error {
-	_, _, err := s.clientv2.StreamsApi.DeleteStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
+	_, err := s.clientv2.StreamsApi.DeleteStreamConnection(s.ctx, projectID, tenantName, connectionName).Execute()
 	return err
 }
 
@@ -165,6 +165,6 @@ func (s *Store) DescribePrivateLinkEndpoint(projectID, connectionID string) (*at
 }
 
 func (s *Store) DeletePrivateLinkEndpoint(projectID, connectionID string) error {
-	_, _, err := s.clientv2.StreamsApi.DeletePrivateLinkConnection(s.ctx, projectID, connectionID).Execute()
+	_, err := s.clientv2.StreamsApi.DeletePrivateLinkConnection(s.ctx, projectID, connectionID).Execute()
 	return err
 }

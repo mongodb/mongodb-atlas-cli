@@ -87,7 +87,7 @@ func (s *Store) CreateOrganizationAPIKey(orgID string, input *atlasv2.CreateAtla
 
 // DeleteOrganizationAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKey(orgID, id string) error {
-	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.DeleteApiKey(s.ctx, orgID, id).Execute()
+	_, err := s.clientv2.ProgrammaticAPIKeysApi.DeleteApiKey(s.ctx, orgID, id).Execute()
 	return err
 }
 
@@ -115,6 +115,6 @@ func (s *Store) AssignProjectAPIKey(projectID, apiKeyID string, input *atlasv2.U
 
 // DeleteProjectAPIKey encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProjectAPIKey(projectID, id string) error {
-	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.RemoveProjectApiKey(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.ProgrammaticAPIKeysApi.RemoveProjectApiKey(s.ctx, projectID, id).Execute()
 	return err
 }

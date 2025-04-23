@@ -71,6 +71,6 @@ func (s *Store) UpdateSearchIndexesDeprecated(projectID, clusterName, indexID st
 
 // DeleteSearchIndexDeprecated encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteSearchIndexDeprecated(projectID, clusterName, indexID string) error {
-	_, _, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndexDeprecated(s.ctx, projectID, clusterName, indexID).Execute()
+	_, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndexDeprecated(s.ctx, projectID, clusterName, indexID).Execute()
 	return err
 }

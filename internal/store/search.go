@@ -81,6 +81,6 @@ func (s *Store) UpdateSearchIndexes(projectID, clusterName, indexID string, inde
 
 // DeleteSearchIndex encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteSearchIndex(projectID, clusterName, indexID string) error {
-	_, _, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
+	_, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndex(s.ctx, projectID, clusterName, indexID).Execute()
 	return err
 }

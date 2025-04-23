@@ -57,7 +57,7 @@ func (s *Store) CreateDatabaseUser(user *atlasv2.CloudDatabaseUser) (*atlasv2.Cl
 }
 
 func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
-	_, _, err := s.clientv2.DatabaseUsersApi.DeleteDatabaseUser(s.ctx, groupID, authDB, username).Execute()
+	_, err := s.clientv2.DatabaseUsersApi.DeleteDatabaseUser(s.ctx, groupID, authDB, username).Execute()
 	return err
 }
 

@@ -205,7 +205,7 @@ func (s *Store) Snapshot(projectID, clusterName, snapshotID string) (*atlasv2.Di
 
 // DeleteSnapshot encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteSnapshot(projectID, clusterName, snapshotID string) error {
-	_, _, err := s.clientv2.CloudBackupsApi.DeleteReplicaSetBackup(s.ctx, projectID, clusterName, snapshotID).Execute()
+	_, err := s.clientv2.CloudBackupsApi.DeleteReplicaSetBackup(s.ctx, projectID, clusterName, snapshotID).Execute()
 	return err
 }
 
@@ -249,7 +249,7 @@ func (s *Store) CreateExportBucket(projectID string, bucket *atlasv2.DiskBackupS
 
 // DeleteExportBucket encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteExportBucket(projectID, bucketID string) error {
-	_, _, err := s.clientv2.CloudBackupsApi.DeleteExportBucket(s.ctx, projectID, bucketID).Execute()
+	_, err := s.clientv2.CloudBackupsApi.DeleteExportBucket(s.ctx, projectID, bucketID).Execute()
 	return err
 }
 

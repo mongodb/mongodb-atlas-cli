@@ -58,6 +58,6 @@ func (s *Store) CreateDataFederationPrivateEndpoint(projectID string, opts *admi
 
 // DeleteDataFederationPrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteDataFederationPrivateEndpoint(projectID, id string) error {
-	_, _, err := s.clientv2.DataFederationApi.DeleteDataFederationPrivateEndpoint(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.DataFederationApi.DeleteDataFederationPrivateEndpoint(s.ctx, projectID, id).Execute()
 	return err
 }

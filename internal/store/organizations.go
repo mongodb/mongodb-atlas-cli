@@ -56,6 +56,6 @@ func (s *Store) CreateAtlasOrganization(o *atlasv2.CreateOrganizationRequest) (*
 
 // DeleteOrganization encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteOrganization(id string) error {
-	_, _, err := s.clientv2.OrganizationsApi.DeleteOrganization(s.ctx, id).Execute()
+	_, err := s.clientv2.OrganizationsApi.DeleteOrganization(s.ctx, id).Execute()
 	return err
 }

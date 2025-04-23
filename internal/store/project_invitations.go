@@ -54,7 +54,7 @@ func (s *Store) ProjectInvitation(groupID, invitationID string) (*atlasv2.GroupI
 
 // DeleteProjectInvitation encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteProjectInvitation(groupID, invitationID string) error {
-	_, _, err := s.clientv2.ProjectsApi.DeleteProjectInvitation(s.ctx, groupID, invitationID).Execute()
+	_, err := s.clientv2.ProjectsApi.DeleteProjectInvitation(s.ctx, groupID, invitationID).Execute()
 	return err
 }
 

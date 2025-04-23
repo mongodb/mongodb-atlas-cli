@@ -38,7 +38,7 @@ type MaintenanceWindowDescriber interface {
 
 // UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atlasv2.GroupMaintenanceWindow) error {
-	_, _, err := s.clientv2.MaintenanceWindowsApi.UpdateMaintenanceWindow(s.ctx, projectID, maintenanceWindow).Execute()
+	_, err := s.clientv2.MaintenanceWindowsApi.UpdateMaintenanceWindow(s.ctx, projectID, maintenanceWindow).Execute()
 	return err
 }
 

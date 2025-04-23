@@ -97,14 +97,13 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
-
-   Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"
+--------
 
 Create the file below and save it as ``payload.json``
 
 .. code-block::
 
+   # Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"
    {
      "name": "MongoTube - Production",
      "tags": [
@@ -120,6 +119,7 @@ After creating `payload.json`, run the command below in the same directory.
 
 .. code-block::
 
+   # Update the value of the existing project to "MongoTube - Production" and change the tags to an environment tag set to "production"
    atlas api projects updateProject --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
 .. Code end marker, please don't delete this comment

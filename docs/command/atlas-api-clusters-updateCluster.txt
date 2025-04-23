@@ -109,14 +109,13 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
-
-   Updates the cluster to increase disk size to 20GB and increase node count to 5
+--------
 
 Create the file below and save it as ``payload.json``
 
 .. code-block::
 
+   # Updates the cluster to increase disk size to 20GB and increase node count to 5
    {
      "replicationSpecs": [
        {
@@ -141,6 +140,7 @@ After creating `payload.json`, run the command below in the same directory.
 
 .. code-block::
 
+   # Updates the cluster to increase disk size to 20GB and increase node count to 5
    atlas api clusters updateCluster --version 2024-10-23 --file payload.json --clusterName [your-cluster-name] --groupId [your-project-id]
 
 .. Code end marker, please don't delete this comment

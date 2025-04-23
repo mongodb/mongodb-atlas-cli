@@ -112,14 +112,11 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
-
-   Returns all clusters in the specified project
-
-Run the command below.
+--------
 
 .. code-block::
 
+   # Returns all clusters in the specified project
    atlas api clusters listClusters --version 2024-08-05 --groupId [your-project-id]
 
 .. Code end marker, please don't delete this comment

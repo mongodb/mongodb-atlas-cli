@@ -97,14 +97,11 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
-
-   Returns the status of 10.0.0.0/16
-
-Run the command below.
+--------
 
 .. code-block::
 
+   # Returns the status of 10.0.0.0/16
    atlas api projectIpAccessList getProjectIpAccessListStatus --version 2023-01-01 --entryValue 10.0.0.0/16 --groupId [your-project-id]
 
 .. Code end marker, please don't delete this comment

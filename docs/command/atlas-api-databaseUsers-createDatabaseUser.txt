@@ -97,18 +97,17 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
+--------
 
 .. tabs::
    .. tab:: Example
       :tabid: 2023-01-01_aws_iam_authentication
 
-      AWS IAM Authentication
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+      # AWS IAM Authentication
          {
            "awsIAMType": "USER",
            "databaseName": "$external",
@@ -138,6 +137,7 @@ Examples
 
       .. code-block::
 
+         # AWS IAM Authentication
          atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -145,12 +145,11 @@ Examples
    .. tab:: Example 1
       :tabid: 2023-01-01_ldap_authentication
 
-      LDAP Authentication
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+      # LDAP Authentication
          {
            "databaseName": "admin",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -180,6 +179,7 @@ Examples
 
       .. code-block::
 
+         # LDAP Authentication
          atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -187,12 +187,11 @@ Examples
    .. tab:: Example 2
       :tabid: 2023-01-01_oidc_workforce_federated_authentication
 
-      OIDC Workforce Federated Authentication
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+      # OIDC Workforce Federated Authentication
          {
            "databaseName": "admin",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -222,6 +221,7 @@ Examples
 
       .. code-block::
 
+         # OIDC Workforce Federated Authentication
          atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -229,12 +229,11 @@ Examples
    .. tab:: Example 3
       :tabid: 2023-01-01_oidc_workload_federated_authentication
 
-      OIDC Workload Federated Authentication
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+      # OIDC Workload Federated Authentication
          {
            "databaseName": "$external",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -264,6 +263,7 @@ Examples
 
       .. code-block::
 
+         # OIDC Workload Federated Authentication
          atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -271,12 +271,11 @@ Examples
    .. tab:: Example 4
       :tabid: 2023-01-01_scram-sha_authentication
 
-      SCRAM-SHA Authentication
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+      # SCRAM-SHA Authentication
          {
            "databaseName": "admin",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -306,6 +305,7 @@ Examples
 
       .. code-block::
 
+         # SCRAM-SHA Authentication
          atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -313,12 +313,11 @@ Examples
    .. tab:: Example 5
       :tabid: 2023-01-01_x509_authentication
 
-      X509 Authentication
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+      # X509 Authentication
          {
            "databaseName": "$external",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -348,6 +347,7 @@ Examples
 
       .. code-block::
 
+         # X509 Authentication
          atlas api databaseUsers createDatabaseUser --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment

@@ -105,14 +105,11 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
-
-   Returns all access list entries from the specified project's IP access list.
-
-Run the command below.
+--------
 
 .. code-block::
 
+   # Returns all access list entries from the specified project's IP access list.
    atlas api projectIpAccessList listProjectIpAccessLists --version 2023-01-01 --groupId [your-project-id]
 
 .. Code end marker, please don't delete this comment

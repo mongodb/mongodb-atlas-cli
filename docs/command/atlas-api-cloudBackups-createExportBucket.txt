@@ -97,18 +97,17 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
+--------
 
 .. tabs::
    .. tab:: Example
       :tabid: 2023-01-01_aws
 
-      AWS
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+      # AWS
          {
            "bucketName": "export-bucket",
            "cloudProvider": "AWS",
@@ -121,6 +120,7 @@ Examples
 
       .. code-block::
 
+         # AWS
          atlas api cloudBackups createExportBucket --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -128,12 +128,11 @@ Examples
    .. tab:: Example 1
       :tabid: 2024-05-30_aws
 
-      AWS
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+      # AWS
          {
            "bucketName": "export-bucket",
            "cloudProvider": "AWS",
@@ -146,6 +145,7 @@ Examples
 
       .. code-block::
 
+         # AWS
          atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -153,12 +153,11 @@ Examples
    .. tab:: Example 2
       :tabid: 2024-05-30_azure
 
-      Azure
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+      # Azure
          {
            "bucketName": "examplecontainer",
            "cloudProvider": "AZURE",
@@ -172,6 +171,7 @@ Examples
 
       .. code-block::
 
+         # Azure
          atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment

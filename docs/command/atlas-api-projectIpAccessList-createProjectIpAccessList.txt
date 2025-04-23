@@ -109,14 +109,13 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
-
-   Adds multiple access list entries to the specified project
+--------
 
 Create the file below and save it as ``payload.json``
 
 .. code-block::
 
+   # Adds multiple access list entries to the specified project
    [
      {
        "cidrBlock": "192.168.1.0/24",
@@ -133,6 +132,7 @@ After creating `payload.json`, run the command below in the same directory.
 
 .. code-block::
 
+   # Adds multiple access list entries to the specified project
    atlas api projectIpAccessList createProjectIpAccessList --version 2023-01-01 --file payload.json --groupId [your-project-id]
 
 .. Code end marker, please don't delete this comment

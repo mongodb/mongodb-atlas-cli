@@ -81,7 +81,7 @@ Options
      - Human-readable label that represents the user that authenticates to MongoDB. The format of this label depends on the method of authentication:
        
        | Authentication Method | Parameter Needed | Parameter Value | username Format |
-       |---|---|---|---|
+       
        | AWS IAM | awsIAMType | ROLE | <abbr title="Amazon Resource Name">ARN</abbr> |
        | AWS IAM | awsIAMType | USER | <abbr title="Amazon Resource Name">ARN</abbr> |
        | x.509 | x509Type | CUSTOMER | [RFC 2253](https://tools.ietf.org/html/2253) Distinguished Name |

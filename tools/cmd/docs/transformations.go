@@ -110,8 +110,10 @@ func replaceFlagUsage(cmd *cobra.Command, f *pflag.Flag) {
 	if !ok {
 		return
 	}
-
-	f.Usage = paramMetadata.Usage
+	// Snooty does not support the string "|---|---|---|---|" that we use in some API field description to generate a table.
+	// Snooty error: ERROR(): Substitution reference could not be replaced: "|---|"
+	usage := strings.ReplaceAll(paramMetadata.Usage, "|---|---|---|---|", "")
+	f.Usage = usage
 }
 
 func sortedKeys[K cmp.Ordered, V any](m map[K]V) []K {

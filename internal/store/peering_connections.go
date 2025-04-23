@@ -62,6 +62,17 @@ type ContainersDeleter interface {
 	DeleteContainer(string, string) error
 }
 
+type ListOptions struct {
+	PageNum      int
+	ItemsPerPage int
+	IncludeCount bool
+}
+
+type ContainersListOptions struct {
+	ListOptions
+	ProviderName string
+}
+
 // PeeringConnections encapsulates the logic to manage different cloud providers.
 func (s *Store) PeeringConnections(projectID string, opts *ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error) {
 	result, _, err := s.clientv2.NetworkPeeringApi.ListPeeringConnections(s.ctx, projectID).

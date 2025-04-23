@@ -140,7 +140,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 
 	var sb strings.Builder
 	sb.WriteString(`Examples
------------------
+--------
 
 `)
 
@@ -176,12 +176,6 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				sb.WriteString("\n\n")
 			}
 
-			if ex.Description != "" {
-				if tabs {
-					sb.WriteString("   ")
-				}
-				sb.WriteString("   " + ex.Description + "\n\n")
-			}
 			if ex.Value != "" {
 				if tabs {
 					sb.WriteString("      ")
@@ -192,6 +186,13 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 					sb.WriteString("      ")
 				}
 				sb.WriteString(".. code-block::\n\n")
+				if ex.Description != "" {
+					if tabs {
+						sb.WriteString("   ")
+					}
+					sb.WriteString("   # " + ex.Description + "\n")
+				}
+
 				lines := strings.Split(ex.Value, "\n")
 				for _, line := range lines {
 					if tabs {
@@ -208,17 +209,20 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 					sb.WriteString("      ")
 				}
 				sb.WriteString("After creating `payload.json`, run the command below in the same directory.\n\n")
-			} else {
-				if tabs {
-					sb.WriteString("      ")
-				}
-				sb.WriteString("Run the command below.\n\n")
+			} else if tabs {
+				sb.WriteString("      ")
 			}
 
 			if tabs {
 				sb.WriteString("      ")
 			}
 			sb.WriteString(".. code-block::\n\n")
+			if tabs {
+				sb.WriteString("      ")
+			}
+			if ex.Description != "" {
+				sb.WriteString("   # " + ex.Description + "\n")
+			}
 			if tabs {
 				sb.WriteString("      ")
 			}

@@ -12,11 +12,7 @@ atlas api projects createProject
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Creates one project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one project.
 
 Projects group clusters into logical collections that support an application environment, workload, or both. Each project can have its own users, teams, security, tags, and alert settings. To use this resource, the requesting Service Account or API Key must have the Read Write role.
 
@@ -114,7 +110,7 @@ Create the file below and save it as ``payload.json``
    }
 .. Code end marker, please don't delete this comment
 
-After creating `payload.json`, run the command below in the same directory.
+After creating ``payload.json``, run the command below in the same directory.
 
 .. code-block::
 

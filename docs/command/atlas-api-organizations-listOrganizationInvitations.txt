@@ -12,11 +12,7 @@ atlas api organizations listOrganizationInvitations
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns all pending invitations to the specified organization.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all pending invitations to the specified organization.
 
 To use this resource, the requesting Service Account or API Key must have the Organization Owner role.
 

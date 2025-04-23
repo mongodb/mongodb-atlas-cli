@@ -12,11 +12,7 @@ atlas api databaseUsers createDatabaseUser
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Creates one database user in the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one database user in the specified project.
 
 This MongoDB Cloud supports a maximum of 100 database users per project. If you require more than 100 database users on a project, contact Support. To use this resource, the requesting Service Account or API Key must have the Project Owner role, the Project Charts Admin role, Project Stream Processing Owner role, or the Project Database Access Admin role.
 
@@ -107,7 +103,7 @@ Examples
 
       .. code-block::
 
-      # AWS IAM Authentication
+         # AWS IAM Authentication
          {
            "awsIAMType": "USER",
            "databaseName": "$external",
@@ -133,7 +129,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
@@ -149,7 +145,7 @@ Examples
 
       .. code-block::
 
-      # LDAP Authentication
+         # LDAP Authentication
          {
            "databaseName": "admin",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -175,7 +171,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
@@ -191,7 +187,7 @@ Examples
 
       .. code-block::
 
-      # OIDC Workforce Federated Authentication
+         # OIDC Workforce Federated Authentication
          {
            "databaseName": "admin",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -217,7 +213,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
@@ -233,7 +229,7 @@ Examples
 
       .. code-block::
 
-      # OIDC Workload Federated Authentication
+         # OIDC Workload Federated Authentication
          {
            "databaseName": "$external",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -259,7 +255,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
@@ -275,7 +271,7 @@ Examples
 
       .. code-block::
 
-      # SCRAM-SHA Authentication
+         # SCRAM-SHA Authentication
          {
            "databaseName": "admin",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -301,7 +297,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
@@ -317,7 +313,7 @@ Examples
 
       .. code-block::
 
-      # X509 Authentication
+         # X509 Authentication
          {
            "databaseName": "$external",
            "groupId": "32b6e34b3d91647abb20e7b8",
@@ -343,7 +339,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 

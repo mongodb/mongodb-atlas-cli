@@ -12,11 +12,7 @@ atlas api flexClusters updateFlexCluster
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Updates one flex cluster in the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates one flex cluster in the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

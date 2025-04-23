@@ -52,15 +52,11 @@ func setDisableAutoGenTag(cmd *cobra.Command) {
 	cmd.DisableAutoGenTag = true
 }
 
-func markExperimenalToAPICommands(cmd *cobra.Command) {
+func markExperimentalToAPICommands(cmd *cobra.Command) {
 	if cmd.CommandPath() == "atlas api" {
 		return // Skip the root command
 	}
-	cmd.Short = `.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-` + cmd.Short
+	cmd.Short = "`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: " + cmd.Short
 }
 
 func updateAPICommandDescription(cmd *cobra.Command) {
@@ -188,7 +184,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				sb.WriteString(".. code-block::\n\n")
 				if ex.Description != "" {
 					if tabs {
-						sb.WriteString("   ")
+						sb.WriteString("      ")
 					}
 					sb.WriteString("   # " + ex.Description + "\n")
 				}
@@ -208,7 +204,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				if tabs {
 					sb.WriteString("      ")
 				}
-				sb.WriteString("After creating `payload.json`, run the command below in the same directory.\n\n")
+				sb.WriteString("After creating ``payload.json``, run the command below in the same directory.\n\n")
 			} else if tabs {
 				sb.WriteString("      ")
 			}
@@ -267,7 +263,7 @@ func applyTransformations(cmd *cobra.Command) error {
 	addAdditionalLongText(cmd)
 
 	if isAPICommand(cmd) {
-		markExperimenalToAPICommands(cmd)
+		markExperimentalToAPICommands(cmd)
 		updateAPICommandDescription(cmd)
 		if err := updateExamples(cmd); err != nil {
 			return err

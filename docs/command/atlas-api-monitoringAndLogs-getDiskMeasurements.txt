@@ -12,11 +12,7 @@ atlas api monitoringAndLogs getDiskMeasurements
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns the measurements of one disk or partition for the specified host for the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the measurements of one disk or partition for the specified host for the specified project.
 
 Returned value can be one of the following:
 

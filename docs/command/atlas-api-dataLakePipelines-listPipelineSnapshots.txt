@@ -12,11 +12,7 @@ atlas api dataLakePipelines listPipelineSnapshots
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns a list of backup snapshots that you can use to trigger an on demand pipeline run.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns a list of backup snapshots that you can use to trigger an on demand pipeline run.
 
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

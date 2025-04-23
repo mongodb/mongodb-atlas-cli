@@ -12,11 +12,7 @@ atlas api cloudBackups cancelBackupRestoreJob
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Cancels one cloud backup restore job of one cluster from the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Cancels one cloud backup restore job of one cluster from the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Backup Manager role.
 

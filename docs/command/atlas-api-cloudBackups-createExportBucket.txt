@@ -12,11 +12,7 @@ atlas api cloudBackups createExportBucket
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Creates a Snapshot Export Bucket for an AWS S3 Bucket or Azure Blob Storage Container.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates a Snapshot Export Bucket for an AWS S3 Bucket or Azure Blob Storage Container.
 
 Once created, an snapshots can be exported to the Export Bucket and its referenced AWS S3 Bucket or Azure Blob Storage Container. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
@@ -107,7 +103,7 @@ Examples
 
       .. code-block::
 
-      # AWS
+         # AWS
          {
            "bucketName": "export-bucket",
            "cloudProvider": "AWS",
@@ -116,7 +112,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
@@ -132,7 +128,7 @@ Examples
 
       .. code-block::
 
-      # AWS
+         # AWS
          {
            "bucketName": "export-bucket",
            "cloudProvider": "AWS",
@@ -141,7 +137,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
@@ -157,7 +153,7 @@ Examples
 
       .. code-block::
 
-      # Azure
+         # Azure
          {
            "bucketName": "examplecontainer",
            "cloudProvider": "AZURE",
@@ -167,7 +163,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 

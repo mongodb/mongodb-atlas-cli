@@ -12,11 +12,7 @@ atlas api projects updateProject
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Updates the human-readable label that identifies the specified project, or the tags associated with the project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Updates the human-readable label that identifies the specified project, or the tags associated with the project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
@@ -115,7 +111,7 @@ Create the file below and save it as ``payload.json``
    }
 .. Code end marker, please don't delete this comment
 
-After creating `payload.json`, run the command below in the same directory.
+After creating ``payload.json``, run the command below in the same directory.
 
 .. code-block::
 

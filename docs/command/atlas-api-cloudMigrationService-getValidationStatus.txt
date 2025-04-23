@@ -12,11 +12,7 @@ atlas api cloudMigrationService getValidationStatus
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Return the status of one migration validation job.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Return the status of one migration validation job.
 
 Your API Key must have the Organization Owner role to successfully call this resource.
 

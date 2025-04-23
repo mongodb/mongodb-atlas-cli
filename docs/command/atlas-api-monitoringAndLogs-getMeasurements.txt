@@ -12,11 +12,7 @@ atlas api monitoringAndLogs getMeasurements
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns the Atlas Search hardware and status data series within the provided time range for one process in the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the Atlas Search hardware and status data series within the provided time range for one process in the specified project.
 
 You must have the Project Read Only or higher role to view the Atlas Search metric types.
 

@@ -12,11 +12,7 @@ atlas api clusters autoScalingConfiguration
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns the internal configuration of AutoScaling for sharded clusters.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the internal configuration of AutoScaling for sharded clusters.
 
 This endpoint can be used for diagnostic purposes to ensure that sharded clusters updated from older APIs have gained support for AutoScaling each shard independently.
 

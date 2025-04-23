@@ -12,11 +12,7 @@ atlas api rollingIndex createRollingIndex
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Creates an index on the cluster identified by its name in a rolling manner.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates an index on the cluster identified by its name in a rolling manner.
 
 Creating the index in this way allows index builds on one replica set member as a standalone at a time, starting with the secondary members. Creating indexes in this way requires at least one replica set election. To use this resource, the requesting Service Account or API Key must have the Project Data Access Admin role.
 
@@ -111,7 +107,7 @@ Examples
 
       .. code-block::
 
-      # 2dspere Index
+         # 2dspere Index
          {
            "collation": {
              "alternate": "non-ignorable",
@@ -143,7 +139,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
@@ -159,7 +155,7 @@ Examples
 
       .. code-block::
 
-      # Partial Index
+         # Partial Index
          {
            "collation": {
              "alternate": "non-ignorable",
@@ -191,7 +187,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
@@ -207,7 +203,7 @@ Examples
 
       .. code-block::
 
-      # Sparse Index
+         # Sparse Index
          {
            "collation": {
              "alternate": "non-ignorable",
@@ -235,7 +231,7 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 

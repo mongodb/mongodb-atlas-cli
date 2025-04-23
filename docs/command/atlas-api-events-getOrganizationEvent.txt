@@ -12,11 +12,7 @@ atlas api events getOrganizationEvent
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns one event for the specified organization.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one event for the specified organization.
 
 Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Organization Member role. Use the Return All Events from One Organization endpoint to retrieve all events to which the authenticated user has access.
 

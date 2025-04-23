@@ -12,11 +12,7 @@ atlas api organizations listOrganizationProjects
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns multiple projects in the specified organization.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns multiple projects in the specified organization.
 
 Each organization can have multiple projects. Use projects to:
 

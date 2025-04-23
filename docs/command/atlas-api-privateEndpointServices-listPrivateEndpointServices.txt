@@ -12,11 +12,7 @@ atlas api privateEndpointServices listPrivateEndpointServices
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns the name, interfaces, and state of all private endpoint services for the specified cloud service provider.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the name, interfaces, and state of all private endpoint services for the specified cloud service provider.
 
 This cloud service provider manages the private endpoint service for the project. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 

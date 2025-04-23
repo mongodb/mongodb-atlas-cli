@@ -12,11 +12,7 @@ atlas api cloudBackups getServerlessBackupRestoreJob
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns one restore job for one serverless instance from the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns one restore job for one serverless instance from the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

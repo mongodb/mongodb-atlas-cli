@@ -12,11 +12,7 @@ atlas api ldapConfiguration saveLdapConfiguration
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Edits the LDAP configuration for the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Edits the LDAP configuration for the specified project.
 
 To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 

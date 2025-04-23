@@ -96,6 +96,7 @@ Examples
 --------
 
 .. tabs::
+
    .. tab:: Example
       :tabid: 2023-01-01_aws_iam_authentication
 

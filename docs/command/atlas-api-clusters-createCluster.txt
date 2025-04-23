@@ -107,6 +107,7 @@ Examples
 --------
 
 .. tabs::
+
    .. tab:: Example
       :tabid: 2024-08-05_cluster
 

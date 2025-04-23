@@ -29,6 +29,8 @@ import (
 	"github.com/spf13/pflag"
 )
 
+// Snooty official Style documentation: https://www.mongodb.com/docs/meta/style-guide
+//
 //go:embed api_docs_long_text.txt
 var atlasAPIDocsAdditionalLongText string
 
@@ -143,6 +145,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 	tabs := countExamples(examples) != 1
 	if tabs {
 		sb.WriteString(`.. tabs::
+
 `)
 	}
 

@@ -18,8 +18,10 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"net/http/httputil"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	storeTransport "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/transport"
 )
 
@@ -34,12 +36,13 @@ var (
 
 type Executor struct {
 	commandConverter CommandConverter
-	httpClient       *http.Client
+	httpClient       HTTPClient
 	formatter        ResponseFormatter
+	logger           Logger
 }
 
 // We're expecting a http client that's authenticated.
-func NewExecutor(commandConverter CommandConverter, httpClient *http.Client, formatter ResponseFormatter) (*Executor, error) {
+func NewExecutor(commandConverter CommandConverter, httpClient HTTPClient, formatter ResponseFormatter, logger Logger) (*Executor, error) {
 	if commandConverter == nil {
 		return nil, errors.Join(ErrMissingDependency, errors.New("commandConverter is nil"))
 	}
@@ -52,10 +55,15 @@ func NewExecutor(commandConverter CommandConverter, httpClient *http.Client, for
 		return nil, errors.Join(ErrMissingDependency, errors.New("formatter is nil"))
 	}
 
+	if logger == nil {
+		return nil, errors.Join(ErrMissingDependency, errors.New("logger is nil"))
+	}
+
 	return &Executor{
 		commandConverter: commandConverter,
 		httpClient:       httpClient,
 		formatter:        formatter,
+		logger:           logger,
 	}, nil
 }
 
@@ -77,6 +85,7 @@ func NewDefaultExecutor(formatter ResponseFormatter) (*Executor, error) {
 		commandConverter,
 		client,
 		formatter,
+		log.Default(),
 	)
 }
 
@@ -104,12 +113,15 @@ func (e *Executor) ExecuteCommand(ctx context.Context, commandRequest CommandReq
 
 	// Set the context, so we can cancel the request
 	httpRequest = httpRequest.WithContext(ctx)
+	e.logRequest(httpRequest)
 
 	// Execute the request
 	httpResponse, err := e.httpClient.Do(httpRequest)
 	if err != nil {
 		return nil, errors.Join(ErrFailedToConvertToHTTPRequest, err)
 	}
+
+	e.logResponse(httpResponse)
 
 	//nolint: mnd // httpResponse.StatusCode >= StatusOK && httpResponse.StatusCode < StatusMultipleChoices makes this code harder to read
 	isSuccess := httpResponse.StatusCode >= 200 && httpResponse.StatusCode < 300
@@ -137,4 +149,34 @@ func (e *Executor) SetContentType(commandRequest *CommandRequest) error {
 	commandRequest.ContentType = contentType
 
 	return nil
+}
+
+// Log the request if the logger is set to debug
+// Copied behavior and format used in the SDK: https://github.com/mongodb/atlas-sdk-go/blob/b3fee40e236a8ff2a1f1c160b6984a242136dbe6/admin/client.go#L322
+func (e *Executor) logRequest(httpRequest *http.Request) {
+	if !e.logger.IsDebugLevel() {
+		return
+	}
+
+	dump, err := httputil.DumpRequestOut(httpRequest, true)
+	if err != nil {
+		return
+	}
+
+	_, _ = e.logger.Debugf("\n%s\n", string(dump))
+}
+
+// Log the response if the logger is set to debug
+// Copied behavior and format used in the SDK: https://github.com/mongodb/atlas-sdk-go/blob/b3fee40e236a8ff2a1f1c160b6984a242136dbe6/admin/client.go#L335
+func (e *Executor) logResponse(httpResponse *http.Response) {
+	if !e.logger.IsDebugLevel() {
+		return
+	}
+
+	dump, err := httputil.DumpResponse(httpResponse, true)
+	if err != nil {
+		return
+	}
+
+	_, _ = e.logger.Debugf("\n%s\n", string(dump))
 }

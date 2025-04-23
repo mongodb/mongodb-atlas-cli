@@ -23,6 +23,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/stretchr/testify/require"
 )
@@ -265,23 +266,19 @@ func (*mockFailingReader) Close() error {
 	return nil
 }
 
-// MockCommandExecutor implements CommandExecutor interface for testing.
-type MockCommandExecutor struct {
-	response *CommandResponse
-	err      error
-}
-
-func (m *MockCommandExecutor) ExecuteCommand(_ context.Context, _ CommandRequest) (*CommandResponse, error) {
-	if m.err != nil {
-		return nil, m.err
-	}
-	return m.response, nil
-}
-
 func TestWatchInner(t *testing.T) {
+	fixedResponse := func(commandResponse *CommandResponse, err error) func(ctrl *gomock.Controller) CommandExecutor {
+		return func(ctrl *gomock.Controller) CommandExecutor {
+			executor := NewMockCommandExecutor(ctrl)
+			executor.EXPECT().ExecuteCommand(gomock.Any(), gomock.Any()).Return(commandResponse, err).AnyTimes()
+
+			return executor
+		}
+	}
+
 	tests := []struct {
 		name              string
-		executor          *MockCommandExecutor
+		executor          func(ctrl *gomock.Controller) CommandExecutor
 		expect            *api.WatcherExpectProperties
 		commandRequest    CommandRequest
 		expectedCompleted bool
@@ -289,12 +286,11 @@ func TestWatchInner(t *testing.T) {
 	}{
 		{
 			name: "Delete cluster - waiting for 404",
-			executor: &MockCommandExecutor{
-				response: &CommandResponse{
-					IsSuccess: false,
-					HTTPCode:  404,
-				},
-			},
+			executor: fixedResponse(&CommandResponse{
+				IsSuccess: false,
+				HTTPCode:  404,
+				Output:    io.NopCloser(strings.NewReader(`{"status": "IDLE"}`)),
+			}, nil),
 			expect: &api.WatcherExpectProperties{
 				HTTPCode: 404,
 			},
@@ -308,13 +304,11 @@ func TestWatchInner(t *testing.T) {
 		},
 		{
 			name: "Create cluster - wait for IDLE status",
-			executor: &MockCommandExecutor{
-				response: &CommandResponse{
-					IsSuccess: true,
-					HTTPCode:  200,
-					Output:    io.NopCloser(strings.NewReader(`{"status": "IDLE"}`)),
-				},
-			},
+			executor: fixedResponse(&CommandResponse{
+				IsSuccess: true,
+				HTTPCode:  200,
+				Output:    io.NopCloser(strings.NewReader(`{"status": "IDLE"}`)),
+			}, nil),
 			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
 				Match: &api.WatcherMatchProperties{
@@ -332,13 +326,11 @@ func TestWatchInner(t *testing.T) {
 		},
 		{
 			name: "Create cluster - wait for IDLE or DONE status",
-			executor: &MockCommandExecutor{
-				response: &CommandResponse{
-					IsSuccess: true,
-					HTTPCode:  200,
-					Output:    io.NopCloser(strings.NewReader(`{"status": "DONE"}`)),
-				},
-			},
+			executor: fixedResponse(&CommandResponse{
+				IsSuccess: true,
+				HTTPCode:  200,
+				Output:    io.NopCloser(strings.NewReader(`{"status": "DONE"}`)),
+			}, nil),
 			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
 				Match: &api.WatcherMatchProperties{
@@ -355,10 +347,8 @@ func TestWatchInner(t *testing.T) {
 			expectedErr:       nil,
 		},
 		{
-			name: "Executor returns error",
-			executor: &MockCommandExecutor{
-				err: errors.New("execution failed"),
-			},
+			name:     "Executor returns error",
+			executor: fixedResponse(nil, errors.New("execution failed")),
 			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
 			},
@@ -372,13 +362,11 @@ func TestWatchInner(t *testing.T) {
 		},
 		{
 			name: "HTTP code mismatch",
-			executor: &MockCommandExecutor{
-				response: &CommandResponse{
-					IsSuccess: false,
-					HTTPCode:  400,
-					Output:    io.NopCloser(strings.NewReader(`{}`)),
-				},
-			},
+			executor: fixedResponse(&CommandResponse{
+				IsSuccess: false,
+				HTTPCode:  400,
+				Output:    io.NopCloser(strings.NewReader(`{}`)),
+			}, nil),
 			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
 			},
@@ -392,13 +380,11 @@ func TestWatchInner(t *testing.T) {
 		},
 		{
 			name: "Default HTTP code (200)",
-			executor: &MockCommandExecutor{
-				response: &CommandResponse{
-					IsSuccess: true,
-					HTTPCode:  200,
-					Output:    io.NopCloser(strings.NewReader(`{}`)),
-				},
-			},
+			executor: fixedResponse(&CommandResponse{
+				IsSuccess: true,
+				HTTPCode:  200,
+				Output:    io.NopCloser(strings.NewReader(`{}`)),
+			}, nil),
 			expect: nil,
 			commandRequest: CommandRequest{
 				Command: api.Command{
@@ -410,13 +396,11 @@ func TestWatchInner(t *testing.T) {
 		},
 		{
 			name: "Invalid JSON in response",
-			executor: &MockCommandExecutor{
-				response: &CommandResponse{
-					IsSuccess: true,
-					HTTPCode:  200,
-					Output:    io.NopCloser(strings.NewReader(`invalid json`)),
-				},
-			},
+			executor: fixedResponse(&CommandResponse{
+				IsSuccess: true,
+				HTTPCode:  200,
+				Output:    io.NopCloser(strings.NewReader(`invalid json`)),
+			}, nil),
 			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
 				Match: &api.WatcherMatchProperties{
@@ -434,13 +418,11 @@ func TestWatchInner(t *testing.T) {
 		},
 		{
 			name: "Status not in expected values",
-			executor: &MockCommandExecutor{
-				response: &CommandResponse{
-					IsSuccess: true,
-					HTTPCode:  200,
-					Output:    io.NopCloser(strings.NewReader(`{"status": "CREATING"}`)),
-				},
-			},
+			executor: fixedResponse(&CommandResponse{
+				IsSuccess: true,
+				HTTPCode:  200,
+				Output:    io.NopCloser(strings.NewReader(`{"status": "CREATING"}`)),
+			}, nil),
 			expect: &api.WatcherExpectProperties{
 				HTTPCode: 200,
 				Match: &api.WatcherMatchProperties{
@@ -461,7 +443,9 @@ func TestWatchInner(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
-			result, err := watchInner(ctx, tt.executor, tt.expect, tt.commandRequest)
+			ctrl := gomock.NewController(t)
+
+			result, err := watchInner(ctx, tt.executor(ctrl), tt.expect, tt.commandRequest)
 
 			// Check error
 			if tt.expectedErr != nil {

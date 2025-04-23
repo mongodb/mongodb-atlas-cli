@@ -734,7 +734,7 @@ func deleteAllPrivateEndpoints(t *testing.T, cliPath, projectID, provider string
 	}
 
 	done := false
-	for attempt := 0; attempt < 10; attempt++ {
+	for range 10 {
 		privateEndpoints = listPrivateEndpointsByProject(t, cliPath, projectID, provider)
 		if len(privateEndpoints) == 0 {
 			t.Logf("all %s private endpoints successfully deleted", provider)
@@ -760,7 +760,7 @@ func deleteAllStreams(t *testing.T, cliPath, projectID string) {
 	}
 
 	done := false
-	for attempt := 0; attempt < 10; attempt++ {
+	for range 10 {
 		streams = listStreamsByProject(t, cliPath, projectID)
 		if streams.GetTotalCount() == 0 {
 			t.Logf("all streams successfully deleted")

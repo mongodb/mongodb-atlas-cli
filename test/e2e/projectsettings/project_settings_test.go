@@ -68,7 +68,7 @@ func TestProjectSettings(t *testing.T) {
 	t.Run("Update", func(t *testing.T) {
 		var settings atlasv2.GroupSettings
 
-		for i := 0; i < 10; i++ { // try again for 10 seconds
+		for range 10 { // try again for 10 seconds
 			cmd := exec.Command(cliPath,
 				projectsEntity,
 				settingsEntity,

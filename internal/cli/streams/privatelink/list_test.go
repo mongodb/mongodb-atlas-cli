@@ -28,9 +28,9 @@ import (
 )
 
 func getPrivateLinkConnections() []atlasv2.StreamsPrivateLinkConnection {
-	var connections []atlasv2.StreamsPrivateLinkConnection
+	connections := make([]atlasv2.StreamsPrivateLinkConnection, 5)
 
-	for i := 0; i < 5; i++ {
+	for i := range 5 {
 		conn := atlasv2.NewStreamsPrivateLinkConnection()
 		conn.SetId(fmt.Sprintf("testId%d", i))
 		conn.SetProvider("Azure")
@@ -38,7 +38,7 @@ func getPrivateLinkConnections() []atlasv2.StreamsPrivateLinkConnection {
 		conn.SetServiceEndpointId("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace")
 		conn.SetDnsDomain("test-namespace.servicebus.windows.net")
 
-		connections = append(connections, *conn)
+		connections[i] = *conn
 	}
 
 	return connections

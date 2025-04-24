@@ -78,7 +78,7 @@ const (
 	Out                                           = "out"                                           // Out flag
 	Output                                        = "output"                                        // Output flag
 	OutputShort                                   = "o"                                             // OutputShort flag
-	OutputFile                                    = "output-file"                                   // OutputFile flag
+	OutputFile                                    = "outputFile"                                    // OutputFile flag
 	Status                                        = "status"                                        // Status flag
 	Start                                         = "start"                                         // Start flag
 	End                                           = "end"                                           // End flag

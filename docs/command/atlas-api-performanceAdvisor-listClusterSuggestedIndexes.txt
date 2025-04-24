@@ -58,7 +58,7 @@ Options
    * - --namespaces
      - .
      - false
-     - Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: `<database>.<collection>`. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (`&`) between each namespace. Omit this parameter to return results for all namespaces.
+     - Namespaces from which to retrieve suggested indexes. A namespace consists of one database and one collection resource written as .: ``<database>.<collection>``. To include multiple namespaces, pass the parameter multiple times delimited with an ampersand (`&`) between each namespace. Omit this parameter to return results for all namespaces.
    * - --output
      - string
      - false

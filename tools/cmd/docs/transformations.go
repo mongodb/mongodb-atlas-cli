@@ -113,6 +113,9 @@ func replaceFlagUsage(cmd *cobra.Command, f *pflag.Flag) {
 	// Snooty does not support the string "|---|---|---|---|" that we use in some API field description to generate a table.
 	// Snooty error: ERROR(): Substitution reference could not be replaced: "|---|"
 	usage := strings.ReplaceAll(paramMetadata.Usage, "|---|---|---|---|", "")
+
+	// Snooty error: ERROR() Malformed external link Did you mean: ` <database>.<collection>`
+	usage = strings.ReplaceAll(usage, "`<database>.<collection>`", "``<database>.<collection>``")
 	f.Usage = usage
 }
 

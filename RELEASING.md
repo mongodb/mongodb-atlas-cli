@@ -12,8 +12,6 @@ these tasks run on master and can be patched at any time.
 
 Stable releases are now managed by internal tooling (PCT)
 
-Use the instructions below as a fallback.
-
 ## Package Managers
 
 Package Managers are published after a stable release happens, in which binaries are stored in 
@@ -73,7 +71,6 @@ This will do the following things:
 3. The [evergreen](build/ci/release.yml) release task will run after a tag event from master.
 4. If everything goes smoothly, the release will be published in the
    [release page](https://github.com/mongodb/mongodb-atlas-cli/releases), and [download center](https://www.mongodb.com/try/download/atlascli).
-
 
 ## Generate the SBOM
 

@@ -418,7 +418,7 @@ tasks:
           display_name: downloads-center-
       - command: s3.put
         params:
-          role_arn: "arn:aws:iam::119629040606:role/s3-access.cdn-origin-atlascli"
+          role_arn: "arn:aws:iam::119629040606:role/s3-access.cdn-origin-mongocli"
           local_files_include_filter:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip

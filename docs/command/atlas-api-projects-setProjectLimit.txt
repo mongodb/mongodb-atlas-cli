@@ -83,11 +83,11 @@ Options
        | atlas.project.deployment.privateServiceConnectionsSubnetMask | Subnet mask for GCP PSC Networks. Has lower limit of 20. | 27 | 27|
        | atlas.project.deployment.salesSoldM0s | Limit on the number of M0 clusters in this project if the org is sales-sold | 100 | 100 |
        
-   * - --output
+   * - -o, --output
      - string
      - false
      - preferred api format, can be ["json", go-template] This value defaults to "json".
-   * - --output-file
+   * - --outputFile
      - string
      - false
      - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)

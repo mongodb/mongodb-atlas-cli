@@ -94,11 +94,11 @@ Options
      - string
      - false
      - Date and time from when MongoDB Cloud starts returning events. This parameter uses the ISO 8601 timestamp format in UTC.
-   * - --output
+   * - -o, --output
      - string
      - false
      - preferred api format, can be ["json", go-template] This value defaults to "json".
-   * - --output-file
+   * - --outputFile
      - string
      - false
      - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)

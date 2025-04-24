@@ -16,7 +16,7 @@ package store
 
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -57,7 +57,7 @@ func (s *Store) CreateDatabaseUser(user *atlasv2.CloudDatabaseUser) (*atlasv2.Cl
 }
 
 func (s *Store) DeleteDatabaseUser(authDB, groupID, username string) error {
-	_, _, err := s.clientv2.DatabaseUsersApi.DeleteDatabaseUser(s.ctx, groupID, authDB, username).Execute()
+	_, err := s.clientv2.DatabaseUsersApi.DeleteDatabaseUser(s.ctx, groupID, authDB, username).Execute()
 	return err
 }
 

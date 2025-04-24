@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectLister,ProjectCreator,ProjectUpdater,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter,OrgProjectLister,ProjectMDBVersionLister
@@ -115,7 +115,7 @@ func (s *Store) UpdateProject(params *atlasv2.UpdateProjectApiParams) (*atlasv2.
 
 // DeleteProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteProject(projectID string) error {
-	_, _, err := s.clientv2.ProjectsApi.DeleteProject(s.ctx, projectID).Execute()
+	_, err := s.clientv2.ProjectsApi.DeleteProject(s.ctx, projectID).Execute()
 	return err
 }
 
@@ -131,7 +131,7 @@ func (s *Store) ProjectUsers(projectID string, opts *ListOptions) (*atlasv2.Pagi
 
 // DeleteUserFromProject encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteUserFromProject(projectID, userID string) error {
-	_, _, err := s.clientv2.MongoDBCloudUsersApi.RemoveProjectUser(s.ctx, projectID, userID).Execute()
+	_, err := s.clientv2.MongoDBCloudUsersApi.RemoveProjectUser(s.ctx, projectID, userID).Execute()
 	return err
 }
 

@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_search_deprecated.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store SearchIndexListerDeprecated,SearchIndexCreatorDeprecated,SearchIndexDescriberDeprecated,SearchIndexUpdaterDeprecated,SearchIndexDeleterDeprecated,SearchIndexCreatorDescriberDeprecated
@@ -71,6 +71,6 @@ func (s *Store) UpdateSearchIndexesDeprecated(projectID, clusterName, indexID st
 
 // DeleteSearchIndexDeprecated encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteSearchIndexDeprecated(projectID, clusterName, indexID string) error {
-	_, _, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndexDeprecated(s.ctx, projectID, clusterName, indexID).Execute()
+	_, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchIndexDeprecated(s.ctx, projectID, clusterName, indexID).Execute()
 	return err
 }

@@ -17,7 +17,7 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20250312001/admin"
+	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_data_federation_private_endpoint.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DataFederationPrivateEndpointLister,DataFederationPrivateEndpointDescriber,DataFederationPrivateEndpointCreator,DataFederationPrivateEndpointDeleter
@@ -58,6 +58,6 @@ func (s *Store) CreateDataFederationPrivateEndpoint(projectID string, opts *admi
 
 // DeleteDataFederationPrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteDataFederationPrivateEndpoint(projectID, id string) error {
-	_, _, err := s.clientv2.DataFederationApi.DeleteDataFederationPrivateEndpoint(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.DataFederationApi.DeleteDataFederationPrivateEndpoint(s.ctx, projectID, id).Execute()
 	return err
 }

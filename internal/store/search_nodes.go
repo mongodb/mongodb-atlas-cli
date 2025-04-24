@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_search_nodes.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store SearchNodesLister,SearchNodesCreator,SearchNodesUpdater,SearchNodesDeleter
@@ -55,6 +55,6 @@ func (s *Store) UpdateSearchNodes(projectID, clusterName string, spec *atlasv2.A
 }
 
 func (s *Store) DeleteSearchNodes(projectID, clusterName string) error {
-	_, _, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchDeployment(s.ctx, projectID, clusterName).Execute()
+	_, err := s.clientv2.AtlasSearchApi.DeleteAtlasSearchDeployment(s.ctx, projectID, clusterName).Execute()
 	return err
 }

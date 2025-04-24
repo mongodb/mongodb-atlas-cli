@@ -19,7 +19,7 @@ package store
 import (
 	"io"
 
-	"go.mongodb.org/atlas-sdk/v20250312001/admin"
+	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_data_federation.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DataFederationLister,DataFederationDescriber,DataFederationStore,DataFederationCreator,DataFederationUpdater,DataFederationDeleter,DataFederationLogDownloader
@@ -80,7 +80,7 @@ func (s *Store) UpdateDataFederation(projectID, id string, opts *admin.DataLakeT
 
 // DeleteDataFederation encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteDataFederation(projectID, id string) error {
-	_, _, err := s.clientv2.DataFederationApi.DeleteFederatedDatabase(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.DataFederationApi.DeleteFederatedDatabase(s.ctx, projectID, id).Execute()
 	return err
 }
 

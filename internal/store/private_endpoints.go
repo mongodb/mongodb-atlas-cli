@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,RegionalizedPrivateEndpointSettingUpdater,RegionalizedPrivateEndpointSettingDescriber,DataLakePrivateEndpointLister,DataLakePrivateEndpointCreator,DataLakePrivateEndpointDeleter,DataLakePrivateEndpointDescriber
@@ -112,13 +112,13 @@ func (s *Store) DataLakeCreatePrivateEndpoint(projectID string, r *atlasv2.Priva
 
 // DeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePrivateEndpoint(projectID, provider, privateLinkID string) error {
-	_, _, err := s.clientv2.PrivateEndpointServicesApi.DeletePrivateEndpointService(s.ctx, projectID, provider, privateLinkID).Execute()
+	_, err := s.clientv2.PrivateEndpointServicesApi.DeletePrivateEndpointService(s.ctx, projectID, provider, privateLinkID).Execute()
 	return err
 }
 
 // DataLakeDeletePrivateEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DataLakeDeletePrivateEndpoint(projectID, endpointID string) error {
-	_, _, err := s.clientv2.DataFederationApi.DeleteDataFederationPrivateEndpoint(s.ctx, projectID, endpointID).Execute()
+	_, err := s.clientv2.DataFederationApi.DeleteDataFederationPrivateEndpoint(s.ctx, projectID, endpointID).Execute()
 	return err
 }
 
@@ -137,7 +137,7 @@ func (s *Store) InterfaceEndpoint(projectID, cloudProvider, privateEndpointID, e
 
 // DeleteInterfaceEndpoint encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteInterfaceEndpoint(projectID, provider, endpointServiceID, privateEndpointID string) error {
-	_, _, err := s.clientv2.PrivateEndpointServicesApi.DeletePrivateEndpoint(s.ctx, projectID, provider, privateEndpointID, endpointServiceID).Execute()
+	_, err := s.clientv2.PrivateEndpointServicesApi.DeletePrivateEndpoint(s.ctx, projectID, provider, privateEndpointID, endpointServiceID).Execute()
 	return err
 }
 

@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LinkTokenCreator,LinkTokenDeleter
@@ -50,6 +50,6 @@ func (s *Store) DeleteLinkToken(orgID string) error {
 	if s.service == config.CloudGovService {
 		return fmt.Errorf("%w: %s", errUnsupportedService, s.service)
 	}
-	_, _, err := s.clientv2.CloudMigrationServiceApi.DeleteLinkToken(s.ctx, orgID).Execute()
+	_, err := s.clientv2.CloudMigrationServiceApi.DeleteLinkToken(s.ctx, orgID).Execute()
 	return err
 }

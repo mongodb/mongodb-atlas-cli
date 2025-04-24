@@ -19,7 +19,7 @@ package store
 import (
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -91,7 +91,7 @@ func (s *Store) UpdatePipeline(projectID, id string, opts atlasv2.DataLakeIngest
 
 // DeletePipeline encapsulates the logic to manage different cloud providers.
 func (s *Store) DeletePipeline(projectID, id string) error {
-	_, _, err := s.clientv2.DataLakePipelinesApi.DeletePipeline(s.ctx, projectID, id).Execute()
+	_, err := s.clientv2.DataLakePipelinesApi.DeletePipeline(s.ctx, projectID, id).Execute()
 	return err
 }
 

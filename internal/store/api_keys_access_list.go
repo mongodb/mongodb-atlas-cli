@@ -15,7 +15,7 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20250312001/admin"
+	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_api_keys_access_list.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationAPIKeyAccessListCreator,OrganizationAPIKeyAccessListDeleter,OrganizationAPIKeyAccessListLister
@@ -40,7 +40,7 @@ func (s *Store) CreateOrganizationAPIKeyAccessList(params *admin.CreateApiKeyAcc
 
 // DeleteOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress string) error {
-	_, _, err := s.clientv2.ProgrammaticAPIKeysApi.DeleteApiKeyAccessListEntry(s.ctx, orgID, apiKeyID, ipAddress).Execute()
+	_, err := s.clientv2.ProgrammaticAPIKeysApi.DeleteApiKeyAccessListEntry(s.ctx, orgID, apiKeyID, ipAddress).Execute()
 	return err
 }
 

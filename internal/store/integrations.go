@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_integrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IntegrationCreator,IntegrationLister,IntegrationDeleter,IntegrationDescriber
@@ -51,7 +51,7 @@ func (s *Store) Integrations(projectID string) (*atlasv2.PaginatedIntegration, e
 
 // DeleteIntegration encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteIntegration(projectID, integrationType string) error {
-	_, _, err := s.clientv2.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegration(s.ctx, integrationType, projectID).Execute()
+	_, err := s.clientv2.ThirdPartyIntegrationsApi.DeleteThirdPartyIntegration(s.ctx, integrationType, projectID).Execute()
 	return err
 }
 

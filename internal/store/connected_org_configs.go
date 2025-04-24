@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 //go:generate mockgen -destination=../mocks/mock_connected_orgs_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ConnectedOrgConfigsUpdater,ConnectedOrgConfigsDescriber,ConnectedOrgConfigsDeleter,ConnectedOrgConfigsLister
@@ -55,6 +55,6 @@ func (s *Store) ListConnectedOrgConfigs(opts *atlasv2.ListConnectedOrgConfigsApi
 
 // DeleteConnectedOrgConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteConnectedOrgConfig(federationSettingsID string, orgID string) error {
-	_, _, err := s.clientv2.FederatedAuthenticationApi.RemoveConnectedOrgConfig(s.ctx, federationSettingsID, orgID).Execute()
+	_, err := s.clientv2.FederatedAuthenticationApi.RemoveConnectedOrgConfig(s.ctx, federationSettingsID, orgID).Execute()
 	return err
 }

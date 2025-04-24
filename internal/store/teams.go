@@ -15,7 +15,7 @@
 package store
 
 import (
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312001/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
@@ -88,7 +88,7 @@ func (s *Store) RenameTeam(orgID, teamID string, team *atlasv2.TeamUpdate) (*atl
 
 // DeleteTeam encapsulates the logic to manage different cloud providers.
 func (s *Store) DeleteTeam(orgID, teamID string) error {
-	_, _, err := s.clientv2.TeamsApi.DeleteTeam(s.ctx, orgID, teamID).Execute()
+	_, err := s.clientv2.TeamsApi.DeleteTeam(s.ctx, orgID, teamID).Execute()
 	return err
 }
 

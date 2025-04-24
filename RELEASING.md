@@ -55,7 +55,7 @@ The final step involves verifying the Docker image's signature to confirm its au
 ## Manual Release (Deprecated)
 
 > [!IMPORTANT]  
-> This action will only publish a release for [maintainers of the cli](https://github.com/orgs/mongodb/teams/mongocli)_
+> This action will only publish a release for [maintainers of the cli](https://github.com/orgs/mongodb/teams/apix/)
 
 To manually generate a new stable release, you can run:
 

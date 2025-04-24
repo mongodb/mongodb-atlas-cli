@@ -113,6 +113,7 @@ func (e *podmanImpl) ContainerRun(ctx context.Context, image string, flags *RunF
 			podmanOpts.HealthRetries = flags.HealthRetries
 		}
 		if flags.Volumes != nil {
+			podmanOpts.Volumes = map[string]string{}
 			for _, volume := range flags.Volumes {
 				podmanOpts.Volumes[volume.HostPath] = volume.ContainerPath
 			}

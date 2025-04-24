@@ -55,11 +55,11 @@ Options
      - 
      - false
      - help for getAuditingConfiguration
-   * - --output
+   * - -o, --output
      - string
      - false
      - preferred api format, can be ["json", go-template] This value defaults to "json".
-   * - -o, --outputFile
+   * - --outputFile
      - string
      - false
      - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)

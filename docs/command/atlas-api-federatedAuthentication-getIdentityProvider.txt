@@ -57,11 +57,11 @@ Options
      - string
      - true
      - Unique string that identifies the identity provider to connect. If using an API version before 11-15-2023, use the legacy 20-hexadecimal digit id. This id can be found within the Federation Management Console > Identity Providers tab by clicking the info icon in the IdP ID row of a configured identity provider. For all other versions, use the 24-hexadecimal digit id.
-   * - --output
+   * - -o, --output
      - string
      - false
      - preferred api format, can be ["json", go-template] This value defaults to "json".
-   * - -o, --outputFile
+   * - --outputFile
      - string
      - false
      - file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)

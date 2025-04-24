@@ -520,8 +520,8 @@ func addOutputFlags(cmd *cobra.Command, apiCommand shared_api.Command, format *s
 	supportedContentTypesString := strings.Join(supportedContentTypesList, ", ")
 
 	// Set the flags
-	cmd.Flags().StringVar(format, flag.Output, *format, fmt.Sprintf("preferred api format, can be [%s]", supportedContentTypesString))
-	cmd.Flags().StringVarP(outputFile, flag.OutputFile, flag.OutputShort, "", "file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)")
+	cmd.Flags().StringVarP(format, flag.Output, flag.OutputShort, *format, fmt.Sprintf("preferred api format, can be [%s]", supportedContentTypesString))
+	cmd.Flags().StringVar(outputFile, flag.OutputFile, "", "file to write the api output to. This flag is required when the output of an endpoint is binary (ex: gzip) and the command is not piped (ex: atlas command > out.zip)")
 
 	// If there's multiple content types, mark --format as required
 	if numSupportedContentTypes > 1 {

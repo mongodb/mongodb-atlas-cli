@@ -12,11 +12,7 @@ atlas api serverlessInstances deleteServerlessInstance
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Removes one serverless instance from the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Removes one serverless instance from the specified project.
 
 The serverless instance must have termination protection disabled in order to be deleted. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
@@ -108,9 +104,7 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
-
-Run the command below.
+--------
 
 .. code-block::
 

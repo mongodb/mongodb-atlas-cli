@@ -12,11 +12,7 @@ atlas api clusters getCluster
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns the details for one cluster in the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns the details for one cluster in the specified project.
 
 Clusters contain a group of hosts that maintain the same data set. The response includes clusters with asymmetrically-sized shards. To use this resource, the requesting Service Account or API Key must have the Project Read Only role. This feature is not available for serverless clusters.
 
@@ -100,14 +96,11 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
-
-   Returns the details for the specified cluster in the project
-
-Run the command below.
+--------
 
 .. code-block::
 
+   # Returns the details for the specified cluster in the project
    atlas api clusters getCluster --version 2024-08-05 --clusterName [your-cluster-name] --groupId [your-project-id]
 
 .. Code end marker, please don't delete this comment

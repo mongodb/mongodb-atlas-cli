@@ -12,11 +12,7 @@ atlas api alertConfigurations listAlertConfigurationsByAlertId
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Returns all alert configurations set for the specified alert.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Returns all alert configurations set for the specified alert.
 
 To use this resource, the requesting Service Account or API Key must have the Project Read Only role. Use the Return All Alerts from One Project endpoint to retrieve all alerts to which the authenticated user has access.
 
@@ -112,9 +108,7 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
-
-Run the command below.
+--------
 
 .. code-block::
 

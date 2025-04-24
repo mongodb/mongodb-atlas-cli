@@ -12,11 +12,7 @@ atlas api cloudBackups createExportBucket
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Creates a Snapshot Export Bucket for an AWS S3 Bucket or Azure Blob Storage Container.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates a Snapshot Export Bucket for an AWS S3 Bucket or Azure Blob Storage Container.
 
 Once created, an snapshots can be exported to the Export Bucket and its referenced AWS S3 Bucket or Azure Blob Storage Container. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
@@ -97,18 +93,18 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
+--------
 
 .. tabs::
+
    .. tab:: Example
       :tabid: 2023-01-01_aws
-
-      AWS
 
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+         # AWS
          {
            "bucketName": "export-bucket",
            "cloudProvider": "AWS",
@@ -117,10 +113,11 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
+         # AWS
          atlas api cloudBackups createExportBucket --version 2023-01-01 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -128,12 +125,11 @@ Examples
    .. tab:: Example 1
       :tabid: 2024-05-30_aws
 
-      AWS
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+         # AWS
          {
            "bucketName": "export-bucket",
            "cloudProvider": "AWS",
@@ -142,10 +138,11 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
+         # AWS
          atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -153,12 +150,11 @@ Examples
    .. tab:: Example 2
       :tabid: 2024-05-30_azure
 
-      Azure
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+         # Azure
          {
            "bucketName": "examplecontainer",
            "cloudProvider": "AZURE",
@@ -168,10 +164,11 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
+         # Azure
          atlas api cloudBackups createExportBucket --version 2024-05-30 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment

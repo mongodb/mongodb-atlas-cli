@@ -12,11 +12,7 @@ atlas api clusters createCluster
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Creates one cluster in the specified project.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates one cluster in the specified project.
 
 Clusters contain a group of hosts that maintain the same data set. This resource can create clusters with asymmetrically-sized shards. Each project supports up to 25 database deployments. To use this resource, the requesting Service Account or API Key must have the Project Owner role. This feature is not available for serverless clusters.
 
@@ -108,18 +104,18 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
+--------
 
 .. tabs::
+
    .. tab:: Example
       :tabid: 2024-08-05_cluster
-
-      Cluster
 
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+         # Cluster
          {
            "clusterType": "SHARDED",
            "name": "myCluster",
@@ -223,10 +219,11 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
+         # Cluster
          atlas api clusters createCluster --version 2024-08-05 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -234,12 +231,11 @@ Examples
    .. tab:: Example 1
       :tabid: 2024-10-23_cluster
 
-      Cluster
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+         # Cluster
          {
            "clusterType": "SHARDED",
            "name": "myCluster",
@@ -355,10 +351,11 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
+         # Cluster
          atlas api clusters createCluster --version 2024-10-23 --file payload.json --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -366,12 +363,11 @@ Examples
    .. tab:: Create a basic MongoDB Atlas cluster
       :tabid: 2024-10-23_create_cluster
 
-      Creates a new M10 replica set cluster in AWS US East region running MongoDB 6.0
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+         # Creates a new M10 replica set cluster in AWS US East region running MongoDB 6.0
          {
            "clusterType": "REPLICASET",
            "name": "MyCluster",
@@ -395,10 +391,11 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
+         # Creates a new M10 replica set cluster in AWS US East region running MongoDB 6.0
          atlas api clusters createCluster --version 2024-10-23 --file payload.json --groupId [your-project-id]
 
       .. Code end marker, please don't delete this comment

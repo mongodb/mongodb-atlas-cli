@@ -12,11 +12,7 @@ atlas api rollingIndex createRollingIndex
    :depth: 1
    :class: singlecol
 
-.. blockquote::
-
-   Public Preview: please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli
-
-Creates an index on the cluster identified by its name in a rolling manner.
+`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Creates an index on the cluster identified by its name in a rolling manner.
 
 Creating the index in this way allows index builds on one replica set member as a standalone at a time, starting with the secondary members. Creating indexes in this way requires at least one replica set election. To use this resource, the requesting Service Account or API Key must have the Project Data Access Admin role.
 
@@ -101,18 +97,18 @@ Inherited Options
      - Name of the profile to use from your configuration file. To learn about profiles for the Atlas CLI, see https://dochub.mongodb.org/core/atlas-cli-save-connection-settings.
 
 Examples
------------------
+--------
 
 .. tabs::
+
    .. tab:: Example
       :tabid: 2023-01-01_2dspere_index
-
-      2dspere Index
 
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+         # 2dspere Index
          {
            "collation": {
              "alternate": "non-ignorable",
@@ -144,10 +140,11 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
+         # 2dspere Index
          atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --clusterName [clusterName] --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -155,12 +152,11 @@ Examples
    .. tab:: Example 1
       :tabid: 2023-01-01_partial_index
 
-      Partial Index
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+         # Partial Index
          {
            "collation": {
              "alternate": "non-ignorable",
@@ -192,10 +188,11 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
+         # Partial Index
          atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --clusterName [clusterName] --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment
@@ -203,12 +200,11 @@ Examples
    .. tab:: Example 2
       :tabid: 2023-01-01_sparse_index
 
-      Sparse Index
-
       Create the file below and save it as ``payload.json``
 
       .. code-block::
 
+         # Sparse Index
          {
            "collation": {
              "alternate": "non-ignorable",
@@ -236,10 +232,11 @@ Examples
 
       .. Code end marker, please don't delete this comment
 
-      After creating `payload.json`, run the command below in the same directory.
+      After creating ``payload.json``, run the command below in the same directory.
 
       .. code-block::
 
+         # Sparse Index
          atlas api rollingIndex createRollingIndex --version 2023-01-01 --file payload.json --clusterName [clusterName] --groupId 32b6e34b3d91647abb20e7b8
 
       .. Code end marker, please don't delete this comment

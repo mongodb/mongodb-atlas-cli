@@ -165,6 +165,42 @@ functions:
           - workdir
           - FEED_FILE_NAME
         binary: ../build/package/generate-download-archive-manifest.sh
+  "generate purls":  
+    - command: shell.exec  
+      params:  
+        shell: bash  
+        script: |  
+          echo "Generating PURLs..."  
+          ./generate_purls.sh > ${workdir}/purls.txt  
+  "generate sbom":  
+    - command: shell.exec  
+      params:  
+        shell: bash  
+        script: |  
+          echo "Generating SBOM from PURLs..."  
+          ./generate_sbom.sh ${workdir}/purls.txt > ${workdir}/sbom.json
+  "write kondukto credentials": 
+    - command: ec2.assume_role
+      display_name: Assume IAM role with permissions to pull Kondukto API token
+      params:
+        role_arn: ${kondukto_role_arn}
+    - command: shell.exec
+      display_name: Pull Kondukto API token from AWS Secrets Manager and write it to file
+      params:
+        silent: true
+        shell: bash
+        include_expansions_in_env: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]
+        script: |
+          set -e
+          # use AWS CLI to get the Kondukto API token from AWS Secrets Manager
+          kondukto_token=$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)
+          # set the KONDUKTO_TOKEN environment variable
+          echo "KONDUKTO_TOKEN=$kondukto_token" > ${workdir}/kondukto_credentials.env
+  "run silkbomb":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: ${CONTAINER_COMMAND} run ${CONTAINER_OPTIONS} ${CONTAINER_ENV_FILES} ${CONTAINER_VOLUMES} ${CONTAINER_IMAGE} ${SILKBOMB_COMMAND} ${SILKBOMB_ARGS}
   "upload dist":
     - command: s3.put
       params:
@@ -437,6 +473,30 @@ tasks:
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-new-
       - func: "send slack notification"
+  - name: generate_purls  
+    commands:  
+      - func: "generate purls"    
+  - name: generate_sbom  
+    commands:  
+      - func: "generate sbom"
+    # uploads SBOM to Kondukto (uploads --sbom-in to Kondukto)
+  - name: upload_sbom_to_kondukto
+    commands:
+      - func: "write kondukto credentials"
+      - func: "run silkbomb"
+        vars:
+          <<: *silkbomb_container_config
+          SILKBOMB_COMMAND: upload
+          SILKBOMB_ARGS: --sbom-in /workdir/<INSERT_SBOM_IN_PATH> --repo <INSERT_ORG_REPO> --branch ${branch_name}
+  # produce augmented SBOM (uploads --sbom-in to Kondukto and writes augmented SBOM to --sbom-out)
+  - name: augment_sbom
+    commands:
+      - func: "write kondukto credentials"
+      - func: "run silkbomb"
+        vars:
+          <<: *silkbomb_container_config
+          SILKBOMB_COMMAND: augment
+          SILKBOMB_ARGS: --sbom-in /workdir/sbom.json --repo mongodb-atlas-cli --branch ${branch_name} --sbom-out /workdir/sbom.augmented.json
   - name: push_atlascli_generate
     patchable: false
     stepback: false
@@ -553,6 +613,15 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: release_atlascli_msi
+  - name: ssdlc
+    display_name: Compliance [ssdlc]
+    run_on:
+      - rhel9-latest-small
+    tasks:
+      - name: generate_purls
+      - name: generate_sbom
+      - name: upload_sbom_to_kondukto
+      - name: augment_sbom
   - name: copybara
     display_name: "Copybara"
     git_tag_only: true

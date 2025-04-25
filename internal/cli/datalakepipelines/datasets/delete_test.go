@@ -21,9 +21,9 @@ package datasets
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"go.uber.org/mock/gomock"
 )
 
 func TestDelete_Run(t *testing.T) {

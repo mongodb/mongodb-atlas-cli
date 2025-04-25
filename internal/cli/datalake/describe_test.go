@@ -19,10 +19,10 @@ package datalake
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.uber.org/mock/gomock"
 )
 
 func TestDescribe_Run(t *testing.T) {

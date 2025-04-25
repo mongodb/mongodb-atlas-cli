@@ -22,18 +22,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
-//go:generate mockgen -destination=./mocks.go -package=api github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api CommandExecutor,HTTPClient,AccessTokenProvider,ConfigProvider,CommandConverter,Logger,ResponseFormatter
+//go:generate mockgen -destination=./mocks.go -package=api github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api CommandExecutor,Doer,ConfigProvider,CommandConverter,Logger,ResponseFormatter
 
 type CommandExecutor interface {
 	ExecuteCommand(ctx context.Context, commandRequest CommandRequest) (*CommandResponse, error)
 }
 
-type HTTPClient interface {
+type Doer interface {
 	Do(req *http.Request) (*http.Response, error)
-}
-
-type AccessTokenProvider interface {
-	GetAccessToken() (string, error)
 }
 
 type ConfigProvider interface {

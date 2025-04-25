@@ -19,11 +19,11 @@ package livemigrations
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/livemigrations/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
+	"go.uber.org/mock/gomock"
 )
 
 func TestLiveMigrationCreateOpts_Run(t *testing.T) {

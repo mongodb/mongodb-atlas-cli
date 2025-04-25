@@ -23,9 +23,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestExecutorHappyPathNoLogging(t *testing.T) {
@@ -39,7 +39,7 @@ func TestExecutorHappyPathNoLogging(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, commandConverter)
 
-	httpClient := NewMockHTTPClient(ctrl)
+	httpClient := NewMockDoer(ctrl)
 	httpClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
 		StatusCode: http.StatusOK,
 		Body:       io.NopCloser(strings.NewReader(`{"success": true}`)),
@@ -88,7 +88,7 @@ func TestExecutorHappyPathDebugLogging(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, commandConverter)
 
-	httpClient := NewMockHTTPClient(ctrl)
+	httpClient := NewMockDoer(ctrl)
 	httpClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
 		StatusCode: http.StatusOK,
 		Body:       io.NopCloser(strings.NewReader(`{"success": true}`)),

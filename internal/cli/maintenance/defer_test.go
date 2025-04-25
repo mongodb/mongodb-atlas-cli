@@ -19,8 +19,8 @@ package maintenance
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
+	"go.uber.org/mock/gomock"
 )
 
 func TestDeferOpts_Run(t *testing.T) {

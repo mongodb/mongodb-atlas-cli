@@ -246,7 +246,7 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - name: Install go-mock
-        run: go install github.com/golang/mock/mockgen@latest
+        run: go install go.uber.org/mock/mockgen@latest
       - name: Generate mocks
         run: make gen-mocks
       - name: Check for uncommitted files

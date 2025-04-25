@@ -77,7 +77,7 @@ We provide a git pre-commit hook to format and check the code, to install it run
 
 #### Generating Mocks
 
-We use [mockgen](https://github.com/golang/mock) to handle mocking in our unit tests.
+We use [mockgen](go.uber.org/mock) to handle mocking in our unit tests.
 If you need a new mock please update or add the `//go:generate` instruction to the appropriate file.
 
 #### Compilation in VSCode

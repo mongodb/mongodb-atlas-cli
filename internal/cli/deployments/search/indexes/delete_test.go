@@ -20,13 +20,13 @@ import (
 	"context"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mongodbclient"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
+	"go.uber.org/mock/gomock"
 )
 
 func TestDelete_RunLocal(t *testing.T) {

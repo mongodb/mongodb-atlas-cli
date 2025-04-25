@@ -46,7 +46,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ServerlessRestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		ServerlessRestoreJobs(listOpts.ProjectID, "Cluster0", listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

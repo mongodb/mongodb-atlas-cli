@@ -50,7 +50,7 @@ func TestDeauthorizeOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeauthorizeCloudProviderAccessRoles(opts.newCloudProviderDeauthorizationRequest()).
+		DeauthorizeCloudProviderAccessRoles(opts.ProjectID, provider, opts.Entry).
 		Return(nil).
 		Times(1)
 

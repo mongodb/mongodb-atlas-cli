@@ -51,7 +51,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ExportBuckets(listOpts.ProjectID, listOpts.NewListOptions()).
+		ExportBuckets(listOpts.ProjectID, listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

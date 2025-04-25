@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockProjectAPIKeyLister is a mock of ProjectAPIKeyLister interface.
@@ -36,7 +36,7 @@ func (m *MockProjectAPIKeyLister) EXPECT() *MockProjectAPIKeyListerMockRecorder 
 }
 
 // ProjectAPIKeys mocks base method.
-func (m *MockProjectAPIKeyLister) ProjectAPIKeys(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedApiApiUser, error) {
+func (m *MockProjectAPIKeyLister) ProjectAPIKeys(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedApiApiUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProjectAPIKeys", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedApiApiUser)
@@ -112,7 +112,7 @@ func (m *MockOrganizationAPIKeyLister) EXPECT() *MockOrganizationAPIKeyListerMoc
 }
 
 // OrganizationAPIKeys mocks base method.
-func (m *MockOrganizationAPIKeyLister) OrganizationAPIKeys(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin.PaginatedApiApiUser, error) {
+func (m *MockOrganizationAPIKeyLister) OrganizationAPIKeys(arg0 string, arg1 *store.ListOptions) (*admin.PaginatedApiApiUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OrganizationAPIKeys", arg0, arg1)
 	ret0, _ := ret[0].(*admin.PaginatedApiApiUser)

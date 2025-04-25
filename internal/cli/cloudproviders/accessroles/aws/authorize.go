@@ -24,7 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const authorizeTemplate = "AWS IAM role '{{.RoleId}} successfully authorized.\n"
@@ -54,10 +54,10 @@ func (opts *AuthorizeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlas.CloudProviderAccessRoleRequest {
-	return &atlas.CloudProviderAccessRoleRequest{
+func (opts *AuthorizeOpts) newCloudProviderAuthorizationRequest() *atlasv2.CloudProviderAccessRoleRequestUpdate {
+	return &atlasv2.CloudProviderAccessRoleRequestUpdate{
 		ProviderName:      provider,
-		IAMAssumedRoleARN: &opts.IAMAssumedRoleARN,
+		IamAssumedRoleArn: &opts.IAMAssumedRoleARN,
 	}
 }
 

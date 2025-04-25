@@ -37,7 +37,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		OrganizationAPIKeys(opts.OrgID, opts.NewListOptions()).
+		OrganizationAPIKeys(opts.OrgID, opts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockServerlessSnapshotsLister is a mock of ServerlessSnapshotsLister interface.
@@ -36,7 +36,7 @@ func (m *MockServerlessSnapshotsLister) EXPECT() *MockServerlessSnapshotsListerM
 }
 
 // ServerlessSnapshots mocks base method.
-func (m *MockServerlessSnapshotsLister) ServerlessSnapshots(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*admin.PaginatedApiAtlasServerlessBackupSnapshot, error) {
+func (m *MockServerlessSnapshotsLister) ServerlessSnapshots(arg0, arg1 string, arg2 *store.ListOptions) (*admin.PaginatedApiAtlasServerlessBackupSnapshot, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessSnapshots", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.PaginatedApiAtlasServerlessBackupSnapshot)
@@ -112,7 +112,7 @@ func (m *MockServerlessRestoreJobsLister) EXPECT() *MockServerlessRestoreJobsLis
 }
 
 // ServerlessRestoreJobs mocks base method.
-func (m *MockServerlessRestoreJobsLister) ServerlessRestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*admin.PaginatedApiAtlasServerlessBackupRestoreJob, error) {
+func (m *MockServerlessRestoreJobsLister) ServerlessRestoreJobs(arg0, arg1 string, arg2 *store.ListOptions) (*admin.PaginatedApiAtlasServerlessBackupRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ServerlessRestoreJobs", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.PaginatedApiAtlasServerlessBackupRestoreJob)

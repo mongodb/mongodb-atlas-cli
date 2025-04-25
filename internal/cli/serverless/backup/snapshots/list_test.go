@@ -45,7 +45,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ServerlessSnapshots(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		ServerlessSnapshots(listOpts.ProjectID, "Cluster0", listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

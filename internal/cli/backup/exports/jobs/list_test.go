@@ -38,7 +38,7 @@ func TestListOpts_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ExportJobs(listOpts.ProjectID, "Cluster0", listOpts.NewListOptions()).
+		ExportJobs(listOpts.ProjectID, "Cluster0", listOpts.NewAtlasListOptions()).
 		Return(expected, nil).
 		Times(1)
 

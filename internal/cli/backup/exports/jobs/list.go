@@ -47,7 +47,7 @@ var listTemplate = `ID	EXPORT BUCKET ID	STATE	SNAPSHOT ID{{range valueOrEmptySli
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.ExportJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
 	if err != nil {
 		return err

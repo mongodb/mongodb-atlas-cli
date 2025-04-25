@@ -55,7 +55,7 @@ type PeeringConnectionDeleter interface {
 
 type ContainersLister interface {
 	ContainersByProvider(string, *atlas.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error)
-	AllContainers(string, *atlas.ListOptions) ([]atlasv2.CloudProviderContainer, error)
+	AllContainers(string, *ListOptions) ([]atlasv2.CloudProviderContainer, error)
 }
 
 type ContainersDeleter interface {
@@ -159,7 +159,7 @@ func (s *Store) GCPContainers(projectID string) ([]atlasv2.CloudProviderContaine
 }
 
 // AllContainers encapsulates the logic to manage different cloud providers.
-func (s *Store) AllContainers(projectID string, opts *atlas.ListOptions) ([]atlasv2.CloudProviderContainer, error) {
+func (s *Store) AllContainers(projectID string, opts *ListOptions) ([]atlasv2.CloudProviderContainer, error) {
 	res := s.clientv2.NetworkPeeringApi.ListPeeringContainers(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)

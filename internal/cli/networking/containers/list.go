@@ -53,7 +53,7 @@ func (opts *ListOpts) Run() error {
 	var r []atlasv2.CloudProviderContainer
 	var err error
 	if opts.provider == "" {
-		r, err = opts.store.AllContainers(opts.ConfigProjectID(), opts.NewListOptions())
+		r, err = opts.store.AllContainers(opts.ConfigProjectID(), opts.NewAtlasListOptions())
 	} else {
 		listOpts := opts.newContainerListOptions()
 		r, err = opts.store.ContainersByProvider(opts.ConfigProjectID(), listOpts)
@@ -66,9 +66,14 @@ func (opts *ListOpts) Run() error {
 }
 
 func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
+	lst := opts.NewAtlasListOptions()
 	return &atlas.ContainersListOptions{
 		ProviderName: opts.provider,
-		ListOptions:  *opts.NewListOptions(),
+		ListOptions: atlas.ListOptions{
+			PageNum:      lst.PageNum,
+			ItemsPerPage: lst.ItemsPerPage,
+			IncludeCount: lst.IncludeCount,
+		},
 	}
 }
 

@@ -66,7 +66,7 @@ func (opts *ListOpts) Run() error {
 		return err
 	}
 
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	restoreJobs, err := opts.store.RestoreJobs(opts.ConfigProjectID(), opts.clusterName, listOpts)
 	if err != nil {
 		return err

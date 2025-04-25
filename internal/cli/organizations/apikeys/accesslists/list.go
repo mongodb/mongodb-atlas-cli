@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
@@ -49,13 +48,13 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	params := &admin.ListApiKeyAccessListsEntriesApiParams{
 		OrgId:        opts.ConfigOrgID(),
 		ApiUserId:    opts.id,
-		PageNum:      pointer.Get(listOpts.PageNum),
-		ItemsPerPage: pointer.Get(listOpts.ItemsPerPage),
-		IncludeCount: pointer.Get(listOpts.IncludeCount),
+		PageNum:      &listOpts.PageNum,
+		ItemsPerPage: &listOpts.ItemsPerPage,
+		IncludeCount: &listOpts.IncludeCount,
 	}
 	result, err := opts.store.OrganizationAPIKeyAccessLists(params)
 	if err != nil {

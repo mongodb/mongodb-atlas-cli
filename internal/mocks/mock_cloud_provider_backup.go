@@ -8,9 +8,9 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	admin0 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockRestoreJobsLister is a mock of RestoreJobsLister interface.
@@ -52,7 +52,7 @@ func (mr *MockRestoreJobsListerMockRecorder) RestoreFlexClusterJobs(arg0 interfa
 }
 
 // RestoreJobs mocks base method.
-func (m *MockRestoreJobsLister) RestoreJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*admin0.PaginatedCloudBackupRestoreJob, error) {
+func (m *MockRestoreJobsLister) RestoreJobs(arg0, arg1 string, arg2 *store.ListOptions) (*admin0.PaginatedCloudBackupRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RestoreJobs", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin0.PaginatedCloudBackupRestoreJob)
@@ -226,7 +226,7 @@ func (mr *MockSnapshotsListerMockRecorder) FlexClusterSnapshots(arg0 interface{}
 }
 
 // Snapshots mocks base method.
-func (m *MockSnapshotsLister) Snapshots(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*admin0.PaginatedCloudBackupReplicaSet, error) {
+func (m *MockSnapshotsLister) Snapshots(arg0, arg1 string, arg2 *store.ListOptions) (*admin0.PaginatedCloudBackupReplicaSet, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Snapshots", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin0.PaginatedCloudBackupReplicaSet)
@@ -392,7 +392,7 @@ func (m *MockExportJobsLister) EXPECT() *MockExportJobsListerMockRecorder {
 }
 
 // ExportJobs mocks base method.
-func (m *MockExportJobsLister) ExportJobs(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*admin0.PaginatedApiAtlasDiskBackupExportJob, error) {
+func (m *MockExportJobsLister) ExportJobs(arg0, arg1 string, arg2 *store.ListOptions) (*admin0.PaginatedApiAtlasDiskBackupExportJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ExportJobs", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin0.PaginatedApiAtlasDiskBackupExportJob)
@@ -506,7 +506,7 @@ func (m *MockExportBucketsLister) EXPECT() *MockExportBucketsListerMockRecorder 
 }
 
 // ExportBuckets mocks base method.
-func (m *MockExportBucketsLister) ExportBuckets(arg0 string, arg1 *mongodbatlas.ListOptions) (*admin0.PaginatedBackupSnapshotExportBuckets, error) {
+func (m *MockExportBucketsLister) ExportBuckets(arg0 string, arg1 *store.ListOptions) (*admin0.PaginatedBackupSnapshotExportBuckets, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ExportBuckets", arg0, arg1)
 	ret0, _ := ret[0].(*admin0.PaginatedBackupSnapshotExportBuckets)

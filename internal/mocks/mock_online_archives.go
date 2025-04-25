@@ -8,8 +8,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	store "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	admin "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	mongodbatlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 // MockOnlineArchiveLister is a mock of OnlineArchiveLister interface.
@@ -36,7 +36,7 @@ func (m *MockOnlineArchiveLister) EXPECT() *MockOnlineArchiveListerMockRecorder 
 }
 
 // OnlineArchives mocks base method.
-func (m *MockOnlineArchiveLister) OnlineArchives(arg0, arg1 string, arg2 *mongodbatlas.ListOptions) (*admin.PaginatedOnlineArchive, error) {
+func (m *MockOnlineArchiveLister) OnlineArchives(arg0, arg1 string, arg2 *store.ListOptions) (*admin.PaginatedOnlineArchive, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "OnlineArchives", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*admin.PaginatedOnlineArchive)

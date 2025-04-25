@@ -33,7 +33,7 @@ func TestListOpts_Run(t *testing.T) {
 	opts := &ListOpts{
 		store: mockStore,
 	}
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 
 	params := &admin.ListApiKeyAccessListsEntriesApiParams{
 		OrgId:        opts.OrgID,

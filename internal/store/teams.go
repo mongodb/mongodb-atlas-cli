@@ -16,13 +16,12 @@ package store
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store TeamLister,TeamDescriber,TeamCreator,TeamRenamer,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
 
 type TeamLister interface {
-	Teams(string, *atlas.ListOptions) (*atlasv2.PaginatedTeam, error)
+	Teams(string, *ListOptions) (*atlasv2.PaginatedTeam, error)
 }
 
 type TeamDescriber interface {
@@ -67,7 +66,7 @@ func (s *Store) TeamByName(orgID, teamName string) (*atlasv2.TeamResponse, error
 }
 
 // Teams encapsulates the logic to manage different cloud providers.
-func (s *Store) Teams(orgID string, opts *atlas.ListOptions) (*atlasv2.PaginatedTeam, error) {
+func (s *Store) Teams(orgID string, opts *ListOptions) (*atlasv2.PaginatedTeam, error) {
 	res := s.clientv2.TeamsApi.ListOrganizationTeams(s.ctx, orgID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)

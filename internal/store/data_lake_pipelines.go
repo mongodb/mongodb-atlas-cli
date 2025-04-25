@@ -20,7 +20,6 @@ import (
 	"time"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate mockgen -destination=../mocks/mock_data_lake_pipelines.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter,PipelineAvailableSnapshotsLister,PipelineAvailableSchedulesLister,PipelinesTriggerer,PipelinesPauser,PipelinesResumer
@@ -46,7 +45,7 @@ type PipelinesUpdater interface {
 }
 
 type PipelineAvailableSnapshotsLister interface {
-	PipelineAvailableSnapshots(string, string, *time.Time, *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshot, error)
+	PipelineAvailableSnapshots(string, string, *time.Time, *ListOptions) (*atlasv2.PaginatedBackupSnapshot, error)
 }
 
 type PipelineAvailableSchedulesLister interface {
@@ -102,7 +101,7 @@ func (s *Store) PipelineAvailableSchedules(projectID, pipelineName string) ([]at
 }
 
 // PipelineAvailableSnapshots encapsulates the logic to manage different cloud providers.
-func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, completedAfter *time.Time, listOps *atlas.ListOptions) (*atlasv2.PaginatedBackupSnapshot, error) {
+func (s *Store) PipelineAvailableSnapshots(projectID, pipelineName string, completedAfter *time.Time, listOps *ListOptions) (*atlasv2.PaginatedBackupSnapshot, error) {
 	request := s.clientv2.DataLakePipelinesApi.ListPipelineSnapshots(s.ctx, projectID, pipelineName)
 	if completedAfter != nil {
 		request = request.CompletedAfter(*completedAfter)

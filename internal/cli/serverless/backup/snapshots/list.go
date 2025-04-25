@@ -47,7 +47,7 @@ var listTemplate = `ID	TYPE	STATUS	CREATED AT	EXPIRES AT{{range valueOrEmptySlic
 `
 
 func (opts *ListOpts) Run() error {
-	listOpts := opts.NewListOptions()
+	listOpts := opts.NewAtlasListOptions()
 	r, err := opts.store.ServerlessSnapshots(opts.ConfigProjectID(), opts.clusterName, listOpts)
 	if err != nil {
 		return err

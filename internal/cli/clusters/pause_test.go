@@ -19,9 +19,9 @@ package clusters
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	"go.uber.org/mock/gomock"
 )
 
 func TestPause_Run(t *testing.T) {

@@ -36,13 +36,13 @@ var (
 
 type Executor struct {
 	commandConverter CommandConverter
-	httpClient       HTTPClient
+	httpClient       Doer
 	formatter        ResponseFormatter
 	logger           Logger
 }
 
 // We're expecting a http client that's authenticated.
-func NewExecutor(commandConverter CommandConverter, httpClient HTTPClient, formatter ResponseFormatter, logger Logger) (*Executor, error) {
+func NewExecutor(commandConverter CommandConverter, httpClient Doer, formatter ResponseFormatter, logger Logger) (*Executor, error) {
 	if commandConverter == nil {
 		return nil, errors.Join(ErrMissingDependency, errors.New("commandConverter is nil"))
 	}

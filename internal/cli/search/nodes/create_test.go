@@ -20,11 +20,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
+	"go.uber.org/mock/gomock"
 )
 
 const testJSON = `{"Specs":[{"instanceSize": "S20_HIGHCPU_NVME", "nodeCount": 2}, {"instanceSize": "S110_LOWCPU_NVME", "nodeCount": 42}]}`

@@ -19,9 +19,9 @@ package datalake
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.uber.org/mock/gomock"
 )
 
 func TestList_Run(t *testing.T) {

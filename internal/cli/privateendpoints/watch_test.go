@@ -19,9 +19,9 @@ package privateendpoints
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
+	"go.uber.org/mock/gomock"
 )
 
 func TestWatch_Run(t *testing.T) {

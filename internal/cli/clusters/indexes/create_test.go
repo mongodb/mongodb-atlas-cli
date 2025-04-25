@@ -19,9 +19,9 @@ package indexes
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
+	"go.uber.org/mock/gomock"
 )
 
 func TestCreate_Run(t *testing.T) {

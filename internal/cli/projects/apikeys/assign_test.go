@@ -19,9 +19,9 @@ package apikeys
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
+	"go.uber.org/mock/gomock"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {

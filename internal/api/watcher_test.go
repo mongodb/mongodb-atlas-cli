@@ -23,9 +23,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestAnyToString(t *testing.T) {
@@ -82,7 +83,6 @@ func TestAnyToString(t *testing.T) {
 			input:    false,
 			expected: "false",
 		},
-
 		// Test slices
 		{
 			name:     "empty slice",
@@ -118,10 +118,9 @@ func TestAnyToString(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			result := anyToString(tt.input)
-			if result != tt.expected {
-				t.Errorf("anyToString(%v) = %v, want %v", tt.input, result, tt.expected)
-			}
+			assert.Equal(t, tt.expected, result)
 		})
 	}
 }
@@ -132,84 +131,84 @@ func TestApplyJsonPath(t *testing.T) {
 		json        string
 		jsonPath    string
 		expected    string
-		expectError bool
+		expectError require.ErrorAssertionFunc
 	}{
 		{
 			name:        "basic object with string",
 			json:        `{"name": "Cluster0", "status": "IDLE"}`,
 			jsonPath:    "$.name",
 			expected:    "Cluster0",
-			expectError: false,
+			expectError: require.NoError,
 		},
 		{
 			name:        "basic object with different field",
 			json:        `{"name": "Cluster0", "status": "IDLE"}`,
 			jsonPath:    "$.status",
 			expected:    "IDLE",
-			expectError: false,
+			expectError: require.NoError,
 		},
 		{
 			name:        "object with integer",
 			json:        `{"id": 123, "name": "Test"}`,
 			jsonPath:    "$.id",
 			expected:    "123",
-			expectError: false,
+			expectError: require.NoError,
 		},
 		{
 			name:        "object with boolean",
 			json:        `{"active": true, "name": "Test"}`,
 			jsonPath:    "$.active",
 			expected:    "true",
-			expectError: false,
+			expectError: require.NoError,
 		},
 		{
 			name:        "array first element",
 			json:        `{"tags": ["dev", "prod", "staging"]}`,
 			jsonPath:    "$.tags[0]",
 			expected:    "dev",
-			expectError: false,
+			expectError: require.NoError,
 		},
 		{
 			name:        "nested object",
 			json:        `{"cluster": {"name": "Cluster0", "status": "IDLE"}}`,
 			jsonPath:    "$.cluster.name",
 			expected:    "Cluster0",
-			expectError: false,
+			expectError: require.NoError,
 		},
 		{
 			name:        "invalid JSON",
 			json:        `{"name": "Cluster0", "status": "IDLE"`, // Missing closing brace
 			jsonPath:    "$.name",
 			expected:    "",
-			expectError: true,
+			expectError: require.Error,
 		},
 		{
 			name:        "invalid JSONPath",
 			json:        `{"name": "Cluster0", "status": "IDLE"}`,
 			jsonPath:    "$.[invalid",
 			expected:    "",
-			expectError: true,
+			expectError: require.Error,
 		},
 		{
 			name:        "non-existent path",
 			json:        `{"name": "Cluster0", "status": "IDLE"}`,
 			jsonPath:    "$.nonexistent",
 			expected:    "",
-			expectError: true,
+			expectError: require.Error,
 		},
 		{
 			name:        "empty JSON object",
 			json:        `{}`,
 			jsonPath:    "$.name",
 			expected:    "",
-			expectError: true,
+			expectError: require.Error,
 		},
 		{
 			name:        "array of objects first element",
 			json:        `{"clusters": [{"name": "Cluster0"}, {"name": "Cluster1"}]}`,
 			jsonPath:    "$.clusters[0].name",
 			expected:    "Cluster0",
-			expectError: false,
+			expectError: require.NoError,
 		},
 	}
 
@@ -219,22 +218,11 @@ func TestApplyJsonPath(t *testing.T) {
 			reader := io.NopCloser(strings.NewReader(tt.json))
 
 			result, err := applyJSONPath(reader, tt.jsonPath)
-
-			// Check error expectations
-			if tt.expectError && err == nil {
-				t.Errorf("expected error but got none")
-				return
-			}
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
-				return
-			}
+			tt.expectError(t, err)
 
 			// If we're not expecting an error, check the result
-			if !tt.expectError {
-				if result != tt.expected {
-					t.Errorf("got %v, want %v", result, tt.expected)
-				}
+			if result != tt.expected {
+				t.Errorf("got %v, want %v", result, tt.expected)
 			}
 		})
 	}
@@ -247,23 +235,17 @@ func TestApplyJsonPathReaderError(t *testing.T) {
 		err: io.ErrClosedPipe,
 	}
 
-	_, err := applyJSONPath(failingReader, "$.name")
-	if err == nil {
-		t.Error("expected error from failing reader, got nil")
-	}
+	_, err := applyJSONPath(io.NopCloser(failingReader), "$.name")
+	require.Error(t, err)
 }
 
-// mockFailingReader implements io.ReadCloser and always returns an error.
+// mockFailingReader implements io.Reader and always returns an error.
 type mockFailingReader struct {
 	err error
 }
 
 func (m *mockFailingReader) Read(_ []byte) (n int, err error) {
 	return 0, m.err
-}
-
-func (*mockFailingReader) Close() error {
-	return nil
 }
 
 func TestWatchInner(t *testing.T) {

@@ -43,6 +43,12 @@ variables:
     working_dir: src/github.com/mongodb/mongodb-atlas-cli
     env:
       <<: *go_env
+  - &silkbomb_container_config
+    CONTAINER_COMMAND: podman
+    CONTAINER_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
+    CONTAINER_OPTIONS: --pull=always --platform="linux/amd64" -it --rm
+    CONTAINER_ENV_FILES: --env-file ${workdir}/kondukto_credentials.env
+    CONTAINER_VOLUMES: -v ${workdir}:/workdir
 pre:
   - func: "clone"
   - func: "set-expansions"
@@ -533,6 +539,40 @@ functions:
         binary: make
         args:
           - otel
+  "generate purls":  
+    - command: shell.exec  
+      params:  
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        script: |  
+          set -Eeou pipefail
+          echo "Generating PURLs..."  
+          go version -m atlas | awk '{if ($1 == "dep" || $1 == "=>"){print "pkg:golang/"$2"@"$3}}' > purls.txt
+  "generate sbom":  
+    - command: shell.exec  
+      params:  
+        shell: bash
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        script: |  
+          echo "Generating SBOM from PURLs..."  
+          silkbomb:2.0 update --purls ${workdir}/purls.txt --sbom-out ${workdir}/sbom.json 
+  "write kondukto credentials": 
+    - command: ec2.assume_role
+      params:
+        role_arn: ${kondukto_role_arn}
+    - command: shell.exec
+      params:
+        silent: true
+        shell: bash
+        include_expansions_in_env: [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]
+        script: |
+          set -e
+          kondukto_token=$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)
+          echo "KONDUKTO_TOKEN=$kondukto_token" > ${workdir}/kondukto_credentials.env
+  "run silkbomb":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: ${CONTAINER_COMMAND} run ${CONTAINER_OPTIONS} ${CONTAINER_ENV_FILES} ${CONTAINER_VOLUMES} ${CONTAINER_IMAGE} ${SILKBOMB_COMMAND} ${SILKBOMB_ARGS}
 tasks:
   - name: compile
     tags: ["code_health"]
@@ -1742,6 +1782,20 @@ tasks:
               -e SNYK_CFG_ORG=${SNYK_ORG} \
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/app \
               snyk/snyk:golang snyk monitor
+  - name: generate_purls  
+    commands:  
+      - func: "generate purls"    
+  - name: generate_sbom  
+    commands:  
+      - func: "generate sbom"
+  - name: upload_sbom_to_kondukto
+    commands:
+      - func: "write kondukto credentials"
+      - func: "run silkbomb"
+        vars:
+          <<: *silkbomb_container_config
+          SILKBOMB_COMMAND: upload
+          SILKBOMB_ARGS: --sbom-in /workdir/sbom.json --repo mongodb-atlas-cli  --branch ${branch_name}
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
@@ -2068,6 +2122,14 @@ buildvariants:
       - ubuntu2204-small
     tasks:
       - name: ".snyk"
+  - name: ssdlc
+    display_name: Compliance [ssdlc]
+    run_on:
+      - rhel9-latest-small
+    tasks:
+      - name: generate_purls
+      - name: generate_sbom
+      - name: upload_sbom_to_kondukto
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev cron"]

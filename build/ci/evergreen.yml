@@ -542,21 +542,17 @@ functions:
   "generate purls":  
     - command: shell.exec  
       params:  
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
+        <<: *go_options
+        shell: bash
         script: |  
           set -Eeou pipefail
-          GO_VERSION="1.22.2"
-          mkdir -p go-tmp
-          curl -sfL "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" | tar zx -C "go-tmp" --strip-components=1
-          mv go-tmp/bin/* .
-          rm -rf go-tmp
           echo "Generating PURLs..."  
-          go version -m bin/atlas | awk '{if ($1 == "dep" || $1 == "=>"){print "pkg:golang/"$2"@"$3}}' > purls.txt
+          go list -json -mod=mod all | jq -r '.Module // empty | "pkg:golang/" + .Path + "@" + .Version // empty' | sort -u
+          go version | sed 's|^go version \([^ ]*\) *.*|pkg:golang/std@\1|'
   "generate sbom":  
     - command: shell.exec  
       params:  
         shell: bash
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         script: |  
           echo "Generating SBOM from PURLs..."  
           silkbomb:2.0 update --purls ${workdir}/purls.txt --sbom-out ${workdir}/sbom.json 
@@ -1787,14 +1783,10 @@ tasks:
               -e SNYK_CFG_ORG=${SNYK_ORG} \
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/app \
               snyk/snyk:golang snyk monitor
-  - name: generate_purls  
+  - name: generate_and_upload_sboms  
     commands:  
       - func: "generate purls"    
-  - name: generate_sbom  
-    commands:  
       - func: "generate sbom"
-  - name: upload_sbom_to_kondukto
-    commands:
       - func: "write kondukto credentials"
       - func: "run silkbomb"
         vars:
@@ -2131,10 +2123,10 @@ buildvariants:
     display_name: Compliance [ssdlc]
     run_on:
       - rhel9-latest-small
+    expansions:
+      <<: *go_linux_version
     tasks:
-      - name: generate_purls
-      - name: generate_sbom
-      - name: upload_sbom_to_kondukto
+      - name: generate_and_upload_sboms
 patch_aliases:
   - alias: "localdev"
     variant_tags: ["localdev cron"]

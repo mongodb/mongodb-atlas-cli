@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 904
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 28 Apr 2025 05:16:21 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 80
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndpointServices
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=51d9d3f5e3aa7a2c921661f591d25d12538a8eb7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+[{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"680f0e38cb44403662bd866d","regionName":"EUROPE_WEST_2","serviceAttachmentNames":["projects/p-vtcjuvjvwfxipu2f9vvom11b/regions/europe-west2/serviceAttachments/sa-europe-west2-680f0e37cb44403662bd8614-0","projects/p-vtcjuvjvwfxipu2f9vvom11b/regions/europe-west2/serviceAttachments/sa-europe-west2-680f0e37cb44403662bd8614-1","projects/p-vtcjuvjvwfxipu2f9vvom11b/regions/europe-west2/serviceAttachments/sa-europe-west2-680f0e37cb44403662bd8614-2","projects/p-vtcjuvjvwfxipu2f9vvom11b/regions/europe-west2/serviceAttachments/sa-europe-west2-680f0e37cb44403662bd8614-3","projects/p-vtcjuvjvwfxipu2f9vvom11b/regions/europe-west2/serviceAttachments/sa-europe-west2-680f0e37cb44403662bd8614-4","projects/p-vtcjuvjvwfxipu2f9vvom11b/regions/europe-west2/serviceAttachments/sa-europe-west2-680f0e37cb44403662bd8614-5"],"status":"AVAILABLE"}]

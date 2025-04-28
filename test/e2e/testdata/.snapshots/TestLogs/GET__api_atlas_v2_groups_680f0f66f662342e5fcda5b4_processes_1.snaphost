@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1841
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 28 Apr 2025 05:25:05 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 94
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=51d9d3f5e3aa7a2c921661f591d25d12538a8eb7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/680f0f66f662342e5fcda5b4/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-04-28T05:24:29Z","groupId":"680f0f66f662342e5fcda5b4","hostname":"atlas-953jpo-shard-00-00.bm5xuw.mongodb-dev.net","id":"atlas-953jpo-shard-00-00.bm5xuw.mongodb-dev.net:27017","lastPing":"2025-04-28T05:24:58Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/680f0f66f662342e5fcda5b4/processes/atlas-953jpo-shard-00-00.bm5xuw.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-953jpo-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-514-shard-00-00.bm5xuw.mongodb-dev.net","version":"8.0.8"},{"created":"2025-04-28T05:24:29Z","groupId":"680f0f66f662342e5fcda5b4","hostname":"atlas-953jpo-shard-00-01.bm5xuw.mongodb-dev.net","id":"atlas-953jpo-shard-00-01.bm5xuw.mongodb-dev.net:27017","lastPing":"2025-04-28T05:24:58Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/680f0f66f662342e5fcda5b4/processes/atlas-953jpo-shard-00-01.bm5xuw.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-953jpo-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-514-shard-00-01.bm5xuw.mongodb-dev.net","version":"8.0.8"},{"created":"2025-04-28T05:24:29Z","groupId":"680f0f66f662342e5fcda5b4","hostname":"atlas-953jpo-shard-00-02.bm5xuw.mongodb-dev.net","id":"atlas-953jpo-shard-00-02.bm5xuw.mongodb-dev.net:27017","lastPing":"2025-04-28T05:24:58Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/680f0f66f662342e5fcda5b4/processes/atlas-953jpo-shard-00-02.bm5xuw.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-953jpo-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-514-shard-00-02.bm5xuw.mongodb-dev.net","version":"8.0.8"}],"totalCount":3}

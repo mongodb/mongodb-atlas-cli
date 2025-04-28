@@ -542,16 +542,21 @@ functions:
   "generate purls":  
     - command: shell.exec  
       params:  
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         script: |  
           set -Eeou pipefail
+          GO_VERSION="1.22.2"
+          mkdir -p go-tmp
+          curl -sfL "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" | tar zx -C "go-tmp" --strip-components=1
+          mv go-tmp/bin/* .
+          rm -rf go-tmp
           echo "Generating PURLs..."  
-          go version -m atlas | awk '{if ($1 == "dep" || $1 == "=>"){print "pkg:golang/"$2"@"$3}}' > purls.txt
+          go version -m bin/atlas | awk '{if ($1 == "dep" || $1 == "=>"){print "pkg:golang/"$2"@"$3}}' > purls.txt
   "generate sbom":  
     - command: shell.exec  
       params:  
         shell: bash
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli/bin
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
         script: |  
           echo "Generating SBOM from PURLs..."  
           silkbomb:2.0 update --purls ${workdir}/purls.txt --sbom-out ${workdir}/sbom.json 
@@ -1795,7 +1800,7 @@ tasks:
         vars:
           <<: *silkbomb_container_config
           SILKBOMB_COMMAND: upload
-          SILKBOMB_ARGS: --sbom-in /workdir/sbom.json --repo mongodb-atlas-cli  --branch ${branch_name}
+          SILKBOMB_ARGS: --sbom-in /workdir/sbom.json --repo mongodb/mongodb-atlas-cli  --branch ${branch_name}
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

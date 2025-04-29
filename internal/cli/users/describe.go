@@ -16,7 +16,6 @@ package users
 
 import (
 	"context"
-	"errors"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
@@ -66,13 +65,6 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *DescribeOpts) validate() error {
-	if opts.id == "" && opts.username == "" {
-		return errors.New("must supply one of 'id' or 'username'")
-	}
-	return nil
-}
-
 // DescribeBuilder atlas user(s) describe [--id id|--username USERNAME].
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
@@ -94,7 +86,6 @@ User accounts and API keys with any role can run this command.`,
 			return prerun.ExecuteE(
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
-				opts.validate,
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
@@ -105,6 +96,7 @@ User accounts and API keys with any role can run this command.`,
 	cmd.Flags().StringVar(&opts.username, flag.Username, "", usage.Username)
 	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.UserID)
 	cmd.MarkFlagsMutuallyExclusive(flag.Username, flag.ID)
+	cmd.MarkFlagsOneRequired(flag.Username, flag.ID)
 
 	opts.AddOutputOptFlags(cmd)
 

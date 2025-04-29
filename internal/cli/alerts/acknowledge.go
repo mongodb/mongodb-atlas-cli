@@ -97,9 +97,6 @@ func AcknowledgeBuilder() *cobra.Command {
 		Aliases: []string{"ack"},
 		Args:    require.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			if opts.forever && opts.until != "" {
-				return fmt.Errorf("--%s and --%s are exclusive", flag.Forever, flag.Until)
-			}
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
@@ -121,6 +118,7 @@ func AcknowledgeBuilder() *cobra.Command {
 	cmd.Flags().BoolVarP(&opts.forever, flag.Forever, flag.ForeverShort, false, usage.Forever)
 	cmd.Flags().StringVar(&opts.until, flag.Until, "", usage.Until)
 	cmd.Flags().StringVar(&opts.comment, flag.Comment, "", usage.Comment)
+	cmd.MarkFlagsMutuallyExclusive(flag.Forever, flag.Until)
 
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)

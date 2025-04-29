@@ -47,10 +47,14 @@ Options
      - string
      - false
      - Unique 24-digit string that identifies the team.
+
+       Mutually exclusive with --name.
    * - --name
      - string
      - false
      - Label that identifies the team.
+
+       Mutually exclusive with --id.
    * - --orgId
      - string
      - false

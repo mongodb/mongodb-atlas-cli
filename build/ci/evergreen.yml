@@ -43,12 +43,6 @@ variables:
     working_dir: src/github.com/mongodb/mongodb-atlas-cli
     env:
       <<: *go_env
-  - &silkbomb_container_config
-    CONTAINER_COMMAND: docker
-    CONTAINER_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
-    CONTAINER_OPTIONS: --pull=always --platform="linux/amd64" --rm
-    CONTAINER_ENV_FILES: --env-file ${workdir}/kondukto_credentials.env
-    CONTAINER_VOLUMES: -v ${workdir}:/workdir
 pre:
   - func: "clone"
   - func: "set-expansions"
@@ -566,16 +560,13 @@ functions:
         shell: bash
         script: |  
           set -Eeuo pipefail
-          echo "Generating SBOM from PURLs..."  
+          echo "Generating SBOM..."  
           docker run --rm \
           -v "${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/pwd" \
           901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
           update \
           --purls /pwd/purls.txt \
           --sbom-out /pwd/sbom.json 
-
-          echo "Resulting SBOM contents:"
-          cat sbom.json
   "write kondukto credentials": 
     - command: ec2.assume_role
       params:
@@ -1810,7 +1801,11 @@ tasks:
       - func: "write kondukto credentials"
       - func: "run silkbomb"
         vars:
-          <<: *silkbomb_container_config
+          CONTAINER_COMMAND: docker
+          CONTAINER_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
+          CONTAINER_OPTIONS: --pull=always --platform="linux/amd64" --rm
+          CONTAINER_ENV_FILES: --env-file ${workdir}/kondukto_credentials.env
+          CONTAINER_VOLUMES: -v ${workdir}:/workdir
           SILKBOMB_COMMAND: upload
           SILKBOMB_ARGS: --sbom-in /workdir/src/github.com/mongodb/mongodb-atlas-cli/sbom.json --repo mongodb_mongodb-atlas-cli  --branch ${branch_name}
 task_groups:

@@ -16,7 +16,6 @@ package teams
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -67,18 +66,6 @@ func (opts *DescribeOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *DescribeOpts) validate() error {
-	if opts.id == "" && opts.name == "" {
-		return errors.New("must supply one of 'id' or 'username'")
-	}
-
-	if opts.id != "" && opts.name != "" {
-		return errors.New("cannot supply both 'id' and 'username'")
-	}
-
-	return nil
-}
-
 // atlas team(s) describe --id id --name name --orgId orgId.
 func DescribeBuilder() *cobra.Command {
 	opts := &DescribeOpts{}
@@ -101,7 +88,6 @@ func DescribeBuilder() *cobra.Command {
 				opts.ValidateOrgID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
-				opts.validate,
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
@@ -111,6 +97,9 @@ func DescribeBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.name, flag.Name, "", usage.TeamName)
 	cmd.Flags().StringVar(&opts.id, flag.ID, "", usage.TeamID)
+
+	cmd.MarkFlagsOneRequired(flag.Name, flag.ID)
+	cmd.MarkFlagsMutuallyExclusive(flag.Name, flag.ID)
 
 	opts.AddOrgOptFlags(cmd)
 	opts.AddOutputOptFlags(cmd)

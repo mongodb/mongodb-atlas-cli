@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1883
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 29 Apr 2025 05:17:41 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 125
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=71c15aaea390f4fca9e79bcd8570ae039dbe411b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68105e91b798e05bd70a2f26/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-04-29T05:16:52Z","groupId":"68105e91b798e05bd70a2f26","hostname":"atlas-dkyrig-shard-00-00.tcu2oy.mongodb-dev.net","id":"atlas-dkyrig-shard-00-00.tcu2oy.mongodb-dev.net:27017","lastPing":"2025-04-29T05:17:40Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68105e91b798e05bd70a2f26/processes/atlas-dkyrig-shard-00-00.tcu2oy.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-dkyrig-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-380-shard-00-00.tcu2oy.mongodb-dev.net","version":"8.0.8"},{"created":"2025-04-29T05:16:52Z","groupId":"68105e91b798e05bd70a2f26","hostname":"atlas-dkyrig-shard-00-01.tcu2oy.mongodb-dev.net","id":"atlas-dkyrig-shard-00-01.tcu2oy.mongodb-dev.net:27017","lastPing":"2025-04-29T05:17:40Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68105e91b798e05bd70a2f26/processes/atlas-dkyrig-shard-00-01.tcu2oy.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-dkyrig-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-380-shard-00-01.tcu2oy.mongodb-dev.net","version":"8.0.8"},{"created":"2025-04-29T05:16:52Z","groupId":"68105e91b798e05bd70a2f26","hostname":"atlas-dkyrig-shard-00-02.tcu2oy.mongodb-dev.net","id":"atlas-dkyrig-shard-00-02.tcu2oy.mongodb-dev.net:27017","lastPing":"2025-04-29T05:17:40Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68105e91b798e05bd70a2f26/processes/atlas-dkyrig-shard-00-02.tcu2oy.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-dkyrig-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-380-shard-00-02.tcu2oy.mongodb-dev.net","version":"8.0.8"}],"totalCount":3}

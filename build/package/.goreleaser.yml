@@ -55,6 +55,7 @@ archives:
       - LICENSE
       - LICENSING-NOTES.txt
       - third_party_notices/**/*
+      - compliance/**/*
   wrap_in_directory: true
   format: tar.gz
 - id: macos

@@ -1091,6 +1091,18 @@ var metadata = metadatatypes.Metadata{
 				Flags: map[string]string{
 					`groupId`: `32b6e34b3d91647abb20e7b8`,
 				},
+			}, {
+				Source: `GCP`,
+
+				Description: `GCP`,
+				Value: `{
+  "bucketName": "export-bucket",
+  "cloudProvider": "GCP",
+  "roleId": "668c5f0ed436263134491592"
+}`,
+				Flags: map[string]string{
+					`groupId`: `32b6e34b3d91647abb20e7b8`,
+				},
 			},
 			},
 		},

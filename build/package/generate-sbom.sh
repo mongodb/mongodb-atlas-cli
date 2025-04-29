@@ -19,15 +19,14 @@ set -Eeou pipefail
 echo "Generating PURLs..."
 cd "${workdir}/src/github.com/mongodb/mongodb-atlas-cli"
 
-# Generate purls.txt
-go list -json -mod=mod all | jq -r '.Module // empty | "pkg:golang/" + .Path + "@" + .Version // empty' | sort -u > purls.txt
+go list -json -mod=mod all | jq -r '.Module // empty | "pkg:golang/" + .Path + "@" + .Version // empty' | sort -u  > purls.txt
 go version | sed 's|^go version \([^ ]*\) *.*|pkg:golang/std@\1|' >> purls.txt
 
 mkdir ./compliance
 
 echo "Generating SBOM..."
 docker run --rm \
-  -v "${PWD}:/pwd" \
+  -v "${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/pwd" \
   901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update \
   --purls /pwd/purls.txt \

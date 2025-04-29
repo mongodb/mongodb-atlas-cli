@@ -20,7 +20,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader,AtlasClusterConfigurationOptionsUpdater,ClusterTester,ClusterDescriberStarter
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader,AtlasClusterConfigurationOptionsUpdater,ClusterTester,ClusterDescriberStarter,ProjectMDBVersionLister
 
 type ClusterLister interface {
 	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
@@ -98,6 +98,10 @@ type AtlasSharedClusterGetterUpgrader interface {
 	AtlasSharedClusterDescriber
 	ClusterDescriber
 	ClusterUpgrader
+}
+
+type ProjectMDBVersionLister interface {
+	MDBVersions(projectID string, opt *MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error)
 }
 
 type AtlasClusterQuickStarter interface {

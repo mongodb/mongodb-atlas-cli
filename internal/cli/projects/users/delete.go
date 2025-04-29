@@ -27,10 +27,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=users . ProjectUserDeleter
+
+type ProjectUserDeleter interface {
+	DeleteUserFromProject(string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	store store.ProjectUserDeleter
+	store ProjectUserDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

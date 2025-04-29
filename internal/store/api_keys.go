@@ -18,44 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_api_keys.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectAPIKeyLister,ProjectAPIKeyCreator,OrganizationAPIKeyLister,OrganizationAPIKeyDescriber,OrganizationAPIKeyUpdater,OrganizationAPIKeyCreator,OrganizationAPIKeyDeleter,ProjectAPIKeyDeleter,ProjectAPIKeyAssigner
-
-type ProjectAPIKeyLister interface {
-	ProjectAPIKeys(string, *ListOptions) (*atlasv2.PaginatedApiApiUser, error)
-}
-
-type ProjectAPIKeyCreator interface {
-	CreateProjectAPIKey(string, *atlasv2.CreateAtlasProjectApiKey) (*atlasv2.ApiKeyUserDetails, error)
-}
-
-type ProjectAPIKeyDeleter interface {
-	DeleteProjectAPIKey(string, string) error
-}
-
-type ProjectAPIKeyAssigner interface {
-	AssignProjectAPIKey(string, string, *atlasv2.UpdateAtlasProjectApiKey) error
-}
-
-type OrganizationAPIKeyLister interface {
-	OrganizationAPIKeys(string, *ListOptions) (*atlasv2.PaginatedApiApiUser, error)
-}
-
-type OrganizationAPIKeyDescriber interface {
-	OrganizationAPIKey(string, string) (*atlasv2.ApiKeyUserDetails, error)
-}
-
-type OrganizationAPIKeyUpdater interface {
-	UpdateOrganizationAPIKey(string, string, *atlasv2.UpdateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
-}
-
-type OrganizationAPIKeyCreator interface {
-	CreateOrganizationAPIKey(string, *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
-}
-
-type OrganizationAPIKeyDeleter interface {
-	DeleteOrganizationAPIKey(string, string) error
-}
-
 // OrganizationAPIKeys encapsulates the logic to manage different cloud providers.
 func (s *Store) OrganizationAPIKeys(orgID string, opts *ListOptions) (*atlasv2.PaginatedApiApiUser, error) {
 	res := s.clientv2.ProgrammaticAPIKeysApi.ListApiKeys(s.ctx, orgID)

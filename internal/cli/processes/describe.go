@@ -30,12 +30,18 @@ const describeTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION
 {{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}
 `
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=processes . ProcessDescriber
+
+type ProcessDescriber interface {
+	Process(*atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	host  string
 	port  int
-	store store.ProcessDescriber
+	store ProcessDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

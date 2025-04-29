@@ -14,12 +14,6 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_default_mongodb_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DefaultVersionGetter
-
-type DefaultVersionGetter interface {
-	DefaultMongoDBVersion() (string, error)
-}
-
 // DefaultMongoDBVersion encapsulates the logic to manage different cloud providers.
 func (s *Store) DefaultMongoDBVersion() (string, error) {
 	result, _, err := s.client.DefaultMongoDBMajorVersion.Get(s.ctx)

@@ -31,6 +31,12 @@ import (
 
 const providerName = "SERVERLESS"
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=serverless . Creator
+
+type Creator interface {
+	CreateServerlessInstance(string, *atlasv2.ServerlessInstanceDescriptionCreate) (*atlasv2.ServerlessInstanceDescription, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -38,7 +44,7 @@ type CreateOpts struct {
 	provider     string
 	region       string
 	tag          map[string]string
-	store        store.ServerlessInstanceCreator
+	store        Creator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

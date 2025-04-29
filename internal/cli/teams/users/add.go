@@ -30,10 +30,16 @@ import (
 
 const addTemplate = "User(s) added to the team.\n"
 
+//go:generate mockgen -typed -destination=add_mock_test.go -package=users . TeamAdder
+
+type TeamAdder interface {
+	AddUsersToTeam(string, string, []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error)
+}
+
 type AddOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
-	store  store.TeamAdder
+	store  TeamAdder
 	teamID string
 	users  []string
 }

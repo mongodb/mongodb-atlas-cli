@@ -24,7 +24,6 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
@@ -34,7 +33,7 @@ import (
 
 func TestTrackCommand(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockEventsSender(ctrl)
+	mockStore := NewMockEventsSender(ctrl)
 
 	cmd := &cobra.Command{
 		Use: "test-command",
@@ -61,7 +60,7 @@ func TestTrackCommand(t *testing.T) {
 
 func TestTrackCommandWithError(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockEventsSender(ctrl)
+	mockStore := NewMockEventsSender(ctrl)
 
 	cacheDir := t.TempDir()
 	cmd := &cobra.Command{
@@ -95,7 +94,7 @@ func TestTrackCommandWithError(t *testing.T) {
 
 func TestTrackCommandWithSendError(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockEventsSender(ctrl)
+	mockStore := NewMockEventsSender(ctrl)
 
 	cmd := &cobra.Command{
 		Use: "test-command",

@@ -31,6 +31,12 @@ import (
 
 const atlasCreateTemplate = "Project '{{.Id}}' created.\n"
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=projects . ProjectCreator
+
+type ProjectCreator interface {
+	CreateProject(*atlasv2.CreateProjectApiParams) (*atlasv2.Group, error)
+}
+
 type CreateOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
@@ -39,7 +45,7 @@ type CreateOpts struct {
 	regionUsageRestrictions     bool
 	withoutDefaultAlertSettings bool
 	tag                         map[string]string
-	store                       store.ProjectCreator
+	store                       ProjectCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

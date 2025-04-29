@@ -26,8 +26,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=update_mock_test.go -package=nodes . SearchNodesUpdater
+
+type SearchNodesUpdater interface {
+	UpdateSearchNodes(string, string, *atlasv2.ApiSearchDeploymentRequest) (*atlasv2.ApiSearchDeploymentResponse, error)
+	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
+}
 
 type UpdateOpts struct {
 	cli.ProjectOpts
@@ -35,7 +42,7 @@ type UpdateOpts struct {
 	clusterName string
 	filename    string
 	fs          afero.Fs
-	store       store.SearchNodesUpdater
+	store       SearchNodesUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -66,7 +73,7 @@ func (opts *UpdateOpts) Run() error {
 			return err
 		}
 		opts.Template = updateWatchTemplate
-		r = watchResult.(*admin.ApiSearchDeploymentResponse)
+		r = watchResult.(*atlasv2.ApiSearchDeploymentResponse)
 	}
 
 	return opts.Print(r)

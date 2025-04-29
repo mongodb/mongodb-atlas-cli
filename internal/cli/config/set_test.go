@@ -19,13 +19,12 @@ package config
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestSet_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSetSaver(ctrl)
+	mockStore := NewMockSetSaver(ctrl)
 
 	t.Run("valid prop", func(t *testing.T) {
 		setOpts := &SetOpts{

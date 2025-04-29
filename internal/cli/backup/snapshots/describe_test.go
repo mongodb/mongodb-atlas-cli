@@ -19,7 +19,6 @@ package snapshots
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSnapshotsDescriber(ctrl)
+	mockStore := NewMockDescriber(ctrl)
 
 	var expected atlasv2.DiskBackupReplicaSet
 
@@ -57,7 +56,7 @@ func TestDescribe_Run(t *testing.T) {
 
 func TestDescribe_Run_FlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSnapshotsDescriber(ctrl)
+	mockStore := NewMockDescriber(ctrl)
 	expected := &atlasv2.FlexBackupSnapshot20241113{}
 
 	describeOpts := &DescribeOpts{

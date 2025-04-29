@@ -22,7 +22,6 @@ import (
 
 type SearchIndexLister interface {
 	SearchIndexListerDeprecated
-
 	SearchIndexes(string, string, string, string) ([]atlasv2.SearchIndexResponse, error)
 }
 

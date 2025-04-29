@@ -28,9 +28,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=disable_mock_test.go -package=customercerts . X509CertificateConfDisabler
+
+type X509CertificateConfDisabler interface {
+	DisableX509Configuration(string) error
+}
+
 type DisableOpts struct {
 	cli.ProjectOpts
-	store   store.X509CertificateConfDisabler
+	store   X509CertificateConfDisabler
 	confirm bool
 }
 

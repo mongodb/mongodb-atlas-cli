@@ -19,7 +19,6 @@ package snapshots
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSnapshotsDescriber(ctrl)
+	mockStore := NewMockDescriber(ctrl)
 
 	watchOpts := &WatchOpts{
 		id:            "test",
@@ -50,7 +49,7 @@ func TestWatch_Run(t *testing.T) {
 
 func TestWatch_Run_FlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSnapshotsDescriber(ctrl)
+	mockStore := NewMockDescriber(ctrl)
 
 	watchOpts := &WatchOpts{
 		id:            "test",

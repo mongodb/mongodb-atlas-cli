@@ -20,13 +20,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestWhitelistDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListDeleter(ctrl)
+	mockStore := NewMockProjectIPAccessListDeleter(ctrl)
 
 	deleteOpts := &DeleteOpts{
 		DeleteOpts: &cli.DeleteOpts{

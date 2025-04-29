@@ -34,7 +34,7 @@ type ConnectOpts struct {
 	identityProviderID   string
 	protocol             string
 	federationSettingsID string
-	store                store.ConnectedOrgConfigsUpdater
+	store                ConnectedOrgConfigsUpdater
 }
 
 const (

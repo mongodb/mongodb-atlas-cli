@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -46,7 +45,7 @@ func getPrivateLinkConnections() []atlasv2.StreamsPrivateLinkConnection {
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateLinkLister(ctrl)
+	mockStore := NewMockLister(ctrl)
 
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{

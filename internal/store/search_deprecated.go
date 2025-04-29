@@ -57,7 +57,7 @@ func (s *Store) CreateSearchIndexesDeprecated(projectID, clusterName string, ind
 	return result, err
 }
 
-// SearchIndex encapsulate the logic to manage different cloud providers.
+// SearchIndexDeprecated encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexDeprecated(projectID, clusterName, indexID string) (*atlasv2.ClusterSearchIndex, error) {
 	index, _, err := s.clientv2.AtlasSearchApi.GetAtlasSearchIndexDeprecated(s.ctx, projectID, clusterName, indexID).Execute()
 	return index, err

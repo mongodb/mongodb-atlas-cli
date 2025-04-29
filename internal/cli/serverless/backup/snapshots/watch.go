@@ -32,7 +32,7 @@ type WatchOpts struct {
 	cli.WatchOpts
 	id          string
 	clusterName string
-	store       store.ServerlessSnapshotsDescriber
+	store       ServerlessSnapshotsDescriber
 }
 
 var watchTemplate = "\nSnapshot changes completed.\n"

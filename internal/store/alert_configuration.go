@@ -19,23 +19,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_alert_configuration.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store AlertConfigurationLister,AlertConfigurationCreator,AlertConfigurationDeleter,AlertConfigurationUpdater,MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler,AlertConfigurationDescriber
-
-type AlertConfigurationLister interface {
-	AlertConfigurations(*admin.ListAlertConfigurationsApiParams) (*admin.PaginatedAlertConfig, error)
-}
-
-type AlertConfigurationCreator interface {
-	CreateAlertConfiguration(*admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error)
-}
-
-type AlertConfigurationDeleter interface {
-	DeleteAlertConfiguration(string, string) error
-}
-
-type AlertConfigurationUpdater interface {
-	UpdateAlertConfiguration(*admin.GroupAlertsConfig) (*admin.GroupAlertsConfig, error)
-}
+//go:generate mockgen -destination=../mocks/mock_alert_configuration.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store MatcherFieldsLister,AlertConfigurationEnabler,AlertConfigurationDisabler
 
 type MatcherFieldsLister interface {
 	MatcherFields() ([]string, error)
@@ -47,10 +31,6 @@ type AlertConfigurationEnabler interface {
 
 type AlertConfigurationDisabler interface {
 	DisableAlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
-}
-
-type AlertConfigurationDescriber interface {
-	AlertConfiguration(string, string) (*admin.GroupAlertsConfig, error)
 }
 
 // AlertConfigurations encapsulate the logic to manage different cloud providers.

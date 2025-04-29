@@ -28,6 +28,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=update_mock_test.go -package=serverless . Updater
+
+type Updater interface {
+	UpdateServerlessInstance(string, string, *atlasv2.ServerlessInstanceDescriptionUpdate) (*atlasv2.ServerlessInstanceDescription, error)
+}
+
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -37,7 +43,7 @@ type UpdateOpts struct {
 	disableTerminationProtection      bool
 	enableTerminationProtection       bool
 	tag                               map[string]string
-	store                             store.ServerlessInstanceUpdater
+	store                             Updater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {

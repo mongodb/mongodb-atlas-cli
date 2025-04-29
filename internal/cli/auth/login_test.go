@@ -47,7 +47,7 @@ func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockConfig := mocks.NewMockLoginConfig(ctrl)
+			mockConfig := NewMockLoginConfig(ctrl)
 			opts := &LoginOpts{
 				NoBrowser:    true,
 				AccessToken:  "at",
@@ -69,7 +69,7 @@ func Test_loginOpts_SyncWithOAuthAccessProfile(t *testing.T) {
 func Test_loginOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-	mockConfig := mocks.NewMockLoginConfig(ctrl)
+	mockConfig := NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	buf := new(bytes.Buffer)

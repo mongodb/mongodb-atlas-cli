@@ -184,12 +184,6 @@ func ListBuilder() *cobra.Command {
 		Aliases: []string{"ls"},
 		Args:    require.NoArgs,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			if opts.orgID != "" && opts.projectID != "" {
-				return fmt.Errorf("both --%s and --%s set", flag.ProjectID, flag.OrgID)
-			}
-			if opts.orgID == "" && opts.projectID == "" {
-				return fmt.Errorf("--%s or --%s must be set", flag.ProjectID, flag.OrgID)
-			}
 			opts.OutWriter = cmd.OutOrStdout()
 
 			return opts.initStore(cmd.Context())()
@@ -207,6 +201,8 @@ func ListBuilder() *cobra.Command {
 
 	cmd.Flags().StringVar(&opts.projectID, flag.ProjectID, "", usage.ProjectID)
 	cmd.Flags().StringVar(&opts.orgID, flag.OrgID, "", usage.OrgID)
+	cmd.MarkFlagsOneRequired(flag.ProjectID, flag.OrgID)
+	cmd.MarkFlagsMutuallyExclusive(flag.ProjectID, flag.OrgID)
 	opts.AddOutputOptFlags(cmd)
 
 	return cmd

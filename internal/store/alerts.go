@@ -18,21 +18,7 @@ import (
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_alerts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store AlertDescriber,AlertLister,AlertAcknowledger
-
-type AlertDescriber interface {
-	Alert(*admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error)
-}
-
-type AlertLister interface {
-	Alerts(*admin.ListAlertsApiParams) (*admin.PaginatedAlert, error)
-}
-
-type AlertAcknowledger interface {
-	AcknowledgeAlert(*admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error)
-}
-
-// Alert encapsulate the logic to manage different cloud providers.
+// Alert encapsulates the logic to manage different cloud providers.
 func (s *Store) Alert(params *admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
 	result, _, err := s.clientv2.AlertsApi.GetAlertWithParams(s.ctx, params).Execute()
 	return result, err

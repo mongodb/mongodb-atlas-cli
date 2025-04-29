@@ -20,21 +20,10 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectIPAccessListDescriber,ProjectIPAccessListLister,ProjectIPAccessListCreator,ProjectIPAccessListDeleter
-
-type ProjectIPAccessListDescriber interface {
-	IPAccessList(string, string) (*atlasv2.NetworkPermissionEntry, error)
-}
-type ProjectIPAccessListLister interface {
-	ProjectIPAccessLists(string, *ListOptions) (*atlasv2.PaginatedNetworkAccess, error)
-}
+//go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectIPAccessListCreator
 
 type ProjectIPAccessListCreator interface {
 	CreateProjectIPAccessList([]*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error)
-}
-
-type ProjectIPAccessListDeleter interface {
-	DeleteProjectIPAccessList(string, string) error
 }
 
 // CreateProjectIPAccessList encapsulate the logic to manage different cloud providers.

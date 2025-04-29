@@ -33,7 +33,7 @@ import (
 func Test_registerOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-	mockConfig := mocks.NewMockLoginConfig(ctrl)
+	mockConfig := NewMockLoginConfig(ctrl)
 	mockStore := mocks.NewMockProjectOrgsLister(ctrl)
 
 	buf := new(bytes.Buffer)

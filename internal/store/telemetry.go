@@ -20,16 +20,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 )
 
-//go:generate mockgen -destination=../mocks/mock_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store EventsSender,UnauthEventsSender
-
-type EventsSender interface {
-	SendEvents(body any) error
-}
-
-type UnauthEventsSender interface {
-	SendUnauthEvents(body any) error
-}
-
 func (s *Store) SendEvents(body any) error {
 	switch s.service {
 	case config.CloudService:

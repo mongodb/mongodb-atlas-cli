@@ -33,7 +33,7 @@ type WatchOpts struct {
 	cli.WatchOpts
 	id          string
 	clusterName string
-	store       store.ServerlessRestoreJobsDescriber
+	store       ServerlessRestoreJobsDescriber
 }
 
 var watchTemplate = "\nRestore completed.\n"

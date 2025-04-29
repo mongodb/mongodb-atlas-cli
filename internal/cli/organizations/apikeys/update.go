@@ -28,13 +28,19 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=update_mock_test.go -package=apikeys . OrganizationAPIKeyUpdater
+
+type OrganizationAPIKeyUpdater interface {
+	UpdateOrganizationAPIKey(string, string, *atlasv2.UpdateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
+}
+
 type UpdateOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
 	id    string
 	desc  string
 	roles []string
-	store store.OrganizationAPIKeyUpdater
+	store OrganizationAPIKeyUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {

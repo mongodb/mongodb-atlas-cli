@@ -35,8 +35,6 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -destination=../mocks/mock_profile.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config SetSaver
-
 const (
 	MongoCLIEnvPrefix        = "MCLI"          // MongoCLIEnvPrefix prefix for MongoCLI ENV variables
 	AtlasCLIEnvPrefix        = "MONGODB_ATLAS" // AtlasCLIEnvPrefix prefix for AtlasCLI ENV variables
@@ -82,24 +80,6 @@ var (
 	CLIUserType    = newCLIUserTypeFromEnvs()
 	defaultProfile = newProfile()
 )
-
-type Setter interface {
-	Set(string, any)
-}
-
-type GlobalSetter interface {
-	SetGlobal(string, any)
-}
-
-type Saver interface {
-	Save() error
-}
-
-type SetSaver interface {
-	Setter
-	Saver
-	GlobalSetter
-}
 
 type Profile struct {
 	name      string

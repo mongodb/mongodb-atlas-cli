@@ -29,11 +29,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=connection . Deleter
+
+type Deleter interface {
+	DeleteConnection(string, string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
 	streamsInstance string
-	store           store.ConnectionDeleter
+	store           Deleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

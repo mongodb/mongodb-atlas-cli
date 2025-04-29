@@ -575,6 +575,8 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: "go_atlascli_msi_snapshot"
+          - name: generate_and_upload_sboms
+            variant: ssdlc
   - name: publish_atlascli_snapshot
     display_name: "Publish AtlasCLI Snapshot"
     run_on:

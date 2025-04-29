@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -30,7 +29,7 @@ import (
 
 func TestAccessLogListClusterName_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAccessLogsLister(ctrl)
+	mockStore := NewMockLister(ctrl)
 
 	expected := &atlasv2.MongoDBAccessLogsList{
 		AccessLogs: &[]atlasv2.MongoDBAccessLogs{
@@ -77,7 +76,7 @@ func TestListTemplate(t *testing.T) {
 
 func TestAccessLogListHostname_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAccessLogsLister(ctrl)
+	mockStore := NewMockLister(ctrl)
 
 	expected := &atlasv2.MongoDBAccessLogsList{}
 

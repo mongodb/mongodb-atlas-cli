@@ -575,7 +575,7 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: "go_atlascli_msi_snapshot"
-          - name: generate_and_upload_sboms
+          - name: generate_and_upload_sbom
             variant: ssdlc
   - name: publish_atlascli_snapshot
     display_name: "Publish AtlasCLI Snapshot"
@@ -602,7 +602,7 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: release_atlascli_msi
-          - name: generate_and_upload_sboms
+          - name: generate_and_upload_sbom
             variant: ssdlc
   - name: copybara
     display_name: "Copybara"
@@ -663,4 +663,4 @@ buildvariants:
     expansions:
       <<: *go_linux_version
     tasks:
-      - name: generate_and_upload_sboms
+      - name: generate_and_upload_sbom

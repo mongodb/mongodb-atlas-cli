@@ -26,13 +26,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=privateendpoints . DataFederationPrivateEndpointDescriber
+
+type DataFederationPrivateEndpointDescriber interface {
+	DataFederationPrivateEndpoint(string, string) (*atlasv2.PrivateNetworkEndpointIdEntry, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	id    string
-	store store.DataFederationPrivateEndpointDescriber
+	store DataFederationPrivateEndpointDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

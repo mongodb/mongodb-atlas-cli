@@ -19,14 +19,13 @@ package accesslists
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestWhitelistCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
+	mockStore := NewMockProjectIPAccessListCreator(ctrl)
 
 	var expected *atlasv2.PaginatedNetworkAccess
 
@@ -50,7 +49,7 @@ func TestWhitelistCreate_Run(t *testing.T) {
 
 func TestValidateCurrentIPFlag(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListCreator(ctrl)
+	mockStore := NewMockProjectIPAccessListCreator(ctrl)
 
 	tests := []struct {
 		name         string

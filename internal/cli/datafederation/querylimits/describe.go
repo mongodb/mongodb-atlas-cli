@@ -27,14 +27,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=querylimits . DataFederationQueryLimitDescriber
+
+type DataFederationQueryLimitDescriber interface {
+	DataFederationQueryLimit(string, string, string) (*atlasv2.DataFederationTenantQueryLimit, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	limitName  string
 	tenantName string
-	store      store.DataFederationQueryLimitDescriber
+	store      DataFederationQueryLimitDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

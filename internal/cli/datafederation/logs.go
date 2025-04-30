@@ -31,10 +31,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=logs_mock_test.go -package=datafederation . LogDownloader
+
+type LogDownloader interface {
+	DataFederationLogs(string, string, int64, int64) (io.ReadCloser, error)
+}
+
 type LogOpts struct {
 	cli.ProjectOpts
 	cli.DownloaderOpts
-	store store.DataFederationLogDownloader
+	store LogDownloader
 	id    string
 	start int64
 	end   int64

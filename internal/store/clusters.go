@@ -111,10 +111,10 @@ type AtlasClusterQuickStarter interface {
 	ClusterLister
 	DatabaseUserCreator
 	DatabaseUserDescriber
-	ProjectIPAccessListCreator
 	ClusterDescriber
 	ClusterCreator
 	ProjectMDBVersionLister
+	CreateProjectIPAccessList([]*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error)
 }
 
 // AddSampleData encapsulate the logic to manage different cloud providers.

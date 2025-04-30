@@ -20,13 +20,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestLinkTokenDeleteOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLinkTokenDeleter(ctrl)
+	mockStore := NewMockTokenDeleter(ctrl)
 
 	deleteOpts := &DeleteOpts{
 		OrgOpts: cli.OrgOpts{OrgID: "1"},

@@ -20,12 +20,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_ip_access_lists.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectIPAccessListCreator
-
-type ProjectIPAccessListCreator interface {
-	CreateProjectIPAccessList([]*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error)
-}
-
 // CreateProjectIPAccessList encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateProjectIPAccessList(entries []*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error) {
 	if len(entries) == 0 {

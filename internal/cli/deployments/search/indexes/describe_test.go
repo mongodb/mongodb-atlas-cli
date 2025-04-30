@@ -36,7 +36,7 @@ import (
 func TestDescribe_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
-	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
+	mockStore := NewMockDescriber(ctrl)
 	ctx := context.Background()
 
 	const (
@@ -123,7 +123,7 @@ test   name   db         coll         STEADY   search
 func TestDescribe_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
-	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
+	mockStore := NewMockDescriber(ctrl)
 	ctx := context.Background()
 
 	var (

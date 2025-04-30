@@ -18,40 +18,21 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDescriber,SearchIndexUpdater,SearchIndexDeleter,SearchIndexCreatorDescriber
+//go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexCreatorDescriber
 
 type SearchIndexLister interface {
-	SearchIndexListerDeprecated
-	SearchIndexes(string, string, string, string) ([]atlasv2.SearchIndexResponse, error)
+	SearchIndexesDeprecated(string, string, string, string) ([]atlasv2.ClusterSearchIndex, error)
 }
 
 type SearchIndexCreatorDescriber interface {
-	SearchIndexDescriber
+	SearchIndexDeprecated(string, string, string) (*atlasv2.ClusterSearchIndex, error)
+	SearchIndex(string, string, string) (*atlasv2.SearchIndexResponse, error)
 	SearchIndexCreator
 }
 
 type SearchIndexCreator interface {
-	SearchIndexCreatorDeprecated
-
+	CreateSearchIndexesDeprecated(string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
 	CreateSearchIndexes(string, string, *atlasv2.SearchIndexCreateRequest) (*atlasv2.SearchIndexResponse, error)
-}
-
-type SearchIndexDescriber interface {
-	SearchIndexDescriberDeprecated
-
-	SearchIndex(string, string, string) (*atlasv2.SearchIndexResponse, error)
-}
-
-type SearchIndexUpdater interface {
-	SearchIndexUpdaterDeprecated
-
-	UpdateSearchIndexes(string, string, string, *atlasv2.SearchIndexUpdateRequest) (*atlasv2.SearchIndexResponse, error)
-}
-
-type SearchIndexDeleter interface {
-	SearchIndexDeleterDeprecated
-
-	DeleteSearchIndex(string, string, string) error
 }
 
 // SearchIndexes encapsulate the logic to manage different cloud providers.

@@ -24,12 +24,8 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 echo "Generating PURLs..."
 cd "$WORKDIR/src/github.com/mongodb/mongodb-atlas-cli"
 
-go build -C cmd/atlas -o tmp_binary
-go version -m cmd/atlas/tmp_binary | awk '{if ($1 == "dep" || $1 == "=>"){print "pkg:golang/"$2"@"$3}}' > purls.txt
-
-rm -f cmd/atlas/tmp_binary
-
-cat purls.txt
+make build
+go version -m ./bin/atlas | awk '{if ($1 == "dep" || $1 == "=>"){print "pkg:golang/"$2"@"$3}}' > purls.txt
 
 mkdir ./compliance
 

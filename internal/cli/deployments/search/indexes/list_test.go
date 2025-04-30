@@ -148,7 +148,7 @@ func TestList_RunLocal(t *testing.T) {
 func TestList_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
-	mockStore := mocks.NewMockSearchIndexLister(ctrl)
+	mockStore := NewMockLister(ctrl)
 	ctx := context.Background()
 
 	var (

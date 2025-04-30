@@ -19,14 +19,13 @@ package organizations
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestCreateAtlasOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationCreator(ctrl)
+	mockStore := NewMockOrganizationCreator(ctrl)
 
 	federationSettings := "federationId"
 	expected := &atlasv2.CreateOrganizationRequest{
@@ -41,7 +40,7 @@ func TestCreateAtlasOpts_Run(t *testing.T) {
 		CreateAtlasOrganization(expected).Return(resp, nil).
 		Times(1)
 
-	createOpts := &CreateAtlasOpts{
+	createOpts := &CreateOpts{
 		store:                mockStore,
 		name:                 "Org 0",
 		federationSettingsID: federationSettings,

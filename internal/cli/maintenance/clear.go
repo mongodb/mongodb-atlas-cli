@@ -32,11 +32,17 @@ const longDesc = `To learn more about maintenance windows, see https://www.mongo
 
 `
 
+//go:generate mockgen -typed -destination=clear_mock_test.go -package=maintenance . Clearer
+
+type Clearer interface {
+	ClearMaintenanceWindow(string) error
+}
+
 type ClearOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	Confirm bool
-	store   store.MaintenanceWindowClearer
+	store   Clearer
 }
 
 func (opts *ClearOpts) initStore(ctx context.Context) func() error {

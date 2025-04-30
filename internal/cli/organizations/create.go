@@ -32,17 +32,23 @@ import (
 
 var createAtlasTemplate = "Organization '{{.Organization.Id}}' created.\n"
 
-type CreateAtlasOpts struct {
+//go:generate mockgen -typed -destination=create_mock_test.go -package=organizations . OrganizationCreator
+
+type OrganizationCreator interface {
+	CreateAtlasOrganization(*atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error)
+}
+
+type CreateOpts struct {
 	cli.OutputOpts
 	name                 string
 	ownerID              string
 	apiKeyDescription    string
 	apiKeyRole           []string
 	federationSettingsID string
-	store                store.OrganizationCreator
+	store                OrganizationCreator
 }
 
-func (opts *CreateAtlasOpts) initStore(ctx context.Context) func() error {
+func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	return func() error {
 		var err error
 		opts.store, err = store.New(store.AuthenticatedPreset(config.Default()), store.WithContext(ctx))
@@ -50,7 +56,7 @@ func (opts *CreateAtlasOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *CreateAtlasOpts) Run() error {
+func (opts *CreateOpts) Run() error {
 	o := &atlasv2.CreateOrganizationRequest{
 		Name: opts.name,
 	}
@@ -76,7 +82,7 @@ func (opts *CreateAtlasOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateAtlasOpts) validateAPIKeyRequirements() error {
+func (opts *CreateOpts) validateAPIKeyRequirements() error {
 	required := make([]string, 0)
 	if len(opts.apiKeyRole) == 0 {
 		required = append(required, flag.APIKeyRole)
@@ -96,7 +102,7 @@ func (opts *CreateAtlasOpts) validateAPIKeyRequirements() error {
 	return nil
 }
 
-func (opts *CreateAtlasOpts) validateOAuthRequirements() error {
+func (opts *CreateOpts) validateOAuthRequirements() error {
 	disallowed := make([]string, 0)
 	if len(opts.apiKeyRole) > 0 {
 		disallowed = append(disallowed, flag.APIKeyRole)
@@ -113,7 +119,7 @@ func (opts *CreateAtlasOpts) validateOAuthRequirements() error {
 	return nil
 }
 
-func (opts *CreateAtlasOpts) validateAuthType() error {
+func (opts *CreateOpts) validateAuthType() error {
 	switch config.AuthType() {
 	case config.APIKeys:
 		return opts.validateAPIKeyRequirements()
@@ -128,7 +134,7 @@ func (opts *CreateAtlasOpts) validateAuthType() error {
 
 // CreateAtlasBuilder atlas organization(s) create <name>.
 func CreateAtlasBuilder() *cobra.Command {
-	opts := new(CreateAtlasOpts)
+	opts := new(CreateOpts)
 
 	cmd := &cobra.Command{
 		Use:   "create <name>",

@@ -32,10 +32,16 @@ const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range valueOrEmptySlice
 {{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
 `
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=invitations . ProjectInvitationLister
+
+type ProjectInvitationLister interface {
+	ProjectInvitations(*atlasv2.ListProjectInvitationsApiParams) ([]atlasv2.GroupInvitation, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store    store.ProjectInvitationLister
+	store    ProjectInvitationLister
 	username string
 }
 

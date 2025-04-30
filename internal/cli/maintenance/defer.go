@@ -25,10 +25,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=defer_mock_test.go -package=maintenance . Deferrer
+
+type Deferrer interface {
+	DeferMaintenanceWindow(string) error
+}
+
 type DeferOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.MaintenanceWindowDeferrer
+	store Deferrer
 }
 
 func (opts *DeferOpts) initStore(ctx context.Context) func() error {

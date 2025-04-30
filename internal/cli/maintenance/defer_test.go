@@ -19,13 +19,12 @@ package maintenance
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestDeferOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockMaintenanceWindowDeferrer(ctrl)
+	mockStore := NewMockDeferrer(ctrl)
 
 	updateOpts := &DeferOpts{
 		store: mockStore,

@@ -74,16 +74,13 @@ functions:
     - command: ec2.assume_role
       params:
         role_arn: ${ecr_role_arn}
-    - command: shell.exec
-      params:
-        include_expansions_in_env:
-          [AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN]
-        script: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com
     - command: subprocess.exec
       params:
         <<: *go_options
         include_expansions_in_env:
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
           - workdir
         binary: build/package/generate-sbom.sh 
   "write kondukto credentials": 
@@ -103,7 +100,18 @@ functions:
     - command: shell.exec
       params:
         shell: bash
-        script: ${CONTAINER_COMMAND} run ${CONTAINER_OPTIONS} ${CONTAINER_ENV_FILES} ${CONTAINER_VOLUMES} ${CONTAINER_IMAGE} ${SILKBOMB_COMMAND} ${SILKBOMB_ARGS}  
+        script: |
+          docker run \
+          --pull=always \
+          --platform="linux/amd64" \
+          --rm \
+          --env-file ${workdir}/kondukto_credentials.env \
+          -v ${workdir}:/workdir \
+          901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
+          upload \
+          --sbom-in /workdir/src/github.com/mongodb/mongodb-atlas-cli/compliance/sbom.json \
+          --repo mongodb_mongodb-atlas-cli  \
+          --branch ${branch_name}  
   "package":
     - command: github.generate_token
       params:
@@ -356,14 +364,6 @@ tasks:
       - func: "generate sbom"
       - func: "write kondukto credentials"
       - func: "run silkbomb"
-        vars:
-          CONTAINER_COMMAND: docker
-          CONTAINER_IMAGE: 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0
-          CONTAINER_OPTIONS: --pull=always --platform="linux/amd64" --rm
-          CONTAINER_ENV_FILES: --env-file ${workdir}/kondukto_credentials.env
-          CONTAINER_VOLUMES: -v ${workdir}:/workdir
-          SILKBOMB_COMMAND: upload
-          SILKBOMB_ARGS: --sbom-in /workdir/src/github.com/mongodb/mongodb-atlas-cli/compliance/sbom.json --repo mongodb_mongodb-atlas-cli  --branch ${branch_name}
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:

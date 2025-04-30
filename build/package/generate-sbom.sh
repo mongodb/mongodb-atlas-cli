@@ -18,11 +18,18 @@ set -Eeou pipefail
 
 export WORKDIR=${workdir:?}
 
+# Authenticate Docker to AWS ECR
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com
+
 echo "Generating PURLs..."
 cd "$WORKDIR/src/github.com/mongodb/mongodb-atlas-cli"
 
-go list -json -mod=mod all | jq -r '.Module // empty | "pkg:golang/" + .Path + "@" + .Version // empty' | sort -u  > purls.txt
-go version | sed 's|^go version \([^ ]*\) *.*|pkg:golang/std@\1|' >> purls.txt
+go build -C cmd/atlas -o tmp_binary
+go version -m cmd/atlas/tmp_binary | awk '{if ($1 == "dep" || $1 == "=>"){print "pkg:golang/"$2"@"$3}}' > purls.txt
+
+rm -f cmd/atlas/tmp_binary
+
+cat purls.txt
 
 mkdir ./compliance
 

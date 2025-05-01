@@ -78,20 +78,12 @@ functions:
       params:
         <<: *go_options
         include_expansions_in_env:
-          - workdir
-        binary: make
-        args:
-          - gen-purls
-    - command: subprocess.exec
-      params:
-        <<: *go_options
-        include_expansions_in_env:
           - AWS_ACCESS_KEY_ID
           - AWS_SECRET_ACCESS_KEY
           - AWS_SESSION_TOKEN
           - workdir
         binary: build/package/generate-sbom.sh 
-  "write kondukto credentials": 
+  "run silkbomb": 
     - command: ec2.assume_role
       params:
         role_arn: ${kondukto_role_arn}
@@ -104,7 +96,6 @@ functions:
           set -e
           kondukto_token=$(aws secretsmanager get-secret-value --secret-id "kondukto-token" --region "us-east-1" --query 'SecretString' --output text)
           echo "KONDUKTO_TOKEN=$kondukto_token" > ${workdir}/kondukto_credentials.env
-  "run silkbomb":
     - command: shell.exec
       params:
         shell: bash
@@ -120,6 +111,7 @@ functions:
           --sbom-in /workdir/src/github.com/mongodb/mongodb-atlas-cli/compliance/sbom.json \
           --repo mongodb_mongodb-atlas-cli  \
           --branch ${branch_name}  
+          rm ${workdir}/kondukto_credentials.env
   "package":
     - command: github.generate_token
       params:
@@ -370,7 +362,6 @@ tasks:
   - name: generate_and_upload_sbom
     commands:  
       - func: "generate sbom"
-      - func: "write kondukto credentials"
       - func: "run silkbomb"
   - name: package_goreleaser
     tags: ["packaging"]

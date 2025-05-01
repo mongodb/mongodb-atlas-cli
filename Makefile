@@ -150,9 +150,11 @@ gen-docs: gen-docs-metadata ## Generate docs for atlascli commands
 	go run -ldflags "$(LINKER_FLAGS)" ./tools/cmd/docs
 
 .PHONY: gen-purls
-gen-purls: build ## Generate list of purls
+gen-purls: # Generate purls on linux os
 	@echo "==> Generating purls"
-	@go version -m ./bin/atlas | awk '$$1 == "dep" || $$1 == "=>" { print "pkg:golang/" $$2 "@" $$3 }' > build/package/purls.txt
+	GOOS=linux GOARCH=amd64 go build -o bin/atlas-linux ./cmd/atlas
+	go version -m ./bin/atlas-linux | awk '$$1 == "dep" || $$1 == "=>" { print "pkg:golang/" $$2 "@" $$3 }' | sort > build/package/purls.txt
+	rm bin/atlas-linux
 
 .PHONY: build
 build: ## Generate an atlas binary in ./bin

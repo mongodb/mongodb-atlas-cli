@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 617
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 01 May 2025 05:30:27 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 82
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupExportJobsResource::getExportRestoreJobs
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=244ccf57e1fff77a2803627f073ca87e936d616f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/clusters/cluster-985/backup/exports?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"createdAt":"2025-05-01T05:18:02Z","customData":[],"exportBucketId":"6813036313d6b32170fed160","exportStatus":{"exportedCollections":0,"totalCollections":0},"finishedAt":"2025-05-01T05:30:23Z","id":"6813040af7db2d2570671885","prefix":"exported_snapshots/a0123456789abcdef012345a/b0123456789abcdef012345b/cluster-985/2025-05-01T0516/1746076682","snapshotId":"68130364ed10397068f878ae","state":"Successful"}],"totalCount":1}

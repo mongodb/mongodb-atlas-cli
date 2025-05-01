@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1883
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 01 May 2025 05:16:53 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 110
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=244ccf57e1fff77a2803627f073ca87e936d616f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681301a0f7db2d25706708b1/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-01T05:16:05Z","groupId":"681301a0f7db2d25706708b1","hostname":"atlas-10lso4-shard-00-00.2hgkvb.mongodb-dev.net","id":"atlas-10lso4-shard-00-00.2hgkvb.mongodb-dev.net:27017","lastPing":"2025-05-01T05:16:41Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681301a0f7db2d25706708b1/processes/atlas-10lso4-shard-00-00.2hgkvb.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-10lso4-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-691-shard-00-00.2hgkvb.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-01T05:16:05Z","groupId":"681301a0f7db2d25706708b1","hostname":"atlas-10lso4-shard-00-01.2hgkvb.mongodb-dev.net","id":"atlas-10lso4-shard-00-01.2hgkvb.mongodb-dev.net:27017","lastPing":"2025-05-01T05:16:41Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681301a0f7db2d25706708b1/processes/atlas-10lso4-shard-00-01.2hgkvb.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-10lso4-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-691-shard-00-01.2hgkvb.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-01T05:16:05Z","groupId":"681301a0f7db2d25706708b1","hostname":"atlas-10lso4-shard-00-02.2hgkvb.mongodb-dev.net","id":"atlas-10lso4-shard-00-02.2hgkvb.mongodb-dev.net:27017","lastPing":"2025-05-01T05:16:41Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681301a0f7db2d25706708b1/processes/atlas-10lso4-shard-00-02.2hgkvb.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-10lso4-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-691-shard-00-02.2hgkvb.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

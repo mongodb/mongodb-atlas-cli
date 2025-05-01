@@ -152,7 +152,7 @@ gen-docs: gen-docs-metadata ## Generate docs for atlascli commands
 .PHONY: gen-purls
 gen-purls: # Generate purls on linux os
 	@echo "==> Generating purls"
-	GOOS=linux GOARCH=amd64 go build -o bin/atlas-linux ./cmd/atlas
+	GOOS=linux GOARCH=amd64 go build -trimpath -mod=readonly -o bin/atlas-linux ./cmd/atlas
 	go version -m ./bin/atlas-linux | \
 		awk '$$1 == "dep" || $$1 == "=>" { print "pkg:golang/" $$2 "@" $$3 }' | \
 		LC_ALL=C sort > build/package/purls.txt

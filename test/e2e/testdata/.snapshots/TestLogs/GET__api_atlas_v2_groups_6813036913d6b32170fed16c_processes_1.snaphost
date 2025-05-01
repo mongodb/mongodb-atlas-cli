@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1841
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 01 May 2025 05:24:37 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 91
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=244ccf57e1fff77a2803627f073ca87e936d616f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6813036913d6b32170fed16c/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-01T05:23:36Z","groupId":"6813036913d6b32170fed16c","hostname":"atlas-dptfvj-shard-00-00.xnwnta.mongodb-dev.net","id":"atlas-dptfvj-shard-00-00.xnwnta.mongodb-dev.net:27017","lastPing":"2025-05-01T05:24:25Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6813036913d6b32170fed16c/processes/atlas-dptfvj-shard-00-00.xnwnta.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-dptfvj-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-928-shard-00-00.xnwnta.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-01T05:23:36Z","groupId":"6813036913d6b32170fed16c","hostname":"atlas-dptfvj-shard-00-01.xnwnta.mongodb-dev.net","id":"atlas-dptfvj-shard-00-01.xnwnta.mongodb-dev.net:27017","lastPing":"2025-05-01T05:24:25Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6813036913d6b32170fed16c/processes/atlas-dptfvj-shard-00-01.xnwnta.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-dptfvj-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-928-shard-00-01.xnwnta.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-01T05:23:36Z","groupId":"6813036913d6b32170fed16c","hostname":"atlas-dptfvj-shard-00-02.xnwnta.mongodb-dev.net","id":"atlas-dptfvj-shard-00-02.xnwnta.mongodb-dev.net:27017","lastPing":"2025-05-01T05:24:25Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6813036913d6b32170fed16c/processes/atlas-dptfvj-shard-00-02.xnwnta.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-dptfvj-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-928-shard-00-02.xnwnta.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

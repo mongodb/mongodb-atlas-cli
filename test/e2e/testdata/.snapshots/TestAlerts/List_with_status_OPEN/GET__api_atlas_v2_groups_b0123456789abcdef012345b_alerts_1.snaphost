@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
-Content-Length: 1536
+Content-Length: 194
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Wed, 30 Apr 2025 05:07:30 GMT
+Date: Thu, 01 May 2025 05:08:03 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 125
+X-Envoy-Upstream-Service-Time: 86
 X-Frame-Options: DENY
 X-Java-Method: ApiAlertsResource::getAllAlerts
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=9bc41c830fc7008b1fb8ef550585bd355a758135; versionString=master
+X-Mongodb-Service-Version: gitHash=244ccf57e1fff77a2803627f073ca87e936d616f; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts?includeCount=true&status=OPEN&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"alertConfigId":"62347fd81bfe1073af78a5e2","created":"2025-04-02T02:06:57Z","eventTypeName":"DAILY_BILL_OVER_THRESHOLD","groupId":"b0123456789abcdef012345b","id":"67ec9bc1a274bc0e20df466b","lastNotified":"2025-04-30T01:01:11Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/67ec9bc1a274bc0e20df466b","rel":"self"}],"orgId":"a0123456789abcdef012345a","status":"OPEN","updated":"2025-04-30T02:13:45Z"},{"alertConfigId":"623997b6c4f2aa666ae90fad","created":"2025-04-02T02:06:57Z","eventTypeName":"PENDING_INVOICE_OVER_THRESHOLD","groupId":"b0123456789abcdef012345b","id":"67ec9bc1a274bc0e20df4e60","lastNotified":"2025-04-29T15:18:19Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/67ec9bc1a274bc0e20df4e60","rel":"self"}],"orgId":"a0123456789abcdef012345a","status":"OPEN","updated":"2025-04-30T02:13:45Z"},{"alertConfigId":"624db2d013b80654d0c0d0bd","created":"2025-04-02T02:06:57Z","eventTypeName":"DAILY_BILL_OVER_THRESHOLD","groupId":"b0123456789abcdef012345b","id":"67ec9bc1a274bc0e20df52b3","lastNotified":"2025-04-02T02:06:57Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/67ec9bc1a274bc0e20df52b3","rel":"self"}],"orgId":"a0123456789abcdef012345a","status":"OPEN","updated":"2025-04-30T02:13:45Z"}],"totalCount":3}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts?includeCount=true&status=OPEN&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[],"totalCount":0}

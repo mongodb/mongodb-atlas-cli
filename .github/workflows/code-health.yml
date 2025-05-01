@@ -339,12 +339,12 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - name: Generate purls
-        run: make purls > /dev/null
-      - name: Check for uncommitted changes in purl.txt
+        run: make gen-purls > /dev/null
+      - name: Check for uncommitted changes in purls.txt
         run: |
-          if ! git diff --quiet --exit-code purl.txt; then
-            echo "purl.txt is out of date. Please run 'make purl.txt' and commit the result."
-            git --no-pager diff purl.txt
+          if ! git diff --quiet --exit-code build/package/purls.txt; then
+            echo "build/package/purls.txt is out of date. Please run 'make gen-purls' and commit the result."
+            git --no-pager diff build/package/purls.txt
             exit 1
           fi
   verify_image:

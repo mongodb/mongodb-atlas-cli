@@ -117,7 +117,7 @@ addcopy: ## Add missing license to files
 	@scripts/add-copy.sh
 
 .PHONY: generate
-generate: gen-docs gen-mocks gen-api-commands ## Generate docs, mocks, code, api commands, all auto generated assets
+generate: gen-docs gen-mocks gen-api-commands gen-purls ## Generate docs, mocks, code, api commands, all auto generated assets
 
 .PHONY: apply-overlay
 apply-overlay: ## Apply overlay on openapi spec
@@ -148,6 +148,11 @@ gen-mocks: ## Generate mocks
 gen-docs: gen-docs-metadata ## Generate docs for atlascli commands
 	@echo "==> Generating docs"
 	go run -ldflags "$(LINKER_FLAGS)" ./tools/cmd/docs
+
+.PHONY: gen-purls
+gen-purls: build ## Generate list of purls
+	@echo "==> Generating purls"
+	@go version -m ./bin/atlas | awk '$$1 == "dep" || $$1 == "=>" { print "pkg:golang/" $$2 "@" $$3 }' > build/package/purls.txt
 
 .PHONY: build
 build: ## Generate an atlas binary in ./bin

@@ -156,7 +156,6 @@ gen-purls: # Generate purls on linux os
 	go version -m ./bin/atlas-linux | \
 		awk '$$1 == "dep" || $$1 == "=>" { print "pkg:golang/" $$2 "@" $$3 }' | \
 		LC_ALL=C sort > build/package/purls.txt
-	rm bin/atlas-linux
 
 .PHONY: build
 build: ## Generate an atlas binary in ./bin

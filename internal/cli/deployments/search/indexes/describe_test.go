@@ -18,7 +18,6 @@ package indexes
 
 import (
 	"bytes"
-	"context"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -37,7 +36,7 @@ func TestDescribe_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	const (
 		expectedLocalDeployment = "localDeployment1"
@@ -124,7 +123,7 @@ func TestDescribe_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockStore := mocks.NewMockSearchIndexDescriber(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	var (
 		expectedLocalDeployment = "localDeployment1"

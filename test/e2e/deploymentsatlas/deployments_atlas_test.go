@@ -17,7 +17,6 @@ package deploymentsatlas
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -55,7 +54,7 @@ func TestDeploymentsAtlas(t *testing.T) {
 	dbUserPassword := dbUserUsername + "~PwD"
 
 	var client *mongo.Client
-	ctx := context.Background()
+	ctx := t.Context()
 
 	g.Run("Setup", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

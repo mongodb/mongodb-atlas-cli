@@ -18,7 +18,6 @@ package deployments
 
 import (
 	"bytes"
-	"context"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -38,7 +37,7 @@ const (
 
 func TestRun_ConnectLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
+	ctx := t.Context()
 	buf := new(bytes.Buffer)
 
 	deploymenTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
@@ -87,7 +86,7 @@ func TestRun_ConnectLocal(t *testing.T) {
 
 func TestRun_ConnectAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
+	ctx := t.Context()
 	buf := new(bytes.Buffer)
 
 	mockAtlasClusterDescriberStarter := mocks.NewMockClusterDescriberStarter(ctrl)

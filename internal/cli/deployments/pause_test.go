@@ -18,7 +18,6 @@ package deployments
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"testing"
 
@@ -39,7 +38,7 @@ const (
 func TestPause_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, deploymentName)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	buf := new(bytes.Buffer)
 	pauseOpts := &PauseOpts{
@@ -75,7 +74,7 @@ func TestPause_RunLocal(t *testing.T) {
 func TestPause_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterPauser(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, deploymentName)
 

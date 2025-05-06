@@ -18,7 +18,6 @@ package deployments
 
 import (
 	"bytes"
-	"context"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -30,7 +29,7 @@ import (
 func TestDelete_Run_Atlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockAtlasStore := mocks.NewMockClusterDeleter(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	deploymentsTest := fixture.NewMockAtlasDeploymentOpts(ctrl, "atlasDeployment")
 
@@ -65,7 +64,7 @@ func TestDelete_Run_Atlas(t *testing.T) {
 
 func TestDelete_Run_Local(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
+	ctx := t.Context()
 	buf := new(bytes.Buffer)
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "testDeployment")

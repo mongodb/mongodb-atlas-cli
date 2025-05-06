@@ -18,7 +18,6 @@ package indexes
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"testing"
 
@@ -40,7 +39,7 @@ func TestList_RunLocal(t *testing.T) {
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
 	mockColl := mocks.NewMockCollection(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	const (
 		expectedLocalDeployment = "localDeployment1"
@@ -149,7 +148,7 @@ func TestList_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockStore := mocks.NewMockSearchIndexLister(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	var (
 		expectedLocalDeployment = "localDeployment1"

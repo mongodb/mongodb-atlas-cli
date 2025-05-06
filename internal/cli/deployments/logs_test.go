@@ -18,7 +18,6 @@ package deployments
 
 import (
 	"bytes"
-	"context"
 	"encoding/base64"
 	"io"
 	"strings"
@@ -33,7 +32,7 @@ import (
 
 func TestLogs_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
+	ctx := t.Context()
 	buf := new(bytes.Buffer)
 	expectedLocalDeployment := "localDeployment"
 	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
@@ -66,7 +65,7 @@ func TestLogs_RunLocal(t *testing.T) {
 
 func TestLogs_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
+	ctx := t.Context()
 	atlasDeployment := "localDeployment1"
 	mockStore := mocks.NewMockLogsDownloader(ctrl)
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, atlasDeployment)

@@ -17,7 +17,6 @@
 package api
 
 import (
-	"context"
 	"errors"
 	"io"
 	"strings"
@@ -424,7 +423,7 @@ func TestWatchInner(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ctx := context.Background()
+			ctx := t.Context()
 			ctrl := gomock.NewController(t)
 
 			result, err := watchInner(ctx, tt.executor(ctrl), tt.expect, tt.commandRequest)

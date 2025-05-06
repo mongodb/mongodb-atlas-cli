@@ -17,7 +17,6 @@
 package api
 
 import (
-	"context"
 	"io"
 	"net/http"
 	"strings"
@@ -70,7 +69,7 @@ func TestExecutorHappyPathNoLogging(t *testing.T) {
 		Parameters:  nil,
 		Version:     "1991-05-17",
 	}
-	response, err := executor.ExecuteCommand(context.Background(), commandRequest)
+	response, err := executor.ExecuteCommand(t.Context(), commandRequest)
 
 	// Assert
 	require.NoError(t, err)
@@ -132,7 +131,7 @@ func TestExecutorHappyPathDebugLogging(t *testing.T) {
 		Parameters:  nil,
 		Version:     "1991-05-17",
 	}
-	response, err := executor.ExecuteCommand(context.Background(), commandRequest)
+	response, err := executor.ExecuteCommand(t.Context(), commandRequest)
 
 	// Assert
 	require.NoError(t, err)

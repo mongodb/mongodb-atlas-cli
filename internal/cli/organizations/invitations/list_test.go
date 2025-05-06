@@ -19,14 +19,13 @@ package invitations
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationInvitationLister(ctrl)
+	mockStore := NewMockOrganizationInvitationLister(ctrl)
 
 	var expected []admin.OrganizationInvitation
 

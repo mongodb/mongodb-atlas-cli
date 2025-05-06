@@ -29,12 +29,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=aws . DataLakePrivateEndpointCreator
+
+type DataLakePrivateEndpointCreator interface {
+	DataLakeCreatePrivateEndpoint(string, *atlasv2.PrivateNetworkEndpointIdEntry) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	privateEndpointID string
 	comment           string
-	store             store.DataLakePrivateEndpointCreator
+	store             DataLakePrivateEndpointCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

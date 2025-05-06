@@ -34,15 +34,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=logs_mock_test.go -package=deployments . LogsDownloader
+
+type LogsDownloader interface {
+	DownloadLog(*atlasv2.GetHostLogsApiParams) (io.ReadCloser, error)
+}
 
 type DownloadOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
 	cli.DownloaderOpts
 	options.DeploymentOpts
-	downloadStore store.LogsDownloader
+	downloadStore LogsDownloader
 	Host          string
 	Name          string
 	start         int64
@@ -147,9 +153,9 @@ func (opts *DownloadOpts) downloadLogFile() error {
 	return nil
 }
 
-func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
+func (opts *DownloadOpts) newHostLogsParams() *atlasv2.GetHostLogsApiParams {
 	fileBaseName := strings.TrimSuffix(opts.Name, filepath.Ext(opts.Name))
-	params := &admin.GetHostLogsApiParams{
+	params := &atlasv2.GetHostLogsApiParams{
 		GroupId:  opts.ConfigProjectID(),
 		HostName: opts.Host,
 		LogName:  fileBaseName,

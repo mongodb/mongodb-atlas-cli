@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const describeTemplate = `NAME	ACTION	DB	COLLECTION	CLUSTER {{- $roleName := .RoleName }} {{range valueOrEmptySlice .Actions}} 
@@ -30,10 +31,16 @@ const describeTemplate = `NAME	ACTION	DB	COLLECTION	CLUSTER {{- $roleName := .Ro
 {{ $roleName }}	{{ $actionName }}{{if .Db }}	{{ .Db }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}
 `
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=customdbroles . DatabaseRoleDescriber
+
+type DatabaseRoleDescriber interface {
+	DatabaseRole(string, string) (*atlasv2.UserCustomDBRole, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store    store.DatabaseRoleDescriber
+	store    DatabaseRoleDescriber
 	roleName string
 }
 

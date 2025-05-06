@@ -19,14 +19,13 @@ package events
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func Test_orgListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationEventLister(ctrl)
+	mockStore := NewMockOrganizationEventLister(ctrl)
 
 	expected := &admin.OrgPaginatedEvent{}
 	listOpts := &orgListOpts{
@@ -46,7 +45,7 @@ func Test_orgListOpts_Run(t *testing.T) {
 
 func Test_orgListOpts_Run_WithDate(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationEventLister(ctrl)
+	mockStore := NewMockOrganizationEventLister(ctrl)
 
 	expected := &admin.OrgPaginatedEvent{}
 	listOpts := &orgListOpts{
@@ -57,9 +56,8 @@ func Test_orgListOpts_Run_WithDate(t *testing.T) {
 		},
 	}
 	listOpts.OrgID = "1"
-	anyMock := gomock.Any()
 	mockStore.
-		EXPECT().OrganizationEvents(anyMock).
+		EXPECT().OrganizationEvents(gomock.Any()).
 		Return(expected, nil).
 		Times(1)
 
@@ -70,7 +68,7 @@ func Test_orgListOpts_Run_WithDate(t *testing.T) {
 
 func Test_orgListOpts_Run_WithInvalidDate(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationEventLister(ctrl)
+	mockStore := NewMockOrganizationEventLister(ctrl)
 
 	listOpts := &orgListOpts{
 		store: mockStore,

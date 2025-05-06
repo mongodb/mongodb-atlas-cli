@@ -28,7 +28,7 @@ import (
 type EnableOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.RegionalizedPrivateEndpointSettingUpdater
+	store RegionalizedPrivateEndpointSettingUpdater
 }
 
 var enableTemplate = "Regionalized private endpoint setting enabled.\n"

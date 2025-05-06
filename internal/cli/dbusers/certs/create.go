@@ -26,10 +26,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=certs . DBUserCertificateCreator
+
+type DBUserCertificateCreator interface {
+	CreateDBUserCertificate(string, string, int) (string, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store             store.DBUserCertificateCreator
+	store             DBUserCertificateCreator
 	username          string
 	monthsUntilExpiry int
 }

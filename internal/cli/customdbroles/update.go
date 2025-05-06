@@ -32,6 +32,13 @@ import (
 
 const updateTemplate = "Custom database role '{{.RoleName}}' successfully updated.\n"
 
+//go:generate mockgen -typed -destination=update_mock_test.go -package=customdbroles . DatabaseRoleUpdater
+
+type DatabaseRoleUpdater interface {
+	UpdateDatabaseRole(string, string, *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error)
+	DatabaseRole(string, string) (*atlasv2.UserCustomDBRole, error)
+}
+
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -39,7 +46,7 @@ type UpdateOpts struct {
 	action         []string
 	inheritedRoles []string
 	append         bool
-	store          store.DatabaseRoleUpdater
+	store          DatabaseRoleUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {

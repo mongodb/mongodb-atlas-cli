@@ -20,7 +20,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasClusterConfigurationOptionsDescriber,AtlasSharedClusterDescriber,ClusterUpgrader,AtlasSharedClusterGetterUpgrader,AtlasClusterConfigurationOptionsUpdater,ClusterTester,ClusterDescriberStarter,ProjectMDBVersionLister
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterUpdater,AtlasClusterGetterUpdater,ClusterPauser,ClusterStarter,AtlasClusterQuickStarter,SampleDataAdder,SampleDataStatusDescriber,AtlasSharedClusterDescriber,AtlasSharedClusterGetterUpgrader,ClusterDescriberStarter
 
 type ClusterLister interface {
 	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
@@ -33,16 +33,9 @@ type ClusterDescriber interface {
 }
 
 type ClusterDescriberStarter interface {
-	ClusterDescriber
-	ClusterStarter
-}
-
-type AtlasClusterConfigurationOptionsDescriber interface {
-	AtlasClusterConfigurationOptions(string, string) (*atlasClustersPinned.ClusterDescriptionProcessArgs, error)
-}
-
-type AtlasClusterConfigurationOptionsUpdater interface {
-	UpdateAtlasClusterConfigurationOptions(string, string, *atlasClustersPinned.ClusterDescriptionProcessArgs) (*atlasClustersPinned.ClusterDescriptionProcessArgs, error)
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
 type AtlasSharedClusterDescriber interface {
@@ -72,11 +65,6 @@ type ClusterStarter interface {
 	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
-type ClusterUpgrader interface {
-	UpgradeCluster(string, *atlas.Cluster) (*atlas.Cluster, error)
-	UpgradeFlexCluster(string, *atlasv2.AtlasTenantClusterUpgradeRequest20240805) (*atlasv2.FlexClusterDescription20241113, error)
-}
-
 type SampleDataAdder interface {
 	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)
 }
@@ -85,35 +73,34 @@ type SampleDataStatusDescriber interface {
 	SampleDataStatus(string, string) (*atlasv2.SampleDatasetStatus, error)
 }
 
-type ClusterTester interface {
-	TestClusterFailover(string, string) error
-}
-
 type AtlasClusterGetterUpdater interface {
-	ClusterDescriber
-	ClusterUpdater
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+	UpdateCluster(string, string, *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	UpdateFlexCluster(string, string, *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type AtlasSharedClusterGetterUpgrader interface {
-	AtlasSharedClusterDescriber
-	ClusterDescriber
-	ClusterUpgrader
-}
-
-type ProjectMDBVersionLister interface {
-	MDBVersions(projectID string, opt *MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error)
+	AtlasSharedCluster(string, string) (*atlas.Cluster, error)
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+	UpgradeCluster(string, *atlas.Cluster) (*atlas.Cluster, error)
+	UpgradeFlexCluster(string, *atlasv2.AtlasTenantClusterUpgradeRequest20240805) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type AtlasClusterQuickStarter interface {
-	SampleDataAdder
-	SampleDataStatusDescriber
-	CloudProviderRegionsLister
-	ClusterLister
-	DatabaseUserCreator
-	DatabaseUserDescriber
-	ClusterDescriber
-	ClusterCreator
-	ProjectMDBVersionLister
+	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)
+	SampleDataStatus(string, string) (*atlasv2.SampleDatasetStatus, error)
+	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)
+	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
+	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	CreateFlexCluster(string, *atlasv2.FlexClusterDescriptionCreate20241113) (*atlasv2.FlexClusterDescription20241113, error)
+	MDBVersions(projectID string, opt *MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error)
+	CreateDatabaseUser(*atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error)
+	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)
 	CreateProjectIPAccessList([]*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error)
 }
 

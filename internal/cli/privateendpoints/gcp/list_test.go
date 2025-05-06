@@ -19,7 +19,6 @@ package gcp
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointLister(ctrl)
+	mockStore := NewMockPrivateEndpointLister(ctrl)
 
 	var expected []admin.EndpointService
 

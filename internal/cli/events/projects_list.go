@@ -25,14 +25,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=projects_list_mock_test.go -package=events . ProjectEventLister
+
+type ProjectEventLister interface {
+	ProjectEvents(opts *atlasv2.ListProjectEventsApiParams) (*atlasv2.GroupPaginatedEvent, error)
+}
 
 type projectListOpts struct {
 	EventListOpts
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.ProjectEventLister
+	store ProjectEventLister
 }
 
 func (opts *projectListOpts) initStore(ctx context.Context) func() error {
@@ -57,13 +63,13 @@ func (opts *projectListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *projectListOpts) NewProjectListOptions() (*admin.ListProjectEventsApiParams, error) {
+func (opts *projectListOpts) NewProjectListOptions() (*atlasv2.ListProjectEventsApiParams, error) {
 	var eventType *[]string
 	var err error
 	if len(opts.EventType) > 0 {
 		eventType = &opts.EventType
 	}
-	p := &admin.ListProjectEventsApiParams{
+	p := &atlasv2.ListProjectEventsApiParams{
 		GroupId:   opts.ConfigProjectID(),
 		EventType: eventType,
 	}

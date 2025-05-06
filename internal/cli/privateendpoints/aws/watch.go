@@ -30,7 +30,7 @@ type WatchOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	id    string
-	store store.PrivateEndpointDescriber
+	store PrivateEndpointDescriber
 }
 
 var watchTemplate = "\nPrivate endpoint changes completed.\n"

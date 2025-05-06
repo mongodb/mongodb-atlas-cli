@@ -19,7 +19,6 @@ package gcp
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPrivateEndpointDescriber(ctrl)
+	mockStore := NewMockPrivateEndpointDescriber(ctrl)
 
 	opts := &DescribeOpts{
 		store: mockStore,

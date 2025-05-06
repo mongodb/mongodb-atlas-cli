@@ -22,13 +22,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=list_mock_test.go -package=certs . DBUserCertificateLister
+
+type DBUserCertificateLister interface {
+	DBUserCertificates(string, string, *store.ListOptions) (*atlasv2.PaginatedUserCert, error)
+}
 
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store    store.DBUserCertificateLister
+	store    DBUserCertificateLister
 	username string
 }
 
@@ -41,7 +48,7 @@ func (opts *ListOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *ListOpts) Run() error {
-	r, err := opts.store.DBUserCertificates(opts.ConfigProjectID(), opts.username, nil)
+	r, err := opts.store.DBUserCertificates(opts.ConfigProjectID(), opts.username, opts.NewAtlasListOptions())
 	if err != nil {
 		return err
 	}
@@ -85,6 +92,7 @@ The user you specify must authenticate using X.509 certificates.`,
 
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
+	opts.AddListOptsFlags(cmd)
 
 	return cmd
 }

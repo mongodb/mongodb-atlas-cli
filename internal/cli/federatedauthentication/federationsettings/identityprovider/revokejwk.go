@@ -27,11 +27,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=revokejwk_mock_test.go -package=identityprovider . JwkRevoker
+
+type JwkRevoker interface {
+	RevokeJwksFromIdentityProvider(string, string) error
+}
+
 type RevokeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	*cli.DeleteOpts
-	store                store.IdentityProviderJwkRevoker
+	store                JwkRevoker
 	FederationSettingsID string
 }
 

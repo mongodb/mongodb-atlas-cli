@@ -21,12 +21,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LogsDownloader
-
-type LogsDownloader interface {
-	DownloadLog(*atlasv2.GetHostLogsApiParams) (io.ReadCloser, error)
-}
-
 // DownloadLog encapsulates the logic to manage different cloud providers.
 func (s *Store) DownloadLog(params *atlasv2.GetHostLogsApiParams) (io.ReadCloser, error) {
 	result, _, err := s.clientv2.MonitoringAndLogsApi.GetHostLogsWithParams(s.ctx, params).Execute()

@@ -15,11 +15,11 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 // CreateOrganizationAPIKeyAccessList encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateOrganizationAPIKeyAccessList(params *admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
+func (s *Store) CreateOrganizationAPIKeyAccessList(params *atlasv2.CreateApiKeyAccessListApiParams) (*atlasv2.PaginatedApiUserAccessListResponse, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.CreateApiKeyAccessListWithParams(s.ctx, params).Execute()
 	return result, err
 }
@@ -31,7 +31,7 @@ func (s *Store) DeleteOrganizationAPIKeyAccessList(orgID, apiKeyID, ipAddress st
 }
 
 // OrganizationAPIKeyAccessLists encapsulates the logic to manage different cloud providers.
-func (s *Store) OrganizationAPIKeyAccessLists(params *admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error) {
+func (s *Store) OrganizationAPIKeyAccessLists(params *atlasv2.ListApiKeyAccessListsEntriesApiParams) (*atlasv2.PaginatedApiUserAccessListResponse, error) {
 	result, _, err := s.clientv2.ProgrammaticAPIKeysApi.ListApiKeyAccessListsEntriesWithParams(s.ctx, params).Execute()
 	return result, err
 }

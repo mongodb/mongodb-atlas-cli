@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
@@ -31,7 +30,7 @@ import (
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationInvitationUpdater(ctrl)
+	mockStore := NewMockOrganizationInvitationUpdater(ctrl)
 
 	expected := &admin.OrganizationInvitation{}
 
@@ -50,14 +49,12 @@ func TestUpdate_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := updateOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, updateOpts.Run())
 }
 
 func TestUpdate_Run_WithFile(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationInvitationUpdater(ctrl)
+	mockStore := NewMockOrganizationInvitationUpdater(ctrl)
 	fs := afero.NewMemMapFs()
 
 	testFile := "update_invitation.json"
@@ -91,7 +88,5 @@ func TestUpdate_Run_WithFile(t *testing.T) {
 		UpdateOrganizationInvitation(opts.ConfigOrgID(), invitationID, invitation).Return(expectedResult, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.Run())
 }

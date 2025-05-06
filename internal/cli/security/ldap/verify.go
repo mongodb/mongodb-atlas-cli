@@ -30,6 +30,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=verify_mock_test.go -package=ldap . ConfigurationVerifier
+
+type ConfigurationVerifier interface {
+	VerifyLDAPConfiguration(string, *atlasv2.LDAPVerifyConnectivityJobRequestParams) (*atlasv2.LDAPVerifyConnectivityJobRequest, error)
+}
+
 type VerifyOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -40,7 +46,7 @@ type VerifyOpts struct {
 	bindPassword       string
 	caCertificate      string
 	authzQueryTemplate string
-	store              store.LDAPConfigurationVerifier
+	store              ConfigurationVerifier
 }
 
 func (opts *VerifyOpts) initStore(ctx context.Context) func() error {

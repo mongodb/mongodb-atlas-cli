@@ -19,7 +19,6 @@ package interfaces
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockInterfaceEndpointCreatorDeprecated(ctrl)
+	mockStore := NewMockInterfaceEndpointCreatorDeprecated(ctrl)
 
 	createOpts := &CreateOpts{
 		store:               mockStore,

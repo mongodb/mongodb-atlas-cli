@@ -74,7 +74,7 @@ func Test_setupOpts_RunSkipRegister(t *testing.T) {
 
 func TestCluster_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
+	mockStore := NewMockAtlasClusterQuickStarter(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 
 	expectedCluster := &atlasClustersPinned.AdvancedClusterDescription{
@@ -133,7 +133,7 @@ func TestCluster_Run(t *testing.T) {
 
 func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterQuickStarter(ctrl)
+	mockStore := NewMockAtlasClusterQuickStarter(ctrl)
 	mockFlow := mocks.NewMockRefresher(ctrl)
 	defer ctrl.Finish()
 

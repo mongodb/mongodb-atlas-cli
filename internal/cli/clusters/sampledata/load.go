@@ -24,13 +24,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=load_mock_test.go -package=sampledata . Adder
+
+type Adder interface {
+	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)
+}
 
 type LoadOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	name  string
-	store store.SampleDataAdder
+	store Adder
 }
 
 func (opts *LoadOpts) initStore(ctx context.Context) func() error {

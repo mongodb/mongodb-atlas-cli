@@ -27,10 +27,17 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=scheduled . CompliancePolicyScheduledPolicyCreator
+
+type CompliancePolicyScheduledPolicyCreator interface {
+	CreateScheduledPolicy(projectID string, policy *atlasv2.BackupComplianceScheduledPolicyItem) (*atlasv2.DataProtectionSettings20231001, error)
+	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
-	store             store.CompliancePolicyScheduledPolicyCreator
+	store             CompliancePolicyScheduledPolicyCreator
 	policy            *atlasv2.DataProtectionSettings20231001
 	frequencyType     string
 	frequencyInterval int

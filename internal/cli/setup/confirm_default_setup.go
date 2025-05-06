@@ -37,6 +37,9 @@ func (opts *Opts) promptSettings() error {
 	return telemetry.TrackAskOne(p, &opts.settings, nil)
 }
 
+const loadSampleDataMsg = `
+Load sample data:			Yes`
+
 func (opts *Opts) askConfirmDefaultQuestion(values *clusterSettings) error {
 	if opts.Confirm {
 		return nil

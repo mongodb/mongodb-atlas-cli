@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -31,7 +30,7 @@ import (
 // Tests that setupWatcher() returns true when status == "ACTIVE".
 func TestSetupOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyUpdater(ctrl)
+	mockStore := NewMockUpdater(ctrl)
 	state := active
 
 	opts := &SetupOpts{
@@ -56,7 +55,7 @@ func TestSetupOpts_Watcher(t *testing.T) {
 // Verifies the output template.
 func TestSetupOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyUpdater(ctrl)
+	mockStore := NewMockUpdater(ctrl)
 	state := active
 
 	opts := &SetupOpts{
@@ -98,7 +97,7 @@ func TestSetupOpts_Run(t *testing.T) {
 // Verifies the output template when using --watch.
 func TestSetupOpts_WatchRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyUpdater(ctrl)
+	mockStore := NewMockUpdater(ctrl)
 	state := active
 
 	opts := &SetupOpts{

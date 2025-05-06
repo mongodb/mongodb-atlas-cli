@@ -44,6 +44,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const (
@@ -108,19 +109,31 @@ We could not find your public IP address. To add your IP address run:
 
 `
 
-//go:generate mockgen -destination=../../mocks/mock_setup.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup ProfileReader
+//go:generate mockgen -typed -destination=setup_mock_test.go -package=setup . AtlasClusterQuickStarter
 
-type ProfileReader interface {
+type profileReader interface {
 	ProjectID() string
 	OrgID() string
+}
+
+type AtlasClusterQuickStarter interface {
+	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)
+	SampleDataStatus(string, string) (*atlasv2.SampleDatasetStatus, error)
+	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	MDBVersions(projectID string, opt *store.MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error)
+	CreateDatabaseUser(*atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error)
+	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)
+	CreateProjectIPAccessList([]*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error)
 }
 
 type Opts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	register                    auth.RegisterOpts
-	config                      ProfileReader
-	store                       store.AtlasClusterQuickStarter
+	config                      profileReader
+	store                       AtlasClusterQuickStarter
 	defaultName                 string
 	ClusterName                 string
 	Provider                    string

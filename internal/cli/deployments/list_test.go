@@ -39,7 +39,6 @@ func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
-	mockProfileReader := mocks.NewMockProfileReader(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	ctx := context.Background()
 
@@ -86,7 +85,6 @@ func TestList_Run(t *testing.T) {
 			ContainerEngine:       mockContainerEngine,
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockStore,
-			Config:                mockProfileReader,
 		},
 		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
@@ -146,7 +144,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
-	mockProfileReader := mocks.NewMockProfileReader(ctrl)
+
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	ctx := context.Background()
 
@@ -180,7 +178,6 @@ func TestList_Run_NoLocal(t *testing.T) {
 			ContainerEngine:       mockContainerEngine,
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockStore,
-			Config:                mockProfileReader,
 		},
 		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
@@ -238,7 +235,6 @@ func TestList_Run_NoAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
-	mockProfileReader := mocks.NewMockProfileReader(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
 	ctx := context.Background()
 
@@ -272,7 +268,6 @@ func TestList_Run_NoAtlas(t *testing.T) {
 			ContainerEngine:       mockContainerEngine,
 			CredStore:             mockCredentialsGetter,
 			AtlasClusterListStore: mockStore,
-			Config:                mockProfileReader,
 		},
 		ProjectOpts: cli.ProjectOpts{
 			ProjectID: "64f670f0bf789926667dad1a",
@@ -332,10 +327,8 @@ func TestListOpts_PostRun(t *testing.T) {
 
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
-	mockProfileReader := mocks.NewMockProfileReader(ctrl)
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")
-	deploymentsTest.Opts.Config = mockProfileReader
 	deploymentsTest.Opts.CredStore = mockCredentialsGetter
 	deploymentsTest.Opts.AtlasClusterListStore = mockStore
 

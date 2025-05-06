@@ -21,7 +21,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
@@ -35,13 +34,11 @@ type PauseOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
 	options.DeploymentOpts
-	store  store.ClusterPauser
-	config setup.ProfileReader
+	store store.ClusterPauser
 }
 
 const (
-	pauseTemplate                     = "Pausing deployment '{{.Name}}'.\n"
-	podmanContainerTerminatedExitCode = 137
+	pauseTemplate = "Pausing deployment '{{.Name}}'.\n"
 )
 
 var (
@@ -127,7 +124,6 @@ func PauseBuilder() *cobra.Command {
 			"output":             pauseTemplate,
 		},
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
-			opts.config = config.Default()
 			opts.CredStore = config.Default()
 
 			return opts.PreRunE(

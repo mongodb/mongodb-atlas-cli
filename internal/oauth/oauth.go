@@ -29,6 +29,7 @@ type ServiceGetter interface {
 	Service() string
 	OpsManagerURL() string
 	ClientID() string
+	AccountURL() string
 }
 
 const (
@@ -50,7 +51,10 @@ func FlowWithConfig(c ServiceGetter, client *http.Client) (*auth.Config, error) 
 		auth.SetClientID(id),
 		auth.SetScopes([]string{"openid", "profile", "offline_access"}),
 	}
-	if configURL := c.OpsManagerURL(); configURL != "" {
+
+	if configURL := c.AccountURL(); configURL != "" {
+		authOpts = append(authOpts, auth.SetAuthURL(configURL))
+	} else if configURL := c.OpsManagerURL(); configURL != "" {
 		authOpts = append(authOpts, auth.SetAuthURL(c.OpsManagerURL()))
 	} else if c.Service() == config.CloudGovService {
 		authOpts = append(authOpts, auth.SetAuthURL(cloudGovServiceURL))

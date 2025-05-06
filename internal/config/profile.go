@@ -54,6 +54,7 @@ const (
 	RefreshTokenField        = "refresh_token"
 	ClientIDField            = "client_id"
 	OpsManagerURLField       = "ops_manager_url"
+	AccountURLField          = "account_url"
 	baseURL                  = "base_url"
 	apiVersion               = "api_version"
 	output                   = "output"
@@ -468,6 +469,12 @@ func (p *Profile) OpsManagerURL() string {
 func SetOpsManagerURL(v string) { Default().SetOpsManagerURL(v) }
 func (p *Profile) SetOpsManagerURL(v string) {
 	p.Set(OpsManagerURLField, v)
+}
+
+// AccountURL gets configured account base url
+func AccountURL() string { return Default().AccountURL() }
+func (p *Profile) AccountURL() string {
+	return p.GetString(AccountURLField)
 }
 
 // ProjectID get configured project ID.

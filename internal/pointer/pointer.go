@@ -14,26 +14,6 @@
 
 package pointer
 
-import (
-	"golang.org/x/exp/constraints"
-)
-
-func GetOrZero[T any](ptr *T) T {
-	if ptr == nil {
-		var zero T
-		return zero
-	}
-	return *ptr
-}
-
 func Get[T any](val T) *T {
 	return &val
-}
-
-func GetNonZeroValue[T constraints.Integer](val T) *T {
-	if val > T(0) {
-		return Get(val)
-	}
-
-	return nil
 }

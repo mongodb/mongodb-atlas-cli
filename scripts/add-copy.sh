@@ -28,6 +28,6 @@ find_files() {
 
 echo "==> Adding copy notice..."
 for FILE in $(find_files); do
-	addlicense -c "MongoDB Inc" "${FILE}"
+	go tool addlicense -c "MongoDB Inc" "${FILE}"
 done
 echo "==> Done..."

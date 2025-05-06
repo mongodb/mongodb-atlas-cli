@@ -63,6 +63,11 @@ require (
 )
 
 require (
+	github.com/bmatcuk/doublestar/v4 v4.0.2 // indirect
+	github.com/google/addlicense v1.1.1 // indirect
+)
+
+require (
 	cloud.google.com/go v0.120.0 // indirect
 	cloud.google.com/go/auth v0.16.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
@@ -169,3 +174,5 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20250414145226-207652e42e2e // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250425173222-7b384671a197 // indirect
 )
+
+tool github.com/google/addlicense

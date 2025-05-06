@@ -20,7 +20,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber,ClusterDeleter,ClusterPauser,ClusterStarter
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber
 
 type ClusterLister interface {
 	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
@@ -30,19 +30,6 @@ type ClusterLister interface {
 type ClusterDescriber interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
-}
-
-type ClusterDeleter interface {
-	DeleteCluster(string, string) error
-	DeleteFlexCluster(string, string) error
-}
-
-type ClusterPauser interface {
-	PauseCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
-}
-
-type ClusterStarter interface {
-	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
 // AddSampleData encapsulate the logic to manage different cloud providers.

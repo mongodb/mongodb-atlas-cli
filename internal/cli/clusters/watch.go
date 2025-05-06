@@ -38,7 +38,7 @@ type WatchOpts struct {
 	cli.RefresherOpts
 	name          string
 	isFlexCluster bool
-	store         store.ClusterDescriber
+	store         ClusterDescriber
 }
 
 var watchTemplate = "\nCluster available.\n"

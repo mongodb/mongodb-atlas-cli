@@ -69,10 +69,6 @@ deps:  ## Download go module dependencies
 devtools:  ## Install dev tools
 	@echo "==> Installing dev tools..."
 	go install go.uber.org/mock/mockgen@latest
-	go install golang.org/x/tools/cmd/goimports@latest
-	go install github.com/google/go-licenses@latest
-	go install mvdan.cc/sh/v3/cmd/shfmt@latest
-	go install github.com/icholy/gomajor@latest
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
 
 .PHONY: setup

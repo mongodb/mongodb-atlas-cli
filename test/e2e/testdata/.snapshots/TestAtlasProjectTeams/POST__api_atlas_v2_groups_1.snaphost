@@ -1,17 +1,17 @@
 HTTP/2.0 201 Created
 Content-Length: 1034
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 06 May 2025 05:07:54 GMT
+Date: Tue, 06 May 2025 09:25:41 GMT
 Location: http://localhost:8080//api/atlas/v1.0
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 1643
+X-Envoy-Upstream-Service-Time: 4643
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasGroupsResource::addGroup
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=ecab06ab7302f6c6b96ae52fd38f8dbb489c0351; versionString=master
+X-Mongodb-Service-Version: gitHash=733604ad5eeed0edbd5a1bcc5431c5698ebc20f1; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"clusterCount":0,"created":"2025-05-06T05:07:55Z","id":"6819992a74a1ae59b22fdb7b","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6819992a74a1ae59b22fdb7b","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819992a74a1ae59b22fdb7b/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819992a74a1ae59b22fdb7b/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819992a74a1ae59b22fdb7b/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819992a74a1ae59b22fdb7b/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819992a74a1ae59b22fdb7b/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819992a74a1ae59b22fdb7b/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"teams-e2e-750","orgId":"a0123456789abcdef012345a"}
+{"clusterCount":0,"created":"2025-05-06T09:25:45Z","id":"6819d59555457949ff3c63c6","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6819d59555457949ff3c63c6","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819d59555457949ff3c63c6/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819d59555457949ff3c63c6/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819d59555457949ff3c63c6/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819d59555457949ff3c63c6/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819d59555457949ff3c63c6/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/6819d59555457949ff3c63c6/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"teams-e2e-557","orgId":"a0123456789abcdef012345a"}

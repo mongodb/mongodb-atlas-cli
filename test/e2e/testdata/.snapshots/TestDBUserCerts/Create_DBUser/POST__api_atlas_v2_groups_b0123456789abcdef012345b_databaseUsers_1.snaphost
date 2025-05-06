@@ -1,16 +1,16 @@
 HTTP/2.0 201 Created
-Content-Length: 385
+Content-Length: 387
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 06 May 2025 05:08:30 GMT
+Date: Tue, 06 May 2025 09:25:21 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 467
+X-Envoy-Upstream-Service-Time: 448
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasV2DatabaseUsersResource::addUser
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=ecab06ab7302f6c6b96ae52fd38f8dbb489c0351; versionString=master
+X-Mongodb-Service-Version: gitHash=d89ffae210108a90173f6635938cb962642c5873; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"awsIAMType":"NONE","databaseName":"$external","groupId":"b0123456789abcdef012345b","labels":[],"ldapAuthType":"NONE","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/$external/user29","rel":"self"}],"oidcAuthType":"NONE","roles":[{"databaseName":"admin","roleName":"atlasAdmin"}],"scopes":[],"username":"user29","x509Type":"MANAGED"}
+{"awsIAMType":"NONE","databaseName":"$external","groupId":"b0123456789abcdef012345b","labels":[],"ldapAuthType":"NONE","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/$external/user281","rel":"self"}],"oidcAuthType":"NONE","roles":[{"databaseName":"admin","roleName":"atlasAdmin"}],"scopes":[],"username":"user281","x509Type":"MANAGED"}

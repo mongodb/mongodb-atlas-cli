@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 2022
 Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
-Date: Tue, 06 May 2025 05:07:45 GMT
+Date: Tue, 06 May 2025 09:25:00 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 96
+X-Envoy-Upstream-Service-Time: 123
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasFlexBackupResource::getSnapshots
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=ecab06ab7302f6c6b96ae52fd38f8dbb489c0351; versionString=master
+X-Mongodb-Service-Version: gitHash=d89ffae210108a90173f6635938cb962642c5873; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
 {"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/flexClusters/test-flex/backup/snapshots?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"expiration":"2025-05-06T17:05:10Z","finishTime":"2025-04-28T17:07:01Z","id":"680fb568e2269358c0f4123e","mongoDBVersion":"8.0.8","scheduledTime":"2025-04-28T17:05:10Z","startTime":"2025-04-28T17:05:50Z","status":"COMPLETED"},{"expiration":"2025-05-07T17:05:10Z","finishTime":"2025-04-29T17:07:19Z","id":"681106fafcc24470182df868","mongoDBVersion":"8.0.8","scheduledTime":"2025-04-29T17:05:10Z","startTime":"2025-04-29T17:06:08Z","status":"COMPLETED"},{"expiration":"2025-05-08T17:05:10Z","finishTime":"2025-04-30T17:06:53Z","id":"6812585d1964ea248a646488","mongoDBVersion":"8.0.9","scheduledTime":"2025-04-30T17:05:10Z","startTime":"2025-04-30T17:05:39Z","status":"COMPLETED"},{"expiration":"2025-05-09T17:05:10Z","finishTime":"2025-05-01T17:07:26Z","id":"6813aa0058fd4f6121abfd5c","mongoDBVersion":"8.0.9","scheduledTime":"2025-05-01T17:05:10Z","startTime":"2025-05-01T17:06:14Z","status":"COMPLETED"},{"expiration":"2025-05-10T17:05:10Z","finishTime":"2025-05-02T17:06:48Z","id":"6814fb5af6aa464dec70f46e","mongoDBVersion":"8.0.9","scheduledTime":"2025-05-02T17:05:10Z","startTime":"2025-05-02T17:05:36Z","status":"COMPLETED"},{"expiration":"2025-05-11T17:05:10Z","finishTime":"2025-05-03T17:06:55Z","id":"68164ce2a4b4276d03a55d8b","mongoDBVersion":"8.0.9","scheduledTime":"2025-05-03T17:05:10Z","startTime":"2025-05-03T17:05:44Z","status":"COMPLETED"},{"expiration":"2025-05-12T17:05:10Z","finishTime":"2025-05-04T17:06:57Z","id":"68179e62a4b4276d03c0b7ea","mongoDBVersion":"8.0.9","scheduledTime":"2025-05-04T17:05:10Z","startTime":"2025-05-04T17:05:44Z","status":"COMPLETED"},{"expiration":"2025-05-13T17:05:10Z","finishTime":"2025-05-05T17:07:25Z","id":"6818efffda68703bd10356e4","mongoDBVersion":"8.0.9","scheduledTime":"2025-05-05T17:05:10Z","startTime":"2025-05-05T17:06:13Z","status":"COMPLETED"}],"totalCount":8}

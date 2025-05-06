@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 665
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 06 May 2025 05:08:08 GMT
+Date: Tue, 06 May 2025 09:26:14 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 32
+X-Envoy-Upstream-Service-Time: 28
 X-Frame-Options: DENY
 X-Java-Method: ApiFederationSettingsResource::getAllIdentityProviders
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=ecab06ab7302f6c6b96ae52fd38f8dbb489c0351; versionString=master
+X-Mongodb-Service-Version: gitHash=d89ffae210108a90173f6635938cb962642c5873; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-285","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-05-06T05:08:06Z","description":"CLI TEST Provider","displayName":"idp-285","groupsClaim":"groups","id":"68199936672b3b2681c5cf4f","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":1}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKFORCE&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedDomains":["iam-test-domain-dev.com"],"associatedOrgs":[],"audience":"idp-197","authorizationType":"GROUP","clientId":"cliClients","createdAt":"2025-05-06T09:26:08Z","description":"CLI TEST Provider","displayName":"idp-197","groupsClaim":"groups","id":"6819d5b05bdc3006eaa53438","idpType":"WORKFORCE","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","requestedScopes":[],"updatedAt":null,"userClaim":"user"}],"totalCount":1}

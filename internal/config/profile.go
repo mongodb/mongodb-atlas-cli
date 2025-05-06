@@ -471,7 +471,7 @@ func (p *Profile) SetOpsManagerURL(v string) {
 	p.Set(OpsManagerURLField, v)
 }
 
-// AccountURL gets configured account base url
+// AccountURL gets the configured account base url.
 func AccountURL() string { return Default().AccountURL() }
 func (p *Profile) AccountURL() string {
 	return p.GetString(AccountURLField)

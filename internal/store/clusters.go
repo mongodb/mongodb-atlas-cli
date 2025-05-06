@@ -20,7 +20,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber,ClusterCreator,ClusterDeleter,ClusterPauser,ClusterStarter,ClusterDescriberStarter
+//go:generate mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber,ClusterDeleter,ClusterPauser,ClusterStarter
 
 type ClusterLister interface {
 	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
@@ -30,17 +30,6 @@ type ClusterLister interface {
 type ClusterDescriber interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
-}
-
-type ClusterDescriberStarter interface {
-	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
-	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
-	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
-}
-
-type ClusterCreator interface {
-	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
-	CreateFlexCluster(string, *atlasv2.FlexClusterDescriptionCreate20241113) (*atlasv2.FlexClusterDescription20241113, error)
 }
 
 type ClusterDeleter interface {

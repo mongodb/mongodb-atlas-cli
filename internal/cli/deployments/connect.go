@@ -34,6 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/vscode"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 var (
@@ -238,11 +239,18 @@ func (opts *ConnectOpts) connectToLocal(ctx context.Context) error {
 	return opts.connectToDeployment(connectionString)
 }
 
+//go:generate mockgen -typed -destination=connect_mock_test.go -package=deployments . ClusterDescriberStarter
+
+type ClusterDescriberStarter interface {
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+}
+
 type ConnectToAtlasOpts struct {
 	cli.ProjectOpts
 	cli.InputOpts
 	ConnectionStringType string
-	Store                store.ClusterDescriberStarter
+	Store                ClusterDescriberStarter
 }
 
 func (opts *ConnectToAtlasOpts) InitAtlasStore(ctx context.Context) func() error {

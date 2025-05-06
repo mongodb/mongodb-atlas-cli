@@ -24,7 +24,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -90,7 +89,7 @@ func TestRun_ConnectAtlas(t *testing.T) {
 	ctx := context.Background()
 	buf := new(bytes.Buffer)
 
-	mockAtlasClusterDescriberStarter := mocks.NewMockClusterDescriberStarter(ctrl)
+	mockAtlasClusterDescriberStarter := NewMockClusterDescriberStarter(ctrl)
 	deploymenTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedAtlasDeployment)
 
 	connectOpts := &ConnectOpts{

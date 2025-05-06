@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1841
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 06 May 2025 05:24:11 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 85
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=ecab06ab7302f6c6b96ae52fd38f8dbb489c0351; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68199b3492531c673cfe1660/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-06T05:23:33Z","groupId":"68199b3492531c673cfe1660","hostname":"atlas-wl99kl-shard-00-00.ph3vy0.mongodb-dev.net","id":"atlas-wl99kl-shard-00-00.ph3vy0.mongodb-dev.net:27017","lastPing":"2025-05-06T05:24:03Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68199b3492531c673cfe1660/processes/atlas-wl99kl-shard-00-00.ph3vy0.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-wl99kl-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-797-shard-00-00.ph3vy0.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-06T05:23:33Z","groupId":"68199b3492531c673cfe1660","hostname":"atlas-wl99kl-shard-00-01.ph3vy0.mongodb-dev.net","id":"atlas-wl99kl-shard-00-01.ph3vy0.mongodb-dev.net:27017","lastPing":"2025-05-06T05:24:03Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68199b3492531c673cfe1660/processes/atlas-wl99kl-shard-00-01.ph3vy0.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-wl99kl-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-797-shard-00-01.ph3vy0.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-06T05:23:33Z","groupId":"68199b3492531c673cfe1660","hostname":"atlas-wl99kl-shard-00-02.ph3vy0.mongodb-dev.net","id":"atlas-wl99kl-shard-00-02.ph3vy0.mongodb-dev.net:27017","lastPing":"2025-05-06T05:24:03Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68199b3492531c673cfe1660/processes/atlas-wl99kl-shard-00-02.ph3vy0.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-wl99kl-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-797-shard-00-02.ph3vy0.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

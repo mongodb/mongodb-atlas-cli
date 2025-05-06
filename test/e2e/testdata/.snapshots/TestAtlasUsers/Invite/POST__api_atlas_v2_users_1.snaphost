@@ -1,19 +1,18 @@
-HTTP/2.0 201 Created
-Content-Length: 609
-Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Thu, 01 May 2025 05:08:12 GMT
+HTTP/2.0 409 Conflict
+Content-Length: 186
+Content-Type: application/json
+Date: Tue, 06 May 2025 05:08:04 GMT
 Deprecation: Wed, 19 Feb 2025 00:00:00 GMT
-Location: http://localhost:8080/api/atlas/v1.0/users/681301bef7db2d2570670c8d
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 Sunset: Fri, 31 Jul 2026 00:00:00 GMT
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 1655
+X-Envoy-Upstream-Service-Time: 72
 X-Frame-Options: DENY
 X-Java-Method: ApiUsersResource::addUser
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=244ccf57e1fff77a2803627f073ca87e936d616f; versionString=master
+X-Mongodb-Service-Version: gitHash=ecab06ab7302f6c6b96ae52fd38f8dbb489c0351; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"country":"US","createdAt":"2025-05-01T05:08:14Z","emailAddress":"cli-test-1660@moongodb.com","firstName":"TestFirstName","id":"681301bef7db2d2570670c8d","lastName":"TestLastName","links":[{"href":"http://localhost:8080/api/atlas/v2/users/681301bef7db2d2570670c8d","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/users/681301bef7db2d2570670c8d/whitelist","rel":"https://cloud.mongodb.com/whitelist"},{"href":"http://localhost:8080/api/atlas/v2/users/681301bef7db2d2570670c8d/accessList","rel":"https://cloud.mongodb.com/accessList"}],"roles":[],"teamIds":[],"username":"cli-test-1660@moongodb.com"}
+{"detail":"A user with username cli-test-6509@moongodb.com already exists.","error":409,"errorCode":"USER_ALREADY_EXISTS","parameters":["cli-test-6509@moongodb.com"],"reason":"Conflict"}

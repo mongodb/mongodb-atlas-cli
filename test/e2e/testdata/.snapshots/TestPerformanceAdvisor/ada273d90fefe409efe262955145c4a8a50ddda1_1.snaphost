@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1883
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 06 May 2025 05:16:42 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 103
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=ecab06ab7302f6c6b96ae52fd38f8dbb489c0351; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6819991874a1ae59b22fd919/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-06T05:16:04Z","groupId":"6819991874a1ae59b22fd919","hostname":"atlas-pd9wdf-shard-00-00.xoykp4.mongodb-dev.net","id":"atlas-pd9wdf-shard-00-00.xoykp4.mongodb-dev.net:27017","lastPing":"2025-05-06T05:16:36Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6819991874a1ae59b22fd919/processes/atlas-pd9wdf-shard-00-00.xoykp4.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-pd9wdf-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-610-shard-00-00.xoykp4.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-06T05:16:04Z","groupId":"6819991874a1ae59b22fd919","hostname":"atlas-pd9wdf-shard-00-01.xoykp4.mongodb-dev.net","id":"atlas-pd9wdf-shard-00-01.xoykp4.mongodb-dev.net:27017","lastPing":"2025-05-06T05:16:36Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6819991874a1ae59b22fd919/processes/atlas-pd9wdf-shard-00-01.xoykp4.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-pd9wdf-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-610-shard-00-01.xoykp4.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-06T05:16:04Z","groupId":"6819991874a1ae59b22fd919","hostname":"atlas-pd9wdf-shard-00-02.xoykp4.mongodb-dev.net","id":"atlas-pd9wdf-shard-00-02.xoykp4.mongodb-dev.net:27017","lastPing":"2025-05-06T05:16:36Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6819991874a1ae59b22fd919/processes/atlas-pd9wdf-shard-00-02.xoykp4.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-pd9wdf-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-610-shard-00-02.xoykp4.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

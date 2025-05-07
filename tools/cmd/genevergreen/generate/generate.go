@@ -45,7 +45,6 @@ var (
 		"rhel9",
 		"debian11",
 		"debian12",
-		"ubuntu20.04",
 		"ubuntu22.04",
 		"ubuntu24.04",
 	}
@@ -54,7 +53,6 @@ var (
 		"suse15":      "suse15-rpm",
 		"centos8":     "centos8-rpm",
 		"rhel9":       "rhel9-rpm",
-		"ubuntu20.04": "ubuntu20.04-deb",
 		"ubuntu22.04": "ubuntu22.04-deb",
 		"ubuntu24.04": "ubuntu24.04-deb",
 		"debian11":    "debian11-deb",
@@ -64,7 +62,6 @@ var (
 		"suse15":          "suse15",
 		"centos8":         "rhel80",
 		"rhel9":           "rhel90",
-		"ubuntu20.04":     "ubuntu2004",
 		"ubuntu22.04":     "ubuntu2204",
 		"ubuntu24.04":     "ubuntu2404",
 		"debian11":        "debian11",

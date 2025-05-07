@@ -18,7 +18,6 @@ package auth
 
 import (
 	"bytes"
-	"context"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
@@ -41,7 +40,7 @@ func Test_logoutOpts_Run(t *testing.T) {
 			Confirm: true,
 		},
 	}
-	ctx := context.TODO()
+	ctx := t.Context()
 	mockFlow.
 		EXPECT().
 		RevokeToken(ctx, gomock.Any(), gomock.Any()).
@@ -71,7 +70,7 @@ func Test_logoutOpts_Run_Keep(t *testing.T) {
 		},
 		keepConfig: true,
 	}
-	ctx := context.TODO()
+	ctx := t.Context()
 	mockFlow.
 		EXPECT().
 		RevokeToken(ctx, gomock.Any(), gomock.Any()).

@@ -18,7 +18,6 @@ package deployments
 
 import (
 	"bytes"
-	"context"
 	"errors"
 	"testing"
 
@@ -40,7 +39,7 @@ func TestList_Run(t *testing.T) {
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	cli.TokenRefreshed = true
 	t.Cleanup(func() {
@@ -146,7 +145,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	cli.TokenRefreshed = true
 	t.Cleanup(func() {
@@ -236,7 +235,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 	mockStore := mocks.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	cli.TokenRefreshed = true
 	t.Cleanup(func() {

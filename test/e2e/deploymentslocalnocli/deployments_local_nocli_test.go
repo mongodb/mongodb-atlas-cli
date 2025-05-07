@@ -17,7 +17,6 @@ package deploymentslocalnocli
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -140,7 +139,7 @@ func TestDeploymentsLocalWithNoCLI(t *testing.T) {
 		assert.Equal(t, "IDLE", cols[3])
 	})
 
-	ctx := context.Background()
+	ctx := t.Context()
 	const localFile = "sampledata.archive"
 	var connectionString string
 

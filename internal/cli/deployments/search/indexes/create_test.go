@@ -18,7 +18,6 @@ package indexes
 
 import (
 	"bytes"
-	"context"
 	"errors"
 	"testing"
 
@@ -49,7 +48,7 @@ func TestCreate_RunLocal(t *testing.T) {
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
 	mockColl := mocks.NewMockCollection(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
 
@@ -172,7 +171,7 @@ func TestCreate_Duplicated(t *testing.T) {
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
 	mockColl := mocks.NewMockCollection(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 
 	testDeployments := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
 
@@ -266,7 +265,7 @@ func TestCreate_Duplicated(t *testing.T) {
 func TestCreate_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockIndexStore := NewMockSearchIndexCreatorDescriber(ctrl)
-	ctx := context.Background()
+	ctx := t.Context()
 	buf := new(bytes.Buffer)
 
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, expectedLocalDeployment)

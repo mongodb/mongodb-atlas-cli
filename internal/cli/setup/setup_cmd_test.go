@@ -18,7 +18,6 @@ package setup
 
 import (
 	"bytes"
-	"context"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
@@ -36,7 +35,7 @@ import (
 func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-	ctx := context.TODO()
+	ctx := t.Context()
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{}
@@ -57,7 +56,7 @@ func Test_setupOpts_PreRunWithAPIKeys(t *testing.T) {
 func Test_setupOpts_RunSkipRegister(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockFlow := mocks.NewMockRefresher(ctrl)
-	ctx := context.TODO()
+	ctx := t.Context()
 	buf := new(bytes.Buffer)
 
 	opts := &Opts{

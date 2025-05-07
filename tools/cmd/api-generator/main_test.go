@@ -46,7 +46,7 @@ func testSpec(t *testing.T, name, specPath string) {
 		})
 
 		buf := &bytes.Buffer{}
-		if err := outputTypeFunc(context.Background(), specFile, buf); err != nil {
+		if err := outputTypeFunc(t.Context(), specFile, buf); err != nil {
 			t.Fatalf("failed to convert spec into %s, error: %s", outputType, err)
 		}
 

@@ -17,7 +17,6 @@
 package clusters
 
 import (
-	"context"
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
@@ -45,7 +44,7 @@ func TestWatch_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	require.NoError(t, opts.Run(context.Background()))
+	require.NoError(t, opts.Run(t.Context()))
 }
 
 func TestWatch_Run_FlexCluster(t *testing.T) {
@@ -66,5 +65,5 @@ func TestWatch_Run_FlexCluster(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	require.NoError(t, opts.Run(context.Background()))
+	require.NoError(t, opts.Run(t.Context()))
 }

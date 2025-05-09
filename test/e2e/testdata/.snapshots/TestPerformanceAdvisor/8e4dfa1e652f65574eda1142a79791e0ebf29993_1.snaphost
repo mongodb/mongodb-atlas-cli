@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1883
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 09 May 2025 05:15:29 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 93
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=f4cac4bef68680c08e8b7ce8a9ab47d5584027b8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681d8d8adff5f75c44322e12/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-09T05:14:55Z","groupId":"681d8d8adff5f75c44322e12","hostname":"atlas-ke6gca-shard-00-00.sfsfk3.mongodb-dev.net","id":"atlas-ke6gca-shard-00-00.sfsfk3.mongodb-dev.net:27017","lastPing":"2025-05-09T05:15:16Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681d8d8adff5f75c44322e12/processes/atlas-ke6gca-shard-00-00.sfsfk3.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ke6gca-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-412-shard-00-00.sfsfk3.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-09T05:14:55Z","groupId":"681d8d8adff5f75c44322e12","hostname":"atlas-ke6gca-shard-00-01.sfsfk3.mongodb-dev.net","id":"atlas-ke6gca-shard-00-01.sfsfk3.mongodb-dev.net:27017","lastPing":"2025-05-09T05:15:16Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681d8d8adff5f75c44322e12/processes/atlas-ke6gca-shard-00-01.sfsfk3.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ke6gca-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-412-shard-00-01.sfsfk3.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-09T05:14:55Z","groupId":"681d8d8adff5f75c44322e12","hostname":"atlas-ke6gca-shard-00-02.sfsfk3.mongodb-dev.net","id":"atlas-ke6gca-shard-00-02.sfsfk3.mongodb-dev.net:27017","lastPing":"2025-05-09T05:15:16Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681d8d8adff5f75c44322e12/processes/atlas-ke6gca-shard-00-02.sfsfk3.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ke6gca-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-412-shard-00-02.sfsfk3.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

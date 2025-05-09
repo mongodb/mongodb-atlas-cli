@@ -1,0 +1,16 @@
+HTTP/2.0 201 Created
+Content-Length: 612
+Content-Type: application/vnd.atlas.2024-05-30+json;charset=utf-8
+Date: Fri, 09 May 2025 05:16:51 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 2962
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasSearchIndexConfigResource::createSearchIndex
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=f4cac4bef68680c08e8b7ce8a9ab47d5584027b8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"collectionName":"planets","database":"sample_guides","indexID":"681d8fc3dff5f75c4432380f","latestDefinition":{"analyzer":"lucene.standard","mappings":{"dynamic":false,"fields":{"mainAtmosphere":{"analyzer":"lucene.standard","type":"string"},"name":{"analyzer":"lucene.whitespace","multi":{"mySecondaryAnalyzer":{"analyzer":"lucene.french","type":"string"}},"type":"string"},"surfaceTemperatureC":{"analyzer":"lucene.standard","dynamic":true,"type":"document"}}},"searchAnalyzer":"lucene.standard"},"latestDefinitionVersion":{"version":0},"name":"index-848","queryable":false,"status":"PENDING","type":"search"}

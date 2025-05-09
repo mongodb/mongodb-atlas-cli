@@ -28,11 +28,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=onlinearchive . Deleter
+
+type Deleter interface {
+	DeleteOnlineArchive(string, string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
 	clusterName string
-	store       store.OnlineArchiveDeleter
+	store       Deleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

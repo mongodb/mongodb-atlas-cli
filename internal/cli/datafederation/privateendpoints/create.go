@@ -27,13 +27,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=create_mock_test.go -package=privateendpoints . DataFederationPrivateEndpointCreator
+
+type DataFederationPrivateEndpointCreator interface {
+	CreateDataFederationPrivateEndpoint(string, *atlasv2.PrivateNetworkEndpointIdEntry) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error)
+}
 
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store      store.DataFederationPrivateEndpointCreator
+	store      DataFederationPrivateEndpointCreator
 	endpointID string
 	comment    string
 }
@@ -59,8 +65,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCreateRequest() *admin.PrivateNetworkEndpointIdEntry {
-	p := admin.NewPrivateNetworkEndpointIdEntry(opts.endpointID)
+func (opts *CreateOpts) newCreateRequest() *atlasv2.PrivateNetworkEndpointIdEntry {
+	p := atlasv2.NewPrivateNetworkEndpointIdEntry(opts.endpointID)
 	p.Comment = &opts.comment
 	return p
 }

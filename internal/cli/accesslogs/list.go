@@ -26,7 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const (
@@ -38,6 +38,13 @@ const (
 	invalidValueAuthResultErrorMessage = "you must set --%s to %q or %q"
 )
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=accesslogs . Lister
+
+type Lister interface {
+	AccessLogsByHostname(string, string, *store.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
+	AccessLogsByClusterName(string, string, *store.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -48,7 +55,7 @@ type ListOpts struct {
 	nLogs       int
 	ipAddresses string
 	authResult  string
-	store       store.AccessLogsLister
+	store       Lister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -77,14 +84,14 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newAccessLogOptions() *atlas.AccessLogOptions {
+func (opts *ListOpts) newAccessLogOptions() *store.AccessLogOptions {
 	var authResult *bool
 	if opts.authResult != "" {
 		isSuccess := strings.EqualFold(opts.authResult, success)
 		authResult = &isSuccess
 	}
 
-	return &atlas.AccessLogOptions{
+	return &store.AccessLogOptions{
 		Start:      opts.start,
 		End:        opts.end,
 		NLogs:      opts.nLogs,
@@ -94,9 +101,6 @@ func (opts *ListOpts) newAccessLogOptions() *atlas.AccessLogOptions {
 }
 
 func (opts *ListOpts) ValidateInput() error {
-	if err := opts.ValidateProjectID(); err != nil {
-		return err
-	}
 	if opts.authResult != "" && !strings.EqualFold(opts.authResult, success) && !strings.EqualFold(opts.authResult, fail) {
 		return fmt.Errorf(invalidValueAuthResultErrorMessage, flag.AuthResult, success, fail)
 	}
@@ -121,6 +125,7 @@ func ListBuilder() *cobra.Command {
 `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
+				opts.ValidateProjectID,
 				opts.ValidateInput,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),

@@ -15,37 +15,23 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_alerts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store AlertDescriber,AlertLister,AlertAcknowledger
-
-type AlertDescriber interface {
-	Alert(*admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error)
-}
-
-type AlertLister interface {
-	Alerts(*admin.ListAlertsApiParams) (*admin.PaginatedAlert, error)
-}
-
-type AlertAcknowledger interface {
-	AcknowledgeAlert(*admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error)
-}
-
-// Alert encapsulate the logic to manage different cloud providers.
-func (s *Store) Alert(params *admin.GetAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
+// Alert encapsulates the logic to manage different cloud providers.
+func (s *Store) Alert(params *atlasv2.GetAlertApiParams) (*atlasv2.AlertViewForNdsGroup, error) {
 	result, _, err := s.clientv2.AlertsApi.GetAlertWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // Alerts encapsulate the logic to manage different cloud providers.
-func (s *Store) Alerts(params *admin.ListAlertsApiParams) (*admin.PaginatedAlert, error) {
+func (s *Store) Alerts(params *atlasv2.ListAlertsApiParams) (*atlasv2.PaginatedAlert, error) {
 	result, _, err := s.clientv2.AlertsApi.ListAlertsWithParams(s.ctx, params).Execute()
 	return result, err
 }
 
 // AcknowledgeAlert encapsulate the logic to manage different cloud providers.
-func (s *Store) AcknowledgeAlert(params *admin.AcknowledgeAlertApiParams) (*admin.AlertViewForNdsGroup, error) {
+func (s *Store) AcknowledgeAlert(params *atlasv2.AcknowledgeAlertApiParams) (*atlasv2.AlertViewForNdsGroup, error) {
 	result, _, err := s.clientv2.AlertsApi.AcknowledgeAlertWithParams(s.ctx, params).Execute()
 	return result, err
 }

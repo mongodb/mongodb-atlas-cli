@@ -30,13 +30,19 @@ import (
 
 const createTemplate = "User '{{.Username}}' invited.\n"
 
+//go:generate mockgen -typed -destination=invite_mock_test.go -package=invitations . ProjectInviter
+
+type ProjectInviter interface {
+	InviteUserToProject(string, *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error)
+}
+
 type InviteOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
 	username string
 	roles    []string
 	teamIDs  []string
-	store    store.ProjectInviter
+	store    ProjectInviter
 }
 
 func (opts *InviteOpts) initStore(ctx context.Context) func() error {

@@ -27,10 +27,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=teams . TeamDeleter
+
+type TeamDeleter interface {
+	DeleteTeam(string, string) error
+}
+
 type DeleteOpts struct {
 	cli.OrgOpts
 	*cli.DeleteOpts
-	store store.TeamDeleter
+	store TeamDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

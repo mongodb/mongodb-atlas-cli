@@ -264,7 +264,7 @@ func TestCreate_Duplicated(t *testing.T) {
 
 func TestCreate_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockIndexStore := mocks.NewMockSearchIndexCreatorDescriber(ctrl)
+	mockIndexStore := NewMockSearchIndexCreatorDescriber(ctrl)
 	ctx := t.Context()
 	buf := new(bytes.Buffer)
 

@@ -30,10 +30,16 @@ import (
 
 const addTemplate = "Team added to the project.\n"
 
+//go:generate mockgen -typed -destination=add_mock_test.go -package=teams . ProjectTeamAdder
+
+type ProjectTeamAdder interface {
+	AddTeamsToProject(string, []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)
+}
+
 type AddOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store  store.ProjectTeamAdder
+	store  ProjectTeamAdder
 	teamID string
 	roles  []string
 }

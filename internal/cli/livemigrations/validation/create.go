@@ -21,11 +21,18 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=create_mock_test.go -package=validation . LiveMigrationValidationsCreator
+
+type LiveMigrationValidationsCreator interface {
+	CreateValidation(string, *atlasv2.LiveMigrationRequest20240530) (*atlasv2.LiveImportValidation, error)
+}
 
 type CreateOpts struct {
 	options.LiveMigrationsOpts
-	store store.LiveMigrationValidationsCreator
+	store LiveMigrationValidationsCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

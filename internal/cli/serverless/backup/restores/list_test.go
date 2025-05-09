@@ -19,7 +19,6 @@ package restores
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessRestoreJobsLister(ctrl)
+	mockStore := NewMockServerlessRestoreJobsLister(ctrl)
 	defer ctrl.Finish()
 
 	expected := &atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob{

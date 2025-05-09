@@ -18,29 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_database_roles.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DatabaseRoleLister,DatabaseRoleCreator,DatabaseRoleDeleter,DatabaseRoleUpdater,DatabaseRoleDescriber
-
-type DatabaseRoleLister interface {
-	DatabaseRoles(string) ([]atlasv2.UserCustomDBRole, error)
-}
-
-type DatabaseRoleCreator interface {
-	CreateDatabaseRole(string, *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error)
-}
-
-type DatabaseRoleDeleter interface {
-	DeleteDatabaseRole(string, string) error
-}
-
-type DatabaseRoleUpdater interface {
-	UpdateDatabaseRole(string, string, *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error)
-	DatabaseRole(string, string) (*atlasv2.UserCustomDBRole, error)
-}
-
-type DatabaseRoleDescriber interface {
-	DatabaseRole(string, string) (*atlasv2.UserCustomDBRole, error)
-}
-
 // CreateDatabaseRole encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDatabaseRole(groupID string, role *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error) {
 	result, _, err := s.clientv2.CustomDatabaseRolesApi.CreateCustomDatabaseRole(s.ctx, groupID, role).Execute()

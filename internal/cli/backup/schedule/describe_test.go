@@ -19,7 +19,6 @@ package schedule
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockScheduleDescriber(ctrl)
+	mockStore := NewMockDescriber(ctrl)
 
 	expected := &atlasClustersPinned.DiskBackupSnapshotSchedule{}
 

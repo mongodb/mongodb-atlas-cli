@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -30,7 +29,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockStreamsConnectionDescriber(ctrl)
+	mockStore := NewMockStreamsConnectionDescriber(ctrl)
 	expected := admin.StreamsConnection{Name: admin.PtrString("id"), Type: admin.PtrString("Kafka"), BootstrapServers: admin.PtrString("example.com:8080")}
 
 	buf := new(bytes.Buffer)

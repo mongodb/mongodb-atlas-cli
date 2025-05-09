@@ -19,7 +19,6 @@ package restores
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestWatchOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
+	mockStore := NewMockRestoreJobsDescriber(ctrl)
 
 	expected := &atlasv2.DiskBackupSnapshotRestoreJob{
 		Failed: pointer.Get(true),
@@ -54,7 +53,7 @@ func TestWatchOpts_Run(t *testing.T) {
 
 func TestWatch_Run_FlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockRestoreJobsDescriber(ctrl)
+	mockStore := NewMockRestoreJobsDescriber(ctrl)
 
 	watchOpts := &WatchOpts{
 		id:            "test",

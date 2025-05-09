@@ -31,7 +31,7 @@ import (
 func TestDelete_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
-	mockStore := mocks.NewMockSearchIndexDeleter(ctrl)
+	mockStore := NewMockDeleter(ctrl)
 	mockDB := mocks.NewMockDatabase(ctrl)
 	mockColl := mocks.NewMockCollection(ctrl)
 	ctx := t.Context()
@@ -128,7 +128,7 @@ func TestDelete_RunLocal(t *testing.T) {
 func TestDelete_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockMongodbClient := mocks.NewMockMongoDBClient(ctrl)
-	mockStore := mocks.NewMockSearchIndexDeleter(ctrl)
+	mockStore := NewMockDeleter(ctrl)
 	ctx := t.Context()
 
 	const (
@@ -156,7 +156,7 @@ func TestDelete_RunAtlas(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteSearchIndexDeprecated(opts.ProjectID, opts.DeploymentName, opts.Entry).
+		DeleteSearchIndex(opts.ProjectID, opts.DeploymentName, opts.Entry).
 		Return(nil).
 		Times(1)
 

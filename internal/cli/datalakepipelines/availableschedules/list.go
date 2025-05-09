@@ -27,15 +27,22 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var listTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION UNIT	RETENTION VALUE{{range valueOrEmptySlice .}}
 {{ .Id }}	{{ .FrequencyInterval }}	{{ .FrequencyType }}	{{ .RetentionUnit }}	{{ .RetentionValue }}{{end}}`
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=availableschedules . PipelineAvailableSchedulesLister
+
+type PipelineAvailableSchedulesLister interface {
+	PipelineAvailableSchedules(string, string) ([]atlasv2.DiskBackupApiPolicyItem, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.PipelineAvailableSchedulesLister
+	store PipelineAvailableSchedulesLister
 
 	pipelineName string
 }

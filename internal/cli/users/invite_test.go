@@ -21,7 +21,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -30,7 +29,7 @@ import (
 
 func TestInvite_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockUserCreator(ctrl)
+	mockStore := NewMockUserCreator(ctrl)
 
 	expected := &atlasv2.CloudAppUser{
 		Username: "testUser",

@@ -19,7 +19,6 @@ package advancedsettings
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterConfigurationOptionsDescriber(ctrl)
+	mockStore := NewMockAtlasClusterConfigurationOptionsDescriber(ctrl)
 	expected := &atlasClustersPinned.ClusterDescriptionProcessArgs{}
 	describeOpts := &DescribeOpts{
 		name:  "test",

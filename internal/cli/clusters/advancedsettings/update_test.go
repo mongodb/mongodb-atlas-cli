@@ -19,7 +19,6 @@ package advancedsettings
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasClusterConfigurationOptionsUpdater(ctrl)
+	mockStore := NewMockAtlasClusterConfigurationOptionsUpdater(ctrl)
 
 	expected := &atlasClustersPinned.ClusterDescriptionProcessArgs{
 		DefaultReadConcern:               pointer.Get(""),

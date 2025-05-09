@@ -17,38 +17,7 @@ package store
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
-
-//go:generate mockgen -destination=../mocks/mock_database_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DatabaseUserLister,DatabaseUserCreator,DatabaseUserDeleter,DatabaseUserUpdater,DatabaseUserDescriber,DBUserCertificateLister,DBUserCertificateCreator
-
-type DatabaseUserLister interface {
-	DatabaseUsers(groupID string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)
-}
-
-type DatabaseUserCreator interface {
-	CreateDatabaseUser(*atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error)
-}
-
-type DatabaseUserDeleter interface {
-	DeleteDatabaseUser(string, string, string) error
-}
-
-type DatabaseUserUpdater interface {
-	UpdateDatabaseUser(*atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.CloudDatabaseUser, error)
-}
-
-type DatabaseUserDescriber interface {
-	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)
-}
-
-type DBUserCertificateLister interface {
-	DBUserCertificates(string, string, *atlas.ListOptions) (*atlasv2.PaginatedUserCert, error)
-}
-
-type DBUserCertificateCreator interface {
-	CreateDBUserCertificate(string, string, int) (string, error)
-}
 
 // CreateDatabaseUser encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateDatabaseUser(user *atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error) {
@@ -81,7 +50,7 @@ func (s *Store) DatabaseUser(authDB, groupID, username string) (*atlasv2.CloudDa
 }
 
 // DBUserCertificates retrieves the current Atlas managed certificates for a database user.
-func (s *Store) DBUserCertificates(projectID, username string, opts *atlas.ListOptions) (*atlasv2.PaginatedUserCert, error) {
+func (s *Store) DBUserCertificates(projectID, username string, opts *ListOptions) (*atlasv2.PaginatedUserCert, error) {
 	res := s.clientv2.X509AuthenticationApi.ListDatabaseUserCertificates(s.ctx, projectID, username)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage)

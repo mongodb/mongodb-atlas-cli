@@ -29,11 +29,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=disable_mock_test.go -package=copyprotection . CompliancePolicyCopyProtectionDisabler
+
+type CompliancePolicyCopyProtectionDisabler interface {
+	DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
+	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
+}
+
 type DisableOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	policy *atlasv2.DataProtectionSettings20231001
-	store  store.CompliancePolicyCopyProtectionDisabler
+	store  CompliancePolicyCopyProtectionDisabler
 }
 
 var disableWatchTemplate = `Copy protection has been disabled.

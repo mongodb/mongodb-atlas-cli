@@ -20,13 +20,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestClearOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockMaintenanceWindowClearer(ctrl)
+	mockStore := NewMockClearer(ctrl)
 
 	updateOpts := &ClearOpts{
 		store: mockStore,

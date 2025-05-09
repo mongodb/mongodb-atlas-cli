@@ -19,7 +19,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -87,7 +86,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		require.NoError(t, afero.WriteFile(fs, fileName, []byte(validPrivateLinkConfigFileContents), 0600))
 
 		ctrl := gomock.NewController(t)
-		mockStore := mocks.NewMockPrivateLinkCreator(ctrl)
+		mockStore := NewMockCreator(ctrl)
 
 		createOpts := &CreateOpts{
 			store:    mockStore,
@@ -114,7 +113,7 @@ func TestCreateOpts_Run(t *testing.T) {
 		require.NoError(t, afero.WriteFile(fs, fileName, []byte(validPrivateLinkConfigFileContents), 0600))
 
 		ctrl := gomock.NewController(t)
-		mockStore := mocks.NewMockPrivateLinkCreator(ctrl)
+		mockStore := NewMockCreator(ctrl)
 
 		buf := new(bytes.Buffer)
 		createOpts := &CreateOpts{

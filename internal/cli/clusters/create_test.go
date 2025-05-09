@@ -34,7 +34,7 @@ import (
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterCreator(ctrl)
+	mockStore := NewMockClusterCreator(ctrl)
 
 	expected := &atlasClustersPinned.AdvancedClusterDescription{}
 
@@ -109,7 +109,7 @@ func TestCreateOpts_Run(t *testing.T) {
 
 func TestCreateOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterCreator(ctrl)
+	mockStore := NewMockClusterCreator(ctrl)
 
 	expected := &atlasClustersPinned.AdvancedClusterDescription{
 		Name: pointer.Get("ProjectBar"),
@@ -146,10 +146,10 @@ func TestCreateOpts_PostRun(t *testing.T) {
 func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := &struct {
-		*mocks.MockClusterCreator
+		*MockClusterCreator
 		*mocks.MockClusterDescriber
 	}{
-		mocks.NewMockClusterCreator(ctrl),
+		NewMockClusterCreator(ctrl),
 		mocks.NewMockClusterDescriber(ctrl),
 	}
 
@@ -216,7 +216,7 @@ func TestCreateTemplates(t *testing.T) {
 
 func TestCreateOpts_RunFlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterCreator(ctrl)
+	mockStore := NewMockClusterCreator(ctrl)
 
 	expected := &atlasv2.FlexClusterDescription20241113{}
 
@@ -282,10 +282,10 @@ func TestCreateOpts_RunFlexCluster(t *testing.T) {
 func TestCreateOpts_PostRunFlexCluster_EnableWatch(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := &struct {
-		*mocks.MockClusterCreator
+		*MockClusterCreator
 		*mocks.MockClusterDescriber
 	}{
-		mocks.NewMockClusterCreator(ctrl),
+		NewMockClusterCreator(ctrl),
 		mocks.NewMockClusterDescriber(ctrl),
 	}
 

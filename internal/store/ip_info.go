@@ -19,10 +19,6 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-type IPInfoDescriber interface {
-	IPInfo() (*atlas.IPInfo, error)
-}
-
 // IPInfo encapsulates the logic to manage different cloud providers.
 func (s *Store) IPInfo() (*atlas.IPInfo, error) {
 	resp, _, err := s.client.IPInfo.Get(s.ctx)

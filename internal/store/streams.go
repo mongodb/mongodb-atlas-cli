@@ -21,68 +21,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_streams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store StreamsLister,StreamsDescriber,StreamsCreator,StreamsDeleter,StreamsUpdater,StreamsDownloader,ConnectionCreator,ConnectionDeleter,ConnectionUpdater,StreamsConnectionDescriber,StreamsConnectionLister,PrivateLinkCreator,PrivateLinkLister,PrivateLinkDescriber,PrivateLinkDeleter
-
-type StreamsLister interface {
-	ProjectStreams(*atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error)
-}
-
-type StreamsDescriber interface {
-	AtlasStream(string, string) (*atlasv2.StreamsTenant, error)
-}
-
-type StreamsCreator interface {
-	CreateStream(string, *atlasv2.StreamsTenant) (*atlasv2.StreamsTenant, error)
-}
-
-type StreamsDeleter interface {
-	DeleteStream(string, string) error
-}
-
-type StreamsUpdater interface {
-	UpdateStream(string, string, *atlasv2.StreamsDataProcessRegion) (*atlasv2.StreamsTenant, error)
-}
-
-type StreamsDownloader interface {
-	DownloadAuditLog(*atlasv2.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error)
-}
-
-type StreamsConnectionLister interface {
-	StreamsConnections(string, string) (*atlasv2.PaginatedApiStreamsConnection, error)
-}
-
-type ConnectionCreator interface {
-	CreateConnection(string, string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
-}
-
-type ConnectionDeleter interface {
-	DeleteConnection(string, string, string) error
-}
-
-type StreamsConnectionDescriber interface {
-	StreamConnection(string, string, string) (*atlasv2.StreamsConnection, error)
-}
-
-type ConnectionUpdater interface {
-	UpdateConnection(string, string, string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
-}
-
-type PrivateLinkCreator interface {
-	CreatePrivateLinkEndpoint(projectID string, connection *atlasv2.StreamsPrivateLinkConnection) (*atlasv2.StreamsPrivateLinkConnection, error)
-}
-
-type PrivateLinkLister interface {
-	ListPrivateLinkEndpoints(projectID string) (*atlasv2.PaginatedApiStreamsPrivateLink, error)
-}
-
-type PrivateLinkDescriber interface {
-	DescribePrivateLinkEndpoint(projectID, connectionID string) (*atlasv2.StreamsPrivateLinkConnection, error)
-}
-
-type PrivateLinkDeleter interface {
-	DeletePrivateLinkEndpoint(projectID, connectionID string) error
-}
-
 func (s *Store) ProjectStreams(opts *atlasv2.ListStreamInstancesApiParams) (*atlasv2.PaginatedApiStreamsTenant, error) {
 	result, _, err := s.clientv2.StreamsApi.ListStreamInstancesWithParams(s.ctx, opts).Execute()
 	return result, err

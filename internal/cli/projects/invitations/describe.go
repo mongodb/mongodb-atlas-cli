@@ -24,17 +24,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const describeTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT
 {{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}
 `
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=invitations . ProjectInvitationDescriber
+
+type ProjectInvitationDescriber interface {
+	ProjectInvitation(string, string) (*atlasv2.GroupInvitation, error)
+}
+
 type DescribeOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
 	id    string
-	store store.ProjectInvitationDescriber
+	store ProjectInvitationDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

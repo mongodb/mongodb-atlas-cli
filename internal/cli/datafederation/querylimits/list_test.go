@@ -23,7 +23,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -32,7 +31,7 @@ import (
 
 func TestListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataFederationQueryLimitLister(ctrl)
+	mockStore := NewMockDataFederationQueryLimitLister(ctrl)
 
 	expected := []admin.DataFederationTenantQueryLimit{
 		{

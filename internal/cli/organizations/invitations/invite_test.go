@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
@@ -30,7 +29,7 @@ import (
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationInviter(ctrl)
+	mockStore := NewMockOrganizationInviter(ctrl)
 
 	expected := &admin.OrganizationInvitation{}
 	opts := &InviteOpts{
@@ -46,14 +45,12 @@ func TestCreate_Run(t *testing.T) {
 		InviteUser(opts.ConfigOrgID(), request).Return(expected, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.Run())
 }
 
 func TestInvite_Run_WithFile(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockOrganizationInviter(ctrl)
+	mockStore := NewMockOrganizationInviter(ctrl)
 	fs := afero.NewMemMapFs()
 
 	testFile := "invitation.json"
@@ -86,7 +83,5 @@ func TestInvite_Run_WithFile(t *testing.T) {
 		InviteUser(opts.ConfigOrgID(), invitation).Return(expectedResult, nil).
 		Times(1)
 
-	if err := opts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
+	require.NoError(t, opts.Run())
 }

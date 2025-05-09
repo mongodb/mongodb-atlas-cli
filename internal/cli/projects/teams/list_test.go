@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -29,7 +28,7 @@ import (
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectTeamLister(ctrl)
+	mockStore := NewMockProjectTeamLister(ctrl)
 
 	expected := atlasv2.PaginatedTeamRole{
 		Results: &[]atlasv2.TeamRole{

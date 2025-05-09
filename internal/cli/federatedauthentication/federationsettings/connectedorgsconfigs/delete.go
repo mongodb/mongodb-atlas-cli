@@ -25,13 +25,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=connectedorgsconfigs . ConnectedOrgConfigsDeleter
+
+type ConnectedOrgConfigsDeleter interface {
+	DeleteConnectedOrgConfig(federationSettingsID string, orgID string) error
+}
+
 type DeleteOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
 	cli.InputOpts
 	*cli.DeleteOpts
 	federationSettingsID string
-	store                store.ConnectedOrgConfigsDeleter
+	store                ConnectedOrgConfigsDeleter
 }
 
 func (opts *DeleteOpts) InitStore(ctx context.Context) func() error {

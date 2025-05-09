@@ -25,15 +25,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 const aws = "AWS"
 
+//go:generate mockgen -typed -destination=update_mock_test.go -package=datalake . Updater
+
+type Updater interface {
+	UpdateDataLake(string, string, *atlas.DataLakeUpdateRequest) (*atlas.DataLake, error)
+}
+
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store      store.DataLakeUpdater
+	store      Updater
 	name       string
 	region     string
 	role       string
@@ -48,19 +54,19 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-func (opts *UpdateOpts) newUpdateRequest() *mongodbatlas.DataLakeUpdateRequest {
-	updateRequest := &mongodbatlas.DataLakeUpdateRequest{}
+func (opts *UpdateOpts) newUpdateRequest() *atlas.DataLakeUpdateRequest {
+	updateRequest := &atlas.DataLakeUpdateRequest{}
 
 	if opts.region != "" {
-		updateRequest.DataProcessRegion = &mongodbatlas.DataProcessRegion{
+		updateRequest.DataProcessRegion = &atlas.DataProcessRegion{
 			CloudProvider: aws,
 			Region:        opts.region,
 		}
 	}
 
 	if opts.role != "" || opts.testBucket != "" {
-		updateRequest.CloudProviderConfig = &mongodbatlas.CloudProviderConfig{
-			AWSConfig: mongodbatlas.AwsCloudProviderConfig{
+		updateRequest.CloudProviderConfig = &atlas.CloudProviderConfig{
+			AWSConfig: atlas.AwsCloudProviderConfig{
 				IAMAssumedRoleARN: opts.role,
 				TestS3Bucket:      opts.testBucket,
 			},

@@ -35,7 +35,7 @@ type VictorOpsOpts struct {
 	cli.OutputOpts
 	apiKey     string
 	routingKey string
-	store      store.IntegrationCreator
+	store      IntegrationCreator
 }
 
 func (opts *VictorOpsOpts) initStore(ctx context.Context) func() error {

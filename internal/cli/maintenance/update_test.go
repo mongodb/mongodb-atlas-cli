@@ -19,13 +19,12 @@ package maintenance
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockMaintenanceWindowUpdater(ctrl)
+	mockStore := NewMockUpdater(ctrl)
 
 	updateOpts := &UpdateOpts{
 		store:     mockStore,

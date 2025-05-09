@@ -27,12 +27,19 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=restores . RestoreJobsLister
+
+type RestoreJobsLister interface {
+	RestoreJobs(string, string, *store.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error)
+	RestoreFlexClusterJobs(args *atlasv2.ListFlexBackupRestoreJobsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupRestoreJob20241113, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	clusterName string
-	store       store.RestoreJobsLister
+	store       RestoreJobsLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

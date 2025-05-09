@@ -20,14 +20,13 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/convert"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestDBUserUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDatabaseUserUpdater(ctrl)
+	mockStore := NewMockDatabaseUserUpdater(ctrl)
 
 	expected := &admin.CloudDatabaseUser{}
 

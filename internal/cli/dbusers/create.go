@@ -32,6 +32,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=dbusers . DatabaseUserCreator
+
+type DatabaseUserCreator interface {
+	CreateDatabaseUser(*atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -46,7 +52,7 @@ type CreateOpts struct {
 	description string
 	roles       []string
 	scopes      []string
-	store       store.DatabaseUserCreator
+	store       DatabaseUserCreator
 }
 
 const (

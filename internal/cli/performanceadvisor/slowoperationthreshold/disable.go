@@ -29,9 +29,15 @@ import (
 const DisableTemplate = `Atlas management of the slow operation disabled
 `
 
+//go:generate mockgen -typed -destination=disable_mock_test.go -package=slowoperationthreshold . PerformanceAdvisorSlowOperationThresholdDisabler
+
+type PerformanceAdvisorSlowOperationThresholdDisabler interface {
+	DisablePerformanceAdvisorSlowOperationThreshold(string) error
+}
+
 type DisableOpts struct {
 	cli.ProjectOpts
-	store store.PerformanceAdvisorSlowOperationThresholdDisabler
+	store PerformanceAdvisorSlowOperationThresholdDisabler
 }
 
 func (opts *DisableOpts) initStore(ctx context.Context) func() error {

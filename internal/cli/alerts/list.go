@@ -29,12 +29,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=alerts . AlertLister
+
+type AlertLister interface {
+	Alerts(*atlasv2.ListAlertsApiParams) (*atlasv2.PaginatedAlert, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	status string
-	store  store.AlertLister
+	store  AlertLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

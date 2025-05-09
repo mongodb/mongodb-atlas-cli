@@ -18,60 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PrivateEndpointLister,PrivateEndpointDescriber,PrivateEndpointCreator,PrivateEndpointDeleter,InterfaceEndpointDescriber,InterfaceEndpointCreator,InterfaceEndpointDeleter,RegionalizedPrivateEndpointSettingUpdater,RegionalizedPrivateEndpointSettingDescriber,DataLakePrivateEndpointLister,DataLakePrivateEndpointCreator,DataLakePrivateEndpointDeleter,DataLakePrivateEndpointDescriber
-
-type PrivateEndpointLister interface {
-	PrivateEndpoints(string, string) ([]atlasv2.EndpointService, error)
-}
-
-type DataLakePrivateEndpointLister interface {
-	DataLakePrivateEndpoints(*atlasv2.ListDataFederationPrivateEndpointsApiParams) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error)
-}
-
-type PrivateEndpointDescriber interface {
-	PrivateEndpoint(string, string, string) (*atlasv2.EndpointService, error)
-}
-
-type DataLakePrivateEndpointDescriber interface {
-	DataLakePrivateEndpoint(string, string) (*atlasv2.PrivateNetworkEndpointIdEntry, error)
-}
-
-type PrivateEndpointCreator interface {
-	CreatePrivateEndpoint(string, *atlasv2.CloudProviderEndpointServiceRequest) (*atlasv2.EndpointService, error)
-}
-
-type DataLakePrivateEndpointCreator interface {
-	DataLakeCreatePrivateEndpoint(string, *atlasv2.PrivateNetworkEndpointIdEntry) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error)
-}
-
-type PrivateEndpointDeleter interface {
-	DeletePrivateEndpoint(string, string, string) error
-}
-
-type DataLakePrivateEndpointDeleter interface {
-	DataLakeDeletePrivateEndpoint(string, string) error
-}
-
-type InterfaceEndpointDescriber interface {
-	InterfaceEndpoint(projectID, cloudProvider, privateEndpointID, endpointServiceID string) (*atlasv2.PrivateLinkEndpoint, error)
-}
-
-type InterfaceEndpointCreator interface {
-	CreateInterfaceEndpoint(string, string, string, *atlasv2.CreateEndpointRequest) (*atlasv2.PrivateLinkEndpoint, error)
-}
-
-type InterfaceEndpointDeleter interface {
-	DeleteInterfaceEndpoint(string, string, string, string) error
-}
-
-type RegionalizedPrivateEndpointSettingUpdater interface {
-	UpdateRegionalizedPrivateEndpointSetting(string, bool) (*atlasv2.ProjectSettingItem, error)
-}
-
-type RegionalizedPrivateEndpointSettingDescriber interface {
-	RegionalizedPrivateEndpointSetting(string) (*atlasv2.ProjectSettingItem, error)
-}
-
 // PrivateEndpoints encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpoints(projectID, provider string) ([]atlasv2.EndpointService, error) {
 	result, _, err := s.clientv2.PrivateEndpointServicesApi.ListPrivateEndpointServices(s.ctx, projectID, provider).Execute()

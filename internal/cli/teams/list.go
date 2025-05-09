@@ -25,18 +25,25 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Name}}{{end}}
 `
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=teams . TeamLister
+
+type TeamLister interface {
+	Teams(string, *store.ListOptions) (*atlasv2.PaginatedTeam, error)
+}
+
 type ListOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
 	cli.ListOpts
 	CompactResponse bool
-	store           store.TeamLister
+	store           TeamLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

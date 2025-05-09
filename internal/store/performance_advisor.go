@@ -18,27 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_performance_advisor.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PerformanceAdvisorNamespacesLister,PerformanceAdvisorSlowQueriesLister,PerformanceAdvisorIndexesLister,PerformanceAdvisorSlowOperationThresholdEnabler,PerformanceAdvisorSlowOperationThresholdDisabler
-type PerformanceAdvisorNamespacesLister interface {
-	PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespacesApiParams) (*atlasv2.Namespaces, error)
-}
-
-type PerformanceAdvisorSlowQueriesLister interface {
-	PerformanceAdvisorSlowQueries(*atlasv2.ListSlowQueriesApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error)
-}
-
-type PerformanceAdvisorIndexesLister interface {
-	PerformanceAdvisorIndexes(*atlasv2.ListSuggestedIndexesApiParams) (*atlasv2.PerformanceAdvisorResponse, error)
-}
-
-type PerformanceAdvisorSlowOperationThresholdEnabler interface {
-	EnablePerformanceAdvisorSlowOperationThreshold(string) error
-}
-
-type PerformanceAdvisorSlowOperationThresholdDisabler interface {
-	DisablePerformanceAdvisorSlowOperationThreshold(string) error
-}
-
 // PerformanceAdvisorNamespaces encapsulates the logic to manage different cloud providers.
 func (s *Store) PerformanceAdvisorNamespaces(opts *atlasv2.ListSlowQueryNamespacesApiParams) (*atlasv2.Namespaces, error) {
 	request := s.clientv2.PerformanceAdvisorApi.

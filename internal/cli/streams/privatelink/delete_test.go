@@ -18,7 +18,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
@@ -26,7 +25,7 @@ import (
 func TestDeleteOpts_Run(t *testing.T) {
 	t.Run("should call the store delete privateLink method with the correct parameters", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		mockStore := mocks.NewMockPrivateLinkDeleter(ctrl)
+		mockStore := NewMockDeleter(ctrl)
 
 		const projectID = "a-project-id"
 		const connectionID = "the-connection-id"
@@ -52,7 +51,7 @@ func TestDeleteOpts_Run(t *testing.T) {
 
 	t.Run("should delete without error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		mockStore := mocks.NewMockPrivateLinkDeleter(ctrl)
+		mockStore := NewMockDeleter(ctrl)
 
 		deleteOpts := &DeleteOpts{
 			DeleteOpts: &cli.DeleteOpts{
@@ -75,7 +74,7 @@ func TestDeleteOpts_Run(t *testing.T) {
 
 	t.Run("should not call delete if confirm is false", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		mockStore := mocks.NewMockPrivateLinkDeleter(ctrl)
+		mockStore := NewMockDeleter(ctrl)
 
 		deleteOpts := &DeleteOpts{
 			DeleteOpts: &cli.DeleteOpts{

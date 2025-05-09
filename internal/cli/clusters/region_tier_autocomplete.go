@@ -26,15 +26,22 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const storeErrMsg = "store error: "
+
+//go:generate mockgen -typed -destination=region_tier_autocomplete_mock_test.go -package=clusters . CloudProviderRegionsLister
+
+type CloudProviderRegionsLister interface {
+	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)
+}
 
 type autoCompleteOpts struct {
 	cli.ProjectOpts
 	providers []string
 	tier      string
-	store     store.CloudProviderRegionsLister
+	store     CloudProviderRegionsLister
 }
 
 func (opts *autoCompleteOpts) autocompleteTier() cli.AutoFunc {

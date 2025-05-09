@@ -21,15 +21,14 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
 
 func Test_logoutOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockFlow := mocks.NewMockRevoker(ctrl)
-	mockConfig := mocks.NewMockConfigDeleter(ctrl)
+	mockFlow := NewMockRevoker(ctrl)
+	mockConfig := NewMockConfigDeleter(ctrl)
 
 	buf := new(bytes.Buffer)
 
@@ -57,8 +56,8 @@ func Test_logoutOpts_Run(t *testing.T) {
 
 func Test_logoutOpts_Run_Keep(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockFlow := mocks.NewMockRevoker(ctrl)
-	mockConfig := mocks.NewMockConfigDeleter(ctrl)
+	mockFlow := NewMockRevoker(ctrl)
+	mockConfig := NewMockConfigDeleter(ctrl)
 
 	buf := new(bytes.Buffer)
 

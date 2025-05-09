@@ -24,12 +24,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=list_mock_test.go -package=accessroles . CloudProviderAccessRoleLister
+
+type CloudProviderAccessRoleLister interface {
+	CloudProviderAccessRoles(string) (*atlasv2.CloudProviderAccessRoles, error)
+}
 
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.CloudProviderAccessRoleLister
+	store CloudProviderAccessRoleLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

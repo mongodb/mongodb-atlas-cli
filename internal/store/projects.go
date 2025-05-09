@@ -18,58 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_projects.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectLister,ProjectCreator,ProjectUpdater,ProjectDeleter,ProjectDescriber,ProjectUsersLister,ProjectUserDeleter,ProjectTeamLister,ProjectTeamAdder,ProjectTeamDeleter,OrgProjectLister,ProjectMDBVersionLister
-
-type ProjectLister interface {
-	Projects(*ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
-}
-
-type OrgProjectLister interface {
-	ProjectLister
-	GetOrgProjects(string, *ListOptions) (*atlasv2.PaginatedAtlasGroup, error)
-}
-
-type ProjectCreator interface {
-	CreateProject(*atlasv2.CreateProjectApiParams) (*atlasv2.Group, error)
-}
-
-type ProjectUpdater interface {
-	UpdateProject(*atlasv2.UpdateProjectApiParams) (*atlasv2.Group, error)
-}
-
-type ProjectDeleter interface {
-	DeleteProject(string) error
-}
-
-type ProjectDescriber interface {
-	Project(string) (*atlasv2.Group, error)
-	ProjectByName(string) (*atlasv2.Group, error)
-}
-
-type ProjectUsersLister interface {
-	ProjectUsers(string, *ListOptions) (*atlasv2.PaginatedGroupUser, error)
-}
-
-type ProjectUserDeleter interface {
-	DeleteUserFromProject(string, string) error
-}
-
-type ProjectTeamLister interface {
-	ProjectTeams(string, *ListOptions) (*atlasv2.PaginatedTeamRole, error)
-}
-
-type ProjectTeamAdder interface {
-	AddTeamsToProject(string, []atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)
-}
-
-type ProjectTeamDeleter interface {
-	DeleteTeamFromProject(string, string) error
-}
-
-type ProjectMDBVersionLister interface {
-	MDBVersions(projectID string, opt *MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error)
-}
-
 // Projects encapsulates the logic to manage different cloud providers.
 func (s *Store) Projects(opts *ListOptions) (*atlasv2.PaginatedAtlasGroup, error) {
 	res := s.clientv2.ProjectsApi.ListProjects(s.ctx)

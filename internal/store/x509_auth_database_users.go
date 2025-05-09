@@ -18,27 +18,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_x509_certificate_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store X509CertificateConfDescriber,X509CertificateConfSaver,X509CertificateConfDisabler
-
-type X509CertificateConfDescriber interface {
-	X509Configuration(string) (*atlasv2.UserSecurity, error)
-}
-
-type X509CertificateConfSaver interface {
-	SaveX509Configuration(string, string) (*atlasv2.UserSecurity, error)
-}
-
-type X509CertificateConfDisabler interface {
-	DisableX509Configuration(string) error
-}
-
-type X509CertificateStore interface {
-	X509CertificateConfDescriber
-	X509CertificateConfSaver
-	X509CertificateConfDisabler
-}
-
-// X509Configuration retrieves the current user managed certificates for a database user.
+// X509Configuration retrieves the current user-managed certificates for a database user.
 func (s *Store) X509Configuration(projectID string) (*atlasv2.UserSecurity, error) {
 	result, _, err := s.clientv2.LDAPConfigurationApi.GetLdapConfiguration(s.ctx, projectID).Execute()
 	return result, err

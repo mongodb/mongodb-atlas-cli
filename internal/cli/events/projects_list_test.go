@@ -19,7 +19,6 @@ package events
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func Test_projectListOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectEventLister(ctrl)
+	mockStore := NewMockProjectEventLister(ctrl)
 
 	expected := &admin.GroupPaginatedEvent{}
 	listOpts := &projectListOpts{
@@ -47,7 +46,7 @@ func Test_projectListOpts_Run(t *testing.T) {
 
 func Test_projectListOpts_Run_WithDate(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectEventLister(ctrl)
+	mockStore := NewMockProjectEventLister(ctrl)
 
 	expected := &admin.GroupPaginatedEvent{}
 	listOpts := &projectListOpts{
@@ -71,7 +70,7 @@ func Test_projectListOpts_Run_WithDate(t *testing.T) {
 
 func Test_projectListOpts_Run_WithInvalidDate(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectEventLister(ctrl)
+	mockStore := NewMockProjectEventLister(ctrl)
 
 	listOpts := &projectListOpts{
 		store: mockStore,

@@ -19,7 +19,6 @@ package customercerts
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockX509CertificateConfSaver(ctrl)
+	mockStore := NewMockX509CertificateConfSaver(ctrl)
 
 	fs := afero.NewMemMapFs()
 	fileName := "/path/to/cert.pem"

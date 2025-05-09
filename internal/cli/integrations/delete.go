@@ -27,10 +27,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=integrations . IntegrationDeleter
+
+type IntegrationDeleter interface {
+	DeleteIntegration(string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	store store.IntegrationDeleter
+	store IntegrationDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

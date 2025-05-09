@@ -19,7 +19,6 @@ package certs
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestListBuilder(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDBUserCertificateLister(ctrl)
+	mockStore := NewMockDBUserCertificateLister(ctrl)
 
 	expected := atlasv2.PaginatedUserCert{
 		Results: &[]atlasv2.UserCert{},
@@ -42,7 +41,7 @@ func TestListBuilder(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DBUserCertificates(listOpts.ProjectID, username, nil).
+		DBUserCertificates(listOpts.ProjectID, username, listOpts.NewAtlasListOptions()).
 		Return(&expected, nil).
 		Times(1)
 

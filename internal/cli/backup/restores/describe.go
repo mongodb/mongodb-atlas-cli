@@ -28,12 +28,19 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=restores . RestoreJobsDescriber
+
+type RestoreJobsDescriber interface {
+	RestoreJob(string, string, string) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
+	RestoreFlexClusterJob(string, string, string) (*atlasv2.FlexBackupRestoreJob20241113, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	id          string
 	clusterName string
-	store       store.RestoreJobsDescriber
+	store       RestoreJobsDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

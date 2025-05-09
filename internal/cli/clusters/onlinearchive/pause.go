@@ -34,7 +34,7 @@ type PauseOpts struct {
 	cli.OutputOpts
 	id          string
 	clusterName string
-	store       store.OnlineArchiveUpdater
+	store       Updater
 }
 
 func (opts *PauseOpts) initStore(ctx context.Context) func() error {

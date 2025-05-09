@@ -35,7 +35,7 @@ type WebhookOpts struct {
 	cli.OutputOpts
 	url    string
 	secret string
-	store  store.IntegrationCreator
+	store  IntegrationCreator
 }
 
 func (opts *WebhookOpts) initStore(ctx context.Context) func() error {

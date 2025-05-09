@@ -19,7 +19,6 @@ package aws
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -32,7 +31,7 @@ func TestCreateTemplate(t *testing.T) {
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCloudProviderAccessRoleCreator(ctrl)
+	mockStore := NewMockCloudProviderAccessRoleCreator(ctrl)
 
 	expected := &atlasv2.CloudProviderAccessRole{}
 

@@ -18,54 +18,47 @@ package users
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
-func TestDescribe_Run_ByID(t *testing.T) {
+func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockUserDescriber(ctrl)
+	mockStore := NewMockUserDescriber(ctrl)
 
 	expected := &atlasv2.CloudAppUser{}
 
-	descOpts := &DescribeOpts{
-		store: mockStore,
-		id:    "id",
-	}
+	t.Run("by ID", func(t *testing.T) {
+		descOpts := &DescribeOpts{
+			store: mockStore,
+			id:    "id",
+		}
+		mockStore.
+			EXPECT().
+			UserByID(descOpts.id).
+			Return(expected, nil).
+			Times(1)
 
-	mockStore.
-		EXPECT().
-		UserByID(descOpts.id).
-		Return(expected, nil).
-		Times(1)
+		if err := descOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+		test.VerifyOutputTemplate(t, describeTemplate, expected)
+	})
+	t.Run("by name", func(t *testing.T) {
+		descOpts := &DescribeOpts{
+			store:    mockStore,
+			username: "test",
+		}
+		mockStore.
+			EXPECT().
+			UserByName(descOpts.username).
+			Return(expected, nil).
+			Times(1)
 
-	if err := descOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-	test.VerifyOutputTemplate(t, describeTemplate, expected)
-}
-
-func TestDescribe_Run_ByName(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockUserDescriber(ctrl)
-
-	expected := &atlasv2.CloudAppUser{}
-
-	descOpts := &DescribeOpts{
-		store:    mockStore,
-		username: "test",
-	}
-
-	mockStore.
-		EXPECT().
-		UserByName(descOpts.username).
-		Return(expected, nil).
-		Times(1)
-
-	if err := descOpts.Run(); err != nil {
-		t.Fatalf("Run() unexpected error: %v", err)
-	}
-	test.VerifyOutputTemplate(t, describeTemplate, expected)
+		if err := descOpts.Run(); err != nil {
+			t.Fatalf("Run() unexpected error: %v", err)
+		}
+		test.VerifyOutputTemplate(t, describeTemplate, expected)
+	})
 }

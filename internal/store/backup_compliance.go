@@ -22,67 +22,6 @@ import (
 
 var errTScheduledPolicyItemNotFound = errors.New("scheduled policy item not found")
 
-//go:generate mockgen -destination=../mocks/mock_backup_compliance.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store CompliancePolicyDescriber,CompliancePolicyUpdater,CompliancePolicyEncryptionAtRestEnabler,CompliancePolicyEncryptionAtRestDisabler,CompliancePolicyEnabler,CompliancePolicyCopyProtectionEnabler,CompliancePolicyCopyProtectionDisabler,CompliancePolicyPointInTimeRestoresEnabler,CompliancePolicyOnDemandPolicyCreator,CompliancePolicyScheduledPolicyCreator,CompliancePolicyScheduledPolicyDeleter,CompliancePolicyScheduledPolicyUpdater
-
-type CompliancePolicyDescriber interface {
-	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
-}
-type CompliancePolicyPointInTimeRestoresEnabler interface {
-	EnablePointInTimeRestore(projectID string, restoreWindowDays int) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-
-type CompliancePolicyEnabler interface {
-	EnableCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName string) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-
-type CompliancePolicyCopyProtectionEnabler interface {
-	EnableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-type CompliancePolicyCopyProtectionDisabler interface {
-	DisableCopyProtection(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-type CompliancePolicyEncryptionAtRestUpdater interface {
-	UpdateEncryptionAtRest(projectID string, enable bool) (*atlasv2.DataProtectionSettings20231001, error)
-}
-type CompliancePolicyUpdater interface {
-	CompliancePolicyDescriber
-	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error)
-}
-
-type CompliancePolicyEncryptionAtRestEnabler interface {
-	EnableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-
-type CompliancePolicyEncryptionAtRestDisabler interface {
-	DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-
-type CompliancePolicyOnDemandPolicyCreator interface {
-	CreateOnDemandPolicy(projectID string, policy *atlasv2.BackupComplianceOnDemandPolicyItem) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-
-type CompliancePolicyScheduledPolicyCreator interface {
-	CreateScheduledPolicy(projectID string, policy *atlasv2.BackupComplianceScheduledPolicyItem) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-
-type CompliancePolicyScheduledPolicyUpdater interface {
-	UpdateScheduledPolicy(projectID string, policy *atlasv2.BackupComplianceScheduledPolicyItem) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-
-type CompliancePolicyScheduledPolicyDeleter interface {
-	DeleteScheduledPolicy(projectID, scheduledPolicyID string) (*atlasv2.DataProtectionSettings20231001, error)
-	CompliancePolicyDescriber
-}
-
 func (s *Store) DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error) {
 	result, _, err := s.clientv2.CloudBackupsApi.GetDataProtectionSettings(s.ctx, projectID).Execute()
 	return result, err

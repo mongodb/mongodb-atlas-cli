@@ -19,14 +19,13 @@ package create
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestWebhookOpsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIntegrationCreator(ctrl)
+	mockStore := NewMockIntegrationCreator(ctrl)
 
 	opts := &WebhookOpts{
 		store: mockStore,

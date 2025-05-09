@@ -18,41 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_teams.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store TeamLister,TeamDescriber,TeamCreator,TeamRenamer,TeamDeleter,TeamAdder,TeamUserRemover,TeamRolesUpdater
-
-type TeamLister interface {
-	Teams(string, *ListOptions) (*atlasv2.PaginatedTeam, error)
-}
-
-type TeamDescriber interface {
-	TeamByID(string, string) (*atlasv2.TeamResponse, error)
-	TeamByName(string, string) (*atlasv2.TeamResponse, error)
-}
-
-type TeamCreator interface {
-	CreateTeam(string, *atlasv2.Team) (*atlasv2.Team, error)
-}
-
-type TeamRenamer interface {
-	RenameTeam(string, string, *atlasv2.TeamUpdate) (*atlasv2.TeamResponse, error)
-}
-
-type TeamDeleter interface {
-	DeleteTeam(string, string) error
-}
-
-type TeamAdder interface {
-	AddUsersToTeam(string, string, []atlasv2.AddUserToTeam) (*atlasv2.PaginatedApiAppUser, error)
-}
-
-type TeamUserRemover interface {
-	RemoveUserFromTeam(string, string, string) error
-}
-
-type TeamRolesUpdater interface {
-	UpdateProjectTeamRoles(string, string, *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)
-}
-
 // TeamByID encapsulates the logic to manage different cloud providers.
 func (s *Store) TeamByID(orgID, teamID string) (*atlasv2.TeamResponse, error) {
 	result, _, err := s.clientv2.TeamsApi.GetTeamById(s.ctx, orgID, teamID).Execute()

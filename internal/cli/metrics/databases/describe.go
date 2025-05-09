@@ -29,6 +29,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=databases . ProcessDatabaseMeasurementsLister
+
+type ProcessDatabaseMeasurementsLister interface {
+	ProcessDatabaseMeasurements(*atlasv2.GetDatabaseMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -38,7 +44,7 @@ type DescribeOpts struct {
 	host  string
 	port  int
 	name  string
-	store store.ProcessDatabaseMeasurementsLister
+	store ProcessDatabaseMeasurementsLister
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

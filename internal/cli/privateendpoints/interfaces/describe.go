@@ -24,14 +24,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=interfaces . InterfaceEndpointDescriberDeprecated
+
+type InterfaceEndpointDescriberDeprecated interface {
+	InterfaceEndpointDeprecated(string, string, string) (*atlas.InterfaceEndpointConnectionDeprecated, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	id                string
 	privateEndpointID string
-	store             store.InterfaceEndpointDescriberDeprecated
+	store             InterfaceEndpointDescriberDeprecated
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

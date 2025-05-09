@@ -24,17 +24,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const listTemplate = `CIDR BLOCK	AWS SECURITY GROUP{{range valueOrEmptySlice .Results}}
 {{.CidrBlock}}	{{if .AwsSecurityGroup}}{{.AwsSecurityGroup}} {{else}}N/A{{end}}{{end}}
 `
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=accesslists . ProjectIPAccessListLister
+
+type ProjectIPAccessListLister interface {
+	ProjectIPAccessLists(string, *store.ListOptions) (*atlasv2.PaginatedNetworkAccess, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.ProjectIPAccessListLister
+	store ProjectIPAccessListLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

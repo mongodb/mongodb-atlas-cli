@@ -24,16 +24,22 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const listTemplate = `TYPE{{range valueOrEmptySlice .Results}}
 {{.Type}}{{end}}
 `
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=integrations . IntegrationLister
+
+type IntegrationLister interface {
+	Integrations(string) (*atlasv2.PaginatedIntegration, error)
+}
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.IntegrationLister
+	store IntegrationLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

@@ -19,7 +19,6 @@ package compliancepolicy
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -35,7 +34,7 @@ const (
 
 func TestEnableOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyEnabler(ctrl)
+	mockStore := NewMockEnabler(ctrl)
 
 	opts := &EnableOpts{
 		store:   mockStore,
@@ -61,7 +60,7 @@ func TestEnableOpts_Watcher(t *testing.T) {
 
 func TestEnableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyEnabler(ctrl)
+	mockStore := NewMockEnabler(ctrl)
 	state := active
 
 	expected := &atlasv2.DataProtectionSettings20231001{

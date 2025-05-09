@@ -19,14 +19,13 @@ package indexes
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	"go.uber.org/mock/gomock"
 )
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIndexCreator(ctrl)
+	mockStore := NewMockIndexCreator(ctrl)
 
 	createOpts := &CreateOpts{
 		name:        "ProjectBar",
@@ -51,7 +50,7 @@ func TestCreate_Run(t *testing.T) {
 
 func TestCreateWithFile_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIndexCreator(ctrl)
+	mockStore := NewMockIndexCreator(ctrl)
 	appFS := afero.NewMemMapFs()
 	fileJSON := `
 {

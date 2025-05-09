@@ -26,10 +26,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=ldap . Deleter
+
+type Deleter interface {
+	DeleteLDAPConfiguration(string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	store store.LDAPConfigurationDeleter
+	store Deleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

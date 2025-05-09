@@ -18,43 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_search.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store SearchIndexLister,SearchIndexCreator,SearchIndexDescriber,SearchIndexUpdater,SearchIndexDeleter,SearchIndexCreatorDescriber
-
-type SearchIndexLister interface {
-	SearchIndexListerDeprecated
-
-	SearchIndexes(string, string, string, string) ([]atlasv2.SearchIndexResponse, error)
-}
-
-type SearchIndexCreatorDescriber interface {
-	SearchIndexDescriber
-	SearchIndexCreator
-}
-
-type SearchIndexCreator interface {
-	SearchIndexCreatorDeprecated
-
-	CreateSearchIndexes(string, string, *atlasv2.SearchIndexCreateRequest) (*atlasv2.SearchIndexResponse, error)
-}
-
-type SearchIndexDescriber interface {
-	SearchIndexDescriberDeprecated
-
-	SearchIndex(string, string, string) (*atlasv2.SearchIndexResponse, error)
-}
-
-type SearchIndexUpdater interface {
-	SearchIndexUpdaterDeprecated
-
-	UpdateSearchIndexes(string, string, string, *atlasv2.SearchIndexUpdateRequest) (*atlasv2.SearchIndexResponse, error)
-}
-
-type SearchIndexDeleter interface {
-	SearchIndexDeleterDeprecated
-
-	DeleteSearchIndex(string, string, string) error
-}
-
 // SearchIndexes encapsulate the logic to manage different cloud providers.
 func (s *Store) SearchIndexes(projectID, clusterName, dbName, collName string) ([]atlasv2.SearchIndexResponse, error) {
 	result, _, err := s.clientv2.AtlasSearchApi.ListAtlasSearchIndexes(s.ctx, projectID, clusterName, collName, dbName).Execute()

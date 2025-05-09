@@ -19,7 +19,6 @@ package create
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestAwsOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAWSPeeringConnectionCreator(ctrl)
+	mockStore := NewMockAWSPeeringConnectionCreator(ctrl)
 
 	opts := &AWSOpts{
 		store:  mockStore,

@@ -14,23 +14,9 @@
 
 package store
 
-//go:generate mockgen -destination=../mocks/mock_custom_dns.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store CustomDNSEnabler,CustomDNSDisabler,CustomDNSDescriber
-
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
-
-type CustomDNSEnabler interface {
-	EnableCustomDNS(string) (*atlasv2.AWSCustomDNSEnabled, error)
-}
-
-type CustomDNSDisabler interface {
-	DisableCustomDNS(string) (*atlasv2.AWSCustomDNSEnabled, error)
-}
-
-type CustomDNSDescriber interface {
-	DescribeCustomDNS(string) (*atlasv2.AWSCustomDNSEnabled, error)
-}
 
 // EnableCustomDNS encapsulates the logic to manage different cloud providers.
 func (s *Store) EnableCustomDNS(projectID string) (*atlasv2.AWSCustomDNSEnabled, error) {

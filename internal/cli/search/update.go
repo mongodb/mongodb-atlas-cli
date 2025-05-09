@@ -28,8 +28,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=update_mock_test.go -package=search . Updater
+
+type Updater interface {
+	UpdateSearchIndexesDeprecated(string, string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
+	UpdateSearchIndexes(string, string, string, *atlasv2.SearchIndexUpdateRequest) (*atlasv2.SearchIndexResponse, error)
+}
 
 type UpdateOpts struct {
 	cli.ProjectOpts
@@ -37,7 +44,7 @@ type UpdateOpts struct {
 	IndexOpts
 	id          string
 	clusterName string
-	store       store.SearchIndexUpdater
+	store       Updater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -57,14 +64,14 @@ func (opts *UpdateOpts) Run() error {
 	}
 
 	switch index := i.(type) {
-	case *admin.SearchIndexUpdateRequest:
+	case *atlasv2.SearchIndexUpdateRequest:
 		r, err := opts.store.UpdateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, opts.id, index)
 		if err != nil {
 			return err
 		}
 
 		return opts.Print(r)
-	case *admin.ClusterSearchIndex:
+	case *atlasv2.ClusterSearchIndex:
 		_, _ = log.Warningln("you're using an old search index definition")
 		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 		r, err := opts.store.UpdateSearchIndexesDeprecated(opts.ConfigProjectID(), opts.clusterName, opts.id, index)

@@ -19,7 +19,6 @@ package ldap
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestVerify_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLDAPConfigurationVerifier(ctrl)
+	mockStore := NewMockConfigurationVerifier(ctrl)
 
 	expected := &atlasv2.LDAPVerifyConnectivityJobRequest{
 		RequestId: pointer.Get("5f9b0b4e1f6f7d4e6f7d4e6f"),

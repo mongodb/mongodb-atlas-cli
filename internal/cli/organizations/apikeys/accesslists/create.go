@@ -30,6 +30,12 @@ import (
 
 const createTemplate = "Created new access list entry(s).\n"
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=accesslists . OrganizationAPIKeyAccessListCreator
+
+type OrganizationAPIKeyAccessListCreator interface {
+	CreateOrganizationAPIKeyAccessList(*admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error)
+}
+
 type CreateOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
@@ -37,7 +43,7 @@ type CreateOpts struct {
 	ips       []string
 	cidrs     []string
 	currentIP bool
-	store     store.OrganizationAPIKeyAccessListCreator
+	store     OrganizationAPIKeyAccessListCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

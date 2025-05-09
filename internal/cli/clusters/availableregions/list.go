@@ -27,12 +27,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=list_autocomplete_mock_test.go -package=availableregions . CloudProviderRegionsLister
+
+type CloudProviderRegionsLister interface {
+	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)
+}
 
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store    store.CloudProviderRegionsLister
+	store    CloudProviderRegionsLister
 	provider string
 	tier     string
 }

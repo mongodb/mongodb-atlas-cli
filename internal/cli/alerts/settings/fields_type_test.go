@@ -19,14 +19,13 @@ package settings
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"go.uber.org/mock/gomock"
 )
 
 func TestFieldsType_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockMatcherFieldsLister(ctrl)
+	mockStore := NewMockMatcherFieldsLister(ctrl)
 
 	var expected []string
 

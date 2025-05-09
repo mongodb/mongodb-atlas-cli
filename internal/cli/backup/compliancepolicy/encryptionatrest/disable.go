@@ -29,11 +29,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=disable_mock_test.go -package=encryptionatrest . CompliancePolicyEncryptionAtRestDisabler
+
+type CompliancePolicyEncryptionAtRestDisabler interface {
+	DisableEncryptionAtRest(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
+	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
+}
+
 type DisableOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	policy *atlasv2.DataProtectionSettings20231001
-	store  store.CompliancePolicyEncryptionAtRestDisabler
+	store  CompliancePolicyEncryptionAtRestDisabler
 }
 
 var disableWatchTemplate = `Encryption at rest has been disabled.

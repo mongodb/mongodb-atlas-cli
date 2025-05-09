@@ -19,14 +19,13 @@ package teams
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockTeamRolesUpdater(ctrl)
+	mockStore := NewMockTeamRolesUpdater(ctrl)
 
 	expected := atlasv2.PaginatedTeamRole{}
 

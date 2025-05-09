@@ -34,7 +34,7 @@ type DisconnectOpts struct {
 	identityProviderID   string
 	protocol             string
 	federationSettingsID string
-	store                store.ConnectedOrgConfigsUpdater
+	store                ConnectedOrgConfigsUpdater
 }
 
 const disconnectTemplate = `Org Configs disconnected.`

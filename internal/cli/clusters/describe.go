@@ -25,13 +25,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=clusters . ClusterDescriber
+
+type ClusterDescriber interface {
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	name  string
-	store store.ClusterDescriber
+	store ClusterDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -29,7 +28,7 @@ import (
 
 func TestDisableOpts_Watcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyCopyProtectionDisabler(ctrl)
+	mockStore := NewMockCompliancePolicyCopyProtectionDisabler(ctrl)
 
 	opts := &DisableOpts{
 		store: mockStore,
@@ -52,7 +51,7 @@ func TestDisableOpts_Watcher(t *testing.T) {
 
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyCopyProtectionDisabler(ctrl)
+	mockStore := NewMockCompliancePolicyCopyProtectionDisabler(ctrl)
 	expected := &atlasv2.DataProtectionSettings20231001{}
 	expected.SetCopyProtectionEnabled(false)
 	expected.SetState(active)
@@ -73,7 +72,7 @@ func TestDisableOpts_Run(t *testing.T) {
 
 func TestDisableOpts_WatchRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCompliancePolicyCopyProtectionDisabler(ctrl)
+	mockStore := NewMockCompliancePolicyCopyProtectionDisabler(ctrl)
 
 	opts := &DisableOpts{
 		store: mockStore,

@@ -18,28 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organization_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationInvitationLister,OrganizationInvitationDeleter,OrganizationInvitationDescriber,OrganizationInvitationUpdater,OrganizationInviter
-
-type OrganizationInvitationLister interface {
-	OrganizationInvitations(*atlasv2.ListOrganizationInvitationsApiParams) ([]atlasv2.OrganizationInvitation, error)
-}
-
-type OrganizationInvitationDescriber interface {
-	OrganizationInvitation(string, string) (*atlasv2.OrganizationInvitation, error)
-}
-
-type OrganizationInviter interface {
-	InviteUser(string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)
-}
-
-type OrganizationInvitationDeleter interface {
-	DeleteInvitation(string, string) error
-}
-
-type OrganizationInvitationUpdater interface {
-	UpdateOrganizationInvitation(string, string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)
-}
-
 // OrganizationInvitations encapsulate the logic to manage different cloud providers.
 func (s *Store) OrganizationInvitations(params *atlasv2.ListOrganizationInvitationsApiParams) ([]atlasv2.OrganizationInvitation, error) {
 	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationInvitationsWithParams(s.ctx, params).Execute()

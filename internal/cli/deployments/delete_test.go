@@ -22,13 +22,12 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestDelete_Run_Atlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockAtlasStore := mocks.NewMockClusterDeleter(ctrl)
+	mockAtlasStore := NewMockClusterDeleter(ctrl)
 	ctx := t.Context()
 
 	deploymentsTest := fixture.NewMockAtlasDeploymentOpts(ctrl, "atlasDeployment")

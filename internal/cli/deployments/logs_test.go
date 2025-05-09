@@ -25,7 +25,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	"go.uber.org/mock/gomock"
 )
@@ -34,8 +33,8 @@ func TestLogs_RunLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := t.Context()
 	buf := new(bytes.Buffer)
-	expectedLocalDeployment := "localDeployment"
-	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, expectedLocalDeployment)
+	want := "localDeployment"
+	deploymentTest := fixture.NewMockLocalDeploymentOpts(ctrl, want)
 
 	downloadOpts := &DownloadOpts{
 		DeploymentOpts: *deploymentTest.Opts,
@@ -48,7 +47,7 @@ func TestLogs_RunLocal(t *testing.T) {
 
 	deploymentTest.MockContainerEngine.
 		EXPECT().
-		ContainerLogs(ctx, expectedLocalDeployment).
+		ContainerLogs(ctx, want).
 		Return([]string{"log1", "log2"}, nil).
 		Times(1)
 
@@ -67,7 +66,7 @@ func TestLogs_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := t.Context()
 	atlasDeployment := "localDeployment1"
-	mockStore := mocks.NewMockLogsDownloader(ctrl)
+	mockStore := NewMockLogsDownloader(ctrl)
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, atlasDeployment)
 
 	downloadOpts := &DownloadOpts{

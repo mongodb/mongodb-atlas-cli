@@ -34,6 +34,11 @@ const (
 	deleteMessageFailed = "Index not deleted"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=indexes . Deleter
+
+type Deleter interface {
+	DeleteSearchIndex(string, string, string) error
+}
 type DeleteOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
@@ -41,7 +46,7 @@ type DeleteOpts struct {
 	options.DeploymentOpts
 	search.IndexOpts
 	mongodbClient mongodbclient.MongoDBClient
-	store         store.SearchIndexDeleter
+	store         Deleter
 }
 
 func (opts *DeleteOpts) Run(ctx context.Context) error {
@@ -67,7 +72,7 @@ func (opts *DeleteOpts) Run(ctx context.Context) error {
 }
 
 func (opts *DeleteOpts) RunAtlas() error {
-	return opts.Delete(opts.store.DeleteSearchIndexDeprecated, opts.ConfigProjectID(), opts.DeploymentName)
+	return opts.Delete(opts.store.DeleteSearchIndex, opts.ConfigProjectID(), opts.DeploymentName)
 }
 
 func (opts *DeleteOpts) RunLocal(ctx context.Context) error {

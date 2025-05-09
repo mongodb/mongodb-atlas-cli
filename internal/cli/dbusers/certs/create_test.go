@@ -19,7 +19,6 @@ package certs
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestCreateBuilder(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDBUserCertificateCreator(ctrl)
+	mockStore := NewMockDBUserCertificateCreator(ctrl)
 
 	username := "to_create"
 	monthsUntilExpiry := 12

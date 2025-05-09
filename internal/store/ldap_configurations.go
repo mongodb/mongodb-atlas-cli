@@ -18,28 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_ldap_configurations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LDAPConfigurationVerifier,LDAPConfigurationDescriber,LDAPConfigurationSaver,LDAPConfigurationDeleter,LDAPConfigurationGetter
-
-type LDAPConfigurationVerifier interface {
-	VerifyLDAPConfiguration(string, *atlasv2.LDAPVerifyConnectivityJobRequestParams) (*atlasv2.LDAPVerifyConnectivityJobRequest, error)
-}
-
-type LDAPConfigurationDescriber interface {
-	GetStatusLDAPConfiguration(string, string) (*atlasv2.LDAPVerifyConnectivityJobRequest, error)
-}
-
-type LDAPConfigurationDeleter interface {
-	DeleteLDAPConfiguration(string) error
-}
-
-type LDAPConfigurationSaver interface {
-	SaveLDAPConfiguration(string, *atlasv2.UserSecurity) (*atlasv2.UserSecurity, error)
-}
-
-type LDAPConfigurationGetter interface {
-	GetLDAPConfiguration(string) (*atlasv2.UserSecurity, error)
-}
-
 // VerifyLDAPConfiguration encapsulates the logic to manage different cloud providers.
 func (s *Store) VerifyLDAPConfiguration(projectID string, ldap *atlasv2.LDAPVerifyConnectivityJobRequestParams) (*atlasv2.LDAPVerifyConnectivityJobRequest, error) {
 	resp, _, err := s.clientv2.LDAPConfigurationApi.VerifyLdapConfiguration(s.ctx, projectID, ldap).

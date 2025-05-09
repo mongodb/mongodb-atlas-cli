@@ -37,7 +37,7 @@ type NewRelicOpts struct {
 	accountID  string
 	writeToken string
 	readToken  string
-	store      store.IntegrationCreator
+	store      IntegrationCreator
 }
 
 func (opts *NewRelicOpts) initStore(ctx context.Context) func() error {

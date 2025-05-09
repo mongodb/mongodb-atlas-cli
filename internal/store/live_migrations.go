@@ -22,16 +22,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migrations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LiveMigrationCreator,LiveMigrationDescriber
-
-type LiveMigrationCreator interface {
-	LiveMigrationCreate(string, *atlasv2.LiveMigrationRequest20240530) (*atlasv2.LiveMigrationResponse, error)
-}
-
-type LiveMigrationDescriber interface {
-	LiveMigrationDescribe(string, string) (*atlasv2.LiveMigrationResponse, error)
-}
-
 // LiveMigrationCreate encapsulates the logic to manage different cloud providers.
 func (s *Store) LiveMigrationCreate(groupID string, liveMigrationRequest *atlasv2.LiveMigrationRequest20240530) (*atlasv2.LiveMigrationResponse, error) {
 	if s.service == config.CloudGovService {

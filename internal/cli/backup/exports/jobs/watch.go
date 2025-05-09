@@ -32,7 +32,7 @@ type WatchOpts struct {
 	cli.WatchOpts
 	id          string
 	clusterName string
-	store       store.ExportJobsDescriber
+	store       ExportJobsDescriber
 }
 
 var watchTemplate = "\nExport completed.\n"

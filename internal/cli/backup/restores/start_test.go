@@ -19,7 +19,6 @@ package restores
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestStart_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockRestoreJobsCreator(ctrl)
+	mockStore := NewMockRestoreJobsCreator(ctrl)
 	expected := &atlasv2.DiskBackupSnapshotRestoreJob{}
 
 	t.Run(automatedRestore, func(t *testing.T) {

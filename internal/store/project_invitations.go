@@ -18,28 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_project_invitations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProjectInvitationLister,ProjectInvitationDescriber,ProjectInvitationDeleter,ProjectInviter,ProjectInvitationUpdater
-
-type ProjectInvitationLister interface {
-	ProjectInvitations(*atlasv2.ListProjectInvitationsApiParams) ([]atlasv2.GroupInvitation, error)
-}
-
-type ProjectInvitationDescriber interface {
-	ProjectInvitation(string, string) (*atlasv2.GroupInvitation, error)
-}
-
-type ProjectInviter interface {
-	InviteUserToProject(string, *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error)
-}
-
-type ProjectInvitationDeleter interface {
-	DeleteProjectInvitation(string, string) error
-}
-
-type ProjectInvitationUpdater interface {
-	UpdateProjectInvitation(string, string, *atlasv2.GroupInvitationRequest) (*atlasv2.GroupInvitation, error)
-}
-
 // ProjectInvitations encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectInvitations(params *atlasv2.ListProjectInvitationsApiParams) ([]atlasv2.GroupInvitation, error) {
 	result, _, err := s.clientv2.ProjectsApi.ListProjectInvitationsWithParams(s.ctx, params).Execute()

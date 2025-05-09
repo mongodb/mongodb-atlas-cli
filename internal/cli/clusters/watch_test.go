@@ -19,7 +19,6 @@ package clusters
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -29,7 +28,7 @@ import (
 
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDescriber(ctrl)
+	mockStore := NewMockClusterDescriber(ctrl)
 
 	expected := &atlasClustersPinned.AdvancedClusterDescription{StateName: pointer.Get("IDLE")}
 
@@ -50,7 +49,7 @@ func TestWatch_Run(t *testing.T) {
 
 func TestWatch_Run_FlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDescriber(ctrl)
+	mockStore := NewMockClusterDescriber(ctrl)
 
 	expected := &atlasv2.FlexClusterDescription20241113{StateName: pointer.Get("IDLE")}
 

@@ -24,13 +24,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+//go:generate mockgen -typed -destination=create_mock_test.go -package=privateendpoints . PrivateEndpointCreatorDeprecated
+
+type PrivateEndpointCreatorDeprecated interface {
+	CreatePrivateEndpointDeprecated(string, *atlas.PrivateEndpointConnectionDeprecated) (*atlas.PrivateEndpointConnectionDeprecated, error)
+}
 
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store    store.PrivateEndpointCreatorDeprecated
+	store    PrivateEndpointCreatorDeprecated
 	region   string
 	provider string
 }
@@ -56,8 +62,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newPrivateEndpointConnection() *mongodbatlas.PrivateEndpointConnectionDeprecated {
-	createRequest := &mongodbatlas.PrivateEndpointConnectionDeprecated{
+func (opts *CreateOpts) newPrivateEndpointConnection() *atlas.PrivateEndpointConnectionDeprecated {
+	createRequest := &atlas.PrivateEndpointConnectionDeprecated{
 		Region:       opts.region,
 		ProviderName: opts.provider,
 	}

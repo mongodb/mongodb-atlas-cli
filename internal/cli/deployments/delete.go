@@ -36,13 +36,19 @@ const (
 	deleteFailMessage    = "Deployment not deleted"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=deployments . ClusterDeleter
+
+type ClusterDeleter interface {
+	DeleteCluster(string, string) error
+}
+
 type DeleteOpts struct {
 	cli.OutputOpts
 	cli.ProjectOpts
 	*cli.DeleteOpts
 	cli.WatchOpts
 	options.DeploymentOpts
-	atlasStore store.ClusterDeleter
+	atlasStore ClusterDeleter
 }
 
 func (opts *DeleteOpts) initAtlasStore(ctx context.Context) func() error {

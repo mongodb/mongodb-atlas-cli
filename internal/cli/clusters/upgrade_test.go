@@ -19,7 +19,6 @@ package clusters
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -31,7 +30,7 @@ const atlasM10 = "M10"
 
 func TestUpgrade_RunSharedCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasSharedClusterGetterUpgrader(ctrl)
+	mockStore := NewMockAtlasSharedClusterGetterUpgrader(ctrl)
 
 	expected := &mongodbatlas.Cluster{}
 
@@ -159,7 +158,7 @@ func TestUpgrade_RunSharedCluster(t *testing.T) {
 
 func TestUpgrade_RunFlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAtlasSharedClusterGetterUpgrader(ctrl)
+	mockStore := NewMockAtlasSharedClusterGetterUpgrader(ctrl)
 	expected := &atlasv2.FlexClusterDescription20241113{
 		Name: pointer.Get("Test"),
 	}

@@ -19,14 +19,13 @@ package datalake
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.uber.org/mock/gomock"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataLakeLister(ctrl)
+	mockStore := NewMockLister(ctrl)
 
 	var expected []mongodbatlas.DataLake
 	listOpts := &ListOpts{

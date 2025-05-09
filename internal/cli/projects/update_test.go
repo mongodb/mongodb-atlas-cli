@@ -19,7 +19,6 @@ package projects
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestUpdate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectUpdater(ctrl)
+	mockStore := NewMockProjectUpdater(ctrl)
 
 	const projectJSON = `{ "name": "testProject", "tags": [ { "key": "env", "value": "dev" }, { "key": "app", "value": "cli" } ] }`
 	const filename = "myProject.json"

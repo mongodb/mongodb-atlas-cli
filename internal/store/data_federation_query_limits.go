@@ -17,41 +17,23 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_federation_query_limits.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DataFederationQueryLimitLister,DataFederationQueryLimitDescriber,DataFederationQueryLimitCreator,DataFederationQueryLimitDeleter
-
-type DataFederationQueryLimitLister interface {
-	DataFederationQueryLimits(string, string) ([]admin.DataFederationTenantQueryLimit, error)
-}
-
-type DataFederationQueryLimitCreator interface {
-	CreateDataFederationQueryLimit(string, string, string, *admin.DataFederationTenantQueryLimit) (*admin.DataFederationTenantQueryLimit, error)
-}
-
-type DataFederationQueryLimitDeleter interface {
-	DeleteDataFederationQueryLimit(string, string, string) error
-}
-
-type DataFederationQueryLimitDescriber interface {
-	DataFederationQueryLimit(string, string, string) (*admin.DataFederationTenantQueryLimit, error)
-}
-
 // DataFederationQueryLimits encapsulates the logic to manage different cloud providers.
-func (s *Store) DataFederationQueryLimits(projectID, tenantName string) ([]admin.DataFederationTenantQueryLimit, error) {
+func (s *Store) DataFederationQueryLimits(projectID, tenantName string) ([]atlasv2.DataFederationTenantQueryLimit, error) {
 	result, _, err := s.clientv2.DataFederationApi.ReturnFederatedDatabaseQueryLimits(s.ctx, projectID, tenantName).Execute()
 	return result, err
 }
 
 // DataFederationQueryLimit encapsulates the logic to manage different cloud providers.
-func (s *Store) DataFederationQueryLimit(projectID, tenantName, limitName string) (*admin.DataFederationTenantQueryLimit, error) {
+func (s *Store) DataFederationQueryLimit(projectID, tenantName, limitName string) (*atlasv2.DataFederationTenantQueryLimit, error) {
 	result, _, err := s.clientv2.DataFederationApi.ReturnFederatedDatabaseQueryLimit(s.ctx, projectID, tenantName, limitName).Execute()
 	return result, err
 }
 
 // CreateDataFederationQueryLimit encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateDataFederationQueryLimit(projectID, tenantName, limitName string, opts *admin.DataFederationTenantQueryLimit) (*admin.DataFederationTenantQueryLimit, error) {
+func (s *Store) CreateDataFederationQueryLimit(projectID, tenantName, limitName string, opts *atlasv2.DataFederationTenantQueryLimit) (*atlasv2.DataFederationTenantQueryLimit, error) {
 	result, _, err := s.clientv2.DataFederationApi.CreateOneDataFederationQueryLimit(s.ctx, projectID, tenantName, limitName, opts).Execute()
 	return result, err
 }

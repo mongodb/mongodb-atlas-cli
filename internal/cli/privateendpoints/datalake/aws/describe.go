@@ -24,17 +24,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var describeTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT
 {{.EndpointId}}	{{.Provider}}	{{.Type}}	{{.Comment}}
 `
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=aws . DataLakePrivateEndpointDescriber
+
+type DataLakePrivateEndpointDescriber interface {
+	DataLakePrivateEndpoint(string, string) (*atlasv2.PrivateNetworkEndpointIdEntry, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	privateEndpointID string
-	store             store.DataLakePrivateEndpointDescriber
+	store             DataLakePrivateEndpointDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

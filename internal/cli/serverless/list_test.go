@@ -19,19 +19,18 @@ package serverless
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessInstanceLister(ctrl)
+	mockStore := NewMockLister(ctrl)
 
-	expected := &atlasClustersPinned.PaginatedServerlessInstanceDescription{
-		Results: &[]atlasClustersPinned.ServerlessInstanceDescription{
+	expected := &atlasv2.PaginatedServerlessInstanceDescription{
+		Results: &[]atlasv2.ServerlessInstanceDescription{
 			{
 				Id: pointer.Get("1"),
 			},

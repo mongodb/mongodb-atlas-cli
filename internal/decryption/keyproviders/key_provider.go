@@ -29,11 +29,6 @@ const (
 	Azure KeyStoreProvider = "azure"
 )
 
-type KeyProvider interface {
-	ValidateCredentials() error
-	DecryptKey(encryptedLEK []byte) ([]byte, error)
-}
-
 type KeyStoreIdentifier struct {
 	Provider KeyStoreProvider
 }

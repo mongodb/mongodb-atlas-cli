@@ -26,13 +26,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=connectedorgsconfigs . ConnectedOrgConfigsLister
+
+type ConnectedOrgConfigsLister interface {
+	ListConnectedOrgConfigs(opts *atlasv2.ListConnectedOrgConfigsApiParams) (*atlasv2.PaginatedConnectedOrgConfigs, error)
+}
+
 type ListOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
 	cli.InputOpts
 	cli.ListOpts
-	store store.ConnectedOrgConfigsLister
-
+	store                ConnectedOrgConfigsLister
 	federationSettingsID string
 }
 

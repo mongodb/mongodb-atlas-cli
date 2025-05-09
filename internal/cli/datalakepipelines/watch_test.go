@@ -21,7 +21,6 @@ package datalakepipelines
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -29,7 +28,7 @@ import (
 
 func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPipelinesDescriber(ctrl)
+	mockStore := NewMockPipelinesDescriber(ctrl)
 
 	opts := &WatchOpts{
 		id:    "test",

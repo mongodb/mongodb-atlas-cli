@@ -23,7 +23,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -73,7 +72,7 @@ func TestPause_RunLocal(t *testing.T) {
 
 func TestPause_RunAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterPauser(ctrl)
+	mockStore := NewMockClusterPauser(ctrl)
 	ctx := t.Context()
 
 	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, deploymentName)

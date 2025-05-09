@@ -19,7 +19,6 @@ package events
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockEventLister(ctrl)
+	mockStore := NewMockEventLister(ctrl)
 
 	t.Run("for a org", func(t *testing.T) {
 		expected := &admin.OrgPaginatedEvent{}

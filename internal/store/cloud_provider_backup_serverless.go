@@ -21,28 +21,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_cloud_provider_backup_serverless.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ServerlessSnapshotsLister,ServerlessSnapshotsDescriber,ServerlessRestoreJobsLister,ServerlessRestoreJobsDescriber,ServerlessRestoreJobsCreator
-
-type ServerlessSnapshotsLister interface {
-	ServerlessSnapshots(string, string, *ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupSnapshot, error)
-}
-
-type ServerlessSnapshotsDescriber interface {
-	ServerlessSnapshot(string, string, string) (*atlasv2.ServerlessBackupSnapshot, error)
-}
-
-type ServerlessRestoreJobsLister interface {
-	ServerlessRestoreJobs(string, string, *ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob, error)
-}
-
-type ServerlessRestoreJobsDescriber interface {
-	ServerlessRestoreJob(string, string, string) (*atlasv2.ServerlessBackupRestoreJob, error)
-}
-
-type ServerlessRestoreJobsCreator interface {
-	ServerlessCreateRestoreJobs(string, string, *atlasv2.ServerlessBackupRestoreJob) (*atlasv2.ServerlessBackupRestoreJob, error)
-}
-
 // ServerlessSnapshots encapsulates the logic to manage different cloud providers.
 func (s *Store) ServerlessSnapshots(projectID, clusterName string, opts *ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupSnapshot, error) {
 	if s.service == config.CloudGovService {

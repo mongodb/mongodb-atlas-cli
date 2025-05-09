@@ -25,13 +25,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
+
+//go:generate mockgen -typed -destination=start_mock_test.go -package=clusters . ClusterStarter
+
+type ClusterStarter interface {
+	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+}
 
 type StartOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	name  string
-	store store.ClusterStarter
+	store ClusterStarter
 }
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {

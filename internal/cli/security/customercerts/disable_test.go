@@ -19,13 +19,12 @@ package customercerts
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestDisableOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockX509CertificateConfDisabler(ctrl)
+	mockStore := NewMockX509CertificateConfDisabler(ctrl)
 
 	saveOpts := &DisableOpts{
 		store:   mockStore,

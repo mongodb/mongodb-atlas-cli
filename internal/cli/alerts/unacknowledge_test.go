@@ -19,14 +19,13 @@ package alerts
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestUnacknowledge_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockAlertAcknowledger(ctrl)
+	mockStore := NewMockAlertAcknowledger(ctrl)
 
 	expected := &atlasv2.AlertViewForNdsGroup{}
 

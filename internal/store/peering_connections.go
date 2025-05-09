@@ -16,51 +16,7 @@ package store
 
 import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
-
-//go:generate mockgen -destination=../mocks/mock_peering_connections.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PeeringConnectionLister,PeeringConnectionDescriber,PeeringConnectionDeleter,AzurePeeringConnectionCreator,AWSPeeringConnectionCreator,GCPPeeringConnectionCreator,PeeringConnectionCreator,ContainersLister,ContainersDeleter
-
-type PeeringConnectionLister interface {
-	PeeringConnections(string, *ContainersListOptions) ([]atlasv2.BaseNetworkPeeringConnectionSettings, error)
-}
-
-type PeeringConnectionDescriber interface {
-	PeeringConnection(string, string) (*atlasv2.BaseNetworkPeeringConnectionSettings, error)
-}
-
-type PeeringConnectionCreator interface {
-	CreateContainer(string, *atlasv2.CloudProviderContainer) (*atlasv2.CloudProviderContainer, error)
-	CreatePeeringConnection(string, *atlasv2.BaseNetworkPeeringConnectionSettings) (*atlasv2.BaseNetworkPeeringConnectionSettings, error)
-}
-
-type AzurePeeringConnectionCreator interface {
-	AzureContainers(string) ([]atlasv2.CloudProviderContainer, error)
-	PeeringConnectionCreator
-}
-
-type AWSPeeringConnectionCreator interface {
-	AWSContainers(string) ([]atlasv2.CloudProviderContainer, error)
-	PeeringConnectionCreator
-}
-
-type GCPPeeringConnectionCreator interface {
-	GCPContainers(string) ([]atlasv2.CloudProviderContainer, error)
-	PeeringConnectionCreator
-}
-
-type PeeringConnectionDeleter interface {
-	DeletePeeringConnection(string, string) error
-}
-
-type ContainersLister interface {
-	ContainersByProvider(string, *atlas.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error)
-	AllContainers(string, *ListOptions) ([]atlasv2.CloudProviderContainer, error)
-}
-
-type ContainersDeleter interface {
-	DeleteContainer(string, string) error
-}
 
 type ListOptions struct {
 	PageNum      int
@@ -104,7 +60,7 @@ func (s *Store) CreatePeeringConnection(projectID string, peer *atlasv2.BaseNetw
 }
 
 // ContainersByProvider encapsulates the logic to manage different cloud providers.
-func (s *Store) ContainersByProvider(projectID string, opts *atlas.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error) {
+func (s *Store) ContainersByProvider(projectID string, opts *ContainersListOptions) ([]atlasv2.CloudProviderContainer, error) {
 	res := s.clientv2.NetworkPeeringApi.ListPeeringContainerByCloudProvider(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount).ProviderName(opts.ProviderName)

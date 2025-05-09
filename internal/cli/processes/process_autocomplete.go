@@ -31,7 +31,7 @@ import (
 
 type AutoCompleteOpts struct {
 	cli.ProjectOpts
-	store store.ProcessLister
+	store ProcessLister
 }
 
 func (opts *AutoCompleteOpts) AutocompleteProcesses() cli.AutoFunc {

@@ -22,13 +22,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataFederationQueryLimitDeleter(ctrl)
+	mockStore := NewMockDataFederationQueryLimitDeleter(ctrl)
 
 	deleteOpts := &DeleteOpts{
 		store:      mockStore,

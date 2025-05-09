@@ -19,14 +19,13 @@ package apikeys
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"go.uber.org/mock/gomock"
 )
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectAPIKeyAssigner(ctrl)
+	mockStore := NewMockProjectAPIKeyAssigner(ctrl)
 
 	opts := &AssignOpts{
 		store: mockStore,

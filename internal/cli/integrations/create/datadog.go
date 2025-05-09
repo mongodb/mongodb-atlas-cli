@@ -35,7 +35,7 @@ type DatadogOpts struct {
 	cli.OutputOpts
 	apiKey string
 	region string
-	store  store.IntegrationCreator
+	store  IntegrationCreator
 }
 
 func (opts *DatadogOpts) initStore(ctx context.Context) func() error {

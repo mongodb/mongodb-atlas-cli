@@ -18,24 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_organizations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationLister,OrganizationDeleter,OrganizationDescriber,OrganizationCreator
-
-type OrganizationLister interface {
-	Organizations(*atlasv2.ListOrganizationsApiParams) (*atlasv2.PaginatedOrganization, error)
-}
-
-type OrganizationDescriber interface {
-	Organization(string) (*atlasv2.AtlasOrganization, error)
-}
-
-type OrganizationCreator interface {
-	CreateAtlasOrganization(*atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error)
-}
-
-type OrganizationDeleter interface {
-	DeleteOrganization(string) error
-}
-
 // Organizations encapsulate the logic to manage different cloud providers.
 func (s *Store) Organizations(params *atlasv2.ListOrganizationsApiParams) (*atlasv2.PaginatedOrganization, error) {
 	result, _, err := s.clientv2.OrganizationsApi.ListOrganizationsWithParams(s.ctx, params).Execute()

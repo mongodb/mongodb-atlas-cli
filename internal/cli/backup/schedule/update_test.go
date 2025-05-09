@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -32,7 +31,7 @@ import (
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockScheduleDescriberUpdater(ctrl)
+	mockStore := NewMockDescribeUpdater(ctrl)
 
 	opts := &UpdateOpts{
 		store:                               mockStore,
@@ -68,7 +67,7 @@ func TestUpdateOpts_Run(t *testing.T) {
 
 func TestUpdateOpts_RunWithFile(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockScheduleDescriberUpdater(ctrl)
+	mockStore := NewMockDescribeUpdater(ctrl)
 	fs := afero.NewMemMapFs()
 
 	fileContents := `

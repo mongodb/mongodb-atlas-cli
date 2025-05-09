@@ -30,16 +30,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var listTemplate = `ID	DESCRIPTION	STATUS{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Description}}	{{.Status}}{{end}}`
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=availablesnapshots . PipelineAvailableSnapshotsLister
+
+type PipelineAvailableSnapshotsLister interface {
+	PipelineAvailableSnapshots(string, string, *time.Time, *store.ListOptions) (*atlasv2.PaginatedBackupSnapshot, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.PipelineAvailableSnapshotsLister
+	store PipelineAvailableSnapshotsLister
 
 	pipelineName   string
 	completedAfter string

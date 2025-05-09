@@ -34,10 +34,16 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -destination=../../mocks/mock_login.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/auth LoginConfig
+//go:generate mockgen -typed -destination=login_mock_test.go -package=auth . LoginConfig
+
+type SetSaver interface {
+	Set(string, any)
+	Save() error
+	SetGlobal(string, any)
+}
 
 type LoginConfig interface {
-	config.SetSaver
+	SetSaver
 	AccessTokenSubject() (string, error)
 	OrgID() string
 	ProjectID() string

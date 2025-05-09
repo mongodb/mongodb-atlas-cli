@@ -18,32 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_identity_providers_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store IdentityProviderLister,IdentityProviderDescriber,IdentityProviderCreator,IdentityProviderDeleter,IdentityProviderUpdater,IdentityProviderJwkRevoker
-
-type IdentityProviderLister interface {
-	IdentityProviders(opts *atlasv2.ListIdentityProvidersApiParams) (*atlasv2.PaginatedFederationIdentityProvider, error)
-}
-
-type IdentityProviderDescriber interface {
-	IdentityProvider(opts *atlasv2.GetIdentityProviderApiParams) (*atlasv2.FederationIdentityProvider, error)
-}
-
-type IdentityProviderCreator interface {
-	CreateIdentityProvider(*atlasv2.CreateIdentityProviderApiParams) (*atlasv2.FederationOidcIdentityProvider, error)
-}
-
-type IdentityProviderDeleter interface {
-	DeleteIdentityProvider(string, string) error
-}
-
-type IdentityProviderJwkRevoker interface {
-	RevokeJwksFromIdentityProvider(string, string) error
-}
-
-type IdentityProviderUpdater interface {
-	UpdateIdentityProvider(opts *atlasv2.UpdateIdentityProviderApiParams) (*atlasv2.FederationIdentityProvider, error)
-}
-
 // IdentityProviders encapsulate the logic to manage different cloud providers.
 func (s *Store) IdentityProviders(opts *atlasv2.ListIdentityProvidersApiParams) (*atlasv2.PaginatedFederationIdentityProvider, error) {
 	result, _, err := s.clientv2.FederatedAuthenticationApi.ListIdentityProvidersWithParams(s.ctx, opts).Execute()

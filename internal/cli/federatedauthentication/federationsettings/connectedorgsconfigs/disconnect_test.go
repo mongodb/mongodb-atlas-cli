@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -29,8 +28,8 @@ import (
 
 func TestDisconnect_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockConnectedOrgConfigsUpdater(ctrl)
-	describeStore := mocks.NewMockConnectedOrgConfigsDescriber(ctrl)
+	mockStore := NewMockConnectedOrgConfigsUpdater(ctrl)
+	describeStore := NewMockConnectedOrgConfigsDescriber(ctrl)
 	buf := new(bytes.Buffer)
 
 	DisconnectOpts := &DisconnectOpts{
@@ -78,10 +77,10 @@ func TestDisconnect_Run(t *testing.T) {
 
 func TestDisconnectEmpty_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockConnectedOrgConfigsUpdater(ctrl)
-	describeStore := mocks.NewMockConnectedOrgConfigsDescriber(ctrl)
+	mockStore := NewMockConnectedOrgConfigsUpdater(ctrl)
+	describeStore := NewMockConnectedOrgConfigsDescriber(ctrl)
 
-	DisconnectOpts := &DisconnectOpts{
+	opts := &DisconnectOpts{
 		store:                mockStore,
 		federationSettingsID: "federationSettingsID",
 		identityProviderID:   "id",
@@ -102,7 +101,7 @@ func TestDisconnectEmpty_Run(t *testing.T) {
 		Return(&atlasv2.ConnectedOrgConfig{}, nil).
 		Times(1)
 
-	if err := DisconnectOpts.Run(); err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 }

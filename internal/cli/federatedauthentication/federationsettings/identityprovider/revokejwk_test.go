@@ -20,13 +20,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestRevoke_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockIdentityProviderJwkRevoker(ctrl)
+	mockStore := NewMockJwkRevoker(ctrl)
 
 	revokeOpts := &RevokeOpts{
 		store:                mockStore,

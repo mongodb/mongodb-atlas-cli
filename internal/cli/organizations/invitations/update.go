@@ -32,11 +32,17 @@ import (
 
 const updateTemplate = "Invitation {{.Id}} updated.\n"
 
+//go:generate mockgen -typed -destination=update_mock_test.go -package=invitations . OrganizationInvitationUpdater
+
+type OrganizationInvitationUpdater interface {
+	UpdateOrganizationInvitation(string, string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)
+}
+
 type UpdateOpts struct {
 	cli.OrgOpts
 	cli.ProjectOpts
 	cli.OutputOpts
-	store        store.OrganizationInvitationUpdater
+	store        OrganizationInvitationUpdater
 	invitationID string
 	username     string
 	roles        []string

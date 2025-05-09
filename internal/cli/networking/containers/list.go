@@ -26,15 +26,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+//go:generate mockgen -typed -destination=list_mock_test.go -package=containers . Lister
+
+type Lister interface {
+	ContainersByProvider(string, *store.ContainersListOptions) ([]atlasv2.CloudProviderContainer, error)
+	AllContainers(string, *store.ListOptions) ([]atlasv2.CloudProviderContainer, error)
+}
 
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	provider string
-	store    store.ContainersLister
+	store    Lister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -65,11 +71,11 @@ func (opts *ListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *ListOpts) newContainerListOptions() *atlas.ContainersListOptions {
+func (opts *ListOpts) newContainerListOptions() *store.ContainersListOptions {
 	lst := opts.NewAtlasListOptions()
-	return &atlas.ContainersListOptions{
+	return &store.ContainersListOptions{
 		ProviderName: opts.provider,
-		ListOptions: atlas.ListOptions{
+		ListOptions: store.ListOptions{
 			PageNum:      lst.PageNum,
 			ItemsPerPage: lst.ItemsPerPage,
 			IncludeCount: lst.IncludeCount,

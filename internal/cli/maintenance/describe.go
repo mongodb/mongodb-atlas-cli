@@ -23,16 +23,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var describeTemplate = `DAY OF THE WEEK	HOUR OF DAY	START ASAP
 {{.DayOfWeek}}	{{.HourOfDay}}	{{.StartASAP}}
 `
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=maintenance . Describer
+
+type Describer interface {
+	MaintenanceWindow(string) (*atlasv2.GroupMaintenanceWindow, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.MaintenanceWindowDescriber
+	store Describer
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

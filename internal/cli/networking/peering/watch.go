@@ -27,11 +27,17 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=watch_mock_test.go -package=peering . Describer
+
+type Describer interface {
+	PeeringConnection(string, string) (*atlasv2.BaseNetworkPeeringConnectionSettings, error)
+}
+
 type WatchOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	id    string
-	store store.PeeringConnectionDescriber
+	store Describer
 }
 
 var watchTemplate = "\nNetwork peering changes completed.\n"

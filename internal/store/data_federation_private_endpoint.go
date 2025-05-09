@@ -17,41 +17,23 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_federation_private_endpoint.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store DataFederationPrivateEndpointLister,DataFederationPrivateEndpointDescriber,DataFederationPrivateEndpointCreator,DataFederationPrivateEndpointDeleter
-
-type DataFederationPrivateEndpointLister interface {
-	DataFederationPrivateEndpoints(string) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error)
-}
-
-type DataFederationPrivateEndpointCreator interface {
-	CreateDataFederationPrivateEndpoint(string, *admin.PrivateNetworkEndpointIdEntry) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error)
-}
-
-type DataFederationPrivateEndpointDeleter interface {
-	DeleteDataFederationPrivateEndpoint(string, string) error
-}
-
-type DataFederationPrivateEndpointDescriber interface {
-	DataFederationPrivateEndpoint(string, string) (*admin.PrivateNetworkEndpointIdEntry, error)
-}
-
 // DataFederationPrivateEndpoints encapsulates the logic to manage different cloud providers.
-func (s *Store) DataFederationPrivateEndpoints(projectID string) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error) {
+func (s *Store) DataFederationPrivateEndpoints(projectID string) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error) {
 	result, _, err := s.clientv2.DataFederationApi.ListDataFederationPrivateEndpoints(s.ctx, projectID).Execute()
 	return result, err
 }
 
 // DataFederationPrivateEndpoint encapsulates the logic to manage different cloud providers.
-func (s *Store) DataFederationPrivateEndpoint(projectID, id string) (*admin.PrivateNetworkEndpointIdEntry, error) {
+func (s *Store) DataFederationPrivateEndpoint(projectID, id string) (*atlasv2.PrivateNetworkEndpointIdEntry, error) {
 	result, _, err := s.clientv2.DataFederationApi.GetDataFederationPrivateEndpoint(s.ctx, projectID, id).Execute()
 	return result, err
 }
 
 // CreateDataFederationPrivateEndpoint encapsulates the logic to manage different cloud providers.
-func (s *Store) CreateDataFederationPrivateEndpoint(projectID string, opts *admin.PrivateNetworkEndpointIdEntry) (*admin.PaginatedPrivateNetworkEndpointIdEntry, error) {
+func (s *Store) CreateDataFederationPrivateEndpoint(projectID string, opts *atlasv2.PrivateNetworkEndpointIdEntry) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error) {
 	result, _, err := s.clientv2.DataFederationApi.CreateDataFederationPrivateEndpoint(s.ctx, projectID, opts).Execute()
 	return result, err
 }

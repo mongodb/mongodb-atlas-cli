@@ -57,7 +57,7 @@ func Builder() *cobra.Command {
 		PauseBuilder(),
 		StartBuilder(),
 		DeleteBuilder(),
-		LoadSampleDataBuilder(true),
+		LoadSampleDataBuilder(),
 		UpgradeBuilder(),
 		FailoverBuilder(),
 		indexes.Builder(),

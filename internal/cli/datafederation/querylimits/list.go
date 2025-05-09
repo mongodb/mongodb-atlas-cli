@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var listTemplate = `TENANT NAME	NAME	VALUE{{range valueOrEmptySlice .}}
@@ -34,10 +35,16 @@ var listTemplate = `TENANT NAME	NAME	VALUE{{range valueOrEmptySlice .}}
 {{end}}
 `
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=querylimits . DataFederationQueryLimitLister
+
+type DataFederationQueryLimitLister interface {
+	DataFederationQueryLimits(string, string) ([]atlasv2.DataFederationTenantQueryLimit, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store      store.DataFederationQueryLimitLister
+	store      DataFederationQueryLimitLister
 	tenantName string
 }
 

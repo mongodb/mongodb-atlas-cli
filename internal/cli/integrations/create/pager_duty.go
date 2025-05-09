@@ -34,7 +34,7 @@ type PagerDutyOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	serviceKey string
-	store      store.IntegrationCreator
+	store      IntegrationCreator
 }
 
 func (opts *PagerDutyOpts) initStore(ctx context.Context) func() error {

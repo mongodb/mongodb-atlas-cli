@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -31,7 +30,7 @@ import (
 
 func TestWhitelistDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockProjectIPAccessListDescriber(ctrl)
+	mockStore := NewMockProjectIPAccessListDescriber(ctrl)
 
 	expected := &atlasv2.NetworkPermissionEntry{
 		AwsSecurityGroup: pointer.Get("test"),

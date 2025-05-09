@@ -30,7 +30,7 @@ type WatchOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	name  string
-	store store.ServerlessInstanceDescriber
+	store Describer
 }
 
 var watchTemplate = "\nInstance available.\n"

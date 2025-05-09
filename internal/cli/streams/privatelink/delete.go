@@ -27,13 +27,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var successDeleteTemplate = "Atlas Stream Processing PrivateLink endpoint '%s' deleted.\n"
-var failDeleteTemplate = "Atlas Stream Processing PrivateLink endpoint not deleted"
+var (
+	successDeleteTemplate = "Atlas Stream Processing PrivateLink endpoint '%s' deleted.\n"
+	failDeleteTemplate    = "Atlas Stream Processing PrivateLink endpoint not deleted"
+)
+
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=privatelink . Deleter
+
+type Deleter interface {
+	DeletePrivateLinkEndpoint(projectID, connectionID string) error
+}
 
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	store store.PrivateLinkDeleter
+	store Deleter
 }
 
 func (opts *DeleteOpts) Run() error {

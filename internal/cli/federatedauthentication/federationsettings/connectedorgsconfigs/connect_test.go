@@ -19,7 +19,6 @@ package connectedorgsconfigs
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -27,10 +26,10 @@ import (
 
 func TestConnect_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockConnectedOrgConfigsUpdater(ctrl)
-	describeStore := mocks.NewMockConnectedOrgConfigsDescriber(ctrl)
+	mockStore := NewMockConnectedOrgConfigsUpdater(ctrl)
+	describeStore := NewMockConnectedOrgConfigsDescriber(ctrl)
 
-	ConnectOpts := &ConnectOpts{
+	opts := &ConnectOpts{
 		store:                mockStore,
 		federationSettingsID: "federationSettingsID",
 		identityProviderID:   "id",
@@ -58,7 +57,7 @@ func TestConnect_Run(t *testing.T) {
 		Return(expected, nil).
 		Times(1)
 
-	if err := ConnectOpts.Run(); err != nil {
+	if err := opts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}
 	test.VerifyOutputTemplate(t, connectTemplate, expected)

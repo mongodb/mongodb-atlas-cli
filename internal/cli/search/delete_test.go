@@ -20,13 +20,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSearchIndexDeleter(ctrl)
+	mockStore := NewMockDeleter(ctrl)
 
 	deleteOpts := &DeleteOpts{
 		DeleteOpts: &cli.DeleteOpts{
@@ -38,7 +37,7 @@ func TestDelete_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		DeleteSearchIndexDeprecated(deleteOpts.ProjectID, deleteOpts.clusterName, deleteOpts.Entry).
+		DeleteSearchIndex(deleteOpts.ProjectID, deleteOpts.clusterName, deleteOpts.Entry).
 		Return(nil).
 		Times(1)
 

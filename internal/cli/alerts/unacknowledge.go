@@ -33,7 +33,7 @@ type UnacknowledgeOpts struct {
 	cli.OutputOpts
 	alertID string
 	comment string
-	store   store.AlertAcknowledger
+	store   AlertAcknowledger
 }
 
 func (opts *UnacknowledgeOpts) initStore(ctx context.Context) func() error {

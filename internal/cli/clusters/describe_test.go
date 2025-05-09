@@ -20,7 +20,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
@@ -31,7 +30,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDescriber(ctrl)
+	mockStore := NewMockClusterDescriber(ctrl)
 
 	expected := &atlasClustersPinned.AdvancedClusterDescription{}
 
@@ -52,7 +51,7 @@ func TestDescribe_Run(t *testing.T) {
 
 func TestDescribe_RunFlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDescriber(ctrl)
+	mockStore := NewMockClusterDescriber(ctrl)
 
 	expected := &atlasv2.FlexClusterDescription20241113{}
 	expectedError := &atlasClustersPinned.GenericOpenAPIError{}
@@ -81,7 +80,7 @@ func TestDescribe_RunFlexCluster(t *testing.T) {
 
 func TestDescribe_RunFlexCluster_Error(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDescriber(ctrl)
+	mockStore := NewMockClusterDescriber(ctrl)
 
 	expected := &atlasv2.FlexClusterDescription20241113{}
 	expectedError := errors.New("test")

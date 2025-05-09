@@ -35,7 +35,7 @@ type OpsGenieOpts struct {
 	cli.OutputOpts
 	apiKey string
 	region string
-	store  store.IntegrationCreator
+	store  IntegrationCreator
 }
 
 func (opts *OpsGenieOpts) initStore(ctx context.Context) func() error {

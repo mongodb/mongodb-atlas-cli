@@ -68,12 +68,7 @@ deps:  ## Download go module dependencies
 .PHONY: devtools
 devtools:  ## Install dev tools
 	@echo "==> Installing dev tools..."
-	go install github.com/google/addlicense@latest
 	go install go.uber.org/mock/mockgen@latest
-	go install golang.org/x/tools/cmd/goimports@latest
-	go install github.com/google/go-licenses@latest
-	go install mvdan.cc/sh/v3/cmd/shfmt@latest
-	go install github.com/icholy/gomajor@latest
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin $(GOLANGCI_VERSION)
 
 .PHONY: setup
@@ -87,12 +82,7 @@ link-git-hooks: ## Install git hooks
 
 .PHONY: fmt
 fmt: ## Format changed go
-	@scripts/fmt.sh
-
-.PHONY: fmt-all
-fmt-all: ### Format all go files with goimports and gofmt
-	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec gofmt -w "{}" \;
-	find . -name "*.go" -not -path "./vendor/*" -not -path "./internal/mocks" -exec goimports -l -w "{}" \;
+	golangci-lint fmt
 
 .PHONY: test
 test: unit-test

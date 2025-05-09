@@ -15,7 +15,6 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
-      - run:  go install github.com/icholy/gomajor@latest
       - id:   version
         run:  echo "VERSION=$(curl -sSfL -X GET  https://api.github.com/repos/mongodb/atlas-sdk-go/releases/latest | jq -r '.tag_name')" >> "$GITHUB_OUTPUT"
       - run:  make update-atlas-sdk

@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 278
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 06 May 2025 09:26:11 GMT
+Date: Fri, 09 May 2025 05:08:20 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 72
+X-Envoy-Upstream-Service-Time: 58
 X-Frame-Options: DENY
 X-Java-Method: ApiConnectedOrgConfigsResource::getConnectedOrgConfig
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=d89ffae210108a90173f6635938cb962642c5873; versionString=master
+X-Mongodb-Service-Version: gitHash=f4cac4bef68680c08e8b7ce8a9ab47d5584027b8; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"dataAccessIdentityProviderIds":["6819d5b05bdc3006eaa53438","6819d5af5bdc3006eaa53432"],"domainAllowList":[],"domainRestrictionEnabled":false,"identityProviderId":null,"orgId":"a0123456789abcdef012345a","postAuthRoleGrants":["ORG_OWNER"],"roleMappings":[],"userConflicts":null}
+{"dataAccessIdentityProviderIds":["681d8dc2cba77569dbe4cba1","681d8dc15ae1fa63b0eae98b"],"domainAllowList":[],"domainRestrictionEnabled":false,"identityProviderId":null,"orgId":"a0123456789abcdef012345a","postAuthRoleGrants":["ORG_OWNER"],"roleMappings":[],"userConflicts":null}

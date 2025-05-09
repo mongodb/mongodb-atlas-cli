@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 364
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 09 May 2025 05:07:59 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 227
+X-Frame-Options: DENY
+X-Java-Method: ApiGroupTeamsResource::addTeams
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=f4cac4bef68680c08e8b7ce8a9ab47d5584027b8; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681d8dadcba77569dbe4ca14/teams?pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/681d8dadcba77569dbe4ca14/teams/681d8dafdff5f75c44323273","rel":"self"}],"roleNames":["GROUP_READ_ONLY"],"teamId":"681d8dafdff5f75c44323273"}],"totalCount":1}

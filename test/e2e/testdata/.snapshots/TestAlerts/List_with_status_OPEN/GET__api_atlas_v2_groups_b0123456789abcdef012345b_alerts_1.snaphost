@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 1536
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Fri, 09 May 2025 05:07:28 GMT
+Date: Mon, 12 May 2025 05:08:06 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 129
+X-Envoy-Upstream-Service-Time: 113
 X-Frame-Options: DENY
 X-Java-Method: ApiAlertsResource::getAllAlerts
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=f4cac4bef68680c08e8b7ce8a9ab47d5584027b8; versionString=master
+X-Mongodb-Service-Version: gitHash=b4fa165bfbcb725abc0816ef770e5f595c0528ce; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts?includeCount=true&status=OPEN&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"alertConfigId":"62347fd81bfe1073af78a5e2","created":"2025-05-02T02:09:04Z","eventTypeName":"DAILY_BILL_OVER_THRESHOLD","groupId":"b0123456789abcdef012345b","id":"6814294020d1d238f2983b4c","lastNotified":"2025-05-09T00:21:02Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/6814294020d1d238f2983b4c","rel":"self"}],"orgId":"a0123456789abcdef012345a","status":"OPEN","updated":"2025-05-09T02:10:24Z"},{"alertConfigId":"623997b6c4f2aa666ae90fad","created":"2025-05-02T02:09:04Z","eventTypeName":"PENDING_INVOICE_OVER_THRESHOLD","groupId":"b0123456789abcdef012345b","id":"6814294020d1d238f298413c","lastNotified":"2025-05-08T11:32:21Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/6814294020d1d238f298413c","rel":"self"}],"orgId":"a0123456789abcdef012345a","status":"OPEN","updated":"2025-05-09T02:10:24Z"},{"alertConfigId":"624db2d013b80654d0c0d0bd","created":"2025-05-02T02:09:04Z","eventTypeName":"DAILY_BILL_OVER_THRESHOLD","groupId":"b0123456789abcdef012345b","id":"6814294020d1d238f298451b","lastNotified":"2025-05-02T02:09:04Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/6814294020d1d238f298451b","rel":"self"}],"orgId":"a0123456789abcdef012345a","status":"OPEN","updated":"2025-05-09T02:10:24Z"}],"totalCount":3}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts?includeCount=true&status=OPEN&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"alertConfigId":"62347fd81bfe1073af78a5e2","created":"2025-05-02T02:09:04Z","eventTypeName":"DAILY_BILL_OVER_THRESHOLD","groupId":"b0123456789abcdef012345b","id":"6814294020d1d238f2983b4c","lastNotified":"2025-05-12T00:26:56Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/6814294020d1d238f2983b4c","rel":"self"}],"orgId":"a0123456789abcdef012345a","status":"OPEN","updated":"2025-05-12T02:10:35Z"},{"alertConfigId":"623997b6c4f2aa666ae90fad","created":"2025-05-02T02:09:04Z","eventTypeName":"PENDING_INVOICE_OVER_THRESHOLD","groupId":"b0123456789abcdef012345b","id":"6814294020d1d238f298413c","lastNotified":"2025-05-11T17:38:56Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/6814294020d1d238f298413c","rel":"self"}],"orgId":"a0123456789abcdef012345a","status":"OPEN","updated":"2025-05-12T02:10:35Z"},{"alertConfigId":"624db2d013b80654d0c0d0bd","created":"2025-05-02T02:09:04Z","eventTypeName":"DAILY_BILL_OVER_THRESHOLD","groupId":"b0123456789abcdef012345b","id":"6814294020d1d238f298451b","lastNotified":"2025-05-02T02:09:04Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alerts/6814294020d1d238f298451b","rel":"self"}],"orgId":"a0123456789abcdef012345a","status":"OPEN","updated":"2025-05-12T02:10:35Z"}],"totalCount":3}

@@ -24,7 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=disks . ProcessDisksLister
+
+type ProcessDisksLister interface {
+	ProcessDisks(string, string, int, *store.ListOptions) (*atlasv2.PaginatedDiskPartition, error)
+}
 
 type ListsOpts struct {
 	cli.ProjectOpts
@@ -32,7 +39,7 @@ type ListsOpts struct {
 	cli.ListOpts
 	host  string
 	port  int
-	store store.ProcessDisksLister
+	store ProcessDisksLister
 }
 
 func (opts *ListsOpts) initStore(ctx context.Context) func() error {

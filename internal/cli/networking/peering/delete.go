@@ -27,10 +27,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=peering . Deleter
+
+type Deleter interface {
+	DeletePeeringConnection(string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	store store.PeeringConnectionDeleter
+	store Deleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

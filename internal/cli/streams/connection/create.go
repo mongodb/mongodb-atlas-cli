@@ -33,10 +33,16 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=connection . Creator
+
+type Creator interface {
+	CreateConnection(string, string, *atlasv2.StreamsConnection) (*atlasv2.StreamsConnection, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store           store.ConnectionCreator
+	store           Creator
 	name            string
 	filename        string
 	streamsInstance string

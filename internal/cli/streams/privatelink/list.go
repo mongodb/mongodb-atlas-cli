@@ -24,16 +24,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var listTemplate = `ID  PROVIDER  REGION  VENDOR  STATE  INTERFACE_ENDPOINT_ID  SERVICE_ENDPOINT_ID  DNS_DOMAIN  DNS_SUBDOMAIN{{range valueOrEmptySlice .Results}}
 {{.Id}}  {{.Provider}}  {{.Region}}  {{.Vendor}}  {{.State}}  {{.InterfaceEndpointId}}  {{.ServiceEndpointId}}  {{.DnsDomain}}  {{.DnsSubDomain}}{{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=privatelink . Lister
+
+type Lister interface {
+	ListPrivateLinkEndpoints(projectID string) (*atlasv2.PaginatedApiStreamsPrivateLink, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.PrivateLinkLister
+	store Lister
 }
 
 func (opts *ListOpts) Run() error {

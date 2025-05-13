@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range valueOrEmptySlice .}}
@@ -33,11 +34,17 @@ var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range valueOrEmptySlice .}
 
 const deprecatedFlagMessage = "--page and --limit are not supported by privateendpoint azure list"
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=azure . PrivateEndpointLister
+
+type PrivateEndpointLister interface {
+	PrivateEndpoints(string, string) ([]atlasv2.EndpointService, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.PrivateEndpointLister
+	store PrivateEndpointLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

@@ -24,13 +24,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=schedule . Describer
+
+type Describer interface {
+	DescribeSchedule(string, string) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	clusterName string
-	store       store.ScheduleDescriber
+	store       Describer
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

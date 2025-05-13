@@ -38,6 +38,12 @@ const (
 	createTemplate   = "Created a new IP access list.\n"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=accesslists . ProjectIPAccessListCreator
+
+type ProjectIPAccessListCreator interface {
+	CreateProjectIPAccessList([]*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -46,7 +52,7 @@ type CreateOpts struct {
 	comment     string
 	deleteAfter string
 	currentIP   bool
-	store       store.ProjectIPAccessListCreator
+	store       ProjectIPAccessListCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

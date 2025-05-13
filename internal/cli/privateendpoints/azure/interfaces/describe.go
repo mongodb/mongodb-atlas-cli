@@ -25,14 +25,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=interfaces . InterfaceEndpointDescriber
+
+type InterfaceEndpointDescriber interface {
+	InterfaceEndpoint(projectID, cloudProvider, privateEndpointID, endpointServiceID string) (*atlasv2.PrivateLinkEndpoint, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	privateEndpointID        string
 	privateEndpointServiceID string
-	store                    store.InterfaceEndpointDescriber
+	store                    InterfaceEndpointDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

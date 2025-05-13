@@ -21,7 +21,6 @@ package datafederation
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -29,7 +28,7 @@ import (
 
 func TestCreate_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataFederationCreator(ctrl)
+	mockStore := NewMockCreator(ctrl)
 
 	expected := &admin.DataLakeTenant{Name: pointer.Get("test1")}
 

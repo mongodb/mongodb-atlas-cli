@@ -24,17 +24,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const describeTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT
 {{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=invitations . OrganizationInvitationDescriber
+
+type OrganizationInvitationDescriber interface {
+	OrganizationInvitation(string, string) (*atlasv2.OrganizationInvitation, error)
+}
+
 type DescribeOpts struct {
 	cli.OutputOpts
 	cli.OrgOpts
 	id    string
-	store store.OrganizationInvitationDescriber
+	store OrganizationInvitationDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

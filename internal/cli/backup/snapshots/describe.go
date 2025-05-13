@@ -36,10 +36,17 @@ const describeTemplateFlex = `ID	STATUS	MONGODB VERSION	START TIME	FINISH TIME	E
 {{.Id}}	{{.Status}}	{{.MongoDBVersion}}	{{.StartTime}}	{{.FinishTime}}	{{.Expiration}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=snapshots . Describer
+
+type Describer interface {
+	Snapshot(string, string, string) (*atlasv2.DiskBackupReplicaSet, error)
+	FlexClusterSnapshot(string, string, string) (*atlasv2.FlexBackupSnapshot20241113, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store       store.SnapshotsDescriber
+	store       Describer
 	snapshot    string
 	clusterName string
 }

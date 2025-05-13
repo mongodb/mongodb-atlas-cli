@@ -28,6 +28,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=instance . StreamsCreator
+
+type StreamsCreator interface {
+	CreateStream(string, *atlasv2.StreamsTenant) (*atlasv2.StreamsTenant, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -36,7 +42,7 @@ type CreateOpts struct {
 	provider string
 	region   string
 	tier     string
-	store    store.StreamsCreator
+	store    StreamsCreator
 }
 
 const (

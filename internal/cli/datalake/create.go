@@ -24,13 +24,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas/mongodbatlas"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=datalake . Creator
+
+type Creator interface {
+	CreateDataLake(string, *atlas.DataLakeCreateRequest) (*atlas.DataLake, error)
+}
 
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store      store.DataLakeCreator
+	store      Creator
 	name       string
 	awsRoleID  string
 	testBucket string
@@ -57,11 +63,11 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newDataLakeRequest() *mongodbatlas.DataLakeCreateRequest {
-	return &mongodbatlas.DataLakeCreateRequest{
+func (opts *CreateOpts) newDataLakeRequest() *atlas.DataLakeCreateRequest {
+	return &atlas.DataLakeCreateRequest{
 		Name: opts.name,
-		CloudProviderConfig: &mongodbatlas.CloudProviderConfig{
-			AWSConfig: mongodbatlas.AwsCloudProviderConfig{
+		CloudProviderConfig: &atlas.CloudProviderConfig{
+			AWSConfig: atlas.AwsCloudProviderConfig{
 				RoleID:       opts.awsRoleID,
 				TestS3Bucket: opts.testBucket,
 			},

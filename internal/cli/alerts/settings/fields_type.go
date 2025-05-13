@@ -26,9 +26,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=fields_type_mock_test.go -package=settings . MatcherFieldsLister
+
+type MatcherFieldsLister interface {
+	MatcherFields() ([]string, error)
+}
+
 type FieldsTypeOpts struct {
 	cli.OutputOpts
-	store store.MatcherFieldsLister
+	store MatcherFieldsLister
 }
 
 func (opts *FieldsTypeOpts) initStore(ctx context.Context) func() error {

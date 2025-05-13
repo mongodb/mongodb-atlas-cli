@@ -34,12 +34,18 @@ import (
 
 const updateTemplate = "Project '{{.Id}}' updated.\n"
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=projects . ProjectUpdater
+
+type ProjectUpdater interface {
+	UpdateProject(*atlasv2.UpdateProjectApiParams) (*atlasv2.Group, error)
+}
+
 type UpdateOpts struct {
 	cli.OutputOpts
 	projectID string
 	filename  string
 	fs        afero.Fs
-	store     store.ProjectUpdater
+	store     ProjectUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {

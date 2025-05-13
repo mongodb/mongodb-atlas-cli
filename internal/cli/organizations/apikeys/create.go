@@ -33,12 +33,18 @@ Public API Key {{.PublicKey}}
 Private API Key {{.PrivateKey}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=apikeys . OrganizationAPIKeyCreator
+
+type OrganizationAPIKeyCreator interface {
+	CreateOrganizationAPIKey(string, *atlasv2.CreateAtlasOrganizationApiKey) (*atlasv2.ApiKeyUserDetails, error)
+}
+
 type CreateOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
 	desc  string
 	roles []string
-	store store.OrganizationAPIKeyCreator
+	store OrganizationAPIKeyCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

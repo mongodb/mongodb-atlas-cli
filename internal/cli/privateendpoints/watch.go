@@ -31,7 +31,7 @@ type WatchOpts struct {
 	cli.WatchOpts
 	id       string
 	provider string
-	store    store.PrivateEndpointDescriberDeprecated
+	store    PrivateEndpointDescriberDeprecated
 }
 
 var watchTemplate = "\nPrivate endpoint changes completed.\n"

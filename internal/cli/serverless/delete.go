@@ -27,10 +27,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=serverless . Deleter
+
+type Deleter interface {
+	DeleteServerlessInstance(string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	store store.ServerlessInstanceDeleter
+	store Deleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

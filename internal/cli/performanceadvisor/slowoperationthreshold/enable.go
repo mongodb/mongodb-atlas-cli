@@ -29,9 +29,15 @@ import (
 const EnableTemplate = `Atlas management of the slow operation enabled
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=slowoperationthreshold . PerformanceAdvisorSlowOperationThresholdEnabler
+
+type PerformanceAdvisorSlowOperationThresholdEnabler interface {
+	EnablePerformanceAdvisorSlowOperationThreshold(string) error
+}
+
 type EnableOpts struct {
 	cli.ProjectOpts
-	store store.PerformanceAdvisorSlowOperationThresholdEnabler
+	store PerformanceAdvisorSlowOperationThresholdEnabler
 }
 
 func (opts *EnableOpts) initStore(ctx context.Context) func() error {

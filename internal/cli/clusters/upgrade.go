@@ -38,6 +38,15 @@ const (
 	replicaSetPriority  = 7
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=upgrade_mock_test.go -package=clusters . AtlasSharedClusterGetterUpgrader
+
+type AtlasSharedClusterGetterUpgrader interface {
+	AtlasSharedCluster(string, string) (*atlas.Cluster, error)
+	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+	UpgradeCluster(string, *atlas.Cluster) (*atlas.Cluster, error)
+	UpgradeFlexCluster(string, *atlasv2.AtlasTenantClusterUpgradeRequest20240805) (*atlasv2.FlexClusterDescription20241113, error)
+}
+
 type UpgradeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -51,7 +60,7 @@ type UpgradeOpts struct {
 	isFlexCluster                bool
 	tag                          map[string]string
 	fs                           afero.Fs
-	store                        store.AtlasSharedClusterGetterUpgrader
+	store                        AtlasSharedClusterGetterUpgrader
 }
 
 func (opts *UpgradeOpts) initStore(ctx context.Context) func() error {

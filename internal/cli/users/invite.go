@@ -33,7 +33,15 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-var inviteTemplate = "The user '{{.Username}}' has been invited.\nInvited users do not have access to the project until they accept the invitation.\n"
+var inviteTemplate = `The user '{{.Username}}' has been invited.
+Invited users do not have access to the project until they accept the invitation.
+`
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=invite_mock_test.go -package=users . UserCreator
+
+type UserCreator interface {
+	CreateUser(user *atlasv2.CloudAppUser) (*atlasv2.CloudAppUser, error)
+}
 
 type InviteOpts struct {
 	cli.OutputOpts
@@ -47,7 +55,7 @@ type InviteOpts struct {
 	lastName     string
 	orgRoles     []string
 	projectRoles []string
-	store        store.UserCreator
+	store        UserCreator
 }
 
 func (opts *InviteOpts) initStore(ctx context.Context) func() error {

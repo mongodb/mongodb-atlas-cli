@@ -24,13 +24,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=settings . AlertConfigurationDescriber
+
+type AlertConfigurationDescriber interface {
+	AlertConfiguration(string, string) (*atlasv2.GroupAlertsConfig, error)
+}
 
 type describeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	alertID string
-	store   store.AlertConfigurationDescriber
+	store   AlertConfigurationDescriber
 }
 
 func (opts *describeOpts) initStore(ctx context.Context) func() error {

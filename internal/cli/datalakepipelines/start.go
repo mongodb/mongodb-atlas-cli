@@ -24,13 +24,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=datalakepipelines . PipelinesResumer
+
+type PipelinesResumer interface {
+	PipelineResume(string, string) (*atlasv2.DataLakeIngestionPipeline, error)
+}
 
 type StartOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	id    string
-	store store.PipelinesResumer
+	store PipelinesResumer
 }
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {

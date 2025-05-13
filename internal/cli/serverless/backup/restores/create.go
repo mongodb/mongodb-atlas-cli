@@ -36,6 +36,12 @@ const (
 	pointInTimeRestore = "pointInTime"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=restores . ServerlessRestoreJobsCreator
+
+type ServerlessRestoreJobsCreator interface {
+	ServerlessCreateRestoreJobs(string, string, *atlasv2.ServerlessBackupRestoreJob) (*atlasv2.ServerlessBackupRestoreJob, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -47,7 +53,7 @@ type CreateOpts struct {
 	oplogInc              int
 	snapshotID            string
 	pointInTimeUTCSeconds int
-	store                 store.ServerlessRestoreJobsCreator
+	store                 ServerlessRestoreJobsCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

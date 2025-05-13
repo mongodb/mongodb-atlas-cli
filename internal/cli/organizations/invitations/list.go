@@ -32,10 +32,16 @@ const listTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT{{range valueOrEmptySlice
 {{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}{{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=invitations . OrganizationInvitationLister
+
+type OrganizationInvitationLister interface {
+	OrganizationInvitations(*atlasv2.ListOrganizationInvitationsApiParams) ([]atlasv2.OrganizationInvitation, error)
+}
+
 type ListOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
-	store    store.OrganizationInvitationLister
+	store    OrganizationInvitationLister
 	username string
 }
 

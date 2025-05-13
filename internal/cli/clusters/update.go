@@ -39,6 +39,15 @@ const (
 	updateTmpl = "Updating cluster '{{.Name}}'.\n"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=clusters . AtlasClusterGetterUpdater
+
+type AtlasClusterGetterUpdater interface {
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+	UpdateCluster(string, string, *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	UpdateFlexCluster(string, string, *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error)
+}
+
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -52,7 +61,7 @@ type UpdateOpts struct {
 	filename                     string
 	tag                          map[string]string
 	fs                           afero.Fs
-	store                        store.AtlasClusterGetterUpdater
+	store                        AtlasClusterGetterUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {

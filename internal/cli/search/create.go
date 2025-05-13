@@ -29,17 +29,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var errInvalidIndex = errors.New("invalid index")
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=search . Creator
+
+type Creator interface {
+	CreateSearchIndexesDeprecated(string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
+	CreateSearchIndexes(string, string, *atlasv2.SearchIndexCreateRequest) (*atlasv2.SearchIndexResponse, error)
+}
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	IndexOpts
 	clusterName string
-	store       store.SearchIndexCreator
+	store       Creator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {
@@ -59,7 +65,7 @@ func (opts *CreateOpts) Run() error {
 	}
 
 	switch index := i.(type) {
-	case *admin.SearchIndexCreateRequest:
+	case *atlasv2.SearchIndexCreateRequest:
 		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 		r, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.clusterName, index)
 		if err != nil {
@@ -67,7 +73,7 @@ func (opts *CreateOpts) Run() error {
 		}
 
 		return opts.Print(r)
-	case *admin.ClusterSearchIndex:
+	case *atlasv2.ClusterSearchIndex:
 		_, _ = log.Warningln("you're using an old search index definition")
 		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 		r, err := opts.store.CreateSearchIndexesDeprecated(opts.ConfigProjectID(), opts.clusterName, index)

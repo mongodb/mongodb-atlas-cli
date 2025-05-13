@@ -26,8 +26,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=nodes . SearchNodesCreator
+
+type SearchNodesCreator interface {
+	CreateSearchNodes(string, string, *atlasv2.ApiSearchDeploymentRequest) (*atlasv2.ApiSearchDeploymentResponse, error)
+	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
+}
 
 type CreateOpts struct {
 	cli.ProjectOpts
@@ -35,7 +42,7 @@ type CreateOpts struct {
 	clusterName string
 	filename    string
 	fs          afero.Fs
-	store       store.SearchNodesCreator
+	store       SearchNodesCreator
 }
 
 const (
@@ -70,7 +77,7 @@ func (opts *CreateOpts) Run() error {
 			return err
 		}
 		opts.Template = createWatchTemplate
-		r = watchResult.(*admin.ApiSearchDeploymentResponse)
+		r = watchResult.(*atlasv2.ApiSearchDeploymentResponse)
 	}
 
 	return opts.Print(r)

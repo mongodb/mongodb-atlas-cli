@@ -29,13 +29,19 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=buckets . ExportBucketsCreator
+
+type ExportBucketsCreator interface {
+	CreateExportBucket(string, *atlasv2.DiskBackupSnapshotExportBucketRequest) (*atlasv2.DiskBackupSnapshotExportBucketResponse, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	iamRoleID     string
 	bucketName    string
 	cloudProvider string
-	store         store.ExportBucketsCreator
+	store         ExportBucketsCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

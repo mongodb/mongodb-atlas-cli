@@ -29,10 +29,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=datasets . PipelineDatasetDeleter
+
+type PipelineDatasetDeleter interface {
+	DeletePipelineDataset(string, string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	store        store.PipelineDatasetDeleter
+	store        PipelineDatasetDeleter
 	pipelineName string
 }
 

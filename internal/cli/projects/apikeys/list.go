@@ -25,18 +25,25 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const listTemplate = `ID	PUBLIC KEY	DESCRIPTION{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.PublicKey}}	{{.Desc}}{{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=apikeys . ProjectAPIKeyLister
+
+type ProjectAPIKeyLister interface {
+	ProjectAPIKeys(string, *store.ListOptions) (*atlasv2.PaginatedApiApiUser, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	CompactResponse bool
-	store           store.ProjectAPIKeyLister
+	store           ProjectAPIKeyLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

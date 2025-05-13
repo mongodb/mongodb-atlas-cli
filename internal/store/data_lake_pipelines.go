@@ -22,48 +22,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_lake_pipelines.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PipelinesLister,PipelinesDescriber,PipelinesCreator,PipelinesUpdater,PipelinesDeleter,PipelineAvailableSnapshotsLister,PipelineAvailableSchedulesLister,PipelinesTriggerer,PipelinesPauser,PipelinesResumer
-
-type PipelinesLister interface {
-	Pipelines(string) ([]atlasv2.DataLakeIngestionPipeline, error)
-}
-
-type PipelinesCreator interface {
-	CreatePipeline(string, atlasv2.DataLakeIngestionPipeline) (*atlasv2.DataLakeIngestionPipeline, error)
-}
-
-type PipelinesDeleter interface {
-	DeletePipeline(string, string) error
-}
-
-type PipelinesDescriber interface {
-	Pipeline(string, string) (*atlasv2.DataLakeIngestionPipeline, error)
-}
-
-type PipelinesUpdater interface {
-	UpdatePipeline(string, string, atlasv2.DataLakeIngestionPipeline) (*atlasv2.DataLakeIngestionPipeline, error)
-}
-
-type PipelineAvailableSnapshotsLister interface {
-	PipelineAvailableSnapshots(string, string, *time.Time, *ListOptions) (*atlasv2.PaginatedBackupSnapshot, error)
-}
-
-type PipelineAvailableSchedulesLister interface {
-	PipelineAvailableSchedules(string, string) ([]atlasv2.DiskBackupApiPolicyItem, error)
-}
-
-type PipelinesTriggerer interface {
-	PipelineTrigger(string, string, string) (*atlasv2.IngestionPipelineRun, error)
-}
-
-type PipelinesPauser interface {
-	PipelinePause(string, string) (*atlasv2.DataLakeIngestionPipeline, error)
-}
-
-type PipelinesResumer interface {
-	PipelineResume(string, string) (*atlasv2.DataLakeIngestionPipeline, error)
-}
-
 // Pipelines encapsulates the logic to manage different cloud providers.
 func (s *Store) Pipelines(projectID string) ([]atlasv2.DataLakeIngestionPipeline, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelines(s.ctx, projectID).Execute()

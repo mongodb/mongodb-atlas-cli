@@ -19,7 +19,6 @@ package peering
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -56,7 +55,7 @@ func TestWatchOpts_Run(t *testing.T) {
 			t.Parallel()
 
 			ctrl := gomock.NewController(t)
-			mockStore := mocks.NewMockPeeringConnectionDescriber(ctrl)
+			mockStore := NewMockDescriber(ctrl)
 
 			describeOpts := &WatchOpts{
 				id:    "test",

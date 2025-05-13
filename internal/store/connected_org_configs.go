@@ -18,23 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_connected_orgs_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ConnectedOrgConfigsUpdater,ConnectedOrgConfigsDescriber,ConnectedOrgConfigsDeleter,ConnectedOrgConfigsLister
-
-type ConnectedOrgConfigsUpdater interface {
-	UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)
-}
-
-type ConnectedOrgConfigsDescriber interface {
-	GetConnectedOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)
-}
-
-type ConnectedOrgConfigsLister interface {
-	ListConnectedOrgConfigs(opts *atlasv2.ListConnectedOrgConfigsApiParams) (*atlasv2.PaginatedConnectedOrgConfigs, error)
-}
-type ConnectedOrgConfigsDeleter interface {
-	DeleteConnectedOrgConfig(federationSettingsID string, orgID string) error
-}
-
 // UpdateConnectedOrgConfig encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error) {
 	result, _, err := s.clientv2.FederatedAuthenticationApi.UpdateConnectedOrgConfigWithParams(s.ctx, opts).Execute()

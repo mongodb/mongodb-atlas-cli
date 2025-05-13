@@ -25,7 +25,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=search . Lister
+
+type Lister interface {
+	SearchIndexesDeprecated(string, string, string, string) ([]atlasv2.ClusterSearchIndex, error)
+}
 
 type ListOpts struct {
 	cli.ProjectOpts
@@ -34,7 +41,7 @@ type ListOpts struct {
 	clusterName string
 	dbName      string
 	collName    string
-	store       store.SearchIndexLister
+	store       Lister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

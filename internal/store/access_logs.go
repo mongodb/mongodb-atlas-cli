@@ -18,40 +18,40 @@ import (
 	"strconv"
 
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_access_logs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store AccessLogsLister
-
-type AccessLogsLister interface {
-	AccessLogsByHostname(string, string, *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
-	AccessLogsByClusterName(string, string, *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error)
+type AccessLogOptions struct {
+	Start      string
+	End        string
+	NLogs      int
+	IPAddress  string
+	AuthResult *bool
 }
 
 // AccessLogsByHostname encapsulates the logic to manage different cloud providers.
-func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
+func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
 	result := s.clientv2.AccessTrackingApi.ListAccessLogsByHostname(s.ctx, groupID, hostname)
 
 	if opts != nil {
 		if opts.Start != "" {
 			startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
-			result = result.Start(startTime)
+			result.Start(startTime)
 		}
 		if opts.End != "" {
 			endTime, _ := strconv.ParseInt(opts.End, 10, 64)
-			result = result.End(endTime)
+			result.End(endTime)
 		}
 
 		if opts.NLogs > 0 {
-			result = result.NLogs(opts.NLogs)
+			result.NLogs(opts.NLogs)
 		}
 
 		if opts.IPAddress != "" {
-			result = result.IpAddress(opts.IPAddress)
+			result.IpAddress(opts.IPAddress)
 		}
 
 		if opts.AuthResult != nil {
-			result = result.AuthResult(*opts.AuthResult)
+			result.AuthResult(*opts.AuthResult)
 		}
 	}
 
@@ -60,29 +60,29 @@ func (s *Store) AccessLogsByHostname(groupID, hostname string, opts *atlas.Acces
 }
 
 // AccessLogsByClusterName encapsulates the logic to manage different cloud providers.
-func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *atlas.AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
+func (s *Store) AccessLogsByClusterName(groupID, clusterName string, opts *AccessLogOptions) (*atlasv2.MongoDBAccessLogsList, error) {
 	result := s.clientv2.AccessTrackingApi.ListAccessLogsByClusterName(s.ctx, groupID, clusterName)
 
 	if opts != nil {
 		if opts.Start != "" {
 			startTime, _ := strconv.ParseInt(opts.Start, 10, 64)
-			result = result.Start(startTime)
+			result.Start(startTime)
 		}
 		if opts.End != "" {
 			endTime, _ := strconv.ParseInt(opts.End, 10, 64)
-			result = result.End(endTime)
+			result.End(endTime)
 		}
 
 		if opts.NLogs > 0 {
-			result = result.NLogs(opts.NLogs)
+			result.NLogs(opts.NLogs)
 		}
 
 		if opts.IPAddress != "" {
-			result = result.IpAddress(opts.IPAddress)
+			result.IpAddress(opts.IPAddress)
 		}
 
 		if opts.AuthResult != nil {
-			result = result.AuthResult(*opts.AuthResult)
+			result.AuthResult(*opts.AuthResult)
 		}
 	}
 	res, _, err := result.Execute()

@@ -27,7 +27,6 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/briandowns/spinner"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/setup"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/container"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
@@ -85,6 +84,11 @@ var localStateMap = map[string]string{
 	"dead":       StoppedState,
 }
 
+type ProfileReader interface {
+	ProjectID() string
+	OrgID() string
+}
+
 type DeploymentOpts struct {
 	DeploymentName        string
 	DeploymentType        string
@@ -97,7 +101,7 @@ type DeploymentOpts struct {
 	s                     *spinner.Spinner
 	DefaultSetter         cli.DefaultSetterOpts
 	AtlasClusterListStore store.ClusterLister
-	Config                setup.ProfileReader
+	Config                ProfileReader
 	DeploymentTelemetry   DeploymentTelemetry
 	DeploymentUUID        string
 }

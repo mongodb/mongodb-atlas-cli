@@ -31,6 +31,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=onlinearchive . Creator
+
+type Creator interface {
+	CreateOnlineArchive(string, string, *atlasv2.BackupOnlineArchiveCreate) (*atlasv2.BackupOnlineArchive, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -42,7 +48,7 @@ type CreateOpts struct {
 	archiveAfter    int
 	partitions      []string
 	expireAfterDays int
-	store           store.OnlineArchiveCreator
+	store           Creator
 	filename        string
 	fs              afero.Fs
 }

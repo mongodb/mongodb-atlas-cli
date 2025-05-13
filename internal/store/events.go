@@ -15,32 +15,17 @@
 package store
 
 import (
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_events.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store OrganizationEventLister,ProjectEventLister,EventLister
-
-type OrganizationEventLister interface {
-	OrganizationEvents(opts *admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error)
-}
-
-type ProjectEventLister interface {
-	ProjectEvents(opts *admin.ListProjectEventsApiParams) (*admin.GroupPaginatedEvent, error)
-}
-
-type EventLister interface {
-	OrganizationEventLister
-	ProjectEventLister
-}
-
 // ProjectEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) ProjectEvents(opts *admin.ListProjectEventsApiParams) (*admin.GroupPaginatedEvent, error) {
+func (s *Store) ProjectEvents(opts *atlasv2.ListProjectEventsApiParams) (*atlasv2.GroupPaginatedEvent, error) {
 	result, _, err := s.clientv2.EventsApi.ListProjectEventsWithParams(s.ctx, opts).Execute()
 	return result, err
 }
 
 // OrganizationEvents encapsulate the logic to manage different cloud providers.
-func (s *Store) OrganizationEvents(opts *admin.ListOrganizationEventsApiParams) (*admin.OrgPaginatedEvent, error) {
+func (s *Store) OrganizationEvents(opts *atlasv2.ListOrganizationEventsApiParams) (*atlasv2.OrgPaginatedEvent, error) {
 	result, _, err := s.clientv2.EventsApi.ListOrganizationEventsWithParams(s.ctx, opts).Execute()
 	return result, err
 }

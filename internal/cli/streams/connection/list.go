@@ -27,17 +27,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var listTemplate = `NAME	TYPE	SERVERS{{range valueOrEmptySlice .Results}}
 {{.Name}}	{{.Type}}	{{if .ClusterName}}{{.ClusterName}}{{else if .BootstrapServers}}{{.BootstrapServers}}{{else}}nil{{end}}{{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=connection . StreamsConnectionLister
+
+type StreamsConnectionLister interface {
+	StreamsConnections(string, string) (*atlasv2.PaginatedApiStreamsConnection, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	streamsInstance string
-	store           store.StreamsConnectionLister
+	store           StreamsConnectionLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

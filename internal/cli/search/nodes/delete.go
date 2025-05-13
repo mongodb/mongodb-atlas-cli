@@ -28,11 +28,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=nodes . SearchNodesDeleter
+
+type SearchNodesDeleter interface {
+	DeleteSearchNodes(string, string) error
+	SearchNodes(string, string) (*atlasv2.ApiSearchDeploymentResponse, error)
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	*cli.DeleteOpts
-	store store.SearchNodesDeleter
+	store SearchNodesDeleter
 }
 
 const atlasFtsDeploymentDoesNotExist = "ATLAS_SEARCH_DEPLOYMENT_DOES_NOT_EXIST"

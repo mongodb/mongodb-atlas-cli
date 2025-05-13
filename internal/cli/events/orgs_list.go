@@ -25,14 +25,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=orgs_list_mock_test.go -package=events . OrganizationEventLister
+
+type OrganizationEventLister interface {
+	OrganizationEvents(opts *atlasv2.ListOrganizationEventsApiParams) (*atlasv2.OrgPaginatedEvent, error)
+}
 
 type orgListOpts struct {
 	cli.OutputOpts
 	EventListOpts
 	cli.OrgOpts
-	store store.OrganizationEventLister
+	store OrganizationEventLister
 }
 
 func (opts *orgListOpts) initStore(ctx context.Context) func() error {
@@ -56,14 +62,14 @@ func (opts *orgListOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *orgListOpts) NewOrgListOptions() (*admin.ListOrganizationEventsApiParams, error) {
+func (opts *orgListOpts) NewOrgListOptions() (*atlasv2.ListOrganizationEventsApiParams, error) {
 	var eventType []string
 	var err error
 
 	if len(opts.EventType) > 0 {
 		eventType = opts.EventType
 	}
-	p := &admin.ListOrganizationEventsApiParams{
+	p := &atlasv2.ListOrganizationEventsApiParams{
 		OrgId:     opts.ConfigOrgID(),
 		EventType: &eventType,
 	}

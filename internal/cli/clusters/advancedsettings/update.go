@@ -30,6 +30,12 @@ import (
 
 const updateTmpl = "Updating advanced configuration settings of your cluster'.\n"
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=advancedsettings . AtlasClusterConfigurationOptionsUpdater
+
+type AtlasClusterConfigurationOptionsUpdater interface {
+	UpdateAtlasClusterConfigurationOptions(string, string, *atlasClustersPinned.ClusterDescriptionProcessArgs) (*atlasClustersPinned.ClusterDescriptionProcessArgs, error)
+}
+
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -47,7 +53,7 @@ type UpdateOpts struct {
 	oplogSizeMB                      int
 	sampleRefreshIntervalBIConnector int
 	sampleSizeBIConnector            int
-	store                            store.AtlasClusterConfigurationOptionsUpdater
+	store                            AtlasClusterConfigurationOptionsUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {

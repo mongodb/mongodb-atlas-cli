@@ -25,16 +25,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const describeTemplate = `ID	SNAPSHOT TYPE	EXPIRES AT
 {{.Id}}	{{.SnapshotType}}	{{.ExpiresAt}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=snapshots . ServerlessSnapshotsDescriber
+
+type ServerlessSnapshotsDescriber interface {
+	ServerlessSnapshot(string, string, string) (*atlasv2.ServerlessBackupSnapshot, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store       store.ServerlessSnapshotsDescriber
+	store       ServerlessSnapshotsDescriber
 	snapshot    string
 	clusterName string
 }

@@ -22,13 +22,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=disable_mock_test.go -package=settings . AlertConfigurationDisabler
+
+type AlertConfigurationDisabler interface {
+	DisableAlertConfiguration(string, string) (*atlasv2.GroupAlertsConfig, error)
+}
 
 type DisableOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	alertID string
-	store   store.AlertConfigurationDisabler
+	store   AlertConfigurationDisabler
 }
 
 func (opts *DisableOpts) initStore(ctx context.Context) func() error {

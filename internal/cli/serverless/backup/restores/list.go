@@ -24,14 +24,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=restores . ServerlessRestoreJobsLister
+
+type ServerlessRestoreJobsLister interface {
+	ServerlessRestoreJobs(string, string, *store.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupRestoreJob, error)
+}
 
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	clusterName string
-	store       store.ServerlessRestoreJobsLister
+	store       ServerlessRestoreJobsLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

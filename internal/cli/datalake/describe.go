@@ -22,12 +22,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=datalake . Describer
+
+type Describer interface {
+	DataLake(string, string) (*atlas.DataLake, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.DataLakeDescriber
+	store Describer
 	name  string
 }
 

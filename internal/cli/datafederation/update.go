@@ -29,13 +29,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=datafederation . Updater
+
+type Updater interface {
+	UpdateDataFederation(string, string, *atlasv2.DataLakeTenant) (*atlasv2.DataLakeTenant, error)
+}
 
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store         store.DataFederationUpdater
+	store         Updater
 	fs            afero.Fs
 	name          string
 	filename      string
@@ -68,9 +74,9 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) newUpdateRequest() (*admin.DataLakeTenant, error) {
+func (opts *UpdateOpts) newUpdateRequest() (*atlasv2.DataLakeTenant, error) {
 	if opts.filename != "" {
-		tenant := admin.DataLakeTenant{}
+		tenant := atlasv2.DataLakeTenant{}
 		if err := file.Load(opts.fs, opts.filename, &tenant); err != nil {
 			return nil, err
 		}
@@ -78,19 +84,19 @@ func (opts *UpdateOpts) newUpdateRequest() (*admin.DataLakeTenant, error) {
 		return &tenant, nil
 	}
 
-	ret := admin.NewDataLakeTenant()
+	ret := atlasv2.NewDataLakeTenant()
 	ret.Name = &opts.name
 
 	if opts.region != "" {
-		ret.DataProcessRegion = &admin.DataLakeDataProcessRegion{
+		ret.DataProcessRegion = &atlasv2.DataLakeDataProcessRegion{
 			CloudProvider: "AWS",
 			Region:        opts.region,
 		}
 	}
 
 	if opts.awsRoleID != "" || opts.awsTestBucket != "" {
-		ret.CloudProviderConfig = &admin.DataLakeCloudProviderConfig{
-			Aws: &admin.DataLakeAWSCloudProviderConfig{
+		ret.CloudProviderConfig = &atlasv2.DataLakeCloudProviderConfig{
+			Aws: &atlasv2.DataLakeAWSCloudProviderConfig{
 				RoleId:       opts.awsRoleID,
 				TestS3Bucket: opts.awsTestBucket,
 			},

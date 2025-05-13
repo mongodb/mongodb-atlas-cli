@@ -24,15 +24,22 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const describeTemplate = "{{if .CustomerX509}}{{.CustomerX509.Cas}}{{end}}\n"
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=customercerts . X509CertificateConfDescriber
+
+type X509CertificateConfDescriber interface {
+	X509Configuration(string) (*atlasv2.UserSecurity, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.X509CertificateConfDescriber
+	store X509CertificateConfDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

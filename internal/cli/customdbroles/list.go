@@ -25,6 +25,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const listTemplate = `NAME	ACTION	INHERITED ROLES	DB	COLLECTION	CLUSTER{{range valueOrEmptySlice .}}{{- $roleName := .RoleName }} {{range valueOrEmptySlice .Actions}} 
@@ -35,11 +36,17 @@ const listTemplate = `NAME	ACTION	INHERITED ROLES	DB	COLLECTION	CLUSTER{{range v
 
 const deprecatedFlagMessage = "--pageNum and --ItemsPerPage are not supported by customdbroles list"
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=customdbroles . DatabaseRoleLister
+
+type DatabaseRoleLister interface {
+	DatabaseRoles(string) ([]atlasv2.UserCustomDBRole, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.DatabaseRoleLister
+	store DatabaseRoleLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

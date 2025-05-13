@@ -33,11 +33,17 @@ const (
 	confirmationMessage = "Are you sure you want to deauthorize: %s"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=deauthorize_mock_test.go -package=aws . CloudProviderAccessRoleDeauthorizer
+
+type CloudProviderAccessRoleDeauthorizer interface {
+	DeauthorizeCloudProviderAccessRoles(string, string, string) error
+}
+
 type DeauthorizeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	*cli.DeleteOpts
-	store store.CloudProviderAccessRoleDeauthorizer
+	store CloudProviderAccessRoleDeauthorizer
 }
 
 func (opts *DeauthorizeOpts) initStore(ctx context.Context) func() error {

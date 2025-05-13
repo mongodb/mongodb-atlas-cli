@@ -27,12 +27,19 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=snapshots . Lister
+
+type Lister interface {
+	Snapshots(string, string, *store.ListOptions) (*atlasv2.PaginatedCloudBackupReplicaSet, error)
+	FlexClusterSnapshots(*atlasv2.ListFlexBackupsApiParams) (*atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	clusterName string
-	store       store.SnapshotsLister
+	store       Lister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

@@ -27,10 +27,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=apikeys . ProjectAPIKeyDeleter
+
+type ProjectAPIKeyDeleter interface {
+	DeleteProjectAPIKey(string, string) error
+}
+
 type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.ProjectOpts
-	store store.ProjectAPIKeyDeleter
+	store ProjectAPIKeyDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

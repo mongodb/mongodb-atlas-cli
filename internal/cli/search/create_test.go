@@ -20,20 +20,21 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
-const testName = "default"
-const testJSON = `{"name":"default"}`
-const testInvalidJSON = `{"name:"default"}`
-const fileName = "atlas_search_index_create_test.json"
+const (
+	testName        = "default"
+	testJSON        = `{"name":"default"}`
+	testInvalidJSON = `{"name:"default"}`
+	fileName        = "atlas_search_index_create_test.json"
+)
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSearchIndexCreator(ctrl)
+	mockStore := NewMockCreator(ctrl)
 
 	t.Run("flags run", func(t *testing.T) {
 		opts := &CreateOpts{

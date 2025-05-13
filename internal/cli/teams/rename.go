@@ -30,12 +30,18 @@ import (
 
 var renameTemplate = "Team '{{.Name}}' updated.\n"
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=rename_mock_test.go -package=teams . TeamRenamer
+
+type TeamRenamer interface {
+	RenameTeam(string, string, *atlasv2.TeamUpdate) (*atlasv2.TeamResponse, error)
+}
+
 type renameOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
 	name   string
 	teamID string
-	store  store.TeamRenamer
+	store  TeamRenamer
 }
 
 func (opts *renameOpts) initStore(ctx context.Context) func() error {

@@ -35,7 +35,7 @@ var (
 	errEmptyUUID                  = errors.New("error uuid is empty")
 )
 
-//go:generate mockgen -destination=../../../mocks/mock_deployment_opts_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options DeploymentTelemetry
+//go:generate go tool go.uber.org/mock/mockgen -destination=../../../mocks/mock_deployment_opts_telemetry.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options DeploymentTelemetry
 type DeploymentTelemetry interface {
 	AppendDeploymentType()
 	AppendDeploymentUUID()

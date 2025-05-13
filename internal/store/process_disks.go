@@ -20,12 +20,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_process_disks.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ProcessDisksLister
-
-type ProcessDisksLister interface {
-	ProcessDisks(string, string, int, *ListOptions) (*atlasv2.PaginatedDiskPartition, error)
-}
-
 // ProcessDisks encapsulates the logic to manage different cloud providers.
 func (s *Store) ProcessDisks(groupID, host string, port int, opts *ListOptions) (*atlasv2.PaginatedDiskPartition, error) {
 	processID := host + ":" + strconv.Itoa(port)

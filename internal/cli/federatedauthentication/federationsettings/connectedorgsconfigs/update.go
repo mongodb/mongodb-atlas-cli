@@ -28,6 +28,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=connectedorgsconfigs . ConnectedOrgConfigsUpdater
+
+type ConnectedOrgConfigsUpdater interface {
+	UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)
+}
+
 type UpdateOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
@@ -35,7 +41,7 @@ type UpdateOpts struct {
 	*DescribeOrgConfigsOpts
 	federationSettingsID string
 	file                 string
-	store                store.ConnectedOrgConfigsUpdater
+	store                ConnectedOrgConfigsUpdater
 	fs                   afero.Fs
 }
 

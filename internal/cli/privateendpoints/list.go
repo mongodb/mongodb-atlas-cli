@@ -22,17 +22,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range valueOrEmptySlice .}}
 {{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=privateendpoints . PrivateEndpointListerDeprecated
+
+type PrivateEndpointListerDeprecated interface {
+	PrivateEndpointsDeprecated(string, *store.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.PrivateEndpointListerDeprecated
+	store PrivateEndpointListerDeprecated
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

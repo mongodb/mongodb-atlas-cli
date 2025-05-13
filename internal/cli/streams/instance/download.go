@@ -32,13 +32,19 @@ import (
 
 var downloadMessage = "Download of %s completed.\n"
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=download_mock_test.go -package=instance . StreamsDownloader
+
+type StreamsDownloader interface {
+	DownloadAuditLog(*atlasv2.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error)
+}
+
 type DownloadOpts struct {
 	cli.ProjectOpts
 	cli.DownloaderOpts
 	tenantName string
 	start      int64
 	end        int64
-	store      store.StreamsDownloader
+	store      StreamsDownloader
 }
 
 func (opts *DownloadOpts) initStore(ctx context.Context) func() error {

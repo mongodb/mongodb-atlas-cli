@@ -19,13 +19,12 @@ package slowoperationthreshold
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestEnable_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockPerformanceAdvisorSlowOperationThresholdEnabler(ctrl)
+	mockStore := NewMockPerformanceAdvisorSlowOperationThresholdEnabler(ctrl)
 
 	opts := &EnableOpts{
 		store: mockStore,

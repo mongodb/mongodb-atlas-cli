@@ -32,12 +32,18 @@ const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range valueOrEmpty
 {{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=processes . ProcessLister
+
+type ProcessLister interface {
+	Processes(*atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	CompactResponse bool
-	store           store.ProcessLister
+	store           ProcessLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

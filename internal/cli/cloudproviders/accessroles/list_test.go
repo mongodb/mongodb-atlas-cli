@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
@@ -35,7 +34,7 @@ func TestListTemplate_Run(t *testing.T) {
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockCloudProviderAccessRoleLister(ctrl)
+	mockStore := NewMockCloudProviderAccessRoleLister(ctrl)
 
 	expected := &atlasv2.CloudProviderAccessRoles{
 		AwsIamRoles: &[]atlasv2.CloudProviderAccessAWSIAMRole{

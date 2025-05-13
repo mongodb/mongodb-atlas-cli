@@ -27,10 +27,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=invitations . ProjectInvitationDeleter
+
+type ProjectInvitationDeleter interface {
+	DeleteProjectInvitation(string, string) error
+}
+
 type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.ProjectOpts
-	store store.ProjectInvitationDeleter
+	store ProjectInvitationDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

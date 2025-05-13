@@ -22,20 +22,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_validations.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LiveMigrationValidationsCreator,LiveMigrationCutoverCreator,LiveMigrationValidationsDescriber
-
-type LiveMigrationValidationsCreator interface {
-	CreateValidation(string, *atlasv2.LiveMigrationRequest20240530) (*atlasv2.LiveImportValidation, error)
-}
-
-type LiveMigrationCutoverCreator interface {
-	CreateLiveMigrationCutover(string, string) error
-}
-
-type LiveMigrationValidationsDescriber interface {
-	GetValidationStatus(string, string) (*atlasv2.LiveImportValidation, error)
-}
-
 // CreateValidation encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateValidation(groupID string, liveMigration *atlasv2.LiveMigrationRequest20240530) (*atlasv2.LiveImportValidation, error) {
 	if s.service == config.CloudGovService {

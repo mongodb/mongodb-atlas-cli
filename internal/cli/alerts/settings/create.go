@@ -29,11 +29,17 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=settings . AlertConfigurationCreator
+
+type AlertConfigurationCreator interface {
+	CreateAlertConfiguration(*atlasv2.GroupAlertsConfig) (*atlasv2.GroupAlertsConfig, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	ConfigOpts
-	store    store.AlertConfigurationCreator
+	store    AlertConfigurationCreator
 	filename string
 	fs       afero.Fs
 }

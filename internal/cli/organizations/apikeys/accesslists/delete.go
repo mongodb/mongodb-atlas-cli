@@ -27,11 +27,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=accesslists . OrganizationAPIKeyAccessListDeleter
+
+type OrganizationAPIKeyAccessListDeleter interface {
+	DeleteOrganizationAPIKeyAccessList(string, string, string) error
+}
+
 type DeleteOpts struct {
 	*cli.DeleteOpts
 	cli.OrgOpts
 	apiKey string
-	store  store.OrganizationAPIKeyAccessListDeleter
+	store  OrganizationAPIKeyAccessListDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

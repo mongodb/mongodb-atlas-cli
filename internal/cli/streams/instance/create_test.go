@@ -20,7 +20,6 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
@@ -32,7 +31,7 @@ const (
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockStreamsCreator(ctrl)
+	mockStore := NewMockStreamsCreator(ctrl)
 
 	t.Run("stream instances create", func(t *testing.T) {
 		buf := new(bytes.Buffer)

@@ -33,10 +33,16 @@ import (
 
 var createTemplate = "Atlas Stream Processing PrivateLink endpoint {{.InterfaceEndpointId}} created.\n"
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=privatelink . Creator
+
+type Creator interface {
+	CreatePrivateLinkEndpoint(projectID string, connection *atlasv2.StreamsPrivateLinkConnection) (*atlasv2.StreamsPrivateLinkConnection, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store    store.PrivateLinkCreator
+	store    Creator
 	filename string
 	fs       afero.Fs
 }

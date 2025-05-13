@@ -32,11 +32,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=setup_mock_test.go -package=compliancepolicy . Updater
+
+type Updater interface {
+	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
+	UpdateCompliancePolicy(projectID string, opts *atlasv2.DataProtectionSettings20231001) (*atlasv2.DataProtectionSettings20231001, error)
+}
+
 type SetupOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	policy  *atlasv2.DataProtectionSettings20231001
-	store   store.CompliancePolicyUpdater
+	store   Updater
 	fs      afero.Fs
 	path    string
 	confirm bool

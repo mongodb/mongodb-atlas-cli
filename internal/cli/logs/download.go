@@ -32,10 +32,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var errEmptyLog = errors.New("log is empty")
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=download_mock_test.go -package=logs . Downloader
+
+type Downloader interface {
+	DownloadLog(*atlasv2.GetHostLogsApiParams) (io.ReadCloser, error)
+}
 
 type DownloadOpts struct {
 	cli.ProjectOpts
@@ -45,7 +51,7 @@ type DownloadOpts struct {
 	start      int64
 	end        int64
 	decompress bool
-	store      store.LogsDownloader
+	store      Downloader
 }
 
 var downloadMessage = "Download of %s completed.\n"
@@ -126,9 +132,9 @@ func (opts *DownloadOpts) initDefaultOut() error {
 	return nil
 }
 
-func (opts *DownloadOpts) newHostLogsParams() *admin.GetHostLogsApiParams {
+func (opts *DownloadOpts) newHostLogsParams() *atlasv2.GetHostLogsApiParams {
 	fileBaseName := strings.TrimSuffix(opts.name, filepath.Ext(opts.name))
-	params := &admin.GetHostLogsApiParams{
+	params := &atlasv2.GetHostLogsApiParams{
 		GroupId:  opts.ConfigProjectID(),
 		HostName: opts.host,
 		LogName:  fileBaseName,

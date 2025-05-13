@@ -27,11 +27,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=interfaces . InterfaceEndpointDeleter
+
+type InterfaceEndpointDeleter interface {
+	DeleteInterfaceEndpoint(string, string, string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
 	privateEndpointServiceID string
-	store                    store.InterfaceEndpointDeleter
+	store                    InterfaceEndpointDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

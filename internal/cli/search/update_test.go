@@ -19,7 +19,6 @@ package search
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
@@ -28,7 +27,7 @@ import (
 
 func TestUpdateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSearchIndexUpdater(ctrl)
+	mockStore := NewMockUpdater(ctrl)
 
 	t.Run("flags run", func(t *testing.T) {
 		updateOpts := &UpdateOpts{

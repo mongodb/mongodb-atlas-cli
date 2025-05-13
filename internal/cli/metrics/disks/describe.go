@@ -31,6 +31,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=disks . ProcessDiskMeasurementsLister
+
+type ProcessDiskMeasurementsLister interface {
+	ProcessDiskMeasurements(*atlasv2.GetDiskMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -39,7 +45,7 @@ type DescribeOpts struct {
 	host  string
 	port  int
 	name  string
-	store store.ProcessDiskMeasurementsLister
+	store ProcessDiskMeasurementsLister
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

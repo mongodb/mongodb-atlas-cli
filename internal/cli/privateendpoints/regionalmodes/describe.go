@@ -23,16 +23,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var describeTemplate = `ENABLED
 {{.Enabled}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=regionalmodes . RegionalizedPrivateEndpointSettingDescriber
+
+type RegionalizedPrivateEndpointSettingDescriber interface {
+	RegionalizedPrivateEndpointSetting(string) (*atlasv2.ProjectSettingItem, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.RegionalizedPrivateEndpointSettingDescriber
+	store RegionalizedPrivateEndpointSettingDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

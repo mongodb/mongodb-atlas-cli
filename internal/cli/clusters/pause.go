@@ -25,13 +25,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=pause_mock_test.go -package=clusters . ClusterPauser
+
+type ClusterPauser interface {
+	PauseCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+}
 
 type PauseOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	name  string
-	store store.ClusterPauser
+	store ClusterPauser
 }
 
 func (opts *PauseOpts) initStore(ctx context.Context) func() error {

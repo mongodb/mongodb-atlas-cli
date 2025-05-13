@@ -22,7 +22,6 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -32,7 +31,7 @@ import (
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessRestoreJobsDescriber(ctrl)
+	mockStore := NewMockServerlessRestoreJobsDescriber(ctrl)
 
 	expiresAt, _ := time.Parse("01-02-2006", "01-01-2023")
 	expected := &atlasv2.ServerlessBackupRestoreJob{

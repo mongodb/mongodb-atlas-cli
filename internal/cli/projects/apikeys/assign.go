@@ -27,12 +27,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=assign_mock_test.go -package=apikeys . ProjectAPIKeyAssigner
+
+type ProjectAPIKeyAssigner interface {
+	AssignProjectAPIKey(string, string, *atlasv2.UpdateAtlasProjectApiKey) error
+}
+
 type AssignOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	id    string
 	roles []string
-	store store.ProjectAPIKeyAssigner
+	store ProjectAPIKeyAssigner
 }
 
 func (opts *AssignOpts) initStore(ctx context.Context) func() error {

@@ -24,16 +24,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const describeTemplate = `ID	NAME
 {{.Id}}	{{.Name}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=projects . ProjectDescriber
+
+type ProjectDescriber interface {
+	Project(string) (*atlasv2.Group, error)
+}
+
 type DescribeOpts struct {
 	cli.OutputOpts
 	id    string
-	store store.ProjectDescriber
+	store ProjectDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

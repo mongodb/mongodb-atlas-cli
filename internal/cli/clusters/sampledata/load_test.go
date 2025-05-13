@@ -19,14 +19,13 @@ package sampledata
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestLoadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSampleDataAdder(ctrl)
+	mockStore := NewMockAdder(ctrl)
 
 	expected := &atlasv2.SampleDatasetStatus{}
 

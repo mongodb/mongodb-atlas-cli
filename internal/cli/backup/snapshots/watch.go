@@ -34,7 +34,7 @@ type WatchOpts struct {
 	id            string
 	clusterName   string
 	isFlexCluster bool
-	store         store.SnapshotsDescriber
+	store         Describer
 }
 
 var watchTemplate = "\nSnapshot changes completed.\n"

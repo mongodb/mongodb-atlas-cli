@@ -35,7 +35,7 @@ type WatchOpts struct {
 	id            string
 	clusterName   string
 	isFlexCluster bool
-	store         store.RestoreJobsDescriber
+	store         RestoreJobsDescriber
 }
 
 var watchTemplate = "\nRestore completed.\n"

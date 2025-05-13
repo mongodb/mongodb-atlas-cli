@@ -25,15 +25,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const describeTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL
 {{.Id}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=users . UserDescriber
+
+type UserDescriber interface {
+	UserByID(string) (*atlasv2.CloudAppUser, error)
+	UserByName(string) (*atlasv2.CloudAppUser, error)
+}
+
 type DescribeOpts struct {
 	cli.OutputOpts
-	store    store.UserDescriber
+	store    UserDescriber
 	username string
 	id       string
 }

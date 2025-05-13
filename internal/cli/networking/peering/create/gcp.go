@@ -28,6 +28,14 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=gcp_mock_test.go -package=create . GCPPeeringConnectionCreator
+
+type GCPPeeringConnectionCreator interface {
+	GCPContainers(string) ([]atlasv2.CloudProviderContainer, error)
+	CreateContainer(string, *atlasv2.CloudProviderContainer) (*atlasv2.CloudProviderContainer, error)
+	CreatePeeringConnection(string, *atlasv2.BaseNetworkPeeringConnectionSettings) (*atlasv2.BaseNetworkPeeringConnectionSettings, error)
+}
+
 type GCPOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -35,7 +43,7 @@ type GCPOpts struct {
 	gcpProjectID   string
 	network        string
 	regions        []string
-	store          store.GCPPeeringConnectionCreator
+	store          GCPPeeringConnectionCreator
 }
 
 func (opts *GCPOpts) initStore(ctx context.Context) func() error {

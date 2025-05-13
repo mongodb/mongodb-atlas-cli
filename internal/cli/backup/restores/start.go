@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const (
@@ -36,6 +36,14 @@ const (
 	pointInTimeRestore                    = "pointInTime"
 	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=restores . RestoreJobsCreator
+
+type RestoreJobsCreator interface {
+	CreateRestoreJobs(string, string, *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
+	CreateRestoreFlexClusterJobs(string, string, *atlasv2.FlexBackupRestoreJobCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error)
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+}
 
 type StartOpts struct {
 	cli.ProjectOpts
@@ -49,7 +57,7 @@ type StartOpts struct {
 	oplogInc              int
 	pointInTimeUTCSeconds int
 	isFlexCluster         bool
-	store                 store.RestoreJobsCreator
+	store                 RestoreJobsCreator
 }
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {
@@ -80,8 +88,8 @@ func (opts *StartOpts) Run() error {
 	return opts.Print(restoreJob)
 }
 
-func (opts *StartOpts) newFlexBackupRestoreJobCreate() *admin.FlexBackupRestoreJobCreate20241113 {
-	request := &admin.FlexBackupRestoreJobCreate20241113{
+func (opts *StartOpts) newFlexBackupRestoreJobCreate() *atlasv2.FlexBackupRestoreJobCreate20241113 {
+	request := &atlasv2.FlexBackupRestoreJobCreate20241113{
 		SnapshotId:               opts.snapshotID,
 		TargetDeploymentItemName: opts.targetClusterName,
 		InstanceName:             &opts.clusterName,
@@ -94,8 +102,8 @@ func (opts *StartOpts) newFlexBackupRestoreJobCreate() *admin.FlexBackupRestoreJ
 	return request
 }
 
-func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *admin.DiskBackupSnapshotRestoreJob {
-	request := new(admin.DiskBackupSnapshotRestoreJob)
+func (opts *StartOpts) newCloudProviderSnapshotRestoreJob() *atlasv2.DiskBackupSnapshotRestoreJob {
+	request := new(atlasv2.DiskBackupSnapshotRestoreJob)
 	request.DeliveryType = opts.method
 
 	if opts.targetProjectID != "" {
@@ -158,15 +166,15 @@ func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
 	return cmd.MarkFlagRequired(flag.TargetClusterName)
 }
 
-// newIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster is a FlexCluster.
-func (opts *StartOpts) newIsFlexCluster() error {
+// checkIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster is a FlexCluster.
+func (opts *StartOpts) checkIsFlexCluster() error {
 	_, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.clusterName)
 	if err == nil {
 		opts.isFlexCluster = false
 		return nil
 	}
 
-	if !atlasClustersPinned.IsErrorCode(err, cannotUseFlexWithClusterApisErrorCode) {
+	if !atlasv2.IsErrorCode(err, cannotUseFlexWithClusterApisErrorCode) {
 		return err
 	}
 
@@ -240,7 +248,7 @@ func StartBuilder() *cobra.Command {
 			return opts.PreRunE(
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
-				opts.newIsFlexCluster,
+				opts.checkIsFlexCluster,
 				opts.InitOutput(cmd.OutOrStdout(), startTemplate),
 			)
 		},

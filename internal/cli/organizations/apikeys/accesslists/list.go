@@ -31,12 +31,18 @@ const listTemplate = `IP ADDRESS	CIDR BLOCK	CREATED AT{{range valueOrEmptySlice 
 {{.IpAddress}}	{{.CidrBlock}}	{{.Created}}{{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=accesslists . OrganizationAPIKeyAccessListLister
+
+type OrganizationAPIKeyAccessListLister interface {
+	OrganizationAPIKeyAccessLists(*admin.ListApiKeyAccessListsEntriesApiParams) (*admin.PaginatedApiUserAccessListResponse, error)
+}
+
 type ListOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
 	cli.ListOpts
 	id    string
-	store store.OrganizationAPIKeyAccessListLister
+	store OrganizationAPIKeyAccessListLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

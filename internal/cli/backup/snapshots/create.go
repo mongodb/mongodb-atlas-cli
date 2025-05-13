@@ -29,10 +29,16 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=snapshots . Creator
+
+type Creator interface {
+	CreateSnapshot(string, string, *atlasv2.DiskBackupOnDemandSnapshotRequest) (*atlasv2.DiskBackupSnapshot, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store           store.SnapshotsCreator
+	store           Creator
 	clusterName     string
 	desc            string
 	retentionInDays int

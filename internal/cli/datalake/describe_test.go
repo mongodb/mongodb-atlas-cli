@@ -19,7 +19,6 @@ package datalake
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.uber.org/mock/gomock"
@@ -27,7 +26,7 @@ import (
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataLakeDescriber(ctrl)
+	mockStore := NewMockDescriber(ctrl)
 
 	expected := mongodbatlas.DataLake{
 		Name: "test",

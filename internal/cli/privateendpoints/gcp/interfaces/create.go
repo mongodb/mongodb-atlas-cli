@@ -30,10 +30,16 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=interfaces . InterfaceEndpointCreator
+
+type InterfaceEndpointCreator interface {
+	CreateInterfaceEndpoint(string, string, string, *atlasv2.CreateEndpointRequest) (*atlasv2.PrivateLinkEndpoint, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store                    store.InterfaceEndpointCreator
+	store                    InterfaceEndpointCreator
 	privateEndpointServiceID string
 	privateEndpointGroupID   string
 	gcpProjectID             string

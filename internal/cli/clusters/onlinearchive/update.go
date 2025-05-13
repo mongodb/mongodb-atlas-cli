@@ -31,6 +31,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=onlinearchive . Updater
+
+type Updater interface {
+	UpdateOnlineArchive(string, string, *atlasv2.BackupOnlineArchive) (*atlasv2.BackupOnlineArchive, error)
+}
+
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -38,7 +44,7 @@ type UpdateOpts struct {
 	clusterName     string
 	archiveAfter    int
 	expireAfterDays int
-	store           store.OnlineArchiveUpdater
+	store           Updater
 	filename        string
 	fs              afero.Fs
 }

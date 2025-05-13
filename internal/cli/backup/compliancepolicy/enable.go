@@ -31,11 +31,18 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=enable_mock_test.go -package=compliancepolicy . Enabler
+
+type Enabler interface {
+	EnableCompliancePolicy(projectID, authorizedEmail, authorizedFirstName, authorizedLastName string) (*atlasv2.DataProtectionSettings20231001, error)
+	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)
+}
+
 type EnableOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	policy                  *atlasv2.DataProtectionSettings20231001
-	store                   store.CompliancePolicyEnabler
+	store                   Enabler
 	authorizedUserFirstName string
 	authorizedUserLastName  string
 	authorizedEmail         string

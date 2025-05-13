@@ -24,13 +24,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=load_sample_data_mock_test.go -package=clusters . SampleDataAdder
+
+type SampleDataAdder interface {
+	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)
+}
 
 type LoadSampleDataOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	name  string
-	store store.SampleDataAdder
+	store SampleDataAdder
 }
 
 func (opts *LoadSampleDataOpts) initStore(ctx context.Context) func() error {
@@ -53,13 +60,14 @@ func (opts *LoadSampleDataOpts) Run() error {
 }
 
 // atlas cluster loadSampleData <clusterName> --projectId projectId -o json.
-func LoadSampleDataBuilder(deprecate bool) *cobra.Command {
+func LoadSampleDataBuilder() *cobra.Command {
 	opts := &LoadSampleDataOpts{}
 	cmd := &cobra.Command{
-		Use:   "loadSampleData <clusterName>",
-		Short: "Load sample data into the specified cluster for your project.",
-		Long:  fmt.Sprintf(usage.RequiredRole, "Project Owner"),
-		Args:  require.ExactArgs(1),
+		Use:        "loadSampleData <clusterName>",
+		Short:      "Load sample data into the specified cluster for your project.",
+		Long:       fmt.Sprintf(usage.RequiredRole, "Project Owner"),
+		Deprecated: "use 'atlas clusters sampleData load' instead",
+		Args:       require.ExactArgs(1),
 		Annotations: map[string]string{
 			"clusterNameDesc": "Label that identifies the cluster that you want to load sample data into.",
 			"output":          addTmpl,
@@ -75,10 +83,6 @@ func LoadSampleDataBuilder(deprecate bool) *cobra.Command {
 			opts.name = args[0]
 			return opts.Run()
 		},
-	}
-
-	if deprecate { // do not deprecate in mongocli but deprecate in atlascli
-		cmd.Deprecated = "use 'atlas clusters sampleData load' instead"
 	}
 
 	opts.AddProjectOptsFlags(cmd)

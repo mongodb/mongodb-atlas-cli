@@ -33,12 +33,18 @@ const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQueries}}
 {{.Namespace}}	{{.Line}}{{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=slowquerylogs . PerformanceAdvisorSlowQueriesLister
+
+type PerformanceAdvisorSlowQueriesLister interface {
+	PerformanceAdvisorSlowQueries(*atlasv2.ListSlowQueriesApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.PreRunOpts
 	cli.OutputOpts
 	cli.PerformanceAdvisorOpts
-	store      store.PerformanceAdvisorSlowQueriesLister
+	store      PerformanceAdvisorSlowQueriesLister
 	since      int64
 	duration   int64
 	namespaces []string

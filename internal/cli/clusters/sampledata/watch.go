@@ -30,7 +30,7 @@ type WatchOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	id    string
-	store store.SampleDataStatusDescriber
+	store Describer
 }
 
 var watchTemplate = "\nSample data available.\n"

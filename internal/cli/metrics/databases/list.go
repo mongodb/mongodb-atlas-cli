@@ -24,7 +24,14 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=databases . ProcessDatabaseLister
+
+type ProcessDatabaseLister interface {
+	ProcessDatabases(string, string, int, *store.ListOptions) (*atlasv2.PaginatedDatabase, error)
+}
 
 type ListsOpts struct {
 	cli.ProjectOpts
@@ -32,7 +39,7 @@ type ListsOpts struct {
 	cli.ListOpts
 	host  string
 	port  int
-	store store.ProcessDatabaseLister
+	store ProcessDatabaseLister
 }
 
 func (opts *ListsOpts) initStore(ctx context.Context) func() error {

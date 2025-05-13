@@ -16,7 +16,14 @@ package create
 
 import (
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=create . IntegrationCreator
+
+type IntegrationCreator interface {
+	CreateIntegration(string, string, *atlasv2.ThirdPartyIntegration) (*atlasv2.PaginatedIntegration, error)
+}
 
 func Builder() *cobra.Command {
 	const use = "create"

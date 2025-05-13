@@ -25,16 +25,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var describeTemplate = `ID  PROVIDER  REGION  VENDOR  STATE  INTERFACE_ENDPOINT_ID  SERVICE_ENDPOINT_ID  DNS_DOMAIN  DNS_SUBDOMAIN
 {{.Id}}  {{.Provider}}  {{.Region}}  {{.Vendor}}  {{.State}}  {{.InterfaceEndpointId}}  {{.ServiceEndpointId}}  {{.DnsDomain}}  {{.DnsSubDomain}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=privatelink . Describer
+
+type Describer interface {
+	DescribePrivateLinkEndpoint(projectID, connectionID string) (*atlasv2.StreamsPrivateLinkConnection, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store        store.PrivateLinkDescriber
+	store        Describer
 	connectionID string
 }
 

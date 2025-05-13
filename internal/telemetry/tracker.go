@@ -41,12 +41,22 @@ const (
 	promptEventType = "prompt"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=tracker_mock_test.go -package=telemetry . EventsSender,UnauthEventsSender
+
+type EventsSender interface {
+	SendEvents(body any) error
+}
+
+type UnauthEventsSender interface {
+	SendUnauthEvents(body any) error
+}
+
 type tracker struct {
 	fs               afero.Fs
 	maxCacheFileSize int64
 	cacheDir         string
-	unauthStore      store.UnauthEventsSender
-	store            store.EventsSender
+	unauthStore      UnauthEventsSender
+	store            EventsSender
 	storeSet         bool
 	cmd              *cobra.Command
 	args             []string

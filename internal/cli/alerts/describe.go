@@ -27,11 +27,17 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=alerts . AlertDescriber
+
+type AlertDescriber interface {
+	Alert(*atlasv2.GetAlertApiParams) (*atlasv2.AlertViewForNdsGroup, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	alertID string
-	store   store.AlertDescriber
+	store   AlertDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

@@ -23,16 +23,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var getTemplate = `HOSTNAME	PORT	AUTHENTICATION	AUTHORIZATION
 {{.Ldap.Hostname}}	{{.Ldap.Port}}	{{.Ldap.AuthenticationEnabled}}	{{.Ldap.AuthorizationEnabled}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=get_mock_test.go -package=ldap . Getter
+
+type Getter interface {
+	GetLDAPConfiguration(string) (*atlasv2.UserSecurity, error)
+}
+
 type GetOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.LDAPConfigurationGetter
+	store Getter
 }
 
 func (opts *GetOpts) initStore(ctx context.Context) func() error {

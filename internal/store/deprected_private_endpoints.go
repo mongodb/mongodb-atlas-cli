@@ -18,36 +18,6 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_deprecated_private_endpoints.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PrivateEndpointListerDeprecated,PrivateEndpointDescriberDeprecated,PrivateEndpointCreatorDeprecated,PrivateEndpointDeleterDeprecated,InterfaceEndpointCreatorDeprecated,InterfaceEndpointDescriberDeprecated,InterfaceEndpointDeleterDeprecated
-
-type PrivateEndpointListerDeprecated interface {
-	PrivateEndpointsDeprecated(string, *ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error)
-}
-
-type PrivateEndpointDescriberDeprecated interface {
-	PrivateEndpointDeprecated(string, string) (*atlas.PrivateEndpointConnectionDeprecated, error)
-}
-
-type PrivateEndpointDeleterDeprecated interface {
-	DeletePrivateEndpointDeprecated(string, string) error
-}
-
-type InterfaceEndpointDescriberDeprecated interface {
-	InterfaceEndpointDeprecated(string, string, string) (*atlas.InterfaceEndpointConnectionDeprecated, error)
-}
-
-type InterfaceEndpointCreatorDeprecated interface {
-	CreateInterfaceEndpointDeprecated(string, string, string) (*atlas.InterfaceEndpointConnectionDeprecated, error)
-}
-
-type PrivateEndpointCreatorDeprecated interface {
-	CreatePrivateEndpointDeprecated(string, *atlas.PrivateEndpointConnectionDeprecated) (*atlas.PrivateEndpointConnectionDeprecated, error)
-}
-
-type InterfaceEndpointDeleterDeprecated interface {
-	DeleteInterfaceEndpointDeprecated(string, string, string) error
-}
-
 // PrivateEndpointsDeprecated encapsulates the logic to manage different cloud providers.
 func (s *Store) PrivateEndpointsDeprecated(projectID string, opts *ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error) {
 	lst := &atlas.ListOptions{

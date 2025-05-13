@@ -25,15 +25,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=clusters . ClusterLister
+
+type ClusterLister interface {
+	ProjectClusters(string, *store.ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
+	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
+}
 
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	tier  string
-	store store.ClusterLister
+	store ClusterLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

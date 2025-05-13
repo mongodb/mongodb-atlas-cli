@@ -24,16 +24,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var describeTemplate = `ID	NAME	MDB VER	STATE
 {{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=serverless . Describer
+
+type Describer interface {
+	GetServerlessInstance(string, string) (*atlasv2.ServerlessInstanceDescription, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store        store.ServerlessInstanceDescriber
+	store        Describer
 	instanceName string
 }
 

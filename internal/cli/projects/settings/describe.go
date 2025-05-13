@@ -22,12 +22,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=settings . ProjectSettingsDescriber
+
+type ProjectSettingsDescriber interface {
+	ProjectSettings(string) (*atlasv2.GroupSettings, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.ProjectSettingsDescriber
+	store ProjectSettingsDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

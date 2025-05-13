@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -29,7 +28,7 @@ import (
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDeleter(ctrl)
+	mockStore := NewMockClusterDeleter(ctrl)
 
 	deleteOpts := &DeleteOpts{
 		DeleteOpts: &cli.DeleteOpts{
@@ -50,7 +49,7 @@ func TestDelete_Run(t *testing.T) {
 
 func TestDelete_RunFlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDeleter(ctrl)
+	mockStore := NewMockClusterDeleter(ctrl)
 
 	expectedError := &atlasClustersPinned.GenericOpenAPIError{}
 	expectedError.SetModel(atlasClustersPinned.ApiError{ErrorCode: pointer.Get(cannotUseFlexWithClusterApisErrorCode)})

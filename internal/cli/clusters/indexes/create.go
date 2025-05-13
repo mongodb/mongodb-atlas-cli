@@ -31,6 +31,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=indexes . IndexCreator
+
+type IndexCreator interface {
+	CreateIndex(string, string, *atlasv2.DatabaseRollingIndexRequest) error
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	clusterName string
@@ -40,7 +46,7 @@ type CreateOpts struct {
 	filename    string
 	keys        []string
 	sparse      bool
-	store       store.IndexCreator
+	store       IndexCreator
 	fs          afero.Fs
 }
 

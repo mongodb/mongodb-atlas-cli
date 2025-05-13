@@ -28,10 +28,16 @@ import (
 
 const updateTemplate = "Project settings updated.\n"
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=settings . ProjectSettingsUpdater
+
+type ProjectSettingsUpdater interface {
+	UpdateProjectSettings(string, *atlasv2.GroupSettings) (*atlasv2.GroupSettings, error)
+}
+
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store                                         store.ProjectSettingsUpdater
+	store                                         ProjectSettingsUpdater
 	enableCollectDatabaseSpecificsStatistics      bool
 	disableCollectDatabaseSpecificsStatistics     bool
 	enableDataExplorer                            bool

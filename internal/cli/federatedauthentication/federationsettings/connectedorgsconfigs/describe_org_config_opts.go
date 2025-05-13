@@ -22,8 +22,14 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=connectedorgsconfigs . ConnectedOrgConfigsDescriber
+
+type ConnectedOrgConfigsDescriber interface {
+	GetConnectedOrgConfig(opts *atlasv2.GetConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)
+}
+
 type DescribeOrgConfigsOpts struct {
-	describeStore store.ConnectedOrgConfigsDescriber
+	describeStore ConnectedOrgConfigsDescriber
 }
 
 func (opts *DescribeOrgConfigsOpts) InitDescribeStore(ctx context.Context) func() error {

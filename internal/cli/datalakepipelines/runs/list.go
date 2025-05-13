@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var listTemplate = `ID	DATASET NAME	STATE{{range valueOrEmptySlice .Results}}
@@ -34,10 +35,16 @@ var listTemplate = `ID	DATASET NAME	STATE{{range valueOrEmptySlice .Results}}
 {{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=runs . PipelineRunsLister
+
+type PipelineRunsLister interface {
+	PipelineRuns(string, string) (*atlasv2.PaginatedPipelineRun, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.PipelineRunsLister
+	store PipelineRunsLister
 
 	pipelineName string
 }

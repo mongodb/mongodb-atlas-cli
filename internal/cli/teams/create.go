@@ -30,12 +30,18 @@ import (
 
 var createTemplate = "Team '{{.Name}}' created.\n"
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=teams . TeamCreator
+
+type TeamCreator interface {
+	CreateTeam(string, *atlasv2.Team) (*atlasv2.Team, error)
+}
+
 type CreateOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
 	name      string
 	userNames []string
-	store     store.TeamCreator
+	store     TeamCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

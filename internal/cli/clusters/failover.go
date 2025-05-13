@@ -26,10 +26,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=failover_mock_test.go -package=clusters . ClusterTester
+
+type ClusterTester interface {
+	TestClusterFailover(string, string) error
+}
+
 type FailoverOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	store store.ClusterTester
+	store ClusterTester
 }
 
 func (opts *FailoverOpts) initStore(ctx context.Context) func() error {

@@ -33,7 +33,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli ProjectOrgsLister
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli ProjectOrgsLister
 
 type ProjectOrgsLister interface {
 	Project(id string) (*atlasv2.Group, error)
@@ -77,7 +77,7 @@ func newSpinner() *spinner.Spinner {
 	return spinner.New(spinner.CharSets[9], speed)
 }
 
-// Projects fetches projects and returns then as two slices of string.
+// projects fetches projects and returns then as two slices of string.
 // One for names and another for ids.
 func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 	spin := newSpinner()
@@ -109,7 +109,7 @@ func (opts *DefaultSetterOpts) projects() (ids, names []string, err error) {
 	return ids, names, nil
 }
 
-// Orgs fetches organizations, filtering by name.
+// orgs fetches organizations, filtering by name.
 func (opts *DefaultSetterOpts) orgs(filter string) (results []atlasv2.AtlasOrganization, err error) {
 	spin := newSpinner()
 	spin.Start()

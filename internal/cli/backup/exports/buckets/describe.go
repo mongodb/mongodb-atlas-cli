@@ -25,17 +25,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var describeTemplate = `ID	BUCKET NAME	CLOUD PROVIDER	IAM ROLE ID
 {{.Id}}	{{.BucketName}}	{{.CloudProvider}}	{{.IamRoleId}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=buckets . ExportBucketsDescriber
+
+type ExportBucketsDescriber interface {
+	DescribeExportBucket(string, string) (*atlasv2.DiskBackupSnapshotExportBucketResponse, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	bucketID string
-	store    store.ExportBucketsDescriber
+	store    ExportBucketsDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

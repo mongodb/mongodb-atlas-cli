@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var describeTemplate = `ID	GROUP NAME	REGION	STATUS	ERROR{{if .EndpointGroupNames}}{{range valueOrEmptySlice .EndpointGroupNames}}
@@ -31,11 +32,16 @@ var describeTemplate = `ID	GROUP NAME	REGION	STATUS	ERROR{{if .EndpointGroupName
 {{$.Id}}	N/A	{{$.RegionName}}	{{$.Status}}	{{$.ErrorMessage}}{{end}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=gcp . PrivateEndpointDescriber
+
+type PrivateEndpointDescriber interface {
+	PrivateEndpoint(string, string, string) (*atlasv2.EndpointService, error)
+}
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	id    string
-	store store.PrivateEndpointDescriber
+	store PrivateEndpointDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

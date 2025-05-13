@@ -27,13 +27,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=querylimits . DataFederationQueryLimitCreator
+
+type DataFederationQueryLimitCreator interface {
+	CreateDataFederationQueryLimit(string, string, string, *atlasv2.DataFederationTenantQueryLimit) (*atlasv2.DataFederationTenantQueryLimit, error)
+}
 
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store         store.DataFederationQueryLimitCreator
+	store         DataFederationQueryLimitCreator
 	limitName     string
 	tenantName    string
 	value         int64
@@ -61,8 +67,8 @@ func (opts *CreateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *CreateOpts) newCreateRequest() *admin.DataFederationTenantQueryLimit {
-	req := &admin.DataFederationTenantQueryLimit{
+func (opts *CreateOpts) newCreateRequest() *atlasv2.DataFederationTenantQueryLimit {
+	req := &atlasv2.DataFederationTenantQueryLimit{
 		Name:       opts.limitName,
 		TenantName: &opts.tenantName,
 		Value:      opts.value,

@@ -34,7 +34,7 @@ type StartOpts struct {
 	cli.OutputOpts
 	id          string
 	clusterName string
-	store       store.OnlineArchiveUpdater
+	store       Updater
 }
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {

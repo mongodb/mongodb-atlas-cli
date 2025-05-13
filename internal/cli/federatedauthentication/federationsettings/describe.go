@@ -31,10 +31,16 @@ const describeTemplate = `ID	IDENTITY PROVIDER ID	IDENTITY PROVIDER STATUS
 {{.Id}}	{{.IdentityProviderId}}	{{.IdentityProviderStatus}}
 `
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=federationsettings . Describer
+
+type Describer interface {
+	FederationSetting(opts *atlasv2.GetFederationSettingsApiParams) (*atlasv2.OrgFederationSettings, error)
+}
+
 type DescribeOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
-	store store.FederationSettingsDescriber
+	store Describer
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

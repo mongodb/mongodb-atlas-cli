@@ -47,6 +47,13 @@ const (
 	backupPolicyLength = 6
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=schedule . DescribeUpdater
+
+type DescribeUpdater interface {
+	DescribeSchedule(string, string) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error)
+	UpdateSchedule(string, string, *atlasClustersPinned.DiskBackupSnapshotSchedule) (*atlasClustersPinned.DiskBackupSnapshotSchedule, error)
+}
+
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -63,7 +70,7 @@ type UpdateOpts struct {
 	noUpdateSnapshots                   bool
 	useOrgAndGroupNamesInExportPrefix   bool
 	noUseOrgAndGroupNamesInExportPrefix bool
-	store                               store.ScheduleDescriberUpdater
+	store                               DescribeUpdater
 	filename                            string
 	fs                                  afero.Fs
 }

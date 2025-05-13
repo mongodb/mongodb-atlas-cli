@@ -17,7 +17,6 @@ package snapshots
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
@@ -27,7 +26,7 @@ import (
 
 func TestSnapshotDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSnapshotsDownloader(ctrl)
+	mockStore := NewMockDownloader(ctrl)
 
 	opts := &DownloadOpts{
 		id:          "test.tgz",

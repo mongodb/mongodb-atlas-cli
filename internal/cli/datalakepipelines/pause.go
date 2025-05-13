@@ -24,13 +24,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=pause_mock_test.go -package=datalakepipelines . PipelinesPauser
+
+type PipelinesPauser interface {
+	PipelinePause(string, string) (*atlasv2.DataLakeIngestionPipeline, error)
+}
 
 type PauseOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	id    string
-	store store.PipelinesPauser
+	store PipelinesPauser
 }
 
 func (opts *PauseOpts) initStore(ctx context.Context) func() error {

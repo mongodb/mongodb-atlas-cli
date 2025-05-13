@@ -18,24 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_maintenance.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store MaintenanceWindowUpdater,MaintenanceWindowClearer,MaintenanceWindowDeferrer,MaintenanceWindowDescriber
-
-type MaintenanceWindowUpdater interface {
-	UpdateMaintenanceWindow(string, *atlasv2.GroupMaintenanceWindow) error
-}
-
-type MaintenanceWindowClearer interface {
-	ClearMaintenanceWindow(string) error
-}
-
-type MaintenanceWindowDeferrer interface {
-	DeferMaintenanceWindow(string) error
-}
-
-type MaintenanceWindowDescriber interface {
-	MaintenanceWindow(string) (*atlasv2.GroupMaintenanceWindow, error)
-}
-
 // UpdateMaintenanceWindow encapsulates the logic to manage different cloud providers.
 func (s *Store) UpdateMaintenanceWindow(projectID string, maintenanceWindow *atlasv2.GroupMaintenanceWindow) error {
 	_, err := s.clientv2.MaintenanceWindowsApi.UpdateMaintenanceWindow(s.ctx, projectID, maintenanceWindow).Execute()

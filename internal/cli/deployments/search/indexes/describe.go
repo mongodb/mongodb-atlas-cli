@@ -28,11 +28,18 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 var describeTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{if .Type}}{{.Type}}{{else}}` + search.DefaultType + `{{end}}
 `
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=indexes . Describer
+
+type Describer interface {
+	SearchIndexDeprecated(string, string, string) (*atlasv2.ClusterSearchIndex, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
@@ -40,7 +47,7 @@ type DescribeOpts struct {
 	options.DeploymentOpts
 	indexID       string
 	mongodbClient mongodbclient.MongoDBClient
-	store         store.SearchIndexDescriber
+	store         Describer
 }
 
 func (opts *DescribeOpts) Run(ctx context.Context) error {

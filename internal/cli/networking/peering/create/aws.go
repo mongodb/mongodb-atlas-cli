@@ -30,6 +30,14 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=aws_mock_test.go -package=create . AWSPeeringConnectionCreator
+
+type AWSPeeringConnectionCreator interface {
+	AWSContainers(string) ([]atlasv2.CloudProviderContainer, error)
+	CreateContainer(string, *atlasv2.CloudProviderContainer) (*atlasv2.CloudProviderContainer, error)
+	CreatePeeringConnection(string, *atlasv2.BaseNetworkPeeringConnectionSettings) (*atlasv2.BaseNetworkPeeringConnectionSettings, error)
+}
+
 type AWSOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -38,7 +46,7 @@ type AWSOpts struct {
 	accountID           string
 	vpcID               string
 	atlasCIDRBlock      string
-	store               store.AWSPeeringConnectionCreator
+	store               AWSPeeringConnectionCreator
 }
 
 func (opts *AWSOpts) initStore(ctx context.Context) func() error {

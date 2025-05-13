@@ -28,11 +28,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=search . Deleter
+
+type Deleter interface {
+	DeleteSearchIndex(string, string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
 	clusterName string
-	store       store.SearchIndexDeleter
+	store       Deleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
@@ -44,7 +50,7 @@ func (opts *DeleteOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *DeleteOpts) Run() error {
-	return opts.Delete(opts.store.DeleteSearchIndexDeprecated, opts.ConfigProjectID(), opts.clusterName)
+	return opts.Delete(opts.store.DeleteSearchIndex, opts.ConfigProjectID(), opts.clusterName)
 }
 
 // atlas cluster(s) search(s) index(es) delete <id> [--clusterName name][--projectId projectId][--force].

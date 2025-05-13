@@ -27,6 +27,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=oidc_mock_test.go -package=create . IdentityProviderCreator
+
+type IdentityProviderCreator interface {
+	CreateIdentityProvider(*atlasv2.CreateIdentityProviderApiParams) (*atlasv2.FederationOidcIdentityProvider, error)
+}
+
 type OidcOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -44,7 +50,7 @@ type OidcOpts struct {
 	groupsClaim          string
 	userClaim            string
 	requestedScopes      []string
-	store                store.IdentityProviderCreator
+	store                IdentityProviderCreator
 }
 
 const (

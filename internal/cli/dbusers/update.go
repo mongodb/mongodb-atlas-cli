@@ -32,7 +32,7 @@ import (
 
 const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
 
-//go:generate mockgen -typed -destination=update_mock_test.go -package=dbusers . DatabaseUserUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=dbusers . DatabaseUserUpdater
 
 type DatabaseUserUpdater interface {
 	UpdateDatabaseUser(*atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.CloudDatabaseUser, error)

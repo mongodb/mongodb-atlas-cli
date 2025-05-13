@@ -31,7 +31,7 @@ const listTemplate = `TYPE{{range valueOrEmptySlice .Results}}
 {{.Type}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=integrations . IntegrationLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=integrations . IntegrationLister
 
 type IntegrationLister interface {
 	Integrations(string) (*atlasv2.PaginatedIntegration, error)

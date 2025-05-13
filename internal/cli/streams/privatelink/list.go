@@ -31,7 +31,7 @@ var listTemplate = `ID  PROVIDER  REGION  VENDOR  STATE  INTERFACE_ENDPOINT_ID  
 {{.Id}}  {{.Provider}}  {{.Region}}  {{.Vendor}}  {{.State}}  {{.InterfaceEndpointId}}  {{.ServiceEndpointId}}  {{.DnsDomain}}  {{.DnsSubDomain}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=privatelink . Lister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=privatelink . Lister
 
 type Lister interface {
 	ListPrivateLinkEndpoints(projectID string) (*atlasv2.PaginatedApiStreamsPrivateLink, error)

@@ -31,7 +31,7 @@ const describeTemplate = `ID	NAME
 {{.Id}}	{{.Name}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=organizations . OrganizationDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=organizations . OrganizationDescriber
 
 type OrganizationDescriber interface {
 	Organization(string) (*atlasv2.AtlasOrganization, error)

@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=runs . PipelineRunsDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=runs . PipelineRunsDescriber
 
 type PipelineRunsDescriber interface {
 	PipelineRun(string, string, string) (*atlasv2.IngestionPipelineRun, error)

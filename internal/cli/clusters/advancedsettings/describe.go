@@ -31,7 +31,7 @@ var describeTemplate = `MINIMUM TLS	JAVASCRIPT ENABLED	OPLOG SIZE MB
 {{.MinimumEnabledTlsProtocol}}	{{.JavascriptEnabled}}	{{if .GetOplogSizeMB}}{{.GetOplogSizeMB}} {{else}}N/A{{end}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=advancedsettings . AtlasClusterConfigurationOptionsDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=advancedsettings . AtlasClusterConfigurationOptionsDescriber
 
 type AtlasClusterConfigurationOptionsDescriber interface {
 	AtlasClusterConfigurationOptions(string, string) (*atlasClustersPinned.ClusterDescriptionProcessArgs, error)

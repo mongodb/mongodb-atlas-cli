@@ -75,7 +75,7 @@ type Image struct {
 	Digest     string `json:"digest"`
 }
 
-//go:generate mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman Client
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_podman.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/podman Client
 
 type Client interface {
 	Ready(ctx context.Context) error

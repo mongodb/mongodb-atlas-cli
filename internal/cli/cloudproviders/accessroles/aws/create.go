@@ -35,7 +35,7 @@ Unique External ID: {{.AtlasAssumedRoleExternalId}}
 `
 )
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=aws . CloudProviderAccessRoleCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=aws . CloudProviderAccessRoleCreator
 
 type CloudProviderAccessRoleCreator interface {
 	CreateCloudProviderAccessRole(string, string) (*atlasv2.CloudProviderAccessRole, error)

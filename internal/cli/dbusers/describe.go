@@ -34,7 +34,7 @@ const describeTemplate = `USERNAME	DATABASE
 {{.Username}}	{{.DatabaseName}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=dbusers . DatabaseUserDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=dbusers . DatabaseUserDescriber
 
 type DatabaseUserDescriber interface {
 	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)

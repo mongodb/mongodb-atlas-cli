@@ -30,7 +30,7 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
-//go:generate mockgen -typed -destination=pause_mock_test.go -package=deployments . ClusterPauser
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=pause_mock_test.go -package=deployments . ClusterPauser
 
 type ClusterPauser interface {
 	PauseCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)

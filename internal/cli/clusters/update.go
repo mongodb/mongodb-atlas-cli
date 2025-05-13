@@ -39,7 +39,7 @@ const (
 	updateTmpl = "Updating cluster '{{.Name}}'.\n"
 )
 
-//go:generate mockgen -typed -destination=update_mock_test.go -package=clusters . AtlasClusterGetterUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=clusters . AtlasClusterGetterUpdater
 
 type AtlasClusterGetterUpdater interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)

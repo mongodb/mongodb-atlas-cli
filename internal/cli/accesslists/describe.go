@@ -31,7 +31,7 @@ const describeTemplate = `CIDR BLOCK	SECURITY GROUP
 {{.CidrBlock}}	{{if .AwsSecurityGroup}}{{.AwsSecurityGroup}} {{else}}N/A{{end}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=accesslists . ProjectIPAccessListDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=accesslists . ProjectIPAccessListDescriber
 
 type ProjectIPAccessListDescriber interface {
 	IPAccessList(string, string) (*atlasv2.NetworkPermissionEntry, error)

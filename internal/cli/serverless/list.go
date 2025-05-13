@@ -31,7 +31,7 @@ var listTemplate = `ID	NAME	MDB VER	STATE{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=serverless . Lister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=serverless . Lister
 
 type Lister interface {
 	ServerlessInstances(string, *store.ListOptions) (*atlasv2.PaginatedServerlessInstanceDescription, error)

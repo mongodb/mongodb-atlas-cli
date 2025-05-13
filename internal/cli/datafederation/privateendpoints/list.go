@@ -34,7 +34,7 @@ var listTemplate = `ENDPOINT ID	COMMENT	TYPE{{range valueOrEmptySlice .Results}}
 {{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=privateendpoints . DataFederationPrivateEndpointLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=privateendpoints . DataFederationPrivateEndpointLister
 
 type DataFederationPrivateEndpointLister interface {
 	DataFederationPrivateEndpoints(string) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error)

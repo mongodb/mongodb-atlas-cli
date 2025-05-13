@@ -34,7 +34,7 @@ import (
 
 var errInvalidIndex = errors.New("invalid index")
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=search . Creator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=search . Creator
 
 type Creator interface {
 	CreateSearchIndexesDeprecated(string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)

@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=settings . AlertConfigurationLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=settings . AlertConfigurationLister
 
 type AlertConfigurationLister interface {
 	AlertConfigurations(*atlasv2.ListAlertConfigurationsApiParams) (*atlasv2.PaginatedAlertConfig, error)

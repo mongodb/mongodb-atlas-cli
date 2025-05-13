@@ -29,7 +29,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=alerts . AlertLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=alerts . AlertLister
 
 type AlertLister interface {
 	Alerts(*atlasv2.ListAlertsApiParams) (*atlasv2.PaginatedAlert, error)

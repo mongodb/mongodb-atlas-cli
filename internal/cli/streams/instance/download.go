@@ -32,7 +32,7 @@ import (
 
 var downloadMessage = "Download of %s completed.\n"
 
-//go:generate mockgen -typed -destination=download_mock_test.go -package=instance . StreamsDownloader
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=download_mock_test.go -package=instance . StreamsDownloader
 
 type StreamsDownloader interface {
 	DownloadAuditLog(*atlasv2.DownloadStreamTenantAuditLogsApiParams) (io.ReadCloser, error)

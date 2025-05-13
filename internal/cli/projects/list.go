@@ -31,7 +31,7 @@ const listTemplate = `ID	NAME{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Name}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=projects . OrgProjectLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=projects . OrgProjectLister
 
 type OrgProjectLister interface {
 	Projects(*store.ListOptions) (*atlasv2.PaginatedAtlasGroup, error)

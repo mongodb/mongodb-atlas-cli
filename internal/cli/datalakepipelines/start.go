@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=start_mock_test.go -package=datalakepipelines . PipelinesResumer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=datalakepipelines . PipelinesResumer
 
 type PipelinesResumer interface {
 	PipelineResume(string, string) (*atlasv2.DataLakeIngestionPipeline, error)

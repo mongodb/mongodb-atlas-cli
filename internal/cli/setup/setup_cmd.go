@@ -109,7 +109,7 @@ We could not find your public IP address. To add your IP address run:
 
 `
 
-//go:generate mockgen -typed -destination=setup_mock_test.go -package=setup . AtlasClusterQuickStarter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=setup_mock_test.go -package=setup . AtlasClusterQuickStarter
 
 type profileReader interface {
 	ProjectID() string

@@ -34,7 +34,7 @@ var listTemplate = `ID	NAME	STATE{{range valueOrEmptySlice .}}
 {{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=datalakepipelines . PipelinesLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=datalakepipelines . PipelinesLister
 
 type PipelinesLister interface {
 	Pipelines(string) ([]atlasv2.DataLakeIngestionPipeline, error)

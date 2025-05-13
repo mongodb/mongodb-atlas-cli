@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=integrations . IntegrationDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=integrations . IntegrationDescriber
 
 type IntegrationDescriber interface {
 	Integration(string, string) (*atlasv2.ThirdPartyIntegration, error)

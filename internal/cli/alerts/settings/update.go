@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=update_mock_test.go -package=settings . AlertConfigurationUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=settings . AlertConfigurationUpdater
 
 type AlertConfigurationUpdater interface {
 	UpdateAlertConfiguration(*atlasv2.GroupAlertsConfig) (*atlasv2.GroupAlertsConfig, error)

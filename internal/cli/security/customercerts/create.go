@@ -31,7 +31,7 @@ import (
 
 const createTemplate = "Certificate successfully created.\n"
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=customercerts . X509CertificateConfSaver
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=customercerts . X509CertificateConfSaver
 
 type X509CertificateConfSaver interface {
 	SaveX509Configuration(string, string) (*atlasv2.UserSecurity, error)

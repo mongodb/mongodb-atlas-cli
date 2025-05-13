@@ -27,7 +27,7 @@ import (
 
 var cutoverTemplate = "Cutover process successfully started.\n"
 
-//go:generate mockgen -typed -destination=cutover_mock_test.go -package=livemigrations . LiveMigrationCutoverCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=cutover_mock_test.go -package=livemigrations . LiveMigrationCutoverCreator
 
 type LiveMigrationCutoverCreator interface {
 	CreateLiveMigrationCutover(string, string) error

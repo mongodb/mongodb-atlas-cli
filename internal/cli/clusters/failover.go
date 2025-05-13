@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate mockgen -typed -destination=failover_mock_test.go -package=clusters . ClusterTester
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=failover_mock_test.go -package=clusters . ClusterTester
 
 type ClusterTester interface {
 	TestClusterFailover(string, string) error

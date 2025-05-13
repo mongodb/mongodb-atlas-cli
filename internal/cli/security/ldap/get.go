@@ -30,7 +30,7 @@ var getTemplate = `HOSTNAME	PORT	AUTHENTICATION	AUTHORIZATION
 {{.Ldap.Hostname}}	{{.Ldap.Port}}	{{.Ldap.AuthenticationEnabled}}	{{.Ldap.AuthorizationEnabled}}
 `
 
-//go:generate mockgen -typed -destination=get_mock_test.go -package=ldap . Getter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=get_mock_test.go -package=ldap . Getter
 
 type Getter interface {
 	GetLDAPConfiguration(string) (*atlasv2.UserSecurity, error)

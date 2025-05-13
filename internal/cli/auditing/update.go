@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=update_mock_test.go -package=auditing . Updater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=auditing . Updater
 
 type Updater interface {
 	UpdateAuditingConfig(string, *atlasv2.AuditLog) (*atlasv2.AuditLog, error)

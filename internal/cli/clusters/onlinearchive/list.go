@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=onlinearchive . Lister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=onlinearchive . Lister
 
 type Lister interface {
 	OnlineArchives(string, string, *store.ListOptions) (*atlasv2.PaginatedOnlineArchive, error)

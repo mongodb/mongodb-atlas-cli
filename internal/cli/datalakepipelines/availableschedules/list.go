@@ -33,7 +33,7 @@ import (
 var listTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION UNIT	RETENTION VALUE{{range valueOrEmptySlice .}}
 {{ .Id }}	{{ .FrequencyInterval }}	{{ .FrequencyType }}	{{ .RetentionUnit }}	{{ .RetentionValue }}{{end}}`
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=availableschedules . PipelineAvailableSchedulesLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=availableschedules . PipelineAvailableSchedulesLister
 
 type PipelineAvailableSchedulesLister interface {
 	PipelineAvailableSchedules(string, string) ([]atlasv2.DiskBackupApiPolicyItem, error)

@@ -33,7 +33,7 @@ Public API Key {{.PublicKey}}
 Private API Key {{.PrivateKey}}
 `
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=apikeys . ProjectAPIKeyCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=apikeys . ProjectAPIKeyCreator
 
 type ProjectAPIKeyCreator interface {
 	CreateProjectAPIKey(string, *atlasv2.CreateAtlasProjectApiKey) (*atlasv2.ApiKeyUserDetails, error)

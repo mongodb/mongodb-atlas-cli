@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=verify_mock_test.go -package=ldap . ConfigurationVerifier
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=verify_mock_test.go -package=ldap . ConfigurationVerifier
 
 type ConfigurationVerifier interface {
 	VerifyLDAPConfiguration(string, *atlasv2.LDAPVerifyConnectivityJobRequestParams) (*atlasv2.LDAPVerifyConnectivityJobRequest, error)

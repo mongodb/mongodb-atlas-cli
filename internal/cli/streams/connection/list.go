@@ -34,7 +34,7 @@ var listTemplate = `NAME	TYPE	SERVERS{{range valueOrEmptySlice .Results}}
 {{.Name}}	{{.Type}}	{{if .ClusterName}}{{.ClusterName}}{{else if .BootstrapServers}}{{.BootstrapServers}}{{else}}nil{{end}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=connection . StreamsConnectionLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=connection . StreamsConnectionLister
 
 type StreamsConnectionLister interface {
 	StreamsConnections(string, string) (*atlasv2.PaginatedApiStreamsConnection, error)

@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate mockgen -typed -destination=revokejwk_mock_test.go -package=identityprovider . JwkRevoker
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=revokejwk_mock_test.go -package=identityprovider . JwkRevoker
 
 type JwkRevoker interface {
 	RevokeJwksFromIdentityProvider(string, string) error

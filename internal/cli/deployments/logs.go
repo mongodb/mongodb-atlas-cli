@@ -37,7 +37,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=logs_mock_test.go -package=deployments . LogsDownloader
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=logs_mock_test.go -package=deployments . LogsDownloader
 
 type LogsDownloader interface {
 	DownloadLog(*atlasv2.GetHostLogsApiParams) (io.ReadCloser, error)

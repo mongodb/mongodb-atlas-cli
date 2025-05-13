@@ -30,7 +30,7 @@ import (
 
 const updateTemplate = "Team's roles updated.\n"
 
-//go:generate mockgen -typed -destination=update_mock_test.go -package=teams . TeamRolesUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=teams . TeamRolesUpdater
 
 type TeamRolesUpdater interface {
 	UpdateProjectTeamRoles(string, string, *atlasv2.TeamRole) (*atlasv2.PaginatedTeamRole, error)

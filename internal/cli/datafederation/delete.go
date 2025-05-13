@@ -29,7 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=datafederation . Deleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=datafederation . Deleter
 
 type Deleter interface {
 	DeleteDataFederation(string, string) error

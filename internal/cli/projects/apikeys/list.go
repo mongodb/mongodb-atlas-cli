@@ -32,7 +32,7 @@ const listTemplate = `ID	PUBLIC KEY	DESCRIPTION{{range valueOrEmptySlice .Result
 {{.Id}}	{{.PublicKey}}	{{.Desc}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=apikeys . ProjectAPIKeyLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=apikeys . ProjectAPIKeyLister
 
 type ProjectAPIKeyLister interface {
 	ProjectAPIKeys(string, *store.ListOptions) (*atlasv2.PaginatedApiApiUser, error)

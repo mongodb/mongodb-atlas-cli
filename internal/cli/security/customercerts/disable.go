@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate mockgen -typed -destination=disable_mock_test.go -package=customercerts . X509CertificateConfDisabler
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=disable_mock_test.go -package=customercerts . X509CertificateConfDisabler
 
 type X509CertificateConfDisabler interface {
 	DisableX509Configuration(string) error

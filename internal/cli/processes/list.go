@@ -32,7 +32,7 @@ const listTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION{{range valueOrEmpty
 {{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=processes . ProcessLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=processes . ProcessLister
 
 type ProcessLister interface {
 	Processes(*atlasv2.ListAtlasProcessesApiParams) (*atlasv2.PaginatedHostViewAtlas, error)

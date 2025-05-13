@@ -31,7 +31,7 @@ import (
 
 const providerName = "SERVERLESS"
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=serverless . Creator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=serverless . Creator
 
 type Creator interface {
 	CreateServerlessInstance(string, *atlasv2.ServerlessInstanceDescriptionCreate) (*atlasv2.ServerlessInstanceDescription, error)

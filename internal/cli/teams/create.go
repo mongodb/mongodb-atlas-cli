@@ -30,7 +30,7 @@ import (
 
 var createTemplate = "Team '{{.Name}}' created.\n"
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=teams . TeamCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=teams . TeamCreator
 
 type TeamCreator interface {
 	CreateTeam(string, *atlasv2.Team) (*atlasv2.Team, error)

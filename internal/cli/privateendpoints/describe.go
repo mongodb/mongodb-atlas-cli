@@ -29,7 +29,7 @@ var describeTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR
 {{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=privateendpoints . PrivateEndpointDescriberDeprecated
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=privateendpoints . PrivateEndpointDescriberDeprecated
 
 type PrivateEndpointDescriberDeprecated interface {
 	PrivateEndpointDeprecated(string, string) (*atlas.PrivateEndpointConnectionDeprecated, error)

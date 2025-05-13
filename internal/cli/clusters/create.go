@@ -50,7 +50,7 @@ const (
 	regionName                    = "regionName"
 )
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=clusters . ClusterCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=clusters . ClusterCreator
 
 type ClusterCreator interface {
 	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)

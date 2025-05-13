@@ -30,7 +30,7 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=clusters . ClusterDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=clusters . ClusterDeleter
 
 type ClusterDeleter interface {
 	DeleteCluster(string, string) error

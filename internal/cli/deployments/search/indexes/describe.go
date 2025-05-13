@@ -35,7 +35,7 @@ var describeTemplate = `ID	NAME	DATABASE	COLLECTION	STATUS	TYPE
 {{.IndexID}}	{{.Name}}	{{.Database}}	{{.CollectionName}}	{{.Status}}	{{if .Type}}{{.Type}}{{else}}` + search.DefaultType + `{{end}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=indexes . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=indexes . Describer
 
 type Describer interface {
 	SearchIndexDeprecated(string, string, string) (*atlasv2.ClusterSearchIndex, error)

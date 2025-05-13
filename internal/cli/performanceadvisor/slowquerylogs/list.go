@@ -33,7 +33,7 @@ const listTemplate = `NAMESPACE	LINE{{range valueOrEmptySlice .SlowQueries}}
 {{.Namespace}}	{{.Line}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=slowquerylogs . PerformanceAdvisorSlowQueriesLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=slowquerylogs . PerformanceAdvisorSlowQueriesLister
 
 type PerformanceAdvisorSlowQueriesLister interface {
 	PerformanceAdvisorSlowQueries(*atlasv2.ListSlowQueriesApiParams) (*atlasv2.PerformanceAdvisorSlowQueryList, error)

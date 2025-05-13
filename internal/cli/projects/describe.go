@@ -31,7 +31,7 @@ const describeTemplate = `ID	NAME
 {{.Id}}	{{.Name}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=projects . ProjectDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=projects . ProjectDescriber
 
 type ProjectDescriber interface {
 	Project(string) (*atlasv2.Group, error)

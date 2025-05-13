@@ -33,7 +33,7 @@ const listTemplate = `ID	NAMESPACE	SUGGESTED INDEX{{range valueOrEmptySlice .Sug
 {{ .Id }}	{{ .Namespace}}	{ {{range $i, $element := valueOrEmptySlice .Index}}{{range $key, $value := .}}{{if $i}}, {{end}}{{ $key }}: {{ $value }}{{end}}{{end}} }{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=suggestedindexes . PerformanceAdvisorIndexesLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=suggestedindexes . PerformanceAdvisorIndexesLister
 
 type PerformanceAdvisorIndexesLister interface {
 	PerformanceAdvisorIndexes(*atlasv2.ListSuggestedIndexesApiParams) (*atlasv2.PerformanceAdvisorResponse, error)

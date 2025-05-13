@@ -30,7 +30,7 @@ var describeTemplate = `ENABLED
 {{.Enabled}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=regionalmodes . RegionalizedPrivateEndpointSettingDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=regionalmodes . RegionalizedPrivateEndpointSettingDescriber
 
 type RegionalizedPrivateEndpointSettingDescriber interface {
 	RegionalizedPrivateEndpointSetting(string) (*atlasv2.ProjectSettingItem, error)

@@ -32,7 +32,7 @@ var describeTemplate = `ID	BUCKET NAME	CLOUD PROVIDER	IAM ROLE ID
 {{.Id}}	{{.BucketName}}	{{.CloudProvider}}	{{.IamRoleId}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=buckets . ExportBucketsDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=buckets . ExportBucketsDescriber
 
 type ExportBucketsDescriber interface {
 	DescribeExportBucket(string, string) (*atlasv2.DiskBackupSnapshotExportBucketResponse, error)

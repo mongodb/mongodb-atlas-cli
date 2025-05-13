@@ -33,7 +33,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=download_mock_test.go -package=snapshots . Downloader
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=download_mock_test.go -package=snapshots . Downloader
 
 type Downloader interface {
 	DownloadFlexClusterSnapshot(string, string, *atlasv2.FlexBackupSnapshotDownloadCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error)

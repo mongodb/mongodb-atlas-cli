@@ -32,7 +32,7 @@ const describeTemplate = `ID	SNAPSHOT TYPE	EXPIRES AT
 {{.Id}}	{{.SnapshotType}}	{{.ExpiresAt}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=snapshots . ServerlessSnapshotsDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=snapshots . ServerlessSnapshotsDescriber
 
 type ServerlessSnapshotsDescriber interface {
 	ServerlessSnapshot(string, string, string) (*atlasv2.ServerlessBackupSnapshot, error)

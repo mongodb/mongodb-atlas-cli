@@ -32,7 +32,7 @@ const listTemplate = `ID	FIRST NAME	LAST NAME	USERNAME{{range valueOrEmptySlice 
 {{.Id}}	{{.FirstName}}	{{.LastName}}	{{.Username}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=users . ProjectUsersLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=users . ProjectUsersLister
 
 type ProjectUsersLister interface {
 	ProjectUsers(string, *store.ListOptions) (*atlasv2.PaginatedGroupUser, error)

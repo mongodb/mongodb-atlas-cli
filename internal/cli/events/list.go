@@ -38,7 +38,7 @@ type EventListOpts struct {
 	MaxDate   string
 }
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=events . EventLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=events . EventLister
 
 type EventLister interface {
 	OrganizationEvents(opts *atlasv2.ListOrganizationEventsApiParams) (*atlasv2.OrgPaginatedEvent, error)

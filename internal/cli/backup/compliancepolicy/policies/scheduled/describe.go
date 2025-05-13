@@ -24,7 +24,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=scheduled . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=scheduled . Describer
 
 type Describer interface {
 	DescribeCompliancePolicy(projectID string) (*atlasv2.DataProtectionSettings20231001, error)

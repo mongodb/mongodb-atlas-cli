@@ -35,7 +35,7 @@ var listTemplate = `ID	DATASET NAME	STATE{{range valueOrEmptySlice .Results}}
 {{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=runs . PipelineRunsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=runs . PipelineRunsLister
 
 type PipelineRunsLister interface {
 	PipelineRuns(string, string) (*atlasv2.PaginatedPipelineRun, error)

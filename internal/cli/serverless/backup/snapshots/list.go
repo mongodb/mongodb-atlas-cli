@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=snapshots . ServerlessSnapshotsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=snapshots . ServerlessSnapshotsLister
 
 type ServerlessSnapshotsLister interface {
 	ServerlessSnapshots(string, string, *store.ListOptions) (*atlasv2.PaginatedApiAtlasServerlessBackupSnapshot, error)

@@ -31,7 +31,7 @@ import (
 
 const storeErrMsg = "store error: "
 
-//go:generate mockgen -typed -destination=region_tier_autocomplete_mock_test.go -package=clusters . CloudProviderRegionsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=region_tier_autocomplete_mock_test.go -package=clusters . CloudProviderRegionsLister
 
 type CloudProviderRegionsLister interface {
 	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)

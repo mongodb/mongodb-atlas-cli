@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=acknowledge_mock_test.go -package=alerts . AlertAcknowledger
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=acknowledge_mock_test.go -package=alerts . AlertAcknowledger
 
 type AlertAcknowledger interface {
 	AcknowledgeAlert(*atlasv2.AcknowledgeAlertApiParams) (*atlasv2.AlertViewForNdsGroup, error)

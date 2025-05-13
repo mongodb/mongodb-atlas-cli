@@ -31,7 +31,7 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 {{.Id}}	{{.Name}}	{{.MongoDBVersion}}	{{.StateName}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=serverless . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=serverless . Describer
 
 type Describer interface {
 	GetServerlessInstance(string, string) (*atlasv2.ServerlessInstanceDescription, error)

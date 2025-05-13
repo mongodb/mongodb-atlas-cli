@@ -30,7 +30,7 @@ import (
 
 const createTemplate = "Created new access list entry(s).\n"
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=accesslists . OrganizationAPIKeyAccessListCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=accesslists . OrganizationAPIKeyAccessListCreator
 
 type OrganizationAPIKeyAccessListCreator interface {
 	CreateOrganizationAPIKeyAccessList(*admin.CreateApiKeyAccessListApiParams) (*admin.PaginatedApiUserAccessListResponse, error)

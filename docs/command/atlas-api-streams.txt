@@ -77,6 +77,7 @@ Related Commands
 * :ref:`atlas-api-streams-modifyStreamProcessor` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Modify one existing Stream Processor within the specified stream instance.
 * :ref:`atlas-api-streams-rejectVpcPeeringConnection` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Requests the rejection of an incoming VPC Peering connection.
 * :ref:`atlas-api-streams-startStreamProcessor` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Start a Stream Processor within the specified stream instance.
+* :ref:`atlas-api-streams-startStreamProcessorWith` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Start a Stream Processor within the specified stream instance.
 * :ref:`atlas-api-streams-stopStreamProcessor` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Stop a Stream Processor within the specified stream instance.
 * :ref:`atlas-api-streams-updateStreamConnection` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Update one connection for the specified stream instance in the specified project.
 * :ref:`atlas-api-streams-updateStreamInstance` - `Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Update one stream instance in the specified project.
@@ -111,6 +112,7 @@ Related Commands
    modifyStreamProcessor </command/atlas-api-streams-modifyStreamProcessor>
    rejectVpcPeeringConnection </command/atlas-api-streams-rejectVpcPeeringConnection>
    startStreamProcessor </command/atlas-api-streams-startStreamProcessor>
+   startStreamProcessorWith </command/atlas-api-streams-startStreamProcessorWith>
    stopStreamProcessor </command/atlas-api-streams-stopStreamProcessor>
    updateStreamConnection </command/atlas-api-streams-updateStreamConnection>
    updateStreamInstance </command/atlas-api-streams-updateStreamInstance>

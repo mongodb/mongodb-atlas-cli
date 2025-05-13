@@ -36,7 +36,7 @@ import (
 var listTemplate = `ID	DESCRIPTION	STATUS{{range valueOrEmptySlice .Results}}
 {{.Id}}	{{.Description}}	{{.Status}}{{end}}`
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=availablesnapshots . PipelineAvailableSnapshotsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=availablesnapshots . PipelineAvailableSnapshotsLister
 
 type PipelineAvailableSnapshotsLister interface {
 	PipelineAvailableSnapshots(string, string, *time.Time, *store.ListOptions) (*atlasv2.PaginatedBackupSnapshot, error)

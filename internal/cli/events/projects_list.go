@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=projects_list_mock_test.go -package=events . ProjectEventLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=projects_list_mock_test.go -package=events . ProjectEventLister
 
 type ProjectEventLister interface {
 	ProjectEvents(opts *atlasv2.ListProjectEventsApiParams) (*atlasv2.GroupPaginatedEvent, error)

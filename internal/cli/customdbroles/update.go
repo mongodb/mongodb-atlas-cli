@@ -32,7 +32,7 @@ import (
 
 const updateTemplate = "Custom database role '{{.RoleName}}' successfully updated.\n"
 
-//go:generate mockgen -typed -destination=update_mock_test.go -package=customdbroles . DatabaseRoleUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=customdbroles . DatabaseRoleUpdater
 
 type DatabaseRoleUpdater interface {
 	UpdateDatabaseRole(string, string, *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error)

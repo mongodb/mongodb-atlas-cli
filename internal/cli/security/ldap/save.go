@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=save_mock_test.go -package=ldap . Saver
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=save_mock_test.go -package=ldap . Saver
 
 type Saver interface {
 	SaveLDAPConfiguration(string, *atlasv2.UserSecurity) (*atlasv2.UserSecurity, error)

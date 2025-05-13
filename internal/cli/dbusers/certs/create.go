@@ -26,7 +26,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=certs . DBUserCertificateCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=certs . DBUserCertificateCreator
 
 type DBUserCertificateCreator interface {
 	CreateDBUserCertificate(string, string, int) (string, error)

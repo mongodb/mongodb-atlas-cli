@@ -34,7 +34,7 @@ var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range valueOrEmptySlice .}
 
 const deprecatedFlagMessage = "--page and --limit are not supported by privateendpoint azure list"
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=azure . PrivateEndpointLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=azure . PrivateEndpointLister
 
 type PrivateEndpointLister interface {
 	PrivateEndpoints(string, string) ([]atlasv2.EndpointService, error)

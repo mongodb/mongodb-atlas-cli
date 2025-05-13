@@ -31,7 +31,7 @@ const listTemplate = `CIDR BLOCK	AWS SECURITY GROUP{{range valueOrEmptySlice .Re
 {{.CidrBlock}}	{{if .AwsSecurityGroup}}{{.AwsSecurityGroup}} {{else}}N/A{{end}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=accesslists . ProjectIPAccessListLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=accesslists . ProjectIPAccessListLister
 
 type ProjectIPAccessListLister interface {
 	ProjectIPAccessLists(string, *store.ListOptions) (*atlasv2.PaginatedNetworkAccess, error)

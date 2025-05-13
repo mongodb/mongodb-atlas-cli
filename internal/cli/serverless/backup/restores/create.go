@@ -36,7 +36,7 @@ const (
 	pointInTimeRestore = "pointInTime"
 )
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=restores . ServerlessRestoreJobsCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=restores . ServerlessRestoreJobsCreator
 
 type ServerlessRestoreJobsCreator interface {
 	ServerlessCreateRestoreJobs(string, string, *atlasv2.ServerlessBackupRestoreJob) (*atlasv2.ServerlessBackupRestoreJob, error)

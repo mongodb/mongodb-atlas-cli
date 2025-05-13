@@ -36,7 +36,7 @@ const (
 	deleteFailMessage    = "Deployment not deleted"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=deployments . ClusterDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=deployments . ClusterDeleter
 
 type ClusterDeleter interface {
 	DeleteCluster(string, string) error

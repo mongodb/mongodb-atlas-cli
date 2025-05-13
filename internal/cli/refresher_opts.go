@@ -33,7 +33,7 @@ type RefresherOpts struct {
 	flow Refresher
 }
 
-//go:generate mockgen -destination=../mocks/mock_refresher.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli Refresher
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_refresher.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli Refresher
 type Refresher interface {
 	RequestCode(context.Context) (*atlasauth.DeviceCode, *atlas.Response, error)
 	PollToken(context.Context, *atlasauth.DeviceCode) (*atlasauth.Token, *atlas.Response, error)

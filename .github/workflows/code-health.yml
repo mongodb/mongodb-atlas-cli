@@ -245,8 +245,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
-      - name: Install go-mock
-        run: go install go.uber.org/mock/mockgen@latest
       - name: Generate mocks
         run: make gen-mocks
       - name: Check for uncommitted files

@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=nodes . SearchNodesDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=nodes . SearchNodesDeleter
 
 type SearchNodesDeleter interface {
 	DeleteSearchNodes(string, string) error

@@ -27,7 +27,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=privateendpoints . PrivateEndpointCreatorDeprecated
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=privateendpoints . PrivateEndpointCreatorDeprecated
 
 type PrivateEndpointCreatorDeprecated interface {
 	CreatePrivateEndpointDeprecated(string, *atlas.PrivateEndpointConnectionDeprecated) (*atlas.PrivateEndpointConnectionDeprecated, error)

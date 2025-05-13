@@ -32,7 +32,7 @@ const describeTemplate = `ID	NAME
 {{.Id}}	{{.Name}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=teams . TeamDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=teams . TeamDescriber
 
 type TeamDescriber interface {
 	TeamByID(string, string) (*atlasv2.TeamResponse, error)

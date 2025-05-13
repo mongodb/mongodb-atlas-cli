@@ -21,7 +21,7 @@ import (
 	"github.com/google/go-github/v61/github"
 )
 
-//go:generate mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version ReleaseVersionDescriber
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_release_version.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/version ReleaseVersionDescriber
 
 const (
 	maxWaitTime = 500 * time.Millisecond

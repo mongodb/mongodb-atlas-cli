@@ -33,7 +33,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli ProjectOrgsLister
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_default_opts.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli ProjectOrgsLister
 
 type ProjectOrgsLister interface {
 	Project(id string) (*atlasv2.Group, error)

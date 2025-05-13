@@ -25,7 +25,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=datalake . Lister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=datalake . Lister
 
 type Lister interface {
 	DataLakes(string) ([]atlas.DataLake, error)

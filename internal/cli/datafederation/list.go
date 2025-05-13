@@ -35,7 +35,7 @@ var listTemplate = `NAME	STATE{{range valueOrEmptySlice .}}
 {{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=datafederation . Lister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=datafederation . Lister
 
 type Lister interface {
 	DataFederationList(string) ([]atlasv2.DataLakeTenant, error)

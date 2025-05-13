@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=instance . StreamsDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=instance . StreamsDeleter
 
 type StreamsDeleter interface {
 	DeleteStream(string, string) error

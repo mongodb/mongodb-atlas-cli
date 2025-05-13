@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=trigger_mock_test.go -package=datalakepipelines . PipelinesTriggerer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=trigger_mock_test.go -package=datalakepipelines . PipelinesTriggerer
 
 type PipelinesTriggerer interface {
 	PipelineTrigger(string, string, string) (*atlasv2.IngestionPipelineRun, error)

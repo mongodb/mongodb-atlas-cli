@@ -31,7 +31,7 @@ const describeTemplate = `ID	USERNAME	CREATED AT	EXPIRES AT
 {{.Id}}	{{.Username}}	{{.CreatedAt}}	{{.ExpiresAt}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=invitations . OrganizationInvitationDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=invitations . OrganizationInvitationDescriber
 
 type OrganizationInvitationDescriber interface {
 	OrganizationInvitation(string, string) (*atlasv2.OrganizationInvitation, error)

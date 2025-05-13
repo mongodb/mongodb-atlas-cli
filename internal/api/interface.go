@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
-//go:generate mockgen -destination=./mocks.go -package=api github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api CommandExecutor,Doer,ConfigProvider,CommandConverter,Logger,ResponseFormatter
+//go:generate go tool go.uber.org/mock/mockgen -destination=./mocks.go -package=api github.com/mongodb/mongodb-atlas-cli/atlascli/internal/api CommandExecutor,Doer,ConfigProvider,CommandConverter,Logger,ResponseFormatter
 
 type CommandExecutor interface {
 	ExecuteCommand(ctx context.Context, commandRequest CommandRequest) (*CommandResponse, error)

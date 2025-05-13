@@ -32,7 +32,7 @@ const describeTemplate = `ID	FIRST NAME	LAST NAME	USERNAME	EMAIL
 {{.Id}}	{{.FirstName}}	{{.LastName}}	{{.Username}}	{{.EmailAddress}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=users . UserDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=users . UserDescriber
 
 type UserDescriber interface {
 	UserByID(string) (*atlasv2.CloudAppUser, error)

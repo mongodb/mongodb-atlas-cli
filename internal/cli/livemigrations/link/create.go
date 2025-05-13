@@ -28,7 +28,7 @@ import (
 
 var createTemplate = "Link-token '{{.LinkToken}}' successfully created.\n"
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=link . TokenCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=link . TokenCreator
 
 type TokenCreator interface {
 	CreateLinkToken(string, *atlasv2.TargetOrgRequest) (*atlasv2.TargetOrg, error)

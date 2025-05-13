@@ -31,7 +31,7 @@ var describeTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT
 {{.EndpointId}}	{{.Provider}}	{{.Type}}	{{.Comment}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=aws . DataLakePrivateEndpointDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=aws . DataLakePrivateEndpointDescriber
 
 type DataLakePrivateEndpointDescriber interface {
 	DataLakePrivateEndpoint(string, string) (*atlasv2.PrivateNetworkEndpointIdEntry, error)

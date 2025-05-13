@@ -31,7 +31,7 @@ const describeTemplate = `NAME	ACTION	DB	COLLECTION	CLUSTER {{- $roleName := .Ro
 {{ $roleName }}	{{ $actionName }}{{if .Db }}	{{ .Db }}{{else}}	N/A{{end}}{{if .Collection }}	{{ .Collection }}{{else if .Cluster}}	N/A{{else}}	ALL COLLECTIONS{{end}}{{if .Cluster}}	{{ .Cluster }}{{else}}	N/A	{{end}}{{end}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=customdbroles . DatabaseRoleDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=customdbroles . DatabaseRoleDescriber
 
 type DatabaseRoleDescriber interface {
 	DatabaseRole(string, string) (*atlasv2.UserCustomDBRole, error)

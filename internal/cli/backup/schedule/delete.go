@@ -31,7 +31,7 @@ const (
 	confirmationMessage = "Are you sure you want to delete all backup schedules for cluster: %s"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=schedule . Deleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=schedule . Deleter
 
 type Deleter interface {
 	DeleteSchedule(string, string) error

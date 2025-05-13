@@ -29,7 +29,7 @@ import (
 
 const authorizeTemplate = "AWS IAM role '{{.RoleId}} successfully authorized.\n"
 
-//go:generate mockgen -typed -destination=authorize_mock_test.go -package=aws . CloudProviderAccessRoleAuthorizer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=authorize_mock_test.go -package=aws . CloudProviderAccessRoleAuthorizer
 
 // CloudProviderAccessRoleAuthorizer encapsulates the logic to manage different cloud providers.
 type CloudProviderAccessRoleAuthorizer interface {

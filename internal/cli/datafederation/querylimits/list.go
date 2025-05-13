@@ -35,7 +35,7 @@ var listTemplate = `TENANT NAME	NAME	VALUE{{range valueOrEmptySlice .}}
 {{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=querylimits . DataFederationQueryLimitLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=querylimits . DataFederationQueryLimitLister
 
 type DataFederationQueryLimitLister interface {
 	DataFederationQueryLimits(string, string) ([]atlasv2.DataFederationTenantQueryLimit, error)

@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=aws . DataLakePrivateEndpointDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=aws . DataLakePrivateEndpointDeleter
 
 type DataLakePrivateEndpointDeleter interface {
 	DataLakeDeletePrivateEndpoint(string, string) error

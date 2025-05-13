@@ -36,7 +36,7 @@ const listTemplate = `NAME	ACTION	INHERITED ROLES	DB	COLLECTION	CLUSTER{{range v
 
 const deprecatedFlagMessage = "--pageNum and --ItemsPerPage are not supported by customdbroles list"
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=customdbroles . DatabaseRoleLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=customdbroles . DatabaseRoleLister
 
 type DatabaseRoleLister interface {
 	DatabaseRoles(string) ([]atlasv2.UserCustomDBRole, error)

@@ -30,7 +30,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -typed -destination=logout_mock_test.go -package=auth . ConfigDeleter,Revoker
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=logout_mock_test.go -package=auth . ConfigDeleter,Revoker
 
 type ConfigDeleter interface {
 	Delete() error

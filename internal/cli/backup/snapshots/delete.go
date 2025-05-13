@@ -28,7 +28,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=snapshots . Deleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=snapshots . Deleter
 
 type Deleter interface {
 	DeleteSnapshot(string, string, string) error

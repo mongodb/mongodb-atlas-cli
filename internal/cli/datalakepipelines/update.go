@@ -33,7 +33,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=update_mock_test.go -package=datalakepipelines . PipelinesUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=datalakepipelines . PipelinesUpdater
 
 type PipelinesUpdater interface {
 	UpdatePipeline(string, string, atlasv2.DataLakeIngestionPipeline) (*atlasv2.DataLakeIngestionPipeline, error)

@@ -32,7 +32,7 @@ var describeTemplate = `ID	GROUP NAME	REGION	STATUS	ERROR{{if .EndpointGroupName
 {{$.Id}}	N/A	{{$.RegionName}}	{{$.Status}}	{{$.ErrorMessage}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=gcp . PrivateEndpointDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=gcp . PrivateEndpointDescriber
 
 type PrivateEndpointDescriber interface {
 	PrivateEndpoint(string, string, string) (*atlasv2.EndpointService, error)

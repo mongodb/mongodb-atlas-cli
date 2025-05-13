@@ -30,7 +30,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=aws_mock_test.go -package=create . AWSPeeringConnectionCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=aws_mock_test.go -package=create . AWSPeeringConnectionCreator
 
 type AWSPeeringConnectionCreator interface {
 	AWSContainers(string) ([]atlasv2.CloudProviderContainer, error)

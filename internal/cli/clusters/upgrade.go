@@ -38,7 +38,7 @@ const (
 	replicaSetPriority  = 7
 )
 
-//go:generate mockgen -typed -destination=upgrade_mock_test.go -package=clusters . AtlasSharedClusterGetterUpgrader
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=upgrade_mock_test.go -package=clusters . AtlasSharedClusterGetterUpgrader
 
 type AtlasSharedClusterGetterUpgrader interface {
 	AtlasSharedCluster(string, string) (*atlas.Cluster, error)

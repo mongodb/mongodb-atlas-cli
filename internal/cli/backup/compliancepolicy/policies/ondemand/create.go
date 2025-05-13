@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=ondemand . CompliancePolicyOnDemandPolicyCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=ondemand . CompliancePolicyOnDemandPolicyCreator
 
 type CompliancePolicyOnDemandPolicyCreator interface {
 	CreateOnDemandPolicy(projectID string, policy *atlasv2.BackupComplianceOnDemandPolicyItem) (*atlasv2.DataProtectionSettings20231001, error)

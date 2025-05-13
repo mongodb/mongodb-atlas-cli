@@ -29,7 +29,7 @@ var listTemplate = `ID	ENDPOINT SERVICE	STATUS	ERROR{{range valueOrEmptySlice .}
 {{.ID}}	{{.EndpointServiceName}}	{{.Status}}	{{.ErrorMessage}}{{end}}
 `
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=privateendpoints . PrivateEndpointListerDeprecated
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=privateendpoints . PrivateEndpointListerDeprecated
 
 type PrivateEndpointListerDeprecated interface {
 	PrivateEndpointsDeprecated(string, *store.ListOptions) ([]atlas.PrivateEndpointConnectionDeprecated, error)

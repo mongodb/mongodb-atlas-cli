@@ -32,7 +32,7 @@ import (
 
 var createAtlasTemplate = "Organization '{{.Organization.Id}}' created.\n"
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=organizations . OrganizationCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=organizations . OrganizationCreator
 
 type OrganizationCreator interface {
 	CreateAtlasOrganization(*atlasv2.CreateOrganizationRequest) (*atlasv2.CreateOrganizationResponse, error)

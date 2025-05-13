@@ -37,7 +37,7 @@ var inviteTemplate = `The user '{{.Username}}' has been invited.
 Invited users do not have access to the project until they accept the invitation.
 `
 
-//go:generate mockgen -typed -destination=invite_mock_test.go -package=users . UserCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=invite_mock_test.go -package=users . UserCreator
 
 type UserCreator interface {
 	CreateUser(user *atlasv2.CloudAppUser) (*atlasv2.CloudAppUser, error)

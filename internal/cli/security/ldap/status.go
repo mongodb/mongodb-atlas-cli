@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=status_mock_test.go -package=ldap . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=status_mock_test.go -package=ldap . Describer
 
 type Describer interface {
 	GetStatusLDAPConfiguration(string, string) (*atlasv2.LDAPVerifyConnectivityJobRequest, error)

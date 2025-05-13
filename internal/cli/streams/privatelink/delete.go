@@ -32,7 +32,7 @@ var (
 	failDeleteTemplate    = "Atlas Stream Processing PrivateLink endpoint not deleted"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=privatelink . Deleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=privatelink . Deleter
 
 type Deleter interface {
 	DeletePrivateLinkEndpoint(projectID, connectionID string) error

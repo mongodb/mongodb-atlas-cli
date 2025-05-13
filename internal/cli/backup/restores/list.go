@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=list_mock_test.go -package=restores . RestoreJobsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=list_mock_test.go -package=restores . RestoreJobsLister
 
 type RestoreJobsLister interface {
 	RestoreJobs(string, string, *store.ListOptions) (*atlasv2.PaginatedCloudBackupRestoreJob, error)

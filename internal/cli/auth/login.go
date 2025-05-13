@@ -34,7 +34,7 @@ import (
 	"go.mongodb.org/atlas/auth"
 )
 
-//go:generate mockgen -typed -destination=login_mock_test.go -package=auth . LoginConfig
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=login_mock_test.go -package=auth . LoginConfig
 
 type SetSaver interface {
 	Set(string, any)

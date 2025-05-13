@@ -195,4 +195,5 @@ tool (
 	github.com/google/addlicense
 	github.com/google/go-licenses
 	github.com/icholy/gomajor
+	go.uber.org/mock/mockgen
 )

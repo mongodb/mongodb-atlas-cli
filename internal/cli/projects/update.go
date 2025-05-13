@@ -34,7 +34,7 @@ import (
 
 const updateTemplate = "Project '{{.Id}}' updated.\n"
 
-//go:generate mockgen -typed -destination=update_mock_test.go -package=projects . ProjectUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=projects . ProjectUpdater
 
 type ProjectUpdater interface {
 	UpdateProject(*atlasv2.UpdateProjectApiParams) (*atlasv2.Group, error)

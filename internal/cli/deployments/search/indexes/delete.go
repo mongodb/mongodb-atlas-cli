@@ -34,7 +34,7 @@ const (
 	deleteMessageFailed = "Index not deleted"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=indexes . Deleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=indexes . Deleter
 
 type Deleter interface {
 	DeleteSearchIndex(string, string, string) error

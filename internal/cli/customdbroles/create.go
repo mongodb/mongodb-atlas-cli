@@ -32,7 +32,7 @@ import (
 
 const createTemplate = "Custom database role '{{.RoleName}}' successfully created.\n"
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=customdbroles . DatabaseRoleCreator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=customdbroles . DatabaseRoleCreator
 
 type DatabaseRoleCreator interface {
 	CreateDatabaseRole(string, *atlasv2.UserCustomDBRole) (*atlasv2.UserCustomDBRole, error)

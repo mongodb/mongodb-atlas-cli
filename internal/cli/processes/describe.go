@@ -30,7 +30,7 @@ const describeTemplate = `ID	REPLICA SET NAME	SHARD NAME	VERSION
 {{.Id}}	{{.ReplicaSetName}}	{{.ShardName}}	{{.Version}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=processes . ProcessDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=processes . ProcessDescriber
 
 type ProcessDescriber interface {
 	Process(*atlasv2.GetAtlasProcessApiParams) (*atlasv2.ApiHostViewAtlas, error)

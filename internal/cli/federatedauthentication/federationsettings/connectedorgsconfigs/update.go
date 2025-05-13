@@ -28,7 +28,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=update_mock_test.go -package=connectedorgsconfigs . ConnectedOrgConfigsUpdater
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=update_mock_test.go -package=connectedorgsconfigs . ConnectedOrgConfigsUpdater
 
 type ConnectedOrgConfigsUpdater interface {
 	UpdateConnectedOrgConfig(opts *atlasv2.UpdateConnectedOrgConfigApiParams) (*atlasv2.ConnectedOrgConfig, error)

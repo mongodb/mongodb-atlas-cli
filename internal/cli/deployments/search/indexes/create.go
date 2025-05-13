@@ -57,7 +57,7 @@ type IndexID struct {
 	Index      any
 }
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=indexes . SearchIndexCreatorDescriber
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=indexes . SearchIndexCreatorDescriber
 
 type SearchIndexCreatorDescriber interface {
 	SearchIndexDeprecated(string, string, string) (*atlasv2.ClusterSearchIndex, error)

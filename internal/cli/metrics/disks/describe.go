@@ -31,7 +31,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=disks . ProcessDiskMeasurementsLister
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=disks . ProcessDiskMeasurementsLister
 
 type ProcessDiskMeasurementsLister interface {
 	ProcessDiskMeasurements(*atlasv2.GetDiskMeasurementsApiParams) (*atlasv2.ApiMeasurementsGeneralViewAtlas, error)

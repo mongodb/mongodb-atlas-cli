@@ -30,7 +30,7 @@ var describeTemplate = `DAY OF THE WEEK	HOUR OF DAY	START ASAP
 {{.DayOfWeek}}	{{.HourOfDay}}	{{.StartASAP}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=maintenance . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=maintenance . Describer
 
 type Describer interface {
 	MaintenanceWindow(string) (*atlasv2.GroupMaintenanceWindow, error)

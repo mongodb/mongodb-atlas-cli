@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//go:generate mockgen -typed -destination=delete_mock_test.go -package=accesslists . OrganizationAPIKeyAccessListDeleter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=accesslists . OrganizationAPIKeyAccessListDeleter
 
 type OrganizationAPIKeyAccessListDeleter interface {
 	DeleteOrganizationAPIKeyAccessList(string, string, string) error

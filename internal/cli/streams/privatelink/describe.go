@@ -32,7 +32,7 @@ var describeTemplate = `ID  PROVIDER  REGION  VENDOR  STATE  INTERFACE_ENDPOINT_
 {{.Id}}  {{.Provider}}  {{.Region}}  {{.Vendor}}  {{.State}}  {{.InterfaceEndpointId}}  {{.ServiceEndpointId}}  {{.DnsDomain}}  {{.DnsSubDomain}}
 `
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=privatelink . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=privatelink . Describer
 
 type Describer interface {
 	DescribePrivateLinkEndpoint(projectID, connectionID string) (*atlasv2.StreamsPrivateLinkConnection, error)

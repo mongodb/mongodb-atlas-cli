@@ -32,7 +32,7 @@ import (
 
 const createTemplate = "User '{{.Username}}' invited.\n"
 
-//go:generate mockgen -typed -destination=invite_mock_test.go -package=invitations . OrganizationInviter
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=invite_mock_test.go -package=invitations . OrganizationInviter
 
 type OrganizationInviter interface {
 	InviteUser(string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)

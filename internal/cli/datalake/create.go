@@ -27,7 +27,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -typed -destination=create_mock_test.go -package=datalake . Creator
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=datalake . Creator
 
 type Creator interface {
 	CreateDataLake(string, *atlas.DataLakeCreateRequest) (*atlas.DataLake, error)

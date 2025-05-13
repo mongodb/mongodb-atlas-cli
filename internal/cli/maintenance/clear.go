@@ -32,7 +32,7 @@ const longDesc = `To learn more about maintenance windows, see https://www.mongo
 
 `
 
-//go:generate mockgen -typed -destination=clear_mock_test.go -package=maintenance . Clearer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=clear_mock_test.go -package=maintenance . Clearer
 
 type Clearer interface {
 	ClearMaintenanceWindow(string) error

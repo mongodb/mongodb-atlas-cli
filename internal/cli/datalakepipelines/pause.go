@@ -27,7 +27,7 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -typed -destination=pause_mock_test.go -package=datalakepipelines . PipelinesPauser
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=pause_mock_test.go -package=datalakepipelines . PipelinesPauser
 
 type PipelinesPauser interface {
 	PipelinePause(string, string) (*atlasv2.DataLakeIngestionPipeline, error)

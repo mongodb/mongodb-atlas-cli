@@ -25,7 +25,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate mockgen -typed -destination=describe_mock_test.go -package=datalake . Describer
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=describe_mock_test.go -package=datalake . Describer
 
 type Describer interface {
 	DataLake(string, string) (*atlas.DataLake, error)

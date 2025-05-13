@@ -3124,6 +3124,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -3405,6 +3407,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -4130,7 +4134,7 @@ components:
                 roleAssignments:
                     description: Atlas roles and the unique identifiers of the groups and organizations associated with each role. The array must include at least one element with an Organization role and its respective **orgId**. Each element in the array can have a value for **orgId** or **groupId**, but not both.
                     items:
-                        $ref: '#/components/schemas/RoleAssignment'
+                        $ref: '#/components/schemas/ConnectedOrgConfigRoleAssignment'
                     type: array
                     uniqueItems: true
             required:
@@ -6781,6 +6785,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 threshold:
                     $ref: '#/components/schemas/GreaterThanRawThreshold'
                 updated:
@@ -8348,6 +8354,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -9801,6 +9809,40 @@ components:
                 - domainRestrictionEnabled
                 - orgId
             type: object
+        ConnectedOrgConfigRoleAssignment:
+            properties:
+                groupId:
+                    description: Unique 24-hexadecimal digit string that identifies the project to which this role belongs. Each element within **roleAssignments** can have a value for **groupId** or **orgId**, but not both.
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    type: string
+                orgId:
+                    description: Unique 24-hexadecimal digit string that identifies the organization to which this role belongs. Each element within **roleAssignments** can have a value for **orgId** or **groupId**, but not both.
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    type: string
+                role:
+                    description: Human-readable label that identifies the collection of privileges that MongoDB Cloud grants a specific API key, MongoDB Cloud user, or MongoDB Cloud team. These roles include organization- and project-level roles.
+                    enum:
+                        - ORG_OWNER
+                        - ORG_MEMBER
+                        - ORG_GROUP_CREATOR
+                        - ORG_BILLING_ADMIN
+                        - ORG_BILLING_READ_ONLY
+                        - ORG_READ_ONLY
+                        - GROUP_BACKUP_MANAGER
+                        - GROUP_CLUSTER_MANAGER
+                        - GROUP_DATA_ACCESS_ADMIN
+                        - GROUP_DATA_ACCESS_READ_ONLY
+                        - GROUP_DATA_ACCESS_READ_WRITE
+                        - GROUP_DATABASE_ACCESS_ADMIN
+                        - GROUP_OBSERVABILITY_VIEWER
+                        - GROUP_OWNER
+                        - GROUP_READ_ONLY
+                        - GROUP_SEARCH_INDEX_EDITOR
+                        - GROUP_STREAM_PROCESSING_OWNER
+                    type: string
+            type: object
         ControlPlaneIPAddresses:
             description: List of IP addresses in the Atlas control plane.
             properties:
@@ -9950,6 +9992,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 threshold:
                     $ref: '#/components/schemas/GreaterThanTimeThreshold'
                 updated:
@@ -12506,6 +12550,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -14935,6 +14981,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 threshold:
                     $ref: '#/components/schemas/GreaterThanDaysThresholdView'
                 updated:
@@ -15005,6 +15053,14 @@ components:
             required:
                 - cloudProvider
             type: object
+        EventSeverity:
+            description: Severity of the event.
+            enum:
+                - INFO
+                - WARNING
+                - ERROR
+                - CRITICAL
+            type: string
         EventTypeDetails:
             description: A singular type of event
             properties:
@@ -17543,6 +17599,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -18280,6 +18338,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 threshold:
                     $ref: '#/components/schemas/GreaterThanRawThreshold'
                 updated:
@@ -19214,6 +19274,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -19904,6 +19966,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -21213,6 +21277,21 @@ components:
                         - ATLAS_FLEX_GCP_300_USAGE_HOURS
                         - ATLAS_FLEX_GCP_400_USAGE_HOURS
                         - ATLAS_FLEX_GCP_500_USAGE_HOURS
+                        - ATLAS_FLEX_AWS_LEGACY_100_USAGE_HOURS
+                        - ATLAS_FLEX_AWS_LEGACY_200_USAGE_HOURS
+                        - ATLAS_FLEX_AWS_LEGACY_300_USAGE_HOURS
+                        - ATLAS_FLEX_AWS_LEGACY_400_USAGE_HOURS
+                        - ATLAS_FLEX_AWS_LEGACY_500_USAGE_HOURS
+                        - ATLAS_FLEX_AZURE_LEGACY_100_USAGE_HOURS
+                        - ATLAS_FLEX_AZURE_LEGACY_200_USAGE_HOURS
+                        - ATLAS_FLEX_AZURE_LEGACY_300_USAGE_HOURS
+                        - ATLAS_FLEX_AZURE_LEGACY_400_USAGE_HOURS
+                        - ATLAS_FLEX_AZURE_LEGACY_500_USAGE_HOURS
+                        - ATLAS_FLEX_GCP_LEGACY_100_USAGE_HOURS
+                        - ATLAS_FLEX_GCP_LEGACY_200_USAGE_HOURS
+                        - ATLAS_FLEX_GCP_LEGACY_300_USAGE_HOURS
+                        - ATLAS_FLEX_GCP_LEGACY_400_USAGE_HOURS
+                        - ATLAS_FLEX_GCP_LEGACY_500_USAGE_HOURS
                     readOnly: true
                     type: string
                 startDate:
@@ -22133,6 +22212,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 threshold:
                     $ref: '#/components/schemas/LessThanTimeThreshold'
                 updated:
@@ -23776,6 +23857,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 threshold:
                     $ref: '#/components/schemas/LessThanDaysThresholdView'
                 updated:
@@ -27058,8 +27141,18 @@ components:
                     description: Text of the MongoDB log related to this slow query.
                     readOnly: true
                     type: string
+                metrics:
+                    $ref: '#/components/schemas/PerformanceAdvisorSlowQueryMetrics'
                 namespace:
                     description: Human-readable label that identifies the namespace on the specified host. The resource expresses this parameter value as `<database>.<collection>`.
+                    readOnly: true
+                    type: string
+                opType:
+                    description: Operation type (read/write/command) associated with this slow query log.
+                    readOnly: true
+                    type: string
+                replicaState:
+                    description: Replica state associated with this slow query log.
                     readOnly: true
                     type: string
             readOnly: true
@@ -27072,6 +27165,63 @@ components:
                         $ref: '#/components/schemas/PerformanceAdvisorSlowQuery'
                     readOnly: true
                     type: array
+            type: object
+        PerformanceAdvisorSlowQueryMetrics:
+            description: Metrics from a slow query log.
+            properties:
+                docsExamined:
+                    description: The number of documents in the collection that MongoDB scanned in order to carry out the operation.
+                    format: int64
+                    readOnly: true
+                    type: integer
+                docsExaminedReturnedRatio:
+                    description: Ratio of documents examined to documents returned.
+                    format: double
+                    readOnly: true
+                    type: number
+                docsReturned:
+                    description: The number of documents returned by the operation.
+                    format: int64
+                    readOnly: true
+                    type: integer
+                fromUserConnection:
+                    description: This boolean will be true when the server can identfiy the query source as non-server. This field is only available for MDB 8.0+.
+                    readOnly: true
+                    type: boolean
+                hasIndexCoverage:
+                    description: Indicates if the query has index coverage.
+                    readOnly: true
+                    type: boolean
+                hasSort:
+                    description: This boolean will be true when a query cannot use the ordering in the index to return the requested sorted results; i.e. MongoDB must sort the documents after it receives the documents from a cursor.
+                    readOnly: true
+                    type: boolean
+                keysExamined:
+                    description: The number of index keys that MongoDB scanned in order to carry out the operation.
+                    format: int64
+                    readOnly: true
+                    type: integer
+                keysExaminedReturnedRatio:
+                    description: Ratio of keys examined to documents returned.
+                    format: double
+                    readOnly: true
+                    type: number
+                numYields:
+                    description: The number of times the operation yielded to allow other operations to complete.
+                    format: int64
+                    readOnly: true
+                    type: integer
+                operationExecutionTime:
+                    description: Total execution time of a query in milliseconds.
+                    format: int64
+                    readOnly: true
+                    type: integer
+                responseLength:
+                    description: The length in bytes of the operation's result document.
+                    format: int64
+                    readOnly: true
+                    type: integer
+            readOnly: true
             type: object
         PeriodicCpsSnapshotSource:
             allOf:
@@ -27846,6 +27996,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 threshold:
                     $ref: '#/components/schemas/AlertsThresholdInteger'
                 updated:
@@ -28136,6 +28288,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 threshold:
                     $ref: '#/components/schemas/AlertsThresholdInteger'
                 updated:
@@ -28468,40 +28622,6 @@ components:
                     readOnly: true
                     type: string
             readOnly: true
-            type: object
-        RoleAssignment:
-            properties:
-                groupId:
-                    description: Unique 24-hexadecimal digit string that identifies the project to which this role belongs. Each element within **roleAssignments** can have a value for **groupId** or **orgId**, but not both.
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    type: string
-                orgId:
-                    description: Unique 24-hexadecimal digit string that identifies the organization to which this role belongs. Each element within **roleAssignments** can have a value for **orgId** or **groupId**, but not both.
-                    example: 32b6e34b3d91647abb20e7b8
-                    pattern: ^([a-f0-9]{24})$
-                    type: string
-                role:
-                    description: Human-readable label that identifies the collection of privileges that MongoDB Cloud grants a specific API key, MongoDB Cloud user, or MongoDB Cloud team. These roles include organization- and project-level roles.
-                    enum:
-                        - ORG_OWNER
-                        - ORG_MEMBER
-                        - ORG_GROUP_CREATOR
-                        - ORG_BILLING_ADMIN
-                        - ORG_BILLING_READ_ONLY
-                        - ORG_READ_ONLY
-                        - GROUP_BACKUP_MANAGER
-                        - GROUP_CLUSTER_MANAGER
-                        - GROUP_DATA_ACCESS_ADMIN
-                        - GROUP_DATA_ACCESS_READ_ONLY
-                        - GROUP_DATA_ACCESS_READ_WRITE
-                        - GROUP_DATABASE_ACCESS_ADMIN
-                        - GROUP_OBSERVABILITY_VIEWER
-                        - GROUP_OWNER
-                        - GROUP_READ_ONLY
-                        - GROUP_SEARCH_INDEX_EDITOR
-                        - GROUP_STREAM_PROCESSING_OWNER
-                    type: string
             type: object
         SMSNotification:
             description: SMS notification configuration for MongoDB Cloud to send information when an event triggers an alert condition.
@@ -29735,6 +29855,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -30486,6 +30608,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 updated:
                     description: Date and time when someone last updated this alert configuration. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
                     externalDocs:
@@ -30769,6 +30893,8 @@ components:
                     items:
                         $ref: '#/components/schemas/AlertsNotificationRootForGroup'
                     type: array
+                severityOverride:
+                    $ref: '#/components/schemas/EventSeverity'
                 threshold:
                     $ref: '#/components/schemas/StreamProcessorMetricThreshold'
                 updated:
@@ -31478,6 +31604,26 @@ components:
                     default: false
                     description: Flag that indicates whether to add a 'sample_stream_solar' connection.
                     type: boolean
+            type: object
+        StreamsStartStreamProcessorWith:
+            description: A request to start a stream processor
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                startAtOperationTime:
+                    description: The operation time after which the change stream source should begin reporting. This parameter expresses its value in the ISO 8601 timestamp format in UTC.
+                    externalDocs:
+                        description: ISO 8601
+                        url: https://en.wikipedia.org/wiki/ISO_8601
+                    format: date-time
+                    type: string
             type: object
         StreamsTenant:
             properties:
@@ -34580,7 +34726,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 81c7b725931883162817169e0338141ae79bd842
+    x-xgen-sha: 6b18ef3b18445fb4a2303483b5910f9581148a12
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -35596,6 +35742,8 @@ paths:
             summary: Return Project IP Access List
             tags:
                 - Project IP Access List
+            x-xgen-changelog:
+                "2025-05-08": Corrects an issue where the endpoint would include Atlas internal entries.
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Project-IP-Access-List/operation/listProjectIpAccessLists
         post:
             description: Adds one or more access list entries to the specified project. MongoDB Cloud only allows client connections to the cluster from entries in the project's IP access list. Write each entry as either one IP address or one CIDR-notated block of IP addresses. To use this resource, the requesting Service Account or API Key must have the Project Owner or Project Charts Admin roles. This resource replaces the whitelist resource. MongoDB Cloud removed whitelists in July 2021. Update your applications to use this new resource. The `/groups/{GROUP-ID}/accessList` endpoint manages the database IP access list. This endpoint is distinct from the `orgs/{ORG-ID}/apiKeys/{API-KEY-ID}/accesslist` endpoint, which manages the access list for MongoDB Cloud organizations. This endpoint doesn't support concurrent `POST` requests. You must submit multiple `POST` requests synchronously.
@@ -48394,6 +48542,24 @@ paths:
                     type: integer
                   x-xgen-IPA-exception:
                     xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+                - description: Whether or not to include metrics extracted from the slow query log as separate fields.
+                  in: query
+                  name: includeMetrics
+                  schema:
+                    default: false
+                    type: boolean
+                - description: Whether or not to include the replica state of the host when the slow query log was generated as a separate field.
+                  in: query
+                  name: includeReplicaState
+                  schema:
+                    default: false
+                    type: boolean
+                - description: Whether or not to include the operation type (read/write/command) extracted from the slow query log as a separate field.
+                  in: query
+                  name: includeOpType
+                  schema:
+                    default: false
+                    type: boolean
             responses:
                 "200":
                     content:
@@ -50440,6 +50606,51 @@ paths:
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/startStreamProcessor
+    /api/atlas/v2/groups/{groupId}/streams/{tenantName}/processor/{processorName}:startWith:
+        post:
+            description: Start a Stream Processor within the specified stream instance. To use this resource, the requesting Service Account or API Key must have the Project Owner role or Project Stream Processing Owner role.
+            operationId: startStreamProcessorWith
+            parameters:
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/pretty'
+                - $ref: '#/components/parameters/groupId'
+                - description: Human-readable label that identifies the stream instance.
+                  in: path
+                  name: tenantName
+                  required: true
+                  schema:
+                    type: string
+                - description: Human-readable label that identifies the stream processor.
+                  in: path
+                  name: processorName
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/vnd.atlas.2025-03-12+json:
+                        schema:
+                            $ref: '#/components/schemas/StreamsStartStreamProcessorWith'
+                        x-xgen-version: "2025-03-12"
+                description: Options for starting a stream processor.
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.2025-03-12+json:
+                            x-xgen-version: "2025-03-12"
+                    description: OK
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Start One Stream Processor With Options
+            tags:
+                - Streams
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/startStreamProcessorWith
     /api/atlas/v2/groups/{groupId}/streams/{tenantName}/processor/{processorName}:stop:
         post:
             description: Stop a Stream Processor within the specified stream instance. To use this resource, the requesting Service Account or API Key must have the Project Owner role or Project Stream Processing Owner role.

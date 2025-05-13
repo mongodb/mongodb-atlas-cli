@@ -62,6 +62,18 @@ Options
      - 
      - false
      - help for listSlowQueries
+   * - --includeMetrics
+     - 
+     - false
+     - Whether or not to include metrics extracted from the slow query log as separate fields.
+   * - --includeOpType
+     - 
+     - false
+     - Whether or not to include the operation type (read/write/command) extracted from the slow query log as a separate field.
+   * - --includeReplicaState
+     - 
+     - false
+     - Whether or not to include the replica state of the host when the slow query log was generated as a separate field.
    * - --nLogs
      - int
      - false

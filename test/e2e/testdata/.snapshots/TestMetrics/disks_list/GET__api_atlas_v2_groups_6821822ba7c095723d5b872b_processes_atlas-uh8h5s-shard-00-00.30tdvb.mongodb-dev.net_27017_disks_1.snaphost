@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 445
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 12 May 2025 05:17:55 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 92
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getDiskMeasurementLinks
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=b4fa165bfbcb725abc0816ef770e5f595c0528ce; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6821822ba7c095723d5b872b/processes/atlas-uh8h5s-shard-00-00.30tdvb.mongodb-dev.net:27017/disks?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6821822ba7c095723d5b872b/processes/atlas-uh8h5s-shard-00-00.30tdvb.mongodb-dev.net:27017/disks/data","rel":"self"}],"partitionName":"data"}],"totalCount":1}

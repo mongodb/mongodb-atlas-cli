@@ -1,16 +1,16 @@
 HTTP/2.0 202 Accepted
-Content-Length: 235
+Content-Length: 236
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Fri, 09 May 2025 05:07:37 GMT
+Date: Mon, 12 May 2025 05:08:17 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 443
+X-Envoy-Upstream-Service-Time: 481
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasCustomDBRoleResource::createCustomDBRole
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=f4cac4bef68680c08e8b7ce8a9ab47d5584027b8; versionString=master
+X-Mongodb-Service-Version: gitHash=b4fa165bfbcb725abc0816ef770e5f595c0528ce; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"actions":[{"action":"UPDATE","resources":[{"collection":"collection","db":"db"}]},{"action":"FIND","resources":[{"collection":"collection2","db":"db"}]}],"inheritedRoles":[{"db":"admin","role":"enableSharding"}],"roleName":"role-57"}
+{"actions":[{"action":"UPDATE","resources":[{"collection":"collection","db":"db"}]},{"action":"FIND","resources":[{"collection":"collection2","db":"db"}]}],"inheritedRoles":[{"db":"admin","role":"enableSharding"}],"roleName":"role-881"}

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2641
+Content-Type: application/json
+Date: Mon, 12 May 2025 05:08:24 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyClusterDescriptionResource::upgradeTenantCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=b4fa165bfbcb725abc0816ef770e5f595c0528ce; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Xgen-Up-Proto: HTTP/2
+
+{"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGBEnabled":false},"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-acxcy4b-shard-00-00.bgy1fjf.mongodb-dev.net:27017,ac-acxcy4b-shard-00-01.bgy1fjf.mongodb-dev.net:27017,ac-acxcy4b-shard-00-02.bgy1fjf.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-jcysq2-shard-0","standardSrv":"mongodb+srv://cluster-712.bgy1fjf.mongodb-dev.net"},"createDate":"2025-05-12T05:08:05Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"682182319a8a5550061201d3","id":"68218235a7c095723d5b8cf3","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v1.0/groups/682182319a8a5550061201d3/clusters/cluster-712","rel":"self"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/682182319a8a5550061201d3/clusters/cluster-712/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v1.0/groups/682182319a8a5550061201d3/clusters/cluster-712/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.9","mongoURI":"mongodb://ac-acxcy4b-shard-00-00.bgy1fjf.mongodb-dev.net:27017,ac-acxcy4b-shard-00-01.bgy1fjf.mongodb-dev.net:27017,ac-acxcy4b-shard-00-02.bgy1fjf.mongodb-dev.net:27017","mongoURIUpdated":"2025-05-12T05:08:20Z","mongoURIWithOptions":"mongodb://ac-acxcy4b-shard-00-00.bgy1fjf.mongodb-dev.net:27017,ac-acxcy4b-shard-00-01.bgy1fjf.mongodb-dev.net:27017,ac-acxcy4b-shard-00-02.bgy1fjf.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-jcysq2-shard-0","name":"cluster-712","numShards":1,"paused":false,"pitEnabled":false,"providerBackupEnabled":false,"providerSettings":{"providerName":"TENANT","autoScaling":{"compute":{"maxInstanceSize":null,"minInstanceSize":null}},"backingProviderName":"AWS","effectiveInstanceSizeName":"M0","instanceSizeName":"M0","regionName":"US_EAST_2"},"replicationFactor":3,"replicationSpec":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"replicationSpecs":[{"id":"68218235a7c095723d5b8cbe","numShards":1,"regionsConfig":{"US_EAST_2":{"analyticsNodes":0,"electableNodes":3,"priority":7,"readOnlyNodes":0}},"zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","srvAddress":"mongodb+srv://cluster-712.bgy1fjf.mongodb-dev.net","stateName":"UPDATING","tags":[{"key":"env","value":"e2e"}],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

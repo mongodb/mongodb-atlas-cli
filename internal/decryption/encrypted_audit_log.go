@@ -59,7 +59,7 @@ type AuditLogLine struct {
 	Log                *string
 }
 
-func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (keyproviders.KeyProvider, error) {
+func (logLine *AuditLogLine) KeyProvider(opts KeyProviderOpts) (KeyProvider, error) {
 	if logLine.AuditRecordType != AuditHeaderRecord {
 		return nil, ErrInvalidHeaderLine
 	}

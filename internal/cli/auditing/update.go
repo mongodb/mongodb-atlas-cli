@@ -30,6 +30,12 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
+//go:generate mockgen -typed -destination=update_mock_test.go -package=auditing . Updater
+
+type Updater interface {
+	UpdateAuditingConfig(string, *atlasv2.AuditLog) (*atlasv2.AuditLog, error)
+}
+
 type UpdateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
@@ -38,7 +44,7 @@ type UpdateOpts struct {
 	filename                  string
 	auditFilter               string
 	fs                        afero.Fs
-	store                     store.AuditingUpdater
+	store                     Updater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {

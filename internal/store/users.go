@@ -18,25 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_users.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store UserCreator,UserDescriber,UserLister,TeamUserLister
-
-type UserCreator interface {
-	CreateUser(user *atlasv2.CloudAppUser) (*atlasv2.CloudAppUser, error)
-}
-
-type UserLister interface {
-	OrganizationUsers(string, *ListOptions) (*atlasv2.PaginatedOrgUser, error)
-}
-
-type TeamUserLister interface {
-	TeamUsers(string, string) (*atlasv2.PaginatedOrgUser, error)
-}
-
-type UserDescriber interface {
-	UserByID(string) (*atlasv2.CloudAppUser, error)
-	UserByName(string) (*atlasv2.CloudAppUser, error)
-}
-
 // CreateUser encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateUser(user *atlasv2.CloudAppUser) (*atlasv2.CloudAppUser, error) {
 	result, _, err := s.clientv2.MongoDBCloudUsersApi.CreateUser(s.ctx, user).Execute()

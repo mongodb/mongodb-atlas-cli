@@ -19,17 +19,16 @@ package serverless
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
-	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestDescribeOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockServerlessInstanceDescriber(ctrl)
+	mockStore := NewMockDescriber(ctrl)
 
-	var expected atlasClustersPinned.ServerlessInstanceDescription
+	var expected atlasv2.ServerlessInstanceDescription
 
 	describeOpts := &DescribeOpts{
 		store: mockStore,

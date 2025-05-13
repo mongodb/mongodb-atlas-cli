@@ -22,12 +22,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
+	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
+
+//go:generate mockgen -typed -destination=list_mock_test.go -package=datalake . Lister
+
+type Lister interface {
+	DataLakes(string) ([]atlas.DataLake, error)
+}
 
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.DataLakeLister
+	store Lister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

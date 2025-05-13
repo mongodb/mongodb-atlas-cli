@@ -27,11 +27,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=set_mock_test.go -package=config . SetSaver
+
+type SetSaver interface {
+	Set(string, any)
+	Save() error
+	SetGlobal(string, any)
+}
+
 type SetOpts struct {
 	cli.ProjectOpts
 	prop  string
 	val   string
-	store config.SetSaver
+	store SetSaver
 }
 
 func (opts *SetOpts) Run() error {

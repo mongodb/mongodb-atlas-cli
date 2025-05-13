@@ -24,17 +24,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
 var describeTemplate = `MINIMUM TLS	JAVASCRIPT ENABLED	OPLOG SIZE MB
 {{.MinimumEnabledTlsProtocol}}	{{.JavascriptEnabled}}	{{if .GetOplogSizeMB}}{{.GetOplogSizeMB}} {{else}}N/A{{end}}
 `
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=advancedsettings . AtlasClusterConfigurationOptionsDescriber
+
+type AtlasClusterConfigurationOptionsDescriber interface {
+	AtlasClusterConfigurationOptions(string, string) (*atlasClustersPinned.ClusterDescriptionProcessArgs, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	name  string
-	store store.AtlasClusterConfigurationOptionsDescriber
+	store AtlasClusterConfigurationOptionsDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

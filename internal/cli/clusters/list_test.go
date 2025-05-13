@@ -19,7 +19,6 @@ package clusters
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
@@ -30,7 +29,7 @@ import (
 
 func TestList_RunDedicatedCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockStore := NewMockClusterLister(ctrl)
 
 	expected := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
 		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
@@ -56,7 +55,7 @@ func TestList_RunDedicatedCluster(t *testing.T) {
 
 func TestList_RunFlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockStore := NewMockClusterLister(ctrl)
 
 	expected := &atlasv2.PaginatedFlexClusters20241113{
 		Results: &[]atlasv2.FlexClusterDescription20241113{

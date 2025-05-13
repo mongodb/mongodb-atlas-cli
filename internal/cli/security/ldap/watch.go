@@ -30,7 +30,7 @@ type WatchOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	id    string
-	store store.LDAPConfigurationDescriber
+	store Describer
 }
 
 var watchTemplate = "\nLDAP Configuration request completed.\n"

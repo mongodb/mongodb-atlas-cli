@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const (
@@ -34,10 +35,16 @@ Unique External ID: {{.AtlasAssumedRoleExternalId}}
 `
 )
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=aws . CloudProviderAccessRoleCreator
+
+type CloudProviderAccessRoleCreator interface {
+	CreateCloudProviderAccessRole(string, string) (*atlasv2.CloudProviderAccessRole, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.CloudProviderAccessRoleCreator
+	store CloudProviderAccessRoleCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

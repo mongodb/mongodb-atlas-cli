@@ -50,6 +50,13 @@ const (
 	regionName                    = "regionName"
 )
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=clusters . ClusterCreator
+
+type ClusterCreator interface {
+	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	CreateFlexCluster(string, *atlasv2.FlexClusterDescriptionCreate20241113) (*atlasv2.FlexClusterDescription20241113, error)
+}
+
 type CreateOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
@@ -69,7 +76,7 @@ type CreateOpts struct {
 	filename                    string
 	tag                         map[string]string
 	fs                          afero.Fs
-	store                       store.ClusterCreator
+	store                       ClusterCreator
 }
 
 func (opts *CreateOpts) initStore(ctx context.Context) func() error {

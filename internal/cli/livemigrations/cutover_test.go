@@ -18,13 +18,12 @@ package livemigrations
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestCutoverOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLiveMigrationCutoverCreator(ctrl)
+	mockStore := NewMockLiveMigrationCutoverCreator(ctrl)
 
 	opts := &CutoverOpts{
 		store: mockStore,

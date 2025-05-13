@@ -22,13 +22,20 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=enable_mock_test.go -package=settings . AlertConfigurationEnabler
+
+type AlertConfigurationEnabler interface {
+	EnableAlertConfiguration(string, string) (*atlasv2.GroupAlertsConfig, error)
+}
 
 type EnableOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	alertID string
-	store   store.AlertConfigurationEnabler
+	store   AlertConfigurationEnabler
 }
 
 func (opts *EnableOpts) initStore(ctx context.Context) func() error {

@@ -26,14 +26,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const createTemplate = "Certificate successfully created.\n"
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=customercerts . X509CertificateConfSaver
+
+type X509CertificateConfSaver interface {
+	SaveX509Configuration(string, string) (*atlasv2.UserSecurity, error)
+}
+
 type SaveOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store   store.X509CertificateConfSaver
+	store   X509CertificateConfSaver
 	casPath string
 	fs      afero.Fs
 }

@@ -21,7 +21,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -30,7 +29,7 @@ import (
 
 func TestLogsDownloadOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockLogsDownloader(ctrl)
+	mockStore := NewMockDownloader(ctrl)
 
 	validLogsToDownload := []string{
 		"mongodb.gz",
@@ -41,19 +40,22 @@ func TestLogsDownloadOpts_Run(t *testing.T) {
 	}
 
 	for _, validLogToDownload := range validLogsToDownload {
-		opts := &DownloadOpts{
-			name:  validLogToDownload,
-			store: mockStore,
-		}
-		opts.Out = opts.name
-		opts.Fs = afero.NewMemMapFs()
+		t.Run(validLogToDownload, func(t *testing.T) {
+			t.Parallel()
+			opts := &DownloadOpts{
+				name:  validLogToDownload,
+				store: mockStore,
+			}
+			opts.Out = opts.name
+			opts.Fs = afero.NewMemMapFs()
 
-		mockStore.
-			EXPECT().
-			DownloadLog(opts.newHostLogsParams()).
-			Return(io.NopCloser(strings.NewReader("")), nil).
-			Times(1)
-		require.NoError(t, opts.Run())
+			mockStore.
+				EXPECT().
+				DownloadLog(opts.newHostLogsParams()).
+				Return(io.NopCloser(strings.NewReader("")), nil).
+				Times(1)
+			require.NoError(t, opts.Run())
+		})
 	}
 }
 

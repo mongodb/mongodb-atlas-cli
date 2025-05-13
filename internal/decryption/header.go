@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/decryption/aes"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/decryption/keyproviders"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -35,11 +34,16 @@ var (
 	ErrHeaderRecordInvalid    = errors.New("incorrect header record")
 )
 
+type KeyProvider interface {
+	ValidateCredentials() error
+	DecryptKey(encryptedLEK []byte) ([]byte, error)
+}
+
 type HeaderRecord struct {
 	Timestamp       time.Time
 	Version         string
 	CompressionMode CompressionMode
-	KeyProvider     keyproviders.KeyProvider
+	KeyProvider     KeyProvider
 	EncryptedKey    []byte
 	MAC             string
 }

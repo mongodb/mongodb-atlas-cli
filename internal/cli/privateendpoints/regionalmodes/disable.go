@@ -23,12 +23,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=disable_mock_test.go -package=regionalmodes . RegionalizedPrivateEndpointSettingUpdater
+
+type RegionalizedPrivateEndpointSettingUpdater interface {
+	UpdateRegionalizedPrivateEndpointSetting(string, bool) (*atlasv2.ProjectSettingItem, error)
+}
 
 type DisableOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.RegionalizedPrivateEndpointSettingUpdater
+	store RegionalizedPrivateEndpointSettingUpdater
 }
 
 var disableTemplate = "Regionalized private endpoint setting disabled.\n"

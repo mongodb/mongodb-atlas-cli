@@ -27,10 +27,16 @@ import (
 
 var cutoverTemplate = "Cutover process successfully started.\n"
 
+//go:generate mockgen -typed -destination=cutover_mock_test.go -package=livemigrations . LiveMigrationCutoverCreator
+
+type LiveMigrationCutoverCreator interface {
+	CreateLiveMigrationCutover(string, string) error
+}
+
 type CutoverOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store           store.LiveMigrationCutoverCreator
+	store           LiveMigrationCutoverCreator
 	liveMigrationID string
 }
 

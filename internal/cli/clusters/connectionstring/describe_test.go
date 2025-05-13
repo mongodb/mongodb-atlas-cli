@@ -29,7 +29,7 @@ import (
 
 func TestDescribe_Run_StandardConnectionString(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterDescriber(ctrl)
+	mockStore := NewMockClusterDescriber(ctrl)
 
 	expected := &atlasClustersPinned.AdvancedClusterDescription{
 		ConnectionStrings: &atlasClustersPinned.ClusterConnectionStrings{

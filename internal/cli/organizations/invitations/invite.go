@@ -32,13 +32,19 @@ import (
 
 const createTemplate = "User '{{.Username}}' invited.\n"
 
+//go:generate mockgen -typed -destination=invite_mock_test.go -package=invitations . OrganizationInviter
+
+type OrganizationInviter interface {
+	InviteUser(string, *atlasv2.OrganizationInvitationRequest) (*atlasv2.OrganizationInvitation, error)
+}
+
 type InviteOpts struct {
 	cli.OutputOpts
 	cli.OrgOpts
 	username string
 	roles    []string
 	teamIDs  []string
-	store    store.OrganizationInviter
+	store    OrganizationInviter
 	filename string
 	fs       afero.Fs
 }

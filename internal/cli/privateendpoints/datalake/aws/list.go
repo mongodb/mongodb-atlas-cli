@@ -32,11 +32,17 @@ var listTemplate = `ID	ENDPOINT PROVIDER	TYPE	COMMENT{{range valueOrEmptySlice .
 {{.EndpointId}}	{{.Provider}}	{{.Type}}	{{.Comment}}{{end}}
 `
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=aws . DataLakePrivateEndpointLister
+
+type DataLakePrivateEndpointLister interface {
+	DataLakePrivateEndpoints(*atlasv2.ListDataFederationPrivateEndpointsApiParams) (*atlasv2.PaginatedPrivateNetworkEndpointIdEntry, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	store store.DataLakePrivateEndpointLister
+	store DataLakePrivateEndpointLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

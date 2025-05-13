@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
@@ -31,7 +30,7 @@ import (
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSnapshotsLister(ctrl)
+	mockStore := NewMockLister(ctrl)
 	buf := new(bytes.Buffer)
 	expected := &atlasv2.PaginatedCloudBackupReplicaSet{
 		Results: &[]atlasv2.DiskBackupReplicaSet{
@@ -74,7 +73,7 @@ func TestList_Run(t *testing.T) {
 
 func TestList_Run_FlexCluster(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockSnapshotsLister(ctrl)
+	mockStore := NewMockLister(ctrl)
 	expected := &atlasv2.PaginatedApiAtlasFlexBackupSnapshot20241113{}
 	buf := new(bytes.Buffer)
 	listOpts := &ListOpts{

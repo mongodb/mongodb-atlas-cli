@@ -27,16 +27,23 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const describeTemplate = `USERNAME	DATABASE
 {{.Username}}	{{.DatabaseName}}
 `
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=dbusers . DatabaseUserDescriber
+
+type DatabaseUserDescriber interface {
+	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)
+}
+
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store    store.DatabaseUserDescriber
+	store    DatabaseUserDescriber
 	authDB   string
 	username string
 }

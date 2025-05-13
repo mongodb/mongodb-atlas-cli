@@ -34,7 +34,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -57,6 +57,14 @@ type IndexID struct {
 	Index      any
 }
 
+//go:generate mockgen -typed -destination=create_mock_test.go -package=indexes . SearchIndexCreatorDescriber
+
+type SearchIndexCreatorDescriber interface {
+	SearchIndexDeprecated(string, string, string) (*atlasv2.ClusterSearchIndex, error)
+	CreateSearchIndexesDeprecated(string, string, *atlasv2.ClusterSearchIndex) (*atlasv2.ClusterSearchIndex, error)
+	CreateSearchIndexes(string, string, *atlasv2.SearchIndexCreateRequest) (*atlasv2.SearchIndexResponse, error)
+}
+
 type CreateOpts struct {
 	cli.WatchOpts
 	cli.ProjectOpts
@@ -65,7 +73,7 @@ type CreateOpts struct {
 	search.IndexOpts
 	mongodbClient    mongodbclient.MongoDBClient
 	connectionString string
-	store            store.SearchIndexCreatorDescriber
+	store            SearchIndexCreatorDescriber
 	indexID          IndexID
 }
 
@@ -105,7 +113,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 	var idxType *string
 
 	switch index := idx.(type) {
-	case *admin.SearchIndexCreateRequest:
+	case *atlasv2.SearchIndexCreateRequest:
 		idxType = index.Type
 
 		opts.indexID.Database = index.Database
@@ -113,7 +121,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		opts.indexID.Name = index.Name
 
 		definition = index.Definition
-	case *admin.ClusterSearchIndex:
+	case *atlasv2.ClusterSearchIndex:
 		_, _ = log.Warningln("you're using an old search index definition")
 		idxType = index.Type
 
@@ -155,7 +163,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 	return nil
 }
 
-func buildIndexDefinition(idx *admin.ClusterSearchIndex) (any, error) {
+func buildIndexDefinition(idx *atlasv2.ClusterSearchIndex) (any, error) {
 	// To maintain formatting of the SDK, marshal object into JSON and then unmarshal into BSON
 	jsonIndex, err := json.Marshal(idx)
 	if err != nil {
@@ -197,7 +205,7 @@ func (opts *CreateOpts) RunAtlas() error {
 	}
 
 	switch index := idx.(type) {
-	case *admin.SearchIndexCreateRequest:
+	case *atlasv2.SearchIndexCreateRequest:
 		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 		r, err := opts.store.CreateSearchIndexes(opts.ConfigProjectID(), opts.DeploymentName, index)
 		if err != nil {
@@ -220,7 +228,7 @@ func (opts *CreateOpts) RunAtlas() error {
 		opts.indexID.Index = r
 
 		return nil
-	case *admin.ClusterSearchIndex:
+	case *atlasv2.ClusterSearchIndex:
 		_, _ = log.Warningln("you're using an old search index definition")
 		telemetry.AppendOption(telemetry.WithSearchIndexType(index.GetType()))
 		r, err := opts.store.CreateSearchIndexesDeprecated(opts.ConfigProjectID(), opts.DeploymentName, index)

@@ -25,18 +25,25 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const listTemplate = `USERNAME	DATABASE{{range valueOrEmptySlice .Results}}
 {{.Username}}	{{.DatabaseName}}{{end}}
 `
 
+//go:generate mockgen -typed -destination=list_mock_test.go -package=dbusers . DatabaseUserLister
+
+type DatabaseUserLister interface {
+	DatabaseUsers(groupID string, opts *store.ListOptions) (*atlasv2.PaginatedApiAtlasDatabaseUser, error)
+}
+
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
 	CompactResponse bool
-	store           store.DatabaseUserLister
+	store           DatabaseUserLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {

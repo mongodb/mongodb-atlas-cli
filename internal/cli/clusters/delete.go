@@ -30,11 +30,18 @@ import (
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=clusters . ClusterDeleter
+
+type ClusterDeleter interface {
+	DeleteCluster(string, string) error
+	DeleteFlexCluster(string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	cli.WatchOpts
 	*cli.DeleteOpts
-	store         store.ClusterDeleter
+	store         ClusterDeleter
 	isFlexCluster bool
 }
 

@@ -18,25 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_access_role.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store CloudProviderAccessRoleCreator,CloudProviderAccessRoleAuthorizer,CloudProviderAccessRoleLister,CloudProviderAccessRoleDeauthorizer
-
-type CloudProviderAccessRoleCreator interface {
-	CreateCloudProviderAccessRole(string, string) (*atlasv2.CloudProviderAccessRole, error)
-}
-
-type CloudProviderAccessRoleLister interface {
-	CloudProviderAccessRoles(string) (*atlasv2.CloudProviderAccessRoles, error)
-}
-
-type CloudProviderAccessRoleDeauthorizer interface {
-	DeauthorizeCloudProviderAccessRoles(string, string, string) error
-}
-
-// CloudProviderAccessRoleAuthorizer encapsulates the logic to manage different cloud providers.
-type CloudProviderAccessRoleAuthorizer interface {
-	AuthorizeCloudProviderAccessRole(string, string, *atlasv2.CloudProviderAccessRoleRequestUpdate) (*atlasv2.CloudProviderAccessRole, error)
-}
-
 // CreateCloudProviderAccessRole encapsulates the logic to manage different cloud providers.
 func (s *Store) CreateCloudProviderAccessRole(groupID, provider string) (*atlasv2.CloudProviderAccessRole, error) {
 	req := atlasv2.CloudProviderAccessRoleRequest{

@@ -33,7 +33,7 @@ type WatchOpts struct {
 	cli.OutputOpts
 	cli.WatchOpts
 	id    string
-	store store.PipelinesDescriber
+	store PipelinesDescriber
 }
 
 func (opts *WatchOpts) initStore(ctx context.Context) func() error {

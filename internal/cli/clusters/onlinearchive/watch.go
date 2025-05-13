@@ -32,7 +32,7 @@ type WatchOpts struct {
 	cli.WatchOpts
 	id          string
 	clusterName string
-	store       store.OnlineArchiveDescriber
+	store       Describer
 }
 
 var watchTemplate = "\nOnline archive available.\n"

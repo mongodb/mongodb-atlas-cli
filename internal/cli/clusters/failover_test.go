@@ -20,13 +20,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestFailoverOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterTester(ctrl)
+	mockStore := NewMockClusterTester(ctrl)
 
 	deleteOpts := &FailoverOpts{
 		DeleteOpts: &cli.DeleteOpts{

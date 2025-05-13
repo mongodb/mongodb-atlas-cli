@@ -23,12 +23,19 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=enable_mock_test.go -package=aws . CustomDNSEnabler
+
+type CustomDNSEnabler interface {
+	EnableCustomDNS(string) (*atlasv2.AWSCustomDNSEnabled, error)
+}
 
 type EnableOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	store store.CustomDNSEnabler
+	store CustomDNSEnabler
 }
 
 var enableTemplate = "DNS configuration enabled.\n"

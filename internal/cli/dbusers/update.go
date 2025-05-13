@@ -27,10 +27,16 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const updateTemplate = "Successfully updated database user '{{.Username}}'.\n"
+
+//go:generate mockgen -typed -destination=update_mock_test.go -package=dbusers . DatabaseUserUpdater
+
+type DatabaseUserUpdater interface {
+	UpdateDatabaseUser(*atlasv2.UpdateDatabaseUserApiParams) (*atlasv2.CloudDatabaseUser, error)
+}
 
 type UpdateOpts struct {
 	cli.OutputOpts
@@ -43,7 +49,7 @@ type UpdateOpts struct {
 	description     string
 	roles           []string
 	scopes          []string
-	store           store.DatabaseUserUpdater
+	store           DatabaseUserUpdater
 }
 
 func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
@@ -55,10 +61,10 @@ func (opts *UpdateOpts) initStore(ctx context.Context) func() error {
 }
 
 func (opts *UpdateOpts) Run() error {
-	current := new(admin.CloudDatabaseUser)
+	current := new(atlasv2.CloudDatabaseUser)
 	opts.update(current)
 
-	params := &admin.UpdateDatabaseUserApiParams{
+	params := &atlasv2.UpdateDatabaseUserApiParams{
 		GroupId:           current.GroupId,
 		DatabaseName:      current.DatabaseName,
 		Username:          opts.currentUsername,
@@ -73,7 +79,7 @@ func (opts *UpdateOpts) Run() error {
 	return opts.Print(r)
 }
 
-func (opts *UpdateOpts) update(out *admin.CloudDatabaseUser) {
+func (opts *UpdateOpts) update(out *atlasv2.CloudDatabaseUser) {
 	out.GroupId = opts.ConfigProjectID()
 	out.Username = opts.username
 	if opts.username == "" {

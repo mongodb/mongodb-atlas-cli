@@ -19,14 +19,13 @@ package datalake
 import (
 	"testing"
 
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.mongodb.org/atlas/mongodbatlas"
 	"go.uber.org/mock/gomock"
 )
 
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataLakeCreator(ctrl)
+	mockStore := NewMockCreator(ctrl)
 
 	createOpts := &CreateOpts{
 		store: mockStore,

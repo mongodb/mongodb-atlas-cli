@@ -18,12 +18,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_federation_settings_store.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store FederationSettingsDescriber
-
-type FederationSettingsDescriber interface {
-	FederationSetting(opts *atlasv2.GetFederationSettingsApiParams) (*atlasv2.OrgFederationSettings, error)
-}
-
 // FederationSetting encapsulate the logic to manage different cloud providers.
 func (s *Store) FederationSetting(opts *atlasv2.GetFederationSettingsApiParams) (*atlasv2.OrgFederationSettings, error) {
 	result, _, err := s.clientv2.FederatedAuthenticationApi.GetFederationSettingsWithParams(s.ctx, opts).Execute()

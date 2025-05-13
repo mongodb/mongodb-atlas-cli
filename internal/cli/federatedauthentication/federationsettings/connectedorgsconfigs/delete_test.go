@@ -20,13 +20,12 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"go.uber.org/mock/gomock"
 )
 
 func TestDelete_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	store := mocks.NewMockConnectedOrgConfigsDeleter(ctrl)
+	store := NewMockConnectedOrgConfigsDeleter(ctrl)
 
 	deleteOpts := &DeleteOpts{
 		federationSettingsID: "federationSettingsID",

@@ -27,11 +27,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=buckets . ExportBucketsDeleter
+
+type ExportBucketsDeleter interface {
+	DeleteExportBucket(string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
 	bucketID string
-	store    store.ExportBucketsDeleter
+	store    ExportBucketsDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

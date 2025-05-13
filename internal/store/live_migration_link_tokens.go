@@ -21,21 +21,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_live_migration_link_tokens.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store LinkTokenCreator,LinkTokenDeleter
-
-type LinkTokenCreator interface {
-	CreateLinkToken(string, *atlasv2.TargetOrgRequest) (*atlasv2.TargetOrg, error)
-}
-
-type LinkTokenDeleter interface {
-	DeleteLinkToken(string) error
-}
-
-type LinkTokenStore interface {
-	LinkTokenCreator
-	LinkTokenDeleter
-}
-
 // CreateLinkToken encapsulate the logic to manage different cloud providers.
 func (s *Store) CreateLinkToken(orgID string, linkToken *atlasv2.TargetOrgRequest) (*atlasv2.TargetOrg, error) {
 	if s.service == config.CloudGovService {

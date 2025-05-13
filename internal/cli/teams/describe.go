@@ -25,16 +25,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
 const describeTemplate = `ID	NAME
 {{.Id}}	{{.Name}}
 `
 
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=teams . TeamDescriber
+
+type TeamDescriber interface {
+	TeamByID(string, string) (*atlasv2.TeamResponse, error)
+	TeamByName(string, string) (*atlasv2.TeamResponse, error)
+}
+
 type DescribeOpts struct {
 	cli.OrgOpts
 	cli.OutputOpts
-	store store.TeamDescriber
+	store TeamDescriber
 	name  string
 	id    string
 }

@@ -20,16 +20,6 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
 
-//go:generate mockgen -destination=../mocks/mock_data_lake_pipelines_runs.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store PipelineRunsLister,PipelineRunsDescriber
-
-type PipelineRunsLister interface {
-	PipelineRuns(string, string) (*atlasv2.PaginatedPipelineRun, error)
-}
-
-type PipelineRunsDescriber interface {
-	PipelineRun(string, string, string) (*atlasv2.IngestionPipelineRun, error)
-}
-
 // PipelineRuns encapsulates the logic to manage different cloud providers.
 func (s *Store) PipelineRuns(projectID, pipelineName string) (*atlasv2.PaginatedPipelineRun, error) {
 	result, _, err := s.clientv2.DataLakePipelinesApi.ListPipelineRuns(s.ctx, projectID, pipelineName).Execute()

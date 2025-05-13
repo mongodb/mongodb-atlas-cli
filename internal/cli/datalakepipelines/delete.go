@@ -29,10 +29,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+//go:generate mockgen -typed -destination=delete_mock_test.go -package=datalakepipelines . PipelinesDeleter
+
+type PipelinesDeleter interface {
+	DeletePipeline(string, string) error
+}
+
 type DeleteOpts struct {
 	cli.ProjectOpts
 	*cli.DeleteOpts
-	store store.PipelinesDeleter
+	store PipelinesDeleter
 }
 
 func (opts *DeleteOpts) initStore(ctx context.Context) func() error {

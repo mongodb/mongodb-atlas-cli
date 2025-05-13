@@ -25,14 +25,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=trigger_mock_test.go -package=datalakepipelines . PipelinesTriggerer
+
+type PipelinesTriggerer interface {
+	PipelineTrigger(string, string, string) (*atlasv2.IngestionPipelineRun, error)
+}
 
 type TriggerOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	id         string
 	snapshotID string
-	store      store.PipelinesTriggerer
+	store      PipelinesTriggerer
 }
 
 func (opts *TriggerOpts) initStore(ctx context.Context) func() error {

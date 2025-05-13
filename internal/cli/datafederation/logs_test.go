@@ -24,7 +24,6 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -32,7 +31,7 @@ import (
 
 func TestLogOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockDataFederationLogDownloader(ctrl)
+	mockStore := NewMockLogDownloader(ctrl)
 
 	const (
 		contents    = "expected"

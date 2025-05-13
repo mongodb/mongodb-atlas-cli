@@ -26,14 +26,21 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
 )
+
+//go:generate mockgen -typed -destination=describe_mock_test.go -package=onlinearchive . Describer
+
+type Describer interface {
+	OnlineArchive(string, string, string) (*atlasv2.BackupOnlineArchive, error)
+}
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	clusterName string
 	archiveID   string
-	store       store.OnlineArchiveDescriber
+	store       Describer
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {

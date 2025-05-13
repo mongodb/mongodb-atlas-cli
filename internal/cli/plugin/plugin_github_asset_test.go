@@ -326,6 +326,7 @@ func Test_getIDsForOSArch(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			opts := &GithubAsset{}
 
 			assetID, signatureID, pubKeyID, err := opts.getIDsForOSArch(tt.pluginAssets, tt.os, tt.arch)
@@ -350,11 +351,11 @@ func Test_parseGithubRepoValues(t *testing.T) {
 		expectedOwner = "mongodb"
 		expectedName  = "atlas-cli-plugin-example"
 	)
-	var v1_0_0, _ = semver.NewVersion("1.0.0")
-	//nolint:revive,stylecheck
-	var v1_0_0_PRE, _ = semver.NewVersion("1.0.0-prerelease")
-	//nolint:revive,stylecheck
-	var v1_0_0_BETA_AND_META, _ = semver.NewVersion("1.0.0-beta+very-meta")
+	var (
+		v1, _       = semver.NewVersion("1.0.0")
+		v1pre, _    = semver.NewVersion("1.0.0-prerelease")
+		v1pseudo, _ = semver.NewVersion("1.0.0-beta+very-meta")
+	)
 
 	tests := []struct {
 		arg             string
@@ -368,22 +369,22 @@ func Test_parseGithubRepoValues(t *testing.T) {
 		},
 		{
 			arg:             "mongodb/atlas-cli-plugin-example@1.0.0",
-			expectedVersion: v1_0_0,
+			expectedVersion: v1,
 			expectError:     false,
 		},
 		{
 			arg:             "mongodb/atlas-cli-plugin-example@v1.0.0",
-			expectedVersion: v1_0_0,
+			expectedVersion: v1,
 			expectError:     false,
 		},
 		{
 			arg:             "mongodb/atlas-cli-plugin-example@1.0.0-prerelease",
-			expectedVersion: v1_0_0_PRE,
+			expectedVersion: v1pre,
 			expectError:     false,
 		},
 		{
 			arg:             "mongodb/atlas-cli-plugin-example@1.0.0-beta+very-meta",
-			expectedVersion: v1_0_0_BETA_AND_META,
+			expectedVersion: v1pseudo,
 			expectError:     false,
 		},
 		{
@@ -398,7 +399,7 @@ func Test_parseGithubRepoValues(t *testing.T) {
 		},
 		{
 			arg:             "mongodb/atlas-cli-plugin-example/@v1",
-			expectedVersion: v1_0_0,
+			expectedVersion: v1,
 			expectError:     false,
 		},
 		{
@@ -408,7 +409,7 @@ func Test_parseGithubRepoValues(t *testing.T) {
 		},
 		{
 			arg:             "https://github.com/mongodb/atlas-cli-plugin-example@v1.0",
-			expectedVersion: v1_0_0,
+			expectedVersion: v1,
 			expectError:     false,
 		},
 		{
@@ -418,7 +419,7 @@ func Test_parseGithubRepoValues(t *testing.T) {
 		},
 		{
 			arg:             "github.com/mongodb/atlas-cli-plugin-example/@v1.0.0",
-			expectedVersion: v1_0_0,
+			expectedVersion: v1,
 			expectError:     false,
 		},
 		{

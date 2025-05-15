@@ -1568,7 +1568,6 @@ tasks:
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
-      - func: "build"
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"

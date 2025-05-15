@@ -1568,6 +1568,7 @@ tasks:
     must_have_test_results: true
     exec_timeout_secs: 11400 # 3 hours 10 minutes
     commands:
+      - func: "build"
       - func: "install gotestsum"
       - func: "install mongodb database tools"
       - func: "increase inotify limits"
@@ -2020,6 +2021,7 @@ buildvariants:
     run_on:
       - macos-14-arm64-docker
     expansions:
+      <<: *go_linux_version
       <<: *go_env
     tasks:
       - name: ".e2e .deployments .local"

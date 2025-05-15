@@ -2021,6 +2021,7 @@ buildvariants:
       - macos-14-arm64-docker
     expansions:
       <<: *go_linux_version
+      <<: *go_env
     tasks:
       - name: ".e2e .deployments .local"
   - name: e2e_local_deployments_macos_13

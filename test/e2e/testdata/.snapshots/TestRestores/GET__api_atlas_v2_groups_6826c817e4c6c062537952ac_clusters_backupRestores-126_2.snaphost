@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 2160
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Fri, 16 May 2025 05:15:37 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 59
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::getCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=58d8df7feef3ae9d6015fe4d22b0e42fbd749cc2; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"advancedConfiguration":{"customOpensslCipherConfigTls12":[],"minimumEnabledTlsProtocol":"TLS1_2","tlsCipherConfigMode":"DEFAULT"},"backupEnabled":true,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://backuprestores-126-shard-00-00.ik7ebh.mongodb-dev.net:27017,backuprestores-126-shard-00-01.ik7ebh.mongodb-dev.net:27017,backuprestores-126-shard-00-02.ik7ebh.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-a2nmq3-shard-0","standardSrv":"mongodb+srv://backuprestores-126.ik7ebh.mongodb-dev.net"},"createDate":"2025-05-16T05:07:37Z","diskSizeGB":30.0,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"6826c817e4c6c062537952ac","id":"6826c819e50781507901b4ab","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6826c817e4c6c062537952ac/clusters/backupRestores-126","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6826c817e4c6c062537952ac/clusters/backupRestores-126/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/6826c817e4c6c062537952ac/clusters/backupRestores-126/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.9","name":"backupRestores-126","paused":false,"pitEnabled":true,"replicationSpecs":[{"id":"6826c819e50781507901b491","numShards":1,"regionConfigs":[{"analyticsSpecs":{"instanceSize":"M10","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":false}},"electableSpecs":{"instanceSize":"M10","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":3},"priority":7,"providerName":"AWS","readOnlySpecs":{"instanceSize":"M10","diskIOPS":3000,"ebsVolumeType":"STANDARD","nodeCount":0},"regionName":"US_EAST_1"}],"zoneId":"6826c819e50781507901b499","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

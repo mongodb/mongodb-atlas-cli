@@ -533,6 +533,21 @@ functions:
         binary: make
         args:
           - otel
+  "check purls":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        binary: make
+        args: 
+        - gen-purls
+    - command: subprocess.exec
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - workdir
+        binary: build/ci/check-purls.sh
+
 tasks:
   - name: compile
     tags: ["code_health"]
@@ -1726,6 +1741,10 @@ tasks:
         vars:
           span: "coverage"
           attr: "total=${percentage},count=${count}"
+  - name: check_purls
+    tags: ["code_health"]
+    commands:
+      - func: "check purls"
   - name: snyk_monitor
     tags:
     - snyk

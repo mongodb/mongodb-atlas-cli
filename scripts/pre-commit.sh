@@ -39,6 +39,13 @@ if [[ -n "${STAGED_GO_FILES}" ]]; then
     git add docs
 fi
 
+STAGED_GO_MOD_FILES=$(git diff --cached --name-only | grep -E "^go\.(mod|sum)$" || true)
+
+if [[ -n "${STAGED_GO_MOD_FILES}" ]]; then
+    make gen-purls > /dev/null
+    git add build/package/purls.txt
+fi
+
 STAGED_EVG_FILES=$(git diff --cached --name-only | grep "evergreen.yml$")
 
 for FILE in ${STAGED_EVG_FILES}

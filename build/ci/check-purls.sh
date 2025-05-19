@@ -16,8 +16,6 @@
 
 set -Eeou pipefail
 
-echo $GOPROXY
-
 if ! git diff --quiet --exit-code build/package/purls.txt; then
     echo "build/package/purls.txt is out of date. Please run 'make gen-purls' and commit the result."
     git --no-pager diff build/package/purls.txt

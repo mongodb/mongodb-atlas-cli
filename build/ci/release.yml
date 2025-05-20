@@ -82,7 +82,7 @@ functions:
           - AWS_SECRET_ACCESS_KEY
           - AWS_SESSION_TOKEN
           - workdir
-        binary: build/package/generate-sbom.sh 
+        binary: build/package/generate-sbom.sh
   "run silkbomb": 
     - command: ec2.assume_role
       params:
@@ -184,23 +184,23 @@ functions:
         binary: build/package/rename-pkg.sh
   "trace artifacts":
     - command: shell.exec
-      params:  
-        env:  
+      params:
+        env:
           unstable: ${unstable}
-        script: |  
+        script: |
           # Get unstable
-          if [[ "${unstable}" == "-unstable" ]]; then  
-            product_name="atlascli-snapshot"  
-          else  
-            product_name="atlascli"  
-          fi  
+          if [[ "${unstable}" == "-unstable" ]]; then
+            product_name="atlascli-snapshot"
+          else
+            product_name="atlascli"
+          fi
 
           cat <<EOT > expansions.yaml
           product_name: "$product_name"
           EOT
-    - command: expansions.update    
-      params:    
-        ignore_missing_file: true    
+    - command: expansions.update
+      params:
+        ignore_missing_file: true
         file: src/github.com/mongodb/mongodb-atlas-cli/expansions.yaml
     - command: papertrail.trace
       params:

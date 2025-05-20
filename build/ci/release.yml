@@ -82,7 +82,7 @@ functions:
           - AWS_SECRET_ACCESS_KEY
           - AWS_SESSION_TOKEN
           - workdir
-        binary: build/package/generate-sbom.sh 
+        binary: build/package/generate-sbom.sh
   "run silkbomb": 
     - command: ec2.assume_role
       params:

@@ -27,5 +27,5 @@ docker run --rm \
   901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update \
   --purls /pwd/build/package/purls.txt \
-  --sbom-out /pwd/sbom.json
+  --sbom-out /pwd/compliance/sbom.json
   

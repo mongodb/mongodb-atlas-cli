@@ -114,7 +114,6 @@ functions:
           rm ${workdir}/kondukto_credentials.env
   "generate ssdlc report":
     - command: subprocess.exec
-      type: test
       include_expansions_in_env:
           - author
           - github_author

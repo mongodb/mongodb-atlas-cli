@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
 var listTemplate = `ID	FREQUENCY INTERVAL	FREQUENCY TYPE	RETENTION UNIT	RETENTION VALUE{{range valueOrEmptySlice .}}

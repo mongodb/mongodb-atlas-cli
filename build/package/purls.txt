@@ -1,4 +1,4 @@
-build/package/purls.txtpkg:golang/cloud.google.com/go/auth/oauth2adapt@v0.2.8
+pkg:golang/cloud.google.com/go/auth/oauth2adapt@v0.2.8
 pkg:golang/cloud.google.com/go/auth@v0.16.1
 pkg:golang/cloud.google.com/go/compute/metadata@v0.6.0
 pkg:golang/cloud.google.com/go/iam@v1.5.0

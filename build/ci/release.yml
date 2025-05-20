@@ -369,9 +369,10 @@ functions:
           ./run-copybara.sh
   "gen_ssdlc_report":
     - command: subprocess.exec
+      include_expansions_in_env:
+          - author
       env:
-        <<: *go_env
-        VERSION: ${VERSION}
+        AUTHOR: ${author}
       params:
         binary: build/package/gen_ssdlc_report.sh
 tasks:

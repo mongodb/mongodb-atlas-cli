@@ -500,7 +500,7 @@ functions:
           cat <<EOF > expansions.yaml
           home: $HOME
           tag: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1)
-          version: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)
+          version: $(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'atlascli/' -f 2)
           EOF
     - command: expansions.update
       params:

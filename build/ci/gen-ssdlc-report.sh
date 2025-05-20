@@ -20,7 +20,7 @@ release_date=${DATE:-$(date -u '+%Y-%m-%d')}
 
 export DATE="${release_date}"
 VERSION=""
-VERSION=$(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 )
+VERSION=$(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)
 export VERSION
 export AUTHOR="${AUTHOR:-$(git config user.name)}"
 

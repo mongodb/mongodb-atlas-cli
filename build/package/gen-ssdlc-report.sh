@@ -24,7 +24,8 @@ VERSION=$(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v'
 export VERSION
 export AUTHOR="${author:-$(git config user.name)}"
 
-echo "Author: ${author}, Github Author: ${github_author}"
+# PR test
+echo "Author: ${author:-}, Github Author: ${github_author:-}"
 
 echo "Generating SSDLC checklist for AtlasCLI version ${VERSION}, author ${AUTHOR} and release date ${DATE}..."
 

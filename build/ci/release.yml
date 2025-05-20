@@ -82,7 +82,7 @@ functions:
           - AWS_SECRET_ACCESS_KEY
           - AWS_SESSION_TOKEN
           - workdir
-        binary: build/package/generate-sbom.sh
+        binary: build/package/generate-sbom.sh 
   "run silkbomb": 
     - command: ec2.assume_role
       params:
@@ -184,11 +184,12 @@ functions:
         binary: build/package/rename-pkg.sh
   "trace artifacts":
     - command: shell.exec
-      params:
-        <<: *go_options
-        script: |
+      params:  
+        env:  
+          unstable: ${unstable}
+        script: |  
           # Get unstable
-          if [[ "${unstable-}" == "-unstable" ]]; then  
+          if [[ "${unstable}" == "-unstable" ]]; then  
             product_name="atlascli-snapshot"  
           else  
             product_name="atlascli"  

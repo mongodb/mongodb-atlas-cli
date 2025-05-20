@@ -367,6 +367,13 @@ functions:
         shell: bash
         script: |
           ./run-copybara.sh
+  "gen_ssdlc_report":
+    - command: subprocess.exec
+      env:
+        <<: *go_env
+        VERSION: ${VERSION}
+      params:
+        binary: build/package/gen_ssdlc_report.sh
 tasks:
   - name: package_msi
     tags: ["packaging"]
@@ -395,6 +402,9 @@ tasks:
     commands:  
       - func: "generate sbom"
       - func: "run silkbomb"
+  - name: gen_ssdlc_report
+    commands:
+      - func: "gen_ssdlc_report"
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:

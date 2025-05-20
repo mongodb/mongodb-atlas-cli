@@ -24,9 +24,12 @@ export AUTHOR="${AUTHOR:-$(git config user.name)}"
 
 echo "Generating SSDLC checklist for AtlasCLI version ${VERSION}..."
 
-mkdir -p "dist/releases/${VERSION}/"
-envsubst < docs/releases/ssdlc-compliance.template.md \
-  > "dist/releases/${VERSION}/ssdlc-compliance.md"
+# Ensure compliance directory exists
+mkdir -p "compliance/"
 
-echo "SDLC checklist ready. Files at dist/releases/${VERSION}:"
-ls -l "dist/releases/${VERSION}"
+# Generate the report in compliance/ with a versioned filename
+envsubst < docs/releases/ssdlc-compliance.template.md \
+  > "compliance/ssdlc-compliance-${VERSION}.md"
+
+echo "SDLC checklist ready. Files in compliance/:"
+ls -l "compliance/"

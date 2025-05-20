@@ -335,7 +335,7 @@ functions:
         shell: bash
         script: |
           ./run-copybara.sh
-  "gen_ssdlc_report":
+  "generate ssdlc report":
     - command: subprocess.exec
       include_expansions_in_env:
           - author
@@ -371,9 +371,7 @@ tasks:
     commands:  
       - func: "generate sbom"
       - func: "run silkbomb"
-  - name: gen_ssdlc_report
-    commands:
-      - func: "gen_ssdlc_report"
+      - func: "generate ssdlc report"
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:

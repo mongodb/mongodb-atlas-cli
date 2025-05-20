@@ -374,7 +374,7 @@ functions:
       env:
         AUTHOR: ${author}
       params:
-        binary: build/package/gen_ssdlc_report.sh
+        binary: build/ci/gen_ssdlc_report.sh
 tasks:
   - name: package_msi
     tags: ["packaging"]

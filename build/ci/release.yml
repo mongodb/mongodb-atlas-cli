@@ -117,8 +117,7 @@ functions:
       type: test
       include_expansions_in_env:
           - author
-      env:
-        AUTHOR: ${author}
+          - github_author
       params:
         <<: *go_options
         binary: build/package/gen-ssdlc-report.sh

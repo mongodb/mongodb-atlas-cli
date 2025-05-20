@@ -343,6 +343,7 @@ functions:
         AUTHOR: ${author}
       params:
         binary: build/ci/gen_ssdlc_report.sh
+        working_dir: src/github.com/mongodb/mongodb-atlas-cli
 tasks:
   - name: package_msi
     tags: ["packaging"]

@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Copyright 2025 MongoDB Inc
 #
@@ -21,7 +20,7 @@ release_date=${DATE:-$(date -u '+%Y-%m-%d')}
 
 export DATE="${release_date}"
 export VERSION=$(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 )
-export AUTHOR=$AUTHOR
+export AUTHOR="${AUTHOR:-$(git config user.name)}"
 
 echo "Generating SSDLC checklist for AtlasCLI version ${VERSION}..."
 

@@ -112,6 +112,16 @@ functions:
           --repo mongodb_mongodb-atlas-cli  \
           --branch ${branch_name}  
           rm ${workdir}/kondukto_credentials.env
+  "generate ssdlc report":
+    - command: subprocess.exec
+      type: test
+      include_expansions_in_env:
+          - author
+      env:
+        AUTHOR: ${author}
+      params:
+        <<: *go_options
+        binary: build/package/gen-ssdlc-report.sh
   "package":
     - command: github.generate_token
       params:
@@ -367,15 +377,6 @@ functions:
         shell: bash
         script: |
           ./run-copybara.sh
-  "generate ssdlc report":
-    - command: subprocess.exec
-      include_expansions_in_env:
-          - author
-      env:
-        AUTHOR: ${author}
-      params:
-        binary: build/ci/gen-ssdlc-report.sh
-      working_dir: src/github.com/mongodb/mongodb-atlas-cli
 tasks:
   - name: package_msi
     tags: ["packaging"]

@@ -21,7 +21,7 @@ release_date=${DATE:-$(date -u '+%Y-%m-%d')}
 
 export DATE="${release_date}"
 export VERSION=$(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 )
-export AUTHORS="git config user.name"
+export AUTHOR=$AUTHOR
 
 echo "Generating SSDLC checklist for AtlasCLI version ${VERSION}..."
 

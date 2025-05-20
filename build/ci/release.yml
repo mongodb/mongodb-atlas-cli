@@ -185,6 +185,7 @@ functions:
   "trace artifacts":
     - command: shell.exec
       params:
+        <<: *go_options
         script: |
           # Get unstable
           if [[ "${unstable-}" == "-unstable" ]]; then  
@@ -196,7 +197,6 @@ functions:
           cat <<EOT > expansions.yaml
           product_name: "$product_name"
           EOT
-          cat expansions.yaml
     - command: expansions.update    
       params:    
         ignore_missing_file: true    
@@ -213,7 +213,6 @@ functions:
           - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb"
           - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm"
           - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi"
-          - "src/github.com/mongodb/mongodb-atlas-cli/bin/*" # for testing only, will be removed"
   "send slack notification":
     - command: subprocess.exec
       type: test
@@ -516,9 +515,6 @@ tasks:
           display_name: downloads-center-new-
       - func: "trace artifacts"
       - func: "send slack notification"
-  - name: papertrail_test
-    commands:
-      - func: "trace artifacts"
   - name: push_atlascli_generate
     patchable: false
     stepback: false
@@ -699,12 +695,3 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: generate_and_upload_sbom
-  - name: test_papertrail
-    display_name: "Test Papertrail"
-    run_on:
-      - rhel90-small
-    expansions:
-      <<: *go_linux_version
-      unstable: -unstable
-    tasks:
-      - name: papertrail_test

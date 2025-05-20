@@ -24,7 +24,7 @@ VERSION=$(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 )
 export VERSION
 export AUTHOR="${AUTHOR:-$(git config user.name)}"
 
-echo "Generating SSDLC checklist for AtlasCLI version ${VERSION}..."
+echo "Generating SSDLC checklist for AtlasCLI version ${VERSION}, author ${AUTHOR} and release date ${DATE}..."
 
 # Ensure compliance directory exists
 mkdir -p "compliance/"
@@ -35,3 +35,6 @@ envsubst < docs/releases/ssdlc-compliance.template.md \
 
 echo "SDLC checklist ready. Files in compliance/:"
 ls -l "compliance/"
+
+echo "Printing the generated report:"
+cat "compliance/ssdlc-compliance-${VERSION}.md"

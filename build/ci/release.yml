@@ -118,6 +118,9 @@ functions:
       include_expansions_in_env:
           - author
           - github_author
+      env:
+        AUTHOR: ${author}
+        GITHUB_AUTHOR: ${github_author}
       params:
         <<: *go_options
         binary: build/package/gen-ssdlc-report.sh

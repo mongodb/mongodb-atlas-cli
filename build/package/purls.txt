@@ -6,7 +6,7 @@ pkg:golang/cloud.google.com/go/kms@v1.21.2
 pkg:golang/cloud.google.com/go/longrunning@v0.6.6
 pkg:golang/github.com/AlecAivazis/survey/v2@v2.3.7
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azcore@v1.18.0
-pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azidentity@v1.9.0
+pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/azidentity@v1.10.0
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/internal@v1.11.1
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azkeys@v1.3.1
 pkg:golang/github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/internal@v1.1.1
@@ -16,7 +16,7 @@ pkg:golang/github.com/PaesslerAG/gval@v1.0.0
 pkg:golang/github.com/PaesslerAG/jsonpath@v0.1.1
 pkg:golang/github.com/ProtonMail/go-crypto@v1.2.0
 pkg:golang/github.com/STARRY-S/zip@v0.2.1
-pkg:golang/github.com/andybalholm/brotli@v1.1.1
+pkg:golang/github.com/andybalholm/brotli@v1.1.2-0.20250424173009-453214e765f3
 pkg:golang/github.com/aws/aws-sdk-go-v2/config@v1.29.14
 pkg:golang/github.com/aws/aws-sdk-go-v2/credentials@v1.17.67
 pkg:golang/github.com/aws/aws-sdk-go-v2/feature/ec2/imds@v1.16.30
@@ -63,7 +63,7 @@ pkg:golang/github.com/kylelemons/godebug@v1.1.0
 pkg:golang/github.com/mattn/go-colorable@v0.1.13
 pkg:golang/github.com/mattn/go-isatty@v0.0.20
 pkg:golang/github.com/mgutz/ansi@v0.0.0-20170206155736-9520e82c474b
-pkg:golang/github.com/mholt/archives@v0.1.1
+pkg:golang/github.com/mholt/archives@v0.1.2
 pkg:golang/github.com/minio/minlz@v1.0.0
 pkg:golang/github.com/mongodb-forks/digest@v1.1.0
 pkg:golang/github.com/montanaflynn/stats@v0.7.1

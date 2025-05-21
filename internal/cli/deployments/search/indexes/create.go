@@ -120,7 +120,10 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 		opts.indexID.Collection = index.CollectionName
 		opts.indexID.Name = index.Name
 
-		definition = index.Definition
+		definition, err = buildIndexDefinition(index.Definition)
+		if err != nil {
+			return err
+		}
 	case *atlasv2.ClusterSearchIndex:
 		_, _ = log.Warningln("you're using an old search index definition")
 		idxType = index.Type
@@ -163,7 +166,7 @@ func (opts *CreateOpts) RunLocal(ctx context.Context) error {
 	return nil
 }
 
-func buildIndexDefinition(idx *atlasv2.ClusterSearchIndex) (any, error) {
+func buildIndexDefinition(idx any) (any, error) {
 	// To maintain formatting of the SDK, marshal object into JSON and then unmarshal into BSON
 	jsonIndex, err := json.Marshal(idx)
 	if err != nil {

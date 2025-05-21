@@ -112,25 +112,6 @@ functions:
           --repo mongodb_mongodb-atlas-cli  \
           --branch ${branch_name}  
           rm ${workdir}/kondukto_credentials.env
-  "generate ssdlc report":
-    - command: subprocess.exec
-<<<<<<< HEAD
-      include_expansions_in_env:
-          - author
-          - github_author
-      env:
-        AUTHOR: ${author}
-        GITHUB_AUTHOR: ${github_author}
-      params:
-=======
-      params:
-        include_expansions_in_env:
-            - author
-        env:
-          AUTHOR: ${author}
->>>>>>> origin/master
-        <<: *go_options
-        binary: build/package/gen-ssdlc-report.sh
   "package":
     - command: github.generate_token
       params:
@@ -414,7 +395,6 @@ tasks:
     commands:  
       - func: "generate sbom"
       - func: "run silkbomb"
-      - func: "generate ssdlc report"
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:

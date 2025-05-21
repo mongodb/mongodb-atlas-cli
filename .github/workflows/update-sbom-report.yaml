@@ -19,8 +19,6 @@ jobs:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Make scripts executable
-        run: chmod +x ./build/package/gen-ssdlc-report.sh
       - name: Extract AUTHOR and VERSION
         id: extract
         run: |

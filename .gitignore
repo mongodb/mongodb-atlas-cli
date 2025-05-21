@@ -6,6 +6,7 @@
 *.dylib
 bin/**
 compliance/**
+!compliance/v*
 dist/**
 # mac notarization service
 linux_amd64/**

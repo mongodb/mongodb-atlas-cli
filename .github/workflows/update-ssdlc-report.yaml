@@ -32,8 +32,8 @@ jobs:
             VERSION="${GITHUB_REF#refs/tags/atlascli/v}"
             AUTHOR="${{ github.event.release.author.login }}"
           fi
-          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Run gen-ssdlc-report.sh
         env:
           AUTHOR: ${{ steps.extract.outputs.author }}
@@ -47,7 +47,7 @@ jobs:
           private-key: ${{ secrets.APIXBOT_APP_PEM }}
       - uses: peter-evans/create-pull-request@v6
         id: pr
-        with:
+        with: 
           token: ${{ steps.app-token.outputs.token }}
           committer: "${{ steps.app-token.outputs.user-name }} <${{ steps.app-token.outputs.user-email }}>"
           author: "${{ steps.app-token.outputs.user-name }} <${{ steps.app-token.outputs.user-email }}>"

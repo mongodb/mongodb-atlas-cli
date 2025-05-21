@@ -188,15 +188,15 @@ functions:
         include_expansions_in_env:
           - unstable
         script: |
-          # Get unstable to determine product_name
+          # Get unstable to determine product name
           if [[ "${unstable:-}" == "-unstable" ]]; then
-            product_name="atlascli-snapshot"
+            product="atlascli-snapshot"
           else
-            product_name="atlascli"
+            product="atlascli"
           fi
 
           cat <<EOT > expansions.yaml
-          product_name: "$product_name"
+          product: "$product"
           EOT
     - command: expansions.update
       params:
@@ -206,7 +206,7 @@ functions:
       params:
         key_id: ${papertrail_key_id}
         secret_key: ${papertrail_secret_key}
-        product: ${product_name}
+        product: ${product}
         version: ${version}
         filenames:
           - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz"

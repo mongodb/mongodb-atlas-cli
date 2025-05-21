@@ -185,11 +185,11 @@ functions:
   "trace artifacts":
     - command: shell.exec
       params:
-        env:
-          unstable: ${unstable}
+        include_expansions_in_env:
+          - unstable
         script: |
-          # Get unstable
-          if [[ "${unstable}" == "-unstable" ]]; then
+          # Get unstable to determine product_name
+          if [[ "${unstable:-}" == "-unstable" ]]; then
             product_name="atlascli-snapshot"
           else
             product_name="atlascli"

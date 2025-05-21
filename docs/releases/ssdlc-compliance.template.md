@@ -10,7 +10,7 @@ Overview:
     - Atlas CLI ${VERSION}, ${DATE}.
 
 - **Process Document**
-  - http://go/how-we-develop-software-doc
+  - https://www.mongodb.com/blog/post/how-mongodb-protects-against-supply-chain-vulnerabilities
 
 - **Tool used to track third party vulnerabilities**
   - [Kondukto](https://arcticglow.kondukto.io/)

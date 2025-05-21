@@ -114,13 +114,13 @@ functions:
           rm ${workdir}/kondukto_credentials.env
   "generate ssdlc report":
     - command: subprocess.exec
-      include_expansions_in_env:
-          - author
-          - github_author
-      env:
-        AUTHOR: ${author}
-        GITHUB_AUTHOR: ${github_author}
       params:
+        include_expansions_in_env:
+            - author
+            - github_author
+        env:
+          AUTHOR: ${author}
+          GITHUB_AUTHOR: ${github_author}
         <<: *go_options
         binary: build/package/gen-ssdlc-report.sh
   "package":

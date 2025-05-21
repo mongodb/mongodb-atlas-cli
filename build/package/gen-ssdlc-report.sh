@@ -19,17 +19,20 @@ set -eu
 release_date=${DATE:-$(date -u '+%Y-%m-%d')}
 
 export DATE="${release_date}"
-VERSION=""
-VERSION=$(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)
-export VERSION
-export AUTHOR="${AUTHOR:-$(git config user.name)}"
+
+if [ -z "${AUTHOR:-}" ]; then
+  export AUTHOR=$(git config user.name)
+fi
+
+if [ -z "${VERSION:-}" ]; then
+  export VERSION=$(git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2)
+fi
 
 echo "Generating SSDLC checklist for AtlasCLI version ${VERSION}, author ${AUTHOR} and release date ${DATE}..."
 
-# Ensure compliance directory exists
+# Ensure AtlasCLI version directory exists
 mkdir -p compliance/v${VERSION}
 
-# Generate the report in compliance/ with a versioned filename
 envsubst < docs/releases/ssdlc-compliance.template.md \
   > "compliance/v${VERSION}/ssdlc-compliance-${VERSION}.md"
 

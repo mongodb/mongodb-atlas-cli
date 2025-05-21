@@ -41,10 +41,6 @@ jobs:
           AUTHOR: ${{ steps.extract.outputs.author }}
           VERSION: ${{ steps.extract.outputs.version }}
         run: ./build/package/gen-ssdlc-report.sh
-      - name: Prepare compliance report folder
-        run: |
-          mkdir -p docs/releases/v${{ steps.extract.outputs.version }}
-          cp compliance/v${{ steps.extract.outputs.version }}/ssdlc-compliance-${{ steps.extract.outputs.version }}.md docs/releases/v${{ steps.extract.outputs.version }}/
       - name: set Apix Bot token
         id: app-token
         uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42

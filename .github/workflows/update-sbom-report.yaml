@@ -1,0 +1,64 @@
+name: Update Compliance Report
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-compliance-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x ./build/package/gen-ssdlc-report.sh
+
+      - name: Run gen-ssdlc-report.sh
+        run: ./build/package/gen-ssdlc-report.sh
+
+      - name: Extract version from tag
+        id: extract_version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/atlascli/v}"
+          echo "VERSION=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare compliance report folder
+        run: |
+          mkdir -p docs/releases/v${{ steps.extract_version.outputs.VERSION }}
+          cp compliance/ssdlc-compliance-${{ steps.extract_version.outputs.VERSION }}.md docs/releases/v${{ steps.extract_version.outputs.VERSION }}/
+
+      - name: set Apix Bot token
+        id: app-token
+        uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
+        with:
+          app-id: ${{ secrets.APIXBOT_APP_ID }}
+          private-key: ${{ secrets.APIXBOT_APP_PEM }}
+
+      - uses: peter-evans/create-pull-request@v6
+        id: pr
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          committer: "${{ steps.app-token.outputs.user-name }} <${{ steps.app-token.outputs.user-email }}>"
+          author: "${{ steps.app-token.outputs.user-name }} <${{ steps.app-token.outputs.user-email }}>"
+          title: "chore: update compliance report for v${{ steps.extract_version.outputs.VERSION }}"
+          commit-message: "chore: update compliance report for v${{ steps.extract_version.outputs.VERSION }}"
+          delete-branch: true
+          base: main
+          branch: update-compliance-report-v${{ steps.extract_version.outputs.VERSION }}
+          labels: |
+            compliance
+            auto
+          body: |
+            ## Proposed changes
+            Update compliance report for v${{ steps.extract_version.outputs.VERSION }}
+
+      - name: Set auto merge
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash

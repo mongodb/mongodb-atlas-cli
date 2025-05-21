@@ -17,7 +17,7 @@ Overview:
 
 - **Dependency Information**
   - See SBOM Lite manifests (CycloneDX in JSON format):
-    - https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2F${VERSION}/sbom.json
+    - https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${VERSION}/sbom.json
 
 - **Security Testing Report**
   - Available as needed from Cloud Security.

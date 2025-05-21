@@ -34,7 +34,7 @@ export VERSION
 echo "Generating SSDLC checklist for AtlasCLI version ${VERSION}, author ${AUTHOR} and release date ${DATE}..."
 
 # Ensure AtlasCLI version directory exists
-mkdir -p compliance/v${VERSION}
+mkdir -p "compliance/v${VERSION}"
 
 envsubst < docs/releases/ssdlc-compliance.template.md \
   > "compliance/v${VERSION}/ssdlc-compliance-${VERSION}.md"

@@ -193,6 +193,38 @@ functions:
           - package_name
           - meta_package_name
         binary: build/package/rename-pkg.sh
+  "trace artifacts":
+    - command: shell.exec
+      params:
+        include_expansions_in_env:
+          - unstable
+        script: |
+          # Get unstable to determine product name
+          if [ "$unstable" = "-unstable" ]; then
+            product="atlascli-snapshot"
+          else
+            product="atlascli"
+          fi
+
+          cat <<EOT > src/github.com/mongodb/mongodb-atlas-cli/expansions.yaml
+          product: "$product"
+          EOT
+    - command: expansions.update
+      params:
+        ignore_missing_file: true
+        file: src/github.com/mongodb/mongodb-atlas-cli/expansions.yaml
+    - command: papertrail.trace
+      params:
+        key_id: ${papertrail_key_id}
+        secret_key: ${papertrail_secret_key}
+        product: ${product}
+        version: ${version}
+        filenames:
+          - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz"
+          - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip"
+          - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb"
+          - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm"
+          - "src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi"
   "send slack notification":
     - command: subprocess.exec
       type: test
@@ -494,6 +526,9 @@ tasks:
           permissions: private
           content_type: ${content_type|application/x-gzip}
           display_name: downloads-center-new-
+      - func: "trace artifacts"
+        vars:
+          unstable: ${unstable}
       - func: "send slack notification"
   - name: push_atlascli_generate
     patchable: false

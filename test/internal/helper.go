@@ -160,7 +160,7 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
 		e := deleteProject(projectID)
-		if e == nil || strings.Contains(e.Error(), "GROUP_NOT_FOUND") || strings.Contains(e.Error(), "404") {
+		if e == nil || strings.Contains(e.Error(), "GROUP_NOT_FOUND") {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break

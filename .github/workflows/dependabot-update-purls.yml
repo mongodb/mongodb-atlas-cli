@@ -1,0 +1,49 @@
+name: Update PURLs list for dependabot prs
+
+on:
+  pull_request
+
+permissions:
+  pull-requests: write
+  contents: write
+  repository-projects: read
+jobs:
+  update-purls:
+    name: Update PURLs
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+    - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+      with:
+        config: ${{ vars.PERMISSIONS_CONFIG }}
+    - name: Checkout code
+      uses: actions/checkout@v4.1.1
+      with:
+        ref: ${{ github.head_ref }}
+        fetch-depth: 0
+    - uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'
+    - run: make gen-purls
+    - name: Set Apix Bot token
+      id: app-token
+      uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
+      with:
+        app-id: ${{ secrets.APIXBOT_APP_ID }}
+        private-key: ${{ secrets.APIXBOT_APP_PEM }}
+    - name: Commit updated purls.txt if changed
+      env:
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        BRANCH_NAME: ${{ github.head_ref }}
+      run: |
+        echo "Changes to purls.txt:"
+        if git diff --exit-code build/package/purls.txt; then
+          echo "No changes to purls.txt"
+        else 
+          git config --global user.name "${{ steps.app-token.outputs.user-name }}"
+          git config --global user.email "${{ steps.app-token.outputs.user-email }}"
+          git add build/package/purls.txt
+          git commit -m "chore: update purls.txt"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}"
+          git push origin "$BRANCH_NAME"
+        fi

@@ -92,9 +92,10 @@ func TestCreateOpts_Run(t *testing.T) {
 			store:    mockStore,
 			fs:       fs,
 			filename: fileName,
+			provider: "AZURE",
 		}
 
-		expected := atlasv2.NewStreamsPrivateLinkConnection()
+		expected := atlasv2.NewStreamsPrivateLinkConnection(createOpts.provider)
 		expected.SetProvider("Azure")
 		expected.SetRegion("US_EAST_2")
 		expected.SetServiceEndpointId("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace")
@@ -124,11 +125,12 @@ func TestCreateOpts_Run(t *testing.T) {
 				Template:  createTemplate,
 				OutWriter: buf,
 			},
+			provider: "AWS",
 		}
 
 		expectedInterfaceEndpointID := "vpc-1234567890abcdef0"
 
-		expected := atlasv2.NewStreamsPrivateLinkConnection()
+		expected := atlasv2.NewStreamsPrivateLinkConnection(createOpts.provider)
 		expected.InterfaceEndpointId = &expectedInterfaceEndpointID
 
 		mockStore.

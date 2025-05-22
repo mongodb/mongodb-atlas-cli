@@ -64,7 +64,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 			},
 		}
 
-		expected := atlasv2.NewStreamsPrivateLinkConnection()
+		expected := atlasv2.NewStreamsPrivateLinkConnection("AZURE")
 		expected.SetId(describeOpts.connectionID)
 		expected.SetInterfaceEndpointId("vpce-123456789012345678")
 		expected.SetServiceEndpointId("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace")

@@ -53,6 +53,10 @@ Options
      - string
      - false
      - Hexadecimal string that identifies the project to use. This option overrides the settings in the configuration file or environment variable.
+   * - --provider
+     - string
+     - false
+     - Name of your cloud service provider. Valid values are AWS or AZURE. This value defaults to "AZURE".
 
 Inherited Options
 -----------------

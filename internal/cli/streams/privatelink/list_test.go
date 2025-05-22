@@ -30,7 +30,7 @@ func getPrivateLinkConnections() []atlasv2.StreamsPrivateLinkConnection {
 	connections := make([]atlasv2.StreamsPrivateLinkConnection, 5)
 
 	for i := range 5 {
-		conn := atlasv2.NewStreamsPrivateLinkConnection()
+		conn := atlasv2.NewStreamsPrivateLinkConnection("AZURE")
 		conn.SetId(fmt.Sprintf("testId%d", i))
 		conn.SetProvider("Azure")
 		conn.SetRegion("US_EAST_2")

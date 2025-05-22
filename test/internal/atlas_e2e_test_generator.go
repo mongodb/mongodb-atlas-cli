@@ -160,6 +160,7 @@ type AtlasE2ETestGenerator struct {
 	Tier                string
 	MDBVer              string
 	enableBackup        bool
+	skipCleanup         bool
 	firstProcess        *atlasv2.ApiHostViewAtlas
 	t                   *testing.T
 	fileIDs             map[string]int
@@ -211,6 +212,12 @@ func NewAtlasE2ETestGenerator(t *testing.T, opts ...func(g *AtlasE2ETestGenerato
 func WithBackup() func(g *AtlasE2ETestGenerator) {
 	return func(g *AtlasE2ETestGenerator) {
 		g.enableBackup = true
+	}
+}
+
+func WithSkipCleanup() func(g *AtlasE2ETestGenerator) {
+	return func(g *AtlasE2ETestGenerator) {
+		g.skipCleanup = true
 	}
 }
 
@@ -291,7 +298,7 @@ func (g *AtlasE2ETestGenerator) GenerateProject(prefix string) {
 		g.t.Fatal("projectID not created")
 	}
 
-	if SkipCleanup() {
+	if SkipCleanup() || g.skipCleanup {
 		return
 	}
 
@@ -328,7 +335,7 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 	}
 	g.t.Logf("clusterName=%s", g.ClusterName)
 
-	if SkipCleanup() {
+	if SkipCleanup() || g.skipCleanup {
 		return
 	}
 
@@ -345,7 +352,7 @@ func (g *AtlasE2ETestGenerator) GenerateCluster() {
 	g.generateClusterWithPrefix("cluster")
 }
 
-// generateProjectAndCluster calls both generateProject and generateCluster.
+// GenerateProjectAndCluster calls both generateProject and generateCluster.
 func (g *AtlasE2ETestGenerator) GenerateProjectAndCluster(prefix string) {
 	g.t.Helper()
 

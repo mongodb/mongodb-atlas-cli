@@ -1,0 +1,118 @@
+name: Update Compliance Report
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'atlascli tag version (e.g. 1.42.2)'
+        required: true
+        type: string
+
+jobs:
+  update-compliance-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Extract AUTHOR and VERSION
+        id: extract
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            # Expect input like 'atlascli/v1.42.2' or '1.42.2'
+            TAG="${{ github.event.inputs.tag }}"
+            VERSION="${TAG#atlascli/v}"
+            AUTHOR="${{ github.actor }}"
+          else
+            # GITHUB_REF is refs/tags/atlascli/v1.42.2
+            VERSION="${GITHUB_REF#refs/tags/atlascli/v}"
+            AUTHOR="${{ github.event.release.author.login }}"
+          fi
+          echo "author=$AUTHOR" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Run gen-ssdlc-report.sh
+        env:
+          AUTHOR: ${{ steps.extract.outputs.author }}
+          VERSION: ${{ steps.extract.outputs.version }}
+        run: ./build/package/gen-ssdlc-report.sh
+      - name: set Apix Bot token
+        id: app-token
+        uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
+        with:
+          app-id: ${{ secrets.APIXBOT_APP_ID }}
+          private-key: ${{ secrets.APIXBOT_APP_PEM }}
+      - name: Find JIRA ticket
+        id: find
+        uses: mongodb/apix-action/find-jira@3024080388613583e3bd119bfb1ab4b4dbf43c42
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          jql: project = CLOUDP AND status NOT IN (Closed, Resolved) AND summary ~ "Update Compliance Report"
+      - name: Set JIRA ticket (find)
+        if: steps.find.outputs.found == 'true'
+        run: |
+          echo "JIRA_KEY=${{steps.find.outputs.issue-key}}" >> "$GITHUB_ENV"
+      - name: Create JIRA ticket
+        uses: mongodb/apix-action/create-jira@3024080388613583e3bd119bfb1ab4b4dbf43c42
+        id: create
+        if: steps.find.outputs.found == 'false'
+        with:
+          token: ${{ secrets.JIRA_API_TOKEN }}
+          project-key: CLOUDP
+          summary: "[AtlasCLI] Update Compliance Report"
+          issuetype: Story
+          description: Update Compliance Report
+          components: AtlasCLI
+          assignee: ${{ secrets.ASSIGNEE_JIRA_TICKET }}
+          extra-data: |
+            {
+              "fields": {
+                "fixVersions": [
+                  {
+                    "id": "41805"
+                  }
+                ],
+                "customfield_12751": [
+                  {
+                    "id": "22223"
+                  }
+                ],
+                "customfield_10257": {
+                  "id": "11861"
+                }
+              }
+            }
+      - name: Set JIRA ticket (create)
+        if: steps.find.outputs.found == 'false'
+        run: |
+          echo "JIRA_KEY=${{steps.create.outputs.issue-key}}" >> "$GITHUB_ENV"
+      - uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e
+        id: pr
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          committer: "${{ steps.app-token.outputs.user-name }} <${{ steps.app-token.outputs.user-email }}>"
+          author: "${{ steps.app-token.outputs.user-name }} <${{ steps.app-token.outputs.user-email }}>"
+          title: "${{ env.JIRA_KEY }}: Update compliance report for v${{ steps.extract.outputs.version }}"
+          commit-message: "${{ env.JIRA_KEY }}: Update compliance report for v${{ steps.extract.outputs.version }}"
+          delete-branch: true
+          base: master
+          branch: ${{ env.JIRA_KEY }}
+          labels: |
+            compliance
+            auto
+            auto_close_jira
+          body: |
+            ## Proposed changes
+            Update compliance report for v${{ steps.extract.outputs.version }}
+            _Jira ticket:_ ${{ env.JIRA_KEY }}
+
+            Note: Jira ticket will be closed automatically when this PR is merged.
+
+      - name: Set auto merge
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh pr merge "${{ steps.pr.outputs.pull-request-url }}" --auto --squash

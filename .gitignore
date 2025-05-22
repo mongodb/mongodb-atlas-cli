@@ -5,7 +5,6 @@
 *.so
 *.dylib
 bin/**
-compliance/**
 dist/**
 # mac notarization service
 linux_amd64/**

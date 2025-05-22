@@ -28,7 +28,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
 var createTemplate = "Atlas Stream Processing PrivateLink endpoint {{.InterfaceEndpointId}} created.\n"
@@ -44,11 +44,12 @@ type CreateOpts struct {
 	cli.OutputOpts
 	store    Creator
 	filename string
+	provider string
 	fs       afero.Fs
 }
 
 func (opts *CreateOpts) Run() error {
-	privateLinkEndpoint := atlasv2.NewStreamsPrivateLinkConnection()
+	privateLinkEndpoint := atlasv2.NewStreamsPrivateLinkConnection(opts.provider)
 	if err := file.Load(opts.fs, opts.filename, privateLinkEndpoint); err != nil {
 		return err
 	}
@@ -74,7 +75,7 @@ func (opts *CreateOpts) initStore(ctx context.Context) func() error {
 	}
 }
 
-// atlas streams privateLink create
+// CreateBuilder atlas streams privateLink create
 // -f filename: file containing the private link endpoint configuration.
 // Create a PrivateLink endpoint that can be used as an Atlas Stream Processor connection.
 func CreateBuilder() *cobra.Command {
@@ -105,6 +106,7 @@ func CreateBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&opts.filename, flag.File, flag.FileShort, "", usage.StreamsPrivateLinkFilename)
+	cmd.Flags().StringVar(&opts.provider, flag.Provider, "AZURE", usage.ProviderPrivateLink)
 
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)

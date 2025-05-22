@@ -20,7 +20,7 @@ import (
 	"errors"
 	"testing"
 
-	"go.mongodb.org/atlas-sdk/v20250312002/admin"
+	"go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
 func TestCheck(t *testing.T) {

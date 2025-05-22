@@ -22,7 +22,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -30,7 +30,7 @@ func getPrivateLinkConnections() []atlasv2.StreamsPrivateLinkConnection {
 	connections := make([]atlasv2.StreamsPrivateLinkConnection, 5)
 
 	for i := range 5 {
-		conn := atlasv2.NewStreamsPrivateLinkConnection()
+		conn := atlasv2.NewStreamsPrivateLinkConnection("AZURE")
 		conn.SetId(fmt.Sprintf("testId%d", i))
 		conn.SetProvider("Azure")
 		conn.SetRegion("US_EAST_2")

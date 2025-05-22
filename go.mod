@@ -44,7 +44,7 @@ require (
 	github.com/yuin/goldmark v1.7.12
 	go.mongodb.org/atlas v0.38.0
 	go.mongodb.org/atlas-sdk/v20240530005 v20240530005.0.0
-	go.mongodb.org/atlas-sdk/v20250312002 v20250312002.0.0
+	go.mongodb.org/atlas-sdk/v20250312003 v20250312003.0.0
 	go.mongodb.org/mongo-driver v1.17.3
 	go.opentelemetry.io/otel v1.35.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.35.0

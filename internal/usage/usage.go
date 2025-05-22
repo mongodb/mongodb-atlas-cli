@@ -252,6 +252,7 @@ dbName and collection are required only for built-in roles.`
 	PointInTimeUTCSeconds                         = "Timestamp in the number of seconds that have elapsed since the UNIX epoch that represents the point in time to which your data will be restored. This timestamp must be within the last 24 hours of the current time."
 	AccessListType                                = "Type of access list entry. Valid values are cidrBlock, ipAddress, or awsSecurityGroup."
 	Provider                                      = "Name of your cloud service provider. Valid values are AWS, AZURE, or GCP."
+	ProviderPrivateLink                           = "Name of your cloud service provider. Valid values are AWS or AZURE."
 	CreateProvider                                = "Name of your cloud service provider. Valid values are AWS, AZURE, or GCP. You must specify the provider option if you don't use the --file option."
 	ClusterTypes                                  = "Type of the cluster that you want to create. Valid values are REPLICASET or SHARDED."
 	Region                                        = "Physical location of your MongoDB cluster. For a complete list of supported AWS regions, see: https://dochub.mongodb.org/core/aws-atlas. For a complete list of supported Azure regions, see: https://dochub.mongodb.org/core/azure-atlas. For a complete list of supported GCP regions, see: https://dochub.mongodb.org/core/gcp-atlas."

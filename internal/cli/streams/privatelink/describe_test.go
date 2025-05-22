@@ -21,7 +21,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
 	"github.com/stretchr/testify/require"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312002/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -64,7 +64,7 @@ func TestDescribeOpts_Run(t *testing.T) {
 			},
 		}
 
-		expected := atlasv2.NewStreamsPrivateLinkConnection()
+		expected := atlasv2.NewStreamsPrivateLinkConnection("AZURE")
 		expected.SetId(describeOpts.connectionID)
 		expected.SetInterfaceEndpointId("vpce-123456789012345678")
 		expected.SetServiceEndpointId("/subscriptions/fd01adff-b37e-4693-8497-83ecf183a145/resourceGroups/test-rg/providers/Microsoft.EventHub/namespaces/test-namespace")

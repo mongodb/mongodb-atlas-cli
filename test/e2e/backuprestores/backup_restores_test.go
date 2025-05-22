@@ -53,11 +53,11 @@ func TestRestores(t *testing.T) {
 			backupsEntity,
 			snapshotsEntity,
 			"create",
-			g.clusterName,
+			g.ClusterName,
 			"--desc",
 			"test-snapshot",
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -77,9 +77,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--projectId",
-			g.projectID)
+			g.ProjectID)
 		cmd.Env = os.Environ()
 		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
@@ -92,15 +92,15 @@ func TestRestores(t *testing.T) {
 			"start",
 			"automated",
 			"--clusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--snapshotId",
 			snapshotID,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"--targetProjectId",
-			g2.projectID,
+			g2.ProjectID,
 			"--targetClusterName",
-			g2.clusterName,
+			g2.ClusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -118,9 +118,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			restoreJobID,
 			"--clusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -133,9 +133,9 @@ func TestRestores(t *testing.T) {
 			backupsEntity,
 			restoresEntity,
 			"list",
-			g.clusterName,
+			g.ClusterName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -153,9 +153,9 @@ func TestRestores(t *testing.T) {
 			"describe",
 			restoreJobID,
 			"--clusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -174,11 +174,11 @@ func TestRestores(t *testing.T) {
 			"start",
 			"download",
 			"--clusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--snapshotId",
 			snapshotID,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -196,9 +196,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			restoreJobID,
 			"--clusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -213,9 +213,9 @@ func TestRestores(t *testing.T) {
 			"delete",
 			snapshotID,
 			"--clusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--projectId",
-			g.projectID,
+			g.ProjectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -233,69 +233,11 @@ func TestRestores(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			g.clusterName,
+			g.ClusterName,
 			"--projectId",
-			g.projectID)
+			g.ProjectID)
 		cmd.Env = os.Environ()
 		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
 	})
-	//
-	//g.Run("Delete Cluster 1", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-	//	cmd := exec.Command(
-	//		cliPath,
-	//		clustersEntity,
-	//		"delete",
-	//		clusterName,
-	//		"--projectId", projectID,
-	//		"--force",
-	//		"--watch")
-	//	cmd.Env = os.Environ()
-	//	resp, err := internal.RunAndGetStdOut(cmd)
-	//	req.NoError(err, string(resp))
-	//})
-	//
-	//if internal.SkipCleanup() {
-	//	return
-	//}
-	//
-	//g.Run("Delete Project 1", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-	//	cmd := exec.Command(cliPath,
-	//		projectsEntity,
-	//		"delete",
-	//		projectID,
-	//		"--force")
-	//	cmd.Env = os.Environ()
-	//	resp, err := internal.RunAndGetStdOut(cmd)
-	//	require.NoError(t, err, string(resp))
-	//})
-	//
-	//g.Run("Delete Cluster 2", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-	//	cmd := exec.Command(
-	//		cliPath,
-	//		clustersEntity,
-	//		"delete",
-	//		g.ClusterName,
-	//		"--projectId", g.ProjectID,
-	//		"--force",
-	//		"--watch")
-	//	cmd.Env = os.Environ()
-	//	resp, err := internal.RunAndGetStdOut(cmd)
-	//	req.NoError(err, string(resp))
-	//})
-	//
-	//if internal.SkipCleanup() {
-	//	return
-	//}
-	//
-	//g.Run("Delete Project 2", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-	//	cmd := exec.Command(cliPath,
-	//		projectsEntity,
-	//		"delete",
-	//		projectID,
-	//		"--force")
-	//	cmd.Env = os.Environ()
-	//	resp, err := internal.RunAndGetStdOut(cmd)
-	//	require.NoError(t, err, string(resp))
-	//})
 }

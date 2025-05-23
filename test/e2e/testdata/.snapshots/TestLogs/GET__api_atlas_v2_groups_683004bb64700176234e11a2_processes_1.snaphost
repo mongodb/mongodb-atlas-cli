@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1841
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 23 May 2025 05:24:41 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 85
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=8803846cde161943dca00b67df0b1292669bd05b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/683004bb64700176234e11a2/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-23T05:23:57Z","groupId":"683004bb64700176234e11a2","hostname":"atlas-ecxpjb-shard-00-00.dg0htp.mongodb-dev.net","id":"atlas-ecxpjb-shard-00-00.dg0htp.mongodb-dev.net:27017","lastPing":"2025-05-23T05:24:28Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/683004bb64700176234e11a2/processes/atlas-ecxpjb-shard-00-00.dg0htp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ecxpjb-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-557-shard-00-00.dg0htp.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-23T05:23:57Z","groupId":"683004bb64700176234e11a2","hostname":"atlas-ecxpjb-shard-00-01.dg0htp.mongodb-dev.net","id":"atlas-ecxpjb-shard-00-01.dg0htp.mongodb-dev.net:27017","lastPing":"2025-05-23T05:24:28Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/683004bb64700176234e11a2/processes/atlas-ecxpjb-shard-00-01.dg0htp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ecxpjb-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-557-shard-00-01.dg0htp.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-23T05:23:57Z","groupId":"683004bb64700176234e11a2","hostname":"atlas-ecxpjb-shard-00-02.dg0htp.mongodb-dev.net","id":"atlas-ecxpjb-shard-00-02.dg0htp.mongodb-dev.net:27017","lastPing":"2025-05-23T05:24:28Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/683004bb64700176234e11a2/processes/atlas-ecxpjb-shard-00-02.dg0htp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ecxpjb-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-557-shard-00-02.dg0htp.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

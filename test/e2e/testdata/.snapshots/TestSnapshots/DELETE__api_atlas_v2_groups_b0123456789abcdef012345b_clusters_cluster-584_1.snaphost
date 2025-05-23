@@ -1,0 +1,16 @@
+HTTP/2.0 202 Accepted
+Content-Length: 2
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Fri, 23 May 2025 05:18:01 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 263
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::deleteCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=8803846cde161943dca00b67df0b1292669bd05b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{}

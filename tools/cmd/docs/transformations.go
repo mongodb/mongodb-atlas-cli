@@ -22,6 +22,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	pluginCmd "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/plugin"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
@@ -58,7 +59,7 @@ func markExperimentalToAPICommands(cmd *cobra.Command) {
 	if cmd.CommandPath() == "atlas api" {
 		return // Skip the root command
 	}
-	cmd.Short = "`Public Preview: please provide feedback at <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: " + cmd.Short
+	cmd.Short = cli.ExperimentalText + cmd.Short
 }
 
 func updateAPICommandDescription(cmd *cobra.Command) {

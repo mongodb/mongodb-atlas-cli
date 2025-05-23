@@ -60,7 +60,7 @@ func markExperimentalToAPICommands(cmd *cobra.Command) {
 	if cmd.CommandPath() == "atlas api" {
 		return // Skip the root command
 	}
-	cmd.Short = "`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: " + cmd.Short + cmd.Short
+	cmd.Short = "`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: " + cmd.Short
 }
 
 func updateAPICommandDescription(cmd *cobra.Command) {

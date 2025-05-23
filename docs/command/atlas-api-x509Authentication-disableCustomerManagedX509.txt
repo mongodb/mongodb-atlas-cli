@@ -12,7 +12,7 @@ atlas api x509Authentication disableCustomerManagedX509
    :depth: 1
    :class: singlecol
 
-`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Clears the customer-managed X.509 settings on a project, including the uploaded Certificate Authority, which disables self-managed X.509.Clears the customer-managed X.509 settings on a project, including the uploaded Certificate Authority, which disables self-managed X.509.
+`Public Preview: please provide feedback <https://feedback.mongodb.com/forums/930808-atlas-cli>`_: Clears the customer-managed X.509 settings on a project, including the uploaded Certificate Authority, which disables self-managed X.509.
 
 Public Preview: The atlas api sub-command, automatically generated from the MongoDB Atlas Admin API, offers full coverage of the Admin API and is currently in Public Preview (please provide feedback at https://feedback.mongodb.com/forums/930808-atlas-cli).
 Admin API capabilities have their own release lifecycle, which you can check via the provided API endpoint documentation link.

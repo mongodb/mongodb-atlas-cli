@@ -11,6 +11,7 @@ jobs:
   update-purls:
     name: Update PURLs
     runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
     steps:
     - uses: GitHubSecurityLab/actions-permissions/monitor@v1
       with:

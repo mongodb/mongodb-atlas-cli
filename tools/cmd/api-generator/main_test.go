@@ -21,10 +21,22 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"testing"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
 )
+
+// redactSensitiveData redacts sensitive fields like linkToken from the output before snapshotting.
+func redactSensitiveData(s string) string {
+	// Redact JSON: "linkToken" : "..."
+	jsonRe := regexp.MustCompile(`(?m)("linkToken"\s*:\s*")[^"]*(")`)
+	s = jsonRe.ReplaceAllString(s, `$1[REDACTED]$2`)
+	// Redact YAML: linkToken: ...
+	yamlRe := regexp.MustCompile(`(?m)(linkToken\s*:\s*)[^\s\n]+`)
+	s = yamlRe.ReplaceAllString(s, `$1[REDACTED]`)
+	return s
+}
 
 func testSpec(t *testing.T, name, specPath string) {
 	t.Helper()
@@ -50,7 +62,8 @@ func testSpec(t *testing.T, name, specPath string) {
 			t.Fatalf("failed to convert spec into %s, error: %s", outputType, err)
 		}
 
-		if err := snapshotter.SnapshotWithName(fmt.Sprintf("%s-%s", name, outputType), buf.String()); err != nil {
+		redacted := redactSensitiveData(buf.String())
+		if err := snapshotter.SnapshotWithName(fmt.Sprintf("%s-%s", name, outputType), redacted); err != nil {
 			t.Fatalf("unexpected result %s", err)
 		}
 	}

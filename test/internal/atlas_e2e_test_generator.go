@@ -662,10 +662,13 @@ func (g *AtlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 	return resp
 }
 
-func redactSensitiveData(out []byte) ([]byte, error) {
-	// This regex matches: "linkToken":"<any value>"
+func redactSensitiveData(out []byte) []byte {
 	jsonRe := regexp.MustCompile(`("linkToken"\s*:\s*")[^"]*(")`)
-	return jsonRe.ReplaceAll(out, []byte(`${1}[REDACTED]${2}`)), nil
+	// only redact if linkToken is present
+	if !jsonRe.Match(out) {
+		return out
+	}
+	return jsonRe.ReplaceAll(out, []byte(`${1}[REDACTED]${2}`))
 }
 
 func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
@@ -676,10 +679,7 @@ func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 		g.t.Fatal(err)
 	}
 
-	out, err = redactSensitiveData(out)
-	if err != nil {
-		g.t.Fatal(err)
-	}
+	out = redactSensitiveData(out)
 
 	filename := g.snapshotName(r.Request)
 	g.t.Logf("writing snapshot at %q", filename)

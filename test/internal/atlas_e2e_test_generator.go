@@ -662,7 +662,7 @@ func (g *AtlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 	return resp
 }
 
-func (g *AtlasE2ETestGenerator) redactSensitiveData(out []byte) ([]byte, error) {
+func redactSensitiveData(out []byte) ([]byte, error) {
 	// This regex matches: "linkToken":"<any value>"
 	jsonRe := regexp.MustCompile(`("linkToken"\s*:\s*")[^"]*(")`)
 	return jsonRe.ReplaceAll(out, []byte(`${1}[REDACTED]${2}`)), nil
@@ -676,7 +676,7 @@ func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 		g.t.Fatal(err)
 	}
 
-	out, err = g.redactSensitiveData(out)
+	out, err = redactSensitiveData(out)
 	if err != nil {
 		g.t.Fatal(err)
 	}
@@ -749,7 +749,11 @@ func (g *AtlasE2ETestGenerator) snapshotServer() {
 
 	proxy := httputil.NewSingleHostReverseProxy(targetURL)
 
+	g.t.Logf("currentSnapshotMode: %v\n\n", g.currentSnapshotMode)
+
 	proxy.ModifyResponse = func(resp *http.Response) error {
+		g.t.Logf("modify response\n\n")
+		fmt.Printf("modify response: %+v\n", resp)
 		snapshot := g.prepareSnapshot(resp)
 
 		if g.skipSnapshots(snapshot, g.lastSnapshot) {
@@ -765,6 +769,7 @@ func (g *AtlasE2ETestGenerator) snapshotServer() {
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if g.currentSnapshotMode == snapshotModeUpdate {
+			g.t.Logf("update mode\n\n")
 			r.Host = targetURL.Host
 			proxy.ServeHTTP(w, r)
 			return

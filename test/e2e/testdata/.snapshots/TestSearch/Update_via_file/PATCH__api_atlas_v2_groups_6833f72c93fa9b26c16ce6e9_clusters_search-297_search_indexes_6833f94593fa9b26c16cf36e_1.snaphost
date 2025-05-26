@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 238
+Content-Type: application/vnd.atlas.2024-05-30+json;charset=utf-8
+Date: Mon, 26 May 2025 05:16:55 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 74
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasSearchIndexConfigResource::updateUserDefinedIndexFields
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=5c877a3e6985d68e81262a676a39db5818000f52; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"collectionName":"movies","database":"sample_mflix","indexID":"6833f94593fa9b26c16cf36e","latestDefinition":{"analyzer":"lucene.simple","mappings":{"dynamic":true}},"name":"index-779","queryable":false,"status":"PENDING","type":"search"}

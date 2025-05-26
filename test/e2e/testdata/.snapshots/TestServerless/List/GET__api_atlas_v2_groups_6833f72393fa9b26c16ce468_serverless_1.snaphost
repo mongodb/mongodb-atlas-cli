@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1311
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 26 May 2025 05:08:09 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 105
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasLegacyServerlessInstanceDescriptionResource::getAllServerlessInstances
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=5c877a3e6985d68e81262a676a39db5818000f52; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6833f72393fa9b26c16ce468/serverless?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"connectionStrings":{"standardSrv":"mongodb+srv://cluster-210.4lqx1mz.mongodb-dev.net"},"createDate":"2025-05-26T05:07:50Z","groupId":"6833f72393fa9b26c16ce468","id":"6833f7260934b92c21cf83a2","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6833f72393fa9b26c16ce468/serverless/cluster-210","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6833f72393fa9b26c16ce468/serverless/cluster-210/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/6833f72393fa9b26c16ce468/serverless/cluster-210/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBVersion":"8.0.9","name":"cluster-210","providerSettings":{"backingProviderName":"AWS","effectiveDiskSizeGBLimit":5,"effectiveInstanceSizeName":"FLEX","effectiveProviderName":"TENANT","nextBackupDate":"2025-05-27T05:07:50Z","providerName":"SERVERLESS","regionName":"US_EAST_1","tenantBackupEnabled":true},"serverlessBackupOptions":{"serverlessContinuousBackupEnabled":false},"stateName":"UPDATING","tags":[{"key":"env","value":"e2e"}],"terminationProtectionEnabled":false}],"totalCount":1}

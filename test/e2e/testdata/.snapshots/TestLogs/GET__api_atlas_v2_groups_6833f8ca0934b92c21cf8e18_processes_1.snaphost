@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1841
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 26 May 2025 05:22:51 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 63
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=5c877a3e6985d68e81262a676a39db5818000f52; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6833f8ca0934b92c21cf8e18/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-26T05:22:05Z","groupId":"6833f8ca0934b92c21cf8e18","hostname":"atlas-bt11a1-shard-00-00.qdxpes.mongodb-dev.net","id":"atlas-bt11a1-shard-00-00.qdxpes.mongodb-dev.net:27017","lastPing":"2025-05-26T05:22:47Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6833f8ca0934b92c21cf8e18/processes/atlas-bt11a1-shard-00-00.qdxpes.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-bt11a1-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-933-shard-00-00.qdxpes.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-26T05:22:05Z","groupId":"6833f8ca0934b92c21cf8e18","hostname":"atlas-bt11a1-shard-00-01.qdxpes.mongodb-dev.net","id":"atlas-bt11a1-shard-00-01.qdxpes.mongodb-dev.net:27017","lastPing":"2025-05-26T05:22:47Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6833f8ca0934b92c21cf8e18/processes/atlas-bt11a1-shard-00-01.qdxpes.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-bt11a1-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-933-shard-00-01.qdxpes.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-26T05:22:05Z","groupId":"6833f8ca0934b92c21cf8e18","hostname":"atlas-bt11a1-shard-00-02.qdxpes.mongodb-dev.net","id":"atlas-bt11a1-shard-00-02.qdxpes.mongodb-dev.net:27017","lastPing":"2025-05-26T05:22:47Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6833f8ca0934b92c21cf8e18/processes/atlas-bt11a1-shard-00-02.qdxpes.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-bt11a1-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-933-shard-00-02.qdxpes.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

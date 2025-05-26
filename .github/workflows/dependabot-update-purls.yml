@@ -15,24 +15,24 @@ jobs:
     - uses: GitHubSecurityLab/actions-permissions/monitor@v1
       with:
         config: ${{ vars.PERMISSIONS_CONFIG }}
-    - name: Checkout code
-      uses: actions/checkout@v4.1.1
-      with:
-        ref: ${{ github.head_ref }}
-        fetch-depth: 0
-    - uses: actions/setup-go@v5
-      with:
-        go-version-file: 'go.mod'
-    - run: make gen-purls
     - name: Set Apix Bot token
       id: app-token
       uses: mongodb/apix-action/token@3024080388613583e3bd119bfb1ab4b4dbf43c42
       with:
         app-id: ${{ secrets.APIXBOT_APP_ID }}
         private-key: ${{ secrets.APIXBOT_APP_PEM }}
+    - name: Checkout code
+      uses: actions/checkout@v4.1.1
+      with:
+        ref: ${{ github.head_ref }}
+        token: ${{ steps.app-token.outputs.token }}
+        fetch-depth: 0
+    - uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'
+    - run: make gen-purls
     - name: Commit updated purls.txt if changed
       env:
-        GH_TOKEN: ${{ steps.app-token.outputs.token }}
         BRANCH_NAME: ${{ github.head_ref }}
       run: |
         echo "Changes to purls.txt:"

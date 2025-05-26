@@ -33,6 +33,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strconv"
 	"strings"
@@ -661,10 +662,21 @@ func (g *AtlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 	return resp
 }
 
+func (g *AtlasE2ETestGenerator) redactSensitiveData(out []byte) ([]byte, error) {
+	// This regex matches: "linkToken":"<any value>"
+	jsonRe := regexp.MustCompile(`("linkToken"\s*:\s*")[^"]*(")`)
+	return jsonRe.ReplaceAll(out, []byte(`${1}[REDACTED]${2}`)), nil
+}
+
 func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 	g.t.Helper()
 
 	out, err := httputil.DumpResponse(r, true)
+	if err != nil {
+		g.t.Fatal(err)
+	}
+
+	out, err = g.redactSensitiveData(out)
 	if err != nil {
 		g.t.Fatal(err)
 	}

@@ -1,17 +1,17 @@
 HTTP/2.0 201 Created
 Content-Length: 640
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 12 May 2025 05:08:09 GMT
-Location: http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68218239a7c095723d5b8d9d
+Date: Tue, 27 May 2025 16:34:24 GMT
+Location: http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/6835e9906c419c423f3dbdd6
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 192
+X-Envoy-Upstream-Service-Time: 88
 X-Frame-Options: DENY
 X-Java-Method: ApiAlertConfigsResource::addAlertConfig
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=b4fa165bfbcb725abc0816ef770e5f595c0528ce; versionString=master
+X-Mongodb-Service-Version: gitHash=d613d71bc656e4e0a96b3f454d56eefce399f4ab; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"created":"2025-05-12T05:08:09Z","enabled":true,"eventTypeName":"NO_PRIMARY","groupId":"b0123456789abcdef012345b","id":"68218239a7c095723d5b8d9d","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68218239a7c095723d5b8d9d","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/68218239a7c095723d5b8d9d/alerts","rel":"http://localhost:8080/alerts"}],"matchers":[],"notifications":[{"delayMin":0,"emailEnabled":true,"intervalMin":5,"notifierId":"68218239a7c095723d5b8d98","smsEnabled":false,"typeName":"GROUP"}],"updated":"2025-05-12T05:08:09Z"}
+{"created":"2025-05-27T16:34:24Z","enabled":true,"eventTypeName":"NO_PRIMARY","groupId":"b0123456789abcdef012345b","id":"6835e9906c419c423f3dbdd6","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/6835e9906c419c423f3dbdd6","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/alertConfigs/6835e9906c419c423f3dbdd6/alerts","rel":"http://localhost:8080/alerts"}],"matchers":[],"notifications":[{"delayMin":0,"emailEnabled":true,"intervalMin":5,"notifierId":"6835e9906c419c423f3dbdd1","smsEnabled":false,"typeName":"GROUP"}],"updated":"2025-05-27T16:34:24Z"}

@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Content-Length: 3
+Content-Type: text/plain
+Date: Tue, 27 May 2025 16:43:05 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-Mongodb-Service-Version: gitHash=f5fe942bbef706401b1a6a159bbf95285b898193; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+X-Xgen-Up-Proto: HTTP/2
+
+8.0

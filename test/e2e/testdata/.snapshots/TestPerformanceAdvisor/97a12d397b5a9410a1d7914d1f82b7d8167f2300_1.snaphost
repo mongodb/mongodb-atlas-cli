@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1883
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 27 May 2025 16:42:31 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 56
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=f5fe942bbef706401b1a6a159bbf95285b898193; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6835e97e0faf8a6c7fcc6914/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-27T16:41:55Z","groupId":"6835e97e0faf8a6c7fcc6914","hostname":"atlas-vk5yu9-shard-00-00.uyxr3c.mongodb-dev.net","id":"atlas-vk5yu9-shard-00-00.uyxr3c.mongodb-dev.net:27017","lastPing":"2025-05-27T16:42:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6835e97e0faf8a6c7fcc6914/processes/atlas-vk5yu9-shard-00-00.uyxr3c.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-vk5yu9-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-536-shard-00-00.uyxr3c.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-27T16:41:55Z","groupId":"6835e97e0faf8a6c7fcc6914","hostname":"atlas-vk5yu9-shard-00-01.uyxr3c.mongodb-dev.net","id":"atlas-vk5yu9-shard-00-01.uyxr3c.mongodb-dev.net:27017","lastPing":"2025-05-27T16:42:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6835e97e0faf8a6c7fcc6914/processes/atlas-vk5yu9-shard-00-01.uyxr3c.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-vk5yu9-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"performanceadvisor-536-shard-00-01.uyxr3c.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-27T16:41:55Z","groupId":"6835e97e0faf8a6c7fcc6914","hostname":"atlas-vk5yu9-shard-00-02.uyxr3c.mongodb-dev.net","id":"atlas-vk5yu9-shard-00-02.uyxr3c.mongodb-dev.net:27017","lastPing":"2025-05-27T16:42:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6835e97e0faf8a6c7fcc6914/processes/atlas-vk5yu9-shard-00-02.uyxr3c.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-vk5yu9-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"performanceadvisor-536-shard-00-02.uyxr3c.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

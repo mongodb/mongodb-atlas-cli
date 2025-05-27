@@ -44,6 +44,7 @@ import (
 )
 
 const updateSnapshotsEnvVarKey = "UPDATE_SNAPSHOTS"
+const redactedToken = "redactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTo"
 
 type snapshotMode int
 
@@ -663,12 +664,14 @@ func (g *AtlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 }
 
 func redactSensitiveData(out []byte) []byte {
-	jsonRe := regexp.MustCompile(`("linkToken"\s*:\s*")[^"]*(")`)
-	// only redact if linkToken is present
-	if !jsonRe.Match(out) {
+	if !bytes.Contains(out, []byte(`"linkToken"`)) {
 		return out
 	}
-	return jsonRe.ReplaceAll(out, []byte(`${1}[REDACTED]${2}`))
+
+	redactedObject := []byte(`{"linkToken":"` + redactedToken + `"}`)
+
+	jsonObjectRe := regexp.MustCompile(`\{[^{]*"linkToken"\s*:\s*"[^"]*"[^}]*\}`)
+	return jsonObjectRe.ReplaceAll(out, redactedObject)
 }
 
 func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {

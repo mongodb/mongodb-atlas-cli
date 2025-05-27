@@ -44,7 +44,7 @@ import (
 )
 
 const updateSnapshotsEnvVarKey = "UPDATE_SNAPSHOTS"
-const redactedToken = "redactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTokenRedactedTo"
+const redactedToken = "redactedToken"
 
 type snapshotMode int
 
@@ -526,6 +526,8 @@ func (g *AtlasE2ETestGenerator) maskString(s string) string {
 	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), "test-flex")
 	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), "test-bucket")
 	o = strings.ReplaceAll(o, g.snapshotTargetURI, "http://localhost:8080/")
+	o = replaceLinkToken(o)
+
 	return o
 }
 
@@ -663,15 +665,15 @@ func (g *AtlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 	return resp
 }
 
-func redactSensitiveData(out []byte) []byte {
-	if !bytes.Contains(out, []byte(`"linkToken"`)) {
+func replaceLinkToken(out string) string {
+	if !strings.Contains(out, `"linkToken"`) {
 		return out
 	}
 
 	redactedObject := []byte(`{"linkToken":"` + redactedToken + `"}`)
 
 	jsonObjectRe := regexp.MustCompile(`\{[^{]*"linkToken"\s*:\s*"[^"]*"[^}]*\}`)
-	return jsonObjectRe.ReplaceAll(out, redactedObject)
+	return string(jsonObjectRe.ReplaceAll([]byte(out), redactedObject))
 }
 
 func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
@@ -681,8 +683,6 @@ func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {
 	if err != nil {
 		g.t.Fatal(err)
 	}
-
-	out = redactSensitiveData(out)
 
 	filename := g.snapshotName(r.Request)
 	g.t.Logf("writing snapshot at %q", filename)

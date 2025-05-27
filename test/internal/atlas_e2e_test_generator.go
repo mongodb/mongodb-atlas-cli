@@ -33,6 +33,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strconv"
 	"strings"
@@ -43,6 +44,7 @@ import (
 )
 
 const updateSnapshotsEnvVarKey = "UPDATE_SNAPSHOTS"
+const redactedToken = "redactedToken"
 
 type snapshotMode int
 
@@ -524,6 +526,8 @@ func (g *AtlasE2ETestGenerator) maskString(s string) string {
 	o = strings.ReplaceAll(o, os.Getenv("E2E_FLEX_INSTANCE_NAME"), "test-flex")
 	o = strings.ReplaceAll(o, os.Getenv("E2E_TEST_BUCKET"), "test-bucket")
 	o = strings.ReplaceAll(o, g.snapshotTargetURI, "http://localhost:8080/")
+	o = replaceLinkToken(o)
+
 	return o
 }
 
@@ -659,6 +663,17 @@ func (g *AtlasE2ETestGenerator) prepareSnapshot(r *http.Response) *http.Response
 	}
 
 	return resp
+}
+
+func replaceLinkToken(out string) string {
+	if !strings.Contains(out, `"linkToken"`) {
+		return out
+	}
+
+	redactedObject := []byte(`{"linkToken":"` + redactedToken + `"}`)
+
+	jsonObjectRe := regexp.MustCompile(`\{[^{]*"linkToken"\s*:\s*"[^"]*"[^}]*\}`)
+	return string(jsonObjectRe.ReplaceAll([]byte(out), redactedObject))
 }
 
 func (g *AtlasE2ETestGenerator) storeSnapshot(r *http.Response) {

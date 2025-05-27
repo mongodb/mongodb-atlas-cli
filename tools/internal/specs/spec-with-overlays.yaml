@@ -1778,7 +1778,7 @@ components:
         AlertViewForNdsGroup:
             oneOf:
                 - $ref: '#/components/schemas/AppServiceAlertView'
-                - $ref: '#/components/schemas/ClusterAlertView'
+                - $ref: '#/components/schemas/ClusterAlertViewForNdsGroup'
                 - $ref: '#/components/schemas/HostAlertViewForNdsGroup'
                 - $ref: '#/components/schemas/HostMetricAlert'
                 - $ref: '#/components/schemas/ReplicaSetAlertViewForNdsGroup'
@@ -8325,7 +8325,7 @@ components:
                     description: Flag that indicates whether someone enabled this alert configuration for the specified project.
                     type: boolean
                 eventTypeName:
-                    $ref: '#/components/schemas/ClusterEventTypeViewAlertable'
+                    $ref: '#/components/schemas/ClusterEventTypeViewForNdsGroupAlertable'
                 groupId:
                     description: Unique 24-hexadecimal digit string that identifies the project that owns this alert configuration.
                     example: 32b6e34b3d91647abb20e7b8
@@ -8372,7 +8372,7 @@ components:
                 - notifications
             title: Cluster Alert Configuration
             type: object
-        ClusterAlertView:
+        ClusterAlertViewForNdsGroup:
             description: Cluster alert notifies different activities and conditions about cluster of mongod hosts.
             properties:
                 acknowledgedUntil:
@@ -8418,7 +8418,7 @@ components:
                     readOnly: true
                     type: string
                 eventTypeName:
-                    $ref: '#/components/schemas/ClusterEventTypeViewAlertable'
+                    $ref: '#/components/schemas/ClusterEventTypeViewForNdsGroupAlertable'
                 groupId:
                     description: Unique 24-hexadecimal digit string that identifies the project that owns this alert.
                     example: 32b6e34b3d91647abb20e7b8
@@ -9166,21 +9166,19 @@ components:
                     minimum: 1
                     type: integer
             type: object
-        ClusterEventTypeViewAlertable:
-            description: Event type that triggers an alert.
-            enum:
-                - CLUSTER_MONGOS_IS_MISSING
-                - CLUSTER_AGENT_IN_CRASH_LOOP
-            example: CLUSTER_MONGOS_IS_MISSING
-            title: Cluster Event Types
-            type: string
         ClusterEventTypeViewForNdsGroup:
             description: Unique identifier of event type.
             enum:
                 - CLUSTER_MONGOS_IS_PRESENT
                 - CLUSTER_MONGOS_IS_MISSING
-                - CLUSTER_AGENT_IN_CRASH_LOOP
             example: CLUSTER_MONGOS_IS_PRESENT
+            title: Cluster Event Types
+            type: string
+        ClusterEventTypeViewForNdsGroupAlertable:
+            description: Event type that triggers an alert.
+            enum:
+                - CLUSTER_MONGOS_IS_MISSING
+            example: CLUSTER_MONGOS_IS_MISSING
             title: Cluster Event Types
             type: string
         ClusterEventViewForNdsGroup:
@@ -15190,7 +15188,6 @@ components:
                 - enum:
                     - CLUSTER_MONGOS_IS_PRESENT
                     - CLUSTER_MONGOS_IS_MISSING
-                    - CLUSTER_AGENT_IN_CRASH_LOOP
                   title: Cluster Event Types
                   type: string
                 - enum:
@@ -34729,7 +34726,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: d0dc81933289dbde71a17c2676e1b5d45fd74fff
+    x-xgen-sha: f6f6b0dba50116a8faf418ac03cade69e1bfcc10
 openapi: 3.0.1
 paths:
     /api/atlas/v2:

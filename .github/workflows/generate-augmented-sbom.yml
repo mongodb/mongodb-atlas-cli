@@ -1,0 +1,98 @@
+name: Augment SBOM
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Release version (e.g. 1.42.2)"
+        required: true
+        type: string
+
+permissions:  
+  id-token: write  
+  contents: read  
+
+jobs:
+  augment-sbom:
+    runs-on: ubuntu-latest
+
+    env:
+      KONDUKTO_TOKEN: ${{ secrets.KONDUKTO_TOKEN }}
+      KONDUKTO_REPO: mongodb/mongodb-atlas-cli
+      KONDUKTO_BRANCH_PREFIX: atlascli
+      SILKBOMB_IMG: artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+
+    steps:
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+        with:
+          config: ${{ vars.PERMISSIONS_CONFIG }}
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+            go-version-file: 'go.mod'
+
+      - name: Download Linux ARM64 binary
+        run: |
+          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version || '1.42.2' }}/mongodb-atlas-cli_${{ inputs.release_version || '1.42.2' }}_linux_arm64.tar.gz" \
+            -o release.tar.gz
+
+      - name: Extract binary
+        run: |
+          tar -xzf release.tar.gz
+
+      - name: Generate PURLs from binary
+        run: |
+          go version -m ./mongodb-atlas-cli_${{ inputs.release_version || '1.42.2' }}_linux_arm64/bin/atlas | \
+            awk '$1 == "dep" || $1 == "=>" { print "pkg:golang/" $2 "@" $3 }' | \
+            LC_ALL=C sort > purls.txt
+          cat purls.txt
+
+      - name: Generate SBOM with Silkbomb
+        run: |
+          docker run \
+            --pull=always \
+            --platform="linux/amd64" \
+            --rm \
+            -v "${PWD}:/pwd" \
+            "${SILKBOMB_IMG}" \
+            update \
+            --purls "/pwd/purls.txt" \
+            --sbom-out "/pwd/sbom_lite.json"
+          cat "sbom_lite.json"
+
+      - name: Get current date  
+        id: date  
+        run: |  
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV  
+      - name: Augment SBOM with Kondukto
+        run: |
+          docker run \
+            --pull=always \
+            --platform="linux/amd64" \
+            --rm \
+            -v "${PWD}:/pwd" \
+            -e "KONDUKTO_TOKEN=${KONDUKTO_TOKEN}" \
+            "${SILKBOMB_IMG}" \
+            augment \
+            --sbom-in "/pwd/sbom_lite.json" \
+            --repo "${KONDUKTO_REPO}" \
+            --branch "${KONDUKTO_BRANCH_PREFIX}-linux-arm64" \
+            --sbom-out "/pwd/linux-amd64-augmented-sbom-v${{ inputs.release_version || '1.42.2' }}-${{ env.date }}.json"
+      - name: Generate SSDLC report
+        env:
+            AUTHOR: ${{ github.actor }}
+            VERSION: ${{ inputs.release_version || '1.42.2' }}
+            AUGMENTED_SBOM_TEXT: "  - See Augmented SBOM manifests (CycloneDX in JSON format):
+                \n    - This file has been provided along with this report under the name 'linux_amd64_augmented_sbom_v${{ inputs.release_version || '1.42.2' }}.json'
+                \n    - Please note that this file was generated on ${{ env.date }} and may not reflect the latest security information of all third party dependencies.\n"
+        run: ./build/package/gen-ssdlc-report.sh
+      - name: Upload augmented SBOM as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: augmented_sbom_and_ssdlc_report
+          path: |
+            linux-amd64-augmented-sbom-v${{ inputs.release_version || '1.42.2' }}-${{ env.date }}.json
+            ssdlc-compliance-${{ inputs.release_version || '1.42.2' }}-${{ env.date }}.md

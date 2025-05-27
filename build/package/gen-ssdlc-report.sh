@@ -19,6 +19,7 @@ set -eu
 release_date=${DATE:-$(date -u '+%Y-%m-%d')}
 
 export DATE="${release_date}"
+export AUGMENTED_SBOM_TEXT=${AUGMENTED_SBOM_TEXT:-""}  
 
 if [ -z "${AUTHOR:-}" ]; then
   AUTHOR=$(git config user.name)
@@ -31,16 +32,23 @@ fi
 export AUTHOR
 export VERSION
 
+target_dir="."
+file_name="ssdlc-compliance-${VERSION}-${DATE}.md"
+
+if [ -z "${AUGMENTED_SBOM_TEXT:-}" ]; then
+  target_dir="compliance/v${VERSION}"
+  file_name="ssdlc-compliance-${VERSION}.md"
+  # Ensure AtlasCLI version directory exists
+  mkdir -p "${target_dir}"
+fi
+
 echo "Generating SSDLC checklist for AtlasCLI version ${VERSION}, author ${AUTHOR} and release date ${DATE}..."
 
-# Ensure AtlasCLI version directory exists
-mkdir -p "compliance/v${VERSION}"
-
 envsubst < docs/releases/ssdlc-compliance.template.md \
-  > "compliance/v${VERSION}/ssdlc-compliance-${VERSION}.md"
+  > "${target_dir}/${file_name}"
 
-echo "SDLC checklist ready. Files in compliance/v${VERSION}/:"
-ls -l "compliance/v${VERSION}/"
+echo "SDLC checklist ready. Files in ${target_dir}/:"
+ls -l "${target_dir}/"
 
 echo "Printing the generated report:"
-cat "compliance/v${VERSION}/ssdlc-compliance-${VERSION}.md"
+cat "${target_dir}/${file_name}"

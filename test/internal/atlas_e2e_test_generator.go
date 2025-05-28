@@ -347,7 +347,7 @@ func (g *AtlasE2ETestGenerator) GenerateCluster() {
 	g.generateClusterWithPrefix("cluster")
 }
 
-// GenerateProjectAndCluster calls both generateProject and generateCluster.
+// generateProjectAndCluster calls both generateProject and generateCluster.
 func (g *AtlasE2ETestGenerator) GenerateProjectAndCluster(prefix string) {
 	g.t.Helper()
 

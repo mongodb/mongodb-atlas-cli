@@ -159,12 +159,25 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 	deleted := false
 	backoff := 1
 	for attempts := 1; attempts <= maxRetryAttempts; attempts++ {
+		if deleted {
+			break
+		}
+
 		e := deleteProject(projectID)
-		if e == nil || strings.Contains(e.Error(), "GROUP_NOT_FOUND") {
+		if e == nil {
 			t.Logf("project %q successfully deleted", projectID)
 			deleted = true
 			break
 		}
+
+		// delete project does not supoprt json output, so we need to check if the project still exists
+		_, err := getProject(projectID)
+		if err != nil && strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
+			t.Logf("project %q was already deleted", projectID)
+			deleted = true
+			break
+		}
+
 		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
 		time.Sleep(time.Duration(backoff) * time.Second)
 		backoff *= 2
@@ -383,14 +396,6 @@ func removeTerminationProtectionFromCluster(projectID, clusterName string) error
 
 func DeleteClusterForProject(projectID, clusterName string) error {
 	if err := internalDeleteClusterForProject(projectID, clusterName); err != nil {
-		if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") {
-			return nil
-		}
-
-		if strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
-			return nil
-		}
-
 		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED") {
 			return err
 		}
@@ -892,6 +897,32 @@ func deleteProject(projectID string) error {
 		return fmt.Errorf("%s (%w)", string(resp), err)
 	}
 	return nil
+}
+
+func getProject(projectID string) (*atlasv2.Group, error) {
+	cliPath, err := AtlasCLIBin()
+	if err != nil {
+		return nil, err
+	}
+
+	cmd := exec.Command(cliPath,
+		projectEntity,
+		"describe",
+		projectID,
+		"-o=json",
+	)
+	cmd.Env = os.Environ()
+	resp, err := RunAndGetStdOut(cmd)
+	if err != nil {
+		return nil, err
+	}
+
+	var project atlasv2.Group
+	if err := json.Unmarshal(resp, &project); err != nil {
+		return nil, err
+	}
+
+	return &project, nil
 }
 
 func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atlasv2.DataLakeTenant {

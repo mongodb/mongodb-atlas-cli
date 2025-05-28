@@ -298,6 +298,7 @@ func (g *AtlasE2ETestGenerator) GenerateProject(prefix string) {
 	}
 
 	g.t.Cleanup(func() {
+		g.Logf("Project cleanup %q", g.ProjectID)
 		deleteProjectWithRetry(g.t, g.ProjectID)
 	})
 }
@@ -335,10 +336,18 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 	}
 
 	g.t.Cleanup(func() {
-		g.Logf("Cluster cleanup %q\n", g.ProjectID)
-		if e := DeleteClusterForProject(g.ProjectID, g.ClusterName); e != nil {
-			g.t.Errorf("unexpected error deleting cluster: %v", e)
+		g.Logf("Cluster cleanup for project %q\n", g.ProjectID)
+		err := DeleteClusterForProject(g.ProjectID, g.ClusterName)
+		if err == nil {
+			return
 		}
+
+		if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") || strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
+			g.t.Logf("Cluster %q was already deleted", g.ClusterName)
+			return
+		}
+
+		g.t.Errorf("unexpected error deleting cluster: %v", err)
 	})
 }
 

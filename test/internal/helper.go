@@ -383,9 +383,18 @@ func removeTerminationProtectionFromCluster(projectID, clusterName string) error
 
 func DeleteClusterForProject(projectID, clusterName string) error {
 	if err := internalDeleteClusterForProject(projectID, clusterName); err != nil {
+		if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") {
+			return nil
+		}
+
+		if strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
+			return nil
+		}
+
 		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED") {
 			return err
 		}
+
 		if err := removeTerminationProtectionFromCluster(projectID, clusterName); err != nil {
 			return err
 		}

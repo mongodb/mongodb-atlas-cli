@@ -47,6 +47,10 @@ func TestRestores(t *testing.T) {
 	projectID := g.ProjectID
 	clusterName := g.ClusterName
 
+	t.Cleanup(func() {
+		internal.DeleteClusterForProject(projectID, clusterName)
+	})
+
 	g.ProjectID = ""
 	g.ClusterName = ""
 

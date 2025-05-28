@@ -48,7 +48,7 @@ func TestRestores(t *testing.T) {
 	clusterName := g.ClusterName
 
 	t.Cleanup(func() {
-		internal.DeleteClusterForProject(projectID, clusterName)
+		require.NoError(t, internal.DeleteClusterForProject(projectID, clusterName))
 	})
 
 	g.ProjectID = ""

@@ -26,6 +26,7 @@ jobs:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -62,10 +63,11 @@ jobs:
             --sbom-out "/pwd/sbom_lite.json"
           cat "sbom_lite.json"
 
-      - name: Get current date  
-        id: date  
-        run: |  
-          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV  
+      - name: Get current date
+        id: date
+        run: |
+          echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
+
       - name: Augment SBOM with Kondukto
         run: |
           docker run \
@@ -80,6 +82,7 @@ jobs:
             --repo "${KONDUKTO_REPO}" \
             --branch "${KONDUKTO_BRANCH_PREFIX}-linux-arm64" \
             --sbom-out "/pwd/linux-amd64-augmented-sbom-v${{ inputs.release_version }}-${{ env.date }}.json"
+
       - name: Generate SSDLC report
         env:
             AUTHOR: ${{ github.actor }}
@@ -88,6 +91,7 @@ jobs:
                 \n    - This file has been provided along with this report under the name 'linux_amd64_augmented_sbom_v${{ inputs.release_version }}.json'
                 \n    - Please note that this file was generated on ${{ env.date }} and may not reflect the latest security information of all third party dependencies.\n"
         run: ./build/package/gen-ssdlc-report.sh
+
       - name: Upload augmented SBOM as artifact
         uses: actions/upload-artifact@v4
         with:

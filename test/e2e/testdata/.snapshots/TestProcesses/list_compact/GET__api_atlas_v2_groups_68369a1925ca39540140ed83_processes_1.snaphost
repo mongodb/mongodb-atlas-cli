@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1856
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 28 May 2025 05:15:31 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 67
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=c10b22e968220f545e14baef11f43efc793ceecc; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68369a1925ca39540140ed83/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-28T05:14:42Z","groupId":"68369a1925ca39540140ed83","hostname":"atlas-vvte5a-shard-00-00.j6w4h5.mongodb-dev.net","id":"atlas-vvte5a-shard-00-00.j6w4h5.mongodb-dev.net:27017","lastPing":"2025-05-28T05:15:20Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68369a1925ca39540140ed83/processes/atlas-vvte5a-shard-00-00.j6w4h5.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-vvte5a-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-182-shard-00-00.j6w4h5.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-28T05:14:42Z","groupId":"68369a1925ca39540140ed83","hostname":"atlas-vvte5a-shard-00-01.j6w4h5.mongodb-dev.net","id":"atlas-vvte5a-shard-00-01.j6w4h5.mongodb-dev.net:27017","lastPing":"2025-05-28T05:15:20Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68369a1925ca39540140ed83/processes/atlas-vvte5a-shard-00-01.j6w4h5.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-vvte5a-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-182-shard-00-01.j6w4h5.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-28T05:14:42Z","groupId":"68369a1925ca39540140ed83","hostname":"atlas-vvte5a-shard-00-02.j6w4h5.mongodb-dev.net","id":"atlas-vvte5a-shard-00-02.j6w4h5.mongodb-dev.net:27017","lastPing":"2025-05-28T05:15:20Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68369a1925ca39540140ed83/processes/atlas-vvte5a-shard-00-02.j6w4h5.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-vvte5a-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"processes-182-shard-00-02.j6w4h5.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

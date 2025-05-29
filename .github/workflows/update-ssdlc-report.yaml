@@ -38,6 +38,7 @@ jobs:
         env:
           AUTHOR: ${{ steps.extract.outputs.author }}
           VERSION: ${{ steps.extract.outputs.version }}
+          AUGMENTED_REPORT: "false"
         run: ./build/package/gen-ssdlc-report.sh
       - name: set Apix Bot token
         id: app-token

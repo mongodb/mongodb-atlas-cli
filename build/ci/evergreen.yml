@@ -251,11 +251,21 @@ functions:
         script: |
           set -Eeou pipefail
           export PATH="$ADD_PATH:$PATH"
-          if [[ "$(uname -s)" == "Darwin"* ]]; then
-            URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_darwin_arm64.tar.gz
-          else
-            URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz
-          fi
+          case "$(uname -s)" in
+            Darwin*)
+              URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_darwin_arm64.tar.gz
+              ;;
+            Linux*)
+              URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz
+              ;;
+            CGYWIN*)
+              URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_windows_amd64.tar.gz
+              ;;
+            *)
+              echo "Unsupported OS: $(uname -s)"
+              exit 1
+              ;;
+          esac
           curl -sfL $URL | tar zx
   "generate evergreen":
     - command: subprocess.exec

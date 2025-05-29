@@ -298,7 +298,7 @@ func (g *AtlasE2ETestGenerator) GenerateProject(prefix string) {
 	}
 
 	g.t.Cleanup(func() {
-		DeleteProjectWithRetry(g.t, g.ProjectID)
+		deleteProjectWithRetry(g.t, g.ProjectID)
 	})
 }
 
@@ -352,7 +352,7 @@ func (g *AtlasE2ETestGenerator) GenerateProjectAndCluster(prefix string) {
 	g.t.Helper()
 
 	g.GenerateProject(prefix)
-	// g.generateClusterWithPrefix(prefix)
+	g.generateClusterWithPrefix(prefix)
 }
 
 // NewAvailableRegion returns the first region for the provider/tier.

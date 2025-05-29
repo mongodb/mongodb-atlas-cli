@@ -888,32 +888,6 @@ func deleteProject(projectID string) error {
 	return nil
 }
 
-func getProject(projectID string) (*atlasv2.Group, error) {
-	cliPath, err := AtlasCLIBin()
-	if err != nil {
-		return nil, err
-	}
-
-	cmd := exec.Command(cliPath,
-		projectEntity,
-		"describe",
-		projectID,
-		"-o=json",
-	)
-	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOutAndErr(cmd)
-	if err != nil {
-		return nil, err
-	}
-
-	var project atlasv2.Group
-	if err := json.Unmarshal(resp, &project); err != nil {
-		return nil, err
-	}
-
-	return &project, nil
-}
-
 func listDataFederationsByProject(t *testing.T, cliPath, projectID string) []atlasv2.DataLakeTenant {
 	t.Helper()
 

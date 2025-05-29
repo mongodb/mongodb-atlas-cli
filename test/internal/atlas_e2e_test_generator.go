@@ -357,12 +357,12 @@ func (g *AtlasE2ETestGenerator) GenerateCluster() {
 	g.generateClusterWithPrefix("cluster")
 }
 
-// generateProjectAndCluster calls both generateProject and generateCluster.
+// GenerateProjectAndCluster calls both generateProject and generateCluster.
 func (g *AtlasE2ETestGenerator) GenerateProjectAndCluster(prefix string) {
 	g.t.Helper()
 
 	g.GenerateProject(prefix)
-	// g.generateClusterWithPrefix(prefix)
+	g.generateClusterWithPrefix(prefix)
 }
 
 // NewAvailableRegion returns the first region for the provider/tier.

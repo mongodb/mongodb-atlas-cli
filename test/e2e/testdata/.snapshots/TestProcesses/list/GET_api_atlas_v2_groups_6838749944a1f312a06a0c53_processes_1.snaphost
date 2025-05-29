@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1856
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 29 May 2025 15:00:20 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 58
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=84a6e6925c75d1ccc176a0a06d2c040da78c460f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6838749944a1f312a06a0c53/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-29T14:59:47Z","groupId":"6838749944a1f312a06a0c53","hostname":"atlas-ralgoy-shard-00-00.fmsaml.mongodb-dev.net","id":"atlas-ralgoy-shard-00-00.fmsaml.mongodb-dev.net:27017","lastPing":"2025-05-29T15:00:07Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6838749944a1f312a06a0c53/processes/atlas-ralgoy-shard-00-00.fmsaml.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ralgoy-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-832-shard-00-00.fmsaml.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-29T14:59:47Z","groupId":"6838749944a1f312a06a0c53","hostname":"atlas-ralgoy-shard-00-01.fmsaml.mongodb-dev.net","id":"atlas-ralgoy-shard-00-01.fmsaml.mongodb-dev.net:27017","lastPing":"2025-05-29T15:00:07Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6838749944a1f312a06a0c53/processes/atlas-ralgoy-shard-00-01.fmsaml.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ralgoy-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"processes-832-shard-00-01.fmsaml.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-29T14:59:47Z","groupId":"6838749944a1f312a06a0c53","hostname":"atlas-ralgoy-shard-00-02.fmsaml.mongodb-dev.net","id":"atlas-ralgoy-shard-00-02.fmsaml.mongodb-dev.net:27017","lastPing":"2025-05-29T15:00:07Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6838749944a1f312a06a0c53/processes/atlas-ralgoy-shard-00-02.fmsaml.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-ralgoy-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-832-shard-00-02.fmsaml.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

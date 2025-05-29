@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1443
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 29 May 2025 14:52:19 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 46
+X-Frame-Options: DENY
+X-Java-Method: ApiProjectApiUsersResource::getApiUsers
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=84a6e6925c75d1ccc176a0a06d2c040da78c460f; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/apiKeys?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"desc":"bianca-test","id":"65ccd430eb20d062681e521d","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/65ccd430eb20d062681e521d","rel":"self"}],"privateKey":"********-****-****-7a7318486a98","publicKey":"jgblwcvi","roles":[{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"},{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"},{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_OWNER"}]},{"desc":"e2e-test","id":"683874a249dfb479877a1805","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/683874a249dfb479877a1805","rel":"self"}],"privateKey":"********-****-****-4a6ff163c393","publicKey":"ulwckulq","roles":[{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"},{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_DATA_ACCESS_READ_ONLY"}]},{"desc":"e2e-test","id":"6564c343515f29099463b160","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/6564c343515f29099463b160","rel":"self"}],"privateKey":"********-****-****-de061174a097","publicKey":"ywcjnnxw","roles":[{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_READ_ONLY"}]}],"totalCount":3}

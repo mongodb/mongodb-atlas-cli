@@ -20,6 +20,7 @@ require (
 	github.com/briandowns/spinner v1.23.2
 	github.com/creack/pty v1.1.24
 	github.com/denisbrodbeck/machineid v1.0.1
+	github.com/docker/docker-credential-helpers v0.9.3
 	github.com/evergreen-ci/shrub v0.0.0-20250506131348-39cf0eb2b3dc
 	github.com/getkin/kin-openapi v0.132.0
 	github.com/go-test/deep v1.1.1
@@ -63,11 +64,13 @@ require (
 
 require (
 	github.com/bmatcuk/doublestar/v4 v4.0.2 // indirect
+	github.com/danieljoos/wincred v1.2.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/addlicense v1.1.1 // indirect
 	github.com/google/go-licenses/v2 v2.0.0-alpha.1 // indirect
 	github.com/google/licenseclassifier/v2 v2.0.0 // indirect
 	github.com/icholy/gomajor v0.14.0 // indirect
+	github.com/keybase/go-keychain v0.0.1 // indirect
 	github.com/otiai10/copy v1.10.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	go.opencensus.io v0.24.0 // indirect

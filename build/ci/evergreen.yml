@@ -1761,6 +1761,25 @@ tasks:
               -e SNYK_CFG_ORG=${SNYK_ORG} \
               -v ${workdir}/src/github.com/mongodb/mongodb-atlas-cli:/app \
               snyk/snyk:golang snyk monitor
+  # Private endpoints can be flaky when multiple tests run concurrently so keeping this out of the PR suite
+  - name: atlas_keyring_e2e
+    tags: ["e2e","atlas","keyring"]
+    must_have_test_results: true
+    depends_on:
+      - name: compile
+        variant: "code_health"
+        patch_optional: true
+    commands:
+      - func: "install gotestsum"
+      - func: "e2e test"
+        vars:
+          MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
+          MONGODB_ATLAS_PROJECT_ID: ${atlas_project_id}
+          MONGODB_ATLAS_PRIVATE_API_KEY: ${atlas_private_api_key}
+          MONGODB_ATLAS_PUBLIC_API_KEY: ${atlas_public_api_key}
+          MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
+          MONGODB_ATLAS_SERVICE: cloud
+          E2E_TAGS: atlas,keyring
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:
@@ -1889,6 +1908,38 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: ".e2e .backup .atlas"
+  - name: e2e_atlas_keyring_rhel8
+    display_name: "E2E Atlas Keyring Tests (RHEL 8)"
+    run_on:
+      - rhel80-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas .keyring"
+  - name: e2e_atlas_keyring_ubuntu24
+    display_name: "E2E Atlas Keyring Tests (Ubuntu 24.04)"
+    run_on:
+      - ubuntu2404-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas .keyring"
+  - name: e2e_atlas_keyring_windows
+    display_name: "E2E Atlas Keyring Tests (Windows)"
+    run_on:
+      - windows-vsCurrent-small
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas .keyring"
+  - name: e2e_atlas_keyring_osx
+    display_name: "E2E Atlas Keyring Tests (MacOS 14 ARM64)"
+    run_on:
+      - macos-14-arm64-docker
+    expansions:
+      <<: *go_linux_version
+    tasks:
+      - name: ".e2e .atlas .keyring"
   - name: e2e_cleanup
     display_name: "E2E Cleanup Resources"
     allowed_requesters: ["patch", "ad_hoc", "github_pr"]

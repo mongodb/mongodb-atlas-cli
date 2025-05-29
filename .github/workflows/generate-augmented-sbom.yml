@@ -1,7 +1,6 @@
 name: Augment SBOM
 
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       release_version:

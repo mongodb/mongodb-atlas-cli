@@ -22,12 +22,12 @@ import (
 
 //go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber
 
-type ClusterLister interface { //nolint:iface // right now requires some refactor to deployment commands
+type ClusterLister interface {
 	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
 	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
 }
 
-type ClusterDescriber interface { //nolint:iface // right now requires some refactor to deployment commands
+type ClusterDescriber interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
 }

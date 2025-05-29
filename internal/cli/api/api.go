@@ -95,7 +95,6 @@ func createAPICommandGroupToCobraCommand(group shared_api.Group) *cobra.Command 
 	}
 }
 
-//nolint:gocyclo
 func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error) {
 	// command properties
 	commandName := strcase.ToLowerCamel(command.OperationID)

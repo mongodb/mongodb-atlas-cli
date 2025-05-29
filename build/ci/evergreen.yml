@@ -1935,6 +1935,13 @@ buildvariants:
     expansions:
       <<: *go_windows_version
     tasks:
+      - command: shell.exec
+        params:
+          include_expansions_in_env:
+            - workdir
+          shell: bash
+          script: |
+            export GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
       - name: ".e2e .atlas .keyring"
   - name: e2e_atlas_keyring_osx
     display_name: "E2E Atlas Keyring Tests (MacOS 14 ARM64)"

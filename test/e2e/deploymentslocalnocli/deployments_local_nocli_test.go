@@ -27,7 +27,7 @@ import (
 	"strings"
 	"testing"
 
-	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options" //nolint:importas //unique of this test
+	opt "github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

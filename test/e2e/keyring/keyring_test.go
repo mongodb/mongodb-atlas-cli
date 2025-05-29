@@ -25,7 +25,7 @@ import (
 func TestKeyring(t *testing.T) {
 	const service = "atlascli"
 
-	for i := 0; i < 3; i++ {
+	for i := range 3 {
 		username := fmt.Sprintf("client_id_%d", i)
 		secret := fmt.Sprintf("client_secret_%d", i)
 
@@ -35,7 +35,7 @@ func TestKeyring(t *testing.T) {
 		}
 	}
 
-	for i := 0; i < 3; i++ {
+	for i := range 3 {
 		username := fmt.Sprintf("client_id_%d", i)
 		secret := fmt.Sprintf("client_secret_%d", i)
 

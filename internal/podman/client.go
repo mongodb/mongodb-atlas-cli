@@ -181,7 +181,6 @@ func (o *client) ContainerHealthStatus(ctx context.Context, name string) (string
 	return strings.TrimSpace(string(buf)), nil
 }
 
-//nolint:gocyclo
 func (o *client) RunContainer(ctx context.Context, opts RunContainerOpts) ([]byte, error) {
 	arg := []string{"run",
 		"--name", opts.Name,

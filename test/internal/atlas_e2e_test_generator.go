@@ -299,7 +299,7 @@ func (g *AtlasE2ETestGenerator) GenerateProject(prefix string) {
 
 	g.t.Cleanup(func() {
 		g.Logf("Project cleanup %q", g.ProjectID)
-		deleteProjectWithRetry(g.t, g.ProjectID)
+		DeleteProjectWithRetry(g.t, g.ProjectID)
 	})
 }
 

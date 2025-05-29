@@ -47,10 +47,6 @@ func TestRestores(t *testing.T) {
 	projectID := g.ProjectID
 	clusterName := g.ClusterName
 
-	t.Cleanup(func() {
-		require.NoError(t, internal.DeleteClusterForProject(projectID, clusterName))
-	})
-
 	g.ProjectID = ""
 	g.ClusterName = ""
 
@@ -59,6 +55,13 @@ func TestRestores(t *testing.T) {
 
 	projectID2 := g.ProjectID
 	clusterName2 := g.ClusterName
+
+	t.Cleanup(func() {
+		require.NoError(t, internal.DeleteClusterForProject(projectID, clusterName))
+		internal.DeleteProjectWithRetry(t, projectID)
+		require.NoError(t, internal.DeleteClusterForProject(projectID2, clusterName2))
+		internal.DeleteProjectWithRetry(t, projectID2)
+	})
 
 	g.Run("Create snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

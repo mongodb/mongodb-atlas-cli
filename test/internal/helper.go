@@ -154,7 +154,8 @@ func RandInt(maximum int64) (*big.Int, error) {
 	return rand.Int(rand.Reader, big.NewInt(maximum))
 }
 
-func deleteProjectWithRetry(t *testing.T, projectID string) {
+// DeleteProjectWithRetry deletes a project with a retry backoff strategy.
+func DeleteProjectWithRetry(t *testing.T, projectID string) {
 	t.Helper()
 	deleted := false
 	backoff := 1

@@ -1832,6 +1832,7 @@ tasks:
       - command: shell.exec
         params:
           <<: *go_options
+          shell: bash
           script: |
             set -euo pipefail
             case "$(uname -s)" in
@@ -1839,13 +1840,13 @@ tasks:
               *)        echo "No deps to instal"; exit 0 ;;
             esac
             if command -v apt-get &> /dev/null; then
-              echo "running apt-get install -y gnome-keyring dbus-x11"
-              apt-get install -y gnome-keyring dbus-x11
+              echo "running sudo apt-get install -y gnome-keyring dbus-x11"
+              sudo apt-get install -y gnome-keyring dbus-x11
               exit 0
             fi
             if command -v yum &> /dev/null; then
-              echo "running yum install -y gnome-keyring"
-              yum install -y gnome-keyring
+              echo "running sudo yum install -y gnome-keyring"
+              sudo yum install -y gnome-keyring
               exit 0
             fi
       - func: "e2e test no coverage"
@@ -1860,6 +1861,7 @@ tasks:
       - command: shell.exec
         params:
           <<: *go_options
+          shell: bash
           script: |
             set -euo pipefail
             case "$(uname -s)" in
@@ -1867,13 +1869,13 @@ tasks:
               *)        echo "No deps to instal"; exit 0 ;;
             esac
             if command -v apt-get &> /dev/null; then
-              echo "running apt-get uninstall -y gnome-keyring dbus-x11"
-              apt-get uninstall -y gnome-keyring dbus-x11
+              echo "running sudo apt-get uninstall -y gnome-keyring dbus-x11"
+              sudo apt-get uninstall -y gnome-keyring dbus-x11
               exit 0
             fi
             if command -v yum &> /dev/null; then
-              echo "running yum uninstall -y gnome-keyring"
-              yum uninstall -y gnome-keyring
+              echo "running sudo yum uninstall -y gnome-keyring"
+              sudo yum uninstall -y gnome-keyring
               exit 0
             fi
 task_groups:

@@ -1833,13 +1833,19 @@ tasks:
         params:
           <<: *go_options
           script: |
+            set -euo pipefail
             case "$(uname -s)" in
               Linux*)   echo "Detected Linux" ;;
               *)        echo "No deps to instal"; exit 0 ;;
             esac
             if command -v apt-get &> /dev/null; then
-              echo "running apt-get install -y gnome-keyring"
-              apt-get install -y gnome-keyring
+              echo "running apt-get install -y gnome-keyring dbus-x11"
+              apt-get install -y gnome-keyring dbus-x11
+              exit 0
+            fi
+            if command -v yum &> /dev/null; then
+              echo "running yum install -y gnome-keyring"
+              yum install -y gnome-keyring
               exit 0
             fi
       - func: "e2e test no coverage"
@@ -1855,13 +1861,19 @@ tasks:
         params:
           <<: *go_options
           script: |
+            set -euo pipefail
             case "$(uname -s)" in
               Linux*)   echo "Detected Linux" ;;
               *)        echo "No deps to instal"; exit 0 ;;
             esac
             if command -v apt-get &> /dev/null; then
-              echo "running apt-get uninstall -y gnome-keyring"
-              apt-get uninstall -y gnome-keyring
+              echo "running apt-get uninstall -y gnome-keyring dbus-x11"
+              apt-get uninstall -y gnome-keyring dbus-x11
+              exit 0
+            fi
+            if command -v yum &> /dev/null; then
+              echo "running yum uninstall -y gnome-keyring"
+              yum uninstall -y gnome-keyring
               exit 0
             fi
 task_groups:

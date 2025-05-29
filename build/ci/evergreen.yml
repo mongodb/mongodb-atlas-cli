@@ -24,10 +24,12 @@ variables:
       go_root: "/opt/golang/go1.24"
       go_bin: "/opt/golang/go1.24/bin"
       go_base_path: ""
+      bin_extension: ""
   - &go_windows_version
       go_root: "c:\\golang\\go1.24"
       go_bin: "c:\\golang\\go1.24\\bin"
       go_base_path: "c:"
+      bin_extension: ".exe"
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}
       GO111MODULE: "on"
@@ -152,7 +154,7 @@ functions:
           <<: *go_env
           MONGODB_ATLAS_SKIP_UPDATE_CHECK: "yes"
           DO_NOT_TRACK: "1"
-          TEST_CMD: gotestsum --junitfile e2e-tests.xml --format standard-verbose --
+          TEST_CMD: gotestsum${bin_extension} --junitfile e2e-tests.xml --format standard-verbose --
         command: make e2e-test
     - command: archive.targz_pack
       params:
@@ -1775,15 +1777,6 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - command: shell.exec
-        params:
-          include_expansions_in_env:
-            - workdir
-          shell: bash
-          script: |
-            echo "go_base_path: ${go_base_path}"
-            echo "workdir: ${workdir}"
-            echo "GOCACHE: ${GOCACHE}"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:

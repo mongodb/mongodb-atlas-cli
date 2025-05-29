@@ -18,25 +18,20 @@ package keyring
 import (
 	"testing"
 
-	"github.com/docker/docker-credential-helpers/credentials"
+	"github.com/zalando/go-keyring"
 )
 
 func TestKeyring(t *testing.T) {
-	var store = nativeStore()
-
-	const url = "https://atlascli.internal/serviceAccount"
+	const service = "atlascli"
 	const username = "client_id"
 	const secret = "client_secret"
 
-	c := &credentials.Credentials{
-		ServerURL: url,
-		Username:  username,
-		Secret:    secret,
+	err := keyring.Set(service, username, secret)
+	if err != nil {
+		t.Fatalf("Set() error = %v", err)
 	}
 
-	store.Add(c)
-
-	gotSecret, gotUsername, gotErr := store.Get("https://api.github.com")
+	gotSecret, gotErr := keyring.Get(service, username)
 	if gotErr != nil {
 		t.Errorf("Get() error = %v", gotErr)
 		return
@@ -44,10 +39,7 @@ func TestKeyring(t *testing.T) {
 	if gotSecret != secret {
 		t.Errorf("Get() secret = %v, want %v", gotSecret, secret)
 	}
-	if gotUsername != username {
-		t.Errorf("Get() username = %v, want %v", gotUsername, username)
-	}
-	if err := store.Delete(url); err != nil {
+	if err := keyring.Delete(service, username); err != nil {
 		t.Errorf("Delete() error = %v", err)
 	}
 }

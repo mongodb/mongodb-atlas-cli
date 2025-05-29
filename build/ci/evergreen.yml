@@ -115,6 +115,47 @@ functions:
             mv mongodb-database-tools/bin/* .
             rm -rf mongodb-database-tools
           fi
+  "e2e test no coverage":
+    - command: subprocess.exec
+      type: test
+      params:
+        <<: *go_options
+        include_expansions_in_env:
+          - go_base_path
+          - workdir
+          - MONGODB_ATLAS_ORG_ID
+          - MONGODB_ATLAS_PROJECT_ID
+          - MONGODB_ATLAS_PUBLIC_API_KEY
+          - MONGODB_ATLAS_PRIVATE_API_KEY
+          - MONGODB_ATLAS_SERVICE
+          - TEST_CMD
+          - E2E_TEST_PACKAGES
+          - E2E_TAGS
+          - E2E_TEST_BUCKET
+          - E2E_CLOUD_ROLE_ID
+          - MONGODB_ATLAS_OPS_MANAGER_URL
+          - LOCAL_KEY
+          - KMIP_CA
+          - KMIP_CERT
+          - GCP_CREDENTIALS
+          - AWS_ACCESS_KEY
+          - AWS_SECRET_ACCESS_KEY
+          - AZURE_TENANT_ID
+          - AZURE_CLIENT_ID
+          - AZURE_CLIENT_SECRET
+          - E2E_TIMEOUT
+          - E2E_SERVERLESS_INSTANCE_NAME
+          - E2E_FLEX_INSTANCE_NAME
+          - E2E_PARALLEL
+          - IDENTITY_PROVIDER_ID
+          - LOCALDEV_IMAGE
+          - revision
+        env:
+          <<: *go_env
+          MONGODB_ATLAS_SKIP_UPDATE_CHECK: "yes"
+          DO_NOT_TRACK: "1"
+          TEST_CMD: gotestsum${bin_extension} --junitfile e2e-tests.xml --format standard-verbose --
+        command: make e2e-test
   "e2e test":
     - command: subprocess.exec
       type: test
@@ -1788,7 +1829,20 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-      - func: "e2e test"
+      - command: shell.exec
+        params:
+          <<: *go_options
+          script: |
+            case "$(uname -s)" in
+              Linux*)   echo "Detected Linux" ;;
+              *)        echo "No deps to instal"; exit 0 ;;
+            esac
+            if command -v apt-get &> /dev/null; then
+              echo "running apt-get install -y gnome-keyring"
+              apt-get install -y gnome-keyring
+              exit 0
+            fi
+      - func: "e2e test no coverage"
         vars:
           MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
           MONGODB_ATLAS_PROJECT_ID: ${atlas_project_id}
@@ -1797,6 +1851,19 @@ tasks:
           MONGODB_ATLAS_OPS_MANAGER_URL: ${mcli_ops_manager_url}
           MONGODB_ATLAS_SERVICE: cloud
           E2E_TAGS: atlas,keyring
+      - command: shell.exec
+        params:
+          <<: *go_options
+          script: |
+            case "$(uname -s)" in
+              Linux*)   echo "Detected Linux" ;;
+              *)        echo "No deps to instal"; exit 0 ;;
+            esac
+            if command -v apt-get &> /dev/null; then
+              echo "running apt-get uninstall -y gnome-keyring"
+              apt-get uninstall -y gnome-keyring
+              exit 0
+            fi
 task_groups:
   - name: atlas_deployments_windows_group
     setup_task:

@@ -16,6 +16,7 @@
 package keyring
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/zalando/go-keyring"
@@ -23,23 +24,32 @@ import (
 
 func TestKeyring(t *testing.T) {
 	const service = "atlascli"
-	const username = "client_id"
-	const secret = "client_secret"
 
-	err := keyring.Set(service, username, secret)
-	if err != nil {
-		t.Fatalf("Set() error = %v", err)
+	for i := 0; i < 3; i++ {
+		username := fmt.Sprintf("client_id_%d", i)
+		secret := fmt.Sprintf("client_secret_%d", i)
+
+		err := keyring.Set(service, username, secret)
+		if err != nil {
+			t.Fatalf("Set() error = %v", err)
+		}
 	}
 
-	gotSecret, gotErr := keyring.Get(service, username)
-	if gotErr != nil {
-		t.Errorf("Get() error = %v", gotErr)
-		return
+	for i := 0; i < 3; i++ {
+		username := fmt.Sprintf("client_id_%d", i)
+		secret := fmt.Sprintf("client_secret_%d", i)
+
+		gotSecret, gotErr := keyring.Get(service, username)
+		if gotErr != nil {
+			t.Errorf("Get() error = %v", gotErr)
+			return
+		}
+		if gotSecret != secret {
+			t.Errorf("Get() secret = %v, want %v", gotSecret, secret)
+		}
 	}
-	if gotSecret != secret {
-		t.Errorf("Get() secret = %v, want %v", gotSecret, secret)
-	}
-	if err := keyring.Delete(service, username); err != nil {
+
+	if err := keyring.DeleteAll(service); err != nil {
 		t.Errorf("Delete() error = %v", err)
 	}
 }

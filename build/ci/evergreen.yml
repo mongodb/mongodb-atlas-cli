@@ -24,6 +24,10 @@ variables:
       go_root: "/opt/golang/go1.24"
       go_bin: "/opt/golang/go1.24/bin"
       go_base_path: ""
+  - &go_windows_version
+      go_root: "c:\\golang\\go1.24"
+      go_bin: "c:\\golang\\go1.24\\bin"
+      go_base_path: "c:"
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}
       GO111MODULE: "on"
@@ -1929,13 +1933,13 @@ buildvariants:
     run_on:
       - windows-vsCurrent-small
     expansions:
-      <<: *go_linux_version
+      <<: *go_windows_version
     tasks:
       - name: ".e2e .atlas .keyring"
   - name: e2e_atlas_keyring_osx
     display_name: "E2E Atlas Keyring Tests (MacOS 14 ARM64)"
     run_on:
-      - macos-14-arm64-docker
+      - macos-14-arm64-gui-dev
     expansions:
       <<: *go_linux_version
     tasks:

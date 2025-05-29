@@ -258,7 +258,7 @@ functions:
             Linux*)
               URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_linux_amd64.tar.gz
               ;;
-            CGYWIN*)
+            CYGWIN*)
               URL=https://github.com/gotestyourself/gotestsum/releases/download/v${gotestsum_ver}/gotestsum_${gotestsum_ver}_windows_amd64.tar.gz
               ;;
             *)

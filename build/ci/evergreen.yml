@@ -1775,6 +1775,18 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
+      - command: shell.exec
+        params:
+          include_expansions_in_env:
+            - workdir
+          shell: bash
+          script: |
+            unameOut="$(uname -s)"
+            echo "Detected OS: ${unameOut}"
+            case "${unameOut}" in
+                CYGWIN*)    export GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")";;
+            esac
+            echo "GOCACHE: ${GOCACHE}"
       - func: "e2e test"
         vars:
           MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
@@ -1935,13 +1947,6 @@ buildvariants:
     expansions:
       <<: *go_windows_version
     tasks:
-      - command: shell.exec
-        params:
-          include_expansions_in_env:
-            - workdir
-          shell: bash
-          script: |
-            export GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
       - name: ".e2e .atlas .keyring"
   - name: e2e_atlas_keyring_osx
     display_name: "E2E Atlas Keyring Tests (MacOS 14 ARM64)"

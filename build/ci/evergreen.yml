@@ -35,6 +35,7 @@ variables:
       GOPATH: ${go_base_path}${workdir}
       ADD_PATH: "${go_bin}:${go_base_path}${workdir}/bin:${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin"
       GOPROXY: ${go_proxy}
+      GOCACHE: ${go_base_path}${workdir}/.cache
   - &go_options
     add_to_path:
       - ${go_bin}
@@ -1774,19 +1775,16 @@ tasks:
         variant: "code_health"
         patch_optional: true
     commands:
-      - func: "install gotestsum"
       - command: shell.exec
         params:
           include_expansions_in_env:
             - workdir
-          shell: bash
-          script: |
-            unameOut="$(uname -s)"
-            echo "Detected OS: ${unameOut}"
-            case "${unameOut}" in
-                CYGWIN*)    export GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")";;
-            esac
-            echo "GOCACHE: ${GOCACHE}"
+        shell: bash
+        script: |
+          echo "go_base_path: ${go_base_path}"
+          echo "workdir: ${workdir}"
+          echo "GOCACHE: ${GOCACHE}"
+      - func: "install gotestsum"
       - func: "e2e test"
         vars:
           MONGODB_ATLAS_ORG_ID: ${atlas_org_id}

@@ -475,27 +475,6 @@ tasks:
       - func: "upload dist"
       - command: s3.put
         params:
-          aws_key: ${download_center_aws_key}
-          aws_secret: ${download_center_aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.zip
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.deb
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.rpm
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tgz
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
-          remote_file: mongocli/
-          build_variants:
-            - release_mongocli_github
-            - release_atlascli_github
-          bucket: downloads.mongodb.org
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-          display_name: downloads-center-
-      - command: s3.put
-        params:
           role_arn: "arn:aws:iam::119629040606:role/s3-access.cdn-origin-mongocli"
           local_files_include_filter:
             - src/github.com/mongodb/mongodb-atlas-cli/dist/*.tar.gz
@@ -513,7 +492,7 @@ tasks:
           bucket: cdn-origin-mongocli
           permissions: private
           content_type: ${content_type|application/x-gzip}
-          display_name: downloads-center-new-
+          display_name: downloads-center-
       - func: "trace artifacts"
         vars:
           unstable: ${unstable}

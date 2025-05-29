@@ -37,7 +37,7 @@ jobs:
 
       - name: Download Linux ARM64 binary
         run: |
-          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version || '1.42.2' }}/mongodb-atlas-cli_${{ inputs.release_version || '1.42.2' }}_linux_arm64.tar.gz" \
+          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version }}/mongodb-atlas-cli_${{ inputs.release_version }}_linux_arm64.tar.gz" \
             -o release.tar.gz
 
       - name: Extract binary
@@ -46,7 +46,7 @@ jobs:
 
       - name: Generate PURLs from binary
         run: |
-          go version -m ./mongodb-atlas-cli_${{ inputs.release_version || '1.42.2' }}_linux_arm64/bin/atlas | \
+          go version -m ./mongodb-atlas-cli_${{ inputs.release_version }}_linux_arm64/bin/atlas | \
             awk '$1 == "dep" || $1 == "=>" { print "pkg:golang/" $2 "@" $3 }' | \
             LC_ALL=C sort > purls.txt
           cat purls.txt
@@ -82,12 +82,12 @@ jobs:
             --sbom-in "/pwd/sbom_lite.json" \
             --repo "${KONDUKTO_REPO}" \
             --branch "${KONDUKTO_BRANCH_PREFIX}-linux-arm64" \
-            --sbom-out "/pwd/linux-amd64-augmented-sbom-v${{ inputs.release_version || '1.42.2' }}-${{ env.date }}.json"
+            --sbom-out "/pwd/linux-amd64-augmented-sbom-v${{ inputs.release_version }}-${{ env.date }}.json"
 
       - name: Generate SSDLC report
         env:
             AUTHOR: ${{ github.actor }}
-            VERSION: ${{ inputs.release_version || '1.42.2' }}
+            VERSION: ${{ inputs.release_version }}
             AUGMENTED_REPORT: "true"
         run: ./build/package/gen-ssdlc-report.sh
 
@@ -96,6 +96,6 @@ jobs:
         with:
           name: augmented_sbom_and_ssdlc_report
           path: |
-            linux-amd64-augmented-sbom-v${{ inputs.release_version || '1.42.2' }}-${{ env.date }}.json
-            ssdlc-compliance-${{ inputs.release_version || '1.42.2' }}-${{ env.date }}.md
+            linux-amd64-augmented-sbom-v${{ inputs.release_version }}-${{ env.date }}.json
+            ssdlc-compliance-${{ inputs.release_version }}-${{ env.date }}.md
           if-no-files-found: error

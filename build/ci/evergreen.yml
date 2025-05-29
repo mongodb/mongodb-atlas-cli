@@ -1779,11 +1779,11 @@ tasks:
         params:
           include_expansions_in_env:
             - workdir
-        shell: bash
-        script: |
-          echo "go_base_path: ${go_base_path}"
-          echo "workdir: ${workdir}"
-          echo "GOCACHE: ${GOCACHE}"
+          shell: bash
+          script: |
+            echo "go_base_path: ${go_base_path}"
+            echo "workdir: ${workdir}"
+            echo "GOCACHE: ${GOCACHE}"
       - func: "install gotestsum"
       - func: "e2e test"
         vars:

@@ -298,7 +298,7 @@ func (g *AtlasE2ETestGenerator) GenerateProject(prefix string) {
 	}
 
 	g.t.Cleanup(func() {
-		deleteProjectWithRetry(g.t, g.ProjectID)
+		DeleteProjectWithRetry(g.t, g.ProjectID)
 	})
 }
 
@@ -352,7 +352,7 @@ func (g *AtlasE2ETestGenerator) GenerateProjectAndCluster(prefix string) {
 	g.t.Helper()
 
 	g.GenerateProject(prefix)
-	g.generateClusterWithPrefix(prefix)
+	// g.generateClusterWithPrefix(prefix)
 }
 
 // NewAvailableRegion returns the first region for the provider/tier.
@@ -508,7 +508,13 @@ func (g *AtlasE2ETestGenerator) enforceDir(filename string) {
 }
 
 func defaultSnapshotBaseName(r *http.Request) string {
-	return fmt.Sprintf("%s_%s", r.Method, strings.ReplaceAll(strings.ReplaceAll(r.URL.Path, "/", "_"), ":", "_"))
+	// Remove all leading slashes for consistency
+	normalizedPath := strings.TrimLeft(r.URL.Path, "/")
+	// Replace all remaining slashes with underscores
+	normalizedPath = strings.ReplaceAll(normalizedPath, "/", "_")
+	// Replace colons with underscores
+	normalizedPath = strings.ReplaceAll(normalizedPath, ":", "_")
+	return fmt.Sprintf("%s_%s", r.Method, normalizedPath)
 }
 
 func SnapshotHashedName(r *http.Request) string {

@@ -19,7 +19,6 @@ set -eu
 release_date=${DATE:-$(date -u '+%Y-%m-%d')}
 
 export DATE="${release_date}"
-export AUGMENTED_SBOM_TEXT=${AUGMENTED_SBOM_TEXT:-""}  
 
 if [ -z "${AUTHOR:-}" ]; then
   AUTHOR=$(git config user.name)
@@ -32,12 +31,18 @@ fi
 export AUTHOR
 export VERSION
 
-target_dir="."
-file_name="ssdlc-compliance-${VERSION}-${DATE}.md"
-
-if [ -z "${AUGMENTED_SBOM_TEXT:-}" ]; then
+if [ -z "${AUGMENTED_REPORT}" = "true" ]; then
+  target_dir="."
+  file_name="ssdlc-compliance-${VERSION}-${DATE}.md"
+  SBOM_TEXT="  - See Augmented SBOM manifests (CycloneDX in JSON format):
+    \n    - This file has been provided along with this report under the name 'linux_amd64_augmented_sbom_v${{ inputs.release_version }}.json'
+    \n    - Please note that this file was generated on ${{ env.date }} and may not reflect the latest security information of all third party dependencies."
+    
+else # If not augmented, generate the standard report
   target_dir="compliance/v${VERSION}"
   file_name="ssdlc-compliance-${VERSION}.md"
+  SBOM_TEXT="  - See SBOM Lite manifests (CycloneDX in JSON format):
+    /n    - https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${VERSION}/sbom.json"
   # Ensure AtlasCLI version directory exists
   mkdir -p "${target_dir}"
 fi

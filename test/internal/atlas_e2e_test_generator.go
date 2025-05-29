@@ -339,6 +339,7 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 		g.Logf("Cluster cleanup for project %q\n", g.ProjectID)
 		err := DeleteClusterForProject(g.ProjectID, g.ClusterName)
 		if err == nil {
+			g.t.Logf("Cluster %q was deleted", g.ClusterName)
 			return
 		}
 
@@ -361,7 +362,7 @@ func (g *AtlasE2ETestGenerator) GenerateProjectAndCluster(prefix string) {
 	g.t.Helper()
 
 	g.GenerateProject(prefix)
-	g.generateClusterWithPrefix(prefix)
+	// g.generateClusterWithPrefix(prefix)
 }
 
 // NewAvailableRegion returns the first region for the provider/tier.

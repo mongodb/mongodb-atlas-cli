@@ -164,16 +164,8 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 		}
 
 		e := deleteProject(projectID)
-		if e == nil {
+		if e == nil || strings.Contains(e.Error(), "GROUP_NOT_FOUND") {
 			t.Logf("project %q successfully deleted", projectID)
-			deleted = true
-			break
-		}
-
-		// delete project does not supoprt json output, so we need to check if the project still exists
-		_, err := getProject(projectID)
-		if err != nil && strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
-			t.Logf("project %q was already deleted", projectID)
 			deleted = true
 			break
 		}
@@ -334,19 +326,16 @@ func internalDeleteClusterForProject(projectID, clusterName string) error {
 		"delete",
 		clusterName,
 		"--force",
+		"--watch",
 	}
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
 	}
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
-	if resp, err := RunAndGetStdOut(deleteCmd); err != nil {
+	if resp, err := RunAndGetStdOutAndErr(deleteCmd); err != nil {
 		return fmt.Errorf("error deleting cluster %w: %s", err, string(resp))
 	}
-
-	// this command will fail with 404 once the cluster is deleted
-	// we just need to wait for this to close the project
-	_ = WatchCluster(projectID, clusterName)
 	return nil
 }
 
@@ -892,7 +881,7 @@ func deleteProject(projectID string) error {
 		projectID,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := RunAndGetStdOutAndErr(cmd)
 	if err != nil {
 		return fmt.Errorf("%s (%w)", string(resp), err)
 	}
@@ -912,7 +901,7 @@ func getProject(projectID string) (*atlasv2.Group, error) {
 		"-o=json",
 	)
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := RunAndGetStdOutAndErr(cmd)
 	if err != nil {
 		return nil, err
 	}

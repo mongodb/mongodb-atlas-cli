@@ -405,31 +405,31 @@ tasks:
       - func: "install goreleaser"
       - func: "install macos notarization service"
       - func: "install gh-token"
-      - command: subprocess.exec
-        type: test
-        params:
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli
-          include_expansions_in_env:
-            - project
-            - revision
-            - created_at
-          env:
-            BUCKET: mongodb-mongocli-build
-            unstable: ${unstable}
-          binary: build/package/download-win-binaries.sh
-      - command: subprocess.exec
-        type: test
-        params:
-          include_expansions_in_env:
-            - unstable
-          env:
-            ARTIFACTORY_USERNAME: ${artifactory_username}
-            ARTIFACTORY_PASSWORD: ${artifactory_password}
-            GRS_USERNAME: ${garasign_username}
-            GRS_PASSWORD: ${garasign_password}
-            AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli
-          binary: build/package/windows_notarize.sh
+      # - command: subprocess.exec
+      #   type: test
+      #   params:
+      #     working_dir: src/github.com/mongodb/mongodb-atlas-cli
+      #     include_expansions_in_env:
+      #       - project
+      #       - revision
+      #       - created_at
+      #     env:
+      #       BUCKET: mongodb-mongocli-build
+      #       unstable: ${unstable}
+      #     binary: build/package/download-win-binaries.sh
+      # - command: subprocess.exec
+      #   type: test
+      #   params:
+      #     include_expansions_in_env:
+      #       - unstable
+      #     env:
+      #       ARTIFACTORY_USERNAME: ${artifactory_username}
+      #       ARTIFACTORY_PASSWORD: ${artifactory_password}
+      #       GRS_USERNAME: ${garasign_username}
+      #       GRS_PASSWORD: ${garasign_password}
+      #       AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
+      #     working_dir: src/github.com/mongodb/mongodb-atlas-cli
+      #     binary: build/package/windows_notarize.sh
       - func: "package"
         vars:
           unstable: ${unstable}
@@ -583,15 +583,15 @@ tasks:
           gh_token: ${cloud_docs_token}
           workflow: cloud-docs
 buildvariants:
-  - name: go_atlascli_msi_snapshot
-    display_name: "Packaging AtlasCLI (go-msi)"
-    run_on:
-      - windows-vsCurrent-small
-    expansions:
-      <<: *go_windows_version
-      unstable: -unstable
-    tasks:
-      - name: package_msi
+  # - name: go_atlascli_msi_snapshot
+  #   display_name: "Packaging AtlasCLI (go-msi)"
+  #   run_on:
+  #     - windows-vsCurrent-small
+  #   expansions:
+  #     <<: *go_windows_version
+  #     unstable: -unstable
+  #   tasks:
+  #     - name: package_msi
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
     run_on:
@@ -607,8 +607,8 @@ buildvariants:
     tasks:
       - name: package_goreleaser
         depends_on:
-          - name: package_msi
-            variant: "go_atlascli_msi_snapshot"
+          # - name: package_msi
+          #   variant: "go_atlascli_msi_snapshot"
           - name: generate_and_upload_sbom
             variant: ssdlc
   - name: publish_atlascli_snapshot

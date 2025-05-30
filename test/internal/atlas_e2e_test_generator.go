@@ -518,7 +518,13 @@ func (g *AtlasE2ETestGenerator) enforceDir(filename string) {
 }
 
 func defaultSnapshotBaseName(r *http.Request) string {
-	return fmt.Sprintf("%s_%s", r.Method, strings.ReplaceAll(strings.ReplaceAll(r.URL.Path, "/", "_"), ":", "_"))
+	// Remove all leading slashes for consistency
+	normalizedPath := strings.TrimLeft(r.URL.Path, "/")
+	// Replace all remaining slashes with underscores
+	normalizedPath = strings.ReplaceAll(normalizedPath, "/", "_")
+	// Replace colons with underscores
+	normalizedPath = strings.ReplaceAll(normalizedPath, ":", "_")
+	return fmt.Sprintf("%s_%s", r.Method, normalizedPath)
 }
 
 func SnapshotHashedName(r *http.Request) string {

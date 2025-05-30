@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1848
+Content-Type: application/vnd.atlas.2024-11-13+json;charset=utf-8
+Date: Fri, 30 May 2025 12:34:58 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 187
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasFlexClusterResource::getAllFlexClusters
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6f3b92e91d6bca553e30eabbc42d8bea714f2377; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/flexClusters?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2025-05-30T12:34:52Z","groupId":"b0123456789abcdef012345b","id":"6839a5ec06480f407658de93","mongoDBVersion":"8.0.10","name":"cluster-113","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"CREATING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"},{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2025-05-30T12:34:57Z","groupId":"b0123456789abcdef012345b","id":"6839a5f106480f407658e036","mongoDBVersion":"8.0.10","name":"cluster-333","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"CREATING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"},{"backupSettings":{"enabled":true},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://ac-bcmsulp-shard-00-00.gm5almn.mongodb-dev.net:27017,ac-bcmsulp-shard-00-01.gm5almn.mongodb-dev.net:27017,ac-bcmsulp-shard-00-02.gm5almn.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-zgihuc-shard-0","standardSrv":"mongodb+srv://donotdeleteusedfore2ete.gm5almn.mongodb-dev.net"},"createDate":"2024-12-19T17:05:10Z","groupId":"b0123456789abcdef012345b","id":"676452464e0c160700928953","mongoDBVersion":"8.0.10","name":"test-flex","providerSettings":{"backingProviderName":"AWS","diskSizeGB":5.0,"providerName":"FLEX","regionName":"US_EAST_1"},"stateName":"IDLE","tags":[],"terminationProtectionEnabled":true,"versionReleaseSystem":"LTS"}],"totalCount":3}

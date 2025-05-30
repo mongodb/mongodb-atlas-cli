@@ -98,9 +98,9 @@ pkg:golang/go.mongodb.org/mongo-driver@v1.17.3
 pkg:golang/go.opentelemetry.io/auto/sdk@v1.1.0
 pkg:golang/go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc@v0.60.0
 pkg:golang/go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp@v0.60.0
-pkg:golang/go.opentelemetry.io/otel/metric@v1.35.0
-pkg:golang/go.opentelemetry.io/otel/trace@v1.35.0
-pkg:golang/go.opentelemetry.io/otel@v1.35.0
+pkg:golang/go.opentelemetry.io/otel/metric@v1.36.0
+pkg:golang/go.opentelemetry.io/otel/trace@v1.36.0
+pkg:golang/go.opentelemetry.io/otel@v1.36.0
 pkg:golang/go.uber.org/mock@v0.5.2
 pkg:golang/go4.org@v0.0.0-20230225012048-214862532bf5
 pkg:golang/golang.org/x/crypto@v0.38.0
@@ -113,8 +113,8 @@ pkg:golang/golang.org/x/term@v0.32.0
 pkg:golang/golang.org/x/text@v0.25.0
 pkg:golang/golang.org/x/time@v0.11.0
 pkg:golang/google.golang.org/api@v0.233.0
-pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20250414145226-207652e42e2e
-pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20250505200425-f936aa4a68b2
+pkg:golang/google.golang.org/genproto/googleapis/api@v0.0.0-20250519155744-55703ea1f237
+pkg:golang/google.golang.org/genproto/googleapis/rpc@v0.0.0-20250519155744-55703ea1f237
 pkg:golang/google.golang.org/genproto@v0.0.0-20250303144028-a0af3efb3deb
 pkg:golang/google.golang.org/grpc@v1.72.1
 pkg:golang/google.golang.org/protobuf@v1.36.6

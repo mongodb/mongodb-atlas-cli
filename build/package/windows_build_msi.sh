@@ -23,4 +23,19 @@ build/ci/ssh-ready.sh -u "$user" -i "$keyfile" -h "$hostsfile"
 
 host=$(jq -r '.[0].dns_name' "$hostsfile")
 
-ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" echo "SSH connection to $host successful."
+mkdir -p ./build/package/msi/bin
+
+cp bin/atlas.exe ./build/package/msi/bin/atlas.exe
+
+cd ./build/package
+git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2 > msi/version.txt
+zip -r msi.zip msi >/dev/null 2>&1
+cd ../..
+
+scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" "build/package/msi.zip:/cygdrive/c/Users/Administrator/msi.zip"
+
+ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}" bash -c 'unzip -o "/cygdrive/c/Users/Administrator/msi.zip" -d "/cygdrive/c/Users/Administrator/msi" && rm -rf "/cygdrive/c/Users/Administrator/msi.zip" && cd "/cygdrive/c/Users/Administrator/msi" && ./generate-msi.sh'
+
+scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" "/cygdrive/c/Users/Administrator/msi/out.msi:${PWD}/build/package/msi/out.msi"
+
+ls -la ./build/package/msi/

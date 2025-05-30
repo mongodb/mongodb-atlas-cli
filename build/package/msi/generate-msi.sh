@@ -15,19 +15,15 @@
 
 set -Eeou pipefail
 
-if [[ "${OUTPUT}" == "" ]]; then
-  echo "OUTPUT environment variable must be set to the output MSI file path."
-  exit 1
-fi
-
-if [[ "${VERSION}" == "" ]]; then
-  echo "VERSION environment variable must be set to the version of the MSI."
-  exit 1
-fi
-
+VERSION=$(cat msi/version.txt)
 GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
 CGO_ENABLED=0
 export GOCACHE
 export CGO_ENABLED
+export VERSION
 
-go-msi make --path "wix.json" --msi "${OUTPUT}" --version "${VERSION}"
+choco install -y "go-msi" --force
+
+go-msi make --path "wix.json" --msi "out.msi" --version "${VERSION}"
+
+choco uninstall -y "go-msi" --force

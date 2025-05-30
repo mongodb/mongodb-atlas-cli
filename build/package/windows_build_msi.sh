@@ -25,10 +25,10 @@ host=$(jq -r '.[0].dns_name' "$hostsfile")
 
 mkdir -p ./build/package/msi/bin
 
-cp bin/atlas.exe ./build/package/msi/bin/atlas.exe
+cp dist/windows_windows_amd64_v1/bin/atlas.exe ./build/package/msi/bin/atlas.exe
+git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2 > ./build/package/msi/version.txt
 
 cd ./build/package
-git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2 > msi/version.txt
 zip -r msi.zip msi >/dev/null 2>&1
 cd ../..
 
@@ -36,6 +36,13 @@ scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o Strict
 
 ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}" bash -c 'unzip -o "/cygdrive/c/Users/Administrator/msi.zip" -d "/cygdrive/c/Users/Administrator/msi" && rm -rf "/cygdrive/c/Users/Administrator/msi.zip" && cd "/cygdrive/c/Users/Administrator/msi" && ./generate-msi.sh'
 
-scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" "/cygdrive/c/Users/Administrator/msi/out.msi:${PWD}/build/package/msi/out.msi"
+VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
+VERSION_NAME="$VERSION_GIT"
+if [[ "${unstable-}" == "-unstable" ]]; then
+	VERSION_NAME="$VERSION_GIT-next"
+fi
+MSI_FILE="${PWD}/bin/mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi"
 
-ls -la ./build/package/msi/
+scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" "/cygdrive/c/Users/Administrator/msi/out.msi:${MSI_FILE}"
+
+ls -la ./bin

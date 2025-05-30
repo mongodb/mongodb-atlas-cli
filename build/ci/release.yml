@@ -373,6 +373,8 @@ functions:
         distro: windows-vsCurrent-small
     - command: host.list
       params:
+        wait: true
+        num_hosts: 1
         path: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/hosts.json
 tasks:
   - name: package_msi

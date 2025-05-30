@@ -91,7 +91,7 @@ func TestCleanup(t *testing.T) {
 		t.Run("trying to delete project "+projectID, func(t *testing.T) {
 			t.Parallel()
 			t.Cleanup(func() {
-				deleteProjectWithRetry(t, projectID)
+				DeleteProjectWithRetry(t, projectID)
 				deleteKeys(t, cliPath, getKeysToDelete())
 			})
 			for _, provider := range []string{"aws", "gcp", "azure"} {

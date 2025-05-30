@@ -154,7 +154,8 @@ func RandInt(maximum int64) (*big.Int, error) {
 	return rand.Int(rand.Reader, big.NewInt(maximum))
 }
 
-func deleteProjectWithRetry(t *testing.T, projectID string) {
+// DeleteProjectWithRetry deletes a project with a retry backoff strategy.
+func DeleteProjectWithRetry(t *testing.T, projectID string) {
 	t.Helper()
 	deleted := false
 	backoff := 1
@@ -165,6 +166,7 @@ func deleteProjectWithRetry(t *testing.T, projectID string) {
 			deleted = true
 			break
 		}
+
 		t.Logf("%d/%d attempts - trying again in %d seconds: unexpected error while deleting the project %q: %v", attempts, maxRetryAttempts, backoff, projectID, e)
 		time.Sleep(time.Duration(backoff) * time.Second)
 		backoff *= 2
@@ -321,19 +323,16 @@ func internalDeleteClusterForProject(projectID, clusterName string) error {
 		"delete",
 		clusterName,
 		"--force",
+		"--watch",
 	}
 	if projectID != "" {
 		args = append(args, "--projectId", projectID)
 	}
 	deleteCmd := exec.Command(cliPath, args...)
 	deleteCmd.Env = os.Environ()
-	if resp, err := RunAndGetStdOut(deleteCmd); err != nil {
+	if resp, err := RunAndGetStdOutAndErr(deleteCmd); err != nil {
 		return fmt.Errorf("error deleting cluster %w: %s", err, string(resp))
 	}
-
-	// this command will fail with 404 once the cluster is deleted
-	// we just need to wait for this to close the project
-	_ = WatchCluster(projectID, clusterName)
 	return nil
 }
 
@@ -386,6 +385,7 @@ func DeleteClusterForProject(projectID, clusterName string) error {
 		if !strings.Contains(err.Error(), "CANNOT_TERMINATE_CLUSTER_WHEN_TERMINATION_PROTECTION_ENABLED") {
 			return err
 		}
+
 		if err := removeTerminationProtectionFromCluster(projectID, clusterName); err != nil {
 			return err
 		}
@@ -878,7 +878,7 @@ func deleteProject(projectID string) error {
 		projectID,
 		"--force")
 	cmd.Env = os.Environ()
-	resp, err := RunAndGetStdOut(cmd)
+	resp, err := RunAndGetStdOutAndErr(cmd)
 	if err != nil {
 		return fmt.Errorf("%s (%w)", string(resp), err)
 	}

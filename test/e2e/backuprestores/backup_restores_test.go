@@ -44,20 +44,35 @@ func TestRestores(t *testing.T) {
 	g.GenerateProjectAndCluster("backupRestores")
 	require.NotEmpty(t, g.ClusterName)
 
-	g2 := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithBackup())
-	g2.GenerateProjectAndCluster("backupRestores2")
-	require.NotEmpty(t, g2.ClusterName)
+	sourceProjectID := g.ProjectID
+	sourceClusterName := g.ClusterName
+
+	g.ProjectID = ""
+	g.ClusterName = ""
+
+	g.GenerateProjectAndCluster("backupRestores2")
+	require.NotEmpty(t, g.ClusterName)
+
+	targetProjectID := g.ProjectID
+	targetClusterName := g.ClusterName
+
+	t.Cleanup(func() {
+		require.NoError(t, internal.DeleteClusterForProject(sourceProjectID, sourceClusterName))
+		internal.DeleteProjectWithRetry(t, sourceProjectID)
+		require.NoError(t, internal.DeleteClusterForProject(targetProjectID, targetClusterName))
+		internal.DeleteProjectWithRetry(t, targetProjectID)
+	})
 
 	g.Run("Create snapshot", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			backupsEntity,
 			snapshotsEntity,
 			"create",
-			g.ClusterName,
+			sourceClusterName,
 			"--desc",
 			"test-snapshot",
 			"--projectId",
-			g.ProjectID,
+			sourceProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -77,9 +92,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			g.ClusterName,
+			sourceClusterName,
 			"--projectId",
-			g.ProjectID)
+			sourceProjectID)
 		cmd.Env = os.Environ()
 		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))
@@ -92,15 +107,15 @@ func TestRestores(t *testing.T) {
 			"start",
 			"automated",
 			"--clusterName",
-			g.ClusterName,
+			sourceClusterName,
 			"--snapshotId",
 			snapshotID,
 			"--projectId",
-			g.ProjectID,
+			sourceProjectID,
 			"--targetProjectId",
-			g2.ProjectID,
+			targetProjectID,
 			"--targetClusterName",
-			g2.ClusterName,
+			targetClusterName,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -118,9 +133,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			restoreJobID,
 			"--clusterName",
-			g.ClusterName,
+			sourceClusterName,
 			"--projectId",
-			g.ProjectID,
+			sourceProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -133,9 +148,9 @@ func TestRestores(t *testing.T) {
 			backupsEntity,
 			restoresEntity,
 			"list",
-			g.ClusterName,
+			sourceClusterName,
 			"--projectId",
-			g.ProjectID,
+			sourceProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -153,9 +168,9 @@ func TestRestores(t *testing.T) {
 			"describe",
 			restoreJobID,
 			"--clusterName",
-			g.ClusterName,
+			sourceClusterName,
 			"--projectId",
-			g.ProjectID,
+			sourceProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -174,11 +189,11 @@ func TestRestores(t *testing.T) {
 			"start",
 			"download",
 			"--clusterName",
-			g.ClusterName,
+			sourceClusterName,
 			"--snapshotId",
 			snapshotID,
 			"--projectId",
-			g.ProjectID,
+			sourceProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -196,9 +211,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			restoreJobID,
 			"--clusterName",
-			g.ClusterName,
+			sourceClusterName,
 			"--projectId",
-			g.ProjectID,
+			sourceProjectID,
 			"-o=json")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -213,9 +228,9 @@ func TestRestores(t *testing.T) {
 			"delete",
 			snapshotID,
 			"--clusterName",
-			g.ClusterName,
+			sourceClusterName,
 			"--projectId",
-			g.ProjectID,
+			sourceProjectID,
 			"--force")
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
@@ -233,9 +248,9 @@ func TestRestores(t *testing.T) {
 			"watch",
 			snapshotID,
 			"--clusterName",
-			g.ClusterName,
+			sourceClusterName,
 			"--projectId",
-			g.ProjectID)
+			sourceProjectID)
 		cmd.Env = os.Environ()
 		resp, _ := internal.RunAndGetStdOut(cmd)
 		t.Log(string(resp))

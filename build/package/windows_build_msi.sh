@@ -34,8 +34,8 @@ while ! ssh \
     "$(printf "%s@%s" "$USERNAME" "$HOSTNAME")" \
     exit
 do
-    [ "$attempts" -ge "$connection_attempts" ] && printf "SSH connection attempt %d/%d failed." "$attempts" "$connection_attempts" && exit 1
     ((attempts++))
+    [ "$attempts" -ge "$connection_attempts" ] && printf "SSH connection attempt %d/%d failed." "$attempts" "$connection_attempts" && exit 1
     printf "SSH connection attempt %d/%d failed. Retrying...\n" "$attempts" "$connection_attempts"
     sleep 10
 done

@@ -472,8 +472,7 @@ tasks:
           package_name: ${package_name}
           FEED_FILE_NAME: "${package_name}.json"
       - func: "upload dist"
-      - command: subprocess.exec
-        type: test
+      - command: shell.exec
         params:
           working_dir: src/github.com/mongodb/mongodb-atlas-cli
           include_expansions_in_env:
@@ -482,8 +481,6 @@ tasks:
             - created_at
           script: | 
             set -e
-            ls -l ./dist
-            ls -l 
             curl -f "https://mongodb-mongocli-build.s3.amazonaws.com/${project}/dist/${revision}_${created_at}/sbom.json" -o sbom.json
             cat sbom.json
       - command: s3.put

@@ -375,15 +375,14 @@ functions:
       params:
         wait: true
         num_hosts: 1
-        path: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/hosts.json
+        path: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/hosts.json
     - command: shell.exec
       params:
         <<: *go_options
         script: |
           set -Eeou pipefail
-          echo "**** DEBUG ****"
-          echo "${__project_aws_ssh_key_name}"
-          echo "**** DEBUG ****"
+          echo "${__project_aws_ssh_key_value}" > ./build/ci/ssh_id
+          chmod 0600 ./build/ci/ssh_id
 tasks:
   - name: package_msi
     tags: ["packaging"]

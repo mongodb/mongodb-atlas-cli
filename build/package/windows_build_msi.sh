@@ -15,33 +15,12 @@
 
 set -Eeou pipefail
 
-HOSTNAME=$(jq -r '.[0].dns_name' < hosts.json)
-USERNAME=Administrator
+keyfile="${keyfile:-./build/ci/ssh_id}"
+user="${user:-Administrator}"
+hostsfile="${hostsfile:-./build/ci/hosts.json}"
 
-identity_file=~/.ssh/mcipacker.pem
-attempts=0
-connection_attempts=25
+build/ci/ssh-ready.sh -u "$user" -i "$keyfile" -h "$hostsfile"
 
-while ! ssh \
-    -i "$identity_file" \
-    -o ConnectTimeout=10 \
-    -o ForwardAgent=yes \
-    -o IdentitiesOnly=yes \
-    -o StrictHostKeyChecking=no \
-    "$(printf "%s@%s" "$USERNAME" "$HOSTNAME")" \
-    exit
-do
-    ((attempts++))
-    [ "$attempts" -ge "$connection_attempts" ] && printf "SSH connection attempt %d/%d failed." "$attempts" "$connection_attempts" && exit 1
-    printf "SSH connection attempt %d/%d failed. Retrying...\n" "$attempts" "$connection_attempts"
-    sleep 10
-done
+host=$(jq -r '.[0].dns_name' "$hostsfile")
 
-ssh \
-    -i "$identity_file" \
-    -o ConnectTimeout=10 \
-    -o ForwardAgent=yes \
-    -o IdentitiesOnly=yes \
-    -o StrictHostKeyChecking=no \
-    "$(printf "%s@%s" "$USERNAME" "$HOSTNAME")" \
-    bash -c 'echo "echo from remote host"'
+ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" echo "SSH connection to $host successful."

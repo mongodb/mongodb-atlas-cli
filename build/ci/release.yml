@@ -412,7 +412,75 @@ tasks:
             - project
             - revision
             - created_at
-          script: |
+          env:
+            BUCKET: mongodb-mongocli-build
+            unstable: ${unstable}
+          binary: build/package/download-win-binaries.sh
+      - command: subprocess.exec
+        type: test
+        params:
+          include_expansions_in_env:
+            - unstable
+          env:
+            ARTIFACTORY_USERNAME: ${artifactory_username}
+            ARTIFACTORY_PASSWORD: ${artifactory_password}
+            GRS_USERNAME: ${garasign_username}
+            GRS_PASSWORD: ${garasign_password}
+            AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli
+          binary: build/package/windows_notarize.sh
+      - func: "package"
+        vars:
+          unstable: ${unstable}
+          ARTIFACTORY_USERNAME: ${artifactory_username}
+          ARTIFACTORY_PASSWORD: ${artifactory_password}
+          GRS_USERNAME: ${garasign_username}
+          GRS_PASSWORD: ${garasign_password}
+      - func: "rename pkg"
+        vars:
+          unstable: ${unstable}
+          latest_deb: ${latest_deb}
+          latest_rpm: ${latest_rpm}
+          package_name: ${package_name}
+          meta_package_name: ${meta_package_name}
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-deb-x86_64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/x86_64
+          include:
+            - "*.deb"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-deb-arm64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/apt/arm64
+          include:
+            - "*.deb"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-rpm-x86_64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/x86_64
+          include:
+            - "*.rpm"
+      - command: archive.targz_pack
+        params:
+          target: src/github.com/mongodb/mongodb-atlas-cli/dist/atlascli-rpm-aarch64.tgz
+          source_dir: src/github.com/mongodb/mongodb-atlas-cli/dist/yum/arm64
+          include:
+            - "*.rpm"
+      - func: "generate download archive json"
+        vars:
+          package_name: ${package_name}
+          FEED_FILE_NAME: "${package_name}.json"
+      - func: "upload dist"
+      - command: subprocess.exec
+        type: test
+        params:
+          working_dir: src/github.com/mongodb/mongodb-atlas-cli
+          include_expansions_in_env:
+            - project
+            - revision
+            - created_at
+          script: | 
             set -e
             ls -l ./dist
             ls -l 

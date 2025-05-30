@@ -367,6 +367,13 @@ functions:
         shell: bash
         script: |
           ./run-copybara.sh
+  "create-windows-host":
+    - command: host.create
+      params:
+        distro: windows-vsCurrent-small
+    - command: host.list
+      params:
+        path: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/hosts.json
 tasks:
   - name: package_msi
     tags: ["packaging"]
@@ -401,6 +408,7 @@ tasks:
       - name: compile
         variant: "code_health"
     commands:
+      - func: "create-windows-host"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"

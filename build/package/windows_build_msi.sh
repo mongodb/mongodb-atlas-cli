@@ -23,7 +23,7 @@ USERNAME=Administrator
 
 identity_file=~/.ssh/mcipacker.pem
 attempts=0
-connection_attempts=${connection_attempts|25}
+connection_attempts=25
 
 while ! ssh \
     -i "$identity_file" \

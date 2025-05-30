@@ -382,7 +382,7 @@ functions:
         script: |
           set -Eeou pipefail
           echo "**** DEBUG ****"
-          ls -la ~/.ssh
+          echo "${__project_aws_ssh_key_name}"
           echo "**** DEBUG ****"
 tasks:
   - name: package_msi

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1859
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 30 May 2025 05:14:59 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 193
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=b37ab172d080b3e989937e83789e5f98ce67f36d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68393d2556d95510006925a9/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-30T05:14:24Z","groupId":"68393d2556d95510006925a9","hostname":"atlas-j4iody-shard-00-00.oexdgd.mongodb-dev.net","id":"atlas-j4iody-shard-00-00.oexdgd.mongodb-dev.net:27017","lastPing":"2025-05-30T05:14:58Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68393d2556d95510006925a9/processes/atlas-j4iody-shard-00-00.oexdgd.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-j4iody-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-142-shard-00-00.oexdgd.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-30T05:14:24Z","groupId":"68393d2556d95510006925a9","hostname":"atlas-j4iody-shard-00-01.oexdgd.mongodb-dev.net","id":"atlas-j4iody-shard-00-01.oexdgd.mongodb-dev.net:27017","lastPing":"2025-05-30T05:14:58Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68393d2556d95510006925a9/processes/atlas-j4iody-shard-00-01.oexdgd.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-j4iody-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-142-shard-00-01.oexdgd.mongodb-dev.net","version":"8.0.9"},{"created":"2025-05-30T05:14:24Z","groupId":"68393d2556d95510006925a9","hostname":"atlas-j4iody-shard-00-02.oexdgd.mongodb-dev.net","id":"atlas-j4iody-shard-00-02.oexdgd.mongodb-dev.net:27017","lastPing":"2025-05-30T05:14:58Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68393d2556d95510006925a9/processes/atlas-j4iody-shard-00-02.oexdgd.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-j4iody-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-142-shard-00-02.oexdgd.mongodb-dev.net","version":"8.0.9"}],"totalCount":3}

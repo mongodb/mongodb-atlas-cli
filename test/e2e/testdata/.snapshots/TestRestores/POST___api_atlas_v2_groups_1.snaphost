@@ -1,17 +1,17 @@
 HTTP/1.1 201 Created
-Content-Length: 1100
+Content-Length: 1133
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Wed, 28 May 2025 05:15:57 GMT
+Date: Fri, 30 May 2025 05:15:06 GMT
 Location: https://cloud-dev.mongodb.com//api/atlas/v1.0
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 1812
+X-Envoy-Upstream-Service-Time: 1636
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasGroupsResource::addGroup
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=c10b22e968220f545e14baef11f43efc793ceecc; versionString=master
+X-Mongodb-Service-Version: gitHash=b37ab172d080b3e989937e83789e5f98ce67f36d; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"clusterCount":0,"created":"2025-05-28T05:15:58Z","id":"68369c0d9806252ca7c427d1","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68369c0d9806252ca7c427d1","rel":"self"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68369c0d9806252ca7c427d1/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68369c0d9806252ca7c427d1/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68369c0d9806252ca7c427d1/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68369c0d9806252ca7c427d1/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68369c0d9806252ca7c427d1/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68369c0d9806252ca7c427d1/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"backupRestores2-e2e-909","orgId":"a0123456789abcdef012345a"}
+{"clusterCount":0,"created":"2025-05-30T05:15:08Z","id":"68393eda8b043d705d7ecd06","links":[{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68393eda8b043d705d7ecd06","rel":"self"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68393eda8b043d705d7ecd06/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68393eda8b043d705d7ecd06/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68393eda8b043d705d7ecd06/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68393eda8b043d705d7ecd06/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68393eda8b043d705d7ecd06/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"https://cloud-dev.mongodb.com/api/atlas/v2/groups/68393eda8b043d705d7ecd06/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"backupRestores2-e2e-233","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}

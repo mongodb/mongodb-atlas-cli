@@ -16,16 +16,9 @@
 
 set -Eeou pipefail
 
-VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
-VERSION_NAME="$VERSION_GIT"
-if [[ "${unstable-}" == "-unstable" ]]; then
-	VERSION_NAME="$VERSION_GIT-next"
-fi
+EXE_FILE="dist/windows_windows_amd64_v1/bin/atlas.exe"
 
-EXE_FILE="bin/atlas.exe"
-MSI_FILE="bin/mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi"
-
-if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
+if [[ -f "$EXE_FILE" ]]; then
 	echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com
 
 	echo "GRS_CONFIG_USER1_USERNAME=${GRS_USERNAME}" > .env
@@ -39,15 +32,6 @@ if [[ -f "$EXE_FILE" && -f "$MSI_FILE" ]]; then
 		-w "$(pwd)" \
 		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
 		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a ${AUTHENTICODE_KEY_NAME} \"$EXE_FILE\""
-	
-	echo "signing $MSI_FILE"
-	podman run \
-		--env-file=.env \
-		--rm \
-		-v "$(pwd):$(pwd)" \
-		-w "$(pwd)" \
-		artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-jsign \
-		/bin/bash -c "jsign --tsaurl http://timestamp.digicert.com -a ${AUTHENTICODE_KEY_NAME} \"$MSI_FILE\""
 	
 	rm .env
 fi

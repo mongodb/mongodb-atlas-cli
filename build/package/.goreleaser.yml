@@ -28,13 +28,16 @@ builds:
         - cmd: ./build/package/mac_notarize.sh
           output: true
   - <<: *build_defaults
-    builder: prebuilt
     id: windows
     goos: [windows]
     goarch: [amd64]
     goamd64: [v1]
-    prebuilt:
-      path: ./bin/atlas.exe
+    hooks:
+      post:
+        - cmd: ./build/package/windows_notarize.sh
+          output: true
+        - cmd: ./build/package/windows_build_msi.sh
+          output: true
 gomod: # https://goreleaser.com/customization/verifiable_builds/
   # Proxy a module from proxy.golang.org, making the builds verifiable.
   # This will only be effective if running against a tag. Snapshots will ignore

@@ -367,6 +367,22 @@ functions:
         shell: bash
         script: |
           ./run-copybara.sh
+  "create-windows-host":
+    - command: host.create
+      params:
+        distro: windows-vsCurrent-small
+    - command: host.list
+      params:
+        wait: true
+        num_hosts: 1
+        path: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/hosts.json
+    - command: shell.exec
+      params:
+        <<: *go_options
+        script: |
+          set -Eeou pipefail
+          echo "${__project_aws_ssh_key_value}" > ./build/ci/ssh_id
+          chmod 0600 ./build/ci/ssh_id
 tasks:
   - name: package_msi
     tags: ["packaging"]
@@ -401,35 +417,11 @@ tasks:
       - name: compile
         variant: "code_health"
     commands:
+      - func: "create-windows-host"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
       - func: "install gh-token"
-      - command: subprocess.exec
-        type: test
-        params:
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli
-          include_expansions_in_env:
-            - project
-            - revision
-            - created_at
-          env:
-            BUCKET: mongodb-mongocli-build
-            unstable: ${unstable}
-          binary: build/package/download-win-binaries.sh
-      - command: subprocess.exec
-        type: test
-        params:
-          include_expansions_in_env:
-            - unstable
-          env:
-            ARTIFACTORY_USERNAME: ${artifactory_username}
-            ARTIFACTORY_PASSWORD: ${artifactory_password}
-            GRS_USERNAME: ${garasign_username}
-            GRS_PASSWORD: ${garasign_password}
-            AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli
-          binary: build/package/windows_notarize.sh
       - func: "package"
         vars:
           unstable: ${unstable}
@@ -562,15 +554,15 @@ tasks:
           gh_token: ${cloud_docs_token}
           workflow: cloud-docs
 buildvariants:
-  - name: go_atlascli_msi_snapshot
-    display_name: "Packaging AtlasCLI (go-msi)"
-    run_on:
-      - windows-vsCurrent-small
-    expansions:
-      <<: *go_windows_version
-      unstable: -unstable
-    tasks:
-      - name: package_msi
+  # - name: go_atlascli_msi_snapshot
+  #   display_name: "Packaging AtlasCLI (go-msi)"
+  #   run_on:
+  #     - windows-vsCurrent-small
+  #   expansions:
+  #     <<: *go_windows_version
+  #     unstable: -unstable
+  #   tasks:
+  #     - name: package_msi
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
     run_on:
@@ -586,8 +578,8 @@ buildvariants:
     tasks:
       - name: package_goreleaser
         depends_on:
-          - name: package_msi
-            variant: "go_atlascli_msi_snapshot"
+          # - name: package_msi
+          #   variant: "go_atlascli_msi_snapshot"
           - name: generate_and_upload_sbom
             variant: ssdlc
   - name: publish_atlascli_snapshot
@@ -613,8 +605,6 @@ buildvariants:
     tasks:
       - name: package_goreleaser
         depends_on:
-          - name: package_msi
-            variant: release_atlascli_msi
           - name: generate_and_upload_sbom
             variant: ssdlc
   - name: copybara
@@ -628,17 +618,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: copybara
-  - name: release_atlascli_msi
-    display_name: "Release AtlasCLI (go-msi)"
-    run_on:
-      - windows-vsCurrent-small
-    git_tag_only: true
-    tags:
-      - foliage_health
-    expansions:
-      <<: *go_windows_version
-    tasks:
-      - name: package_msi
   - name: release_atlascli_publish
     display_name: "Publish AtlasCLI Generator"
     run_on:

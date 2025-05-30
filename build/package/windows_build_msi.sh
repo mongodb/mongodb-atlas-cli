@@ -18,7 +18,7 @@ set -Eeou pipefail
 echo "$PWD"
 ls -la
 
-HOSTNAME=$(jq -r '.hosts[0].dns_name' < hosts.json)
+HOSTNAME=$(jq -r '.[0].dns_name' < hosts.json)
 USERNAME=Administrator
 
 identity_file=~/.ssh/mcipacker.pem

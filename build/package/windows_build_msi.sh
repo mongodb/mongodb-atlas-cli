@@ -15,9 +15,6 @@
 
 set -Eeou pipefail
 
-echo "$PWD"
-ls -la
-
 HOSTNAME=$(jq -r '.[0].dns_name' < hosts.json)
 USERNAME=Administrator
 

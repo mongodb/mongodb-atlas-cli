@@ -376,6 +376,14 @@ functions:
         wait: true
         num_hosts: 1
         path: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/hosts.json
+    - command: shell.exec
+      params:
+        <<: *go_options
+        script: |
+          set -Eeou pipefail
+          echo "**** DEBUG ****"
+          ls -la ~/.ssh
+          echo "**** DEBUG ****"
 tasks:
   - name: package_msi
     tags: ["packaging"]

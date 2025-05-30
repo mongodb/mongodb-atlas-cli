@@ -1,7 +1,7 @@
 HTTP/2.0 200 OK
-Content-Length: 38
+Content-Length: 40
 Content-Type: application/json
-Date: Thu, 29 May 2025 14:52:03 GMT
+Date: Fri, 30 May 2025 12:35:02 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
@@ -9,8 +9,8 @@ X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
 X-Java-Method: ApiPrivateIpInfoResource::getIpInfo
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=84a6e6925c75d1ccc176a0a06d2c040da78c460f; versionString=master
+X-Mongodb-Service-Version: gitHash=6f3b92e91d6bca553e30eabbc42d8bea714f2377; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 X-Xgen-Up-Proto: HTTP/2
 
-{"currentIpv4Address":"20.43.245.104"}
+{"currentIpv4Address":"172.200.199.214"}

@@ -15,10 +15,12 @@
 
 set -Eeou pipefail
 
-GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
+GOROOT="$(cygpath --mixed "c:\\golang\\go1.24")"
+PATH="$(cygpath --mixed "c:\\golang\\go1.24\\bin");${PATH}"
+GOCACHE="off"
 CGO_ENABLED=0
-export GOCACHE
-export CGO_ENABLED
+
+export GOROOT PATH GOCACHE CGO_ENABLED
 
 choco install -y "go-msi" --force
 

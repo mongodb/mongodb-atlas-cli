@@ -496,15 +496,6 @@ tasks:
           gh_token: ${cloud_docs_token}
           workflow: cloud-docs
 buildvariants:
-  # - name: go_atlascli_msi_snapshot
-  #   display_name: "Packaging AtlasCLI (go-msi)"
-  #   run_on:
-  #     - windows-vsCurrent-small
-  #   expansions:
-  #     <<: *go_windows_version
-  #     unstable: -unstable
-  #   tasks:
-  #     - name: package_msi
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
     run_on:
@@ -520,8 +511,6 @@ buildvariants:
     tasks:
       - name: package_goreleaser
         depends_on:
-          # - name: package_msi
-          #   variant: "go_atlascli_msi_snapshot"
           - name: generate_and_upload_sbom
             variant: ssdlc
   - name: publish_atlascli_snapshot

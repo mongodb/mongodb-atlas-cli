@@ -18,9 +18,9 @@ jobs:
 
     env:
       KONDUKTO_TOKEN: ${{ secrets.KONDUKTO_TOKEN }}
-      KONDUKTO_REPO: mongodb/mongodb-atlas-cli
-      KONDUKTO_BRANCH_PREFIX: atlascli
-      SILKBOMB_IMG: artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0
+      KONDUKTO_REPO: ${{ vars.KONDUKTO_REPO }}
+      KONDUKTO_BRANCH_PREFIX: ${{ vars.KONDUKTO_BRANCH_PREFIX }}
+      SILKBOMB_IMG: ${{ vars.SILKBOMB_IMG }}
 
     steps:
       - uses: GitHubSecurityLab/actions-permissions/monitor@v1

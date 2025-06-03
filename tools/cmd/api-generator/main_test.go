@@ -22,6 +22,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
 )
@@ -29,9 +30,10 @@ import (
 func testSpec(t *testing.T, name, specPath string) {
 	t.Helper()
 
+	snapshotTime := time.Date(2025, time.May, 1, 0, 0, 0, 0, time.UTC)
 	snapshotter := cupaloy.New(cupaloy.SnapshotSubdirectory("testdata/.snapshots"), cupaloy.SnapshotFileExtension(".snapshot"))
 
-	outputFunctions := map[OutputType]func(ctx context.Context, r io.Reader, w io.Writer) error{
+	outputFunctions := map[OutputType]func(ctx context.Context, now time.Time, r io.Reader, w io.Writer) error{
 		Commands: convertSpecToAPICommands,
 		Metadata: convertSpecToMetadata,
 	}
@@ -46,7 +48,7 @@ func testSpec(t *testing.T, name, specPath string) {
 		})
 
 		buf := &bytes.Buffer{}
-		if err := outputTypeFunc(t.Context(), specFile, buf); err != nil {
+		if err := outputTypeFunc(t.Context(), snapshotTime, specFile, buf); err != nil {
 			t.Fatalf("failed to convert spec into %s, error: %s", outputType, err)
 		}
 

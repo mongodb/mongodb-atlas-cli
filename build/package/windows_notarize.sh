@@ -16,8 +16,6 @@
 
 set -Eeou pipefail
 
-set -a && source "./build/package/windows_notarize.env" && set +a
-
 EXE_FILE="dist/windows_windows_amd64_v1/bin/atlas.exe"
 
 if [[ -f "$EXE_FILE" ]]; then

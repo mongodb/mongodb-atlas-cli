@@ -31,8 +31,8 @@ cd ./build/package
 zip -r msi.zip msi
 cd ../..
 echo "Uploading $PWD/build/package/msi.zip to ${user}@${host}:/cygdrive/c/Users/Administrator/msi.zip"
-scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}" "${PWD}/build/package/msi.zip:/cygdrive/c/Users/Administrator/msi.zip"
-rm -rf ./build/package/msi.zip  ./build/package/msi/version.txt ./build/package/msi/bin/atlas.exe
+scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${PWD}/build/package/msi.zip" "${user}@${host}:/cygdrive/c/Users/Administrator/msi.zip"
+rm -rf ./build/package/msi.zip ./build/package/msi/version.txt ./build/package/msi/bin/atlas.exe
 
 ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" bash -c 'unzip -o "/cygdrive/c/Users/Administrator/msi.zip" -d "/cygdrive/c/Users/Administrator/msi" && rm -rf "/cygdrive/c/Users/Administrator/msi.zip" && cd "/cygdrive/c/Users/Administrator/msi" && ./generate-msi.sh'
 
@@ -43,7 +43,7 @@ if [[ "${unstable-}" == "-unstable" ]]; then
 fi
 MSI_FILE="${PWD}/bin/mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi"
 
-scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}" "/cygdrive/c/Users/Administrator/msi/out.msi:${MSI_FILE}"
+scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}:/cygdrive/c/Users/Administrator/msi/out.msi" "${MSI_FILE}"
 
 ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" bash -c 'rm -rf "/cygdrive/c/Users/Administrator/msi"'
 

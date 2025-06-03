@@ -37,13 +37,14 @@ scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o Strict
 rm -rf ./build/package/msi.zip
 
 echo "Building MSI on ${user}@${host}..."
-ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}" /bin/bash << EOF
-mkdir -p "/cygdrive/c/Users/Administrator/msi"
-unzip -o "/cygdrive/c/Users/Administrator/msi.zip" -d "/cygdrive/c/Users/Administrator/msi"
-rm -rf "/cygdrive/c/Users/Administrator/msi.zip"
-cd "/cygdrive/c/Users/Administrator/msi"
-./generate-msi.sh
-EOF
+ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}" "echo 'extracting msi.zip to /cygdrive/c/Users/Administrator/msi';
+mkdir -p '/cygdrive/c/Users/Administrator/msi';
+unzip -o '/cygdrive/c/Users/Administrator/msi.zip' -d '/cygdrive/c/Users/Administrator/msi';
+rm -rf '/cygdrive/c/Users/Administrator/msi.zip';
+echo 'running generate-msi.sh in /cygdrive/c/Users/Administrator/msi';
+cd '/cygdrive/c/Users/Administrator/msi';
+./generate-msi.sh;
+"
 
 VERSION_GIT="$(git tag --list "atlascli/v*" --sort=taggerdate | tail -1 | cut -d "v" -f 2)"
 VERSION_NAME="$VERSION_GIT"

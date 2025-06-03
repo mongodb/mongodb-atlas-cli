@@ -15,15 +15,13 @@
 
 set -Eeou pipefail
 
-VERSION=$(cat msi/version.txt)
 GOCACHE="$(cygpath --mixed "${workdir:?}\.gocache")"
 CGO_ENABLED=0
 export GOCACHE
 export CGO_ENABLED
-export VERSION
 
 choco install -y "go-msi" --force
 
-go-msi make --path "wix.json" --msi "out.msi" --version "${VERSION}"
+go-msi make --path "wix.json" --msi "out.msi" --version "$(cat version.txt)"
 
 choco uninstall -y "go-msi" --force

@@ -126,6 +126,7 @@ functions:
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
+          AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
           GITHUB_TOKEN: ${github_token}
         include_expansions_in_env:
           - go_base_path
@@ -136,38 +137,6 @@ functions:
           - goreleaser_key
           - unstable
         binary: build/package/package.sh
-  "install go-msi":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        command: choco install -y "go-msi" --force
-  "uninstall go-msi":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        command: choco uninstall -y "go-msi"
-  "generate msi":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        add_to_path:
-          - ${go_bin}
-          - ${go_base_path}${workdir}/bin
-          - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
-          - "/cygdrive/c/Program Files/go-msi"
-          - "/cygdrive/c/wixtools/bin"
-        env:
-          <<: *go_env
-          SECRET_API_KEY: ${chocolatey_api_key}
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME: ${garasign_username}
-          GRS_PASSWORD: ${garasign_password}
-          unstable: ${unstable}
-        command: bash.exe -c build/package/generate-msi.sh
   "rename pkg":
     - command: subprocess.exec
       type: test
@@ -402,11 +371,6 @@ tasks:
       - func: "package"
         vars:
           unstable: ${unstable}
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME: ${garasign_username}
-          GRS_PASSWORD: ${garasign_password}
-          AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
       - func: "rename pkg"
         vars:
           unstable: ${unstable}

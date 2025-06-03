@@ -43,6 +43,7 @@ unzip -o '/cygdrive/c/Users/Administrator/msi.zip' -d '/cygdrive/c/Users/Adminis
 rm -rf '/cygdrive/c/Users/Administrator/msi.zip';
 echo 'running generate-msi.sh in /cygdrive/c/Users/Administrator/msi';
 cd '/cygdrive/c/Users/Administrator/msi';
+ls -la;
 ./generate-msi.sh;
 "
 

@@ -24,6 +24,8 @@ export GOROOT PATH GOCACHE CGO_ENABLED
 
 choco install -y "go-msi" --force
 
+echo "PATH: $PATH"
+
 go-msi make --path "wix.json" --msi "out.msi" --version "$(cat version.txt)"
 
 choco uninstall -y "go-msi" --force

@@ -32,12 +32,12 @@ var (
 	versionRegex = regexp.MustCompile(`^application/vnd\.atlas\.(?P<version>\d{4}-\d{2}-\d{2}|preview|upcoming)\+(?P<contentType>[\w]+)$`)
 )
 
-func specToCommands(spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
+func specToCommands(now time.Time, spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
 	groups := make(map[string]*api.Group, 0)
 
 	for path, item := range spec.Paths.Map() {
 		for verb, operation := range item.Operations() {
-			command, err := operationToCommand(path, verb, operation)
+			command, err := operationToCommand(now, path, verb, operation)
 			if err != nil {
 				return nil, fmt.Errorf("failed to convert operation to command: %w", err)
 			}
@@ -134,7 +134,7 @@ func extractExtensionsFromOperation(operation *openapi3.Operation) operationExte
 	return ext
 }
 
-func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.Command, error) {
+func operationToCommand(now time.Time, path, verb string, operation *openapi3.Operation) (*api.Command, error) {
 	extensions := extractExtensionsFromOperation(operation)
 	if extensions.skip {
 		return nil, nil
@@ -153,7 +153,7 @@ func operationToCommand(path, verb string, operation *openapi3.Operation) (*api.
 		return nil, err
 	}
 
-	versions, err := buildVersions(operation)
+	versions, err := buildVersions(now, operation)
 	if err != nil {
 		return nil, err
 	}
@@ -366,7 +366,7 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 }
 
 // Build versions from responses and request body.
-func buildVersions(operation *openapi3.Operation) ([]api.Version, error) {
+func buildVersions(now time.Time, operation *openapi3.Operation) ([]api.Version, error) {
 	versionsMap := make(map[string]*api.Version)
 
 	if err := processResponses(operation.Responses, versionsMap); err != nil {
@@ -379,7 +379,7 @@ func buildVersions(operation *openapi3.Operation) ([]api.Version, error) {
 
 	// filter sunsetted versions
 	for key, version := range versionsMap {
-		if version.Sunset != nil && time.Now().After(*version.Sunset) {
+		if version.Sunset != nil && now.After(*version.Sunset) {
 			delete(versionsMap, key)
 		}
 	}

@@ -29,6 +29,7 @@ import (
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
 	"github.com/spf13/cobra"
 )
 
@@ -91,25 +92,29 @@ func run(ctx context.Context, specPath string, outputType OutputType, w io.Write
 		defer specFile.Close()
 	}
 
+	now := time.Now()
+
 	switch outputType {
 	case Commands:
-		return convertSpecToAPICommands(ctx, spec, w)
+		return convertSpecToAPICommands(ctx, now, spec, w)
 	case Metadata:
-		return convertSpecToMetadata(ctx, spec, w)
+		return convertSpecToMetadata(ctx, now, spec, w)
 	default:
 		return fmt.Errorf("'%s' is not a valid outputType", outputType)
 	}
 }
 
-func convertSpecToAPICommands(ctx context.Context, r io.Reader, w io.Writer) error {
-	return convertSpec(ctx, r, w, specToCommands, commandsTemplateContent)
+func convertSpecToAPICommands(ctx context.Context, now time.Time, r io.Reader, w io.Writer) error {
+	return convertSpec(ctx, now, r, w, specToCommands, commandsTemplateContent)
 }
 
-func convertSpecToMetadata(ctx context.Context, r io.Reader, w io.Writer) error {
-	return convertSpec(ctx, r, w, specToMetadata, metadataTemplateContent)
+func convertSpecToMetadata(ctx context.Context, now time.Time, r io.Reader, w io.Writer) error {
+	return convertSpec(ctx, now, r, w, func(_ time.Time, spec *openapi3.T) (metadatatypes.Metadata, error) {
+		return specToMetadata(spec)
+	}, metadataTemplateContent)
 }
 
-func convertSpec[T any](ctx context.Context, r io.Reader, w io.Writer, mapper func(spec *openapi3.T) (T, error), templateContent string) error {
+func convertSpec[T any](ctx context.Context, now time.Time, r io.Reader, w io.Writer, mapper func(now time.Time, spec *openapi3.T) (T, error), templateContent string) error {
 	spec, err := loadSpec(r)
 	if err != nil {
 		return fmt.Errorf("failed to load spec, error: %w", err)
@@ -121,7 +126,7 @@ func convertSpec[T any](ctx context.Context, r io.Reader, w io.Writer, mapper fu
 		}
 	}
 
-	commands, err := mapper(spec)
+	commands, err := mapper(now, spec)
 	if err != nil {
 		return fmt.Errorf("failed convert spec to api commands: %w", err)
 	}

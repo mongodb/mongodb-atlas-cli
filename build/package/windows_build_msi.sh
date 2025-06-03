@@ -55,6 +55,7 @@ MSI_FILE="${PWD}/bin/mongodb-atlas-cli_${VERSION_NAME}_windows_x86_64.msi"
 
 echo "Downloading from ${user}@${host}:/cygdrive/c/Users/Administrator/msi/out.msi to ${MSI_FILE}"
 scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}:/cygdrive/c/Users/Administrator/msi/out.msi" "${MSI_FILE}"
+chmod 644 "${MSI_FILE}"
 
 echo "Cleaning up ${user}@${host}:/cygdrive/c/Users/Administrator/msi"
 ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" "rm -rf '/cygdrive/c/Users/Administrator/msi'"

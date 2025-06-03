@@ -16,7 +16,7 @@
 set -Eeou pipefail
 
 GOROOT="$(cygpath --mixed "c:\\golang\\go1.24")"
-PATH="$(cygpath --mixed "c:\\golang\\go1.24\\bin");${PATH}"
+PATH="$(cygpath --mixed "c:\\golang\\go1.24\\bin"):${PATH}"
 GOCACHE="off"
 CGO_ENABLED=0
 

@@ -15,16 +15,14 @@
 
 set -Eeou pipefail
 
-GOROOT="$(cygpath --mixed "c:\\golang\\go1.24")"
-PATH="$(cygpath --mixed "c:\\golang\\go1.24\\bin"):$(cygpath --mixed "c:\\Program Files\\go-msi"):$(cygpath --mixed "c:\\wixtools\\bin"):${PATH}"
-GOCACHE="$(cygpath --mixed "c:\\Users\\Administrator\\.cache")"
+GOROOT="$(cygpath --unix "c:\\golang\\go1.24")"
+PATH="${PATH}:$(cygpath --unix "c:\\golang\\go1.24\\bin"):$(cygpath --unix "c:\\Program Files\\go-msi"):$(cygpath --unix "c:\\wixtools\\bin")"
+GOCACHE="$(cygpath --unix "c:\\Users\\Administrator\\.cache")"
 CGO_ENABLED=0
 
 export GOROOT PATH GOCACHE CGO_ENABLED
 
 choco install -y "go-msi" --force
-
-echo "PATH: $PATH"
 
 go-msi make --path "wix.json" --msi "out.msi" --version "$(cat version.txt)"
 

@@ -383,30 +383,26 @@ functions:
           set -Eeou pipefail
           echo "${__project_aws_ssh_key_value}" > ./build/ci/ssh_id
           chmod 0600 ./build/ci/ssh_id
+  "prepare-windows-notarize":
+    - command: shell.exec
+      params:
+        <<: *go_options
+        env:
+          <<: *go_env
+          ARTIFACTORY_USERNAME: ${artifactory_username}
+          ARTIFACTORY_PASSWORD: ${artifactory_password}
+          GRS_USERNAME: ${garasign_username}
+          GRS_PASSWORD: ${garasign_password}
+          AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
+        script: |
+          set -Eeou pipefail
+          echo "ARTIFACTORY_USERNAME=${ARTIFACTORY_USERNAME}" > build/package/windows_notarize.env
+          echo "ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD}" >> build/package/windows_notarize.env
+          echo "GRS_USERNAME=${GRS_USERNAME}" >> build/package/windows_notarize.env
+          echo "GRS_PASSWORD=${GRS_PASSWORD}" >> build/package/windows_notarize.env
+          echo "AUTHENTICODE_KEY_NAME=${AUTHENTICODE_KEY_NAME}" >> build/package/windows_notarize.env
+          chmod 0600 build/package/windows_notarize.env
 tasks:
-  - name: package_msi
-    tags: ["packaging"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-    commands:
-      - func: "install go-msi"
-      - func: "generate msi"
-        vars:
-          unstable: ${unstable}
-      - func: "uninstall go-msi"
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/bin/*.exe
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-          remote_file: ${project}/dist/${revision}_${created_at}/unsigned_
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|application/octet-stream}
-          display_name: unsigned
   - name: generate_and_upload_sbom
     commands:  
       - func: "generate sbom"
@@ -422,6 +418,7 @@ tasks:
       - func: "install goreleaser"
       - func: "install macos notarization service"
       - func: "install gh-token"
+      - func: "prepare-windows-notarize"
       - func: "package"
         vars:
           unstable: ${unstable}

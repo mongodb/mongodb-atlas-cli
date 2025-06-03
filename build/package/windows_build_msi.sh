@@ -57,7 +57,7 @@ echo "Downloading from ${user}@${host}:/cygdrive/c/Users/Administrator/msi/out.m
 scp -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}:/cygdrive/c/Users/Administrator/msi/out.msi" "${MSI_FILE}"
 
 echo "Cleaning up ${user}@${host}:/cygdrive/c/Users/Administrator/msi"
-ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" bash -c 'rm -rf "/cygdrive/c/Users/Administrator/msi"'
+ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt "${user}@${host}" "rm -rf '/cygdrive/c/Users/Administrator/msi'"
 
 echo "Notarizing ${MSI_FILE}"
 echo "${ARTIFACTORY_PASSWORD}" | podman login --password-stdin --username "${ARTIFACTORY_USERNAME}" artifactory.corp.mongodb.com

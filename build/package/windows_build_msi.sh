@@ -38,12 +38,10 @@ rm -rf ./build/package/msi.zip
 
 echo "Building MSI on ${user}@${host}..."
 ssh -i "$keyfile" -o ConnectTimeout=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${user}@${host}" "echo 'extracting msi.zip to /cygdrive/c/Users/Administrator/msi';
-mkdir -p '/cygdrive/c/Users/Administrator/msi';
-unzip -o '/cygdrive/c/Users/Administrator/msi.zip' -d '/cygdrive/c/Users/Administrator/msi';
+unzip -o '/cygdrive/c/Users/Administrator/msi.zip' -d '/cygdrive/c/Users/Administrator';
 rm -rf '/cygdrive/c/Users/Administrator/msi.zip';
 echo 'running generate-msi.sh in /cygdrive/c/Users/Administrator/msi';
 cd '/cygdrive/c/Users/Administrator/msi';
-ls -la;
 ./generate-msi.sh;
 "
 

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1859
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 30 May 2025 12:42:28 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 83
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6f3b92e91d6bca553e30eabbc42d8bea714f2377; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6839a5e706480f407658dc35/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-30T12:41:50Z","groupId":"6839a5e706480f407658dc35","hostname":"atlas-9b0t20-shard-00-00.fna8s2.mongodb-dev.net","id":"atlas-9b0t20-shard-00-00.fna8s2.mongodb-dev.net:27017","lastPing":"2025-05-30T12:42:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6839a5e706480f407658dc35/processes/atlas-9b0t20-shard-00-00.fna8s2.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-9b0t20-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-78-shard-00-00.fna8s2.mongodb-dev.net","version":"8.0.10"},{"created":"2025-05-30T12:41:50Z","groupId":"6839a5e706480f407658dc35","hostname":"atlas-9b0t20-shard-00-01.fna8s2.mongodb-dev.net","id":"atlas-9b0t20-shard-00-01.fna8s2.mongodb-dev.net:27017","lastPing":"2025-05-30T12:42:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6839a5e706480f407658dc35/processes/atlas-9b0t20-shard-00-01.fna8s2.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-9b0t20-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-78-shard-00-01.fna8s2.mongodb-dev.net","version":"8.0.10"},{"created":"2025-05-30T12:41:51Z","groupId":"6839a5e706480f407658dc35","hostname":"atlas-9b0t20-shard-00-02.fna8s2.mongodb-dev.net","id":"atlas-9b0t20-shard-00-02.fna8s2.mongodb-dev.net:27017","lastPing":"2025-05-30T12:42:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6839a5e706480f407658dc35/processes/atlas-9b0t20-shard-00-02.fna8s2.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-9b0t20-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-78-shard-00-02.fna8s2.mongodb-dev.net","version":"8.0.10"}],"totalCount":3}

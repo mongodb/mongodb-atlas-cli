@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 30 May 2025 12:50:28 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 84
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=6f3b92e91d6bca553e30eabbc42d8bea714f2377; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6839a7b606480f407658eb9a/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-05-30T12:49:42Z","groupId":"6839a7b606480f407658eb9a","hostname":"atlas-60nuux-shard-00-00.dogucp.mongodb-dev.net","id":"atlas-60nuux-shard-00-00.dogucp.mongodb-dev.net:27017","lastPing":"2025-05-30T12:50:24Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6839a7b606480f407658eb9a/processes/atlas-60nuux-shard-00-00.dogucp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-60nuux-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-528-shard-00-00.dogucp.mongodb-dev.net","version":"8.0.10"},{"created":"2025-05-30T12:49:42Z","groupId":"6839a7b606480f407658eb9a","hostname":"atlas-60nuux-shard-00-01.dogucp.mongodb-dev.net","id":"atlas-60nuux-shard-00-01.dogucp.mongodb-dev.net:27017","lastPing":"2025-05-30T12:50:24Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6839a7b606480f407658eb9a/processes/atlas-60nuux-shard-00-01.dogucp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-60nuux-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-528-shard-00-01.dogucp.mongodb-dev.net","version":"8.0.10"},{"created":"2025-05-30T12:49:42Z","groupId":"6839a7b606480f407658eb9a","hostname":"atlas-60nuux-shard-00-02.dogucp.mongodb-dev.net","id":"atlas-60nuux-shard-00-02.dogucp.mongodb-dev.net:27017","lastPing":"2025-05-30T12:50:24Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6839a7b606480f407658eb9a/processes/atlas-60nuux-shard-00-02.dogucp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-60nuux-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-528-shard-00-02.dogucp.mongodb-dev.net","version":"8.0.10"}],"totalCount":3}

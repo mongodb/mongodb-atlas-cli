@@ -298,7 +298,8 @@ func (g *AtlasE2ETestGenerator) GenerateProject(prefix string) {
 	}
 
 	g.t.Cleanup(func() {
-		deleteProjectWithRetry(g.t, g.ProjectID)
+		g.Logf("Project cleanup %q", g.ProjectID)
+		DeleteProjectWithRetry(g.t, g.ProjectID)
 	})
 }
 
@@ -335,10 +336,19 @@ func (g *AtlasE2ETestGenerator) generateClusterWithPrefix(prefix string) {
 	}
 
 	g.t.Cleanup(func() {
-		g.Logf("Cluster cleanup %q\n", g.ProjectID)
-		if e := DeleteClusterForProject(g.ProjectID, g.ClusterName); e != nil {
-			g.t.Errorf("unexpected error deleting cluster: %v", e)
+		g.Logf("Cluster cleanup for project %q\n", g.ProjectID)
+		err := DeleteClusterForProject(g.ProjectID, g.ClusterName)
+		if err == nil {
+			g.t.Logf("Cluster %q was deleted", g.ClusterName)
+			return
 		}
+
+		if strings.Contains(err.Error(), "CLUSTER_NOT_FOUND") || strings.Contains(err.Error(), "GROUP_NOT_FOUND") {
+			g.t.Logf("Cluster %q was already deleted", g.ClusterName)
+			return
+		}
+
+		g.t.Errorf("unexpected error deleting cluster: %v", err)
 	})
 }
 
@@ -508,7 +518,13 @@ func (g *AtlasE2ETestGenerator) enforceDir(filename string) {
 }
 
 func defaultSnapshotBaseName(r *http.Request) string {
-	return fmt.Sprintf("%s_%s", r.Method, strings.ReplaceAll(strings.ReplaceAll(r.URL.Path, "/", "_"), ":", "_"))
+	// Remove all leading slashes for consistency
+	normalizedPath := strings.TrimLeft(r.URL.Path, "/")
+	// Replace all remaining slashes with underscores
+	normalizedPath = strings.ReplaceAll(normalizedPath, "/", "_")
+	// Replace colons with underscores
+	normalizedPath = strings.ReplaceAll(normalizedPath, ":", "_")
+	return fmt.Sprintf("%s_%s", r.Method, normalizedPath)
 }
 
 func SnapshotHashedName(r *http.Request) string {

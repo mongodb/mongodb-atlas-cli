@@ -22,10 +22,11 @@ hostsfile="${hostsfile:-./build/ci/hosts.json}"
 echo "Packaging $PWD/build/package/msi.zip"
 mkdir -p ./build/package/msi/bin
 cp ./dist/windows_windows_amd64_v1/bin/atlas.exe ./build/package/msi/bin/atlas.exe
+cp ./LICENSE ./build/package/msi/LICENSE
 git tag --list 'atlascli/v*' --sort=-taggerdate | head -1 | cut -d 'v' -f 2 > ./build/package/msi/version.txt
 cd ./build/package
 zip -r msi.zip msi
-rm -rf ./msi/version.txt ./msi/bin/atlas.exe
+rm -rf ./msi/version.txt ./msi/bin/atlas.exe ./msi/LICENSE
 cd ../..
 
 echo "Waiting for the Windows host to become available..."

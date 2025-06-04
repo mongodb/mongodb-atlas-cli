@@ -100,7 +100,7 @@ functions:
       params:
         shell: bash
         script: |
-          docker run \
+          podman run \
           --pull=always \
           --platform="linux/amd64" \
           --rm \
@@ -108,7 +108,7 @@ functions:
           -v ${workdir}:/workdir \
           901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
           upload \
-          --sbom-in /workdir/src/github.com/mongodb/mongodb-atlas-cli/compliance/sbom.json \
+          --sbom-in /workdir/src/github.com/mongodb/mongodb-atlas-cli/sbom.json \
           --repo mongodb_mongodb-atlas-cli  \
           --branch ${branch_name}  
           rm ${workdir}/kondukto_credentials.env
@@ -253,6 +253,7 @@ functions:
           - src/github.com/mongodb/mongodb-atlas-cli/dist/*.json
           - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
           - src/github.com/mongodb/mongodb-atlas-cli/dist/*.sig
+          - src/github.com/mongodb/mongodb-atlas-cli/sbom.json
         remote_file: ${project}/dist/${revision}_${created_at}/
         bucket: mongodb-mongocli-build
         permissions: public-read
@@ -391,16 +392,14 @@ tasks:
           permissions: public-read
           content_type: ${content_type|application/octet-stream}
           display_name: unsigned
-  - name: generate_and_upload_sbom
-    commands:  
-      - func: "generate sbom"
-      - func: "run silkbomb"
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:
       - name: compile
         variant: "code_health"
     commands:
+      - func: "generate sbom"
+      - func: "run silkbomb"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
@@ -588,8 +587,6 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: "go_atlascli_msi_snapshot"
-          - name: generate_and_upload_sbom
-            variant: ssdlc
   - name: publish_atlascli_snapshot
     display_name: "Publish AtlasCLI Snapshot"
     run_on:
@@ -615,8 +612,6 @@ buildvariants:
         depends_on:
           - name: package_msi
             variant: release_atlascli_msi
-          - name: generate_and_upload_sbom
-            variant: ssdlc
   - name: copybara
     display_name: "Copybara"
     git_tag_only: true
@@ -669,11 +664,3 @@ buildvariants:
       - ubuntu2004-small
     tasks:
       - name: .smoke-test .generate .repo .atlascli
-  - name: ssdlc
-    display_name: Compliance [ssdlc]
-    run_on:
-      - ubuntu2204-small
-    expansions:
-      <<: *go_linux_version
-    tasks:
-      - name: generate_and_upload_sbom

@@ -107,7 +107,7 @@ func TestCluster_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		CreateCluster(opts.newCluster()).Return(expectedCluster, nil).
+		CreateClusterPerType(opts.newCluster()).Return(expectedCluster, nil).
 		Times(1)
 
 	mockStore.

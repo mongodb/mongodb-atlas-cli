@@ -182,6 +182,7 @@ dbName and collection are required only for built-in roles.`
 	Key                                           = "Field to be indexed and the type of index in the following format: field:type."
 	Sparse                                        = "Flag that creates a sparse index. To learn more, see https://dochub.mongodb.org/core/index-sparse-manual."
 	ClusterName                                   = "Name of the cluster. To learn more, see https://dochub.mongodb.org/core/create-cluster-api."
+	AutoScalingMode                               = "Specifies the auto scaling mode for the cluster. Valid values are clusterWideScaling (default) and independentShardScaling."
 	IndexName                                     = "Unique name of the index. You can't use this argument when you use the --file option."
 	CASFilePath                                   = "Path to a PEM file containing one or more CAs for database user authentication."
 	RetentionInDays                               = "Number of days that Atlas should retain the on-demand snapshot. Must be at least 1."

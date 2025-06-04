@@ -37,7 +37,7 @@ var ErrNoRegions = errors.New("no regions found for the cloud provider")
 var ErrNoVersions = errors.New("no mongodb versions found for the cloud provider")
 
 func (opts *Opts) createCluster() error {
-	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
+	if _, err := opts.store.CreateClusterPerType(opts.newCluster()); err != nil {
 		return err
 	}
 

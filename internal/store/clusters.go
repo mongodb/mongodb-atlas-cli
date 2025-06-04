@@ -15,12 +15,16 @@
 package store
 
 import (
+	"errors"
+
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber
+
+var ErrUnsupportedClusterType = errors.New("unsupported cluster type")
 
 type ClusterLister interface { //nolint:iface // right now requires some refactor to deployment commands
 	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
@@ -44,9 +48,15 @@ func (s *Store) SampleDataStatus(groupID, id string) (*atlasv2.SampleDatasetStat
 	return result, err
 }
 
-// CreateCluster encapsulate the logic to manage different cloud providers.
+// CreateCluster creates a cluster using the pinned Atlas SDK version.
 func (s *Store) CreateCluster(cluster *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	result, _, err := s.clientClusters.ClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
+	return result, err
+}
+
+// CreateClusterLatest creates a cluster using the latest Atlas SDK version.
+func (s *Store) CreateClusterLatest(cluster *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error) {
+	result, _, err := s.clientv2.ClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
 	return result, err
 }
 
@@ -123,4 +133,17 @@ func (s *Store) UpdateAtlasClusterConfigurationOptions(projectID, clusterName st
 func (s *Store) TestClusterFailover(projectID, clusterName string) error {
 	_, err := s.clientv2.ClustersApi.TestFailover(s.ctx, projectID, clusterName).Execute()
 	return err
+}
+
+// CreateClusterPerType creates a cluster using the latest Atlas SDK version.
+func (s *Store) CreateClusterPerType(genericCluster interface{}) (interface{}, error) {
+	// check what is the type of the cluster
+	switch cluster := genericCluster.(type) {
+	case *atlasClustersPinned.AdvancedClusterDescription:
+		return s.CreateCluster(cluster)
+	case *atlasv2.ClusterDescription20240805:
+		return s.CreateClusterLatest(cluster)
+	default:
+		return nil, ErrUnsupportedClusterType
+	}
 }

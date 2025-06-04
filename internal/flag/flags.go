@@ -90,6 +90,7 @@ const (
 	IAMAssumedRoleARN                             = "iamAssumedRoleArn"                             // IAMAssumedRoleARN flag
 	Description                                   = "desc"                                          // Description flag
 	TypeFlag                                      = "type"                                          // TypeFlag flag
+	AutoScalingMode                               = "autoScalingMode"                               // AutoScalingMode flag
 	Comment                                       = "comment"                                       // Comment flag
 	DeleteAfter                                   = "deleteAfter"                                   // DeleteAfter flag
 	ArchiveAfter                                  = "archiveAfter"                                  // ArchiveAfter flag

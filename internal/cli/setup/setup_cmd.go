@@ -121,7 +121,7 @@ type AtlasClusterQuickStarter interface {
 	SampleDataStatus(string, string) (*atlasv2.SampleDatasetStatus, error)
 	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
-	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	CreateClusterPerType(interface{}) (interface{}, error)
 	MDBVersions(projectID string, opt *store.MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error)
 	CreateDatabaseUser(*atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error)
 	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)
@@ -155,6 +155,7 @@ type Opts struct {
 	EnableTerminationProtection bool
 	flags                       *pflag.FlagSet
 	flagSet                     map[string]struct{}
+	autoScalingMode             string
 	settings                    string
 	connectionString            string
 
@@ -626,9 +627,11 @@ func (opts *Opts) SetupAtlasFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&opts.EnableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
 	cmd.Flags().StringToStringVar(&opts.Tag, flag.Tag, nil, usage.Tag)
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, "clusterWideScaling", usage.AutoScalingMode)
 	opts.AddProjectOptsFlags(cmd)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.CurrentIP, flag.AccessListIP)
+	cmd.MarkFlagsMutuallyExclusive(flag.AutoScalingMode, flag.TypeFlag)
 }
 
 func (opts *Opts) SetupFlowFlags(cmd *cobra.Command) {
@@ -656,6 +659,13 @@ func (opts *Opts) validateTier() error {
 //	[--username username]
 //	[--password password]
 //	[--skipMongosh skipMongosh]
+//	[--type type]
+//	[--mdbVersion mdbVersion]
+//	[--connectWith connectWith]
+//	[--gov gov]
+//	[--noBrowser noBrowser]
+//	[--clusterName clusterName]
+//	[--autoScalingMode autoScalingMode]
 func Builder() *cobra.Command {
 	opts := &Opts{}
 

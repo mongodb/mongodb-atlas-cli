@@ -19,13 +19,13 @@ set -Eeou pipefail
 export WORKDIR=${workdir:?}
 
 # Authenticate Docker to AWS ECR
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region us-east-1 | podman login --username AWS --password-stdin 901841024863.dkr.ecr.us-east-1.amazonaws.com
 
 echo "Generating SBOMs..."
-docker run --rm \
+podman run --rm \
   -v "$WORKDIR/src/github.com/mongodb/mongodb-atlas-cli:/pwd" \
   901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0 \
   update \
   --purls /pwd/build/package/purls.txt \
-  --sbom-out /pwd/compliance/sbom.json
+  --sbom-out /pwd/sbom.json
   

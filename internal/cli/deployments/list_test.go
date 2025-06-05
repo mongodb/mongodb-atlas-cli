@@ -18,6 +18,7 @@ package deployments
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"testing"
 
@@ -30,24 +31,24 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/stretchr/testify/assert"
-	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	"go.uber.org/mock/gomock"
 )
 
 func TestList_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockStore := fixture.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
-	ctx := t.Context()
+	ctx := context.Background()
 
 	cli.TokenRefreshed = true
 	t.Cleanup(func() {
 		cli.TokenRefreshed = false
 	})
 
-	expectedAtlasClusters := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
-		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
+	expectedAtlasClusters := &atlasv2.PaginatedClusterDescription20240805{
+		Results: &[]atlasv2.ClusterDescription20240805{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),
@@ -96,7 +97,7 @@ func TestList_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectClusters(listOpts.ProjectID,
+		LatestProjectClusters(listOpts.ProjectID,
 			&store.ListOptions{
 				PageNum:      cli.DefaultPage,
 				ItemsPerPage: options.MaxItemsPerPage,
@@ -141,19 +142,19 @@ localTest2      LOCAL   6.0.9     IDLE
 
 func TestList_Run_NoLocal(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockStore := fixture.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
-	ctx := t.Context()
+	ctx := context.Background()
 
 	cli.TokenRefreshed = true
 	t.Cleanup(func() {
 		cli.TokenRefreshed = false
 	})
 
-	expectedAtlasClusters := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
-		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
+	expectedAtlasClusters := &atlasv2.PaginatedClusterDescription20240805{
+		Results: &[]atlasv2.ClusterDescription20240805{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),
@@ -189,7 +190,7 @@ func TestList_Run_NoLocal(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectClusters(listOpts.ProjectID,
+		LatestProjectClusters(listOpts.ProjectID,
 			&store.ListOptions{
 				PageNum:      cli.DefaultPage,
 				ItemsPerPage: options.MaxItemsPerPage,
@@ -232,18 +233,18 @@ atlasCluster1   ATLAS   7.0.0     IDLE
 
 func TestList_Run_NoAtlas(t *testing.T) {
 	ctrl := gomock.NewController(t)
-	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockStore := fixture.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 	mockContainerEngine := mocks.NewMockEngine(ctrl)
-	ctx := t.Context()
+	ctx := context.Background()
 
 	cli.TokenRefreshed = true
 	t.Cleanup(func() {
 		cli.TokenRefreshed = false
 	})
 
-	expectedAtlasClusters := &atlasClustersPinned.PaginatedAdvancedClusterDescription{
-		Results: &[]atlasClustersPinned.AdvancedClusterDescription{
+	expectedAtlasClusters := &atlasv2.PaginatedClusterDescription20240805{
+		Results: &[]atlasv2.ClusterDescription20240805{
 			{
 				Name:           pointer.Get("atlasCluster2"),
 				Id:             pointer.Get("123"),
@@ -279,7 +280,7 @@ func TestList_Run_NoAtlas(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		ProjectClusters(listOpts.ProjectID,
+		LatestProjectClusters(listOpts.ProjectID,
 			&store.ListOptions{
 				PageNum:      cli.DefaultPage,
 				ItemsPerPage: options.MaxItemsPerPage,
@@ -324,7 +325,7 @@ func TestListOpts_PostRun(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	buf := new(bytes.Buffer)
 
-	mockStore := mocks.NewMockClusterLister(ctrl)
+	mockStore := fixture.NewMockClusterLister(ctrl)
 	mockCredentialsGetter := mocks.NewMockCredentialsGetter(ctrl)
 
 	deploymentsTest := fixture.NewMockLocalDeploymentOpts(ctrl, "localDeployment")

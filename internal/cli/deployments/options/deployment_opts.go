@@ -40,6 +40,8 @@ import (
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=../test/fixture/deployment_opts_mocks.go -package=fixture . ClusterLister
+
 const (
 	spinnerSpeed = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster

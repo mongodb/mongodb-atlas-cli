@@ -120,12 +120,11 @@ type AtlasClusterQuickStarter interface {
 	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)
 	SampleDataStatus(string, string) (*atlasv2.SampleDatasetStatus, error)
 	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)
-	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
-	CreateClusterPerType(interface{}) (interface{}, error)
 	MDBVersions(projectID string, opt *store.MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error)
 	CreateDatabaseUser(*atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error)
 	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)
 	CreateProjectIPAccessList([]*atlasv2.NetworkPermissionEntry) (*atlasv2.PaginatedNetworkAccess, error)
+	AtlasClustersOperator
 }
 
 type Opts struct {
@@ -261,7 +260,7 @@ func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 }
 
 func (opts *Opts) clusterCreationWatcher() (any, bool, error) {
-	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
+	result, err := opts.describeCluster()
 	if err != nil {
 		return nil, false, err
 	}
@@ -509,11 +508,10 @@ func (opts *Opts) setupCluster() error {
 	fmt.Println("Cluster created.")
 
 	// Get cluster's connection string
-	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
+	cluster, err := opts.describeCluster()
 	if err != nil {
 		return err
 	}
-
 	opts.connectionString = cluster.ConnectionStrings.GetStandardSrv()
 
 	fmt.Printf("Your connection string: %v\n", opts.connectionString)

@@ -29,6 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"golang.org/x/mod/semver"
 )
@@ -36,12 +37,27 @@ import (
 var ErrNoRegions = errors.New("no regions found for the cloud provider")
 var ErrNoVersions = errors.New("no mongodb versions found for the cloud provider")
 
+type AtlasClustersOperator interface {
+	CreateCluster(cluster *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	CreateClusterLatest(cluster *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error)
+	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+}
+
 func (opts *Opts) createCluster() error {
-	if _, err := opts.store.CreateClusterPerType(opts.newCluster()); err != nil {
+	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (opts *Opts) describeCluster() (*atlasClustersPinned.AdvancedClusterDescription, error) {
+	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
+	if err != nil {
+		return nil, err
+	}
+
+	return cluster, nil
 }
 
 func (opts *Opts) askClusterOptions() error {

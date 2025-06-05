@@ -33,22 +33,34 @@ Our Docker image release for AtlasCLI is managed through the [docker-release.yml
 
 ### Release Steps
 
-#### Step 1: Build and Stage
+#### Step 1: SBOM Generation
+
+An SBOM Lite is generated using the maintained purls.txt file and uploaded to Kundukto. The SBOM Lite is also included as an artifact in the public repository release.
+
+#### Step 2: Build and Stage
 
 The AtlasCLI Docker image is built from the ([Dockerfile](Dockerfile)) and tagged in three ways:
 `latest`, `vX.Y.Z` (reflecting the latest release version, e.g., `v1.22.0`), and `vX.Y.Z-date` 
 (adding the current date, e.g., `v1.22.0-2024-01-01`). 
 This image is initially published to a staging registry to prepare for signature in the next step.
 
-#### Step 2: Sign and Publish
+#### Step 3: Sign and Publish
 
 We retrieve the image from the staging registry and use its [OCI index](https://github.com/opencontainers/image-spec/blob/main/image-index.md) to identify the three
 relevant digests. Each digest is signed using [cosign](https://github.com/sigstore/cosign), and the corresponding signature is stored 
 in the MongoDB cosign repository. The signed image is then pushed to the public repository.
 
-#### Step 3: Verify Signature
+#### Step 4: Verify Signature
 
-The final step involves verifying the Docker image's signature to confirm its authenticity.
+The Docker image's signature are verified to confirm its authenticity.
+
+#### Step 5: Trace Artifacts
+
+Papertrail runs to record detailed metadata about the release for improved traceability and accountability.
+
+#### Step 6: Compliance Reporting
+
+A GitHub workflow generates a compliance report after the release and opens a PR with the report.
 
 ## Manual Release (Deprecated)
 
@@ -71,19 +83,3 @@ This will do the following things:
 3. The [evergreen](build/ci/release.yml) release task will run after a tag event from master.
 4. If everything goes smoothly, the release will be published in the
    [release page](https://github.com/mongodb/mongodb-atlas-cli/releases), and [download center](https://www.mongodb.com/try/download/atlascli).
-
-## Generate the SBOM
-
-The Software Bill of Materials (SBOM) is a description of the components that make up a software artifact.
-
-### Atlas CLI Binary
-We use `go version` to generate the SBOM for Atlas CLI binaries. You can generate the SBOM via the following command:
-```bash
-go version -m <path_to_atlasCLI_binary>
-```
-
-### Atlas CLI Docker image
-We use `docker sbom` to generate the SBOM for the Atlas CLI docker image. You can generate the SBOM via the following command:
-```bash
-docker sbom mongodb/atlas:latest
-```

@@ -210,7 +210,7 @@ Furthermore, after adding the necessary structure, ensure that applicable docume
 We scan our dependencies for vulnerabilities and incompatible licenses using [Snyk](https://snyk.io/).
 To run Snyk locally please follow their [CLI reference](https://support.snyk.io/hc/en-us/articles/360003812458-Getting-started-with-the-CLI).
 
-We also use Kundukto to scan for third-party dependency vulnerabilities. Kundukto creates Jira tickets in the VULN project for any vulnerabilities found.
+We also use Kundukto to scan for third-party dependency vulnerabilities. Kundukto creates tickets in MongoDB's issue tracking system for any vulnerabilities found.
 
 #### Dependency Tracking
 Developers maintain the purls.txt file containing Package URLs for all third-party dependencies. This file must be kept current when dependencies change and is enforced via CI.
@@ -218,7 +218,7 @@ Developers maintain the purls.txt file containing Package URLs for all third-par
 #### SBOM and Compliance
 We generate Software Bill of Materials (SBOM) files for each release as part of MongoDB's SSDLC initiative. SBOM Lite files are automatically generated and included as release artifacts. Compliance reports are generated after each release and stored in the compliance/<release-version> directory.
 
-Augmented SBOMs can be generated on customer request for any released version. This can only be done by MongoDB employees as it requires access to our GitHub workflow
+Augmented SBOMs can be generated on customer request for any released version. This can only be done by MongoDB employees as it requires access to our GitHub workflow.
 
 #### Papertrail Integration
 All releases are recorded using a MongoDB-internal application called Papertrail. This records various pieces of information about releases, including the date and time of the release, who triggered the release (by pushing to Evergreen), and a checksum of each release file.

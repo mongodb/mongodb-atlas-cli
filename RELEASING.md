@@ -52,7 +52,7 @@ in the MongoDB cosign repository. The signed image is then pushed to the public 
 
 #### Step 4: Verify Signature
 
-The Docker image's signature are verified to confirm its authenticity.
+The Docker image's signature is verified to confirm its authenticity.
 
 #### Step 5: Trace Artifacts
 

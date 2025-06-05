@@ -3,10 +3,6 @@ variables:
       go_root: "/opt/golang/go1.24"
       go_bin: "/opt/golang/go1.24/bin"
       go_base_path: ""
-  - &go_windows_version
-      go_root: "c:\\golang\\go1.24"
-      go_bin: "c:\\golang\\go1.24\\bin"
-      go_base_path: "c:"
   - &go_env
       XDG_CONFIG_HOME: ${go_base_path}${workdir}
       GO111MODULE: "on"
@@ -126,6 +122,7 @@ functions:
           ARTIFACTORY_PASSWORD: ${artifactory_password}
           GRS_USERNAME: ${garasign_username}
           GRS_PASSWORD: ${garasign_password}
+          AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
           GITHUB_TOKEN: ${github_token}
         include_expansions_in_env:
           - go_base_path
@@ -136,38 +133,6 @@ functions:
           - goreleaser_key
           - unstable
         binary: build/package/package.sh
-  "install go-msi":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        command: choco install -y "go-msi" --force
-  "uninstall go-msi":
-    - command: subprocess.exec
-      type: setup
-      params:
-        working_dir: src/github.com/mongodb/mongodb-atlas-cli
-        command: choco uninstall -y "go-msi"
-  "generate msi":
-    - command: subprocess.exec
-      type: test
-      params:
-        <<: *go_options
-        add_to_path:
-          - ${go_bin}
-          - ${go_base_path}${workdir}/bin
-          - ${go_base_path}${workdir}/src/github.com/mongodb/mongodb-atlas-cli/bin
-          - "/cygdrive/c/Program Files/go-msi"
-          - "/cygdrive/c/wixtools/bin"
-        env:
-          <<: *go_env
-          SECRET_API_KEY: ${chocolatey_api_key}
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME: ${garasign_username}
-          GRS_PASSWORD: ${garasign_password}
-          unstable: ${unstable}
-        command: bash.exe -c build/package/generate-msi.sh
   "rename pkg":
     - command: subprocess.exec
       type: test
@@ -368,74 +333,39 @@ functions:
         shell: bash
         script: |
           ./run-copybara.sh
+  "create-windows-host":
+    - command: host.create
+      params:
+        distro: windows-vsCurrent-small
+    - command: host.list
+      params:
+        wait: true
+        num_hosts: 1
+        path: ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/hosts.json
+    - command: shell.exec
+      params:
+        <<: *go_options
+        script: |
+          set -Eeou pipefail
+          echo "${__project_aws_ssh_key_value}" > ./build/ci/ssh_id
+          chmod 0600 ./build/ci/ssh_id
 tasks:
-  - name: package_msi
-    tags: ["packaging"]
-    depends_on:
-      - name: compile
-        variant: "code_health"
-    commands:
-      - func: "install go-msi"
-      - func: "generate msi"
-        vars:
-          unstable: ${unstable}
-      - func: "uninstall go-msi"
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_files_include_filter:
-            - src/github.com/mongodb/mongodb-atlas-cli/bin/*.exe
-            - src/github.com/mongodb/mongodb-atlas-cli/dist/*.msi
-          remote_file: ${project}/dist/${revision}_${created_at}/unsigned_
-          bucket: mongodb-mongocli-build
-          permissions: public-read
-          content_type: ${content_type|application/octet-stream}
-          display_name: unsigned
   - name: package_goreleaser
     tags: ["packaging"]
     depends_on:
       - name: compile
         variant: "code_health"
     commands:
+      - func: "create-windows-host"
       - func: "generate sbom"
       - func: "run silkbomb"
       - func: "generate notices"
       - func: "install goreleaser"
       - func: "install macos notarization service"
       - func: "install gh-token"
-      - command: subprocess.exec
-        type: test
-        params:
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli
-          include_expansions_in_env:
-            - project
-            - revision
-            - created_at
-          env:
-            BUCKET: mongodb-mongocli-build
-            unstable: ${unstable}
-          binary: build/package/download-win-binaries.sh
-      - command: subprocess.exec
-        type: test
-        params:
-          include_expansions_in_env:
-            - unstable
-          env:
-            ARTIFACTORY_USERNAME: ${artifactory_username}
-            ARTIFACTORY_PASSWORD: ${artifactory_password}
-            GRS_USERNAME: ${garasign_username}
-            GRS_PASSWORD: ${garasign_password}
-            AUTHENTICODE_KEY_NAME: ${authenticode_key_name}
-          working_dir: src/github.com/mongodb/mongodb-atlas-cli
-          binary: build/package/windows_notarize.sh
       - func: "package"
         vars:
           unstable: ${unstable}
-          ARTIFACTORY_USERNAME: ${artifactory_username}
-          ARTIFACTORY_PASSWORD: ${artifactory_password}
-          GRS_USERNAME: ${garasign_username}
-          GRS_PASSWORD: ${garasign_password}
       - func: "rename pkg"
         vars:
           unstable: ${unstable}
@@ -561,15 +491,6 @@ tasks:
           gh_token: ${cloud_docs_token}
           workflow: cloud-docs
 buildvariants:
-  - name: go_atlascli_msi_snapshot
-    display_name: "Packaging AtlasCLI (go-msi)"
-    run_on:
-      - windows-vsCurrent-small
-    expansions:
-      <<: *go_windows_version
-      unstable: -unstable
-    tasks:
-      - name: package_msi
   - name: goreleaser_atlascli_snapshot
     display_name: "Packaging AtlasCLI (goreleaser)"
     run_on:
@@ -584,9 +505,6 @@ buildvariants:
       unstable: -unstable
     tasks:
       - name: package_goreleaser
-        depends_on:
-          - name: package_msi
-            variant: "go_atlascli_msi_snapshot"
   - name: publish_atlascli_snapshot
     display_name: "Publish AtlasCLI Snapshot"
     run_on:
@@ -609,9 +527,6 @@ buildvariants:
       meta_package_name: "mongodb-atlas"
     tasks:
       - name: package_goreleaser
-        depends_on:
-          - name: package_msi
-            variant: release_atlascli_msi
   - name: copybara
     display_name: "Copybara"
     git_tag_only: true
@@ -623,17 +538,6 @@ buildvariants:
       <<: *go_linux_version
     tasks:
       - name: copybara
-  - name: release_atlascli_msi
-    display_name: "Release AtlasCLI (go-msi)"
-    run_on:
-      - windows-vsCurrent-small
-    git_tag_only: true
-    tags:
-      - foliage_health
-    expansions:
-      <<: *go_windows_version
-    tasks:
-      - name: package_msi
   - name: release_atlascli_publish
     display_name: "Publish AtlasCLI Generator"
     run_on:

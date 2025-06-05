@@ -7,7 +7,7 @@
     "guid": "cac1e5b1-6547-4c47-a68c-17a5b84dd87b",
     "items": [
       "bin/atlas.exe",
-      "build/package/msi/installer"
+      "installer"
     ]
   },
   "env": {

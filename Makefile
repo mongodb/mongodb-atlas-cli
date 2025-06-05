@@ -139,12 +139,28 @@ gen-docs: gen-docs-metadata ## Generate docs for atlascli commands
 	go run -ldflags "$(LINKER_FLAGS)" ./tools/cmd/docs
 
 .PHONY: gen-purls
-gen-purls: # Generate purls on linux os
-	@echo "==> Generating purls"
+gen-purls: # Generate purls
+	@echo "==> Generating Linux purls"
 	GOOS=linux GOARCH=amd64 go build -trimpath -mod=readonly -o bin/atlas-linux ./cmd/atlas
 	go version -m ./bin/atlas-linux | \
 		awk '$$1 == "dep" || $$1 == "=>" { print "pkg:golang/" $$2 "@" $$3 }' | \
-		LC_ALL=C sort > build/package/purls.txt
+		LC_ALL=C sort > build/package/purls-linux.txt
+
+	@echo "==> Generating Darwin purls"
+	GOOS=darwin GOARCH=arm64 go build -trimpath -mod=readonly -o bin/atlas-darwin ./cmd/atlas
+	go version -m ./bin/atlas-darwin | \
+		awk '$$1 == "dep" || $$1 == "=>" { print "pkg:golang/" $$2 "@" $$3 }' | \
+		LC_ALL=C sort > build/package/purls-darwin.txt
+
+	@echo "==> Generating Windows purls"
+	GOOS=windows GOARCH=386 go build -trimpath -mod=readonly -o bin/atlas-win ./cmd/atlas
+	go version -m ./bin/atlas-win | \
+		awk '$$1 == "dep" || $$1 == "=>" { print "pkg:golang/" $$2 "@" $$3 }' | \
+		LC_ALL=C sort > build/package/purls-win.txt
+
+	@echo "==> Merging purls"
+	cat build/package/purls-linux.txt build/package/purls-darwin.txt build/package/purls-win.txt | sort | uniq > build/package/purls.txt
+	rm -rf build/package/purls-linux.txt build/package/purls-darwin.txt build/package/purls-win.txt
 
 .PHONY: build
 build: ## Generate an atlas binary in ./bin

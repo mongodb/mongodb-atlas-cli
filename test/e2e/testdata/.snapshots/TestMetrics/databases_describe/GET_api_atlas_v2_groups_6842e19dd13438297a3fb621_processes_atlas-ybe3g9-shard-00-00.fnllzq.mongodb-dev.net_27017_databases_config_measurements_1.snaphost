@@ -1,0 +1,17 @@
+HTTP/2.0 200 OK
+Content-Length: 1737
+Cache-Control: no-cache, no-transform, must-revalidate, proxy-revalidate, max-age=0
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 06 Jun 2025 12:48:29 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 152
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessMeasurementsResource::getSpecificDatabaseMeasurements
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=b0dbddfb67208b118e339709922b5a96d34d9fa7; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"databaseName":"config","end":"2025-06-06T12:47:33Z","granularity":"PT30M","groupId":"6842e19dd13438297a3fb621","hostId":"atlas-ybe3g9-shard-00-00.fnllzq.mongodb-dev.net:27017","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6842e19dd13438297a3fb621/processes/atlas-ybe3g9-shard-00-00.fnllzq.mongodb-dev.net:27017/databases/config/measurements?granularity=PT30M&period=P1DT12H","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6842e19dd13438297a3fb621/processes/atlas-ybe3g9-shard-00-00.fnllzq.mongodb-dev.net:27017","rel":"https://cloud.mongodb.com/host"}],"measurements":[{"dataPoints":[{"timestamp":"2025-06-06T12:47:33Z","value":0.0}],"name":"DATABASE_AVERAGE_OBJECT_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2025-06-06T12:47:33Z","value":7.0}],"name":"DATABASE_COLLECTION_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2025-06-06T12:47:33Z","value":0.0}],"name":"DATABASE_DATA_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2025-06-06T12:47:33Z","value":28672.0}],"name":"DATABASE_STORAGE_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2025-06-06T12:47:33Z","value":40960.0}],"name":"DATABASE_INDEX_SIZE","units":"BYTES"},{"dataPoints":[{"timestamp":"2025-06-06T12:47:33Z","value":10.0}],"name":"DATABASE_INDEX_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2025-06-06T12:47:33Z","value":0.0}],"name":"DATABASE_EXTENT_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2025-06-06T12:47:33Z","value":0.0}],"name":"DATABASE_OBJECT_COUNT","units":"SCALAR"},{"dataPoints":[{"timestamp":"2025-06-06T12:47:33Z","value":0.0}],"name":"DATABASE_VIEW_COUNT","units":"SCALAR"}],"processId":"atlas-ybe3g9-shard-00-00.fnllzq.mongodb-dev.net:27017","start":"2025-06-06T12:47:33Z"}

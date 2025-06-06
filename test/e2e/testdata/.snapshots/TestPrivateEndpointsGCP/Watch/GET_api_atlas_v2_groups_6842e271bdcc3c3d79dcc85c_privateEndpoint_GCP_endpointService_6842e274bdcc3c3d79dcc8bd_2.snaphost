@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 618
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 06 Jun 2025 12:47:25 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 43
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=015b726fa21c03606e4b34d7fb0bf84ffda7a466; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"6842e274bdcc3c3d79dcc8bd","regionName":"NORTH_AMERICA_NORTHEAST_1","serviceAttachmentNames":["projects/p-0wkkl9xjod8piw1bwstivcb4/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-6842e271bdcc3c3d79dcc85c-0","projects/p-0wkkl9xjod8piw1bwstivcb4/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-6842e271bdcc3c3d79dcc85c-1","projects/p-0wkkl9xjod8piw1bwstivcb4/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-6842e271bdcc3c3d79dcc85c-2"],"status":"INITIATING"}

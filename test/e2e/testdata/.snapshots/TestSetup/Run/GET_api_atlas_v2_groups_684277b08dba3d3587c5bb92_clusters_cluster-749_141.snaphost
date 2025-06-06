@@ -1,0 +1,13 @@
+HTTP/2.0 401 Unauthorized
+Content-Length: 106
+Content-Type: application/json
+Date: Fri, 06 Jun 2025 05:12:51 GMT
+Server: mdbws
+Www-Authenticate: Digest realm="MMS Public API", domain="", nonce="pWT3P9Wdc6qtbaPHOc6/Z7zeLSO5C2pB", algorithm=MD5, qop="auth", stale=false
+X-Envoy-Upstream-Service-Time: 3
+
+{
+  "error" : 401,
+  "reason" : "Unauthorized",
+  "detail" : "You are not authorized for this resource."
+}

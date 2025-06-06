@@ -159,7 +159,7 @@ gen-purls: # Generate purls
 		LC_ALL=C sort > build/package/purls-win.txt
 
 	@echo "==> Merging purls"
-	cat build/package/purls-linux.txt build/package/purls-darwin.txt build/package/purls-win.txt | sort | uniq > build/package/purls.txt
+	cat build/package/purls-linux.txt build/package/purls-darwin.txt build/package/purls-win.txt |  LC_ALL=C sort | uniq > build/package/purls.txt
 	rm -rf build/package/purls-linux.txt build/package/purls-darwin.txt build/package/purls-win.txt
 
 .PHONY: build

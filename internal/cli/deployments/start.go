@@ -87,7 +87,7 @@ func (opts *StartOpts) RunAtlas() error {
 	defer opts.StopSpinner()
 
 	clusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.DeploymentName)
-	if err != nil || clusterAutoScalingConfig.GetAutoScalingMode() == "CLUSTER_WIDE_SCALING" {
+	if err != nil || clusterAutoScalingConfig.GetAutoScalingMode() == options.ClusterWideScaling {
 		r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.DeploymentName)
 		if err != nil {
 			return err
@@ -95,7 +95,7 @@ func (opts *StartOpts) RunAtlas() error {
 		return opts.Print(r)
 	}
 
-	// If cluster is not CLUSTER_WIDE_SCALING, we use the latest API version
+	// If cluster is not cluster wide scaling, we use the latest API version
 	r, err := opts.store.StartClusterLatest(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err

@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
@@ -123,7 +124,7 @@ func TestStart_RunAtlas_clusterWideScaling(t *testing.T) {
 		GetClusterAutoScalingConfig(projectID, deploymentName).
 		Return(
 			&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
-				AutoScalingMode: pointer.Get("CLUSTER_WIDE_SCALING"),
+				AutoScalingMode: pointer.Get(string(options.ClusterWideScaling)),
 			}, nil).
 		Times(1)
 
@@ -169,7 +170,7 @@ func TestStart_RunAtlas_independentShardScaling(t *testing.T) {
 		GetClusterAutoScalingConfig(projectID, deploymentName).
 		Return(
 			&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
-				AutoScalingMode: pointer.Get("INDEPENDENT_SHARD_SCALING"),
+				AutoScalingMode: pointer.Get(string(options.IndependentShardScaling)),
 			}, nil).
 		Times(1)
 

@@ -45,24 +45,26 @@ import (
 const (
 	spinnerSpeed = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
-	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
-	PausedState        = "PAUSED"
-	StoppedState       = "STOPPED"
-	IdleState          = "IDLE"
-	UpdatingState      = "UPDATING"
-	DeletingState      = "DELETING"
-	RestartingState    = "RESTARTING"
-	LocalCluster       = "local"
-	AtlasCluster       = "atlas"
-	CompassConnect     = "compass"
-	MongoshConnect     = "mongosh"
-	VsCodeConnect      = "vscode"
-	PromptTypeMessage  = "What type of deployment would you like to work with?"
-	MaxItemsPerPage    = 500
-	ContainerFilter    = "mongodb-atlas-local=container"
-	bytesInGb          = 1073741824
-	minimumRAM         = 2 * bytesInGb
-	minimumCores       = 2
+	clusterNamePattern      = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	PausedState             = "PAUSED"
+	StoppedState            = "STOPPED"
+	IdleState               = "IDLE"
+	UpdatingState           = "UPDATING"
+	DeletingState           = "DELETING"
+	RestartingState         = "RESTARTING"
+	LocalCluster            = "local"
+	AtlasCluster            = "atlas"
+	CompassConnect          = "compass"
+	MongoshConnect          = "mongosh"
+	VsCodeConnect           = "vscode"
+	PromptTypeMessage       = "What type of deployment would you like to work with?"
+	MaxItemsPerPage         = 500
+	ContainerFilter         = "mongodb-atlas-local=container"
+	ClusterWideScaling      = "CLUSTER_WIDE_SCALING"
+	IndependentShardScaling = "INDEPENDENT_SHARD_SCALING"
+	bytesInGb               = 1073741824
+	minimumRAM              = 2 * bytesInGb
+	minimumCores            = 2
 )
 
 var (

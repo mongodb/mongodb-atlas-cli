@@ -28,12 +28,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=pause_mock_test.go -package=deployments . ClusterPauser
 
 type ClusterPauser interface {
 	PauseCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	PauseClusterLatest(string, string) (*atlasv2.ClusterDescription20240805, error)
+	GetClusterAutoScalingConfig(string, string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error)
 }
 
 type PauseOpts struct {
@@ -104,7 +107,17 @@ func (opts *PauseOpts) RunAtlas() error {
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
-	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.DeploymentName)
+	clusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.DeploymentName)
+	if err != nil || clusterAutoScalingConfig.GetAutoScalingMode() == "CLUSTER_WIDE_SCALING" {
+		r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.DeploymentName)
+		if err != nil {
+			return err
+		}
+		return opts.Print(r)
+	}
+
+	// If cluster is not CLUSTER_WIDE_SCALING, we use the latest API version
+	r, err := opts.store.PauseClusterLatest(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err
 	}

@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -70,7 +71,7 @@ func TestPause_RunLocal(t *testing.T) {
 	t.Log(buf.String())
 }
 
-func TestPause_RunAtlas(t *testing.T) {
+func TestPause_RunAtlas_clusterWideScaling(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockClusterPauser(ctrl)
 	ctx := t.Context()
@@ -94,9 +95,66 @@ func TestPause_RunAtlas(t *testing.T) {
 
 	mockStore.
 		EXPECT().
+		GetClusterAutoScalingConfig(projectID, deploymentName).
+		Return(
+			&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+				AutoScalingMode: pointer.Get("CLUSTER_WIDE_SCALING"),
+			}, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
 		PauseCluster(projectID, deploymentName).
 		Return(
 			&atlasClustersPinned.AdvancedClusterDescription{
+				Name: pointer.Get(deploymentName),
+			}, nil).
+		Times(1)
+
+	if err := listOpts.Run(ctx); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+
+	assert.Equal(t, fmt.Sprintf("Pausing deployment '%s'.\n", deploymentName), buf.String())
+	t.Log(buf.String())
+}
+
+func TestPause_RunAtlas_independentShardScaling(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockClusterPauser(ctrl)
+	ctx := t.Context()
+
+	deploymentTest := fixture.NewMockAtlasDeploymentOpts(ctrl, deploymentName)
+
+	buf := new(bytes.Buffer)
+	listOpts := &PauseOpts{
+		store:          mockStore,
+		DeploymentOpts: *deploymentTest.Opts,
+		ProjectOpts: cli.ProjectOpts{
+			ProjectID: projectID,
+		},
+		OutputOpts: cli.OutputOpts{
+			Template:  pauseTemplate,
+			OutWriter: buf,
+		},
+	}
+
+	deploymentTest.CommonAtlasMocks(projectID)
+
+	mockStore.
+		EXPECT().
+		GetClusterAutoScalingConfig(projectID, deploymentName).
+		Return(
+			&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+				AutoScalingMode: pointer.Get("INDEPENDENT_SHARD_SCALING"),
+			}, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		PauseClusterLatest(projectID, deploymentName).
+		Return(
+			&atlasv2.ClusterDescription20240805{
 				Name: pointer.Get(deploymentName),
 			}, nil).
 		Times(1)

@@ -20,12 +20,7 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber
-
-type ClusterLister interface { //nolint:iface // right now requires some refactor to deployment commands
-	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
-	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
-}
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterDescriber
 
 type ClusterDescriber interface { //nolint:iface // right now requires some refactor to deployment commands
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
@@ -95,6 +90,16 @@ func (s *Store) UpgradeCluster(projectID string, cluster *atlas.Cluster) (*atlas
 // ProjectClusters encapsulate the logic to manage different cloud providers.
 func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error) {
 	res := s.clientClusters.ClustersApi.ListClusters(s.ctx, projectID)
+	if opts != nil {
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
+	}
+	result, _, err := res.Execute()
+	return result, err
+}
+
+// LatestProjectClusters lists the clusters using the latest API version.
+func (s *Store) LatestProjectClusters(projectID string, opts *ListOptions) (*atlasv2.PaginatedClusterDescription20240805, error) {
+	res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
 	if opts != nil {
 		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
 	}

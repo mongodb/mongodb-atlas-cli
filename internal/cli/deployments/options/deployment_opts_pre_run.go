@@ -154,7 +154,7 @@ func (opts *DeploymentOpts) AtlasDeployments(projectID string) ([]Deployment, er
 		ItemsPerPage: MaxItemsPerPage,
 	}
 
-	atlasClusters, err := opts.AtlasClusterListStore.ProjectClusters(projectID, listOpts)
+	atlasClusters, err := opts.AtlasClusterListStore.LatestProjectClusters(projectID, listOpts)
 	if err != nil {
 		return nil, err
 	}

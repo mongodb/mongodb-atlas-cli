@@ -22,11 +22,13 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/options"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/deployments/test/fixture"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -94,7 +96,7 @@ func TestStart_RunLocal_StoppedContainers(t *testing.T) {
 	t.Log(buf.String())
 }
 
-func TestStart_RunAtlas(t *testing.T) {
+func TestStart_RunAtlas_clusterWideScaling(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockClusterStarter(ctrl)
 	ctx := t.Context()
@@ -119,9 +121,64 @@ func TestStart_RunAtlas(t *testing.T) {
 
 	mockStore.
 		EXPECT().
+		GetClusterAutoScalingConfig(projectID, deploymentName).
+		Return(
+			&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+				AutoScalingMode: pointer.Get(string(options.ClusterWideScaling)),
+			}, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
 		StartCluster(projectID, deploymentName).
 		Return(
 			&atlasClustersPinned.AdvancedClusterDescription{
+				Name: pointer.Get(deploymentName),
+			}, nil).
+		Times(1)
+
+	require.NoError(t, opts.Run(ctx))
+	assert.Equal(t, fmt.Sprintf("\nStarting deployment '%s'.\n", deploymentName), buf.String())
+	t.Log(buf.String())
+}
+
+func TestStart_RunAtlas_independentShardScaling(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockClusterStarter(ctrl)
+	ctx := t.Context()
+	const deploymentName = "atlasCluster1"
+
+	deploymentsTest := fixture.NewMockAtlasDeploymentOpts(ctrl, deploymentName)
+
+	buf := new(bytes.Buffer)
+	opts := &StartOpts{
+		store:          mockStore,
+		DeploymentOpts: *deploymentsTest.Opts,
+		ProjectOpts: cli.ProjectOpts{
+			ProjectID: projectID,
+		},
+		OutputOpts: cli.OutputOpts{
+			Template:  startTemplate,
+			OutWriter: buf,
+		},
+	}
+
+	deploymentsTest.CommonAtlasMocksWithState(projectID, "STOPPED")
+
+	mockStore.
+		EXPECT().
+		GetClusterAutoScalingConfig(projectID, deploymentName).
+		Return(
+			&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+				AutoScalingMode: pointer.Get(string(options.IndependentShardScaling)),
+			}, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		StartClusterLatest(projectID, deploymentName).
+		Return(
+			&atlasv2.ClusterDescription20240805{
 				Name: pointer.Get(deploymentName),
 			}, nil).
 		Times(1)

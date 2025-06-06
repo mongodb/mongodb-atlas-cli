@@ -51,6 +51,12 @@ func (s *Store) UpdateCluster(projectID, name string, cluster *atlasClustersPinn
 	return result, err
 }
 
+// UpdateClusterLatest uses the latest API version to update a cluster.
+func (s *Store) UpdateClusterLatest(projectID, name string, cluster *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error) {
+	result, _, err := s.clientv2.ClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
+	return result, err
+}
+
 // PauseCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) PauseCluster(projectID, name string) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	paused := true
@@ -60,6 +66,15 @@ func (s *Store) PauseCluster(projectID, name string) (*atlasClustersPinned.Advan
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
+// PauseClusterLatest uses the latest API version to pause a cluster.
+func (s *Store) PauseClusterLatest(projectID, name string) (*atlasv2.ClusterDescription20240805, error) {
+	paused := true
+	cluster := &atlasv2.ClusterDescription20240805{
+		Paused: &paused,
+	}
+	return s.UpdateClusterLatest(projectID, name, cluster)
+}
+
 // StartCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) StartCluster(projectID, name string) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	paused := false
@@ -67,6 +82,21 @@ func (s *Store) StartCluster(projectID, name string) (*atlasClustersPinned.Advan
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
+}
+
+// StartClusterLatest uses the latest API version to start a cluster.
+func (s *Store) StartClusterLatest(projectID, name string) (*atlasv2.ClusterDescription20240805, error) {
+	paused := false
+	cluster := &atlasv2.ClusterDescription20240805{
+		Paused: &paused,
+	}
+	return s.UpdateClusterLatest(projectID, name, cluster)
+}
+
+// GetClusterAutoScalingConfig uses the latest API version to get the auto scaling configuration of a cluster.
+func (s *Store) GetClusterAutoScalingConfig(projectID, name string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error) {
+	result, _, err := s.clientv2.ClustersApi.AutoScalingConfiguration(s.ctx, projectID, name).Execute()
+	return result, err
 }
 
 // DeleteCluster encapsulate the logic to manage different cloud providers.

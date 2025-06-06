@@ -13,6 +13,7 @@ import (
 	reflect "reflect"
 
 	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	admin0 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -38,6 +39,45 @@ func NewMockClusterStarter(ctrl *gomock.Controller) *MockClusterStarter {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockClusterStarter) EXPECT() *MockClusterStarterMockRecorder {
 	return m.recorder
+}
+
+// GetClusterAutoScalingConfig mocks base method.
+func (m *MockClusterStarter) GetClusterAutoScalingConfig(arg0, arg1 string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetClusterAutoScalingConfig", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.ClusterDescriptionAutoScalingModeConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetClusterAutoScalingConfig indicates an expected call of GetClusterAutoScalingConfig.
+func (mr *MockClusterStarterMockRecorder) GetClusterAutoScalingConfig(arg0, arg1 any) *MockClusterStarterGetClusterAutoScalingConfigCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClusterAutoScalingConfig", reflect.TypeOf((*MockClusterStarter)(nil).GetClusterAutoScalingConfig), arg0, arg1)
+	return &MockClusterStarterGetClusterAutoScalingConfigCall{Call: call}
+}
+
+// MockClusterStarterGetClusterAutoScalingConfigCall wrap *gomock.Call
+type MockClusterStarterGetClusterAutoScalingConfigCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockClusterStarterGetClusterAutoScalingConfigCall) Return(arg0 *admin0.ClusterDescriptionAutoScalingModeConfiguration, arg1 error) *MockClusterStarterGetClusterAutoScalingConfigCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockClusterStarterGetClusterAutoScalingConfigCall) Do(f func(string, string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error)) *MockClusterStarterGetClusterAutoScalingConfigCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockClusterStarterGetClusterAutoScalingConfigCall) DoAndReturn(f func(string, string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error)) *MockClusterStarterGetClusterAutoScalingConfigCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
 }
 
 // StartCluster mocks base method.
@@ -75,6 +115,45 @@ func (c *MockClusterStarterStartClusterCall) Do(f func(string, string) (*admin.A
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockClusterStarterStartClusterCall) DoAndReturn(f func(string, string) (*admin.AdvancedClusterDescription, error)) *MockClusterStarterStartClusterCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// StartClusterLatest mocks base method.
+func (m *MockClusterStarter) StartClusterLatest(arg0, arg1 string) (*admin0.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StartClusterLatest", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StartClusterLatest indicates an expected call of StartClusterLatest.
+func (mr *MockClusterStarterMockRecorder) StartClusterLatest(arg0, arg1 any) *MockClusterStarterStartClusterLatestCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StartClusterLatest", reflect.TypeOf((*MockClusterStarter)(nil).StartClusterLatest), arg0, arg1)
+	return &MockClusterStarterStartClusterLatestCall{Call: call}
+}
+
+// MockClusterStarterStartClusterLatestCall wrap *gomock.Call
+type MockClusterStarterStartClusterLatestCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockClusterStarterStartClusterLatestCall) Return(arg0 *admin0.ClusterDescription20240805, arg1 error) *MockClusterStarterStartClusterLatestCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockClusterStarterStartClusterLatestCall) Do(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockClusterStarterStartClusterLatestCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockClusterStarterStartClusterLatestCall) DoAndReturn(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockClusterStarterStartClusterLatestCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

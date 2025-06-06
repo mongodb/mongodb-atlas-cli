@@ -28,4 +28,9 @@ podman run --rm \
   update \
   --purls /pwd/build/package/purls.txt \
   --sbom-out /pwd/sbom.json
+
+echo "Cleaning up..."
+rm -f \
+  ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/build/ci/hosts.json \
+  ${workdir}/src/github.com/mongodb/mongodb-atlas-cli/ssh_id
   

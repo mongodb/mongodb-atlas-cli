@@ -22,6 +22,9 @@ cov/
 # We don't want to commit the 3rd party notices
 third_party_notices/
 
+# File generated during release process
+sbom.json
+
 # Evergreen generated files
 .gocache/
 gon_x86_64.json

@@ -27,6 +27,9 @@ third_party_notices/
 gon_x86_64.json
 gon_arm64.json
 *.xml
+build/ci/hosts.json
+build/ci/ssh_id
+sbom.json
 
 # We don't want to commit env variables
 *.env

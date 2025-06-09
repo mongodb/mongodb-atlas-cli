@@ -34,20 +34,37 @@ jobs:
         with:
             go-version-file: 'go.mod'
 
-      - name: Download Linux ARM64 binary
+      - name: Download binaries
         run: |
           curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version }}/mongodb-atlas-cli_${{ inputs.release_version }}_linux_arm64.tar.gz" \
-            -o release.tar.gz
+            -o linux.tar.gz
+          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version }}/mongodb-atlas-cli_${{ inputs.release_version }}_macos_x86_64.zip" \
+            -o darwin.zip
+          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version }}/mongodb-atlas-cli_${{ inputs.release_version }}_windows_x86_64.zip" \
+            -o windows.zip
 
       - name: Extract binary
         run: |
-          tar -xzf release.tar.gz
+          tar -xzf linux.tar.gz -d ./linux
+          unzip -o darwin.zip -d ./darwin
+          unzip -o windows.zip -d ./windows
 
       - name: Generate PURLs from binary
         run: |
-          go version -m ./mongodb-atlas-cli_${{ inputs.release_version }}_linux_arm64/bin/atlas | \
+          # Generate Linux purls
+          go version -m ./linux/bin/atlas | \
             awk '$1 == "dep" || $1 == "=>" { print "pkg:golang/" $2 "@" $3 }' | \
-            LC_ALL=C sort > purls.txt
+            LC_ALL=C sort > purls-linux.txt
+          # Generate Darwin purls
+          go version -m ./darwin/bin/atlas | \
+            awk '$1 == "dep" || $1 == "=>" { print "pkg:golang/" $2 "@" $3 }' | \
+            LC_ALL=C sort > purls-darwin.txt
+          # Generate Windows purls
+          go version -m ./windows/bin/atlas | \
+            awk '$1 == "dep" || $1 == "=>" { print "pkg:golang/" $2 "@" $3 }' | \
+            LC_ALL=C sort > purls-windows.txt
+          # Merge purls
+          cat purls-linux.txt purls-darwin.txt purls-windows.txt |  LC_ALL=C sort | uniq > purls.txt
           cat purls.txt
 
       - name: Generate SBOM with Silkbomb
@@ -61,6 +78,7 @@ jobs:
             update \
             --purls "/pwd/purls.txt" \
             --sbom-out "/pwd/sbom_lite.json"
+          echo "SBOM lite generated:"
           cat "sbom_lite.json"
 
       - name: Get current date

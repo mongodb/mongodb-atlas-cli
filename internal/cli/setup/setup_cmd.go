@@ -65,6 +65,7 @@ const (
 	mongoshConnect             = "mongosh"
 	vsCodeConnect              = "vscode"
 	clusterWideScaling         = "clusterWideScaling"
+	independentShardScaling    = "independentShardScaling"
 	deprecateMessageSharedTier = "The '%s' tier is deprecated. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
 )
 
@@ -121,7 +122,6 @@ type AtlasClusterQuickStarter interface {
 	AddSampleData(string, string) (*atlasv2.SampleDatasetStatus, error)
 	SampleDataStatus(string, string) (*atlasv2.SampleDatasetStatus, error)
 	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)
-	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	LatestAtlasCluster(string, string) (*atlasv2.ClusterDescription20240805, error)
 	CreateClusterLatest(v15 *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error)
@@ -653,6 +653,14 @@ func (opts *Opts) validateTier() error {
 	return nil
 }
 
+func (opts *Opts) validateAutoScalingMode() error {
+	if opts.AutoScalingMode != clusterWideScaling && opts.AutoScalingMode != independentShardScaling {
+		return fmt.Errorf("invalid auto scaling mode: %s. Valid values are %s or %s", opts.AutoScalingMode, clusterWideScaling, independentShardScaling)
+	}
+
+	return nil
+}
+
 // Builder
 // atlas setup
 //
@@ -703,6 +711,7 @@ func Builder() *cobra.Command {
 				preRun = append(preRun, opts.register.LoginPreRun(cmd.Context()))
 			}
 			preRun = append(preRun, opts.validateTier)
+			preRun = append(preRun, opts.validateAutoScalingMode)
 
 			return opts.PreRunE(preRun...)
 		},

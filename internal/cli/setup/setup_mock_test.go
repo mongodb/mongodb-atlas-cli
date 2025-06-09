@@ -81,45 +81,6 @@ func (c *MockAtlasClusterQuickStarterAddSampleDataCall) DoAndReturn(f func(strin
 	return c
 }
 
-// AtlasCluster mocks base method.
-func (m *MockAtlasClusterQuickStarter) AtlasCluster(arg0, arg1 string) (*admin.AdvancedClusterDescription, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AtlasCluster", arg0, arg1)
-	ret0, _ := ret[0].(*admin.AdvancedClusterDescription)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// AtlasCluster indicates an expected call of AtlasCluster.
-func (mr *MockAtlasClusterQuickStarterMockRecorder) AtlasCluster(arg0, arg1 any) *MockAtlasClusterQuickStarterAtlasClusterCall {
-	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasCluster", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).AtlasCluster), arg0, arg1)
-	return &MockAtlasClusterQuickStarterAtlasClusterCall{Call: call}
-}
-
-// MockAtlasClusterQuickStarterAtlasClusterCall wrap *gomock.Call
-type MockAtlasClusterQuickStarterAtlasClusterCall struct {
-	*gomock.Call
-}
-
-// Return rewrite *gomock.Call.Return
-func (c *MockAtlasClusterQuickStarterAtlasClusterCall) Return(arg0 *admin.AdvancedClusterDescription, arg1 error) *MockAtlasClusterQuickStarterAtlasClusterCall {
-	c.Call = c.Call.Return(arg0, arg1)
-	return c
-}
-
-// Do rewrite *gomock.Call.Do
-func (c *MockAtlasClusterQuickStarterAtlasClusterCall) Do(f func(string, string) (*admin.AdvancedClusterDescription, error)) *MockAtlasClusterQuickStarterAtlasClusterCall {
-	c.Call = c.Call.Do(f)
-	return c
-}
-
-// DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockAtlasClusterQuickStarterAtlasClusterCall) DoAndReturn(f func(string, string) (*admin.AdvancedClusterDescription, error)) *MockAtlasClusterQuickStarterAtlasClusterCall {
-	c.Call = c.Call.DoAndReturn(f)
-	return c
-}
-
 // CloudProviderRegions mocks base method.
 func (m *MockAtlasClusterQuickStarter) CloudProviderRegions(arg0, arg1 string, arg2 []string) (*admin0.PaginatedApiAtlasProviderRegions, error) {
 	m.ctrl.T.Helper()

@@ -423,6 +423,8 @@ functions:
           - "image_id=/subscriptions/${azure_subscription_id}/resourceGroups/atlascli-image-resources/providers/Microsoft.Compute/images/${image}"
           - -var
           - "certificate_path=${certificate_path}"
+          - -var
+          - "admin_password=${azure_vm_admin_password}"
     - command: shell.exec
       params:
         <<: *go_options

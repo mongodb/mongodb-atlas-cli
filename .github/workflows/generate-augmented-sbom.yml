@@ -7,6 +7,7 @@ on:
         description: "Release version (e.g. 1.42.2)"
         required: true
         type: string
+  pull_request:
 
 permissions:  
   id-token: write  
@@ -36,11 +37,11 @@ jobs:
 
       - name: Download binaries
         run: |
-          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version }}/mongodb-atlas-cli_${{ inputs.release_version }}_linux_arm64.tar.gz" \
+          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version || '1.43.2' }}/mongodb-atlas-cli_${{ inputs.release_version || '1.43.2' }}_linux_arm64.tar.gz" \
             -o linux.tar.gz
-          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version }}/mongodb-atlas-cli_${{ inputs.release_version }}_macos_x86_64.zip" \
+          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version || '1.43.2' }}/mongodb-atlas-cli_${{ inputs.release_version || '1.43.2' }}_macos_x86_64.zip" \
             -o darwin.zip
-          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version }}/mongodb-atlas-cli_${{ inputs.release_version }}_windows_x86_64.zip" \
+          curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version || '1.43.2' }}/mongodb-atlas-cli_${{ inputs.release_version || '1.43.2' }}_windows_x86_64.zip" \
             -o windows.zip
 
       - name: Extract binary
@@ -99,12 +100,12 @@ jobs:
             --sbom-in "/pwd/sbom_lite.json" \
             --repo "${KONDUKTO_REPO}" \
             --branch "${KONDUKTO_BRANCH_PREFIX}-linux-arm64" \
-            --sbom-out "/pwd/linux-amd64-augmented-sbom-v${{ inputs.release_version }}-${{ env.date }}.json"
+            --sbom-out "/pwd/linux-amd64-augmented-sbom-v${{ inputs.release_version || '1.43.2' }}-${{ env.date }}.json"
 
       - name: Generate SSDLC report
         env:
             AUTHOR: ${{ github.actor }}
-            VERSION: ${{ inputs.release_version }}
+            VERSION: ${{ inputs.release_version || '1.43.2' }}
             AUGMENTED_REPORT: "true"
         run: ./build/package/gen-ssdlc-report.sh
 
@@ -113,6 +114,6 @@ jobs:
         with:
           name: augmented_sbom_and_ssdlc_report
           path: |
-            linux-amd64-augmented-sbom-v${{ inputs.release_version }}-${{ env.date }}.json
-            ssdlc-compliance-${{ inputs.release_version }}-${{ env.date }}.md
+            linux-amd64-augmented-sbom-v${{ inputs.release_version || '1.43.2' }}-${{ env.date }}.json
+            ssdlc-compliance-${{ inputs.release_version || '1.43.2' }}-${{ env.date }}.md
           if-no-files-found: error

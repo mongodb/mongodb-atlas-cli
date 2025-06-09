@@ -23,6 +23,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -87,6 +88,10 @@ func (opts *StartOpts) RunAtlas() error {
 	defer opts.StopSpinner()
 
 	clusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.DeploymentName)
+	if err != nil {
+		telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode(clusterAutoScalingConfig.GetAutoScalingMode()))
+	}
+
 	if err != nil || clusterAutoScalingConfig.GetAutoScalingMode() == options.ClusterWideScaling {
 		r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.DeploymentName)
 		if err != nil {

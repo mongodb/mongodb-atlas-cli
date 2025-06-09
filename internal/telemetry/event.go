@@ -411,6 +411,27 @@ func WithSearchIndexType(indexType string) EventOpt {
 	}
 }
 
+func WithDetectedAutoScalingMode(autoScalingMode string) EventOpt {
+	return func(event Event) {
+		if autoScalingMode == "" {
+			return
+		}
+
+		// Handle the case where the auto scaling mode is passed from the API responses
+		if autoScalingMode == "CLUSTER_WIDE_SCALING" {
+			event.Properties["cluster_scaling_type"] = "clusterWideScaling"
+			return
+		}
+
+		if autoScalingMode == "INDEPENDENT_SHARD_SCALING" {
+			event.Properties["cluster_scaling_type"] = "independentShardScaling"
+			return
+		}
+
+		event.Properties["cluster_scaling_type"] = autoScalingMode
+	}
+}
+
 func newEvent(opts ...EventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),

@@ -198,6 +198,45 @@ func (c *MockAtlasClusterQuickStarterCreateClusterCall) DoAndReturn(f func(*admi
 	return c
 }
 
+// CreateClusterLatest mocks base method.
+func (m *MockAtlasClusterQuickStarter) CreateClusterLatest(v15 *admin0.ClusterDescription20240805) (*admin0.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateClusterLatest", v15)
+	ret0, _ := ret[0].(*admin0.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateClusterLatest indicates an expected call of CreateClusterLatest.
+func (mr *MockAtlasClusterQuickStarterMockRecorder) CreateClusterLatest(v15 any) *MockAtlasClusterQuickStarterCreateClusterLatestCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateClusterLatest", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).CreateClusterLatest), v15)
+	return &MockAtlasClusterQuickStarterCreateClusterLatestCall{Call: call}
+}
+
+// MockAtlasClusterQuickStarterCreateClusterLatestCall wrap *gomock.Call
+type MockAtlasClusterQuickStarterCreateClusterLatestCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockAtlasClusterQuickStarterCreateClusterLatestCall) Return(arg0 *admin0.ClusterDescription20240805, arg1 error) *MockAtlasClusterQuickStarterCreateClusterLatestCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockAtlasClusterQuickStarterCreateClusterLatestCall) Do(f func(*admin0.ClusterDescription20240805) (*admin0.ClusterDescription20240805, error)) *MockAtlasClusterQuickStarterCreateClusterLatestCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockAtlasClusterQuickStarterCreateClusterLatestCall) DoAndReturn(f func(*admin0.ClusterDescription20240805) (*admin0.ClusterDescription20240805, error)) *MockAtlasClusterQuickStarterCreateClusterLatestCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // CreateDatabaseUser mocks base method.
 func (m *MockAtlasClusterQuickStarter) CreateDatabaseUser(arg0 *admin0.CloudDatabaseUser) (*admin0.CloudDatabaseUser, error) {
 	m.ctrl.T.Helper()
@@ -311,6 +350,45 @@ func (c *MockAtlasClusterQuickStarterDatabaseUserCall) Do(f func(string, string,
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockAtlasClusterQuickStarterDatabaseUserCall) DoAndReturn(f func(string, string, string) (*admin0.CloudDatabaseUser, error)) *MockAtlasClusterQuickStarterDatabaseUserCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// LatestAtlasCluster mocks base method.
+func (m *MockAtlasClusterQuickStarter) LatestAtlasCluster(arg0, arg1 string) (*admin0.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LatestAtlasCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LatestAtlasCluster indicates an expected call of LatestAtlasCluster.
+func (mr *MockAtlasClusterQuickStarterMockRecorder) LatestAtlasCluster(arg0, arg1 any) *MockAtlasClusterQuickStarterLatestAtlasClusterCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestAtlasCluster", reflect.TypeOf((*MockAtlasClusterQuickStarter)(nil).LatestAtlasCluster), arg0, arg1)
+	return &MockAtlasClusterQuickStarterLatestAtlasClusterCall{Call: call}
+}
+
+// MockAtlasClusterQuickStarterLatestAtlasClusterCall wrap *gomock.Call
+type MockAtlasClusterQuickStarterLatestAtlasClusterCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockAtlasClusterQuickStarterLatestAtlasClusterCall) Return(arg0 *admin0.ClusterDescription20240805, arg1 error) *MockAtlasClusterQuickStarterLatestAtlasClusterCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockAtlasClusterQuickStarterLatestAtlasClusterCall) Do(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockAtlasClusterQuickStarterLatestAtlasClusterCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockAtlasClusterQuickStarterLatestAtlasClusterCall) DoAndReturn(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockAtlasClusterQuickStarterLatestAtlasClusterCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

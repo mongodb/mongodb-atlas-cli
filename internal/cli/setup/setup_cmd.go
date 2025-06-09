@@ -64,6 +64,7 @@ const (
 	compassConnect             = "compass"
 	mongoshConnect             = "mongosh"
 	vsCodeConnect              = "vscode"
+	clusterWideScaling         = "clusterWideScaling"
 	deprecateMessageSharedTier = "The '%s' tier is deprecated. For the migration guide and timeline, visit: https://dochub.mongodb.org/core/flex-migration.\n"
 )
 
@@ -122,6 +123,8 @@ type AtlasClusterQuickStarter interface {
 	CloudProviderRegions(string, string, []string) (*atlasv2.PaginatedApiAtlasProviderRegions, error)
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	CreateCluster(v15 *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	LatestAtlasCluster(string, string) (*atlasv2.ClusterDescription20240805, error)
+	CreateClusterLatest(v15 *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error)
 	MDBVersions(projectID string, opt *store.MDBVersionListOptions) (*atlasv2.PaginatedAvailableVersion, error)
 	CreateDatabaseUser(*atlasv2.CloudDatabaseUser) (*atlasv2.CloudDatabaseUser, error)
 	DatabaseUser(string, string, string) (*atlasv2.CloudDatabaseUser, error)
@@ -153,6 +156,7 @@ type Opts struct {
 	Confirm                     bool
 	CurrentIP                   bool
 	EnableTerminationProtection bool
+	AutoScalingMode             string
 	flags                       *pflag.FlagSet
 	flagSet                     map[string]struct{}
 	settings                    string
@@ -260,7 +264,7 @@ func (opts *Opts) newDefaultValues() (*clusterSettings, error) {
 }
 
 func (opts *Opts) clusterCreationWatcher() (any, bool, error) {
-	result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
+	result, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
 		return nil, false, err
 	}
@@ -508,7 +512,7 @@ func (opts *Opts) setupCluster() error {
 	fmt.Println("Cluster created.")
 
 	// Get cluster's connection string
-	cluster, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
+	cluster, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.ClusterName)
 	if err != nil {
 		return err
 	}
@@ -626,6 +630,8 @@ func (opts *Opts) SetupAtlasFlags(cmd *cobra.Command) {
 	cmd.Flags().BoolVar(&opts.EnableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().BoolVar(&opts.CurrentIP, flag.CurrentIP, false, usage.CurrentIPSimplified)
 	cmd.Flags().StringToStringVar(&opts.Tag, flag.Tag, nil, usage.Tag)
+	cmd.Flags().StringVar(&opts.AutoScalingMode, flag.AutoScalingMode, clusterWideScaling, usage.AutoScalingMode)
+
 	opts.AddProjectOptsFlags(cmd)
 
 	cmd.MarkFlagsMutuallyExclusive(flag.CurrentIP, flag.AccessListIP)

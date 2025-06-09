@@ -322,4 +322,5 @@ const (
 	AuditAuthorizationSuccess                     = "auditAuthorizationSuccess"                     // AuditAuthorizationSuccess flag
 	AuditFilter                                   = "auditFilter"                                   // AuditFilter flag
 	InitDB                                        = "initdb"                                        // InitDB flag
+	AutoScalingMode                               = "autoScalingMode"                               // AutoScalingMode flag
 )

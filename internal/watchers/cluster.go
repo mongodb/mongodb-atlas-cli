@@ -45,7 +45,7 @@ type AtlasClusterStateDescriber struct {
 }
 
 func (describer *AtlasClusterStateDescriber) GetState() (string, error) {
-	result, err := describer.store.AtlasCluster(describer.projectID, describer.clusterName)
+	result, err := describer.store.LatestAtlasCluster(describer.projectID, describer.clusterName)
 	if result != nil && result.StateName != nil {
 		return *result.StateName, err
 	}

@@ -153,11 +153,17 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 		mocks.NewMockClusterDescriber(ctrl),
 	}
 
-	expected := &atlasClustersPinned.AdvancedClusterDescription{
+	expected := &atlasv2.ClusterDescription20240805{
 		Name:      pointer.Get("ProjectBar"),
 		StateName: pointer.Get("CREATING"),
 	}
-	expectedIdle := &atlasClustersPinned.AdvancedClusterDescription{
+
+	expectedCreatedCluster := &atlasClustersPinned.AdvancedClusterDescription{
+		Name:      expected.Name,
+		StateName: expected.StateName,
+	}
+
+	expectedIdle := &atlasv2.ClusterDescription20240805{
 		Name:      expected.Name,
 		StateName: pointer.Get("IDLE"),
 	}
@@ -184,20 +190,20 @@ func TestCreateOpts_PostRun_EnableWatch(t *testing.T) {
 		MockClusterCreator.
 		EXPECT().
 		CreateCluster(cluster).
-		Return(expected, nil).
+		Return(expectedCreatedCluster, nil).
 		Times(1)
 
 	gomock.InOrder(
 		mockStore.
 			MockClusterDescriber.
 			EXPECT().
-			AtlasCluster(createOpts.ProjectID, expected.GetName()).
+			LatestAtlasCluster(createOpts.ProjectID, expected.GetName()).
 			Return(expected, nil).
 			Times(1),
 		mockStore.
 			MockClusterDescriber.
 			EXPECT().
-			AtlasCluster(createOpts.ProjectID, expected.GetName()).
+			LatestAtlasCluster(createOpts.ProjectID, expected.GetName()).
 			Return(expectedIdle, nil).
 			Times(1),
 	)

@@ -70,3 +70,18 @@ func (mr *MockClusterDescriberMockRecorder) FlexCluster(arg0, arg1 any) *gomock.
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FlexCluster", reflect.TypeOf((*MockClusterDescriber)(nil).FlexCluster), arg0, arg1)
 }
+
+// LatestAtlasCluster mocks base method.
+func (m *MockClusterDescriber) LatestAtlasCluster(arg0, arg1 string) (*admin0.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LatestAtlasCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LatestAtlasCluster indicates an expected call of LatestAtlasCluster.
+func (mr *MockClusterDescriberMockRecorder) LatestAtlasCluster(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestAtlasCluster", reflect.TypeOf((*MockClusterDescriber)(nil).LatestAtlasCluster), arg0, arg1)
+}

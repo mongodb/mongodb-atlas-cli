@@ -27,6 +27,12 @@ variable "certificate_path" {
   default = "~/.ssh/id_rsa.pub"
 }
 
+variable "admin_password" {
+  type = string
+  description = "The admin password for the Windows VM"
+  sensitive = true
+}
+
 resource "azurerm_resource_group" "atlascli_vm_rg" {
   name     = "atlascli-resources"
   location = "East US"
@@ -107,7 +113,7 @@ resource "azurerm_windows_virtual_machine" "atlascli_vm" {
   resource_group_name   = azurerm_resource_group.atlascli_vm_rg.name
   size                  = "Standard_D2s_v3"
   admin_username        = "atlascli"
-  admin_password        = "P@ssw0rd1234!"
+  admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.atlascli_vm_nic.id]
   computer_name         = "atlasclivm"
   os_disk {

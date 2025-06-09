@@ -103,7 +103,6 @@ jobs:
           branch: ${{ env.JIRA_KEY }}
           labels: |
             compliance
-            auto
             auto_close_jira
           body: |
             ## Proposed changes

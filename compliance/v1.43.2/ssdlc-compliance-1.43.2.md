@@ -1,13 +1,13 @@
 SSDLC Compliance Report: Atlas CLI 1.43.2
 =================================================================
 
-- Release Creator: apix-bot[bot]
-- Created On:       2025-06-06
+- Release Creator: cveticm
+- Created On:       2025-06-09
 
 Overview:
 
 - **Product and Release Name**
-    - Atlas CLI 1.43.2, 2025-06-06.
+    - Atlas CLI 1.43.2, 2025-06-09.
 
 - **Process Document**
   - https://www.mongodb.com/blog/post/how-mongodb-protects-against-supply-chain-vulnerabilities

@@ -47,14 +47,14 @@ jobs:
       - name: Extract binary
         run: |
           mkdir -p ./linux
-          tar -xzf linux.tar.gz -C ./linux
+          tar -xzf linux.tar.gz
           unzip -o darwin.zip -d ./darwin
           unzip -o windows.zip -d ./windows
 
       - name: Generate PURLs from binary
         run: |
           # Generate Linux purls
-          go version -m ./linux/bin/atlas | \
+          go version -m ./mongodb-atlas-cli_${{ inputs.release_version }}_linux_arm64/bin/atlas | \
             awk '$1 == "dep" || $1 == "=>" { print "pkg:golang/" $2 "@" $3 }' | \
             LC_ALL=C sort > purls-linux.txt
           # Generate Darwin purls
@@ -62,7 +62,7 @@ jobs:
             awk '$1 == "dep" || $1 == "=>" { print "pkg:golang/" $2 "@" $3 }' | \
             LC_ALL=C sort > purls-darwin.txt
           # Generate Windows purls
-          go version -m ./windows/bin/atlas | \
+          go version -m ./windows/bin/atlas.exe | \
             awk '$1 == "dep" || $1 == "=>" { print "pkg:golang/" $2 "@" $3 }' | \
             LC_ALL=C sort > purls-windows.txt
           # Merge purls

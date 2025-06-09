@@ -25,6 +25,7 @@ import (
 type ClusterDescriber interface { //nolint:iface // right now requires some refactor to deployment commands
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+	LatestAtlasCluster(string, string) (*atlasv2.ClusterDescription20240805, error)
 }
 
 // AddSampleData encapsulate the logic to manage different cloud providers.
@@ -140,6 +141,12 @@ func (s *Store) LatestProjectClusters(projectID string, opts *ListOptions) (*atl
 // AtlasCluster encapsulates the logic to manage different cloud providers.
 func (s *Store) AtlasCluster(projectID, name string) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	result, _, err := s.clientClusters.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
+	return result, err
+}
+
+// LatestAtlasCluster uses the latest API version to get a cluster.
+func (s *Store) LatestAtlasCluster(projectID, name string) (*atlasv2.ClusterDescription20240805, error) {
+	result, _, err := s.clientv2.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
 	return result, err
 }
 

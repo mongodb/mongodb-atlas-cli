@@ -46,6 +46,7 @@ jobs:
 
       - name: Extract binary
         run: |
+          mkdir -p ./linux
           tar -xzf linux.tar.gz -C ./linux
           unzip -o darwin.zip -d ./darwin
           unzip -o windows.zip -d ./windows

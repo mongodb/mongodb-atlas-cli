@@ -38,11 +38,13 @@ pkg:golang/github.com/briandowns/spinner@v1.23.2
 pkg:golang/github.com/cloudflare/circl@v1.6.0
 pkg:golang/github.com/denisbrodbeck/machineid@v1.0.1
 pkg:golang/github.com/dsnet/compress@v0.0.2-0.20230904184137-39efe44ab707
+pkg:golang/github.com/ebitengine/purego@v0.8.4
 pkg:golang/github.com/fatih/color@v1.14.1
 pkg:golang/github.com/felixge/httpsnoop@v1.0.4
 pkg:golang/github.com/fsnotify/fsnotify@v1.8.0
 pkg:golang/github.com/go-logr/logr@v1.4.2
 pkg:golang/github.com/go-logr/stdr@v1.2.2
+pkg:golang/github.com/go-ole/go-ole@v1.2.6
 pkg:golang/github.com/go-viper/mapstructure/v2@v2.2.1
 pkg:golang/github.com/golang-jwt/jwt/v5@v5.2.2
 pkg:golang/github.com/golang/snappy@v0.0.4
@@ -56,6 +58,7 @@ pkg:golang/github.com/hashicorp/errwrap@v1.1.0
 pkg:golang/github.com/hashicorp/go-multierror@v1.1.1
 pkg:golang/github.com/hashicorp/golang-lru/v2@v2.0.7
 pkg:golang/github.com/iancoleman/strcase@v0.3.0
+pkg:golang/github.com/inconshreveable/mousetrap@v1.1.0
 pkg:golang/github.com/kballard/go-shellquote@v0.0.0-20180428030007-95032a82bc51
 pkg:golang/github.com/klauspost/compress@v1.18.0
 pkg:golang/github.com/klauspost/pgzip@v1.2.6
@@ -91,6 +94,7 @@ pkg:golang/github.com/xdg-go/pbkdf2@v1.0.0
 pkg:golang/github.com/xdg-go/scram@v1.1.2
 pkg:golang/github.com/xdg-go/stringprep@v1.0.4
 pkg:golang/github.com/youmark/pkcs8@v0.0.0-20240726163527-a2c0da244d78
+pkg:golang/github.com/yusufpapurcu/wmi@v1.2.4
 pkg:golang/go.mongodb.org/atlas-sdk/v20240530005@v20240530005.0.0
 pkg:golang/go.mongodb.org/atlas-sdk/v20250312003@v20250312003.0.0
 pkg:golang/go.mongodb.org/atlas@v0.38.0

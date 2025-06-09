@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 1503
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 09 Jun 2025 15:59:32 GMT
+Date: Fri, 06 Jun 2025 12:40:36 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 52
+X-Envoy-Upstream-Service-Time: 49
 X-Frame-Options: DENY
 X-Java-Method: ApiProjectApiUsersResource::getApiUsers
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=eb9c72c357b4b1d805075b49b4520b5bf409d550; versionString=master
+X-Mongodb-Service-Version: gitHash=b0dbddfb67208b118e339709922b5a96d34d9fa7; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/apiKeys?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"desc":"bianca-test","id":"65ccd430eb20d062681e521d","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/65ccd430eb20d062681e521d","rel":"self"}],"privateKey":"********-****-****-7a7318486a98","publicKey":"jgblwcvi","roles":[{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_OWNER"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_OWNER"},{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"}]},{"desc":"e2e-test","id":"684704e4b60eb95a78a6afeb","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/684704e4b60eb95a78a6afeb","rel":"self"}],"privateKey":"********-****-****-42da739545e9","publicKey":"rggmtcrc","roles":[{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"},{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_DATA_ACCESS_READ_ONLY"}]},{"desc":"e2e-test","id":"6564c343515f29099463b160","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/6564c343515f29099463b160","rel":"self"}],"privateKey":"********-****-****-de061174a097","publicKey":"ywcjnnxw","roles":[{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_READ_ONLY"}]}],"totalCount":3}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/apiKeys?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"desc":"bianca-test","id":"65ccd430eb20d062681e521d","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/65ccd430eb20d062681e521d","rel":"self"}],"privateKey":"********-****-****-7a7318486a98","publicKey":"jgblwcvi","roles":[{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_OWNER"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"},{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_OWNER"}]},{"desc":"e2e-test","id":"6842e1c3d13438297a3fba82","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/6842e1c3d13438297a3fba82","rel":"self"}],"privateKey":"********-****-****-b894dc60f7d9","publicKey":"qkmkxlbe","roles":[{"orgId":"a0123456789abcdef012345a","roleName":"ORG_MEMBER"},{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_DATA_ACCESS_READ_ONLY"}]},{"desc":"e2e-test","id":"6564c343515f29099463b160","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/apiKeys/6564c343515f29099463b160","rel":"self"}],"privateKey":"********-****-****-de061174a097","publicKey":"ywcjnnxw","roles":[{"groupId":"b0123456789abcdef012345b","roleName":"GROUP_READ_ONLY"},{"orgId":"a0123456789abcdef012345a","roleName":"ORG_READ_ONLY"}]}],"totalCount":3}

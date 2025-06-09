@@ -39,9 +39,10 @@ func TestSetupISS(t *testing.T) {
 
 	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandClusterName())).(string)
 
-	tagKey := "env"
-	tagValue := "e2etest"
-	arbitraryAccessListIP := "21.150.105.221"
+	tagKey := "env-iss"
+	tagValue := "e2etest-iss"
+
+	arbitraryAccessListIP := g.MemoryRandIP("randIPSetupForceISS")
 
 	g.Run("Run", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

@@ -45,6 +45,7 @@ import (
 
 const updateSnapshotsEnvVarKey = "UPDATE_SNAPSHOTS"
 const redactedToken = "redactedToken"
+const ipMax = 255
 
 type snapshotMode int
 
@@ -886,6 +887,13 @@ func (g *AtlasE2ETestGenerator) MemoryFunc(key string, value any, marshal func(v
 		g.t.Fatalf("unexpected snapshot mode: %v", g.currentSnapshotMode)
 		return nil
 	}
+}
+
+func (g *AtlasE2ETestGenerator) MemoryRandIP(key string) string {
+	g.t.Helper()
+
+	n := g.MemoryRand(key, ipMax)
+	return fmt.Sprintf("192.168.0.%d", n)
 }
 
 func (g *AtlasE2ETestGenerator) MemoryRand(key string, n int64) *big.Int {

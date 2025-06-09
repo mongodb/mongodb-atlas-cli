@@ -44,14 +44,13 @@ jobs:
           curl -L "https://github.com/mongodb/mongodb-atlas-cli/releases/download/atlascli%2Fv${{ inputs.release_version || '1.43.2' }}/mongodb-atlas-cli_${{ inputs.release_version || '1.43.2' }}_windows_x86_64.zip" \
             -o windows.zip
 
-      - name: Extract binary
+      - name: Extract binaries
         run: |
-          mkdir -p ./linux
           tar -xzf linux.tar.gz
           unzip -o darwin.zip -d ./darwin
           unzip -o windows.zip -d ./windows
 
-      - name: Generate PURLs from binary
+      - name: Generate PURLs from binaries
         run: |
           # Generate Linux purls
           go version -m ./mongodb-atlas-cli_${{ inputs.release_version }}_linux_arm64/bin/atlas | \
@@ -80,7 +79,6 @@ jobs:
             update \
             --purls "/pwd/purls.txt" \
             --sbom-out "/pwd/sbom_lite.json"
-          echo "SBOM lite generated:"
           cat "sbom_lite.json"
 
       - name: Get current date
@@ -101,7 +99,7 @@ jobs:
             --sbom-in "/pwd/sbom_lite.json" \
             --repo "${KONDUKTO_REPO}" \
             --branch "${KONDUKTO_BRANCH_PREFIX}-linux-arm64" \
-            --sbom-out "/pwd/linux-amd64-augmented-sbom-v${{ inputs.release_version || '1.43.2' }}-${{ env.date }}.json"
+            --sbom-out "/pwd/augmented-sbom-v${{ inputs.release_version || '1.43.2' }}-${{ env.date }}.json"
 
       - name: Generate SSDLC report
         env:
@@ -115,6 +113,6 @@ jobs:
         with:
           name: augmented_sbom_and_ssdlc_report
           path: |
-            linux-amd64-augmented-sbom-v${{ inputs.release_version || '1.43.2' }}-${{ env.date }}.json
+            augmented-sbom-v${{ inputs.release_version || '1.43.2' }}-${{ env.date }}.json
             ssdlc-compliance-${{ inputs.release_version || '1.43.2' }}-${{ env.date }}.md
           if-no-files-found: error

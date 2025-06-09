@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1300
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 09 Jun 2025 15:59:37 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 39
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasV2DatabaseUsersResource::getValidCertsByUsername
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=eb9c72c357b4b1d805075b49b4520b5bf409d550; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/b0123456789abcdef012345b/databaseUsers/user162/certs?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"_id":9116777849366263482,"createdAt":"2025-03-13T14:49:28Z","groupId":"b0123456789abcdef012345b","notAfter":"2025-06-13T15:49:28Z","subject":"CN=user162"},{"_id":7184323023436304348,"createdAt":"2025-03-18T09:55:44Z","groupId":"b0123456789abcdef012345b","notAfter":"2025-06-18T10:55:44Z","subject":"CN=user162"},{"_id":6822992811823010441,"createdAt":"2025-03-18T14:09:07Z","groupId":"b0123456789abcdef012345b","notAfter":"2025-06-18T15:09:07Z","subject":"CN=user162"},{"_id":2250464978609529883,"createdAt":"2025-03-28T17:54:16Z","groupId":"b0123456789abcdef012345b","notAfter":"2025-06-28T18:54:16Z","subject":"CN=user162"},{"_id":8911006570703207150,"createdAt":"2025-04-04T16:03:01Z","groupId":"b0123456789abcdef012345b","notAfter":"2025-07-04T17:03:01Z","subject":"CN=user162"},{"_id":842132809198579482,"createdAt":"2025-04-29T00:52:27Z","groupId":"b0123456789abcdef012345b","notAfter":"2025-07-29T01:52:27Z","subject":"CN=user162"},{"_id":8583085513906930178,"createdAt":"2025-06-09T14:59:35Z","groupId":"b0123456789abcdef012345b","notAfter":"2025-09-09T15:59:35Z","subject":"CN=user162"}],"totalCount":7}

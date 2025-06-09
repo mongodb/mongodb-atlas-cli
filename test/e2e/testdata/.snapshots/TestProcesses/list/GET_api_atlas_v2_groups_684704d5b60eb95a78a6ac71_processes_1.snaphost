@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1856
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 09 Jun 2025 16:07:07 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 105
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=eb9c72c357b4b1d805075b49b4520b5bf409d550; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/684704d5b60eb95a78a6ac71/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-06-09T16:06:31Z","groupId":"684704d5b60eb95a78a6ac71","hostname":"atlas-e4au5k-shard-00-00.c2miwp.mongodb-dev.net","id":"atlas-e4au5k-shard-00-00.c2miwp.mongodb-dev.net:27017","lastPing":"2025-06-09T16:07:00Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/684704d5b60eb95a78a6ac71/processes/atlas-e4au5k-shard-00-00.c2miwp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-e4au5k-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-27-shard-00-00.c2miwp.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-09T16:06:32Z","groupId":"684704d5b60eb95a78a6ac71","hostname":"atlas-e4au5k-shard-00-01.c2miwp.mongodb-dev.net","id":"atlas-e4au5k-shard-00-01.c2miwp.mongodb-dev.net:27017","lastPing":"2025-06-09T16:07:00Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/684704d5b60eb95a78a6ac71/processes/atlas-e4au5k-shard-00-01.c2miwp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-e4au5k-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"processes-27-shard-00-01.c2miwp.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-09T16:06:32Z","groupId":"684704d5b60eb95a78a6ac71","hostname":"atlas-e4au5k-shard-00-02.c2miwp.mongodb-dev.net","id":"atlas-e4au5k-shard-00-02.c2miwp.mongodb-dev.net:27017","lastPing":"2025-06-09T16:07:00Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/684704d5b60eb95a78a6ac71/processes/atlas-e4au5k-shard-00-02.c2miwp.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-e4au5k-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"processes-27-shard-00-02.c2miwp.mongodb-dev.net","version":"8.0.10"}],"totalCount":3}

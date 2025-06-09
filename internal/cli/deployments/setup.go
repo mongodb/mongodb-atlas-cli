@@ -714,6 +714,21 @@ func (opts *SetupOpts) validateTier() error {
 	return nil
 }
 
+// validateAutoScalingMode validates that the auto scaling mode is not set for local deployments
+func (opts *SetupOpts) validateAutoScalingMode(cmd *cobra.Command) func() error {
+	return func() error {
+		if opts.DeploymentType != options.LocalCluster {
+			return nil
+		}
+
+		if cmd.Flags().Lookup(flag.AutoScalingMode).Changed {
+			return fmt.Errorf("--%s is not supported for local deployments", flag.AutoScalingMode)
+		}
+
+		return nil
+	}
+}
+
 // SetupBuilder builds a cobra.Command that can run as:
 // atlas deployments setup.
 func SetupBuilder() *cobra.Command {
@@ -744,6 +759,7 @@ func SetupBuilder() *cobra.Command {
 				opts.InitOutput(cmd.OutOrStdout(), ""),
 				opts.InitInput(cmd.InOrStdin()),
 				opts.InitStore(cmd.Context(), cmd.OutOrStdout()),
+				opts.validateAutoScalingMode(cmd),
 				opts.initMongoDBClient,
 			)
 		},

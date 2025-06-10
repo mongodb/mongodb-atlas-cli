@@ -21,6 +21,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/clusterconfig"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/mocks"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/test"
@@ -32,11 +33,50 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+const issFile = `
+		{
+ "clusterType": "SHARDED",
+ "name": "AsymmetricCluster",
+ "mongoDBMajorVersion":"8.0",
+ "backupEnabled":true,
+ "replicationSpecs": [
+  {
+   "regionConfigs": [
+    {
+     "electableSpecs": {
+      "instanceSize": "M40",
+      "nodeCount": 3
+     },
+     "priority": 7,
+     "providerName": "AWS",
+     "regionName": "EU_WEST_1"
+    }
+   ],
+   "zoneName": "Zone1"
+  },
+  {
+   "regionConfigs": [
+    {
+     "electableSpecs": {
+      "instanceSize": "M30",
+      "nodeCount": 3
+     },
+     "priority": 7,
+     "providerName": "AWS",
+     "regionName": "EU_WEST_1"
+    }
+   ],
+   "zoneName": "Zone1"
+  }
+ ]
+}`
+
 func TestCreateOpts_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockClusterCreator(ctrl)
 
 	expected := &atlasClustersPinned.AdvancedClusterDescription{}
+	expectedLatest := &atlasv2.ClusterDescription20240805{}
 
 	t.Run("flags run", func(t *testing.T) {
 		createOpts := &CreateOpts{
@@ -54,6 +94,28 @@ func TestCreateOpts_Run(t *testing.T) {
 		mockStore.
 			EXPECT().
 			CreateCluster(cluster).Return(expected, nil).
+			Times(1)
+
+		require.NoError(t, createOpts.Run())
+	})
+
+	t.Run("flags run ISS", func(t *testing.T) {
+		createOpts := &CreateOpts{
+			name:            "ProjectBar",
+			region:          "US",
+			tier:            atlasM2,
+			members:         3,
+			diskSizeGB:      10,
+			backup:          false,
+			mdbVersion:      "7.0",
+			store:           mockStore,
+			autoScalingMode: clusterconfig.IndependentShardScalingShard,
+		}
+
+		cluster, _ := createOpts.newClusterLatest()
+		mockStore.
+			EXPECT().
+			CreateClusterLatest(cluster).Return(expectedLatest, nil).
 			Times(1)
 
 		require.NoError(t, createOpts.Run())
@@ -104,6 +166,41 @@ func TestCreateOpts_Run(t *testing.T) {
 			CreateCluster(cluster).Return(expected, nil).
 			Times(1)
 		require.NoError(t, createOpts.Run())
+	})
+
+	t.Run("file run ISS", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		fileName := "atlas_cluster_create_test.json"
+		_ = afero.WriteFile(appFS, fileName, []byte(issFile), 0600)
+
+		createOpts := &CreateOpts{
+			filename:        fileName,
+			fs:              appFS,
+			store:           mockStore,
+			autoScalingMode: clusterconfig.IndependentShardScalingShard,
+		}
+
+		cluster, _ := createOpts.newClusterLatest()
+		mockStore.
+			EXPECT().
+			CreateClusterLatest(cluster).Return(expectedLatest, nil).
+			Times(1)
+
+		require.NoError(t, createOpts.Run())
+	})
+
+	t.Run("file run fails with invalid file", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		fileName := "atlas_cluster_create_test.json"
+		_ = afero.WriteFile(appFS, fileName, []byte("invalid"), 0600)
+
+		createOpts := &CreateOpts{
+			filename: fileName,
+			fs:       appFS,
+			store:    mockStore,
+		}
+
+		require.Error(t, createOpts.Run())
 	})
 }
 

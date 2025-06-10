@@ -24,6 +24,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/clusterconfig"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -258,7 +259,7 @@ func (opts *CreateOpts) applyOptsAdvancedCluster(out *atlasClustersPinned.Advanc
 
 	out.ReplicationSpecs = &[]atlasClustersPinned.ReplicationSpec{replicationSpec}
 
-	addTags(out, opts.tag)
+	clusterconfig.SetTags(out, opts.tag)
 }
 
 func (opts *CreateOpts) newFlexClusterDescriptionCreate20241113() *atlasv2.FlexClusterDescriptionCreate20241113 {

@@ -14,7 +14,6 @@
 package clusterconfig
 
 import (
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
@@ -65,28 +64,4 @@ func SetTagsLatest(cluster *atlasv2.ClusterDescription20240805, providedTags map
 		}
 	}
 	cluster.Tags = &tags
-}
-
-const (
-	priority = 7
-	tenant   = "TENANT"
-)
-
-func NewAdvancedRegionConfig(providerName, region, tier, provider string, members int) atlasClustersPinned.CloudRegionConfig {
-	regionConfig := atlasClustersPinned.CloudRegionConfig{
-		Priority:     pointer.Get(priority),
-		RegionName:   &region,
-		ProviderName: &providerName,
-		ElectableSpecs: &atlasClustersPinned.HardwareSpec{
-			InstanceSize: &tier,
-		},
-	}
-
-	if providerName == tenant {
-		regionConfig.BackingProviderName = &provider
-	} else {
-		regionConfig.ElectableSpecs.NodeCount = &members
-	}
-
-	return regionConfig
 }

@@ -46,6 +46,12 @@ func (s *Store) CreateCluster(cluster *atlasClustersPinned.AdvancedClusterDescri
 	return result, err
 }
 
+// CreateClusterLatest uses the latest API version to create a cluster.
+func (s *Store) CreateClusterLatest(cluster *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error) {
+	result, _, err := s.clientv2.ClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
+	return result, err
+}
+
 // UpdateCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateCluster(projectID, name string, cluster *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	result, _, err := s.clientClusters.ClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()

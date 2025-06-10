@@ -25,18 +25,10 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/test/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
-const (
-	clustersEntity   = "clusters"
-	dbusersEntity    = "dbusers"
-	accessListEntity = "accessList"
-	setupEntity      = "setup"
-)
-
-func TestSetup(t *testing.T) {
+func TestSetupISS(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot(), internal.WithSnapshotSkip(internal.SkipSimilarSnapshots))
 	g.GenerateProject("setup")
 	cliPath, err := internal.AtlasCLIBin()
@@ -47,10 +39,10 @@ func TestSetup(t *testing.T) {
 
 	dbUserUsername := g.Memory("dbUserUsername", internal.Must(internal.RandClusterName())).(string)
 
-	tagKey := "env"
-	tagValue := "e2etest"
+	tagKey := "env-iss"
+	tagValue := "e2etest-iss"
 
-	arbitraryAccessListIP := g.MemoryRandIP("randIPSetupForce")
+	arbitraryAccessListIP := g.MemoryRandIP("randIPSetupForceISS")
 
 	g.Run("Run", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -59,6 +51,8 @@ func TestSetup(t *testing.T) {
 			"--username", dbUserUsername,
 			"--skipMongosh",
 			"--skipSampleData",
+			"--autoScalingMode",
+			"independentShardScaling",
 			"--projectId", g.ProjectID,
 			"--tag", tagKey+"="+tagValue,
 			"--accessListIp", arbitraryAccessListIP,
@@ -113,6 +107,8 @@ func TestSetup(t *testing.T) {
 			clustersEntity,
 			"describe",
 			clusterName,
+			"--autoScalingMode",
+			"independentShardScaling",
 			"-o=json",
 			"--projectId", g.ProjectID,
 		)
@@ -120,7 +116,7 @@ func TestSetup(t *testing.T) {
 		resp, err := internal.RunAndGetStdOut(cmd)
 		require.NoError(t, err, string(resp))
 
-		var cluster atlasClustersPinned.AdvancedClusterDescription
+		var cluster atlasv2.ClusterDescription20240805
 		require.NoError(t, json.Unmarshal(resp, &cluster), string(resp))
 		assert.Equal(t, clusterName, *cluster.Name)
 

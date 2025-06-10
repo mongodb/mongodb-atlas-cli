@@ -16,6 +16,7 @@ package setup
 import (
 	"testing"
 
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -63,6 +64,58 @@ func TestNewAdvancedRegionConfigs_AreEqual(t *testing.T) {
 			assert.Equal(t, *pinnedConfig.RegionName, *latestConfig.RegionName)
 			assert.Equal(t, *pinnedConfig.Priority, *latestConfig.Priority)
 			assert.Equal(t, *pinnedConfig.ElectableSpecs.InstanceSize, *latestConfig.ElectableSpecs.InstanceSize)
+		})
+	}
+}
+
+func TestGetDiskSizeOverride(t *testing.T) {
+	testCases := []struct {
+		name     string
+		provider string
+		tier     string
+		want     *float64
+	}{
+		{
+			name:     "AWS M10 cluster",
+			provider: "AWS",
+			tier:     "M10",
+			want:     pointer.Get(10.0),
+		},
+		{
+			name:     "GCP M20 cluster",
+			provider: "GCP",
+			tier:     "M20",
+			want:     pointer.Get(20.0),
+		},
+		{
+			name:     "Azure M30 cluster",
+			provider: "AZURE",
+			tier:     "M30",
+			want:     pointer.Get(32.0),
+		},
+		{
+			name:     "Tenant cluster",
+			provider: "TENANT",
+			tier:     "M10",
+			want:     nil,
+		},
+		{
+			name:     "Disk size 0",
+			provider: "InvalidProvider",
+			tier:     "M10",
+			want:     nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			opts := &Opts{
+				Provider: tc.provider,
+				Tier:     tc.tier,
+			}
+
+			got := opts.getDiskSizeOverride()
+			assert.Equal(t, tc.want, got)
 		})
 	}
 }

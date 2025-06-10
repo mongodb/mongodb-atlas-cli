@@ -99,13 +99,18 @@ func (opts *Opts) newAdvancedRegionConfig() atlasClustersPinned.CloudRegionConfi
 	return regionConfig
 }
 
-// getDiskSizeOverride returns the disk size override, which is only applicable for non-tenant clusters.
+// getDiskSizeOverride returns the disk size override, defaults to nil if the provider is tenant or the disk size is 0.
 func (opts *Opts) getDiskSizeOverride() *float64 {
-	if opts.providerName() != tenant {
-		diskSizeGB := defaultDiskSizeGB(opts.providerName(), opts.Tier)
-		return &diskSizeGB
+	if opts.providerName() == tenant {
+		return nil
 	}
-	return nil
+
+	diskSizeGB := defaultDiskSizeGB(opts.providerName(), opts.Tier)
+	if diskSizeGB == 0 {
+		return nil
+	}
+
+	return &diskSizeGB
 }
 
 // getVersionOverride returns the MongoDB major version override which is only applicable for non-tenant clusters.

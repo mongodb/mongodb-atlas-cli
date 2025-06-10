@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/clusterconfig"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
@@ -51,7 +52,7 @@ func (opts *Opts) newCluster() *atlasClustersPinned.AdvancedClusterDescription {
 		},
 	}
 
-	opts.setTags(cluster)
+	clusterconfig.SetTags(cluster, opts.Tag)
 
 	if diskSizeGB := opts.getDiskSizeOverride(); diskSizeGB != nil {
 		cluster.DiskSizeGB = diskSizeGB
@@ -61,19 +62,6 @@ func (opts *Opts) newCluster() *atlasClustersPinned.AdvancedClusterDescription {
 	}
 
 	return cluster
-}
-
-// setTags sets the tags for a cluster of the pinned API version.
-func (opts *Opts) setTags(cluster *atlasClustersPinned.AdvancedClusterDescription) {
-	if len(opts.Tag) > 0 {
-		var tags []atlasClustersPinned.ResourceTag
-		for k, v := range opts.Tag {
-			if k != "" && v != "" {
-				tags = append(tags, atlasClustersPinned.ResourceTag{Key: k, Value: v})
-			}
-		}
-		cluster.Tags = &tags
-	}
 }
 
 // newAdvancedRegionConfig creates a new advanced region config for the pinned API version.
@@ -148,7 +136,7 @@ func (opts *Opts) newClusterLatest() *atlasv2.ClusterDescription20240805 {
 		},
 	}
 
-	opts.setTagsLatest(cluster)
+	clusterconfig.SetTagsLatest(cluster, opts.Tag)
 
 	version := opts.getVersionOverride()
 	if version != nil {
@@ -182,17 +170,4 @@ func (opts *Opts) newAdvancedRegionConfigLatest() atlasv2.CloudRegionConfig20240
 	}
 
 	return regionConfig
-}
-
-// setTagsLatest sets the tags for a cluster of the latest API version.
-func (opts *Opts) setTagsLatest(cluster *atlasv2.ClusterDescription20240805) {
-	if len(opts.Tag) > 0 {
-		var tags []atlasv2.ResourceTag
-		for k, v := range opts.Tag {
-			if k != "" && v != "" {
-				tags = append(tags, atlasv2.ResourceTag{Key: k, Value: v})
-			}
-		}
-		cluster.Tags = &tags
-	}
 }

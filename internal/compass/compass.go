@@ -16,6 +16,7 @@ package compass
 
 import (
 	"errors"
+	"os"
 )
 
 var (
@@ -23,7 +24,20 @@ var (
 )
 
 func Detect() bool {
-	return binPath() != ""
+	// Get the binary path
+	bin := binPath()
+
+	// Check if the path is not empty
+	if bin == "" {
+		return false
+	}
+
+	// Check if the directory exists
+	if _, err := os.Stat(bin); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
 }
 
 func Run(username, password, mongoURI string) error {

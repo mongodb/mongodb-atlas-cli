@@ -23,7 +23,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/clusterconfig"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -204,10 +203,10 @@ func (opts *UpdateOpts) patchOpts(out *atlasClustersPinned.AdvancedClusterDescri
 	}
 	out.TerminationProtectionEnabled = cli.ReturnValueForSetting(opts.enableTerminationProtection, opts.disableTerminationProtection)
 
-	if len(opts.tag) > 0 && out.Tags == nil {
+	if len(opts.tag) > 0 {
 		out.Tags = &[]atlasClustersPinned.ResourceTag{}
 	}
-	clusterconfig.SetTags(out, opts.tag)
+	addTags(out, opts.tag)
 }
 
 func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasClustersPinned.AdvancedClusterDescription) {

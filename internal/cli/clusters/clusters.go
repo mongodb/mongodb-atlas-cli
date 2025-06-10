@@ -71,6 +71,23 @@ func Builder() *cobra.Command {
 	return cmd
 }
 
+func addTags(out *atlasClustersPinned.AdvancedClusterDescription, tags map[string]string) {
+	resourceTagsAtlasV2 := newResourceTags(tags)
+	if resourceTagsAtlasV2 == nil {
+		return
+	}
+
+	resourceTags := make([]atlasClustersPinned.ResourceTag, len(*resourceTagsAtlasV2))
+	for i, v := range *resourceTagsAtlasV2 {
+		resourceTags[i] = atlasClustersPinned.ResourceTag{
+			Key:   v.Key,
+			Value: v.Value,
+		}
+	}
+
+	out.Tags = &resourceTags
+}
+
 func newResourceTags(tags map[string]string) *[]atlasv2.ResourceTag {
 	if len(tags) == 0 {
 		return nil

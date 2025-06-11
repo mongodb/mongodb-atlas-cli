@@ -12214,7 +12214,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			{
 				OperationID: `getOrganizationEvent`,
 				Aliases:     nil,
-				Description: `Returns one event for the specified organization. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Organization Member role. Use the Return All Events from One Organization endpoint to retrieve all events to which the authenticated user has access.
+				Description: `Returns one event for the specified organization. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Organization Member role. Use the Return Events from One Organization endpoint to retrieve all events to which the authenticated user has access.
 
 
 This resource remains under revision and may change.
@@ -12293,7 +12293,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 			{
 				OperationID: `getProjectEvent`,
 				Aliases:     nil,
-				Description: `Returns one event for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Project Read Only role. Use the Return All Events from One Project endpoint to retrieve all events to which the authenticated user has access.
+				Description: `Returns one event for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Project Read Only role. Use the Return Events from One Project endpoint to retrieve all events to which the authenticated user has access.
 
 
 This resource remains under revision and may change.
@@ -12451,7 +12451,7 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 			{
 				OperationID: `listOrganizationEvents`,
 				Aliases:     nil,
-				Description: `Returns all events for the specified organization. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Organization Member role.
+				Description: `Returns events for the specified organization. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Organization Member role.
 
 
 This resource remains under revision and may change.
@@ -12583,7 +12583,7 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 			{
 				OperationID: `listProjectEvents`,
 				Aliases:     nil,
-				Description: `Returns all events for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
+				Description: `Returns events for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
 
 This resource remains under revision and may change.

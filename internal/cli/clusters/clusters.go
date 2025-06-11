@@ -153,10 +153,8 @@ func removeReadOnlyAttributesLatest(out *atlasv2.ClusterDescription20240805) {
 				isTenant = true
 				// Set disksize to nil for tenant clusters
 				for _, c := range spec.GetRegionConfigs() {
-					electableSpecs := c.GetElectableSpecs()
-					electableSpecs.DiskSizeGB = nil
+					c.ElectableSpecs.DiskSizeGB = nil
 				}
-				break
 			}
 		}
 	}

@@ -77,7 +77,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &cluster))
 
 		internal.EnsureClusterLatest(t, &cluster, issClusterName, mdbVersion, 30, false)
-		assert.Equal(t, 2, len(cluster.GetReplicationSpecs()))
+		assert.Len(t, cluster.GetReplicationSpecs(), 2)
 	})
 
 	//TODO: Enable on CLOUDP-323577

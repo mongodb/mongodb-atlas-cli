@@ -305,7 +305,7 @@ func (opts *CreateOpts) newClusterLatest() (*atlasv2.ClusterDescription20240805,
 			return nil, err
 		}
 
-		// TODO: removeReadOnlyAttributes(cluster)
+		removeReadOnlyAttributesLatest(cluster)
 		cluster.GroupId = pointer.Get(opts.ConfigProjectID())
 		if opts.name != "" {
 			cluster.Name = &opts.name

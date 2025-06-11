@@ -43,6 +43,8 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 	req := require.New(t)
 	req.NoError(err)
 
+	g.GenerateProject("clustersIss")
+
 	issClusterName := g.Memory("issClusterName", internal.Must(internal.RandClusterName())).(string)
 
 	tier := internal.E2eTier()

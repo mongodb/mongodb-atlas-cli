@@ -343,7 +343,7 @@ func (opts *CreateOpts) applyOptsAdvancedCluster(out *atlasClustersPinned.Advanc
 
 func (opts *CreateOpts) applyOptsClusterLatest(out *atlasv2.ClusterDescription20240805) {
 	out.GroupId = pointer.Get(opts.ConfigProjectID())
-	out.ClusterType = pointer.Get(replicaSet)
+	out.ClusterType = &opts.clusterType
 	out.TerminationProtectionEnabled = &opts.enableTerminationProtection
 	out.ReplicationSpecs = opts.newAdvanceReplicationSpecsLatest()
 

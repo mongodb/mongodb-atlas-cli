@@ -138,6 +138,38 @@ func removeReadOnlyAttributes(out *atlasClustersPinned.AdvancedClusterDescriptio
 	}
 }
 
+func removeReadOnlyAttributesLatest(out *atlasv2.ClusterDescription20240805) {
+	out.Id = nil
+	out.CreateDate = nil
+	out.StateName = nil
+	out.MongoDBVersion = nil
+	out.ConnectionStrings = nil
+	isTenant := false
+
+	for i, spec := range out.GetReplicationSpecs() {
+		(*out.ReplicationSpecs)[i].Id = nil
+		for _, c := range spec.GetRegionConfigs() {
+			if c.GetProviderName() == tenant {
+				isTenant = true
+				// Set disksize to nil for tenant clusters
+				for _, c := range spec.GetRegionConfigs() {
+					electableSpecs := c.GetElectableSpecs()
+					electableSpecs.DiskSizeGB = nil
+				}
+				break
+			}
+		}
+	}
+
+	if isTenant {
+		out.BiConnector = nil
+		out.EncryptionAtRestProvider = nil
+		out.MongoDBMajorVersion = nil
+		out.PitEnabled = nil
+		out.BackupEnabled = nil
+	}
+}
+
 func removeReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
 	out.ID = ""
 	out.CreateDate = ""

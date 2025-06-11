@@ -57,7 +57,7 @@ func TestISSClustersFile(t *testing.T) {
 		internal.EnsureClusterLatest(t, &cluster, clusterIssFileName, "8.0", 30, false)
 	})
 
-	g.Run("Delete Flex Cluster - created via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	g.Run("Delete ISS Cluster - created via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(
 			cliPath,
 			clustersEntity,

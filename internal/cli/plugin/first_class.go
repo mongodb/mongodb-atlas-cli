@@ -90,8 +90,12 @@ func (fcp *FirstClassPlugin) isAlreadyInstalled(plugins *plugin.ValidatedPlugins
 	return false
 }
 
-func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args []string, ghClient *github.Client) error {
-	installOpts := &InstallOpts{}
+func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args []string, ghClient *github.Client, plugins *plugin.ValidatedPlugins) error {
+	installOpts := &InstallOpts{
+		Opts: Opts{
+			plugins: plugins,
+		},
+	}
 	installOpts.githubAsset = &GithubAsset{
 		ghClient: ghClient,
 		owner:    fcp.Github.Owner,
@@ -116,7 +120,7 @@ func (fcp *FirstClassPlugin) runFirstClassPluginCommand(cmd *cobra.Command, args
 	return installedPlugin.Run(cmd, args)
 }
 
-func (fcp *FirstClassPlugin) getCommands() []*cobra.Command {
+func (fcp *FirstClassPlugin) getCommands(plugins *plugin.ValidatedPlugins) []*cobra.Command {
 	commands := make([]*cobra.Command, 0, len(fcp.Commands))
 	ghClient := github.NewClient(nil)
 
@@ -129,7 +133,7 @@ func (fcp *FirstClassPlugin) getCommands() []*cobra.Command {
 				sourceType: FirstClassSourceType,
 			},
 			RunE: func(cmd *cobra.Command, args []string) error {
-				return fcp.runFirstClassPluginCommand(cmd, args, ghClient)
+				return fcp.runFirstClassPluginCommand(cmd, args, ghClient, plugins)
 			},
 			DisableFlagParsing: true,
 		}
@@ -148,7 +152,7 @@ func getFirstClassPluginCommands(plugins *plugin.ValidatedPlugins) []*cobra.Comm
 			continue
 		}
 
-		commands = append(commands, firstClassPlugin.getCommands()...)
+		commands = append(commands, firstClassPlugin.getCommands(plugins)...)
 	}
 
 	return commands

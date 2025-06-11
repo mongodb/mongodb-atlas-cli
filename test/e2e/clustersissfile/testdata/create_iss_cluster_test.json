@@ -1,0 +1,50 @@
+{
+  "clusterType": "SHARDED",
+  "name": "AsymmetricCluster",
+  "mongoDBMajorVersion":"8.0",
+  "backupEnabled":true,
+
+  "replicationSpecs": [
+   {
+    "regionConfigs": [
+     {
+      "electableSpecs": {
+       "instanceSize": "M40",
+       "nodeCount": 3,
+       "backingProviderName": "AWS",
+       "backingRegionName": "US_EAST_1",
+       "diskSizeGB": 30
+      },
+      "priority": 7,
+      "providerName": "AWS",
+      "regionName": "EU_WEST_1"
+     }
+    ],
+    "zoneName": "Zone1"
+   },
+   {
+    "regionConfigs": [
+     {
+      "electableSpecs": {
+       "instanceSize": "M30",
+       "nodeCount": 3,
+       "backingProviderName": "AWS",
+       "backingRegionName": "US_EAST_1",
+       "diskSizeGB": 30
+      },
+      "priority": 7,
+      "providerName": "AWS",
+      "regionName": "EU_WEST_1"
+     }
+    ],
+    "zoneName": "Zone1"
+   }
+  ],
+  "tags": [
+    {
+      "key": "e2e_test",
+      "value": "yes"
+    }
+  ],
+  "terminationProtectionEnabled": false
+ }

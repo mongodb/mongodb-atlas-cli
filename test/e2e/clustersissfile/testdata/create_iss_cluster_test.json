@@ -11,12 +11,11 @@
       "electableSpecs": {
        "instanceSize": "M40",
        "nodeCount": 3,
-       "backingProviderName": "AWS",
-       "backingRegionName": "US_EAST_1",
        "diskSizeGB": 30
       },
       "priority": 7,
       "providerName": "AWS",
+      "backingProviderName": "AWS",
       "regionName": "EU_WEST_1"
      }
     ],
@@ -28,12 +27,11 @@
       "electableSpecs": {
        "instanceSize": "M30",
        "nodeCount": 3,
-       "backingProviderName": "AWS",
-       "backingRegionName": "US_EAST_1",
        "diskSizeGB": 30
       },
       "priority": 7,
       "providerName": "AWS",
+      "backingProviderName": "AWS",
       "regionName": "EU_WEST_1"
      }
     ],

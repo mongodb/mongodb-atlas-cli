@@ -44,7 +44,8 @@ const issFile = `
     {
      "electableSpecs": {
       "instanceSize": "M40",
-      "nodeCount": 3
+      "nodeCount": 3,
+      "diskSizeGB": 30
      },
      "priority": 7,
      "providerName": "AWS",
@@ -58,7 +59,7 @@ const issFile = `
     {
      "electableSpecs": {
       "instanceSize": "M30",
-      "nodeCount": 3
+      "nodeCount": 1
      },
      "priority": 7,
      "providerName": "AWS",
@@ -429,15 +430,14 @@ func TestCreateOpts_RunDedicatedClusterLatest(t *testing.T) {
 		require.NoError(t, createOpts.Run())
 	})
 
-	t.Run("file run", func(t *testing.T) {
+	t.Run("file iss run", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, fileName, []byte(issFile), 0600)
 
 		createOpts := &CreateOpts{
-			filename:        fileName,
-			fs:              appFS,
-			store:           mockStore,
-			autoScalingMode: independentShardScalingFlag,
+			filename: fileName,
+			fs:       appFS,
+			store:    mockStore,
 		}
 
 		cluster, _ := createOpts.newClusterLatest()
@@ -446,10 +446,12 @@ func TestCreateOpts_RunDedicatedClusterLatest(t *testing.T) {
 			CreateClusterLatest(cluster).Return(expected, nil).
 			Times(1)
 
+		require.NoError(t, createOpts.validateAutoScalingMode())
+		assert.Equal(t, independentShardScalingFlag, createOpts.autoScalingMode)
 		require.NoError(t, createOpts.Run())
 	})
 
-	t.Run("file run fails with invalid file", func(t *testing.T) {
+	t.Run("filename and autoScalingMode are not compatible", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, fileName, []byte("invalid"), 0600)
 
@@ -461,6 +463,20 @@ func TestCreateOpts_RunDedicatedClusterLatest(t *testing.T) {
 		}
 
 		require.Error(t, createOpts.validateAutoScalingMode())
+	})
+
+	t.Run("does not set autoScalingMode if invalid file", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		_ = afero.WriteFile(appFS, fileName, []byte("invalid"), 0600)
+
+		createOpts := &CreateOpts{
+			filename: fileName,
+			fs:       appFS,
+			store:    mockStore,
+		}
+
+		require.NoError(t, createOpts.validateAutoScalingMode())
+		assert.Empty(t, createOpts.autoScalingMode)
 	})
 }
 

@@ -80,6 +80,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 
 		internal.EnsureClusterLatest(t, &cluster, issClusterName, mdbVersion, 30, false)
 		assert.Len(t, cluster.GetReplicationSpecs(), 2)
+		assert.Equal(t, "SHARDED", cluster.GetClusterType())
 	})
 
 	//TODO: Enable on CLOUDP-323577

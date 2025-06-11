@@ -25,7 +25,7 @@ type ListOps struct {
 }
 
 func (opts *ListOps) Run() error {
-	return opts.Print(opts.plugins)
+	return opts.Print(opts.plugins.GetValidAndInvalidPlugins())
 }
 
 const listTemplate = `NAME	DESCRIPTION	VERSION COMMANDS {{range valueOrEmptySlice .}}

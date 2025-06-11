@@ -49,7 +49,7 @@ func IsPluginCmd(cmd *cobra.Command) bool {
 func GetPluginWithName(name string, existingCommandsSet set.Set[string], onlySearchValidPlugins bool) (*Plugin, error) {
 	var plugins []*Plugin
 	if onlySearchValidPlugins {
-		plugins = GetAllValidPlugins(existingCommandsSet)
+		plugins = GetAllPluginsValidated(existingCommandsSet).GetValidPlugins()
 	} else {
 		plugins = getAllPlugins()
 	}
@@ -73,26 +73,46 @@ func getAllPlugins() []*Plugin {
 	return plugins
 }
 
-func GetAllValidPlugins(existingCommandsSet set.Set[string]) []*Plugin {
+type ValidatedPlugins struct {
+	ValidPlugins                     []*Plugin
+	PluginsWithDuplicateManifestName []*Plugin
+	PluginsWithDuplicateCommands     []*Plugin
+}
+
+func (v *ValidatedPlugins) GetValidPlugins() []*Plugin {
+	return v.ValidPlugins
+}
+
+func (v *ValidatedPlugins) GetValidAndInvalidPlugins() []*Plugin {
+	return append(append(v.ValidPlugins, v.PluginsWithDuplicateManifestName...), v.PluginsWithDuplicateCommands...)
+}
+
+func GetAllPluginsValidated(existingCommandsSet set.Set[string]) *ValidatedPlugins {
 	// Load manifests from plugin directories
 	manifests := loadManifestsFromPluginDirectories()
+	duplicateManifests := make([]*Manifest, 0)
+	duplicateCommands := make([]*Manifest, 0)
 
 	// Remove manifests with duplicate names
 	manifests, duplicateManifestNames := removeManifestsWithDuplicateNames(manifests)
-	for _, name := range duplicateManifestNames {
-		logPluginWarning(`could not load plugin "%s" because there are multiple plugins with that name`, name)
+	for _, duplicate := range duplicateManifestNames {
+		duplicateManifests = append(duplicateManifests, duplicate.Manifest)
+		logPluginWarning(`could not load plugin "%s" because there are multiple plugins with that name`, duplicate.DuplicateName)
 	}
 
 	// Remove manifests that contain already existing commands
 	manifests, duplicateManifest := getUniqueManifests(manifests, existingCommandsSet)
 	for _, manifest := range duplicateManifest {
+		duplicateCommands = append(duplicateCommands, manifest)
 		logPluginWarning(`could not load plugin "%s" because it contains a command that already exists in the AtlasCLI or another plugin`, manifest.Name)
 	}
 
-	// Convert manifests to plugins
-	plugins := convertManifestsToPlugins(manifests)
-
-	return plugins
+	// Convert manifests to validated plugins
+	return &ValidatedPlugins{
+		ValidPlugins:                     convertManifestsToPlugins(manifests),
+		PluginsWithDuplicateManifestName: convertManifestsToPlugins(duplicateManifests),
+		PluginsWithDuplicateCommands:     convertManifestsToPlugins(duplicateCommands),
+	}
 }
 
 func GetDefaultPluginDirectory() (string, error) {

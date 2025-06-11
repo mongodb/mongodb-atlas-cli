@@ -24,7 +24,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/clusterconfig"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
@@ -51,6 +50,8 @@ const (
 	regionName                    = "regionName"
 	priority                      = 7
 	readOnlyNode                  = 0
+	independentShardScalingFlag   = "independentShardScaling"
+	clusterWideScalingFlag        = "clusterWideScaling"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=create_mock_test.go -package=clusters . ClusterCreator
@@ -102,7 +103,7 @@ var flexCluster *atlasv2.FlexClusterDescription20241113
 var clusterObjLatest *atlasv2.ClusterDescription20240805
 
 func (opts *CreateOpts) Run() error {
-	if opts.autoScalingMode == clusterconfig.IndependentShardScalingShard {
+	if opts.autoScalingMode == independentShardScalingFlag {
 		return opts.RunDedicatedClusterLatest()
 	}
 
@@ -159,7 +160,6 @@ func (opts *CreateOpts) RunDedicatedClusterLatest() error {
 	}
 
 	clusterObjLatest, err = opts.store.CreateClusterLatest(cluster)
-
 	apiError, ok := atlasv2.AsError(err)
 	code := apiError.GetErrorCode()
 	if ok {
@@ -196,12 +196,12 @@ func (opts *CreateOpts) RunDedicatedCluster() error {
 }
 
 func (opts *CreateOpts) PostRun() error {
-	if opts.isFlexCluster {
-		return opts.PostRunFlexCluster()
+	if opts.autoScalingMode == independentShardScalingFlag {
+		return opts.PostRunDedicatedClusterLatest()
 	}
 
-	if opts.autoScalingMode == clusterconfig.IndependentShardScalingShard {
-		return opts.PostRunDedicatedClusterLatest()
+	if opts.isFlexCluster {
+		return opts.PostRunFlexCluster()
 	}
 
 	return opts.PostRunDedicatedCluster()
@@ -338,7 +338,7 @@ func (opts *CreateOpts) applyOptsAdvancedCluster(out *atlasClustersPinned.Advanc
 
 	out.ReplicationSpecs = &[]atlasClustersPinned.ReplicationSpec{replicationSpec}
 
-	clusterconfig.SetTags(out, opts.tag)
+	addTags(out, opts.tag)
 }
 
 func (opts *CreateOpts) applyOptsClusterLatest(out *atlasv2.ClusterDescription20240805) {
@@ -360,7 +360,9 @@ func (opts *CreateOpts) applyOptsClusterLatest(out *atlasv2.ClusterDescription20
 		out.BiConnector = &atlasv2.BiConnector{Enabled: &opts.biConnector}
 	}
 
-	clusterconfig.SetTagsLatest(out, opts.tag)
+	if len(opts.tag) > 0 {
+		out.Tags = newResourceTags(opts.tag)
+	}
 }
 
 func (opts *CreateOpts) newFlexClusterDescriptionCreate20241113() *atlasv2.FlexClusterDescriptionCreate20241113 {
@@ -397,7 +399,7 @@ func (opts *CreateOpts) newAdvanceReplicationSpec() atlasClustersPinned.Replicat
 
 func (opts *CreateOpts) newAdvanceReplicationSpecsLatest() *[]atlasv2.ReplicationSpec20240805 {
 	replicationSpecs := make([]atlasv2.ReplicationSpec20240805, opts.shards)
-	for i := 0; i < opts.shards; i++ {
+	for i := range opts.shards {
 		replicationSpecs[i] = atlasv2.ReplicationSpec20240805{
 			ZoneName: pointer.Get(zoneName),
 			RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
@@ -415,13 +417,22 @@ func (opts *CreateOpts) newAdvancedRegionConfig() atlasClustersPinned.CloudRegio
 		Priority:     pointer.Get(priority),
 		RegionName:   &opts.region,
 		ProviderName: &providerName,
+		ElectableSpecs: &atlasClustersPinned.HardwareSpec{
+			InstanceSize: &opts.tier,
+		},
 	}
 
 	if providerName == tenant {
 		regionConfig.BackingProviderName = &opts.provider
 	} else {
-		regionConfig.ElectableSpecs.NodeCount = pointer.Get(opts.members)
+		regionConfig.ElectableSpecs.NodeCount = &opts.members
 	}
+
+	readOnlySpec := &atlasClustersPinned.DedicatedHardwareSpec{
+		InstanceSize: &opts.tier,
+		NodeCount:    pointer.Get(readOnlyNode),
+	}
+	regionConfig.ReadOnlySpecs = readOnlySpec
 
 	return regionConfig
 }
@@ -480,11 +491,11 @@ func (opts *CreateOpts) validateTier() error {
 }
 
 func (opts *CreateOpts) validateAutoScalingMode() error {
-	if opts.isFlexCluster && opts.autoScalingMode != clusterconfig.ClusterWideScalingFlag {
+	if opts.isFlexCluster && opts.autoScalingMode != clusterWideScalingFlag {
 		return fmt.Errorf("flex is incompatible with %s auto scaling mode", opts.autoScalingMode)
 	}
 
-	if opts.autoScalingMode != clusterconfig.ClusterWideScalingFlag && opts.autoScalingMode != clusterconfig.IndependentShardScalingShard {
+	if opts.autoScalingMode != clusterWideScalingFlag && opts.autoScalingMode != independentShardScalingFlag {
 		return fmt.Errorf("invalid auto scaling mode: %s", opts.autoScalingMode)
 	}
 
@@ -499,7 +510,7 @@ func (opts *CreateOpts) validateAutoScalingMode() error {
 		oldCluster := new(atlasClustersPinned.AdvancedClusterDescription)
 		oldLoadErr := file.Load(opts.fs, opts.filename, oldCluster)
 		if oldLoadErr == nil {
-			opts.autoScalingMode = clusterconfig.ClusterWideScalingFlag
+			opts.autoScalingMode = clusterWideScalingFlag
 			return nil
 		}
 
@@ -507,7 +518,7 @@ func (opts *CreateOpts) validateAutoScalingMode() error {
 		cluster := new(atlasv2.ClusterDescription20240805)
 		latestLoadErr := file.Load(opts.fs, opts.filename, cluster)
 		if latestLoadErr == nil {
-			opts.autoScalingMode = clusterconfig.IndependentShardScalingShard
+			opts.autoScalingMode = independentShardScalingFlag
 			return nil
 		}
 
@@ -571,6 +582,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 			return opts.PreRunE(
 				opts.validateTier,
 				opts.newIsFlexCluster,
+				opts.validateAutoScalingMode,
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), createTemplate),
@@ -608,7 +620,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 	cmd.Flags().IntVarP(&opts.shards, flag.Shards, flag.ShardsShort, defaultShardSize, usage.Shards)
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag)
-	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, clusterconfig.ClusterWideScalingFlag, usage.AutoScalingMode)
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, clusterWideScalingFlag, usage.AutoScalingMode)
 
 	cmd.Flags().BoolVarP(&opts.EnableWatch, flag.EnableWatch, flag.EnableWatchShort, false, usage.EnableWatch)
 	cmd.Flags().Int64Var(&opts.Timeout, flag.WatchTimeout, 0, usage.WatchTimeout)
@@ -639,7 +651,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 	})
 
 	_ = cmd.RegisterFlagCompletionFunc(flag.AutoScalingMode, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
-		return []string{clusterconfig.ClusterWideScalingFlag, clusterconfig.IndependentShardScalingShard}, cobra.ShellCompDirectiveDefault
+		return []string{clusterWideScalingFlag, independentShardScalingFlag}, cobra.ShellCompDirectiveDefault
 	})
 
 	autocomplete := &autoCompleteOpts{}

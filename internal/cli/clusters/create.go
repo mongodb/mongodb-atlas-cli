@@ -456,6 +456,7 @@ func (opts *CreateOpts) newAdvanceRegionConfigLatest() atlasv2.CloudRegionConfig
 		regionConfig.BackingProviderName = &opts.provider
 	} else {
 		regionConfig.ElectableSpecs.NodeCount = pointer.Get(opts.members)
+		regionConfig.ElectableSpecs.DiskSizeGB = &opts.diskSizeGB
 	}
 
 	return regionConfig
@@ -563,7 +564,11 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
   atlas cluster create myRS --projectId 5e2211c17a3e5a48f5497de3 --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10
 
   # Deploy a cluster or a multi-cloud cluster from a JSON configuration file named myfile.json for the project with the ID 5e2211c17a3e5a48f5497de3:
-  atlas cluster create --projectId <projectId> --file myfile.json`,
+  atlas cluster create --projectId <projectId> --file myfile.json
+  
+  # Deploy a three-member sharded cluster with independent shard scaling mode named myRS in GCP for the project with the ID 5e2211c17a3e5a48f5497de3:
+  atlas cluster create myRS --projectId 5e2211c17a3e5a48f5497de3 --provider GCP --region EASTERN_US --members 3 --tier M10  --mdbVersion 5.0 --diskSizeGB 10 --autoScalingMode independentShardScaling
+  `,
 		Args: require.MaximumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if opts.filename == "" {

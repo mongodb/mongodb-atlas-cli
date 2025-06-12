@@ -43,5 +43,5 @@ func TestList_Run(t *testing.T) {
 }
 
 func TestList_Template(t *testing.T) {
-	test.VerifyOutputTemplate(t, listTemplate, getTestPlugins(t))
+	test.VerifyOutputTemplate(t, listTemplate, getTestPlugins(t).GetValidAndInvalidPlugins())
 }

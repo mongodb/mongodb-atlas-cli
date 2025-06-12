@@ -212,10 +212,15 @@ func getManifestFileBytes(pluginDirectoryPath string) ([]byte, error) {
 	return nil, fmt.Errorf("plugin invalid: manifest file does not exist in plugin folder %s", pluginDirectoryPath)
 }
 
-func removeManifestsWithDuplicateNames(manifests []*Manifest) ([]*Manifest, []string) {
+type DuplicateManifest struct {
+	Manifest      *Manifest
+	DuplicateName string
+}
+
+func removeManifestsWithDuplicateNames(manifests []*Manifest) ([]*Manifest, []DuplicateManifest) {
 	manifestCountMap := make(map[string]int)
 	uniqueManifestMap := make(map[string]*Manifest)
-	var duplicateManifestNames []string
+	var duplicateManifests []DuplicateManifest
 
 	// iterate through all manifests and add them to a map, if a manifest with the same name
 	// has alread been added remove it from said map and add name to slice of duplicate manifest names
@@ -226,7 +231,10 @@ func removeManifestsWithDuplicateNames(manifests []*Manifest) ([]*Manifest, []st
 			uniqueManifestMap[manifest.Name] = manifest
 		} else if _, ok := uniqueManifestMap[manifest.Name]; ok {
 			delete(uniqueManifestMap, manifest.Name)
-			duplicateManifestNames = append(duplicateManifestNames, manifest.Name)
+			duplicateManifests = append(duplicateManifests, DuplicateManifest{
+				Manifest:      manifest,
+				DuplicateName: manifest.Name,
+			})
 		}
 	}
 
@@ -235,7 +243,7 @@ func removeManifestsWithDuplicateNames(manifests []*Manifest) ([]*Manifest, []st
 		uniqueManifests = append(uniqueManifests, manifest)
 	}
 
-	return uniqueManifests, duplicateManifestNames
+	return uniqueManifests, duplicateManifests
 }
 
 func getUniqueManifests(manifests []*Manifest, existingCommandsSet set.Set[string]) ([]*Manifest, []*Manifest) {

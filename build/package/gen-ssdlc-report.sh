@@ -32,7 +32,7 @@ if [ "${AUGMENTED_REPORT}" = "true" ]; then
   target_dir="."
   file_name="ssdlc-compliance-${VERSION}-${DATE}.md"
   SBOM_TEXT="  - See Augmented SBOM manifests (CycloneDX in JSON format):
-      - This file has been provided along with this report under the name 'linux_amd64_augmented_sbom_v${VERSION}.json'
+      - This file has been provided along with this report under the name 'augmented_sbom_v${VERSION}-${DATE}.json'
       - Please note that this file was generated on ${DATE} and may not reflect the latest security information of all third party dependencies."
 
 else # If not augmented, generate the standard report

@@ -30,8 +30,16 @@ const (
 )
 
 type Opts struct {
-	plugins          []*plugin.Plugin
+	plugins          *plugin.ValidatedPlugins
 	existingCommands []*cobra.Command
+}
+
+func (opts *Opts) getValidPlugins() []*plugin.Plugin {
+	return opts.plugins.GetValidPlugins()
+}
+
+func (opts *Opts) getValidAndInvalidPlugins() []*plugin.Plugin {
+	return opts.plugins.GetValidAndInvalidPlugins()
 }
 
 // find a plugin given the input argument of a plugin command
@@ -67,28 +75,62 @@ func createExistingCommandsSet(existingCommands []*cobra.Command) set.Set[string
 	return existingCommandsSet
 }
 
+// find a plugin given a github owner and repository name
+//
+// also searches through invalid plugins, because this function is also used for uninstall command
+// throws an error when:
+// - multiple plugins are found with the same github values
+// - no plugin is found with the given github values
 func (opts *Opts) findPluginWithGithubValues(owner string, name string) (*plugin.Plugin, error) {
-	for _, p := range opts.plugins {
+	var foundPlugin *plugin.Plugin
+
+	for _, p := range opts.getValidAndInvalidPlugins() {
 		if p.Github != nil && p.Github.Equals(owner, name) {
-			return p, nil
+			if foundPlugin != nil {
+				return nil, fmt.Errorf(`found multiple plugins with github values %s/%s`, owner, name)
+			}
+
+			foundPlugin = p
 		}
 	}
-	return nil, fmt.Errorf(`could not find plugin with github values %s/%s`, owner, name)
+
+	if foundPlugin == nil {
+		return nil, fmt.Errorf(`could not find plugin with github values %s/%s`, owner, name)
+	}
+
+	return foundPlugin, nil
 }
 
+// find a plugin given a plugin name
+//
+// also searches through invalid plugins, because this function is also used for uninstall command
+// throws an error when:
+// - multiple plugins are found with the same name
+// - no plugin is found with the given name
 func (opts *Opts) findPluginWithName(name string) (*plugin.Plugin, error) {
-	for _, p := range opts.plugins {
+	var foundPlugin *plugin.Plugin
+
+	for _, p := range opts.getValidAndInvalidPlugins() {
 		if p.Name == name {
-			return p, nil
+			if foundPlugin != nil {
+				return nil, fmt.Errorf(`found multiple plugins with name %s`, name)
+			}
+
+			foundPlugin = p
 		}
 	}
-	return nil, fmt.Errorf(`could not find plugin with name %s`, name)
+
+	if foundPlugin == nil {
+		return nil, fmt.Errorf(`could not find plugin with name %s`, name)
+	}
+
+	return foundPlugin, nil
 }
 
 func RegisterCommands(rootCmd *cobra.Command) {
-	plugins := plugin.GetAllValidPlugins(createExistingCommandsSet(rootCmd.Commands()))
+	plugins := plugin.GetAllPluginsValidated(createExistingCommandsSet(rootCmd.Commands()))
 
-	for _, p := range plugins {
+	for _, p := range plugins.GetValidPlugins() {
 		rootCmd.AddCommand(p.GetCobraCommands()...)
 	}
 
@@ -110,7 +152,7 @@ func validateManifest(manifest *plugin.Manifest) error {
 	return nil
 }
 
-func Builder(plugins []*plugin.Plugin, existingCommands []*cobra.Command) *cobra.Command {
+func Builder(plugins *plugin.ValidatedPlugins, existingCommands []*cobra.Command) *cobra.Command {
 	const use = "plugin"
 	cmd := &cobra.Command{
 		Use:     use,

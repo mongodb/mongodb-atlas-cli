@@ -25,51 +25,94 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func getTestPlugins(t *testing.T) []*plugin.Plugin {
+func getTestPlugins(t *testing.T) *plugin.ValidatedPlugins {
 	t.Helper()
 	version1, err := semver.NewVersion("1.4.5")
 	require.NoError(t, err)
 	version2, err := semver.NewVersion("1.2.3")
 	require.NoError(t, err)
 
-	return []*plugin.Plugin{
-		{
-			Name:        "plugin1",
-			Description: "plugin1 description",
-			Version:     version1,
-			Commands: []*plugin.Command{
-				{Name: "command1"},
-				{Name: "command 2"},
+	return &plugin.ValidatedPlugins{
+		ValidPlugins: []*plugin.Plugin{
+			{
+				Name:        "plugin1",
+				Description: "plugin1 description",
+				Version:     version1,
+				Commands: []*plugin.Command{
+					{Name: "command1"},
+					{Name: "command 2"},
+				},
+				Github: &plugin.Github{
+					Owner: "owner1",
+					Name:  "repo1",
+				},
 			},
-			Github: &plugin.Github{
-				Owner: "owner1",
-				Name:  "repo1",
+			{
+				Name:        "plugin2",
+				Description: "plugin2 description",
+				Version:     version2,
+				Commands: []*plugin.Command{
+					{Name: "command3"},
+					{Name: "command4"},
+				},
+				Github: &plugin.Github{
+					Owner: "owner2",
+					Name:  "repo2",
+				},
+			},
+			{
+				Name:        "plugin3",
+				Description: "plugin3 description",
+				Version:     version2,
+				Commands: []*plugin.Command{
+					{Name: "command5"},
+					{Name: "command6"},
+				},
+				Github: &plugin.Github{
+					Owner: "owner3",
+					Name:  "repo3",
+				},
+			},
+			{
+				Name:        "plugin5",
+				Description: "plugin5 description",
+				Version:     version2,
+				Commands: []*plugin.Command{
+					{Name: "command7"},
+					{Name: "command8"},
+				},
+				Github: &plugin.Github{
+					Owner: "owner5",
+					Name:  "repo5",
+				},
 			},
 		},
-		{
-			Name:        "plugin2",
-			Description: "plugin2 description",
-			Version:     version2,
-			Commands: []*plugin.Command{
-				{Name: "command3"},
-				{Name: "command4"},
-			},
-			Github: &plugin.Github{
-				Owner: "owner2",
-				Name:  "repo2",
+		PluginsWithDuplicateManifestName: []*plugin.Plugin{
+			{
+				Name:        "plugin5",
+				Description: "plugin5 duplicate",
+				Version:     version2,
+				Commands: []*plugin.Command{
+					{Name: "command9"},
+				},
+				Github: &plugin.Github{
+					Owner: "owner5-duplicate",
+					Name:  "repo5-duplicate",
+				},
 			},
 		},
-		{
-			Name:        "plugin3",
-			Description: "plugin3 description",
-			Version:     version2,
-			Commands: []*plugin.Command{
-				{Name: "command5"},
-				{Name: "command6"},
-			},
-			Github: &plugin.Github{
-				Owner: "owner3",
-				Name:  "repo3",
+		PluginsWithDuplicateCommands: []*plugin.Plugin{
+			{
+				Name:        "plugin6",
+				Description: "plugin6 description",
+				Version:     version2,
+				Commands: []*plugin.Command{
+					{Name: "command7"},
+				},
+				Github: &plugin.Github{
+					Owner: "owner6",
+					Name:  "repo6",
+				},
 			},
 		},
 	}
@@ -189,6 +232,20 @@ func Test_findPluginWithGithubValues(t *testing.T) {
 			want:      "",
 			wantErr:   true,
 		},
+		{
+			name:      "Plugin found with duplicate name",
+			repoOwner: "owner5-duplicate",
+			repoName:  "repo5-duplicate",
+			want:      "plugin5",
+			wantErr:   false,
+		},
+		{
+			name:      "Plugin found with duplicate command",
+			repoOwner: "owner6",
+			repoName:  "repo6",
+			want:      "plugin6",
+			wantErr:   false,
+		},
 	}
 
 	for _, tt := range tests {
@@ -229,6 +286,18 @@ func Test_findPluginWithName(t *testing.T) {
 			name:     "plugin4",
 			want:     "",
 			wantErr:  true,
+		},
+		{
+			testName: "Plugin found with duplicate name",
+			name:     "plugin5",
+			want:     "",
+			wantErr:  true,
+		},
+		{
+			testName: "Plugin found with duplicate command",
+			name:     "plugin6",
+			want:     "plugin6",
+			wantErr:  false,
 		},
 	}
 

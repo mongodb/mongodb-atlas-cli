@@ -106,7 +106,7 @@ func (opts *UpdateOpts) validatePlugin(pluginDirectoryPath string) error {
 
 	// make sure that there is exactly one plugin with the same name
 	pluginCount := 0
-	for _, p := range opts.plugins {
+	for _, p := range opts.getValidPlugins() {
 		if manifest.Name == p.Name {
 			pluginCount++
 		}
@@ -203,7 +203,7 @@ func (opts *UpdateOpts) Run(ctx context.Context) error {
 	// if update flag is set, update all plugin, if not update only specified plugin
 	if opts.UpdateAll {
 		// try to create GithubAssetRelease from each plugin -  when create use it to update the plugin
-		for _, p := range opts.plugins {
+		for _, p := range opts.getValidPlugins() {
 			if !p.HasGithub() {
 				continue
 			}

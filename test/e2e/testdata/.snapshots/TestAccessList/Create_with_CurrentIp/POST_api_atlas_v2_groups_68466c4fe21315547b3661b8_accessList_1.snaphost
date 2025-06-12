@@ -1,0 +1,16 @@
+HTTP/2.0 201 Created
+Content-Length: 434
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 09 Jun 2025 05:08:37 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 108
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasNetworkAccessListResource::addAtlasWhitelist
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=eb36b93835414a5bb1c2a2625bfe67b328c93c2e; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68466c4fe21315547b3661b8/accessList?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"cidrBlock":"52.160.165.204/32","comment":"test","groupId":"68466c4fe21315547b3661b8","ipAddress":"52.160.165.204","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68466c4fe21315547b3661b8/accessList/52.160.165.204%2F32","rel":"self"}]}],"totalCount":1}

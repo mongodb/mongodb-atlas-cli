@@ -58,7 +58,7 @@ func (opts *InstallOpts) validatePlugin(pluginDirectoryPath string) error {
 	}
 
 	// check for duplicate plugin names
-	for _, p := range opts.plugins {
+	for _, p := range opts.getValidPlugins() {
 		if manifest.Name == p.Name {
 			return fmt.Errorf("a plugin with the name %s already exists", manifest.Name)
 		}

@@ -59,7 +59,9 @@ func Test_checkForDuplicatePlugins(t *testing.T) {
 
 	opts := InstallOpts{
 		Opts: Opts{
-			plugins: plugins,
+			plugins: &plugin.ValidatedPlugins{
+				ValidPlugins: plugins,
+			},
 		},
 	}
 

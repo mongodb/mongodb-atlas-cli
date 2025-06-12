@@ -1367,7 +1367,7 @@ components:
                     type: array
                 rootCertType:
                     default: ISRGROOTX1
-                    description: Root Certificate Authority that MongoDB Cloud cluster uses. MongoDB Cloud supports Internet Security Research Group.
+                    description: Root Certificate Authority that MongoDB Atlas cluster uses. MongoDB Cloud supports Internet Security Research Group.
                     enum:
                         - ISRGROOTX1
                     type: string
@@ -4055,7 +4055,7 @@ components:
                     type: array
                 rootCertType:
                     default: ISRGROOTX1
-                    description: Root Certificate Authority that MongoDB Cloud cluster uses. MongoDB Cloud supports Internet Security Research Group.
+                    description: Root Certificate Authority that MongoDB Atlas cluster uses. MongoDB Cloud supports Internet Security Research Group.
                     enum:
                         - ISRGROOTX1
                     type: string
@@ -8810,7 +8810,7 @@ components:
                     type: array
                 rootCertType:
                     default: ISRGROOTX1
-                    description: Root Certificate Authority that MongoDB Cloud cluster uses. MongoDB Cloud supports Internet Security Research Group.
+                    description: Root Certificate Authority that MongoDB Atlas cluster uses. MongoDB Cloud supports Internet Security Research Group.
                     enum:
                         - ISRGROOTX1
                     type: string
@@ -10237,15 +10237,6 @@ components:
                     example: 32b6e34b3d91647abb20e7b8
                     pattern: ^([a-f0-9]{24})$
                     type: string
-                links:
-                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
-                    externalDocs:
-                        description: Web Linking Specification (RFC 5988)
-                        url: https://datatracker.ietf.org/doc/html/rfc5988
-                    items:
-                        $ref: '#/components/schemas/Link'
-                    readOnly: true
-                    type: array
                 prefixPath:
                     description: S3 directory in which vector will write to in order to store the logs. An empty string denotes the root directory.
                     type: string
@@ -15440,6 +15431,7 @@ components:
                     - INDEPENDENT_SHARD_SCALING_CLUSTER_MIGRATED
                     - INDEPENDENT_SHARD_SCALING_CLUSTER_ROLLED_BACK
                     - MOVE_SKIPPED
+                    - STEP_SKIPPED
                     - PROXY_RESTARTED
                     - PROXY_PANICKED
                     - ATLAS_MAINTENANCE_PROTECTED_HOURS_CREATED
@@ -15470,6 +15462,7 @@ components:
                     - STREAMS_AUDIT_LOG_CONFIGURATION_UPDATED
                     - ENCRYPTION_AT_REST_CONFIGURATION_UPDATED
                     - ENCRYPTION_AT_REST_CONFIGURATION_VALIDATION_FAILED
+                    - ENCRYPTION_AT_REST_CONFIGURATION_VALIDATION_SUCCEEDED
                     - NDS_SET_IMAGE_OVERRIDES
                     - NDS_SET_CHEF_TARBALL_URI
                     - RESTRICTED_EMPLOYEE_ACCESS_BYPASS
@@ -21207,6 +21200,7 @@ components:
                         - ATLAS_NDS_AWS_SNAPSHOT_EXPORT_VM_M60
                         - ATLAS_NDS_AWS_SNAPSHOT_EXPORT_VM_STORAGE
                         - ATLAS_NDS_AWS_SNAPSHOT_EXPORT_VM_STORAGE_IOPS
+                        - ATLAS_NDS_GCP_SNAPSHOT_EXPORT_UPLOAD
                         - ATLAS_NDS_GCP_SNAPSHOT_EXPORT_VM
                         - ATLAS_NDS_GCP_SNAPSHOT_EXPORT_VM_M40
                         - ATLAS_NDS_GCP_SNAPSHOT_EXPORT_VM_M50
@@ -21764,7 +21758,7 @@ components:
                     type: array
                 rootCertType:
                     default: ISRGROOTX1
-                    description: Root Certificate Authority that MongoDB Atlas clusters uses. MongoDB Cloud supports Internet Security Research Group.
+                    description: Root Certificate Authority that MongoDB Atlas cluster uses. MongoDB Cloud supports Internet Security Research Group.
                     enum:
                         - ISRGROOTX1
                     type: string
@@ -22057,7 +22051,7 @@ components:
                     type: array
                 rootCertType:
                     default: ISRGROOTX1
-                    description: Root Certificate Authority that MongoDB Atlas clusters uses. MongoDB Cloud supports Internet Security Research Group.
+                    description: Root Certificate Authority that MongoDB Atlas cluster uses. MongoDB Cloud supports Internet Security Research Group.
                     enum:
                         - ISRGROOTX1
                     type: string
@@ -23141,6 +23135,7 @@ components:
                 - INDEPENDENT_SHARD_SCALING_CLUSTER_MIGRATED
                 - INDEPENDENT_SHARD_SCALING_CLUSTER_ROLLED_BACK
                 - MOVE_SKIPPED
+                - STEP_SKIPPED
                 - PROXY_RESTARTED
                 - PROXY_PANICKED
                 - ATLAS_MAINTENANCE_PROTECTED_HOURS_CREATED
@@ -23171,6 +23166,7 @@ components:
                 - STREAMS_AUDIT_LOG_CONFIGURATION_UPDATED
                 - ENCRYPTION_AT_REST_CONFIGURATION_UPDATED
                 - ENCRYPTION_AT_REST_CONFIGURATION_VALIDATION_FAILED
+                - ENCRYPTION_AT_REST_CONFIGURATION_VALIDATION_SUCCEEDED
                 - NDS_SET_IMAGE_OVERRIDES
                 - NDS_SET_CHEF_TARBALL_URI
                 - RESTRICTED_EMPLOYEE_ACCESS_BYPASS
@@ -25876,6 +25872,30 @@ components:
                     readOnly: true
                     type: integer
             type: object
+        PaginatedApiStreamsTransitGatewayRouteResponse:
+            properties:
+                links:
+                    description: List of one or more Uniform Resource Locators (URLs) that point to API sub-resources, related API resources, or both. RFC 5988 outlines these relationships.
+                    externalDocs:
+                        description: Web Linking Specification (RFC 5988)
+                        url: https://datatracker.ietf.org/doc/html/rfc5988
+                    items:
+                        $ref: '#/components/schemas/Link'
+                    readOnly: true
+                    type: array
+                results:
+                    description: List of returned documents that MongoDB Cloud provides when completing this request.
+                    items:
+                        $ref: '#/components/schemas/StreamsTransitGatewayRouteResponse'
+                    readOnly: true
+                    type: array
+                totalCount:
+                    description: Total number of documents available. MongoDB Cloud omits this value if `includeCount` is set to `false`. The total number is an estimate and may not be exact.
+                    format: int32
+                    minimum: 0
+                    readOnly: true
+                    type: integer
+            type: object
         PaginatedApiUserAccessListResponseView:
             properties:
                 links:
@@ -28332,6 +28352,12 @@ components:
                     items:
                         $ref: '#/components/schemas/CloudRegionConfig'
                     type: array
+                zoneId:
+                    description: Unique 24-hexadecimal digit string that identifies a zone in a Global Cluster.
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    readOnly: true
+                    type: string
                 zoneName:
                     description: 'Human-readable label that identifies the zone in a Global Cluster. Provide this value only if `"clusterType" : "GEOSHARDED"`.'
                     type: string
@@ -31284,6 +31310,11 @@ components:
                     description: Reserved. Will be used by TRANSIT_GATEWAY connection type.
                     pattern: ^(tgw-)[0-9a-zA-Z]+$
                     type: string
+                tgwRouteId:
+                    description: Reserved. Will be used by TRANSIT_GATEWAY connection type.
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    type: string
                 type:
                     description: Selected networking type. Either PUBLIC, VPC, PRIVATE_LINK, or TRANSIT_GATEWAY. Defaults to PUBLIC. For VPC, ensure that VPC peering exists and connectivity has been established between Atlas VPC and the VPC where Kafka cluster is hosted for the connection to function properly. TRANSIT_GATEWAY support is coming soon.
                     enum:
@@ -31671,6 +31702,38 @@ components:
                     $ref: '#/components/schemas/StreamsSampleConnections'
                 streamConfig:
                     $ref: '#/components/schemas/StreamConfig'
+            type: object
+        StreamsTransitGatewayRouteRequest:
+            description: Container for metadata needed to create a Transit Gateway route.
+            properties:
+                destinationCidr:
+                    description: The route's destination CIDR.
+                    type: string
+                region:
+                    description: The region of the Atlas VPCs where this route should take effect.
+                    type: string
+                tgwId:
+                    description: The AWS ID of the Transit Gateway through which traffic will be routed.
+                    type: string
+            type: object
+        StreamsTransitGatewayRouteResponse:
+            description: Container for metadata associated with a Transit Gateway route.
+            properties:
+                destinationCidr:
+                    description: The route's destination CIDR.
+                    type: string
+                region:
+                    description: The region of the Atlas VPCs where this route should take effect.
+                    type: string
+                tgwId:
+                    description: The AWS ID of the Transit Gateway through which traffic will be routed.
+                    type: string
+                tgwRouteId:
+                    description: The ID of the Transit Gateway route.
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    readOnly: true
+                    type: string
             type: object
         SynonymMappingStatusDetail:
             description: Contains the status of the index's synonym mappings on each search host. This field (and its subfields) only appear if the index has synonyms defined.
@@ -34704,6 +34767,9 @@ components:
                     scopes: {}
                     tokenUrl: https://cloud.mongodb.com/api/oauth/token
             type: oauth2
+externalDocs:
+    description: Back to Atlas Docs
+    url: https://www.mongodb.com/docs/atlas/
 info:
     description: |-
         The MongoDB Atlas Administration API allows developers to manage all components in MongoDB Atlas.
@@ -34726,7 +34792,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: f6f6b0dba50116a8faf418ac03cade69e1bfcc10
+    x-xgen-sha: 2effbab95330a3343f817c10cb8929ad63bf5292
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -34783,7 +34849,7 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Get All Alert Configuration Matchers Field Names
+            summary: Return All Alert Configuration Matchers Field Names
             tags:
                 - Alert Configurations
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alert-Configurations/operation/listAlertConfigurationMatchersFieldNames
@@ -34839,7 +34905,7 @@ paths:
                     $ref: '#/components/responses/forbidden'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: List All Possible Event Types
+            summary: Return All Event Types
             tags:
                 - Events
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Events/operation/listEventTypes
@@ -34896,7 +34962,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Connected Org Configs from One Federation
+            summary: Return All Organization Configurations from One Federation
             tags:
                 - Federated Authentication
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/listConnectedOrgConfigs
@@ -34931,7 +34997,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Remove One Org Config Connected to One Federation
+            summary: Remove One Organization Configuration from One Federation
             tags:
                 - Federated Authentication
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/removeConnectedOrgConfig
@@ -34969,7 +35035,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Org Config Connected to One Federation
+            summary: Return One Organization Configuration from One Federation
             tags:
                 - Federated Authentication
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/getConnectedOrgConfig
@@ -35012,7 +35078,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update One Org Config Connected to One Federation
+            summary: Update One Organization Configuration in One Federation
             tags:
                 - Federated Authentication
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/updateConnectedOrgConfig
@@ -35078,7 +35144,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Add One Role Mapping to One Organization
+            summary: Create One Role Mapping in One Organization Configuration
             tags:
                 - Federated Authentication
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/createRoleMapping
@@ -35461,7 +35527,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Revoke the JWKS from One OIDC Identity Provider
+            summary: Revoke JWKS from One OIDC Identity Provider
             tags:
                 - Federated Authentication
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/revokeJwksFromIdentityProvider
@@ -35490,7 +35556,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return the Metadata of One Identity Provider
+            summary: Return Metadata of One Identity Provider
             tags:
                 - Federated Authentication
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Federated-Authentication/operation/getIdentityProviderMetadata
@@ -35785,7 +35851,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Project IP Access List
+            summary: Return All Project IP Access List Entries
             tags:
                 - Project IP Access List
             x-xgen-changelog:
@@ -36049,7 +36115,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Alert Configurations for One Project
+            summary: Return All Alert Configurations in One Project
             tags:
                 - Alert Configurations
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alert-Configurations/operation/listAlertConfigurations
@@ -36221,7 +36287,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Toggle One State of One Alert Configuration in One Project
+            summary: Toggle State of One Alert Configuration in One Project
             tags:
                 - Alert Configurations
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alert-Configurations/operation/toggleAlertConfiguration
@@ -36273,7 +36339,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update One Alert Configuration for One Project
+            summary: Update One Alert Configuration in One Project
             tags:
                 - Alert Configurations
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alert-Configurations/operation/updateAlertConfiguration
@@ -36321,7 +36387,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Open Alerts for Alert Configuration
+            summary: Return All Open Alerts for One Alert Configuration
             tags:
                 - Alerts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Alerts/operation/listAlertsByAlertConfigurationId
@@ -36665,7 +36731,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update Roles of One Organization API Key to One Project
+            summary: Update Organization API Key Roles for One Project
             tags:
                 - Programmatic API Keys
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Programmatic-API-Keys/operation/updateApiKeyRoles
@@ -36736,7 +36802,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return the Auditing Configuration for One Project
+            summary: Return Auditing Configuration for One Project
             tags:
                 - Auditing
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Auditing/operation/getAuditingConfiguration
@@ -36836,7 +36902,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Toggle State of One Custom DNS Configuration for Atlas Clusters on AWS
+            summary: Update State of One Custom DNS Configuration for Atlas Clusters on AWS
             tags:
                 - AWS Clusters DNS
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/AWS-Clusters-DNS/operation/toggleAwsCustomDns
@@ -37135,7 +37201,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Disable the Backup Compliance Policy settings
+            summary: Disable Backup Compliance Policy Settings
             tags:
                 - Cloud Backups
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/disableDataProtectionSettings
@@ -37183,7 +37249,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return the Backup Compliance Policy settings
+            summary: Return Backup Compliance Policy Settings
             tags:
                 - Cloud Backups
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/getDataProtectionSettings
@@ -37235,7 +37301,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update or enable the Backup Compliance Policy settings
+            summary: Update Backup Compliance Policy Settings
             tags:
                 - Cloud Backups
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/updateDataProtectionSettings
@@ -37398,7 +37464,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return specified Cloud Provider Access Role
+            summary: Return One Cloud Provider Access Role
             tags:
                 - Cloud Provider Access
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Provider-Access/operation/getCloudProviderAccessRole
@@ -37750,7 +37816,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create One Cluster from One Project
+            summary: Create One Cluster in One Project
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
@@ -38001,7 +38067,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Modify One Cluster from One Project
+            summary: Update One Cluster in One Project
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/updateCluster
@@ -38188,7 +38254,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Get cluster internal configuration of sharded cluster AutoScaling operations
+            summary: Return Auto Scaling Configuration for One Sharded Cluster
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/autoScalingConfiguration
@@ -38458,7 +38524,7 @@ paths:
                     $ref: '#/components/responses/methodNotAllowed'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Cancel One Restore Job of One Cluster
+            summary: Cancel One Restore Job for One Cluster
             tags:
                 - Cloud Backups
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/cancelBackupRestoreJob
@@ -38499,7 +38565,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Restore Job of One Cluster
+            summary: Return One Restore Job for One Cluster
             tags:
                 - Cloud Backups
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/getBackupRestoreJob
@@ -38882,7 +38948,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Change Expiration Date for One Cloud Backup
+            summary: Update Expiration Date for One Cloud Backup
             tags:
                 - Cloud Backups
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/updateSnapshotRetention
@@ -39028,6 +39094,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Backups/operation/listShardedClusterBackups
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/download:
         post:
+            deprecated: true
             description: |-
                 Requests one snapshot for the specified shared cluster. This resource returns a `snapshotURL` that you can use to download the snapshot. This `snapshotURL` remains active for four hours after you make the request. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
@@ -39060,6 +39127,7 @@ paths:
                         application/vnd.atlas.2023-01-01+json:
                             schema:
                                 $ref: '#/components/schemas/TenantRestore'
+                            x-sunset: "2026-01-15"
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -39080,6 +39148,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Snapshots/operation/downloadSharedClusterBackup
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/restore:
         post:
+            deprecated: true
             description: |-
                 Restores the specified M2 or M5 cluster. MongoDB Cloud limits which clusters can be the target clusters of a restore. The target cluster can't use encryption at rest, run a major release MongoDB version different than the snapshot, or receive client requests during restores. MongoDB Cloud deletes all existing data on the target cluster prior to the restore operation. To use this resource, the requesting Service Account or API Key must have the Project Owner role.
 
@@ -39112,6 +39181,7 @@ paths:
                         application/vnd.atlas.2023-01-01+json:
                             schema:
                                 $ref: '#/components/schemas/TenantRestore'
+                            x-sunset: "2026-01-15"
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -39126,12 +39196,13 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create One Restore Job from One M2 or M5 Cluster
+            summary: Create One Restore Job for One M2 or M5 Cluster
             tags:
                 - Shared-Tier Restore Jobs
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Restore-Jobs/operation/createSharedClusterBackupRestoreJob
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/restores:
         get:
+            deprecated: true
             description: |-
                 Returns all restore jobs for the specified M2 or M5 cluster. Restore jobs restore a cluster using a snapshot. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
@@ -39157,6 +39228,7 @@ paths:
                         application/vnd.atlas.2023-01-01+json:
                             schema:
                                 $ref: '#/components/schemas/PaginatedTenantRestoreView'
+                            x-sunset: "2026-01-15"
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -39175,6 +39247,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Restore-Jobs/operation/listSharedClusterBackupRestoreJobs
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/restores/{restoreId}:
         get:
+            deprecated: true
             description: |-
                 Returns the specified restore job for the specified M2 or M5 cluster. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
@@ -39207,6 +39280,7 @@ paths:
                         application/vnd.atlas.2023-01-01+json:
                             schema:
                                 $ref: '#/components/schemas/TenantRestore'
+                            x-sunset: "2026-01-15"
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -39225,6 +39299,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Restore-Jobs/operation/getSharedClusterBackupRestoreJob
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/snapshots:
         get:
+            deprecated: true
             description: |-
                 Returns details for all snapshots for the specified shared cluster. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
@@ -39250,6 +39325,7 @@ paths:
                         application/vnd.atlas.2023-01-01+json:
                             schema:
                                 $ref: '#/components/schemas/PaginatedTenantSnapshotView'
+                            x-sunset: "2026-01-15"
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -39268,6 +39344,7 @@ paths:
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Snapshots/operation/listSharedClusterBackups
     /api/atlas/v2/groups/{groupId}/clusters/{clusterName}/backup/tenant/snapshots/{snapshotId}:
         get:
+            deprecated: true
             description: |-
                 Returns details for one snapshot for the specified shared cluster. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
@@ -39300,6 +39377,7 @@ paths:
                         application/vnd.atlas.2023-01-01+json:
                             schema:
                                 $ref: '#/components/schemas/BackupTenantSnapshot'
+                            x-sunset: "2026-01-15"
                             x-xgen-version: "2023-01-01"
                     description: OK
                 "400":
@@ -39312,7 +39390,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Snapshot for One M2 or M5 Cluster
+            summary: Return One Snapshot of One M2 or M5 Cluster
             tags:
                 - Shared-Tier Snapshots
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Shared-Tier-Snapshots/operation/getSharedClusterBackup
@@ -40007,7 +40085,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Add One Entry to One Custom Zone Mapping
+            summary: Add One Custom Zone Mapping to One Global Cluster
             tags:
                 - Global Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Global-Clusters/operation/createCustomZoneMapping
@@ -40633,7 +40711,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: End an Outage Simulation
+            summary: End One Outage Simulation
             tags:
                 - Cluster Outage Simulation
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cluster-Outage-Simulation/operation/endOutageSimulation
@@ -40732,7 +40810,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Start an Outage Simulation
+            summary: Start One Outage Simulation
             tags:
                 - Cluster Outage Simulation
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cluster-Outage-Simulation/operation/startOutageSimulation
@@ -40780,7 +40858,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Returns Suggested Indexes to Drop
+            summary: Return All Suggested Indexes to Drop
             tags:
                 - Performance Advisor
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/listDropIndexes
@@ -40893,7 +40971,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Suggested Indexes
+            summary: Return All Suggested Indexes
             tags:
                 - Performance Advisor
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/listClusterSuggestedIndexes
@@ -40942,7 +41020,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Advanced Configuration Options for One Cluster
+            summary: Return Advanced Configuration Options for One Cluster
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getClusterAdvancedConfiguration
@@ -41287,7 +41365,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Search Nodes
+            summary: Return All Search Nodes
             tags:
                 - Atlas Search
             x-xgen-changelog:
@@ -41767,7 +41845,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update One Atlas Search Index By Name
+            summary: Update One Atlas Search Index by Name
             tags:
                 - Atlas Search
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/updateAtlasSearchIndexByName
@@ -41814,7 +41892,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Remove One Atlas Search Index by Id
+            summary: Remove One Atlas Search Index by ID
             tags:
                 - Atlas Search
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/deleteAtlasSearchIndex
@@ -41929,7 +42007,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update One Atlas Search Index By ID
+            summary: Update One Atlas Search Index by ID
             tags:
                 - Atlas Search
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Atlas-Search/operation/updateAtlasSearchIndex
@@ -42220,7 +42298,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Change One Legacy Backup Snapshot Expiration
+            summary: Update Expiration Date for One Legacy Backup Snapshot
             tags:
                 - Legacy Backup
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Legacy-Backup/operation/updateLegacySnapshotRetention
@@ -42302,7 +42380,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Grant MongoDB employee cluster access for one cluster.
+            summary: Grant MongoDB Employee Cluster Access for One Cluster
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/grantMongoDbEmployeeAccess
@@ -42346,7 +42424,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Pin FCV for One Cluster from One Project
+            summary: Pin Feature Compatibility Version for One Cluster in One Project
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/pinFeatureCompatibilityVersion
@@ -42383,7 +42461,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Revoke granted MongoDB employee cluster access for one cluster.
+            summary: Revoke MongoDB Employee Cluster Access for One Cluster
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/revokeMongoDbEmployeeAccess
@@ -42422,7 +42500,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Unpins FCV for One Cluster from One Project
+            summary: Unpin Feature Compatibility Version for One Cluster in One Project
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/unpinFeatureCompatibilityVersion
@@ -42607,7 +42685,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Upgrade One Shared-tier Cluster
+            summary: Upgrade One Shared-Tier Cluster
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/upgradeSharedCluster
@@ -42656,7 +42734,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Upgrades One Shared-Tier Cluster to the Serverless Instance
+            summary: Upgrade One Shared-Tier Cluster to One Serverless Instance
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/upgradeSharedClusterToServerless
@@ -42765,7 +42843,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create One New Network Peering Container
+            summary: Create One Network Peering Container
             tags:
                 - Network Peering
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/createPeeringContainer
@@ -43398,7 +43476,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Delete One Query Limit For One Federated Database Instance
+            summary: Delete One Query Limit for One Federated Database Instance
             tags:
                 - Data Federation
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Federation/operation/deleteOneDataFederationInstanceQueryLimit
@@ -43597,7 +43675,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Database Users from One Project
+            summary: Return All Database Users in One Project
             tags:
                 - Database Users
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Database-Users/operation/listDatabaseUsers
@@ -43949,7 +44027,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All X.509 Certificates Assigned to One MongoDB User
+            summary: Return All X.509 Certificates Assigned to One Database User
             tags:
                 - X.509 Authentication
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/X.509-Authentication/operation/listDatabaseUserCertificates
@@ -44002,7 +44080,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create One X.509 Certificate for One MongoDB User
+            summary: Create One X.509 Certificate for One Database User
             tags:
                 - X.509 Authentication
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/X.509-Authentication/operation/createDatabaseUserCertificate
@@ -44074,7 +44152,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Database Access History for One Cluster using Its Cluster Name
+            summary: Return Database Access History for One Cluster by Cluster Name
             tags:
                 - Access Tracking
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Access-Tracking/operation/listAccessLogsByClusterName
@@ -44143,7 +44221,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Database Access History for One Cluster using Its Hostname
+            summary: Return Database Access History for One Cluster by Hostname
             tags:
                 - Access Tracking
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Access-Tracking/operation/listAccessLogsByHostname
@@ -44227,7 +44305,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update Configuration for Encryption at Rest using Customer-Managed Keys for One Project
+            summary: Update Encryption at Rest Configuration for One Project
             tags:
                 - Encryption at Rest using Customer Key Management
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Encryption-at-Rest-using-Customer-Key-Management/operation/updateEncryptionAtRest
@@ -44352,7 +44430,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Delete Private Endpoint for Encryption at Rest Using Customer Key Management
+            summary: Delete One Private Endpoint for Encryption at Rest Using Customer Key Management
             tags:
                 - Encryption at Rest using Customer Key Management
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Encryption-at-Rest-using-Customer-Key-Management/operation/requestEncryptionAtRestPrivateEndpointDeletion
@@ -44404,7 +44482,7 @@ paths:
     /api/atlas/v2/groups/{groupId}/events:
         get:
             description: |-
-                Returns all events for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
+                Returns events for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
 
                 This resource remains under revision and may change.
             operationId: listProjectEvents
@@ -44488,18 +44566,18 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Events from One Project
+            summary: Return Events from One Project
             tags:
                 - Events
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Events/operation/listProjectEvents
     /api/atlas/v2/groups/{groupId}/events/{eventId}:
         get:
             description: |-
-                Returns one event for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Project Read Only role. Use the Return All Events from One Project endpoint to retrieve all events to which the authenticated user has access.
+                Returns one event for the specified project. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Project Read Only role. Use the Return Events from One Project endpoint to retrieve all events to which the authenticated user has access.
 
                 This resource remains under revision and may change.
             externalDocs:
-                description: Return All Events from One Project
+                description: Return Events from One Project
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Events/operation/listProjectEvents
             operationId: getProjectEvent
             parameters:
@@ -45176,7 +45254,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Atlas Search Metrics for One Index in One Specified Namespace
+            summary: Return Atlas Search Metrics for One Index in One Namespace
             tags:
                 - Monitoring and Logs
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs/operation/getIndexMetrics
@@ -45663,7 +45741,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Invite One MongoDB Cloud User to Join One Project
+            summary: Invite One MongoDB Cloud User to One Project
             tags:
                 - Projects
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/createProjectInvitation
@@ -45697,7 +45775,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Cancel One Project Invitation
+            summary: Remove One Project Invitation
             tags:
                 - Projects
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/deleteProjectInvitation
@@ -46186,7 +46264,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Cut Over the Migrated Cluster
+            summary: Cut Over One Migrated Cluster
             tags:
                 - Cloud Migration Service
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Cloud-Migration-Service/operation/cutoverMigration
@@ -46359,7 +46437,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update Maintenance Window for One Project
+            summary: Update One Maintenance Window for One Project
             tags:
                 - Maintenance Windows
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Maintenance-Windows/operation/updateMaintenanceWindow
@@ -46443,7 +46521,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Managed Slow MS enabled
+            summary: Return Managed Slow Operation Threshold Status
             tags:
                 - Performance Advisor
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/getManagedSlowMs
@@ -46563,7 +46641,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Available MongoDB LTS Versions for clusters in One Project
+            summary: Return All Available MongoDB LTS Versions for Clusters in One Project
             tags:
                 - Projects
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/getProjectLtsVersions
@@ -46649,7 +46727,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create One New Network Peering Connection
+            summary: Create One Network Peering Connection
             tags:
                 - Network Peering
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/createPeeringConnection
@@ -46686,7 +46764,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Remove One Existing Network Peering Connection
+            summary: Remove One Network Peering Connection
             tags:
                 - Network Peering
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/deletePeeringConnection
@@ -46769,7 +46847,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update One New Network Peering Connection
+            summary: Update One Network Peering Connection
             tags:
                 - Network Peering
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/updatePeeringConnection
@@ -46808,7 +46886,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Data Lake Pipelines from One Project
+            summary: Return All Data Lake Pipelines in One Project
             tags:
                 - Data Lake Pipelines
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/listPipelines
@@ -47050,7 +47128,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Available Ingestion Schedules for One Data Lake Pipeline
+            summary: Return All Ingestion Schedules for One Data Lake Pipeline
             tags:
                 - Data Lake Pipelines
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/listPipelineSchedules
@@ -47101,7 +47179,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Available Backup Snapshots for One Data Lake Pipeline
+            summary: Return All Backup Snapshots for One Data Lake Pipeline
             tags:
                 - Data Lake Pipelines
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/listPipelineSnapshots
@@ -47229,7 +47307,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Data Lake Pipeline Runs from One Project
+            summary: Return All Data Lake Pipeline Runs in One Project
             tags:
                 - Data Lake Pipelines
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/listPipelineRuns
@@ -47276,7 +47354,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Delete Pipeline Run Dataset
+            summary: Delete One Pipeline Run Dataset
             tags:
                 - Data Lake Pipelines
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/deletePipelineRunDataset
@@ -47370,7 +47448,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Trigger on demand snapshot ingestion
+            summary: Trigger On-Demand Snapshot Ingestion
             tags:
                 - Data Lake Pipelines
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Data-Lake-Pipelines/operation/triggerSnapshotIngestion
@@ -48098,7 +48176,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Verify Connect via Peering Only Mode for One Project
+            summary: Verify Connect via Peering-Only Mode for One Project
             tags:
                 - Network Peering
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/verifyConnectViaPeeringOnlyModeForOneProject
@@ -48138,7 +48216,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Disable Connect via Peering Only Mode for One Project
+            summary: Disable Connect via Peering-Only Mode for One Project
             tags:
                 - Network Peering
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Network-Peering/operation/disablePeering
@@ -48561,7 +48639,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Database for a MongoDB Process
+            summary: Return One Database for One MongoDB Process
             tags:
                 - Monitoring and Logs
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs/operation/getDatabase
@@ -48631,7 +48709,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Measurements of One Database for One MongoDB Process
+            summary: Return Measurements for One Database in One MongoDB Process
             tags:
                 - Monitoring and Logs
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs/operation/getDatabaseMeasurements
@@ -48713,7 +48791,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Measurements of One Disk
+            summary: Return Measurements for One Disk
             tags:
                 - Monitoring and Logs
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Monitoring-and-Logs/operation/listDiskMeasurements
@@ -49237,7 +49315,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Suggested Indexes
+            summary: Return All Suggested Indexes
             tags:
                 - Performance Advisor
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/listSuggestedIndexes
@@ -49265,7 +49343,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Disable the push-based log export feature for a project
+            summary: Disable Push-Based Log Export for One Project
             tags:
                 - Push-Based Log Export
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/deletePushBasedLogConfiguration
@@ -49295,7 +49373,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Get the push-based log export configuration for a project
+            summary: Return Push-Based Log Export Configuration for One Project
             tags:
                 - Push-Based Log Export
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/getPushBasedLogConfiguration
@@ -49330,7 +49408,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update the push-based log export feature for a project
+            summary: Update Push-Based Log Export for One Project
             tags:
                 - Push-Based Log Export
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/updatePushBasedLogConfiguration
@@ -49365,7 +49443,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Enable the push-based log export feature for a project
+            summary: Enable Push-Based Log Export for One Project
             tags:
                 - Push-Based Log Export
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Push-Based-Log-Export/operation/createPushBasedLogConfiguration
@@ -49403,7 +49481,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Load Sample Dataset Request into Cluster
+            summary: Load Sample Dataset into One Cluster
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/loadSampleDataset
@@ -49453,7 +49531,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Check Status of Cluster Sample Dataset Request
+            summary: Return Status of Sample Dataset Load for One Cluster
             tags:
                 - Clusters
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/getSampleDatasetLoadStatus
@@ -49492,7 +49570,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Serverless Instances from One Project
+            summary: Return All Serverless Instances in One Project
             tags:
                 - Serverless Instances
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Serverless-Instances/operation/listServerlessInstances
@@ -49836,7 +49914,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return Serverless Auto Indexing Enabled
+            summary: Return Serverless Auto-Indexing Status
             tags:
                 - Performance Advisor
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/getServerlessAutoIndexing
@@ -49876,7 +49954,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Set Serverless Auto Indexing
+            summary: Set Serverless Auto-Indexing Status
             tags:
                 - Performance Advisor
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Performance-Advisor/operation/setServerlessAutoIndexing
@@ -50071,7 +50149,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: List All Project Service Accounts
+            summary: Return All Project Service Accounts
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/listProjectServiceAccounts
@@ -50108,7 +50186,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create and Assign one Service Account to one Project
+            summary: Create One Project Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/createProjectServiceAccount
@@ -50143,7 +50221,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Unassign One Service Account from One Project
+            summary: Remove One Project Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/deleteProjectServiceAccount
@@ -50180,7 +50258,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Get one Project Service Account
+            summary: Return One Project Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/getProjectServiceAccount
@@ -50224,7 +50302,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update one Project Service Account
+            summary: Update One Project Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/updateProjectServiceAccount
@@ -50263,7 +50341,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Access List entries for one Project Service Account
+            summary: Return All Access List Entries for One Project Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/listProjectServiceAccountAccessList
@@ -50316,7 +50394,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Add Access List entries for one Project Service Account
+            summary: Add Access List Entries for One Project Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/createProjectServiceAccountAccessList
@@ -50360,7 +50438,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Remove One Access List entry from one Project Service Account
+            summary: Remove One Access List Entry from One Project Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/deleteProjectServiceAccountAccessListEntry
@@ -50405,7 +50483,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create one Project Service Account Secret
+            summary: Create One Project Service Account Secret
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/createProjectServiceAccountSecret
@@ -50445,7 +50523,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Delete one Project Service Account Secret
+            summary: Delete One Project Service Account Secret
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/deleteProjectServiceAccountSecret
@@ -50519,7 +50597,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Project Settings
+            summary: Return Project Settings
             tags:
                 - Projects
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/getProjectSettings
@@ -50553,7 +50631,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update One Project Settings
+            summary: Update Project Settings
             tags:
                 - Projects
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/updateProjectSettings
@@ -50583,7 +50661,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Project Stream Instances
+            summary: Return All Stream Instances in One Project
             tags:
                 - Streams
             x-xgen-changelog:
@@ -50835,7 +50913,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Connections Of The Stream Instances
+            summary: Return All Connections of the Stream Instances
             tags:
                 - Streams
             x-xgen-changelog:
@@ -50885,7 +50963,7 @@ paths:
                     $ref: '#/components/responses/unauthorized'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create One Connection
+            summary: Create One Stream Connection
             tags:
                 - Streams
             x-xgen-changelog:
@@ -51149,7 +51227,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Get One Stream Processor
+            summary: Return One Stream Processor
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getStreamProcessor
@@ -51197,7 +51275,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Modify One Stream Processor
+            summary: Update One Stream Processor
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/modifyStreamProcessor
@@ -51360,7 +51438,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Stream Processors In The Stream Instance.
+            summary: Return All Stream Processors in One Stream Instance
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listStreamProcessors
@@ -51399,7 +51477,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Returns the Account ID, and the VPC ID for the group and region specified.
+            summary: Return Account ID and VPC ID for One Project and Region
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getAccountDetails
@@ -51427,7 +51505,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Returns all the active incoming VPC Peering Connections.
+            summary: Return All Active Incoming VPC Peering Connections
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getActiveVpcPeeringConnections
@@ -51457,7 +51535,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Private Link
+            summary: Return All Private Link Connections
             tags:
                 - Streams
             x-xgen-changelog:
@@ -51501,7 +51579,7 @@ paths:
                     $ref: '#/components/responses/unauthorized'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create One Private Link connection
+            summary: Create One Private Link Connection
             tags:
                 - Streams
             x-xgen-changelog:
@@ -51535,7 +51613,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Delete One Private Link connection
+            summary: Delete One Private Link Connection
             tags:
                 - Streams
             x-xgen-changelog:
@@ -51569,7 +51647,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One PrivateLink Connection
+            summary: Return One Private Link Connection
             tags:
                 - Streams
             x-xgen-changelog:
@@ -51605,7 +51683,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All VPC Peering Connections.
+            summary: Return All VPC Peering Connections
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getVpcPeeringConnections
@@ -51636,7 +51714,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Deletes an incoming VPC Peering connection.
+            summary: Delete One VPC Peering Connection
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteVpcPeeringConnection
@@ -51674,7 +51752,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Requests the acceptance of an incoming VPC Peering connection.
+            summary: Accept One Incoming VPC Peering Connection
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/acceptVpcPeeringConnection
@@ -51705,7 +51783,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Requests the rejection of an incoming VPC Peering connection.
+            summary: Reject One Incoming VPC Peering Connection
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/rejectVpcPeeringConnection
@@ -51742,10 +51820,155 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create One Stream Instance With Sample Connections
+            summary: Create One Stream Instance with Sample Connections
             tags:
                 - Streams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createStreamInstanceWithSampleConnections
+    /api/atlas/v2/groups/{groupId}/streamsTgwRoutes:
+        get:
+            description: List Transit Gateway routes in the default route table associated with Atlas VPC.
+            operationId: listTransitGatewayRoutes
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - $ref: '#/components/parameters/itemsPerPage'
+                - $ref: '#/components/parameters/pageNum'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedApiStreamsTransitGatewayRouteResponse'
+                            x-xgen-preview:
+                                name: aws-transit-gateway
+                            x-xgen-version: preview
+                    description: OK
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return All Transit Gateway Routes in the Default Route Table for One Atlas VPC
+            tags:
+                - Streams
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listTransitGatewayRoutes
+        post:
+            description: Creates a route in the default route table associated with Atlas VPC to route all traffic destined for provided CIDR to the provided Transit Gateway.
+            operationId: createTransitGatewayRoute
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+            requestBody:
+                content:
+                    application/vnd.atlas.preview+json:
+                        schema:
+                            $ref: '#/components/schemas/StreamsTransitGatewayRouteRequest'
+                description: Metadata needed for creating a transit gateway route.
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/StreamsTransitGatewayRouteResponse'
+                            x-xgen-preview:
+                                name: aws-transit-gateway
+                            x-xgen-version: preview
+                    description: Created
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Creates a route in the default route table associated with Atlas VPC to route all traffic destined for provided CIDR to the provided Transit Gateway.
+            tags:
+                - Streams
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createTransitGatewayRoute
+    /api/atlas/v2/groups/{groupId}/streamsTgwRoutes/{routeId}:
+        delete:
+            description: Deletes a transit gateway route in the default route table associated with Atlas VPC.
+            operationId: deleteTransitGatewayRoute
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - $ref: '#/components/parameters/envelope'
+                - description: The Object ID that uniquely identifies a transit gateway route.
+                  in: path
+                  name: routeId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    type: string
+            responses:
+                "204":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            x-xgen-preview:
+                                name: aws-transit-gateway
+                            x-xgen-version: preview
+                    description: No Content
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Delete One Transit Gateway Route in the Default Route Table for One Atlas VPC
+            tags:
+                - Streams
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteTransitGatewayRoute
+        get:
+            description: Retrieves a transit gateway route in the default route table associated with Atlas VPC.
+            operationId: getTransitGatewayRoute
+            parameters:
+                - $ref: '#/components/parameters/groupId'
+                - description: The Object ID that uniquely identifies a transit gateway route.
+                  in: path
+                  name: routeId
+                  required: true
+                  schema:
+                    example: 32b6e34b3d91647abb20e7b8
+                    pattern: ^([a-f0-9]{24})$
+                    type: string
+                - $ref: '#/components/parameters/envelope'
+            responses:
+                "200":
+                    content:
+                        application/vnd.atlas.preview+json:
+                            schema:
+                                $ref: '#/components/schemas/StreamsTransitGatewayRouteResponse'
+                            x-xgen-preview:
+                                name: aws-transit-gateway
+                            x-xgen-version: preview
+                    description: OK
+                "400":
+                    $ref: '#/components/responses/badRequest'
+                "401":
+                    $ref: '#/components/responses/unauthorized'
+                "403":
+                    $ref: '#/components/responses/forbidden'
+                "404":
+                    $ref: '#/components/responses/notFound'
+                "500":
+                    $ref: '#/components/responses/internalServerError'
+            summary: Return One Transit Gateway Route in the Default Route Table for One Atlas VPC
+            tags:
+                - Streams
+            x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getTransitGatewayRoute
     /api/atlas/v2/groups/{groupId}/teams:
         get:
             description: Returns all teams to which the authenticated user has access in the project specified using its unique 24-hexadecimal digit identifier. All members of the team share the same project access. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
@@ -51816,7 +52039,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Add One or More Teams to One Project
+            summary: Add Teams to One Project
             tags:
                 - Teams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Teams/operation/addAllTeamsToProject
@@ -51934,7 +52157,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return the Current LDAP or X.509 Configuration
+            summary: Return LDAP or X.509 Configuration
             tags:
                 - LDAP Configuration
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/LDAP-Configuration/operation/getLdapConfiguration
@@ -51973,7 +52196,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Edit the LDAP or X.509 Configuration
+            summary: Update LDAP or X.509 Configuration
             tags:
                 - LDAP Configuration
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/LDAP-Configuration/operation/saveLdapConfiguration
@@ -52031,7 +52254,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Remove the Current LDAP User to DN Mapping
+            summary: Remove LDAP User to DN Mapping
             tags:
                 - LDAP Configuration
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/LDAP-Configuration/operation/deleteLdapConfiguration
@@ -52068,7 +52291,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Verify the LDAP Configuration in One Project
+            summary: Verify LDAP Configuration in One Project
             tags:
                 - LDAP Configuration
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/LDAP-Configuration/operation/verifyLdapConfiguration
@@ -52117,7 +52340,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return the Status of One Verify LDAP Configuration Request
+            summary: Return Status of LDAP Configuration Verification in One Project
             tags:
                 - LDAP Configuration
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/LDAP-Configuration/operation/getLdapConfigurationStatus
@@ -52533,7 +52756,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Project using Its Name
+            summary: Return One Project by Name
             tags:
                 - Projects
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Projects/operation/getProjectByName
@@ -53008,7 +53231,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create Access List Entries for One Organization API Key
+            summary: Create One Access List Entry for One Organization API Key
             tags:
                 - Programmatic API Keys
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Programmatic-API-Keys/operation/createApiKeyAccessList
@@ -53135,7 +53358,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create Cost Explorer query process
+            summary: Create One Cost Explorer Query Process
             tags:
                 - Invoices
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Invoices/operation/createCostExplorerQueryProcess
@@ -53161,10 +53384,18 @@ paths:
                 "200":
                     content:
                         application/vnd.atlas.2023-01-01+csv:
+                            example: |
+                                Billed Date,666acb8787ba90706905dcae,
+                                Invoice Id,"June 1, 2024 - July 1, 2024",
+                                Organization Name,Test 2,
+                                Organization ID,666acb8787ba90706905dcae,
+                                Project Name,666acb8787ba90706905dcae,
+                                Project Id,666acb8787ba90706905dcae,
+                                Cluster Name,TestCluster
+                                Cluster Unique Id,666acb8787ba90706905dcae
+                                Usage Amount, 1018.39
                             schema:
                                 type: string
-                            x-xgen-IPA-exception:
-                                xgen-IPA-117-plaintext-response-must-have-example: API predates IPA validation
                             x-xgen-version: "2023-01-01"
                         application/vnd.atlas.2023-01-01+json:
                             schema:
@@ -53188,7 +53419,7 @@ paths:
     /api/atlas/v2/orgs/{orgId}/events:
         get:
             description: |-
-                Returns all events for the specified organization. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Organization Member role.
+                Returns events for the specified organization. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Organization Member role.
 
                 This resource remains under revision and may change.
             operationId: listOrganizationEvents
@@ -53253,18 +53484,18 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Events from One Organization
+            summary: Return Events from One Organization
             tags:
                 - Events
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Events/operation/listOrganizationEvents
     /api/atlas/v2/orgs/{orgId}/events/{eventId}:
         get:
             description: |-
-                Returns one event for the specified organization. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Organization Member role. Use the Return All Events from One Organization endpoint to retrieve all events to which the authenticated user has access.
+                Returns one event for the specified organization. Events identify significant database, billing, or security activities or status changes. To use this resource, the requesting Service Account or API Key must have the Organization Member role. Use the Return Events from One Organization endpoint to retrieve all events to which the authenticated user has access.
 
                 This resource remains under revision and may change.
             externalDocs:
-                description: Return All Events from One Organization
+                description: Return Events from One Organization
                 url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Events/operation/listOrganizationEvents
             operationId: getOrganizationEvent
             parameters:
@@ -53384,7 +53615,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One or More Projects in One Organization
+            summary: Return All Projects in One Organization
             tags:
                 - Organizations
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Organizations/operation/listOrganizationProjects
@@ -53528,7 +53759,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Invite One MongoDB Cloud User to Join One Atlas Organization
+            summary: Invite One MongoDB Cloud User to One Atlas Organization
             tags:
                 - Organizations
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Organizations/operation/createOrganizationInvitation
@@ -53570,7 +53801,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Cancel One Organization Invitation
+            summary: Remove One Organization Invitation
             tags:
                 - Organizations
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Organizations/operation/deleteOrganizationInvitation
@@ -53786,10 +54017,15 @@ paths:
                 "200":
                     content:
                         application/vnd.atlas.2023-01-01+csv:
+                            example: |
+                                Invoice Number,666acb8787ba43606905dcae,
+                                Billing Period,"June 1, 2024 - July 1, 2024",
+                                Organization Name,Test 2,
+                                Organization ID,666acb8787ba43606905dcac,
+
+                                Date,Usage Date,Description,Note,Organization Name,Organization ID,Project,Project ID,SKU,Region,Cluster,Replica Set,Config Server,Application,Unit,Unit Price,Quantity,Discount Percent,Amount
                             schema:
                                 type: string
-                            x-xgen-IPA-exception:
-                                xgen-IPA-117-plaintext-response-must-have-example: API predates IPA validation
                             x-xgen-version: "2023-01-01"
                         application/vnd.atlas.2023-01-01+json:
                             schema:
@@ -53806,7 +54042,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Organization Invoice
+            summary: Return One Invoice for One Organization
             tags:
                 - Invoices
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Invoices/operation/getInvoice
@@ -53850,7 +54086,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Organization Invoice as CSV
+            summary: Return One Invoice as CSV for One Organization
             tags:
                 - Invoices
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Invoices/operation/downloadInvoiceCsv
@@ -53895,7 +54131,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Query lineItems of the specified invoiceId
+            summary: Return All Line Items for One Invoice by Invoice ID
             tags:
                 - Invoices
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Invoices/operation/queryLineItemsFromSingleInvoice
@@ -54060,7 +54296,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return all non-compliant resources
+            summary: Return All Non-Compliant Resources
             tags:
                 - Resource Policies
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/getResourcesNonCompliant
@@ -54101,7 +54337,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return all Atlas Resource Policies
+            summary: Return All Atlas Resource Policies
             tags:
                 - Resource Policies
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/getAtlasResourcePolicies
@@ -54146,7 +54382,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create one Atlas Resource Policy
+            summary: Create One Atlas Resource Policy
             tags:
                 - Resource Policies
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/createAtlasResourcePolicy
@@ -54187,7 +54423,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Delete one Atlas Resource Policy
+            summary: Delete One Atlas Resource Policy
             tags:
                 - Resource Policies
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/deleteAtlasResourcePolicy
@@ -54231,7 +54467,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return one Atlas Resource Policy
+            summary: Return One Atlas Resource Policy
             tags:
                 - Resource Policies
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/getAtlasResourcePolicy
@@ -54286,7 +54522,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update one Atlas Resource Policy
+            summary: Update One Atlas Resource Policy
             tags:
                 - Resource Policies
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/updateAtlasResourcePolicy
@@ -54332,7 +54568,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Validate one Atlas Resource Policy
+            summary: Validate One Atlas Resource Policy
             tags:
                 - Resource Policies
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Resource-Policies/operation/validateAtlasResourcePolicy
@@ -54362,7 +54598,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: List All Organization Service Accounts
+            summary: Return All Organization Service Accounts
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/listServiceAccounts
@@ -54398,7 +54634,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create one Organization Service Account
+            summary: Create One Organization Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/createServiceAccount
@@ -54432,7 +54668,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Delete one Organization Service Account
+            summary: Delete One Organization Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/deleteServiceAccount
@@ -54469,7 +54705,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Get one Organization Service Account
+            summary: Return One Organization Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/getServiceAccount
@@ -54513,7 +54749,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Update one Organization Service Account
+            summary: Update One Organization Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/updateServiceAccount
@@ -54552,7 +54788,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Access List entries for one Organization Service Account
+            summary: Return All Access List Entries for One Organization Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/listServiceAccountAccessList
@@ -54605,7 +54841,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Add Access List entries for one Organization Service Account
+            summary: Add Access List Entries for One Organization Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/createServiceAccountAccessList
@@ -54649,7 +54885,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Remove One Access List entry from one Organization Service Account
+            summary: Remove One Access List Entry from One Organization Service Account
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/deleteServiceAccountAccessListEntry
@@ -54690,7 +54926,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return All Service Account Project assignments
+            summary: Return All Service Account Project Assignments
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/listServiceAccountProjects
@@ -54735,7 +54971,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Create one Organization Service Account Secret
+            summary: Create One Organization Service Account Secret
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/createServiceAccountSecret
@@ -54775,7 +55011,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Delete a Organization Service Account Secret
+            summary: Delete One Organization Service Account Secret
             tags:
                 - Service Accounts
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Service-Accounts/operation/deleteServiceAccountSecret
@@ -54995,7 +55231,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Team using its ID
+            summary: Return One Team by ID
             tags:
                 - Teams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Teams/operation/getTeamById
@@ -55164,7 +55400,7 @@ paths:
                     $ref: '#/components/responses/conflict'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Assign MongoDB Cloud Users from One Organization to One Team
+            summary: Assign MongoDB Cloud Users in One Organization to One Team
             tags:
                 - Teams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Teams/operation/addTeamUser
@@ -55353,7 +55589,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One Team using its Name
+            summary: Return One Team by Name
             tags:
                 - Teams
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Teams/operation/getTeamByName
@@ -55500,7 +55736,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Remove One MongoDB Cloud User From One Organization
+            summary: Remove One MongoDB Cloud User from One Organization
             tags:
                 - MongoDB Cloud Users
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/MongoDB-Cloud-Users/operation/removeOrganizationUser
@@ -55845,7 +56081,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One MongoDB Cloud User using Its ID
+            summary: Return One MongoDB Cloud User by ID
             tags:
                 - MongoDB Cloud Users
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/MongoDB-Cloud-Users/operation/getUser
@@ -55884,7 +56120,7 @@ paths:
                     $ref: '#/components/responses/notFound'
                 "500":
                     $ref: '#/components/responses/internalServerError'
-            summary: Return One MongoDB Cloud User using Their Username
+            summary: Return One MongoDB Cloud User by Username
             tags:
                 - MongoDB Cloud Users
             x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/MongoDB-Cloud-Users/operation/getUserByUsername

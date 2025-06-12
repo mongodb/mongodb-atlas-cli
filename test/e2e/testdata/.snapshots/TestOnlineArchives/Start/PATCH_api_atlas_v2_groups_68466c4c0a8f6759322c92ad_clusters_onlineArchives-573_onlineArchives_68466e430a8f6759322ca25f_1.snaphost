@@ -1,0 +1,16 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 169
+Content-Type: application/json
+Date: Mon, 09 Jun 2025 05:16:52 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 55
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasOnlineArchiveResource::updateOnlineArchive
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=eb36b93835414a5bb1c2a2625bfe67b328c93c2e; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"The request contained modifications to immutable fields.","error":400,"errorCode":"ONLINE_ARCHIVE_CANNOT_MODIFY_FIELD","parameters":[],"reason":"Bad Request"}

@@ -977,6 +977,21 @@ func EnsureCluster(t *testing.T, cluster *atlasClustersPinned.AdvancedClusterDes
 	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
 }
 
+func EnsureClusterLatest(t *testing.T, cluster *atlasv2.ClusterDescription20240805, clusterName, version string, diskSizeGB float64, terminationProtection bool) {
+	t.Helper()
+	a := assert.New(t)
+	a.Equal(clusterName, cluster.GetName())
+	a.Equal(version, cluster.GetMongoDBMajorVersion())
+	a.Equal(terminationProtection, cluster.GetTerminationProtectionEnabled())
+	for _, repSpecs := range cluster.GetReplicationSpecs() {
+		for _, config := range repSpecs.GetRegionConfigs() {
+			electableSpecs := config.GetElectableSpecs()
+			diskSize := electableSpecs.GetDiskSizeGB()
+			a.InDelta(diskSizeGB, diskSize, 0.01) //nolint:mnd // ensure disk size is within 0.01 of expected value
+		}
+	}
+}
+
 func EnsureFlexCluster(t *testing.T, cluster *atlasv2.FlexClusterDescription20241113, clusterName string, diskSizeGB float64, terminationProtection bool) {
 	t.Helper()
 	a := assert.New(t)

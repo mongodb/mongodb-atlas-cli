@@ -85,6 +85,34 @@ func Load(fs afero.Fs, filename string, out any) error {
 	return nil
 }
 
+// StrictLoad loads a given filename into the out interface and returns an error if the file is not valid for the given type.
+func StrictLoad(fs afero.Fs, filename string, out any) error {
+	file, err := LoadFile(fs, filename)
+	if err != nil {
+		return err
+	}
+
+	t, err := configType(filename, supportedExts)
+	if err != nil {
+		return err
+	}
+
+	switch t {
+	case yamlName, ymlName:
+		scrictDecoder := yaml.NewDecoder(bytes.NewReader(file))
+		scrictDecoder.KnownFields(true)
+
+		return scrictDecoder.Decode(out)
+	case jsonName:
+		scrictDecoder := json.NewDecoder(bytes.NewReader(file))
+		scrictDecoder.DisallowUnknownFields()
+
+		return scrictDecoder.Decode(out)
+	}
+
+	return nil
+}
+
 // LoadFile loads a given filename into a byte slice.
 func LoadFile(fs afero.Fs, filename string) ([]byte, error) {
 	if exists, err := afero.Exists(fs, filename); !exists || err != nil {

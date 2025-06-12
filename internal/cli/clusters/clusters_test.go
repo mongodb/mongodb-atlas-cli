@@ -21,7 +21,9 @@ import (
 	"time"
 
 	"github.com/go-test/deep"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
 func TestRemoveReadOnlyAttributes(t *testing.T) {
@@ -146,6 +148,172 @@ func TestRemoveReadOnlyAttributes(t *testing.T) {
 		want := tt.want
 		t.Run(name, func(t *testing.T) {
 			removeReadOnlyAttributes(arg)
+			if diff := deep.Equal(arg, want); diff != nil {
+				t.Error(diff)
+			}
+		})
+	}
+}
+
+func TestRemoveReadOnlyAttributesLatest(t *testing.T) {
+	var (
+		id           = "Test"
+		testVar      = "test"
+		specID       = "22"
+		diskSizeGB   = 30.0
+		priority     = 7
+		providerName = "AWS"
+		regionName   = "US_EAST_1"
+		timeStamp    = time.Now()
+	)
+	tests := []struct {
+		name string
+		args *atlasv2.ClusterDescription20240805
+		want *atlasv2.ClusterDescription20240805
+	}{
+		{
+			name: "One ReplicationSpec",
+			args: &atlasv2.ClusterDescription20240805{
+				Id:             &id,
+				MongoDBVersion: &testVar,
+				StateName:      &testVar,
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec20240805{
+					{
+						Id: &specID,
+						RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
+							{
+								ElectableSpecs: &atlasv2.HardwareSpec20240805{
+									DiskSizeGB: &diskSizeGB,
+								},
+								Priority:     &priority,
+								ProviderName: &providerName,
+								RegionName:   &regionName,
+							},
+						},
+					},
+				},
+				CreateDate: &timeStamp,
+			},
+			want: &atlasv2.ClusterDescription20240805{
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec20240805{
+					{
+						RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
+							{
+								ElectableSpecs: &atlasv2.HardwareSpec20240805{
+									DiskSizeGB: &diskSizeGB,
+								},
+								Priority:     &priority,
+								ProviderName: &providerName,
+								RegionName:   &regionName,
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "More ReplicationSpecs",
+			args: &atlasv2.ClusterDescription20240805{
+				Id:             &id,
+				MongoDBVersion: &testVar,
+				StateName:      &testVar,
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec20240805{
+					{
+						Id: &specID,
+						RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
+							{
+								ElectableSpecs: &atlasv2.HardwareSpec20240805{
+									DiskSizeGB: &diskSizeGB,
+								},
+								Priority:     &priority,
+								ProviderName: &providerName,
+								RegionName:   &regionName,
+							},
+						},
+					},
+					{
+						Id: &specID,
+						RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
+							{
+								ElectableSpecs: &atlasv2.HardwareSpec20240805{
+									DiskSizeGB: &diskSizeGB,
+								},
+							},
+						},
+					},
+				},
+				CreateDate: &timeStamp,
+			},
+			want: &atlasv2.ClusterDescription20240805{
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec20240805{
+					{
+						RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
+							{
+								ElectableSpecs: &atlasv2.HardwareSpec20240805{
+									DiskSizeGB: &diskSizeGB,
+								},
+								Priority:     &priority,
+								ProviderName: &providerName,
+								RegionName:   &regionName,
+							},
+						},
+					},
+					{
+						RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
+							{
+								ElectableSpecs: &atlasv2.HardwareSpec20240805{
+									DiskSizeGB: &diskSizeGB,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "Tenant cluster",
+			args: &atlasv2.ClusterDescription20240805{
+				Id: &id,
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec20240805{
+					{
+						RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
+							{
+								ElectableSpecs: &atlasv2.HardwareSpec20240805{
+									DiskSizeGB: &diskSizeGB,
+								},
+								Priority:     &priority,
+								ProviderName: pointer.Get(tenant),
+								RegionName:   &regionName,
+							},
+						},
+					},
+				},
+			},
+			want: &atlasv2.ClusterDescription20240805{
+				ReplicationSpecs: &[]atlasv2.ReplicationSpec20240805{
+					{
+						RegionConfigs: &[]atlasv2.CloudRegionConfig20240805{
+							{
+								ElectableSpecs: &atlasv2.HardwareSpec20240805{
+									DiskSizeGB: nil,
+								},
+								Priority:     &priority,
+								ProviderName: pointer.Get(tenant),
+								RegionName:   &regionName,
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		name := tt.name
+		arg := tt.args
+		want := tt.want
+		t.Run(name, func(t *testing.T) {
+			removeReadOnlyAttributesLatest(arg)
 			if diff := deep.Equal(arg, want); diff != nil {
 				t.Error(diff)
 			}

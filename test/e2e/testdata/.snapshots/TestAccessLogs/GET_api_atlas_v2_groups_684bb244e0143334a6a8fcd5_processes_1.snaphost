@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1862
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 13 Jun 2025 05:16:08 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 33
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=aa3fe7e1ae42f301acdbc498fcfe5f806ad7855c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/684bb244e0143334a6a8fcd5/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-06-13T05:15:24Z","groupId":"684bb244e0143334a6a8fcd5","hostname":"atlas-3ownpa-shard-00-00.rqblje.mongodb-dev.net","id":"atlas-3ownpa-shard-00-00.rqblje.mongodb-dev.net:27017","lastPing":"2025-06-13T05:15:56Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/684bb244e0143334a6a8fcd5/processes/atlas-3ownpa-shard-00-00.rqblje.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-3ownpa-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-561-shard-00-00.rqblje.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-13T05:15:24Z","groupId":"684bb244e0143334a6a8fcd5","hostname":"atlas-3ownpa-shard-00-01.rqblje.mongodb-dev.net","id":"atlas-3ownpa-shard-00-01.rqblje.mongodb-dev.net:27017","lastPing":"2025-06-13T05:15:56Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/684bb244e0143334a6a8fcd5/processes/atlas-3ownpa-shard-00-01.rqblje.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-3ownpa-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-561-shard-00-01.rqblje.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-13T05:15:24Z","groupId":"684bb244e0143334a6a8fcd5","hostname":"atlas-3ownpa-shard-00-02.rqblje.mongodb-dev.net","id":"atlas-3ownpa-shard-00-02.rqblje.mongodb-dev.net:27017","lastPing":"2025-06-13T05:15:56Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/684bb244e0143334a6a8fcd5/processes/atlas-3ownpa-shard-00-02.rqblje.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-3ownpa-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-561-shard-00-02.rqblje.mongodb-dev.net","version":"8.0.10"}],"totalCount":3}

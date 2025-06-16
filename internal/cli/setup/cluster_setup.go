@@ -32,7 +32,7 @@ import (
 
 var ErrNoRegions = errors.New("no regions found for the cloud provider")
 var ErrNoVersions = errors.New("no mongodb versions found for the cloud provider")
-var deprecatedClusterWideScalingMessage = "The default scaling type will change from `clusterWideScaling` to `independentShardScaling` in the next major version of the Atlas CLI. Use --autoScalingMode independentShardScaling to create a cluster with independent shard auto scaling mode."
+var deprecatedClusterWideScalingMessage = "If you require more flexibility in shard scaling, consider using --autoScalingMode independentShardScaling."
 
 const (
 	tenant  = "TENANT"

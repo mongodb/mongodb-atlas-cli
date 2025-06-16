@@ -32,7 +32,7 @@ import (
 
 var ErrNoRegions = errors.New("no regions found for the cloud provider")
 var ErrNoVersions = errors.New("no mongodb versions found for the cloud provider")
-var deprecatedClusterWideScalingMessage = "If you require more flexibility in shard scaling, consider using --autoScalingMode independentShardScaling."
+var deprecatedClusterWideScalingMessage = "Detected clusterWideScaling mode. If you require more flexibility in shard scaling, consider using --autoScalingMode independentShardScaling."
 
 const (
 	tenant  = "TENANT"

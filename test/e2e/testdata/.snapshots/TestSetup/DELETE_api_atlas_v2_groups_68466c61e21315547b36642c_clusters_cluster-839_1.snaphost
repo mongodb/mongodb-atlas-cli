@@ -1,0 +1,14 @@
+HTTP/2.0 401 Unauthorized
+<<<<<<<< HEAD:test/e2e/testdata/.snapshots/TestSetup/DELETE_api_atlas_v2_groups_684704daae2ac22d934a7e91_clusters_cluster-79_1.snaphost
+Date: Mon, 09 Jun 2025 15:59:51 GMT
+Server: mdbws
+Www-Authenticate: Digest realm="MMS Public API", domain="", nonce="0Gl8ST9iK8OG6BwEnm6SKfze5j5O03eB", algorithm=MD5, qop="auth", stale=false
+X-Envoy-Upstream-Service-Time: 6
+========
+Date: Mon, 09 Jun 2025 05:09:14 GMT
+Server: mdbws
+Www-Authenticate: Digest realm="MMS Public API", domain="", nonce="RFGFH1musamhfWN1gT8+ZhZPblU0r9tw", algorithm=MD5, qop="auth", stale=false
+X-Envoy-Upstream-Service-Time: 5
+>>>>>>>> origin/master:test/e2e/testdata/.snapshots/TestSetup/DELETE_api_atlas_v2_groups_68466c61e21315547b36642c_clusters_cluster-839_1.snaphost
+Content-Length: 0
+

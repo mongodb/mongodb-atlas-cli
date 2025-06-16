@@ -5,9 +5,6 @@ on:
     branches:
       - master
   pull_request:
-permissions:
-  pull-requests: write  # For PR-specific operations
-  issues: write        # For commenting functionality
 jobs:
   golangci:
     name: lint
@@ -64,6 +61,8 @@ jobs:
           path: coverage.out
 
   code-coverage:
+    permissions:
+      pull-requests: write  # Required to comment on PRs
     needs: unit-tests
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -139,6 +138,7 @@ jobs:
           cat "comment.md" >> "$GITHUB_STEP_SUMMARY"
       - name: Comment PR
         uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db
+        if: github.event.pull_request.head.repo.full_name == github.repository
         with:
           recreate: true
           path: comment.md

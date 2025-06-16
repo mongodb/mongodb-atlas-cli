@@ -1,0 +1,19 @@
+HTTP/2.0 401 Unauthorized
+Content-Length: 106
+Content-Type: application/json
+<<<<<<<< HEAD:test/e2e/testdata/.snapshots/TestSetup/GET_api_atlas_v2_groups_684704daae2ac22d934a7e91_clusters_cluster-79_5.snaphost
+Date: Mon, 09 Jun 2025 15:59:52 GMT
+Server: mdbws
+Www-Authenticate: Digest realm="MMS Public API", domain="", nonce="GNA4HSmAnOMqYHHneI7mGQefnWPljD5f", algorithm=MD5, qop="auth", stale=false
+========
+Date: Mon, 09 Jun 2025 05:09:14 GMT
+Server: mdbws
+Www-Authenticate: Digest realm="MMS Public API", domain="", nonce="5uiJNMkt24fUmjD16vJMwrIoz09lnqpg", algorithm=MD5, qop="auth", stale=false
+>>>>>>>> origin/master:test/e2e/testdata/.snapshots/TestSetup/GET_api_atlas_v2_groups_68466c61e21315547b36642c_clusters_cluster-839_1.snaphost
+X-Envoy-Upstream-Service-Time: 4
+
+{
+  "error" : 401,
+  "reason" : "Unauthorized",
+  "detail" : "You are not authorized for this resource."
+}

@@ -17,6 +17,7 @@ package setup
 import (
 	"errors"
 	"fmt"
+	"os"
 	"slices"
 	"strings"
 
@@ -31,6 +32,7 @@ import (
 
 var ErrNoRegions = errors.New("no regions found for the cloud provider")
 var ErrNoVersions = errors.New("no mongodb versions found for the cloud provider")
+var deprecatedClusterWideScalingMessage = "Detected clusterWideScaling mode. If you require more flexibility in shard scaling, consider using --autoScalingMode independentShardScaling."
 
 const (
 	tenant  = "TENANT"
@@ -40,6 +42,8 @@ const (
 
 func (opts *Opts) createCluster() error {
 	if opts.AutoScalingMode == clusterWideScaling {
+		_, _ = fmt.Fprintln(os.Stderr, deprecatedClusterWideScalingMessage)
+
 		if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
 			return err
 		}

@@ -34,14 +34,16 @@ import (
 type ClusterLister interface {
 	ProjectClusters(string, *store.ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
 	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
+	LatestProjectClusters(string, *store.ListOptions) (*atlasv2.PaginatedClusterDescription20240805, error)
 }
 
 type ListOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
 	cli.ListOpts
-	tier  string
-	store ClusterLister
+	tier            string
+	autoScalingMode string
+	store           ClusterLister
 }
 
 func (opts *ListOpts) initStore(ctx context.Context) func() error {
@@ -66,6 +68,14 @@ func (opts *ListOpts) Run() error {
 
 func (opts *ListOpts) RunDedicatedCluster() error {
 	listOpts := opts.NewAtlasListOptions()
+	if opts.autoScalingMode == independentShardScalingFlag {
+		r, err := opts.store.LatestProjectClusters(opts.ConfigProjectID(), listOpts)
+		if err != nil {
+			return err
+		}
+		return opts.Print(r)
+	}
+
 	r, err := opts.store.ProjectClusters(opts.ConfigProjectID(), listOpts)
 	if err != nil {
 		return err
@@ -121,6 +131,7 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, "", usage.Tier)
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, "", usage.AutoScalingMode)
 	opts.AddListOptsFlags(cmd)
 
 	opts.AddProjectOptsFlags(cmd)

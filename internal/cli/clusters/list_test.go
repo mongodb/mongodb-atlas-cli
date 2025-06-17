@@ -80,6 +80,33 @@ func TestList_RunFlexCluster(t *testing.T) {
 	require.NoError(t, listOpts.Run())
 }
 
+func TestList_RunDedicatedCluster_IndependentShardScaling(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockClusterLister(ctrl)
+
+	expected := &atlasv2.PaginatedClusterDescription20240805{
+		Results: &[]atlasv2.ClusterDescription20240805{
+			{
+				Name: pointer.Get("test"),
+				Id:   pointer.Get("123"),
+			},
+		},
+	}
+
+	listOpts := &ListOpts{
+		store:           mockStore,
+		autoScalingMode: independentShardScalingFlag,
+	}
+
+	mockStore.
+		EXPECT().
+		LatestProjectClusters(listOpts.ProjectID, listOpts.NewAtlasListOptions()).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, listOpts.Run())
+}
+
 func TestListTemplate(t *testing.T) {
 	test.VerifyOutputTemplate(t, listTemplate, atlasClustersPinned.PaginatedAdvancedClusterDescription{})
 }

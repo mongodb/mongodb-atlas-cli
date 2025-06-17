@@ -21,7 +21,6 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/require"
-	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	"go.uber.org/mock/gomock"
 )
@@ -30,7 +29,7 @@ func TestWatch_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockClusterDescriber(ctrl)
 
-	expected := &atlasClustersPinned.AdvancedClusterDescription{StateName: pointer.Get("IDLE")}
+	expected := &atlasv2.ClusterDescription20240805{StateName: pointer.Get("IDLE")}
 
 	opts := &WatchOpts{
 		name:          "test",
@@ -40,7 +39,7 @@ func TestWatch_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AtlasCluster(opts.ProjectID, opts.name).
+		LatestAtlasCluster(opts.ProjectID, opts.name).
 		Return(expected, nil).
 		Times(1)
 

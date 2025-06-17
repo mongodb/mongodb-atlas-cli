@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 1440
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 09 Jun 2025 05:08:44 GMT
+Date: Tue, 17 Jun 2025 05:08:41 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 21
+X-Envoy-Upstream-Service-Time: 19
 X-Frame-Options: DENY
 X-Java-Method: ApiFederationSettingsResource::getAllIdentityProviders
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=eb36b93835414a5bb1c2a2625bfe67b328c93c2e; versionString=master
+X-Mongodb-Service-Version: gitHash=a2708b0de455ac397fe7c5089ba9b542b9cc9c5d; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKLOAD&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedOrgs":[],"audience":"idp-195-96969c56155eeb7774e4596e6e3e65b5fc492e5d","authorizationType":"GROUP","createdAt":"2025-03-18T01:40:21Z","description":"CLI TEST Provider","displayName":"idp-195-96969c56155eeb7774e4596e6e3e65b5fc492e5d","groupsClaim":"groups","id":"67d8cf052f125539987fee8b","idpType":"WORKLOAD","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","updatedAt":null,"userClaim":"user"},{"associatedOrgs":[],"audience":"idp-991","authorizationType":"GROUP","createdAt":"2025-06-09T05:08:41Z","description":"CLI TEST Provider","displayName":"idp-991","groupsClaim":"groups","id":"68466c590a8f6759322c952a","idpType":"WORKLOAD","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","updatedAt":null,"userClaim":"user"},{"associatedOrgs":[],"audience":"idp-906-35c23ab3476f15dcba9d49a041ab7fee4498d4a7","authorizationType":"GROUP","createdAt":"2025-05-28T09:19:08Z","description":"CLI TEST Provider","displayName":"idp-906-35c23ab3476f15dcba9d49a041ab7fee4498d4a7","groupsClaim":"groups","id":"6836d50c215c6f39623c990a","idpType":"WORKLOAD","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","updatedAt":null,"userClaim":"user"}],"totalCount":3}
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/identityProviders?idpType=WORKLOAD&protocol=OIDC&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"associatedOrgs":[],"audience":"idp-195-96969c56155eeb7774e4596e6e3e65b5fc492e5d","authorizationType":"GROUP","createdAt":"2025-03-18T01:40:21Z","description":"CLI TEST Provider","displayName":"idp-195-96969c56155eeb7774e4596e6e3e65b5fc492e5d","groupsClaim":"groups","id":"67d8cf052f125539987fee8b","idpType":"WORKLOAD","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","updatedAt":null,"userClaim":"user"},{"associatedOrgs":[],"audience":"idp-431","authorizationType":"GROUP","createdAt":"2025-06-17T05:08:34Z","description":"CLI TEST Provider","displayName":"idp-431","groupsClaim":"groups","id":"6850f852beebb24722ded2e9","idpType":"WORKLOAD","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","updatedAt":null,"userClaim":"user"},{"associatedOrgs":[],"audience":"idp-906-35c23ab3476f15dcba9d49a041ab7fee4498d4a7","authorizationType":"GROUP","createdAt":"2025-05-28T09:19:08Z","description":"CLI TEST Provider","displayName":"idp-906-35c23ab3476f15dcba9d49a041ab7fee4498d4a7","groupsClaim":"groups","id":"6836d50c215c6f39623c990a","idpType":"WORKLOAD","issuerUri":"https://accounts.google.com","oktaIdpId":null,"protocol":"OIDC","updatedAt":null,"userClaim":"user"}],"totalCount":3}

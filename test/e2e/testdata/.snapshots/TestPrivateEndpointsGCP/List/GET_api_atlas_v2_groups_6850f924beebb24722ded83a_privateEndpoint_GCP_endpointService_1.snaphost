@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 983
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Tue, 17 Jun 2025 05:17:06 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 37
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndpointServices
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=a2708b0de455ac397fe7c5089ba9b542b9cc9c5d; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+[{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"6850f928beebb24722ded89b","regionName":"SOUTH_AMERICA_EAST_1","serviceAttachmentNames":["projects/p-omk72fgxxedqomfj2wlwyyqd/regions/southamerica-east1/serviceAttachments/sa-southamerica-east1-6850f924beebb24722ded83a-0","projects/p-omk72fgxxedqomfj2wlwyyqd/regions/southamerica-east1/serviceAttachments/sa-southamerica-east1-6850f924beebb24722ded83a-1","projects/p-omk72fgxxedqomfj2wlwyyqd/regions/southamerica-east1/serviceAttachments/sa-southamerica-east1-6850f924beebb24722ded83a-2","projects/p-omk72fgxxedqomfj2wlwyyqd/regions/southamerica-east1/serviceAttachments/sa-southamerica-east1-6850f924beebb24722ded83a-3","projects/p-omk72fgxxedqomfj2wlwyyqd/regions/southamerica-east1/serviceAttachments/sa-southamerica-east1-6850f924beebb24722ded83a-4","projects/p-omk72fgxxedqomfj2wlwyyqd/regions/southamerica-east1/serviceAttachments/sa-southamerica-east1-6850f924beebb24722ded83a-5"],"status":"AVAILABLE"}]

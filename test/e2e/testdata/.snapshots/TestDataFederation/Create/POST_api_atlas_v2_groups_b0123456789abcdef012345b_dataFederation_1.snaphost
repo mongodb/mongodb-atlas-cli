@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 511
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Mon, 09 Jun 2025 05:08:47 GMT
+Date: Tue, 17 Jun 2025 05:07:28 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 532
+X-Envoy-Upstream-Service-Time: 741
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasDataFederationResource::createTenant
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=eb36b93835414a5bb1c2a2625bfe67b328c93c2e; versionString=master
+X-Mongodb-Service-Version: gitHash=a2708b0de455ac397fe7c5089ba9b542b9cc9c5d; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"cloudProviderConfig":{"aws":{"externalId":"c6956c40-f7f3-404e-8123-a122deb6162f","iamAssumedRoleARN":"arn:aws:iam::358363220050:role/mongodb-atlas-apix-atlascli-test","iamUserARN":"arn:aws:iam::299602853325:root","roleId":"c0123456789abcdef012345c"}},"dataProcessRegion":null,"groupId":"b0123456789abcdef012345b","hostnames":["e2e-data-federation-836-g1nxq.a.query.mongodb-dev.net"],"name":"e2e-data-federation-836","privateEndpointHostnames":[],"state":"ACTIVE","storage":{"stores": null, "databases": null}}
+{"cloudProviderConfig":{"aws":{"externalId":"c6956c40-f7f3-404e-8123-a122deb6162f","iamAssumedRoleARN":"arn:aws:iam::358363220050:role/mongodb-atlas-apix-atlascli-test","iamUserARN":"arn:aws:iam::299602853325:root","roleId":"c0123456789abcdef012345c"}},"dataProcessRegion":null,"groupId":"b0123456789abcdef012345b","hostnames":["e2e-data-federation-674-g1nxq.a.query.mongodb-dev.net"],"name":"e2e-data-federation-674","privateEndpointHostnames":[],"state":"ACTIVE","storage":{"stores": null, "databases": null}}

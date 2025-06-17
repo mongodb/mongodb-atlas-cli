@@ -147,9 +147,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,

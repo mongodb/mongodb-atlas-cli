@@ -70,10 +70,10 @@ var Commands = shared_api.GroupedAndSortedCommands{
 					},
 					Verb: {{ .RequestParameters.Verb }},
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 				{{- range .Versions }}
 					{
-						Version: `{{ .Version }}`,
+						Version: {{ createVersion .Version }},
 						RequestContentType: `{{ .RequestContentType }}`,
 						ResponseContentTypes: []string{
 						{{- range .ResponseContentTypes }}
@@ -86,7 +86,7 @@ var Commands = shared_api.GroupedAndSortedCommands{
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `{{ .Watcher.Get.OperationID }}`,
-						Version:     `{{ .Watcher.Get.Version }}`,
+						Version:     {{ createVersion .Watcher.Get.Version }},
 						Params: map[string]string{
 							{{- range $k, $v := .Watcher.Get.Params }}
 							`{{ $k }}`: `{{ $v }}`,

@@ -153,11 +153,7 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 			return nil, fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
 		}
 
-		if shouldIgnoreVersion(version) {
-			continue
-		}
-
-		results[version] = extractedExamples{
+		results[version.ToString()] = extractedExamples{
 			Example:  mediaType.Example,
 			Examples: mediaType.Examples,
 		}
@@ -185,7 +181,7 @@ func extractDefaultVersion(operation *openapi3.Operation) (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("unsupported version %q error: %w", mime, err)
 		}
-		versions = append(versions, version)
+		versions = append(versions, version.ToString())
 	}
 
 	if len(versions) == 0 {

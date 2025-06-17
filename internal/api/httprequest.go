@@ -145,19 +145,19 @@ func buildQueryParameters(commandQueryParameters []shared_api.Parameter, paramet
 }
 
 // select a version from a list of versions, throws an error if no match is found.
-func selectVersion(versionString string, versions []shared_api.Version) (*shared_api.Version, error) {
+func selectVersion(selectedVersion shared_api.Version, versions []shared_api.CommandVersion) (*shared_api.CommandVersion, error) {
 	for _, version := range versions {
-		if version.Version == versionString {
+		if version.Version.Equal(selectedVersion) {
 			return &version, nil
 		}
 	}
 
-	return nil, fmt.Errorf("version '%s' not found", versionString)
+	return nil, fmt.Errorf("version '%s' not found", selectedVersion.ToString())
 }
 
 // generate the accept header using the given format string
 // try to find the content type in the list of response content types, if not found set the type to json.
-func acceptHeader(version *shared_api.Version, requestedContentType string) (string, error) {
+func acceptHeader(version *shared_api.CommandVersion, requestedContentType string) (string, error) {
 	contentType := ""
 	supportedTypes := make([]string, 0)
 
@@ -173,12 +173,12 @@ func acceptHeader(version *shared_api.Version, requestedContentType string) (str
 		return "", fmt.Errorf("expected one of the following values: [%s], but got '%s' instead", strings.Join(supportedTypes, ","), requestedContentType)
 	}
 
-	return fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, contentType), nil
+	return fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version.ToString(), contentType), nil
 }
 
-func contentType(version *shared_api.Version) *string {
+func contentType(version *shared_api.CommandVersion) *string {
 	if version.RequestContentType != "" {
-		contentType := fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, version.RequestContentType)
+		contentType := fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version.ToString(), version.RequestContentType)
 		return &contentType
 	}
 

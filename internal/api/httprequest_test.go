@@ -212,7 +212,7 @@ func TestConvertToHttpRequest(t *testing.T) {
 					"envelope":       {"true"},
 					"metrics":        {"metric1", "metric2"},
 				},
-				Version: "2023-11-15",
+				Version: shared_api.NewStableVersion(2023, 11, 15),
 			},
 			shouldFail:                    false,
 			expectedURL:                   "https://base_url/api/atlas/v2/groups/abcdef1234/clusters/cluster-01/view-42/metrics/pageviews/collStats/measurements?envelope=true&metrics=metric1&metrics=metric2",
@@ -232,7 +232,7 @@ func TestConvertToHttpRequest(t *testing.T) {
 					"groupId": {"0ff00ff00ff0"},
 					"pretty":  {"true"},
 				},
-				Version: "2024-08-05",
+				Version: shared_api.NewStableVersion(2024, 8, 5),
 			},
 			shouldFail:                    false,
 			expectedURL:                   "http://another_base/api/atlas/v2/groups/0ff00ff00ff0/clusters?pretty=true",
@@ -252,7 +252,7 @@ func TestConvertToHttpRequest(t *testing.T) {
 					"groupId": {"0ff00ff00ff0"},
 					"pretty":  {"true"},
 				},
-				Version: "2024-08-05",
+				Version: shared_api.NewStableVersion(2024, 8, 5),
 			},
 			shouldFail:                    true,
 			expectedURL:                   "http://another_base/api/atlas/v2/groups/0ff00ff00ff0/clusters?pretty=true",
@@ -271,7 +271,7 @@ func TestConvertToHttpRequest(t *testing.T) {
 				Parameters: map[string][]string{
 					"pretty": {"true"},
 				},
-				Version: "2024-08-05",
+				Version: shared_api.NewStableVersion(2024, 8, 5),
 			},
 			shouldFail: true,
 		},
@@ -286,7 +286,7 @@ func TestConvertToHttpRequest(t *testing.T) {
 					"groupId": {"0ff00ff00ff0"},
 					"pretty":  {"true"},
 				},
-				Version: "1991-05-17",
+				Version: shared_api.NewStableVersion(1991, 5, 17),
 			},
 			shouldFail: true,
 		},
@@ -421,9 +421,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		},
 		Verb: http.MethodGet,
 	},
-	Versions: []shared_api.Version{
+	Versions: []shared_api.CommandVersion{
 		{
-			Version:            `2023-11-15`,
+			Version:            shared_api.NewStableVersion(2023, 11, 15),
 			RequestContentType: ``,
 			ResponseContentTypes: []string{
 				`json`,
@@ -473,30 +473,30 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		},
 		Verb: http.MethodPost,
 	},
-	Versions: []shared_api.Version{
+	Versions: []shared_api.CommandVersion{
 		{
-			Version:            `2023-01-01`,
+			Version:            shared_api.NewStableVersion(2023, 1, 1),
 			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,
 			},
 		},
 		{
-			Version:            `2023-02-01`,
+			Version:            shared_api.NewStableVersion(2023, 2, 1),
 			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,
 			},
 		},
 		{
-			Version:            `2024-08-05`,
+			Version:            shared_api.NewStableVersion(2024, 8, 5),
 			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,
 			},
 		},
 		{
-			Version:            `2024-10-23`,
+			Version:            shared_api.NewStableVersion(2024, 10, 23),
 			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,

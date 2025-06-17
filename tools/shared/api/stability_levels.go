@@ -1,0 +1,252 @@
+package api
+
+import (
+	"errors"
+	"fmt"
+	"regexp"
+	"strconv"
+	"time"
+)
+
+var (
+	versionRegex = regexp.MustCompile(`^((?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})(?P<upcoming>\.upcoming)?|(?P<preview>preview))$`)
+)
+
+type StabilityLevel string
+
+const (
+	StabilityLevelPreview  StabilityLevel = "preview"
+	StabilityLevelUpcoming StabilityLevel = "upcoming"
+	StabilityLevelStable   StabilityLevel = "stable"
+)
+
+type VersionDate struct {
+	Year  int
+	Month time.Month
+	Day   int
+}
+
+// Returns true if v(this) is less than other
+func (v VersionDate) Less(other *VersionDate) bool {
+	return v.Year < other.Year || v.Month < other.Month || v.Day < other.Day
+}
+
+// Returns true if v(this) is equal to other
+func (v VersionDate) Equal(other *VersionDate) bool {
+	return v.Year == other.Year && v.Month == other.Month && v.Day == other.Day
+}
+
+type Version interface {
+	StabilityLevel() StabilityLevel
+	// Returns true if v(this) is less than other
+	Less(other Version) bool
+	Equal(other Version) bool
+	ToString() string
+}
+
+func ParseVersion(version string) (Version, error) {
+	matches := versionRegex.FindStringSubmatch(version)
+	if len(matches) == 0 {
+		return nil, fmt.Errorf("invalid version: %s", version)
+	}
+
+	// Get the named group indexes
+	yearIndex := versionRegex.SubexpIndex("year")
+	monthIndex := versionRegex.SubexpIndex("month")
+	dayIndex := versionRegex.SubexpIndex("day")
+	upcomingIndex := versionRegex.SubexpIndex("upcoming")
+	previewIndex := versionRegex.SubexpIndex("preview")
+
+	// Get the named group values
+	year := matches[yearIndex]
+	month := matches[monthIndex]
+	day := matches[dayIndex]
+	upcoming := matches[upcomingIndex]
+	preview := matches[previewIndex]
+
+	// If the version is a preview, return a PreviewVersion
+	if preview != "" {
+		if year != "" || month != "" || day != "" {
+			return nil, errors.New("preview version cannot have a year, month, or day")
+		}
+
+		return NewPreviewVersion(PreviewTypeUnknown), nil
+	}
+
+	// For upcoming and stable versions, year, month, and day are required
+	if year == "" || month == "" || day == "" {
+		return nil, errors.New("upcoming and stable versions must have a year, month, and day")
+	}
+
+	// Convert the year, month, and day to ints
+	// We know that they're in the correct format (because the regex matched), so we can ignore the error
+	yearInt, _ := strconv.Atoi(year)
+	monthInt, _ := strconv.Atoi(month)
+	dayInt, _ := strconv.Atoi(day)
+
+	// If the version is an upcoming version, return an UpcomingVersion
+	if upcoming != "" {
+		return NewUpcomingVersion(yearInt, time.Month(monthInt), dayInt), nil
+	}
+
+	// If the version is a stable version, return a StableVersion
+	return NewStableVersion(yearInt, time.Month(monthInt), dayInt), nil
+}
+
+type PreviewVersion struct {
+	Type PreviewType
+}
+
+func NewPreviewVersion(previewType PreviewType) PreviewVersion {
+	return PreviewVersion{Type: previewType}
+}
+
+type PreviewType string
+
+const (
+	PreviewTypeUnknown PreviewType = "unknown"
+	PreviewTypePrivate PreviewType = "private"
+	PreviewTypePublic  PreviewType = "public"
+)
+
+func (PreviewVersion) StabilityLevel() StabilityLevel {
+	return StabilityLevelPreview
+}
+
+func (PreviewVersion) Less(other Version) bool {
+	// switch cast other Version to preview/upcoming/stable
+	switch other.(type) {
+	case PreviewVersion:
+		// other preview versions are always equal
+		return false
+	case UpcomingVersion:
+		// upcoming versions are always greater than preview versions
+		return true
+	case StableVersion:
+		// stable versions are always greater than preview versions
+		return true
+	}
+
+	panic("unreachable")
+}
+
+func (PreviewVersion) Equal(other Version) bool {
+	// switch cast other Version to preview/upcoming/stable
+	switch other.(type) {
+	case PreviewVersion:
+		// other preview versions are always equal
+		return true
+	case UpcomingVersion:
+		// upcoming versions are never equal to preview versions
+		return false
+	case StableVersion:
+		// stable versions are never equal to preview versions
+		return false
+	}
+
+	panic("unreachable")
+}
+
+func (PreviewVersion) ToString() string {
+	return "preview"
+}
+
+type UpcomingVersion struct {
+	Date VersionDate
+}
+
+func NewUpcomingVersion(year int, month time.Month, day int) UpcomingVersion {
+	return UpcomingVersion{Date: VersionDate{Year: year, Month: month, Day: day}}
+}
+
+func (UpcomingVersion) StabilityLevel() StabilityLevel {
+	return StabilityLevelUpcoming
+}
+
+func (v UpcomingVersion) Less(other Version) bool {
+	// switch cast other Version to preview/upcoming/stable
+	switch o := other.(type) {
+	case PreviewVersion:
+		// preview versions are always less than upcoming versions
+		return true
+	case UpcomingVersion:
+		// for other upcoming versions, compare dates
+		return v.Date.Less(&o.Date)
+	case StableVersion:
+		// stable versions are always less than upcoming versions
+		return true
+	}
+
+	panic("unreachable")
+}
+
+func (v UpcomingVersion) Equal(other Version) bool {
+	// switch cast other Version to preview/upcoming/stable
+	switch o := other.(type) {
+	case PreviewVersion:
+		// preview versions are never equal to upcoming versions
+		return false
+	case UpcomingVersion:
+		// for other upcoming versions, compare dates
+		return v.Date.Equal(&o.Date)
+	case StableVersion:
+		// stable versions are never equal to upcoming versions
+		return false
+	}
+
+	panic("unreachable")
+}
+
+func (v UpcomingVersion) ToString() string {
+	return fmt.Sprintf("%04d-%02d-%02d.upcoming", v.Date.Year, v.Date.Month, v.Date.Day)
+}
+
+type StableVersion struct {
+	Date VersionDate
+}
+
+func NewStableVersion(year int, month time.Month, day int) StableVersion {
+	return StableVersion{Date: VersionDate{Year: year, Month: month, Day: day}}
+}
+
+func (StableVersion) StabilityLevel() StabilityLevel {
+	return StabilityLevelStable
+}
+
+func (v StableVersion) Less(other Version) bool {
+	// switch cast other Version to preview/upcoming/stable
+	switch o := other.(type) {
+	case PreviewVersion:
+		// preview versions are always less than stable versions
+		return true
+	case UpcomingVersion:
+		// upcoming versions are always less than stable versions
+		return true
+	case StableVersion:
+		// for other stable versions, compare dates
+		return v.Date.Less(&o.Date)
+	}
+
+	panic("unreachable")
+}
+
+func (v StableVersion) Equal(other Version) bool {
+	// switch cast other Version to preview/upcoming/stable
+	switch o := other.(type) {
+	case PreviewVersion:
+		// preview versions are never equal to stable versions
+		return false
+	case UpcomingVersion:
+		// upcoming versions are never equal to stable versions
+		return false
+	case StableVersion:
+		// for other stable versions, compare dates
+		return v.Date.Equal(&o.Date)
+	}
+
+	panic("unreachable")
+}
+
+func (v StableVersion) ToString() string {
+	return fmt.Sprintf("%04d-%02d-%02d", v.Date.Year, v.Date.Month, v.Date.Day)
+}

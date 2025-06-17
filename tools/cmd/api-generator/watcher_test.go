@@ -73,7 +73,7 @@ func TestNewWatcherGetProperties(t *testing.T) {
 			},
 			expectedOutput: &api.WatcherGetProperties{
 				OperationID: "getCluster",
-				Version:     "1991-05-17",
+				Version:     api.StableVersion{Date: api.VersionDate{Year: 1991, Month: 5, Day: 17}},
 				Params:      map[string]string{},
 			},
 			expectedErr: nil,
@@ -89,7 +89,45 @@ func TestNewWatcherGetProperties(t *testing.T) {
 			},
 			expectedOutput: &api.WatcherGetProperties{
 				OperationID: "getCluster",
-				Version:     "1991-05-17",
+				Version:     api.StableVersion{Date: api.VersionDate{Year: 1991, Month: 5, Day: 17}},
+				Params: map[string]string{
+					"groupId":     "input:groupId",
+					"clusterName": "body:$.name",
+				},
+			},
+			expectedErr: nil,
+		},
+		{
+			input: map[string]any{
+				"operation-id": "getCluster",
+				"version":      "1991-05-17.upcoming",
+				"params": map[string]any{
+					"groupId":     "input:groupId",
+					"clusterName": "body:$.name",
+				},
+			},
+			expectedOutput: &api.WatcherGetProperties{
+				OperationID: "getCluster",
+				Version:     api.UpcomingVersion{Date: api.VersionDate{Year: 1991, Month: 5, Day: 17}},
+				Params: map[string]string{
+					"groupId":     "input:groupId",
+					"clusterName": "body:$.name",
+				},
+			},
+			expectedErr: nil,
+		},
+		{
+			input: map[string]any{
+				"operation-id": "getCluster",
+				"version":      "preview",
+				"params": map[string]any{
+					"groupId":     "input:groupId",
+					"clusterName": "body:$.name",
+				},
+			},
+			expectedOutput: &api.WatcherGetProperties{
+				OperationID: "getCluster",
+				Version:     api.PreviewVersion{Type: api.PreviewTypeUnknown},
 				Params: map[string]string{
 					"groupId":     "input:groupId",
 					"clusterName": "body:$.name",

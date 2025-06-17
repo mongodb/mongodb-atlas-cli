@@ -88,7 +88,16 @@ func newWatcherGetProperties(ext map[string]any) (*api.WatcherGetProperties, err
 		return nil, ErrWatcherGetPropertiesInvalidOperationID
 	}
 
-	version, _ := ext["version"].(string)
+	versionString, _ := ext["version"].(string)
+	var version api.Version
+	if versionString != "" {
+		parsedVersion, err := api.ParseVersion(versionString)
+		if err != nil {
+			return nil, err
+		}
+
+		version = parsedVersion
+	}
 
 	params := make(map[string]string)
 	for key, value := range extractObject(ext, "params") {
@@ -258,7 +267,7 @@ func validateWatchersForCommand(allCommands map[string]*api.Group, command api.C
 	// ensure the version exists
 	versionFound := false
 	for _, apiVersion := range getWatcherCommand.Versions {
-		if apiVersion.Version == watcher.Get.Version {
+		if apiVersion.Version.Equal(watcher.Get.Version) {
 			versionFound = true
 		}
 	}

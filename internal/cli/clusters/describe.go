@@ -58,7 +58,7 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 
 func (opts *DescribeOpts) Run() error {
 	autoScalingModeConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.name)
-	if err == nil && autoScalingModeConfig.GetAutoScalingMode() == independentShardScalingFlag {
+	if err == nil && isIndependentShardScaling(autoScalingModeConfig.GetAutoScalingMode()) {
 		r, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.name)
 		if err != nil {
 			return err

@@ -40,6 +40,7 @@ func (opts *Opts) newCluster() *atlasClustersPinned.AdvancedClusterDescription {
 		ClusterType:                  pointer.Get(replicaSet),
 		Name:                         &opts.ClusterName,
 		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
+		BackupEnabled:                pointer.Get(true),
 		ReplicationSpecs: &[]atlasClustersPinned.ReplicationSpec{
 			{
 				NumShards: pointer.Get(1),

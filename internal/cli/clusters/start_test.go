@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	"go.uber.org/mock/gomock"
 )
 
@@ -38,6 +39,51 @@ func TestStart_Run(t *testing.T) {
 		StartCluster(updateOpts.ConfigProjectID(), updateOpts.name).
 		Return(expected, nil).
 		Times(1)
+
+	if err := updateOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestStart_Run_ClusterWideScaling(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockClusterStarter(ctrl)
+
+	updateOpts := &StartOpts{
+		name:  "ProjectBar",
+		store: mockStore,
+	}
+
+	expected := &atlasClustersPinned.AdvancedClusterDescription{}
+
+	mockStore.
+		EXPECT().
+		StartCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+		Return(expected, nil).
+		Times(1)
+
+	if err := updateOpts.Run(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestStart_Run_IndependentShardScaling(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockClusterStarter(ctrl)
+
+	updateOpts := &StartOpts{
+		name:  "ProjectBar",
+		store: mockStore,
+	}
+
+	expected := &atlasv2.ClusterDescription20240805{}
+
+	mockStore.
+		EXPECT().
+		StartClusterLatest(updateOpts.ConfigProjectID(), updateOpts.name).
+		Return(expected, nil).
+		Times(1)
+
 	if err := updateOpts.Run(); err != nil {
 		t.Fatalf("Run() unexpected error: %v", err)
 	}

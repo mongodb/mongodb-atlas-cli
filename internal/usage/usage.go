@@ -409,5 +409,5 @@ dbName and collection are required only for built-in roles.`
 	AuditFilter                = "JSON document that specifies which events to record. Escape any characters that may prevent parsing, such as single or double quotes, using a backslash (\\)."
 	InvitationFile             = "Path to an optional JSON configuration file that defines invitation settings. Note: Unsupported fields in the JSON file are ignored."
 	InitDB                     = "Flag that uses a folder to be mapped into LOCAL deployment for initialization"
-	AutoScalingMode            = "The mode in which the cluster scales. Valid values are clusterWideScaling or independentShardScaling."
+	AutoScalingMode            = "Mode in which the cluster scales. Valid values are clusterWideScaling or independentShardScaling."
 )

@@ -694,7 +694,7 @@ tasks:
         patch_optional: true
     commands:
       - func: "install gotestsum"
-       - func: "e2e test"
+      - func: "e2e test"
         vars:
           MONGODB_ATLAS_ORG_ID: ${atlas_org_id}
           MONGODB_ATLAS_PROJECT_ID: ${atlas_project_id}

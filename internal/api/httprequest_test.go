@@ -290,6 +290,46 @@ func TestConvertToHttpRequest(t *testing.T) {
 			},
 			shouldFail: true,
 		},
+		{
+			name:    "valid preview post request (createClusterCommand - Preview)",
+			baseURL: "http://another_base",
+			request: CommandRequest{
+				Command:     createClusterCommand,
+				Content:     strings.NewReader(`{"very_pretty_json":true}`),
+				ContentType: "json",
+				Parameters: map[string][]string{
+					"groupId": {"0ff00ff00ff0"},
+					"pretty":  {"true"},
+				},
+				Version: shared_api.NewPreviewVersion(shared_api.PreviewTypeUnknown),
+			},
+			shouldFail:                    false,
+			expectedURL:                   "http://another_base/api/atlas/v2/groups/0ff00ff00ff0/clusters?pretty=true",
+			expectedHTTPVerb:              http.MethodPost,
+			expectedHTTPAcceptHeader:      "application/vnd.atlas.preview+json",
+			expectedHTTPContentTypeHeader: "application/vnd.atlas.preview+json",
+			expectedHTTPBody:              `{"very_pretty_json":true}`,
+		},
+		{
+			name:    "valid upcoming post request (createClusterCommand - Upcoming)",
+			baseURL: "http://another_base",
+			request: CommandRequest{
+				Command:     createClusterCommand,
+				Content:     strings.NewReader(`{"very_pretty_json":true}`),
+				ContentType: "json",
+				Parameters: map[string][]string{
+					"groupId": {"0ff00ff00ff0"},
+					"pretty":  {"true"},
+				},
+				Version: shared_api.NewUpcomingVersion(2025, 1, 1),
+			},
+			shouldFail:                    false,
+			expectedURL:                   "http://another_base/api/atlas/v2/groups/0ff00ff00ff0/clusters?pretty=true",
+			expectedHTTPVerb:              http.MethodPost,
+			expectedHTTPAcceptHeader:      "application/vnd.atlas.2025-01-01.upcoming+json",
+			expectedHTTPContentTypeHeader: "application/vnd.atlas.2025-01-01.upcoming+json",
+			expectedHTTPBody:              `{"very_pretty_json":true}`,
+		},
 	}
 
 	for _, tt := range tests {
@@ -497,6 +537,20 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 		},
 		{
 			Version:            shared_api.NewStableVersion(2024, 10, 23),
+			RequestContentType: `json`,
+			ResponseContentTypes: []string{
+				`json`,
+			},
+		},
+		{
+			Version:            shared_api.NewPreviewVersion(shared_api.PreviewTypePublic),
+			RequestContentType: `json`,
+			ResponseContentTypes: []string{
+				`json`,
+			},
+		},
+		{
+			Version:            shared_api.NewUpcomingVersion(2025, 1, 1),
 			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,

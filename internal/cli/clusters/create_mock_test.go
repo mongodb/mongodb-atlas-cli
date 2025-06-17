@@ -80,6 +80,45 @@ func (c *MockClusterCreatorCreateClusterCall) DoAndReturn(f func(*admin.Advanced
 	return c
 }
 
+// CreateClusterLatest mocks base method.
+func (m *MockClusterCreator) CreateClusterLatest(arg0 *admin0.ClusterDescription20240805) (*admin0.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateClusterLatest", arg0)
+	ret0, _ := ret[0].(*admin0.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateClusterLatest indicates an expected call of CreateClusterLatest.
+func (mr *MockClusterCreatorMockRecorder) CreateClusterLatest(arg0 any) *MockClusterCreatorCreateClusterLatestCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateClusterLatest", reflect.TypeOf((*MockClusterCreator)(nil).CreateClusterLatest), arg0)
+	return &MockClusterCreatorCreateClusterLatestCall{Call: call}
+}
+
+// MockClusterCreatorCreateClusterLatestCall wrap *gomock.Call
+type MockClusterCreatorCreateClusterLatestCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockClusterCreatorCreateClusterLatestCall) Return(arg0 *admin0.ClusterDescription20240805, arg1 error) *MockClusterCreatorCreateClusterLatestCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockClusterCreatorCreateClusterLatestCall) Do(f func(*admin0.ClusterDescription20240805) (*admin0.ClusterDescription20240805, error)) *MockClusterCreatorCreateClusterLatestCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockClusterCreatorCreateClusterLatestCall) DoAndReturn(f func(*admin0.ClusterDescription20240805) (*admin0.ClusterDescription20240805, error)) *MockClusterCreatorCreateClusterLatestCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // CreateFlexCluster mocks base method.
 func (m *MockClusterCreator) CreateFlexCluster(arg0 string, arg1 *admin0.FlexClusterDescriptionCreate20241113) (*admin0.FlexClusterDescription20241113, error) {
 	m.ctrl.T.Helper()

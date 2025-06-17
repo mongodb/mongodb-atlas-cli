@@ -33,6 +33,8 @@ import (
 type ClusterDescriber interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+	LatestAtlasCluster(string, string) (*atlasv2.ClusterDescription20240805, error)
+	GetClusterAutoScalingConfig(string, string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error)
 }
 
 type DescribeOpts struct {
@@ -55,6 +57,15 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 `
 
 func (opts *DescribeOpts) Run() error {
+	autoScalingModeConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.name)
+	if err == nil && autoScalingModeConfig.GetAutoScalingMode() == independentShardScalingFlag {
+		r, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.name)
+		if err != nil {
+			return err
+		}
+		return opts.Print(r)
+	}
+
 	r, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return opts.RunFlexCluster(err)

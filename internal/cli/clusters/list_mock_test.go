@@ -42,6 +42,45 @@ func (m *MockClusterLister) EXPECT() *MockClusterListerMockRecorder {
 	return m.recorder
 }
 
+// LatestProjectClusters mocks base method.
+func (m *MockClusterLister) LatestProjectClusters(arg0 string, arg1 *store.ListOptions) (*admin0.PaginatedClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LatestProjectClusters", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.PaginatedClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LatestProjectClusters indicates an expected call of LatestProjectClusters.
+func (mr *MockClusterListerMockRecorder) LatestProjectClusters(arg0, arg1 any) *MockClusterListerLatestProjectClustersCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestProjectClusters", reflect.TypeOf((*MockClusterLister)(nil).LatestProjectClusters), arg0, arg1)
+	return &MockClusterListerLatestProjectClustersCall{Call: call}
+}
+
+// MockClusterListerLatestProjectClustersCall wrap *gomock.Call
+type MockClusterListerLatestProjectClustersCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockClusterListerLatestProjectClustersCall) Return(arg0 *admin0.PaginatedClusterDescription20240805, arg1 error) *MockClusterListerLatestProjectClustersCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockClusterListerLatestProjectClustersCall) Do(f func(string, *store.ListOptions) (*admin0.PaginatedClusterDescription20240805, error)) *MockClusterListerLatestProjectClustersCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockClusterListerLatestProjectClustersCall) DoAndReturn(f func(string, *store.ListOptions) (*admin0.PaginatedClusterDescription20240805, error)) *MockClusterListerLatestProjectClustersCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // ListFlexClusters mocks base method.
 func (m *MockClusterLister) ListFlexClusters(arg0 *admin0.ListFlexClustersApiParams) (*admin0.PaginatedFlexClusters20241113, error) {
 	m.ctrl.T.Helper()

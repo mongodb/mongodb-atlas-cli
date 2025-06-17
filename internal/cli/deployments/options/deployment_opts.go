@@ -37,29 +37,34 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/shirou/gopsutil/v4/cpu"
 	"github.com/shirou/gopsutil/v4/mem"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
+
+//go:generate go tool go.uber.org/mock/mockgen -typed -destination=../test/fixture/deployment_opts_mocks.go -package=fixture . ClusterLister
 
 const (
 	spinnerSpeed = 100 * time.Millisecond
 	// based on https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Clusters/operation/createCluster
-	clusterNamePattern = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
-	PausedState        = "PAUSED"
-	StoppedState       = "STOPPED"
-	IdleState          = "IDLE"
-	UpdatingState      = "UPDATING"
-	DeletingState      = "DELETING"
-	RestartingState    = "RESTARTING"
-	LocalCluster       = "local"
-	AtlasCluster       = "atlas"
-	CompassConnect     = "compass"
-	MongoshConnect     = "mongosh"
-	VsCodeConnect      = "vscode"
-	PromptTypeMessage  = "What type of deployment would you like to work with?"
-	MaxItemsPerPage    = 500
-	ContainerFilter    = "mongodb-atlas-local=container"
-	bytesInGb          = 1073741824
-	minimumRAM         = 2 * bytesInGb
-	minimumCores       = 2
+	clusterNamePattern      = "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+	PausedState             = "PAUSED"
+	StoppedState            = "STOPPED"
+	IdleState               = "IDLE"
+	UpdatingState           = "UPDATING"
+	DeletingState           = "DELETING"
+	RestartingState         = "RESTARTING"
+	LocalCluster            = "local"
+	AtlasCluster            = "atlas"
+	CompassConnect          = "compass"
+	MongoshConnect          = "mongosh"
+	VsCodeConnect           = "vscode"
+	PromptTypeMessage       = "What type of deployment would you like to work with?"
+	MaxItemsPerPage         = 500
+	ContainerFilter         = "mongodb-atlas-local=container"
+	ClusterWideScaling      = "CLUSTER_WIDE_SCALING"
+	IndependentShardScaling = "INDEPENDENT_SHARD_SCALING"
+	bytesInGb               = 1073741824
+	minimumRAM              = 2 * bytesInGb
+	minimumCores            = 2
 )
 
 var (
@@ -100,7 +105,7 @@ type DeploymentOpts struct {
 	CredStore             store.CredentialsGetter
 	s                     *spinner.Spinner
 	DefaultSetter         cli.DefaultSetterOpts
-	AtlasClusterListStore store.ClusterLister
+	AtlasClusterListStore ClusterLister
 	Config                ProfileReader
 	DeploymentTelemetry   DeploymentTelemetry
 	DeploymentUUID        string
@@ -111,6 +116,10 @@ type Deployment struct {
 	Name           string
 	MongoDBVersion string
 	StateName      string
+}
+
+type ClusterLister interface {
+	LatestProjectClusters(string, *store.ListOptions) (*atlasv2.PaginatedClusterDescription20240805, error)
 }
 
 func (opts *DeploymentOpts) InitStore(ctx context.Context, writer io.Writer) func() error {

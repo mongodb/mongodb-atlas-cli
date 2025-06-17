@@ -17,27 +17,40 @@ package setup
 import (
 	"errors"
 	"fmt"
+	"os"
 	"slices"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
-	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	atlas "go.mongodb.org/atlas/mongodbatlas"
 	"golang.org/x/mod/semver"
 )
 
 var ErrNoRegions = errors.New("no regions found for the cloud provider")
 var ErrNoVersions = errors.New("no mongodb versions found for the cloud provider")
+var deprecatedClusterWideScalingMessage = "Detected clusterWideScaling mode. If you require more flexibility in shard scaling, consider using --autoScalingMode independentShardScaling."
+
+const (
+	tenant  = "TENANT"
+	atlasM2 = "M2"
+	atlasM5 = "M5"
+)
 
 func (opts *Opts) createCluster() error {
-	if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
+	if opts.AutoScalingMode == clusterWideScaling {
+		_, _ = fmt.Fprintln(os.Stderr, deprecatedClusterWideScalingMessage)
+
+		if _, err := opts.store.CreateCluster(opts.newCluster()); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if _, err := opts.store.CreateClusterLatest(opts.newClusterLatest()); err != nil {
 		return err
 	}
 
@@ -128,86 +141,6 @@ func newMDBVersionQuestion(versions []string, defaultVersion string) survey.Prom
 		Options: versions,
 		Default: defaultVersion,
 	}
-}
-
-func defaultDiskSizeGB(provider, tier string) float64 {
-	return atlas.DefaultDiskSizeGB[strings.ToUpper(provider)][tier]
-}
-
-func (opts *Opts) newCluster() *atlasClustersPinned.AdvancedClusterDescription {
-	cluster := &atlasClustersPinned.AdvancedClusterDescription{
-		GroupId:                      pointer.Get(opts.ConfigProjectID()),
-		ClusterType:                  pointer.Get(replicaSet),
-		ReplicationSpecs:             &[]atlasClustersPinned.ReplicationSpec{opts.newAdvanceReplicationSpec()},
-		Name:                         &opts.ClusterName,
-		TerminationProtectionEnabled: &opts.EnableTerminationProtection,
-	}
-
-	if len(opts.Tag) > 0 {
-		var tags []atlasClustersPinned.ResourceTag
-		for k, v := range opts.Tag {
-			if k != "" && v != "" {
-				tags = append(tags, atlasClustersPinned.ResourceTag{Key: k, Value: v})
-			}
-		}
-		cluster.Tags = &tags
-	}
-
-	if opts.providerName() != tenant {
-		diskSizeGB := defaultDiskSizeGB(opts.providerName(), opts.Tier)
-		cluster.DiskSizeGB = &diskSizeGB
-		if opts.MDBVersion != "" {
-			cluster.MongoDBMajorVersion = &opts.MDBVersion
-		} else {
-			if mdbVersion, err := cli.DefaultMongoDBMajorVersion(); err == nil && mdbVersion != "" {
-				cluster.MongoDBMajorVersion = &mdbVersion
-			}
-		}
-	}
-
-	return cluster
-}
-
-var (
-	shards   = 1
-	zoneName = "Zone 1"
-)
-
-func (opts *Opts) newAdvanceReplicationSpec() atlasClustersPinned.ReplicationSpec {
-	return atlasClustersPinned.ReplicationSpec{
-		NumShards:     &shards,
-		ZoneName:      &zoneName,
-		RegionConfigs: &[]atlasClustersPinned.CloudRegionConfig{opts.newAdvancedRegionConfig()},
-	}
-}
-
-const (
-	tenant  = "TENANT"
-	atlasM2 = "M2"
-	atlasM5 = "M5"
-)
-
-func (opts *Opts) newAdvancedRegionConfig() atlasClustersPinned.CloudRegionConfig {
-	providerName := opts.providerName()
-
-	priority := 7
-	regionConfig := atlasClustersPinned.CloudRegionConfig{
-		ProviderName: &providerName,
-		Priority:     &priority,
-		RegionName:   &opts.Region,
-	}
-
-	regionConfig.ElectableSpecs = &atlasClustersPinned.HardwareSpec{
-		InstanceSize: &opts.Tier,
-	}
-	members := 3
-	if providerName == tenant {
-		regionConfig.BackingProviderName = &opts.Provider
-	} else {
-		regionConfig.ElectableSpecs.NodeCount = &members
-	}
-
-	return regionConfig
 }
 
 func providerName(tier, provider string) string {

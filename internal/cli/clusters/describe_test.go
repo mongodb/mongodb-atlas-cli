@@ -28,6 +28,9 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+var clusterWideScalingConfig = &atlasv2.ClusterDescriptionAutoScalingModeConfiguration{AutoScalingMode: pointer.Get(clusterWideScalingFlag)}
+var independentShardScalingConfig = &atlasv2.ClusterDescriptionAutoScalingModeConfiguration{AutoScalingMode: pointer.Get(independentShardScalingFlag)}
+
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockClusterDescriber(ctrl)
@@ -38,6 +41,12 @@ func TestDescribe_Run(t *testing.T) {
 		name:  "test",
 		store: mockStore,
 	}
+
+	mockStore.
+		EXPECT().
+		GetClusterAutoScalingConfig(describeOpts.ProjectID, describeOpts.name).
+		Return(clusterWideScalingConfig, nil).
+		Times(1)
 
 	mockStore.
 		EXPECT().
@@ -61,6 +70,12 @@ func TestDescribe_RunFlexCluster(t *testing.T) {
 		name:  "test",
 		store: mockStore,
 	}
+
+	mockStore.
+		EXPECT().
+		GetClusterAutoScalingConfig(describeOpts.ProjectID, describeOpts.name).
+		Return(clusterWideScalingConfig, nil).
+		Times(1)
 
 	mockStore.
 		EXPECT().
@@ -92,6 +107,12 @@ func TestDescribe_RunFlexCluster_Error(t *testing.T) {
 
 	mockStore.
 		EXPECT().
+		GetClusterAutoScalingConfig(describeOpts.ProjectID, describeOpts.name).
+		Return(clusterWideScalingConfig, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
 		AtlasCluster(describeOpts.ProjectID, describeOpts.name).
 		Return(nil, expectedError).
 		Times(1)
@@ -103,4 +124,31 @@ func TestDescribe_RunFlexCluster_Error(t *testing.T) {
 		Times(0)
 
 	require.Error(t, describeOpts.Run())
+}
+
+func TestDescribe_RunDedicatedCluster_IndependentShardScaling(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockClusterDescriber(ctrl)
+
+	expected := &atlasv2.ClusterDescription20240805{}
+
+	describeOpts := &DescribeOpts{
+		name:  "test",
+		store: mockStore,
+	}
+
+	mockStore.
+		EXPECT().
+		GetClusterAutoScalingConfig(describeOpts.ProjectID, describeOpts.name).
+		Return(independentShardScalingConfig, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		LatestAtlasCluster(describeOpts.ProjectID, describeOpts.name).
+		Return(expected, nil).
+		Times(1)
+
+	require.NoError(t, describeOpts.Run())
+	test.VerifyOutputTemplate(t, describeTemplate, expected)
 }

@@ -49,7 +49,8 @@ func TestSetup(t *testing.T) {
 
 	tagKey := "env"
 	tagValue := "e2etest"
-	arbitraryAccessListIP := "21.150.105.221"
+
+	arbitraryAccessListIP := g.MemoryRandIP("randIPSetupForce")
 
 	g.Run("Run", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

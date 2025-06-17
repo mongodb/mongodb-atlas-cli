@@ -1,0 +1,14 @@
+{
+			"eventTypeName": "NO_PRIMARY",
+			"id": "6842e1a5d13438297a3fb730",
+			"enabled": false,
+			"notifications": [
+			  {
+				"typeName": "GROUP",
+				"intervalMin": 5,
+				"delayMin": 0,
+				"emailEnabled": true,
+				"smsEnabled": true
+			  }
+			]
+		}

@@ -22,7 +22,7 @@ import (
 type MockDeploymentOpts struct {
 	ctrl                      *gomock.Controller
 	MockCredentialsGetter     *mocks.MockCredentialsGetter
-	MockAtlasClusterListStore *mocks.MockClusterLister
+	MockAtlasClusterListStore *MockClusterLister
 	MockContainerEngine       *mocks.MockEngine
 	MockDeploymentTelemetry   *mocks.MockDeploymentTelemetry
 	Opts                      *options.DeploymentOpts

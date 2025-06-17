@@ -36,6 +36,8 @@ var errFailedToLoadClusterFileMessage = errors.New("failed to parse JSON file")
 const (
 	cannotUseFlexWithClusterApisErrorCode = "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
 	deprecateMessageSharedTier            = "Deprecation note: the M2 and M5 tiers are now deprecated ('%s' was selected); when selecting M2 or M5, a FLEX tier will be created instead. For the migration guide, visit: https://dochub.mongodb.org/core/flex-migration.\n"
+	independentShardScalingFlag           = "independentShardScaling"
+	clusterWideScalingFlag                = "clusterWideScaling"
 )
 
 func Builder() *cobra.Command {
@@ -132,6 +134,36 @@ func removeReadOnlyAttributes(out *atlasClustersPinned.AdvancedClusterDescriptio
 		out.BiConnector = nil
 		out.EncryptionAtRestProvider = nil
 		out.DiskSizeGB = nil
+		out.MongoDBMajorVersion = nil
+		out.PitEnabled = nil
+		out.BackupEnabled = nil
+	}
+}
+
+func removeReadOnlyAttributesLatest(out *atlasv2.ClusterDescription20240805) {
+	out.Id = nil
+	out.CreateDate = nil
+	out.StateName = nil
+	out.MongoDBVersion = nil
+	out.ConnectionStrings = nil
+	isTenant := false
+
+	for i, spec := range out.GetReplicationSpecs() {
+		(*out.ReplicationSpecs)[i].Id = nil
+		for _, c := range spec.GetRegionConfigs() {
+			if c.GetProviderName() == tenant {
+				isTenant = true
+				// Set disksize to nil for tenant clusters
+				for _, c := range spec.GetRegionConfigs() {
+					c.ElectableSpecs.DiskSizeGB = nil
+				}
+			}
+		}
+	}
+
+	if isTenant {
+		out.BiConnector = nil
+		out.EncryptionAtRestProvider = nil
 		out.MongoDBMajorVersion = nil
 		out.PitEnabled = nil
 		out.BackupEnabled = nil

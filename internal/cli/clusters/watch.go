@@ -82,12 +82,12 @@ func (opts *WatchOpts) flexClusterWatcher(ctx context.Context) func() (any, bool
 
 func (opts *WatchOpts) watcher(ctx context.Context) func() (any, bool, error) {
 	return func() (any, bool, error) {
-		result, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+		result, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.name)
 		if err != nil {
-			var atlasClustersPinnedErr *atlasClustersPinned.GenericOpenAPIError
+			var atlasv2Err *atlasv2.GenericOpenAPIError
 
-			if errors.As(err, &atlasClustersPinnedErr) {
-				if *atlasClustersPinnedErr.Model().Error == http.StatusUnauthorized {
+			if errors.As(err, &atlasv2Err) {
+				if atlasv2Err.Model().Error == http.StatusUnauthorized {
 					// Refresh the access token
 					// Note: this only updates the config, so we have to re-initialize the store
 					if err := opts.RefreshAccessToken(ctx); err != nil {

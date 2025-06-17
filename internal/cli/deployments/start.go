@@ -26,12 +26,15 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=deployments . ClusterStarter
 
 type ClusterStarter interface {
 	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	StartClusterLatest(string, string) (*atlasv2.ClusterDescription20240805, error)
+	GetClusterAutoScalingConfig(string, string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error)
 }
 
 type StartOpts struct {
@@ -83,7 +86,17 @@ func (opts *StartOpts) RunAtlas() error {
 	opts.StartSpinner()
 	defer opts.StopSpinner()
 
-	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.DeploymentName)
+	clusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.DeploymentName)
+	if err != nil || clusterAutoScalingConfig.GetAutoScalingMode() == options.ClusterWideScaling {
+		r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.DeploymentName)
+		if err != nil {
+			return err
+		}
+		return opts.Print(r)
+	}
+
+	// If cluster is not cluster wide scaling, we use the latest API version
+	r, err := opts.store.StartClusterLatest(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err
 	}

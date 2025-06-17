@@ -20,16 +20,12 @@ import (
 	atlas "go.mongodb.org/atlas/mongodbatlas"
 )
 
-//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterLister,ClusterDescriber
-
-type ClusterLister interface { //nolint:iface // right now requires some refactor to deployment commands
-	ProjectClusters(string, *ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
-	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
-}
+//go:generate go tool go.uber.org/mock/mockgen -destination=../mocks/mock_clusters.go -package=mocks github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store ClusterDescriber
 
 type ClusterDescriber interface { //nolint:iface // right now requires some refactor to deployment commands
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
+	LatestAtlasCluster(string, string) (*atlasv2.ClusterDescription20240805, error)
 }
 
 // AddSampleData encapsulate the logic to manage different cloud providers.
@@ -50,9 +46,21 @@ func (s *Store) CreateCluster(cluster *atlasClustersPinned.AdvancedClusterDescri
 	return result, err
 }
 
+// CreateClusterLatest uses the latest API version to create a cluster.
+func (s *Store) CreateClusterLatest(cluster *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error) {
+	result, _, err := s.clientv2.ClustersApi.CreateCluster(s.ctx, cluster.GetGroupId(), cluster).Execute()
+	return result, err
+}
+
 // UpdateCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) UpdateCluster(projectID, name string, cluster *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	result, _, err := s.clientClusters.ClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
+	return result, err
+}
+
+// UpdateClusterLatest uses the latest API version to update a cluster.
+func (s *Store) UpdateClusterLatest(projectID, name string, cluster *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error) {
+	result, _, err := s.clientv2.ClustersApi.UpdateCluster(s.ctx, projectID, name, cluster).Execute()
 	return result, err
 }
 
@@ -65,6 +73,15 @@ func (s *Store) PauseCluster(projectID, name string) (*atlasClustersPinned.Advan
 	return s.UpdateCluster(projectID, name, cluster)
 }
 
+// PauseClusterLatest uses the latest API version to pause a cluster.
+func (s *Store) PauseClusterLatest(projectID, name string) (*atlasv2.ClusterDescription20240805, error) {
+	paused := true
+	cluster := &atlasv2.ClusterDescription20240805{
+		Paused: &paused,
+	}
+	return s.UpdateClusterLatest(projectID, name, cluster)
+}
+
 // StartCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) StartCluster(projectID, name string) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	paused := false
@@ -72,6 +89,21 @@ func (s *Store) StartCluster(projectID, name string) (*atlasClustersPinned.Advan
 		Paused: &paused,
 	}
 	return s.UpdateCluster(projectID, name, cluster)
+}
+
+// StartClusterLatest uses the latest API version to start a cluster.
+func (s *Store) StartClusterLatest(projectID, name string) (*atlasv2.ClusterDescription20240805, error) {
+	paused := false
+	cluster := &atlasv2.ClusterDescription20240805{
+		Paused: &paused,
+	}
+	return s.UpdateClusterLatest(projectID, name, cluster)
+}
+
+// GetClusterAutoScalingConfig uses the latest API version to get the auto scaling configuration of a cluster.
+func (s *Store) GetClusterAutoScalingConfig(projectID, name string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error) {
+	result, _, err := s.clientv2.ClustersApi.AutoScalingConfiguration(s.ctx, projectID, name).Execute()
+	return result, err
 }
 
 // DeleteCluster encapsulate the logic to manage different cloud providers.
@@ -102,9 +134,25 @@ func (s *Store) ProjectClusters(projectID string, opts *ListOptions) (*atlasClus
 	return result, err
 }
 
+// LatestProjectClusters lists the clusters using the latest API version.
+func (s *Store) LatestProjectClusters(projectID string, opts *ListOptions) (*atlasv2.PaginatedClusterDescription20240805, error) {
+	res := s.clientv2.ClustersApi.ListClusters(s.ctx, projectID)
+	if opts != nil {
+		res = res.PageNum(opts.PageNum).ItemsPerPage(opts.ItemsPerPage).IncludeCount(opts.IncludeCount)
+	}
+	result, _, err := res.Execute()
+	return result, err
+}
+
 // AtlasCluster encapsulates the logic to manage different cloud providers.
 func (s *Store) AtlasCluster(projectID, name string) (*atlasClustersPinned.AdvancedClusterDescription, error) {
 	result, _, err := s.clientClusters.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
+	return result, err
+}
+
+// LatestAtlasCluster uses the latest API version to get a cluster.
+func (s *Store) LatestAtlasCluster(projectID, name string) (*atlasv2.ClusterDescription20240805, error) {
+	result, _, err := s.clientv2.ClustersApi.GetCluster(s.ctx, projectID, name).Execute()
 	return result, err
 }
 

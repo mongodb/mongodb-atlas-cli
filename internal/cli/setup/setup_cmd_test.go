@@ -83,23 +83,31 @@ func TestCluster_Run(t *testing.T) {
 		},
 	}
 
+	expectedClusterLatest := &atlasv2.ClusterDescription20240805{
+		StateName: pointer.Get(expectedCluster.GetStateName()),
+		ConnectionStrings: &atlasv2.ClusterConnectionStrings{
+			StandardSrv: pointer.Get(expectedCluster.ConnectionStrings.GetStandardSrv()),
+		},
+	}
+
 	expectedDBUser := &atlasv2.CloudDatabaseUser{}
 
 	var expectedProjectAccessLists *atlasv2.PaginatedNetworkAccess
 
 	opts := &Opts{
-		ClusterName:    "ProjectBar",
-		Region:         "US",
-		store:          mockStore,
-		IPAddresses:    []string{"0.0.0.0"},
-		DBUsername:     "user",
-		DBUserPassword: "test",
-		Provider:       "AWS",
-		SkipMongosh:    true,
-		SkipSampleData: true,
-		Confirm:        true,
-		MDBVersion:     "7.0",
-		Tag:            map[string]string{"env": "test"},
+		ClusterName:     "ProjectBar",
+		Region:          "US",
+		store:           mockStore,
+		IPAddresses:     []string{"0.0.0.0"},
+		DBUsername:      "user",
+		DBUserPassword:  "test",
+		Provider:        "AWS",
+		SkipMongosh:     true,
+		SkipSampleData:  true,
+		Confirm:         true,
+		MDBVersion:      "7.0",
+		Tag:             map[string]string{"env": "test"},
+		AutoScalingMode: clusterWideScaling,
 	}
 	opts.register.WithFlow(mockFlow)
 
@@ -117,7 +125,67 @@ func TestCluster_Run(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedCluster, nil).
+		LatestAtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedClusterLatest, nil).
+		Times(2)
+
+	mockStore.
+		EXPECT().
+		CreateDatabaseUser(opts.newDatabaseUser()).Return(expectedDBUser, nil).
+		Times(1)
+
+	if err := opts.setupCluster(); err != nil {
+		t.Fatalf("Run() unexpected error: %v", err)
+	}
+}
+
+func TestCluster_Run_LatestAPI(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockAtlasClusterQuickStarter(ctrl)
+	mockFlow := mocks.NewMockRefresher(ctrl)
+
+	expectedCluster := &atlasv2.ClusterDescription20240805{
+		StateName: pointer.Get("IDLE"),
+		ConnectionStrings: &atlasv2.ClusterConnectionStrings{
+			StandardSrv: pointer.Get(""),
+		},
+	}
+
+	expectedDBUser := &atlasv2.CloudDatabaseUser{}
+
+	var expectedProjectAccessLists *atlasv2.PaginatedNetworkAccess
+
+	opts := &Opts{
+		ClusterName:     "ProjectBar",
+		Region:          "US",
+		store:           mockStore,
+		IPAddresses:     []string{"0.0.0.0"},
+		DBUsername:      "user",
+		DBUserPassword:  "test",
+		Provider:        "AWS",
+		SkipMongosh:     true,
+		SkipSampleData:  true,
+		Confirm:         true,
+		MDBVersion:      "7.0",
+		Tag:             map[string]string{"env": "test"},
+		AutoScalingMode: "independentShardingScaling",
+	}
+	opts.register.WithFlow(mockFlow)
+
+	projectIPAccessList := opts.newProjectIPAccessList()
+
+	mockStore.
+		EXPECT().
+		CreateClusterLatest(opts.newClusterLatest()).Return(expectedCluster, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		CreateProjectIPAccessList(projectIPAccessList).Return(expectedProjectAccessLists, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		LatestAtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedCluster, nil).
 		Times(2)
 
 	mockStore.
@@ -143,6 +211,13 @@ func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 		},
 	}
 
+	expectedClusterLatest := &atlasv2.ClusterDescription20240805{
+		StateName: pointer.Get(expectedCluster.GetStateName()),
+		ConnectionStrings: &atlasv2.ClusterConnectionStrings{
+			StandardSrv: pointer.Get(expectedCluster.ConnectionStrings.GetStandardSrv()),
+		},
+	}
+
 	expectedDBUser := &atlasv2.CloudDatabaseUser{}
 
 	var expectedProjectAccessLists *atlasv2.PaginatedNetworkAccess
@@ -160,6 +235,7 @@ func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 		SkipSampleData:              true,
 		Confirm:                     true,
 		MDBVersion:                  "7.0",
+		AutoScalingMode:             clusterWideScaling,
 	}
 	opts.register.WithFlow(mockFlow)
 
@@ -177,7 +253,7 @@ func TestCluster_Run_CheckFlagsSet(t *testing.T) {
 
 	mockStore.
 		EXPECT().
-		AtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedCluster, nil).
+		LatestAtlasCluster(opts.ConfigProjectID(), opts.ClusterName).Return(expectedClusterLatest, nil).
 		Times(2)
 
 	mockStore.

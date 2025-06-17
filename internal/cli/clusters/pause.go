@@ -69,7 +69,6 @@ func (opts *PauseOpts) Run() error {
 		return commonerrors.Check(err)
 	}
 	return opts.Print(r)
-
 }
 
 // atlas cluster(s) pause <clusterName> [--projectId projectId].

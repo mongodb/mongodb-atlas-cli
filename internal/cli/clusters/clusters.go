@@ -70,6 +70,7 @@ func Builder() *cobra.Command {
 		connectionstring.Builder(),
 		availableregions.Builder(),
 		sampledata.Builder(),
+		GetAutoscalingConfigBuilder(),
 	)
 
 	return cmd
@@ -189,10 +190,6 @@ func removeReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
 	for _, spec := range out.ReplicationSpecs {
 		spec.ID = ""
 	}
-}
-
-func isClusterWideScaling(mode string) bool {
-	return mode == clusterWideScalingFlag || mode == clusterWideScalingResponse
 }
 
 func isIndependentShardScaling(mode string) bool {

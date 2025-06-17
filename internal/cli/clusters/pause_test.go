@@ -73,8 +73,9 @@ func TestPause_Run_IndependentShardScaling(t *testing.T) {
 	mockStore := NewMockClusterPauser(ctrl)
 
 	updateOpts := &PauseOpts{
-		name:  "ProjectBar",
-		store: mockStore,
+		name:            "ProjectBar",
+		store:           mockStore,
+		autoScalingMode: "independentShardScaling",
 	}
 
 	expected := &atlasv2.ClusterDescription20240805{}

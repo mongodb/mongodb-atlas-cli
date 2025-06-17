@@ -66,7 +66,7 @@ Options
    * - --autoScalingMode
      - string
      - false
-     - The mode in which the cluster scales. Valid values are clusterWideScaling or independentShardScaling.
+     - Mode in which the cluster scales. Valid values are clusterWideScaling or independentShardScaling.
 
        Mutually exclusive with --file. This value defaults to "clusterWideScaling".
    * - --backup

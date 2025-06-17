@@ -686,7 +686,7 @@ tasks:
           MONGODB_ATLAS_SERVICE: cloud
           E2E_TAGS: atlas,clusters,flex
   - name: atlas_clusters_iss_e2e
-    tags: ["e2e","clusters","atlas"]
+    tags: ["e2e","clusters","atlas", "iss"]
     must_have_test_results: true
     depends_on:
       - name: atlas_clusters_flags_e2e

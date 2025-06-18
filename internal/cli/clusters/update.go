@@ -87,7 +87,14 @@ func (opts *UpdateOpts) Run() error {
 		return opts.RunDedicatedIndependentShardScaling()
 	}
 
-	// Get the cluster auto scaling config
+	// Check the actual cluster auto scaling mode and warn the user if they are using the wrong flag
+	opts.checkISSCluster()
+
+	// If ISS wasn't set, try to update the cluster to cluster wide scaling
+	return opts.RunDedicatedClusterWideScaling()
+}
+
+func (opts *UpdateOpts) checkISSCluster() {
 	targetClusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		targetClusterAutoScalingConfig = &atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
@@ -102,8 +109,6 @@ func (opts *UpdateOpts) Run() error {
 			fmt.Fprintf(os.Stderr, "'independentShardScaling' autoscaling cluster detected, updating it to clusterWideScaling is not possible, use  --autoScalingMode 'independentShardScaling' instead")
 		}
 	}
-
-	return opts.RunDedicatedClusterWideScaling()
 }
 
 func (opts *UpdateOpts) RunDedicatedIndependentShardScaling() error {
@@ -289,17 +294,13 @@ func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasClustersPinned.Advanc
 // a FlexCluster. The function uses the AtlasCluster to get the cluster description and in the event of the error
 // cannotUseFlexWithClusterApisErrorCode sets the opts.isFlexCluster to true.
 func (opts *UpdateOpts) newIsFlexCluster() error {
-	_, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+	_, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err == nil {
 		opts.isFlexCluster = false
 		return nil
 	}
 
-	apiError, ok := atlasClustersPinned.AsError(err)
-	if !ok {
-		return err
-	}
-	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+	if !commonerrors.IsCannotUseFlexWithClusterApis(err) {
 		return err
 	}
 

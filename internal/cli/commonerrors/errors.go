@@ -26,6 +26,10 @@ var (
 	errAsymmetricShardUnsupported = errors.New("trying to run a cluster wide scaling command on an independent shard scaling cluster. Use --autoScalingMode 'independentShardScaling' instead")
 )
 
+const (
+	asymmetricShardUnsupportedErrorCode = "ASYMMETRIC_SHARD_UNSUPPORTED"
+)
+
 func Check(err error) error {
 	if err == nil {
 		return nil
@@ -38,9 +42,25 @@ func Check(err error) error {
 			return errClusterUnsupported
 		case "GLOBAL_USER_OUTSIDE_SUBNET":
 			return errOutsideVPN
-		case "ASYMMETRIC_SHARD_UNSUPPORTED":
+		case asymmetricShardUnsupportedErrorCode:
 			return errAsymmetricShardUnsupported
 		}
 	}
 	return err
+}
+
+func IsAsymmetricShardUnsupported(err error) bool {
+	apiError, ok := admin.AsError(err)
+	if !ok {
+		return false
+	}
+	return apiError.GetErrorCode() == asymmetricShardUnsupportedErrorCode
+}
+
+func IsCannotUseFlexWithClusterApis(err error) bool {
+	apiError, ok := admin.AsError(err)
+	if !ok {
+		return false
+	}
+	return apiError.GetErrorCode() == "CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API"
 }

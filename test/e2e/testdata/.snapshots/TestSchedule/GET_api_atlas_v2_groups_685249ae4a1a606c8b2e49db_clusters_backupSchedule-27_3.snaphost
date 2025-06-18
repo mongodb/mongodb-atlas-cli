@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 2239
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Wed, 18 Jun 2025 05:16:09 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 76
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=d8e74d38610ad5f74d45aa2f7555874aa396a9e6; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"advancedConfiguration":{"customOpensslCipherConfigTls12":[],"minimumEnabledTlsProtocol":"TLS1_2","tlsCipherConfigMode":"DEFAULT"},"backupEnabled":true,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standard":"mongodb://backupschedule-27-shard-00-00.xzl1ro.mongodb-dev.net:27017,backupschedule-27-shard-00-01.xzl1ro.mongodb-dev.net:27017,backupschedule-27-shard-00-02.xzl1ro.mongodb-dev.net:27017/?ssl=true&authSource=admin&replicaSet=atlas-bfxxhd-shard-0","standardSrv":"mongodb+srv://backupschedule-27.xzl1ro.mongodb-dev.net"},"createDate":"2025-06-18T05:08:02Z","diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"685249ae4a1a606c8b2e49db","id":"685249b24a1a606c8b2e4ae4","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/685249ae4a1a606c8b2e49db/clusters/backupSchedule-27","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/685249ae4a1a606c8b2e49db/clusters/backupSchedule-27/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/685249ae4a1a606c8b2e49db/clusters/backupSchedule-27/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.10","name":"backupSchedule-27","paused":false,"pitEnabled":true,"redactClientLogData":false,"replicationSpecs":[{"id":"685249b24a1a606c8b2e4add","regionConfigs":[{"analyticsSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":30.0,"ebsVolumeType":"STANDARD","nodeCount":0},"autoScaling":{"compute":{"enabled":false,"predictiveEnabled":false,"scaleDownEnabled":false},"diskGB":{"enabled":false}},"electableSpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":30.0,"ebsVolumeType":"STANDARD","nodeCount":3},"priority":7,"providerName":"AWS","readOnlySpecs":{"instanceSize":"M10","diskIOPS":3000,"diskSizeGB":30.0,"ebsVolumeType":"STANDARD","nodeCount":0},"regionName":"US_EAST_1"}],"zoneId":"685249b24a1a606c8b2e4adc","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"IDLE","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

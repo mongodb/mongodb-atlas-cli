@@ -94,6 +94,7 @@ func (opts *UpdateOpts) Run() error {
 			AutoScalingMode: &opts.autoScalingMode,
 		}
 	}
+	appendAutoScalingModeTelemetry(opts.autoScalingMode)
 
 	// If the flag is set to cluster wide scaling, warn the user that they are using the wrong flag
 	if isIndependentShardScaling(targetClusterAutoScalingConfig.GetAutoScalingMode()) {

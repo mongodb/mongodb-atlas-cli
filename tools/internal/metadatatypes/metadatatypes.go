@@ -17,8 +17,9 @@ package metadatatypes
 type Metadata map[string]*OperationMetadata // operationId: OperationMetadata
 
 type OperationMetadata struct {
-	Parameters map[string]ParameterMetadata // parameterName: ParameterMetadata
-	Examples   map[string][]Example         // version: []Example
+	OnlyPrivatePreview bool
+	Parameters         map[string]ParameterMetadata // parameterName: ParameterMetadata
+	Examples           map[string][]Example         // version: []Example
 }
 
 type ParameterMetadata struct {

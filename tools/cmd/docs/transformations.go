@@ -267,12 +267,25 @@ func updateExamples(cmd *cobra.Command) error {
 	return nil
 }
 
+func removeCommandsWithOnlyPrivatePreview(cmd *cobra.Command) {
+	operationID := cmd.Annotations["operationId"]
+	if operationID == "" {
+		return
+	}
+
+	cmdMetadata, ok := metadata[operationID]
+	if ok && cmdMetadata.OnlyPrivatePreview {
+		cmd.Parent().RemoveCommand(cmd)
+	}
+}
+
 func applyTransformations(cmd *cobra.Command) error {
 	setDisableAutoGenTag(cmd)
 	removePluginCommands(cmd)
 	addAdditionalLongText(cmd)
 
 	if isAPICommand(cmd) {
+		removeCommandsWithOnlyPrivatePreview(cmd)
 		markExperimentalToAPICommands(cmd)
 		updateAPICommandDescription(cmd)
 		if err := updateExamples(cmd); err != nil {

@@ -25,7 +25,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
-	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -109,11 +108,8 @@ func (opts *PauseOpts) RunAtlas() error {
 	defer opts.StopSpinner()
 
 	clusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.DeploymentName)
-	if err != nil {
-		telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode(clusterAutoScalingConfig.GetAutoScalingMode()))
-	}
-
-	if err != nil || clusterAutoScalingConfig.GetAutoScalingMode() == options.ClusterWideScaling {
+	if err != nil || options.IsClusterWideScaling(clusterAutoScalingConfig.GetAutoScalingMode()) {
+		opts.DeploymentTelemetry.AppendClusterWideScalingMode()
 		r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.DeploymentName)
 		if err != nil {
 			return err
@@ -122,6 +118,7 @@ func (opts *PauseOpts) RunAtlas() error {
 	}
 
 	// If cluster is not cluster wide scaling, we use the latest API version
+	opts.DeploymentTelemetry.AppendIndependentShardScalingMode()
 	r, err := opts.store.PauseClusterLatest(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err

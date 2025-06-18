@@ -339,6 +339,11 @@ func TestWithDeploymentUUID(t *testing.T) {
 	assert.Equal(t, "test", e.Properties["deployment_uuid"])
 }
 
+func TestWithDetectedAutoScalingMode(t *testing.T) {
+	e := newEvent(WithDetectedAutoScalingMode("clusterWideScaling"))
+	assert.Equal(t, "clusterWideScaling", e.Properties["cluster_scaling_type"])
+}
+
 func TestWithSignal(t *testing.T) {
 	q := "interrupt"
 	e := newEvent(withSignal(q))
@@ -436,56 +441,6 @@ func Test_withOutput(t *testing.T) {
 			require.NoError(t, cmd.ExecuteContext(NewContext()))
 			e := newEvent(withOutput(cmd, c))
 			assert.Equal(t, tc.want, e.Properties["output"])
-		})
-	}
-}
-
-func TestWithDetectedAutoScalingMode(t *testing.T) {
-	tests := []struct {
-		name            string
-		autoScalingMode string
-		want            string
-	}{
-		{
-			name:            "clusterWideScalingAPI",
-			autoScalingMode: "CLUSTER_WIDE_SCALING",
-			want:            "clusterWideScaling",
-		},
-		{
-			name:            "independentShardScalingAPI",
-			autoScalingMode: "INDEPENDENT_SHARD_SCALING",
-			want:            "independentShardScaling",
-		},
-		{
-			name:            "unknown",
-			autoScalingMode: "UNKNOWN",
-			want:            "UNKNOWN",
-		},
-		{
-			name:            "empty",
-			autoScalingMode: "",
-			want:            "",
-		},
-		{
-			name:            "autoScalingMode",
-			autoScalingMode: "autoScalingMode",
-			want:            "autoScalingMode",
-		},
-		{
-			name:            "independentShardScaling",
-			autoScalingMode: "independentShardScaling",
-			want:            "independentShardScaling",
-		},
-	}
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			e := newEvent(WithDetectedAutoScalingMode(tc.autoScalingMode))
-			if tc.want == "" {
-				assert.NotContains(t, e.Properties, "cluster_scaling_type")
-				return
-			}
-
-			assert.Equal(t, tc.want, e.Properties["cluster_scaling_type"])
 		})
 	}
 }

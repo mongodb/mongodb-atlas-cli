@@ -99,8 +99,14 @@ func TestPause_RunAtlas_clusterWideScaling(t *testing.T) {
 		GetClusterAutoScalingConfig(projectID, deploymentName).
 		Return(
 			&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
-				AutoScalingMode: pointer.Get(options.ClusterWideScaling),
+				AutoScalingMode: pointer.Get(options.ClusterWideScalingResponse),
 			}, nil).
+		Times(1)
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendClusterWideScalingMode().
 		Times(1)
 
 	mockStore.
@@ -147,8 +153,14 @@ func TestPause_RunAtlas_independentShardScaling(t *testing.T) {
 		GetClusterAutoScalingConfig(projectID, deploymentName).
 		Return(
 			&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
-				AutoScalingMode: pointer.Get(string(options.IndependentShardScaling)),
+				AutoScalingMode: pointer.Get(string(options.IndependentShardScalingResponse)),
 			}, nil).
+		Times(1)
+
+	deploymentTest.
+		MockDeploymentTelemetry.
+		EXPECT().
+		AppendIndependentShardScalingMode().
 		Times(1)
 
 	mockStore.

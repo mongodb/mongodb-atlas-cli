@@ -92,7 +92,8 @@ func (opts *StartOpts) RunAtlas() error {
 		telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode(clusterAutoScalingConfig.GetAutoScalingMode()))
 	}
 
-	if err != nil || clusterAutoScalingConfig.GetAutoScalingMode() == options.ClusterWideScaling {
+	if err != nil || options.IsClusterWideScaling(clusterAutoScalingConfig.GetAutoScalingMode()) {
+		opts.DeploymentTelemetry.AppendClusterWideScalingMode()
 		r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.DeploymentName)
 		if err != nil {
 			return err
@@ -101,6 +102,7 @@ func (opts *StartOpts) RunAtlas() error {
 	}
 
 	// If cluster is not cluster wide scaling, we use the latest API version
+	opts.DeploymentTelemetry.AppendIndependentShardScalingMode()
 	r, err := opts.store.StartClusterLatest(opts.ConfigProjectID(), opts.DeploymentName)
 	if err != nil {
 		return err

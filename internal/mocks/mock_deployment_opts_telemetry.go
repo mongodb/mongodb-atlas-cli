@@ -39,6 +39,18 @@ func (m *MockDeploymentTelemetry) EXPECT() *MockDeploymentTelemetryMockRecorder 
 	return m.recorder
 }
 
+// AppendClusterWideScalingMode mocks base method.
+func (m *MockDeploymentTelemetry) AppendClusterWideScalingMode() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "AppendClusterWideScalingMode")
+}
+
+// AppendClusterWideScalingMode indicates an expected call of AppendClusterWideScalingMode.
+func (mr *MockDeploymentTelemetryMockRecorder) AppendClusterWideScalingMode() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppendClusterWideScalingMode", reflect.TypeOf((*MockDeploymentTelemetry)(nil).AppendClusterWideScalingMode))
+}
+
 // AppendDeploymentType mocks base method.
 func (m *MockDeploymentTelemetry) AppendDeploymentType() {
 	m.ctrl.T.Helper()
@@ -61,4 +73,16 @@ func (m *MockDeploymentTelemetry) AppendDeploymentUUID() {
 func (mr *MockDeploymentTelemetryMockRecorder) AppendDeploymentUUID() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppendDeploymentUUID", reflect.TypeOf((*MockDeploymentTelemetry)(nil).AppendDeploymentUUID))
+}
+
+// AppendIndependentShardScalingMode mocks base method.
+func (m *MockDeploymentTelemetry) AppendIndependentShardScalingMode() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "AppendIndependentShardScalingMode")
+}
+
+// AppendIndependentShardScalingMode indicates an expected call of AppendIndependentShardScalingMode.
+func (mr *MockDeploymentTelemetryMockRecorder) AppendIndependentShardScalingMode() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AppendIndependentShardScalingMode", reflect.TypeOf((*MockDeploymentTelemetry)(nil).AppendIndependentShardScalingMode))
 }

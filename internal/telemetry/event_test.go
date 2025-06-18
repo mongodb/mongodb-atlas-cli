@@ -339,6 +339,11 @@ func TestWithDeploymentUUID(t *testing.T) {
 	assert.Equal(t, "test", e.Properties["deployment_uuid"])
 }
 
+func TestWithDetectedAutoScalingMode(t *testing.T) {
+	e := newEvent(WithDetectedAutoScalingMode("clusterWideScaling"))
+	assert.Equal(t, "clusterWideScaling", e.Properties["cluster_scaling_type"])
+}
+
 func TestWithSignal(t *testing.T) {
 	q := "interrupt"
 	e := newEvent(withSignal(q))

@@ -27,6 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -222,4 +223,16 @@ func detectIsFileISS(fs afero.Fs, filename string) string {
 
 	// default to cluster wide scaling
 	return ""
+}
+
+func appendAutoScalingModeTelemetry(mode string) {
+	if mode == "" {
+		return
+	}
+
+	if isIndependentShardScaling(mode) {
+		telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode("independentShardScaling"))
+	} else if isClusterWideScaling(mode) {
+		telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode("clusterWideScaling"))
+	}
 }

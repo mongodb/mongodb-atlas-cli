@@ -16,6 +16,7 @@ package clusters
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/advancedsettings"
@@ -193,5 +194,9 @@ func removeReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
 }
 
 func isIndependentShardScaling(mode string) bool {
-	return mode == independentShardScalingFlag || mode == independentShardScalingResponse
+	return strings.EqualFold(mode, independentShardScalingFlag) || strings.EqualFold(mode, independentShardScalingResponse)
+}
+
+func isClusterWideScaling(mode string) bool {
+	return strings.EqualFold(mode, clusterWideScalingFlag) || strings.EqualFold(mode, clusterWideScalingResponse)
 }

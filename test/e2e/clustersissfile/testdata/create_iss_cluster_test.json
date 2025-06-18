@@ -1,6 +1,5 @@
 {
   "clusterType": "SHARDED",
-  "name": "AsymmetricCluster",
   "mongoDBMajorVersion":"8.0",
   "backupEnabled":true,
   "replicationSpecs": [

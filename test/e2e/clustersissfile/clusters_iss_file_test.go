@@ -34,7 +34,6 @@ const (
 
 func TestISSClustersFile(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
-	g.GenerateProject("clustersIssFile")
 
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
@@ -75,26 +74,27 @@ func TestISSClustersFile(t *testing.T) {
 		assert.Equal(t, "INDEPENDENT_SHARD_SCALING", config.GetAutoScalingMode())
 	})
 
-	g.Run("Pause ISS cluster", func(_ *testing.T) {
+	g.Run("Watch ISS cluster", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"pause",
+			"watch",
 			clusterIssFileName,
 		)
 
 		cmd.Env = os.Environ()
 		resp, err := internal.RunAndGetStdOut(cmd)
 		req.NoError(err, string(resp))
-
-		var cluster admin.ClusterDescription20240805
-		req.NoError(json.Unmarshal(resp, &cluster))
 	})
 
-	g.Run("Watch ISS cluster", func(_ *testing.T) {
+	g.Run("Pause ISS cluster", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
-			"watch",
+			"pause",
 			clusterIssFileName,
+			"--autoScalingMode",
+			"independentShardScaling",
+			"--output",
+			"json",
 		)
 
 		cmd.Env = os.Environ()
@@ -110,6 +110,10 @@ func TestISSClustersFile(t *testing.T) {
 			clustersEntity,
 			"start",
 			clusterIssFileName,
+			"--autoScalingMode",
+			"independentShardScaling",
+			"--output",
+			"json",
 		)
 
 		cmd.Env = os.Environ()

@@ -80,7 +80,6 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Versions: []shared_api.CommandVersion{
 					{
 						Version:            shared_api.NewPreviewVersion(),
-						PrivatePreview:     true,
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,

@@ -435,7 +435,7 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 
 	// Extract the sunset date and private preview from the extensions.
 	sunset := extractSunsetDate(extensions)
-	privatePreview := extractPrivatePreview(extensions)
+	publicPreview := extractPublicPreview(extensions)
 
 	// Add the version to the versions map if it doesn't exist.
 	versionString := version.ToString()
@@ -454,10 +454,9 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 		}
 	}
 
-	// The default for private preview is false and there can only be one private preview version.
-	// This makes is safe to set the private preview flag to true if the extension says we're in a private preview.
-	if privatePreview != nil && *privatePreview {
-		versionsMap[versionString].PrivatePreview = true
+	// The default for public preview is false, override it if the extension says we're in a public preview.
+	if publicPreview != nil && *publicPreview {
+		versionsMap[versionString].PublicPreview = true
 	}
 
 	// If the versioned content type is a request, set the request content type.
@@ -475,23 +474,23 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 	return nil
 }
 
-// Extract private preview from extensions.
+// Extract public preview from extensions.
 // Example yaml:
 // ```yaml
 // x-xgen-preview:
 //
 //	name: charts-dashboards
-//	public: 'false'
+//	public: 'true'
 //
 // ```
 //
-// If the extension is present, return a pointer to a bool.
+// If the extension is present, return true if the preview is public, false if it's private.
 // If the extension is not present, return nil.
-func extractPrivatePreview(extensions map[string]any) *bool {
+func extractPublicPreview(extensions map[string]any) *bool {
 	if extensions, ok := extensions["x-xgen-preview"].(map[string]any); ok && extensions != nil {
 		if public, ok := extensions["public"].(string); ok {
-			privatePreview := public == "false"
-			return &privatePreview
+			publicPreview := public == "true"
+			return &publicPreview
 		}
 	}
 

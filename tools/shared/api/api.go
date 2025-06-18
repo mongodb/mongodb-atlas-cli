@@ -48,7 +48,7 @@ type RequestParameters struct {
 type CommandVersion struct {
 	Version              Version
 	Sunset               *time.Time
-	PrivatePreview       bool
+	PublicPreview        bool
 	RequestContentType   string
 	ResponseContentTypes []string
 }

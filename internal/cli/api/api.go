@@ -137,6 +137,9 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 			// This can happen when the profile contains a default version which is not supported for a specific endpoint
 			ensureVersionIsSupported(command, &version)
 
+			// Print a warning if the version is a preview version
+			printPreviewWarning(command, &version)
+
 			// Detect if stdout is being piped (atlas api myTag myOperationId > output.json)
 			isPiped, err := IsStdOutPiped()
 			if err != nil {
@@ -462,6 +465,40 @@ func ensureVersionIsSupported(apiCommand shared_api.Command, versionString *stri
 
 	fmt.Fprintf(os.Stderr, "warning: version '%s' is not supported for this endpoint, using default API version '%s'; consider pinning a version to ensure consisentcy when updating the CLI\n", *versionString, defaultVersion)
 	*versionString = defaultVersion
+}
+
+func printPreviewWarning(apiCommand shared_api.Command, versionString *string) {
+	version, err := shared_api.ParseVersion(*versionString)
+
+	// If the version is invalid return, this should never happen
+	if err != nil {
+		return
+	}
+
+	// If the version is not a preview version, return
+	if version.StabilityLevel() != shared_api.StabilityLevelPreview {
+		return
+	}
+
+	// Find the version in the command versions
+	var commandVersion *shared_api.CommandVersion
+	for _, cv := range apiCommand.Versions {
+		if cv.Version.Equal(version) {
+			commandVersion = &cv
+			break
+		}
+	}
+
+	// If the version is not found, return (should also never happen)
+	if commandVersion == nil {
+		return
+	}
+
+	if commandVersion.PublicPreview {
+		fmt.Fprintf(os.Stderr, "warning: you've selected a public preview version of the endpoint, this version is subject to breaking changes.\n")
+	} else {
+		fmt.Fprintf(os.Stderr, "warning: you've selected a private preview version of the endpoint, this version might not be available for your account and is subject to breaking changes.\n")
+	}
 }
 
 func needsFileFlag(apiCommand shared_api.Command) bool {

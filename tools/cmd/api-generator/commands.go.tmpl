@@ -74,8 +74,8 @@ var Commands = shared_api.GroupedAndSortedCommands{
 				{{- range .Versions }}
 					{
 						Version: {{ createVersion .Version }},
-						{{- if .PrivatePreview }}
-						PrivatePreview: true,
+						{{- if .PublicPreview }}
+						PublicPreview: true,
 						{{- end}}
 						RequestContentType: `{{ .RequestContentType }}`,
 						ResponseContentTypes: []string{

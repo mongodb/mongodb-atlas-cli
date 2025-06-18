@@ -81,34 +81,43 @@ func (opts *UpdateOpts) Run() error {
 		return opts.RunFlexCluster()
 	}
 
+	// Update will override the autoscaling mode to ISS if the flag is set to ISS
+	if isIndependentShardScaling(opts.autoScalingMode) {
+		return opts.RunDedicatedIndependentShardScaling()
+	}
+
 	// Get the cluster auto scaling config
 	targetClusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return err
+		targetClusterAutoScalingConfig = &atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+			AutoScalingMode: &opts.autoScalingMode,
+		}
 	}
 
+	// If the flag is set to cluster wide scaling, warn the user that they are using the wrong flag
 	if isIndependentShardScaling(targetClusterAutoScalingConfig.GetAutoScalingMode()) {
-		// If the flag is set to cluster wide scaling, warn the user that they are using the wrong flag
-		if isClusterWideScaling(opts.autoScalingMode) || isClusterWideScaling(detectIsFileISS(opts.fs, opts.filename)) {
-			// 'independentShardScaling' autoscaling cluster detected, updating it to clusterWideScaling is not possible, use  --autoScalingMode 'independentShardScaling' instead
+		if isClusterWideScaling(opts.autoScalingMode) {
 			fmt.Fprintf(os.Stderr, "'independentShardScaling' autoscaling cluster detected, updating it to clusterWideScaling is not possible, use  --autoScalingMode 'independentShardScaling' instead")
 		}
-		//TODO: Implement the logic to update the cluster auto scaling config
-		return nil
 	}
 
 	return opts.RunDedicatedClusterWideScaling()
 }
 
 func (opts *UpdateOpts) RunDedicatedIndependentShardScaling() error {
-	cluster, err := opts.cluster()
+	cluster, err := opts.clusterLatest()
 	if err != nil {
 		return err
 	}
 
-	removeReadOnlyAttributes(cluster)
+	removeReadOnlyAttributesLatest(cluster)
 
-	return opts.store.UpdateCluster(opts.ConfigProjectID(), opts.name, cluster)
+	r, err := opts.store.UpdateClusterLatest(opts.ConfigProjectID(), opts.name, cluster)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
 }
 
 func (opts *UpdateOpts) RunFlexCluster() error {
@@ -203,9 +212,9 @@ func (opts *UpdateOpts) RunDedicatedClusterWideScaling() error {
 
 func (opts *UpdateOpts) clusterLatest() (*atlasv2.ClusterDescription20240805, error) {
 	var cluster *atlasv2.ClusterDescription20240805
+	var err error
 	if opts.filename != "" {
-		opts.autoScalingMode = detectIsFileISS(opts.fs, opts.filename)
-		err := file.Load(opts.fs, opts.filename, &cluster)
+		err = file.Load(opts.fs, opts.filename, &cluster)
 		if err != nil {
 			return nil, err
 		}

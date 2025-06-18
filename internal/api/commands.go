@@ -31675,7 +31675,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []shared_api.CommandVersion{
 					{
-						Version:            shared_api.NewPreviewVersion("unknown"),
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32035,7 +32035,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []shared_api.CommandVersion{
 					{
-						Version:            shared_api.NewPreviewVersion("unknown"),
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32665,7 +32665,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []shared_api.CommandVersion{
 					{
-						Version:            shared_api.NewPreviewVersion("unknown"),
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33175,7 +33175,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				},
 				Versions: []shared_api.CommandVersion{
 					{
-						Version:            shared_api.NewPreviewVersion("unknown"),
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,

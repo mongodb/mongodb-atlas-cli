@@ -127,7 +127,7 @@ func TestNewWatcherGetProperties(t *testing.T) {
 			},
 			expectedOutput: &api.WatcherGetProperties{
 				OperationID: "getCluster",
-				Version:     api.PreviewVersion{Type: api.PreviewTypeUnknown},
+				Version:     api.PreviewVersion{},
 				Params: map[string]string{
 					"groupId":     "input:groupId",
 					"clusterName": "body:$.name",

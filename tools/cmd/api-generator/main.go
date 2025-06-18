@@ -171,7 +171,7 @@ func writeCommands[T any](w io.Writer, templateContent string, data T) error {
 		"createVersion": func(version api.Version) string {
 			switch v := version.(type) {
 			case api.PreviewVersion:
-				return fmt.Sprintf("shared_api.NewPreviewVersion(\"%s\")", v.Type)
+				return "shared_api.NewPreviewVersion()"
 			case api.UpcomingVersion:
 				return fmt.Sprintf("shared_api.NewUpcomingVersion(%d, %d, %d)", v.Date.Year, v.Date.Month, v.Date.Day)
 			case api.StableVersion:

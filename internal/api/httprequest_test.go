@@ -301,7 +301,7 @@ func TestConvertToHttpRequest(t *testing.T) {
 					"groupId": {"0ff00ff00ff0"},
 					"pretty":  {"true"},
 				},
-				Version: shared_api.NewPreviewVersion(shared_api.PreviewTypeUnknown),
+				Version: shared_api.NewPreviewVersion(),
 			},
 			shouldFail:                    false,
 			expectedURL:                   "http://another_base/api/atlas/v2/groups/0ff00ff00ff0/clusters?pretty=true",
@@ -543,7 +543,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 			},
 		},
 		{
-			Version:            shared_api.NewPreviewVersion(shared_api.PreviewTypePublic),
+			Version:            shared_api.NewPreviewVersion(),
 			RequestContentType: `json`,
 			ResponseContentTypes: []string{
 				`json`,

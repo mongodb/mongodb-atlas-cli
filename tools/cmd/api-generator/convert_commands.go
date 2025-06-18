@@ -399,7 +399,7 @@ func processResponses(responses *openapi3.Responses, versionsMap map[string]*api
 		}
 
 		for versionedContentType, mediaType := range responses.Value.Content {
-			if err := addContentTypeToVersion(versionedContentType, versionsMap, false, extractSunsetDate(mediaType.Extensions)); err != nil {
+			if err := addContentTypeToVersion(versionedContentType, versionsMap, mediaType.Extensions, false); err != nil {
 				return err
 			}
 		}
@@ -418,7 +418,7 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 			continue
 		}
 
-		if err := addContentTypeToVersion(versionedContentType, versionsMap, true, extractSunsetDate(mediaType.Extensions)); err != nil {
+		if err := addContentTypeToVersion(versionedContentType, versionsMap, mediaType.Extensions, true); err != nil {
 			return err
 		}
 	}
@@ -426,14 +426,19 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 }
 
 // Helper function to add content type to version map.
-func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.CommandVersion, isRequest bool, sunset *time.Time) error {
+func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.CommandVersion, extensions map[string]any, isRequest bool) error {
+	// Extract the version and content type from the versioned content type.
 	version, contentType, err := extractVersionAndContentType(versionedContentType)
 	if err != nil {
 		return fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
 	}
 
-	versionString := version.ToString()
+	// Extract the sunset date and private preview from the extensions.
+	sunset := extractSunsetDate(extensions)
+	privatePreview := extractPrivatePreview(extensions)
 
+	// Add the version to the versions map if it doesn't exist.
+	versionString := version.ToString()
 	if _, ok := versionsMap[versionString]; !ok {
 		versionsMap[versionString] = &api.CommandVersion{
 			Version:              version,
@@ -442,12 +447,21 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 		}
 	}
 
+	// If the sunset date is set, update the sunset date if it's before the current sunset date.
 	if sunset != nil {
 		if versionsMap[versionString].Sunset == nil || sunset.Before(*versionsMap[versionString].Sunset) {
 			versionsMap[versionString].Sunset = sunset
 		}
 	}
 
+	// The default for private preview is false and there can only be one private preview version.
+	// This makes is safe to set the private preview flag to true if the extension says we're in a private preview.
+	if privatePreview != nil && *privatePreview {
+		versionsMap[versionString].PrivatePreview = true
+	}
+
+	// If the versioned content type is a request, set the request content type.
+	// If the versioned content type is a response, add the content type to the response content types.
 	if isRequest {
 		if versionsMap[versionString].RequestContentType != "" {
 			return errors.New("multiple request content types is not supported")
@@ -456,6 +470,29 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 		versionsMap[versionString].RequestContentType = contentType
 	} else {
 		versionsMap[versionString].ResponseContentTypes = append(versionsMap[versionString].ResponseContentTypes, contentType)
+	}
+
+	return nil
+}
+
+// Extract private preview from extensions.
+// Example yaml:
+// ```yaml
+// x-xgen-preview:
+//
+//	name: charts-dashboards
+//	public: 'false'
+//
+// ```
+//
+// If the extension is present, return a pointer to a bool.
+// If the extension is not present, return nil.
+func extractPrivatePreview(extensions map[string]any) *bool {
+	if extensions, ok := extensions["x-xgen-preview"].(map[string]any); ok && extensions != nil {
+		if public, ok := extensions["public"].(string); ok {
+			privatePreview := public == "false"
+			return &privatePreview
+		}
 	}
 
 	return nil

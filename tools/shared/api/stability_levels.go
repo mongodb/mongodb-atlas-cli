@@ -70,7 +70,7 @@ func ParseVersion(version string) (Version, error) {
 			return nil, errors.New("preview version cannot have a year, month, or day")
 		}
 
-		return NewPreviewVersion(PreviewTypeUnknown), nil
+		return NewPreviewVersion(), nil
 	}
 
 	// For upcoming and stable versions, year, month, and day are required
@@ -94,20 +94,11 @@ func ParseVersion(version string) (Version, error) {
 }
 
 type PreviewVersion struct {
-	Type PreviewType
 }
 
-func NewPreviewVersion(previewType PreviewType) PreviewVersion {
-	return PreviewVersion{Type: previewType}
+func NewPreviewVersion() PreviewVersion {
+	return PreviewVersion{}
 }
-
-type PreviewType string
-
-const (
-	PreviewTypeUnknown PreviewType = "unknown"
-	PreviewTypePrivate PreviewType = "private"
-	PreviewTypePublic  PreviewType = "public"
-)
 
 func (PreviewVersion) StabilityLevel() StabilityLevel {
 	return StabilityLevelPreview

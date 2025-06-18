@@ -43,12 +43,12 @@ func TestExtractVersionAndContentType(t *testing.T) {
 		},
 		{
 			"application/vnd.atlas.preview+json",
-			api.NewPreviewVersion(api.PreviewTypeUnknown),
+			api.NewPreviewVersion(),
 			"json",
 		},
 		{
 			"application/vnd.atlas.preview+csv",
-			api.NewPreviewVersion(api.PreviewTypeUnknown),
+			api.NewPreviewVersion(),
 			"csv",
 		},
 		{

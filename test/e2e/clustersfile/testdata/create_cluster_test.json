@@ -1,7 +1,6 @@
 {
   "backupEnabled":false,
   "diskSizeGB":30,
-  "numShards":1,
   "mongoDBMajorVersion":"{{.MongoDBMajorVersion}}",
   "providerSettings":{
     "providerName":"GCP",

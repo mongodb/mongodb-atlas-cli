@@ -34,6 +34,8 @@ const (
 
 func TestISSClustersFile(t *testing.T) {
 	g := internal.NewAtlasE2ETestGenerator(t, internal.WithSnapshot())
+	g.GenerateProject("clustersIssFile")
+
 	cliPath, err := internal.AtlasCLIBin()
 	req := require.New(t)
 	req.NoError(err)
@@ -54,7 +56,7 @@ func TestISSClustersFile(t *testing.T) {
 
 		var cluster admin.ClusterDescription20240805
 		req.NoError(json.Unmarshal(resp, &cluster))
-		internal.EnsureClusterLatest(t, &cluster, clusterIssFileName, "8.0", 30, false)
+		internal.EnsureClusterLatest(t, &cluster, clusterIssFileName, "8.0", 10, false)
 	})
 
 	g.Run("Get ISS cluster autoScalingMode", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
@@ -73,7 +75,52 @@ func TestISSClustersFile(t *testing.T) {
 		assert.Equal(t, "INDEPENDENT_SHARD_SCALING", config.GetAutoScalingMode())
 	})
 
-	g.Run("Delete ISS Cluster - created via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+	g.Run("Pause ISS cluster", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"pause",
+			clusterIssFileName,
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+	})
+
+	g.Run("Watch ISS cluster", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterIssFileName,
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+	})
+
+	g.Run("Start ISS cluster", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"start",
+			clusterIssFileName,
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+	})
+
+	g.Run("Delete ISS Cluster - created via file", func(_ *testing.T) {
 		cmd := exec.Command(
 			cliPath,
 			clustersEntity,

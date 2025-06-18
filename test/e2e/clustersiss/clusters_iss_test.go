@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//go:build e2e || e2eSnap || (atlas && clusters && iss)
+//go:build e2e || e2eSnap || (atlas && clusters && issaaa)
 
 package clustersiss
 
@@ -89,6 +89,8 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			clustersEntity,
 			"get",
 			issClusterName,
+			"--autoScalingMode",
+			independentShardScalingFlag,
 			"-o=json")
 
 		cmd.Env = os.Environ()

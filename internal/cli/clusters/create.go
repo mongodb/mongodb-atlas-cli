@@ -30,6 +30,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/watchers"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -101,7 +102,7 @@ var flexCluster *atlasv2.FlexClusterDescription20241113
 var clusterObjLatest *atlasv2.ClusterDescription20240805
 
 func (opts *CreateOpts) Run() error {
-	if opts.autoScalingMode == independentShardScalingFlag {
+	if isIndependentShardScaling(opts.autoScalingMode) {
 		return opts.RunDedicatedClusterLatest()
 	}
 
@@ -490,15 +491,16 @@ func (opts *CreateOpts) validateTier() error {
 }
 
 func (opts *CreateOpts) validateAutoScalingMode() error {
-	if opts.isFlexCluster && opts.autoScalingMode != clusterWideScalingFlag {
+	if opts.isFlexCluster && !isClusterWideScaling(opts.autoScalingMode) {
 		return fmt.Errorf("flex is incompatible with %s auto scaling mode", opts.autoScalingMode)
 	}
 
-	if opts.autoScalingMode != "" && opts.autoScalingMode != clusterWideScalingFlag && opts.autoScalingMode != independentShardScalingFlag {
-		return fmt.Errorf("invalid auto scaling mode: %s", opts.autoScalingMode)
+	err := validate.AutoScalingMode(opts.autoScalingMode)()
+	if err != nil {
+		return err
 	}
 
-	if opts.filename != "" && opts.autoScalingMode == independentShardScalingFlag {
+	if opts.filename != "" && isIndependentShardScaling(opts.autoScalingMode) {
 		return fmt.Errorf("auto scaling mode %s is not supported for files", opts.autoScalingMode)
 	}
 
@@ -562,6 +564,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 					return errors.New("cluster name missing")
 				}
 			}
+
 			if len(args) != 0 {
 				opts.name = args[0]
 			}

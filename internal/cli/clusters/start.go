@@ -22,23 +22,28 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=start_mock_test.go -package=clusters . ClusterStarter
 
 type ClusterStarter interface {
 	StartCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	StartClusterLatest(string, string) (*atlasv2.ClusterDescription20240805, error)
 }
 
 type StartOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	name  string
-	store ClusterStarter
+	name            string
+	autoScalingMode string
+	store           ClusterStarter
 }
 
 func (opts *StartOpts) initStore(ctx context.Context) func() error {
@@ -52,11 +57,18 @@ func (opts *StartOpts) initStore(ctx context.Context) func() error {
 var startTmpl = "Starting cluster '{{.Name}}'.\n"
 
 func (opts *StartOpts) Run() error {
+	if isIndependentShardScaling(opts.autoScalingMode) {
+		r, err := opts.store.StartClusterLatest(opts.ConfigProjectID(), opts.name)
+		if err != nil {
+			return commonerrors.Check(err)
+		}
+		return opts.Print(r)
+	}
+
 	r, err := opts.store.StartCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-
 	return opts.Print(r)
 }
 
@@ -79,6 +91,7 @@ func StartBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), startTmpl),
+				validate.AutoScalingMode(opts.autoScalingMode),
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
@@ -86,6 +99,11 @@ func StartBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, clusterWideScalingFlag, usage.AutoScalingMode)
+	_ = cmd.RegisterFlagCompletionFunc(flag.AutoScalingMode, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{clusterWideScalingFlag, independentShardScalingFlag}, cobra.ShellCompDirectiveDefault
+	})
 
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)

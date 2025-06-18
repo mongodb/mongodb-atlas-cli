@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1859
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 18 Jun 2025 12:24:06 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 78
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852add5bc51b44046171121/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-06-18T12:23:20Z","groupId":"6852add5bc51b44046171121","hostname":"atlas-wmj3kh-shard-00-00.of81cu.mongodb-dev.net","id":"atlas-wmj3kh-shard-00-00.of81cu.mongodb-dev.net:27017","lastPing":"2025-06-18T12:23:55Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852add5bc51b44046171121/processes/atlas-wmj3kh-shard-00-00.of81cu.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-wmj3kh-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-93-shard-00-00.of81cu.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-18T12:23:21Z","groupId":"6852add5bc51b44046171121","hostname":"atlas-wmj3kh-shard-00-01.of81cu.mongodb-dev.net","id":"atlas-wmj3kh-shard-00-01.of81cu.mongodb-dev.net:27017","lastPing":"2025-06-18T12:23:55Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852add5bc51b44046171121/processes/atlas-wmj3kh-shard-00-01.of81cu.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-wmj3kh-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-93-shard-00-01.of81cu.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-18T12:23:21Z","groupId":"6852add5bc51b44046171121","hostname":"atlas-wmj3kh-shard-00-02.of81cu.mongodb-dev.net","id":"atlas-wmj3kh-shard-00-02.of81cu.mongodb-dev.net:27017","lastPing":"2025-06-18T12:23:55Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852add5bc51b44046171121/processes/atlas-wmj3kh-shard-00-02.of81cu.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-wmj3kh-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-93-shard-00-02.of81cu.mongodb-dev.net","version":"8.0.10"}],"totalCount":3}

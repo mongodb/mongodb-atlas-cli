@@ -1,17 +1,17 @@
 HTTP/2.0 201 Created
 Content-Length: 1094
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Wed, 18 Jun 2025 12:14:54 GMT
+Date: Wed, 18 Jun 2025 12:15:08 GMT
 Location: http://localhost:8080//api/atlas/v1.0
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 1868
+X-Envoy-Upstream-Service-Time: 1964
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasGroupsResource::addGroup
 X-Java-Version: 17.0.14+7
 X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"clusterCount":0,"created":"2025-06-18T12:14:56Z","id":"6852adbebc51b44046170514","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852adbebc51b44046170514","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adbebc51b44046170514/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adbebc51b44046170514/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adbebc51b44046170514/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adbebc51b44046170514/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adbebc51b44046170514/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adbebc51b44046170514/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"copyprotection-compliance-policy-e2e-120","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}
+{"clusterCount":0,"created":"2025-06-18T12:15:10Z","id":"6852adcc7871bb6d3e780b45","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcc7871bb6d3e780b45","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcc7871bb6d3e780b45/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcc7871bb6d3e780b45/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcc7871bb6d3e780b45/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcc7871bb6d3e780b45/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcc7871bb6d3e780b45/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcc7871bb6d3e780b45/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"copyprotection-compliance-policy-e2e-774","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}

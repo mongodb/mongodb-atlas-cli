@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 561
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 18 Jun 2025 12:24:11 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 46
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"6852aecf7871bb6d3e782c13","regionName":"EUROPE_CENTRAL_2","serviceAttachmentNames":["projects/p-msvsvjr2uscumxrazrqsknzt/regions/europe-central2/serviceAttachments/sa-europe-central2-6852aecdbc51b44046172e64-1","projects/p-msvsvjr2uscumxrazrqsknzt/regions/europe-central2/serviceAttachments/sa-europe-central2-6852aecdbc51b44046172e64-2","projects/p-msvsvjr2uscumxrazrqsknzt/regions/europe-central2/serviceAttachments/sa-europe-central2-6852aecdbc51b44046172e64-5"],"status":"INITIATING"}

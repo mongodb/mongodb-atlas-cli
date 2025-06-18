@@ -1,12 +1,12 @@
 HTTP/2.0 200 OK
 Content-Length: 575
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Wed, 18 Jun 2025 12:14:58 GMT
+Date: Wed, 18 Jun 2025 12:15:15 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 20
+X-Envoy-Upstream-Service-Time: 17
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationsResource::getOrg
 X-Java-Version: 17.0.14+7

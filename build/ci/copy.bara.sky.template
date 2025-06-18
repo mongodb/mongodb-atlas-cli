@@ -5,7 +5,7 @@ Copy definitions
 release_tag = "${TAG}"
 source_url = "https://github.com/mongodb/mongodb-atlas-cli.git"
 destination_url = "https://github.com/10gen/cloud-docs.git"
-destination_url_cli_docs = "https://github.com/mongodb/docs-atlas-cli.git"
+destination_url_cli_docs = "https://github.com/10gen/docs-mongodb-internal.git"
 author = "apix-bot[bot] <168195273+apix-bot[bot]@users.noreply.github.com>"
 
 core.workflow(
@@ -39,16 +39,16 @@ core.workflow(
     ),
     destination = git.github_pr_destination(
         url = destination_url_cli_docs,
-        destination_ref = "master",
+        destination_ref = "main",
         pr_branch = "apix_bot_copybara_pull_request_"+release_tag,
         title = "Copies Atlas CLI commands for release tag: " + release_tag,
         body = "Copies Atlas CLI commands from the source repo. See the attached Netlify comment for build log and staging.",
         integrates = [],
     ),
     origin_files = glob(["docs/command/**"]),
-    destination_files = glob(["source/command/**"], exclude=["source/command/atlas-api", "source/command/atlas-kubernetes**"]),
+    destination_files = glob(["content/atlas-cli/current/source/command/**"], exclude=["content/atlas-cli/current/source/command/atlas-api", "content/atlas-cli/current/source/command/atlas-kubernetes**"]),
     authoring = authoring.pass_thru(author),
     transformations = [
-        core.move("docs/command", "source/command"),
+        core.move("docs/command", "content/atlas-cli/current/source/command"),
     ],
 )

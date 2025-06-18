@@ -57,6 +57,22 @@ func TestISSClustersFile(t *testing.T) {
 		internal.EnsureClusterLatest(t, &cluster, clusterIssFileName, "8.0", 30, false)
 	})
 
+	g.Run("Get ISS cluster autoScalingMode", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"autoScalingConfig",
+			clusterIssFileName,
+			"-o=json")
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var config admin.ClusterDescriptionAutoScalingModeConfiguration
+		req.NoError(json.Unmarshal(resp, &config))
+		assert.Equal(t, "INDEPENDENT_SHARD_SCALING", config.GetAutoScalingMode())
+	})
+
 	g.Run("Delete ISS Cluster - created via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(
 			cliPath,

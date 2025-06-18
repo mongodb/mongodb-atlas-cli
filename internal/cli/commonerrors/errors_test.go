@@ -28,6 +28,10 @@ func TestCheck(t *testing.T) {
 
 	skderr := &admin.GenericOpenAPIError{}
 	skderr.SetModel(admin.ApiError{ErrorCode: "TENANT_CLUSTER_UPDATE_UNSUPPORTED"})
+
+	asymmetricShardErr := &admin.GenericOpenAPIError{}
+	asymmetricShardErr.SetModel(admin.ApiError{ErrorCode: "ASYMMETRIC_SHARD_UNSUPPORTED"})
+
 	testCases := []struct {
 		name string
 		err  error
@@ -47,6 +51,11 @@ func TestCheck(t *testing.T) {
 			name: "arbitrary error",
 			err:  dummyErr,
 			want: dummyErr,
+		},
+		{
+			name: "asymmetric shard unsupported",
+			err:  asymmetricShardErr,
+			want: errAsymmetricShardUnsupported,
 		},
 	}
 

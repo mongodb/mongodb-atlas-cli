@@ -21,8 +21,9 @@ import (
 )
 
 var (
-	errClusterUnsupported = errors.New("atlas supports this command only for M10+ clusters. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
-	errOutsideVPN         = errors.New("forbidden action outside access allow list, if you are a MongoDB employee double check your VPN connection")
+	errClusterUnsupported         = errors.New("atlas supports this command only for M10+ clusters. You can upgrade your cluster by running the 'atlas cluster upgrade' command")
+	errOutsideVPN                 = errors.New("forbidden action outside access allow list, if you are a MongoDB employee double check your VPN connection")
+	errAsymmetricShardUnsupported = errors.New("trying to run a cluster wide scaling command on an independent shard scaling cluster. Use --autoScalingMode 'independentShardScaling' instead")
 )
 
 func Check(err error) error {
@@ -37,6 +38,8 @@ func Check(err error) error {
 			return errClusterUnsupported
 		case "GLOBAL_USER_OUTSIDE_SUBNET":
 			return errOutsideVPN
+		case "ASYMMETRIC_SHARD_UNSUPPORTED":
+			return errAsymmetricShardUnsupported
 		}
 	}
 	return err

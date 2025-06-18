@@ -411,6 +411,12 @@ func WithSearchIndexType(indexType string) EventOpt {
 	}
 }
 
+func WithDetectedAutoScalingMode(autoScalingMode string) EventOpt {
+	return func(event Event) {
+		event.Properties["cluster_scaling_type"] = autoScalingMode
+	}
+}
+
 func newEvent(opts ...EventOpt) Event {
 	var event = Event{
 		Timestamp: time.Now(),

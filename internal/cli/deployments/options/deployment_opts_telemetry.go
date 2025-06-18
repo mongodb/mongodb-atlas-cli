@@ -39,6 +39,8 @@ var (
 type DeploymentTelemetry interface {
 	AppendDeploymentType()
 	AppendDeploymentUUID()
+	AppendClusterWideScalingMode()
+	AppendIndependentShardScalingMode()
 }
 
 func NewDeploymentTypeTelemetry(opts *DeploymentOpts) DeploymentTelemetry {
@@ -108,4 +110,18 @@ func (opts *DeploymentOpts) AppendDeploymentUUID() {
 	if err := opts.collectUUID(context.TODO()); err != nil {
 		_, _ = log.Debugf("error collecting deployment uuid: %v", err)
 	}
+}
+
+func (opts *DeploymentOpts) AppendClusterWideScalingMode() {
+	if opts.IsLocalDeploymentType() {
+		return
+	}
+	telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode("clusterWideScaling"))
+}
+
+func (opts *DeploymentOpts) AppendIndependentShardScalingMode() {
+	if opts.IsLocalDeploymentType() {
+		return
+	}
+	telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode("independentShardScaling"))
 }

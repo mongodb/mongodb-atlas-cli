@@ -26,6 +26,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/onlinearchive"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
@@ -199,4 +200,16 @@ func isIndependentShardScaling(mode string) bool {
 
 func isClusterWideScaling(mode string) bool {
 	return strings.EqualFold(mode, clusterWideScalingFlag) || strings.EqualFold(mode, clusterWideScalingResponse)
+}
+
+func appendAutoScalingModeTelemetry(mode string) {
+	if mode == "" {
+		return
+	}
+
+	if isIndependentShardScaling(mode) {
+		telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode("independentShardScaling"))
+	} else if isClusterWideScaling(mode) {
+		telemetry.AppendOption(telemetry.WithDetectedAutoScalingMode("clusterWideScaling"))
+	}
 }

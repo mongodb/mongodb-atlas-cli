@@ -24,6 +24,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
@@ -123,6 +124,7 @@ func ListBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), listTemplate),
+				validate.AutoScalingMode(opts.autoScalingMode),
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
@@ -131,7 +133,7 @@ func ListBuilder() *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&opts.tier, flag.Tier, "", usage.Tier)
-	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, "", usage.AutoScalingMode)
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, clusterWideScalingFlag, usage.AutoScalingMode)
 	opts.AddListOptsFlags(cmd)
 
 	opts.AddProjectOptsFlags(cmd)

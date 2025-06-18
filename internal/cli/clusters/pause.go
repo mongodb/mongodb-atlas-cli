@@ -22,23 +22,28 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=pause_mock_test.go -package=clusters . ClusterPauser
 
 type ClusterPauser interface {
 	PauseCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	PauseClusterLatest(string, string) (*atlasv2.ClusterDescription20240805, error)
 }
 
 type PauseOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	name  string
-	store ClusterPauser
+	name            string
+	autoScalingMode string
+	store           ClusterPauser
 }
 
 func (opts *PauseOpts) initStore(ctx context.Context) func() error {
@@ -52,11 +57,18 @@ func (opts *PauseOpts) initStore(ctx context.Context) func() error {
 var pauseTmpl = "Pausing cluster '{{.Name}}'.\n"
 
 func (opts *PauseOpts) Run() error {
+	if isIndependentShardScaling(opts.autoScalingMode) {
+		r, err := opts.store.PauseClusterLatest(opts.ConfigProjectID(), opts.name)
+		if err != nil {
+			return commonerrors.Check(err)
+		}
+		return opts.Print(r)
+	}
+
 	r, err := opts.store.PauseCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
 		return commonerrors.Check(err)
 	}
-
 	return opts.Print(r)
 }
 
@@ -79,6 +91,7 @@ func PauseBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), pauseTmpl),
+				validate.AutoScalingMode(opts.autoScalingMode),
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
@@ -86,6 +99,11 @@ func PauseBuilder() *cobra.Command {
 			return opts.Run()
 		},
 	}
+
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, clusterWideScalingFlag, usage.AutoScalingMode)
+	_ = cmd.RegisterFlagCompletionFunc(flag.AutoScalingMode, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{clusterWideScalingFlag, independentShardScalingFlag}, cobra.ShellCompDirectiveDefault
+	})
 
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)

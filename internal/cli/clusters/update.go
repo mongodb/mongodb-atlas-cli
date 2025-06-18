@@ -43,9 +43,11 @@ const (
 
 type AtlasClusterGetterUpdater interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	AtlasClusterLatest(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
 	UpdateCluster(string, string, *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	UpdateFlexCluster(string, string, *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error)
+	UpdateClusterLatest(string, string, *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
 }
 
 type UpdateOpts struct {
@@ -55,6 +57,7 @@ type UpdateOpts struct {
 	tier                         string
 	diskSizeGB                   float64
 	mdbVersion                   string
+	autoScalingMode              string
 	enableTerminationProtection  bool
 	disableTerminationProtection bool
 	isFlexCluster                bool
@@ -320,6 +323,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().BoolVar(&opts.disableTerminationProtection, flag.DisableTerminationProtection, false, usage.DisableTerminationProtection)
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, "", usage.AutoScalingMode)
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableTerminationProtection, flag.DisableTerminationProtection)
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag+usage.UpdateWarning)
 
@@ -333,6 +337,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.EnableTerminationProtection)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DisableTerminationProtection)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.AutoScalingMode)
 
 	autocomplete := &autoCompleteOpts{}
 	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())

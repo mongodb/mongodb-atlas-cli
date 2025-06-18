@@ -507,30 +507,10 @@ func (opts *CreateOpts) validateAutoScalingMode() error {
 	}
 
 	if opts.filename != "" {
-		opts.detectIsFileISS()
+		opts.autoScalingMode = detectIsFileISS(opts.fs, opts.filename)
 	}
 
 	return nil
-}
-
-func (opts *CreateOpts) detectIsFileISS() {
-	// First try to load as a default dedicated cluster in strict mode.
-	// If it succeeds, it is a default dedicated cluster.
-	oldCluster := new(atlasClustersPinned.AdvancedClusterDescription)
-	oldLoadErr := file.StrictLoad(opts.fs, opts.filename, oldCluster)
-	if oldLoadErr == nil {
-		opts.autoScalingMode = clusterWideScalingFlag
-		return
-	}
-
-	// Then try to load as an ISS cluster in strict mode.
-	// If it succeeds, it is an ISS cluster. If it fails, it is a default dedicated cluster.
-	cluster := new(atlasv2.ClusterDescription20240805)
-	latestLoadErr := file.StrictLoad(opts.fs, opts.filename, cluster)
-	if latestLoadErr == nil {
-		opts.autoScalingMode = independentShardScalingFlag
-		return
-	}
 }
 
 // CreateBuilder builds a cobra.Command that can run as:

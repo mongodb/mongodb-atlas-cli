@@ -119,6 +119,84 @@ func (c *MockAtlasClusterGetterUpdaterFlexClusterCall) DoAndReturn(f func(string
 	return c
 }
 
+// GetClusterAutoScalingConfig mocks base method.
+func (m *MockAtlasClusterGetterUpdater) GetClusterAutoScalingConfig(arg0, arg1 string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetClusterAutoScalingConfig", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.ClusterDescriptionAutoScalingModeConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetClusterAutoScalingConfig indicates an expected call of GetClusterAutoScalingConfig.
+func (mr *MockAtlasClusterGetterUpdaterMockRecorder) GetClusterAutoScalingConfig(arg0, arg1 any) *MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClusterAutoScalingConfig", reflect.TypeOf((*MockAtlasClusterGetterUpdater)(nil).GetClusterAutoScalingConfig), arg0, arg1)
+	return &MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall{Call: call}
+}
+
+// MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall wrap *gomock.Call
+type MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall) Return(arg0 *admin0.ClusterDescriptionAutoScalingModeConfiguration, arg1 error) *MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall) Do(f func(string, string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error)) *MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall) DoAndReturn(f func(string, string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error)) *MockAtlasClusterGetterUpdaterGetClusterAutoScalingConfigCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// LatestAtlasCluster mocks base method.
+func (m *MockAtlasClusterGetterUpdater) LatestAtlasCluster(arg0, arg1 string) (*admin0.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LatestAtlasCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LatestAtlasCluster indicates an expected call of LatestAtlasCluster.
+func (mr *MockAtlasClusterGetterUpdaterMockRecorder) LatestAtlasCluster(arg0, arg1 any) *MockAtlasClusterGetterUpdaterLatestAtlasClusterCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestAtlasCluster", reflect.TypeOf((*MockAtlasClusterGetterUpdater)(nil).LatestAtlasCluster), arg0, arg1)
+	return &MockAtlasClusterGetterUpdaterLatestAtlasClusterCall{Call: call}
+}
+
+// MockAtlasClusterGetterUpdaterLatestAtlasClusterCall wrap *gomock.Call
+type MockAtlasClusterGetterUpdaterLatestAtlasClusterCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockAtlasClusterGetterUpdaterLatestAtlasClusterCall) Return(arg0 *admin0.ClusterDescription20240805, arg1 error) *MockAtlasClusterGetterUpdaterLatestAtlasClusterCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockAtlasClusterGetterUpdaterLatestAtlasClusterCall) Do(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockAtlasClusterGetterUpdaterLatestAtlasClusterCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockAtlasClusterGetterUpdaterLatestAtlasClusterCall) DoAndReturn(f func(string, string) (*admin0.ClusterDescription20240805, error)) *MockAtlasClusterGetterUpdaterLatestAtlasClusterCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // UpdateCluster mocks base method.
 func (m *MockAtlasClusterGetterUpdater) UpdateCluster(arg0, arg1 string, arg2 *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error) {
 	m.ctrl.T.Helper()
@@ -154,6 +232,45 @@ func (c *MockAtlasClusterGetterUpdaterUpdateClusterCall) Do(f func(string, strin
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockAtlasClusterGetterUpdaterUpdateClusterCall) DoAndReturn(f func(string, string, *admin.AdvancedClusterDescription) (*admin.AdvancedClusterDescription, error)) *MockAtlasClusterGetterUpdaterUpdateClusterCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// UpdateClusterLatest mocks base method.
+func (m *MockAtlasClusterGetterUpdater) UpdateClusterLatest(arg0, arg1 string, arg2 *admin0.ClusterDescription20240805) (*admin0.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateClusterLatest", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*admin0.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateClusterLatest indicates an expected call of UpdateClusterLatest.
+func (mr *MockAtlasClusterGetterUpdaterMockRecorder) UpdateClusterLatest(arg0, arg1, arg2 any) *MockAtlasClusterGetterUpdaterUpdateClusterLatestCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateClusterLatest", reflect.TypeOf((*MockAtlasClusterGetterUpdater)(nil).UpdateClusterLatest), arg0, arg1, arg2)
+	return &MockAtlasClusterGetterUpdaterUpdateClusterLatestCall{Call: call}
+}
+
+// MockAtlasClusterGetterUpdaterUpdateClusterLatestCall wrap *gomock.Call
+type MockAtlasClusterGetterUpdaterUpdateClusterLatestCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockAtlasClusterGetterUpdaterUpdateClusterLatestCall) Return(arg0 *admin0.ClusterDescription20240805, arg1 error) *MockAtlasClusterGetterUpdaterUpdateClusterLatestCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockAtlasClusterGetterUpdaterUpdateClusterLatestCall) Do(f func(string, string, *admin0.ClusterDescription20240805) (*admin0.ClusterDescription20240805, error)) *MockAtlasClusterGetterUpdaterUpdateClusterLatestCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockAtlasClusterGetterUpdaterUpdateClusterLatestCall) DoAndReturn(f func(string, string, *admin0.ClusterDescription20240805) (*admin0.ClusterDescription20240805, error)) *MockAtlasClusterGetterUpdaterUpdateClusterLatestCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

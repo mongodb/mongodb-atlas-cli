@@ -29,6 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -313,6 +314,14 @@ func (opts *UpdateOpts) validateTier() error {
 	return nil
 }
 
+func (opts *UpdateOpts) validateAutoScalingMode() error {
+	if opts.filename != "" {
+		opts.autoScalingMode = detectIsFileISS(opts.fs, opts.filename)
+	}
+
+	return validate.AutoScalingMode(opts.autoScalingMode)()
+}
+
 // UpdateBuilder builds a cobra.Command that can run as:
 // atlas cluster(s) update [clusterName] --projectId projectId [--tier M#] [--diskSizeGB N] [--mdbVersion] [--tag key=value].
 func UpdateBuilder() *cobra.Command {
@@ -359,6 +368,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTmpl),
 				opts.newIsFlexCluster,
+				opts.validateAutoScalingMode,
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {

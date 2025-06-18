@@ -203,10 +203,6 @@ func isClusterWideScaling(mode string) bool {
 	return strings.EqualFold(mode, clusterWideScalingFlag) || strings.EqualFold(mode, clusterWideScalingResponse)
 }
 
-func isClusterWideScaling(mode string) bool {
-	return mode == clusterWideScalingFlag || mode == clusterWideScalingResponse
-}
-
 func detectIsFileISS(fs afero.Fs, filename string) string {
 	// First try to load as a default dedicated cluster in strict mode.
 	// If it succeeds, it is a default dedicated cluster.
@@ -225,5 +221,5 @@ func detectIsFileISS(fs afero.Fs, filename string) string {
 	}
 
 	// default to cluster wide scaling
-	return clusterWideScalingFlag
+	return ""
 }

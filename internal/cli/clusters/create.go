@@ -491,7 +491,7 @@ func (opts *CreateOpts) validateTier() error {
 }
 
 func (opts *CreateOpts) validateAutoScalingMode() error {
-	if opts.isFlexCluster && isClusterWideScaling(opts.autoScalingMode) {
+	if opts.isFlexCluster && !isClusterWideScaling(opts.autoScalingMode) {
 		return fmt.Errorf("flex is incompatible with %s auto scaling mode", opts.autoScalingMode)
 	}
 
@@ -584,6 +584,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 					return errors.New("cluster name missing")
 				}
 			}
+
 			if len(args) != 0 {
 				opts.name = args[0]
 			}

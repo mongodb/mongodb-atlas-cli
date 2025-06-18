@@ -38,6 +38,8 @@ const (
 	deprecateMessageSharedTier            = "Deprecation note: the M2 and M5 tiers are now deprecated ('%s' was selected); when selecting M2 or M5, a FLEX tier will be created instead. For the migration guide, visit: https://dochub.mongodb.org/core/flex-migration.\n"
 	independentShardScalingFlag           = "independentShardScaling"
 	clusterWideScalingFlag                = "clusterWideScaling"
+	clusterWideScalingResponse            = "CLUSTER_WIDE_SCALING"
+	independentShardScalingResponse       = "INDEPENDENT_SHARD_SCALING"
 )
 
 func Builder() *cobra.Command {
@@ -68,6 +70,7 @@ func Builder() *cobra.Command {
 		connectionstring.Builder(),
 		availableregions.Builder(),
 		sampledata.Builder(),
+		GetAutoscalingConfigBuilder(),
 	)
 
 	return cmd
@@ -187,4 +190,8 @@ func removeReadOnlyAttributesSharedCluster(out *atlas.Cluster) {
 	for _, spec := range out.ReplicationSpecs {
 		spec.ID = ""
 	}
+}
+
+func isIndependentShardScaling(mode string) bool {
+	return mode == independentShardScalingFlag || mode == independentShardScalingResponse
 }

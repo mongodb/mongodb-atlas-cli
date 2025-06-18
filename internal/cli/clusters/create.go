@@ -195,7 +195,7 @@ func (opts *CreateOpts) RunDedicatedCluster() error {
 }
 
 func (opts *CreateOpts) PostRun() error {
-	if opts.autoScalingMode == independentShardScalingFlag {
+	if isIndependentShardScaling(opts.autoScalingMode) {
 		return opts.PostRunDedicatedClusterLatest()
 	}
 
@@ -498,10 +498,6 @@ func (opts *CreateOpts) validateAutoScalingMode() error {
 	err := validate.AutoScalingMode(opts.autoScalingMode)()
 	if err != nil {
 		return err
-	}
-
-	if opts.filename != "" && isIndependentShardScaling(opts.autoScalingMode) {
-		return fmt.Errorf("auto scaling mode %s is not supported for files", opts.autoScalingMode)
 	}
 
 	if opts.isFlexCluster {

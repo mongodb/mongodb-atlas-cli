@@ -451,21 +451,7 @@ func TestCreateOpts_RunDedicatedClusterLatest(t *testing.T) {
 		require.NoError(t, createOpts.Run())
 	})
 
-	t.Run("filename and autoScalingMode are not compatible", func(t *testing.T) {
-		appFS := afero.NewMemMapFs()
-		_ = afero.WriteFile(appFS, fileName, []byte("invalid"), 0600)
-
-		createOpts := &CreateOpts{
-			filename:        fileName,
-			fs:              appFS,
-			store:           mockStore,
-			autoScalingMode: independentShardScalingFlag,
-		}
-
-		require.Error(t, createOpts.validateAutoScalingMode())
-	})
-
-	t.Run("does not set autoScalingMode if invalid file", func(t *testing.T) {
+	t.Run("default to clusterWideScaling if invalid file", func(t *testing.T) {
 		appFS := afero.NewMemMapFs()
 		_ = afero.WriteFile(appFS, fileName, []byte("invalid"), 0600)
 
@@ -476,7 +462,7 @@ func TestCreateOpts_RunDedicatedClusterLatest(t *testing.T) {
 		}
 
 		require.NoError(t, createOpts.validateAutoScalingMode())
-		assert.Empty(t, createOpts.autoScalingMode)
+		assert.Equal(t, clusterWideScalingFlag, createOpts.autoScalingMode)
 	})
 }
 

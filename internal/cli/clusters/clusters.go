@@ -222,7 +222,7 @@ func detectIsFileISS(fs afero.Fs, filename string) string {
 	}
 
 	// default to cluster wide scaling
-	return ""
+	return clusterWideScalingFlag
 }
 
 func appendAutoScalingModeTelemetry(mode string) {

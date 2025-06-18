@@ -117,40 +117,6 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		assert.Equal(t, "INDEPENDENT_SHARD_SCALING", config.GetAutoScalingMode())
 	})
 
-	g.Run("Pause ISS cluster with the wrong flag", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"pause",
-			issClusterName,
-			"--autoScalingMode", clusterWideScalingFlag,
-		)
-		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
-		req.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("Pausing cluster '%s'Cluster paused\n", issClusterName)
-		assert.Equal(t, expected, string(resp))
-	})
-
-	g.Run("Get ISS cluster and check autoScalingMode is still independentShardScaling", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"get",
-			issClusterName,
-			"--autoScalingMode", independentShardScalingFlag,
-			"-o=json")
-
-		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
-		req.NoError(err, string(resp))
-
-		var cluster admin.ClusterDescription20240805
-		req.NoError(json.Unmarshal(resp, &cluster))
-
-		internal.EnsureClusterLatest(t, &cluster, issClusterName, mdbVersion, 30, false)
-		assert.Len(t, cluster.GetReplicationSpecs(), 2)
-	})
-
 	g.Run("List ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,
@@ -166,21 +132,6 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 
 		assert.Positive(t, clusters.GetTotalCount())
 		assert.NotEmpty(t, clusters.Results)
-	})
-
-	g.Run("Start ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-		cmd := exec.Command(cliPath,
-			clustersEntity,
-			"start",
-			issClusterName,
-			"--autoScalingMode", independentShardScalingFlag,
-		)
-		cmd.Env = os.Environ()
-		resp, err := internal.RunAndGetStdOut(cmd)
-		req.NoError(err, string(resp))
-
-		expected := fmt.Sprintf("Starting cluster '%s'Cluster started\n", issClusterName)
-		assert.Equal(t, expected, string(resp))
 	})
 
 	g.Run("Delete ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run

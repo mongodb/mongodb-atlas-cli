@@ -1,17 +1,17 @@
 HTTP/2.0 201 Created
 Content-Length: 227
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Wed, 18 Jun 2025 05:08:29 GMT
-Location: http://localhost:8080/orgs/a0123456789abcdef012345a/teams/685249cd4a1a606c8b2e5017
+Date: Wed, 18 Jun 2025 12:15:18 GMT
+Location: http://localhost:8080/orgs/a0123456789abcdef012345a/teams/6852add6bc51b44046171252
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 146
+X-Envoy-Upstream-Service-Time: 154
 X-Frame-Options: DENY
 X-Java-Method: ApiOrganizationTeamsResource::createTeam
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=d8e74d38610ad5f74d45aa2f7555874aa396a9e6; versionString=master
+X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"id":"685249cd4a1a606c8b2e5017","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/teams/685249cd4a1a606c8b2e5017","rel":"self"}],"name":"teams914","usernames":["andrea.angiolillo@mongodb.com"]}
+{"id":"6852add6bc51b44046171252","links":[{"href":"http://localhost:8080/api/atlas/v2/orgs/a0123456789abcdef012345a/teams/6852add6bc51b44046171252","rel":"self"}],"name":"teams651","usernames":["andrea.angiolillo@mongodb.com"]}

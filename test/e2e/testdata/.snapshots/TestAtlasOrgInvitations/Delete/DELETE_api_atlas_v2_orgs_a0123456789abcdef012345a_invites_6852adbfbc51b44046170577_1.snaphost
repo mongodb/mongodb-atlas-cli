@@ -1,0 +1,16 @@
+HTTP/2.0 204 No Content
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 18 Jun 2025 12:14:57 GMT
+Deprecation: Wed, 19 Feb 2025 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Fri, 31 Jul 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 26
+X-Frame-Options: DENY
+X-Java-Method: ApiOrganizationInvitationResource::deleteInvitations
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+

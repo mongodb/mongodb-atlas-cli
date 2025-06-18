@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1862
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 18 Jun 2025 12:23:23 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 53
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcb7871bb6d3e78093b/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-06-18T12:22:44Z","groupId":"6852adcb7871bb6d3e78093b","hostname":"atlas-a7sxgq-shard-00-00.3a1mac.mongodb-dev.net","id":"atlas-a7sxgq-shard-00-00.3a1mac.mongodb-dev.net:27017","lastPing":"2025-06-18T12:23:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcb7871bb6d3e78093b/processes/atlas-a7sxgq-shard-00-00.3a1mac.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-a7sxgq-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-859-shard-00-00.3a1mac.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-18T12:22:44Z","groupId":"6852adcb7871bb6d3e78093b","hostname":"atlas-a7sxgq-shard-00-01.3a1mac.mongodb-dev.net","id":"atlas-a7sxgq-shard-00-01.3a1mac.mongodb-dev.net:27017","lastPing":"2025-06-18T12:23:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcb7871bb6d3e78093b/processes/atlas-a7sxgq-shard-00-01.3a1mac.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-a7sxgq-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"accesslogs-859-shard-00-01.3a1mac.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-18T12:22:44Z","groupId":"6852adcb7871bb6d3e78093b","hostname":"atlas-a7sxgq-shard-00-02.3a1mac.mongodb-dev.net","id":"atlas-a7sxgq-shard-00-02.3a1mac.mongodb-dev.net:27017","lastPing":"2025-06-18T12:23:22Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852adcb7871bb6d3e78093b/processes/atlas-a7sxgq-shard-00-02.3a1mac.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-a7sxgq-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"accesslogs-859-shard-00-02.3a1mac.mongodb-dev.net","version":"8.0.10"}],"totalCount":3}

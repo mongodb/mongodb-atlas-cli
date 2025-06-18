@@ -1,17 +1,16 @@
-HTTP/2.0 201 Created
-Content-Length: 1072
-Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Wed, 18 Jun 2025 05:09:03 GMT
-Location: http://localhost:8080//api/atlas/v1.0
+HTTP/2.0 409 Conflict
+Content-Length: 174
+Content-Type: application/json
+Date: Wed, 18 Jun 2025 12:16:05 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 1586
+X-Envoy-Upstream-Service-Time: 31
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasGroupsResource::addGroup
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=d8e74d38610ad5f74d45aa2f7555874aa396a9e6; versionString=master
+X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
-{"clusterCount":0,"created":"2025-06-18T05:09:05Z","id":"685249f032e708726ed6eb0a","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/685249f032e708726ed6eb0a","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/685249f032e708726ed6eb0a/containers","rel":"https://cloud.mongodb.com/containers"},{"href":"http://localhost:8080/api/atlas/v2/groups/685249f032e708726ed6eb0a/clusters","rel":"https://cloud.mongodb.com/clusters"},{"href":"http://localhost:8080/api/atlas/v2/groups/685249f032e708726ed6eb0a/databaseUsers","rel":"https://cloud.mongodb.com/databaseUsers"},{"href":"http://localhost:8080/api/atlas/v2/groups/685249f032e708726ed6eb0a/peers","rel":"https://cloud.mongodb.com/peers"},{"href":"http://localhost:8080/api/atlas/v2/groups/685249f032e708726ed6eb0a/processes","rel":"https://cloud.mongodb.com/processes"},{"href":"http://localhost:8080/api/atlas/v2/groups/685249f032e708726ed6eb0a/whitelist","rel":"https://cloud.mongodb.com/whitelist"}],"name":"maintenance-e2e-93","orgId":"a0123456789abcdef012345a","withDefaultAlertsSettings":true}
+{"detail":"A group with name \"maintenance-e2e-635\" already exists.","error":409,"errorCode":"GROUP_ALREADY_EXISTS","parameters":["maintenance-e2e-635"],"reason":"Conflict"}

@@ -1,18 +1,18 @@
 HTTP/2.0 400 Bad Request
 Content-Length: 185
 Content-Type: application/json
-Date: Wed, 18 Jun 2025 05:10:18 GMT
+Date: Wed, 18 Jun 2025 12:18:25 GMT
 Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 Sunset: Sun, 1 Mar 2026 00:00:00 GMT
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 88
+X-Envoy-Upstream-Service-Time: 64
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasClusterDescriptionV15Resource::getCluster
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=d8e74d38610ad5f74d45aa2f7555874aa396a9e6; versionString=master
+X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
 {"detail":"Flex cluster test-flex cannot be used in the Cluster API.","error":400,"errorCode":"CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API","parameters":["test-flex"],"reason":"Bad Request"}

@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 18 Jun 2025 12:32:04 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 51
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852afbebc51b44046173c03/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-06-18T12:31:13Z","groupId":"6852afbebc51b44046173c03","hostname":"atlas-shgmpa-shard-00-00.g7gwi9.mongodb-dev.net","id":"atlas-shgmpa-shard-00-00.g7gwi9.mongodb-dev.net:27017","lastPing":"2025-06-18T12:31:56Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852afbebc51b44046173c03/processes/atlas-shgmpa-shard-00-00.g7gwi9.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-shgmpa-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-899-shard-00-00.g7gwi9.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-18T12:31:13Z","groupId":"6852afbebc51b44046173c03","hostname":"atlas-shgmpa-shard-00-01.g7gwi9.mongodb-dev.net","id":"atlas-shgmpa-shard-00-01.g7gwi9.mongodb-dev.net:27017","lastPing":"2025-06-18T12:31:56Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852afbebc51b44046173c03/processes/atlas-shgmpa-shard-00-01.g7gwi9.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-shgmpa-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-899-shard-00-01.g7gwi9.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-18T12:31:13Z","groupId":"6852afbebc51b44046173c03","hostname":"atlas-shgmpa-shard-00-02.g7gwi9.mongodb-dev.net","id":"atlas-shgmpa-shard-00-02.g7gwi9.mongodb-dev.net:27017","lastPing":"2025-06-18T12:31:56Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6852afbebc51b44046173c03/processes/atlas-shgmpa-shard-00-02.g7gwi9.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-shgmpa-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-899-shard-00-02.g7gwi9.mongodb-dev.net","version":"8.0.10"}],"totalCount":3}

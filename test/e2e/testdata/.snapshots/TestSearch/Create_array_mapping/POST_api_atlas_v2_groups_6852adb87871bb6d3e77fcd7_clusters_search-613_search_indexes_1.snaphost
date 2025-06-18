@@ -1,0 +1,16 @@
+HTTP/2.0 201 Created
+Content-Length: 372
+Content-Type: application/vnd.atlas.2024-05-30+json;charset=utf-8
+Date: Wed, 18 Jun 2025 12:24:36 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 2650
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasSearchIndexConfigResource::createSearchIndex
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=41f34161bc8088e7c5346d8c5a415d0e537c8c00; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"collectionName":"posts","database":"sample_training","indexID":"6852b0047871bb6d3e783c2d","latestDefinition":{"mappings":{"dynamic":false,"fields":{"comments":[{"dynamic":true,"type":"document"},{"type":"string"}]}},"searchAnalyzer":"lucene.standard"},"latestDefinitionVersion":{"version":0},"name":"index-array-482","queryable":false,"status":"PENDING","type":"search"}

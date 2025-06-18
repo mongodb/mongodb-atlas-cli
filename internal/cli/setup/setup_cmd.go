@@ -653,14 +653,6 @@ func (opts *Opts) validateTier() error {
 	return nil
 }
 
-func (opts *Opts) validateAutoScalingMode() error {
-	if opts.AutoScalingMode != clusterWideScaling && opts.AutoScalingMode != independentShardScaling {
-		return fmt.Errorf("invalid auto scaling mode: %s. Valid values are %s or %s", opts.AutoScalingMode, clusterWideScaling, independentShardScaling)
-	}
-
-	return nil
-}
-
 // Builder
 // atlas setup
 //
@@ -711,7 +703,7 @@ func Builder() *cobra.Command {
 				preRun = append(preRun, opts.register.LoginPreRun(cmd.Context()))
 			}
 			preRun = append(preRun, opts.validateTier)
-			preRun = append(preRun, opts.validateAutoScalingMode)
+			preRun = append(preRun, validate.AutoScalingMode(opts.AutoScalingMode))
 
 			return opts.PreRunE(preRun...)
 		},

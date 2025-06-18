@@ -28,6 +28,8 @@ import (
 )
 
 const minPasswordLength = 10
+const clusterWideScaling = "clusterWideScaling"
+const independentShardScaling = "independentShardScaling"
 
 // toString tries to cast an interface to string.
 func toString(val any) (string, error) {
@@ -126,6 +128,19 @@ To authenticate using your Atlas username and password on a new profile, run: at
 		ErrAlreadyAuthenticatedAPIKeys,
 		config.PublicAPIKey(),
 	)
+}
+
+func AutoScalingMode(autoScalingMode string) func() error {
+	return func() error {
+		if autoScalingMode == "" {
+			return nil
+		}
+
+		if !strings.EqualFold(autoScalingMode, clusterWideScaling) && !strings.EqualFold(autoScalingMode, independentShardScaling) {
+			return fmt.Errorf("invalid auto scaling mode: %s. Valid values are %s or %s", autoScalingMode, clusterWideScaling, independentShardScaling)
+		}
+		return nil
+	}
 }
 
 var ErrAlreadyAuthenticatedToken = errors.New("already authenticated with an account")

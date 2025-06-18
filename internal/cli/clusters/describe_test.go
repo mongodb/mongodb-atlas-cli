@@ -28,8 +28,8 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-var clusterWideScalingConfig = &atlasv2.ClusterDescriptionAutoScalingModeConfiguration{AutoScalingMode: pointer.Get(clusterWideScalingFlag)}
-var independentShardScalingConfig = &atlasv2.ClusterDescriptionAutoScalingModeConfiguration{AutoScalingMode: pointer.Get(independentShardScalingFlag)}
+var clusterWideScalingConfig = &atlasv2.ClusterDescriptionAutoScalingModeConfiguration{AutoScalingMode: pointer.Get(clusterWideScalingResponse)}
+var independentShardScalingConfig = &atlasv2.ClusterDescriptionAutoScalingModeConfiguration{AutoScalingMode: pointer.Get(independentShardScalingResponse)}
 
 func TestDescribe_Run(t *testing.T) {
 	ctrl := gomock.NewController(t)

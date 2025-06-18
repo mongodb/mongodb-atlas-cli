@@ -32,6 +32,7 @@ const (
 	clustersEntity              = "clusters"
 	diskSizeGB30                = "30"
 	independentShardScalingFlag = "independentShardScaling"
+	clusterWideScalingFlag      = "clusterWideScaling"
 
 	// Cluster settings.
 	e2eClusterProvider = "AWS"
@@ -83,42 +84,55 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		assert.Equal(t, "SHARDED", cluster.GetClusterType())
 	})
 
-	//TODO: Enable on CLOUDP-323577
-	// g.Run("Get ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-	// 	cmd := exec.Command(cliPath,
-	// 		clustersEntity,
-	// 		"get",
-	// 		issClusterName,
-	// 		"--autoScalingMode", independentShardScalingFlag,
-	// 		"-o=json")
+	g.Run("Get ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"get",
+			issClusterName,
+			"-o=json")
 
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := internal.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
 
-	// 	var cluster admin.ClusterDescription20240805
-	// 	req.NoError(json.Unmarshal(resp, &cluster))
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+		assert.Equal(t, "SHARDED", cluster.GetClusterType())
+		assert.Len(t, cluster.GetReplicationSpecs(), 2)
+	})
 
-	// 	internal.EnsureClusterLatest(t, &cluster, issClusterName, mdbVersion, 30, false)
-	// 	assert.Equal(t, len(cluster.GetReplicationSpecs()), 2)
-	// })
+	g.Run("Get ISS cluster autoScalingMode", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"autoScalingConfig",
+			issClusterName,
+			"-o=json")
 
-	// g.Run("List ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-	// 	cmd := exec.Command(cliPath,
-	// 		clustersEntity,
-	// 		"list",
-	// 		"--autoScalingMode", independentShardScalingFlag,
-	// 		"-o=json")
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := internal.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
 
-	// 	var clusters admin.PaginatedClusterDescription20240805
-	// 	req.NoError(json.Unmarshal(resp, &clusters))
+		var config admin.ClusterDescriptionAutoScalingModeConfiguration
+		req.NoError(json.Unmarshal(resp, &config))
+		assert.Equal(t, "INDEPENDENT_SHARD_SCALING", config.GetAutoScalingMode())
+	})
 
-	// 	assert.Positive(t, clusters.GetTotalCount())
-	// 	assert.NotEmpty(t, clusters.Results)
-	// })
+	g.Run("List ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"list",
+			"--autoScalingMode", independentShardScalingFlag,
+			"-o=json")
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var clusters admin.PaginatedClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &clusters))
+
+		assert.Positive(t, clusters.GetTotalCount())
+		assert.NotEmpty(t, clusters.Results)
+	})
 
 	g.Run("Delete ISS cluster", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,

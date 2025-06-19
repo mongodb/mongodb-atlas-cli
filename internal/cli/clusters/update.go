@@ -318,7 +318,7 @@ func (opts *UpdateOpts) validateTier() error {
 
 func (opts *UpdateOpts) validateAutoScalingMode() error {
 	if opts.filename != "" {
-		opts.autoScalingMode = detectIsFileISS(opts.fs, opts.filename)
+		opts.autoScalingMode = detectAutoScalingModeFromFile(opts.fs, opts.filename)
 	}
 
 	return validate.AutoScalingMode(opts.autoScalingMode)()

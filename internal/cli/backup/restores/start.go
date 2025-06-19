@@ -26,7 +26,6 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/spf13/cobra"
-	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
@@ -42,7 +41,7 @@ const (
 type RestoreJobsCreator interface {
 	CreateRestoreJobs(string, string, *atlasv2.DiskBackupSnapshotRestoreJob) (*atlasv2.DiskBackupSnapshotRestoreJob, error)
 	CreateRestoreFlexClusterJobs(string, string, *atlasv2.FlexBackupRestoreJobCreate20241113) (*atlasv2.FlexBackupRestoreJob20241113, error)
-	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	LatestAtlasCluster(string, string) (*atlasv2.ClusterDescription20240805, error)
 }
 
 type StartOpts struct {
@@ -168,13 +167,13 @@ func markRequiredPointInTimeRestoreFlags(cmd *cobra.Command) error {
 
 // checkIsFlexCluster sets the opts.isFlexCluster that indicates if the cluster is a FlexCluster.
 func (opts *StartOpts) checkIsFlexCluster() error {
-	_, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.clusterName)
+	_, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.clusterName)
 	if err == nil {
 		opts.isFlexCluster = false
 		return nil
 	}
 
-	if !atlasClustersPinned.IsErrorCode(err, cannotUseFlexWithClusterApisErrorCode) {
+	if !commonerrors.IsCannotUseFlexWithClusterApis(err) {
 		return err
 	}
 

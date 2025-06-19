@@ -12,8 +12,7 @@ package restores
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20240530005/admin"
-	admin0 "go.mongodb.org/atlas-sdk/v20250312003/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312003/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,50 +40,11 @@ func (m *MockRestoreJobsCreator) EXPECT() *MockRestoreJobsCreatorMockRecorder {
 	return m.recorder
 }
 
-// AtlasCluster mocks base method.
-func (m *MockRestoreJobsCreator) AtlasCluster(arg0, arg1 string) (*admin.AdvancedClusterDescription, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AtlasCluster", arg0, arg1)
-	ret0, _ := ret[0].(*admin.AdvancedClusterDescription)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// AtlasCluster indicates an expected call of AtlasCluster.
-func (mr *MockRestoreJobsCreatorMockRecorder) AtlasCluster(arg0, arg1 any) *MockRestoreJobsCreatorAtlasClusterCall {
-	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AtlasCluster", reflect.TypeOf((*MockRestoreJobsCreator)(nil).AtlasCluster), arg0, arg1)
-	return &MockRestoreJobsCreatorAtlasClusterCall{Call: call}
-}
-
-// MockRestoreJobsCreatorAtlasClusterCall wrap *gomock.Call
-type MockRestoreJobsCreatorAtlasClusterCall struct {
-	*gomock.Call
-}
-
-// Return rewrite *gomock.Call.Return
-func (c *MockRestoreJobsCreatorAtlasClusterCall) Return(arg0 *admin.AdvancedClusterDescription, arg1 error) *MockRestoreJobsCreatorAtlasClusterCall {
-	c.Call = c.Call.Return(arg0, arg1)
-	return c
-}
-
-// Do rewrite *gomock.Call.Do
-func (c *MockRestoreJobsCreatorAtlasClusterCall) Do(f func(string, string) (*admin.AdvancedClusterDescription, error)) *MockRestoreJobsCreatorAtlasClusterCall {
-	c.Call = c.Call.Do(f)
-	return c
-}
-
-// DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockRestoreJobsCreatorAtlasClusterCall) DoAndReturn(f func(string, string) (*admin.AdvancedClusterDescription, error)) *MockRestoreJobsCreatorAtlasClusterCall {
-	c.Call = c.Call.DoAndReturn(f)
-	return c
-}
-
 // CreateRestoreFlexClusterJobs mocks base method.
-func (m *MockRestoreJobsCreator) CreateRestoreFlexClusterJobs(arg0, arg1 string, arg2 *admin0.FlexBackupRestoreJobCreate20241113) (*admin0.FlexBackupRestoreJob20241113, error) {
+func (m *MockRestoreJobsCreator) CreateRestoreFlexClusterJobs(arg0, arg1 string, arg2 *admin.FlexBackupRestoreJobCreate20241113) (*admin.FlexBackupRestoreJob20241113, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRestoreFlexClusterJobs", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin0.FlexBackupRestoreJob20241113)
+	ret0, _ := ret[0].(*admin.FlexBackupRestoreJob20241113)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -102,28 +62,28 @@ type MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall struct {
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall) Return(arg0 *admin0.FlexBackupRestoreJob20241113, arg1 error) *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall {
+func (c *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall) Return(arg0 *admin.FlexBackupRestoreJob20241113, arg1 error) *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall {
 	c.Call = c.Call.Return(arg0, arg1)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall) Do(f func(string, string, *admin0.FlexBackupRestoreJobCreate20241113) (*admin0.FlexBackupRestoreJob20241113, error)) *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall {
+func (c *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall) Do(f func(string, string, *admin.FlexBackupRestoreJobCreate20241113) (*admin.FlexBackupRestoreJob20241113, error)) *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall) DoAndReturn(f func(string, string, *admin0.FlexBackupRestoreJobCreate20241113) (*admin0.FlexBackupRestoreJob20241113, error)) *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall {
+func (c *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall) DoAndReturn(f func(string, string, *admin.FlexBackupRestoreJobCreate20241113) (*admin.FlexBackupRestoreJob20241113, error)) *MockRestoreJobsCreatorCreateRestoreFlexClusterJobsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
 
 // CreateRestoreJobs mocks base method.
-func (m *MockRestoreJobsCreator) CreateRestoreJobs(arg0, arg1 string, arg2 *admin0.DiskBackupSnapshotRestoreJob) (*admin0.DiskBackupSnapshotRestoreJob, error) {
+func (m *MockRestoreJobsCreator) CreateRestoreJobs(arg0, arg1 string, arg2 *admin.DiskBackupSnapshotRestoreJob) (*admin.DiskBackupSnapshotRestoreJob, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateRestoreJobs", arg0, arg1, arg2)
-	ret0, _ := ret[0].(*admin0.DiskBackupSnapshotRestoreJob)
+	ret0, _ := ret[0].(*admin.DiskBackupSnapshotRestoreJob)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -141,19 +101,58 @@ type MockRestoreJobsCreatorCreateRestoreJobsCall struct {
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *MockRestoreJobsCreatorCreateRestoreJobsCall) Return(arg0 *admin0.DiskBackupSnapshotRestoreJob, arg1 error) *MockRestoreJobsCreatorCreateRestoreJobsCall {
+func (c *MockRestoreJobsCreatorCreateRestoreJobsCall) Return(arg0 *admin.DiskBackupSnapshotRestoreJob, arg1 error) *MockRestoreJobsCreatorCreateRestoreJobsCall {
 	c.Call = c.Call.Return(arg0, arg1)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockRestoreJobsCreatorCreateRestoreJobsCall) Do(f func(string, string, *admin0.DiskBackupSnapshotRestoreJob) (*admin0.DiskBackupSnapshotRestoreJob, error)) *MockRestoreJobsCreatorCreateRestoreJobsCall {
+func (c *MockRestoreJobsCreatorCreateRestoreJobsCall) Do(f func(string, string, *admin.DiskBackupSnapshotRestoreJob) (*admin.DiskBackupSnapshotRestoreJob, error)) *MockRestoreJobsCreatorCreateRestoreJobsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockRestoreJobsCreatorCreateRestoreJobsCall) DoAndReturn(f func(string, string, *admin0.DiskBackupSnapshotRestoreJob) (*admin0.DiskBackupSnapshotRestoreJob, error)) *MockRestoreJobsCreatorCreateRestoreJobsCall {
+func (c *MockRestoreJobsCreatorCreateRestoreJobsCall) DoAndReturn(f func(string, string, *admin.DiskBackupSnapshotRestoreJob) (*admin.DiskBackupSnapshotRestoreJob, error)) *MockRestoreJobsCreatorCreateRestoreJobsCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// LatestAtlasCluster mocks base method.
+func (m *MockRestoreJobsCreator) LatestAtlasCluster(arg0, arg1 string) (*admin.ClusterDescription20240805, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LatestAtlasCluster", arg0, arg1)
+	ret0, _ := ret[0].(*admin.ClusterDescription20240805)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LatestAtlasCluster indicates an expected call of LatestAtlasCluster.
+func (mr *MockRestoreJobsCreatorMockRecorder) LatestAtlasCluster(arg0, arg1 any) *MockRestoreJobsCreatorLatestAtlasClusterCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LatestAtlasCluster", reflect.TypeOf((*MockRestoreJobsCreator)(nil).LatestAtlasCluster), arg0, arg1)
+	return &MockRestoreJobsCreatorLatestAtlasClusterCall{Call: call}
+}
+
+// MockRestoreJobsCreatorLatestAtlasClusterCall wrap *gomock.Call
+type MockRestoreJobsCreatorLatestAtlasClusterCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockRestoreJobsCreatorLatestAtlasClusterCall) Return(arg0 *admin.ClusterDescription20240805, arg1 error) *MockRestoreJobsCreatorLatestAtlasClusterCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockRestoreJobsCreatorLatestAtlasClusterCall) Do(f func(string, string) (*admin.ClusterDescription20240805, error)) *MockRestoreJobsCreatorLatestAtlasClusterCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockRestoreJobsCreatorLatestAtlasClusterCall) DoAndReturn(f func(string, string) (*admin.ClusterDescription20240805, error)) *MockRestoreJobsCreatorLatestAtlasClusterCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

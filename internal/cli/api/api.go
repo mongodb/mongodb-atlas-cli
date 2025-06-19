@@ -459,7 +459,7 @@ func ensureVersionIsSupported(apiCommand shared_api.Command, versionString *stri
 	defaultVersion, err := defaultAPIVersion(apiCommand)
 	// if we fail to get a version (which should never happen), then quit
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error in 'ensureVersionIsSupported': received an invalid version '%s'\n", *versionString)
+		fmt.Fprintf(os.Stderr, "error in 'ensureVersionIsSupported': default version has an invalid format '%s'\n", *versionString)
 		return
 	}
 

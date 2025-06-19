@@ -2028,14 +2028,14 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 						},
 					},
 					{
-						Version:            shared_api.NewStableVersion(2024, 5, 30),
+						Version:            shared_api.NewStableVersion(2025, 3, 12),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            shared_api.NewStableVersion(2025, 3, 12),
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,

@@ -55,7 +55,7 @@ type Version interface {
 	// Returns true if v(this) is less than other
 	Less(other Version) bool
 	Equal(other Version) bool
-	ToString() string
+	String() string
 }
 
 func ParseVersion(version string) (Version, error) {
@@ -118,21 +118,10 @@ func (PreviewVersion) StabilityLevel() StabilityLevel {
 	return StabilityLevelPreview
 }
 
-func (PreviewVersion) Less(other Version) bool {
-	// switch cast other Version to preview/upcoming/stable
-	switch other.(type) {
-	case PreviewVersion:
-		// other preview versions are always equal
-		return false
-	case UpcomingVersion:
-		// upcoming versions are always greater than preview versions
-		return true
-	case StableVersion:
-		// stable versions are always greater than preview versions
-		return true
-	}
-
-	panic("unreachable")
+func (PreviewVersion) Less(_ Version) bool {
+	// Preview is always last, so it's never less than anything
+	// When comparing two preview versions, they're equal, so less is also false
+	return false
 }
 
 func (PreviewVersion) Equal(other Version) bool {
@@ -152,7 +141,7 @@ func (PreviewVersion) Equal(other Version) bool {
 	panic("unreachable")
 }
 
-func (PreviewVersion) ToString() string {
+func (PreviewVersion) String() string {
 	return "preview"
 }
 
@@ -172,14 +161,19 @@ func (v UpcomingVersion) Less(other Version) bool {
 	// switch cast other Version to preview/upcoming/stable
 	switch o := other.(type) {
 	case PreviewVersion:
-		// preview versions are always less than upcoming versions
+		// preview versions are always newer (greater) than upcoming versions
 		return true
 	case UpcomingVersion:
 		// for other upcoming versions, compare dates
 		return v.Date.Less(&o.Date)
 	case StableVersion:
-		// stable versions are always less than upcoming versions
-		return true
+		// for stable versions we compare dates
+		// if the date is the same, then the stable version is always older (less) than upcoming versions
+		if v.Date.Equal(&o.Date) {
+			return false
+		}
+
+		return v.Date.Less(&o.Date)
 	}
 
 	panic("unreachable")
@@ -202,7 +196,7 @@ func (v UpcomingVersion) Equal(other Version) bool {
 	panic("unreachable")
 }
 
-func (v UpcomingVersion) ToString() string {
+func (v UpcomingVersion) String() string {
 	return fmt.Sprintf("%04d-%02d-%02d.upcoming", v.Date.Year, v.Date.Month, v.Date.Day)
 }
 
@@ -222,11 +216,16 @@ func (v StableVersion) Less(other Version) bool {
 	// switch cast other Version to preview/upcoming/stable
 	switch o := other.(type) {
 	case PreviewVersion:
-		// preview versions are always less than stable versions
+		// preview versions are always newer (greater) than stable versions
 		return true
 	case UpcomingVersion:
-		// upcoming versions are always less than stable versions
-		return true
+		// for upcoming versions we compare dates
+		// if the date is the same, then the upcoming version is always older (less) than stable versions
+		if v.Date.Equal(&o.Date) {
+			return true
+		}
+
+		return v.Date.Less(&o.Date)
 	case StableVersion:
 		// for other stable versions, compare dates
 		return v.Date.Less(&o.Date)
@@ -252,6 +251,6 @@ func (v StableVersion) Equal(other Version) bool {
 	panic("unreachable")
 }
 
-func (v StableVersion) ToString() string {
+func (v StableVersion) String() string {
 	return fmt.Sprintf("%04d-%02d-%02d", v.Date.Year, v.Date.Month, v.Date.Day)
 }

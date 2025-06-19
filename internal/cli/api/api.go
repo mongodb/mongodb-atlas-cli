@@ -424,7 +424,7 @@ func defaultAPIVersion(command shared_api.Command) (string, error) {
 	}
 
 	lastVersion := command.Versions[nVersions-1]
-	return lastVersion.Version.ToString(), nil
+	return lastVersion.Version.String(), nil
 }
 
 func remindUserToPinVersion(cmd *cobra.Command) {
@@ -524,7 +524,7 @@ func addVersionFlag(cmd *cobra.Command, apiCommand shared_api.Command, version *
 	// Create a unique list of all supported versions
 	versions := make(map[string]struct{}, 0)
 	for _, version := range apiCommand.Versions {
-		versions[version.Version.ToString()] = struct{}{}
+		versions[version.Version.String()] = struct{}{}
 	}
 
 	// Convert the keys of the map into a list

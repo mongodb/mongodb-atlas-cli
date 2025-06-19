@@ -438,7 +438,7 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 	publicPreview := extractPublicPreview(extensions)
 
 	// Add the version to the versions map if it doesn't exist.
-	versionString := version.ToString()
+	versionString := version.String()
 	if _, ok := versionsMap[versionString]; !ok {
 		versionsMap[versionString] = &api.CommandVersion{
 			Version:              version,

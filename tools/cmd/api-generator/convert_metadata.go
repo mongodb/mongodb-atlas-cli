@@ -93,7 +93,7 @@ func onlyContainsPrivatePreview(operation *openapi3.Operation) (bool, error) {
 		return false, nil
 	}
 
-	previewVersion, foundPreview := versionsMap[api.NewPreviewVersion().ToString()]
+	previewVersion, foundPreview := versionsMap[api.NewPreviewVersion().String()]
 	if !foundPreview {
 		return false, nil
 	}
@@ -183,7 +183,7 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 			return nil, fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
 		}
 
-		results[version.ToString()] = extractedExamples{
+		results[version.String()] = extractedExamples{
 			Example:  mediaType.Example,
 			Examples: mediaType.Examples,
 		}
@@ -211,7 +211,7 @@ func extractDefaultVersion(operation *openapi3.Operation) (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("unsupported version %q error: %w", mime, err)
 		}
-		versions = append(versions, version.ToString())
+		versions = append(versions, version.String())
 	}
 
 	if len(versions) == 0 {

@@ -21,6 +21,7 @@ import "github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatyp
 
 var metadata = metadatatypes.Metadata{
 	`exportChartsDashboard`: {
+		OnlyPrivatePreview: true,
 		Parameters: map[string]metadatatypes.ParameterMetadata{
 			`dashboardId`: {
 				Usage: `ID of the dashboard to export.`,

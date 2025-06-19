@@ -152,7 +152,7 @@ func selectVersion(selectedVersion shared_api.Version, versions []shared_api.Com
 		}
 	}
 
-	return nil, fmt.Errorf("version '%s' not found", selectedVersion.ToString())
+	return nil, fmt.Errorf("version '%s' not found", selectedVersion)
 }
 
 // generate the accept header using the given format string
@@ -173,12 +173,12 @@ func acceptHeader(version *shared_api.CommandVersion, requestedContentType strin
 		return "", fmt.Errorf("expected one of the following values: [%s], but got '%s' instead", strings.Join(supportedTypes, ","), requestedContentType)
 	}
 
-	return fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version.ToString(), contentType), nil
+	return fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, contentType), nil
 }
 
 func contentType(version *shared_api.CommandVersion) *string {
 	if version.RequestContentType != "" {
-		contentType := fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version.ToString(), version.RequestContentType)
+		contentType := fmt.Sprintf("application/vnd.atlas.%s+%s", version.Version, version.RequestContentType)
 		return &contentType
 	}
 

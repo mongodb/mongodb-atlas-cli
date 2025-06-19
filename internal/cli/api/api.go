@@ -459,6 +459,7 @@ func ensureVersionIsSupported(apiCommand shared_api.Command, versionString *stri
 	defaultVersion, err := defaultAPIVersion(apiCommand)
 	// if we fail to get a version (which should never happen), then quit
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "error in 'ensureVersionIsSupported': received an invalid version '%s'\n", *versionString)
 		return
 	}
 
@@ -471,6 +472,7 @@ func printPreviewWarning(apiCommand shared_api.Command, versionString *string) {
 
 	// If the version is invalid return, this should never happen
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "error in 'printPreviewWarning': received an invalid version '%s'\n", *versionString)
 		return
 	}
 

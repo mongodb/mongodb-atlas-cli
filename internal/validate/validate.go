@@ -141,7 +141,7 @@ func AutoScalingMode(autoScalingMode string) func() error {
 		}
 
 		if strings.EqualFold(autoScalingMode, independentShardScaling) {
-			fmt.Fprintf(os.Stderr, "'independentShardScaling' autoscaling cluster detected, use --autoScalingMode independentShardScaling for clusters-related commands when interacting with this cluster")
+			fmt.Fprintf(os.Stderr, "'independentShardScaling' autoscaling cluster(s) detected, use --autoScalingMode independentShardScaling for clusters-related commands when interacting with this cluster\n")
 		}
 		return nil
 	}

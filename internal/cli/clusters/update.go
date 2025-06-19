@@ -106,7 +106,7 @@ func (opts *UpdateOpts) checkISSCluster() {
 	// If the flag is set to cluster wide scaling, warn the user that they are using the wrong flag
 	if isIndependentShardScaling(targetClusterAutoScalingConfig.GetAutoScalingMode()) {
 		if isClusterWideScaling(opts.autoScalingMode) {
-			fmt.Fprintf(os.Stderr, "'independentShardScaling' autoscaling cluster detected, updating it to clusterWideScaling is not possible, use  --autoScalingMode 'independentShardScaling' instead")
+			fmt.Fprintf(os.Stderr, "'independentShardScaling' autoscaling cluster detected, updating it to clusterWideScaling is not possible, use  --autoScalingMode 'independentShardScaling' instead\n")
 		}
 	}
 }

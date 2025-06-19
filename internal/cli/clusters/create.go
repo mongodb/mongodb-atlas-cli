@@ -492,7 +492,7 @@ func (opts *CreateOpts) validateTier() error {
 
 func (opts *CreateOpts) validateAutoScalingMode() error {
 	if opts.isFlexCluster && !isClusterWideScaling(opts.autoScalingMode) {
-		return fmt.Errorf("flex is incompatible with %s auto scaling mode", opts.autoScalingMode)
+		return fmt.Errorf("flex is incompatible with %s auto scaling mode, set a --tier value different from FLEX, e.g. M10", opts.autoScalingMode)
 	}
 
 	err := validate.AutoScalingMode(opts.autoScalingMode)()
@@ -505,7 +505,7 @@ func (opts *CreateOpts) validateAutoScalingMode() error {
 	}
 
 	if opts.filename != "" {
-		opts.autoScalingMode = detectIsFileISS(opts.fs, opts.filename)
+		opts.autoScalingMode = detectAutoScalingModeFromFile(opts.fs, opts.filename)
 	}
 
 	return nil

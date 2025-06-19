@@ -36,6 +36,7 @@ type ClusterLister interface {
 	ProjectClusters(string, *store.ListOptions) (*atlasClustersPinned.PaginatedAdvancedClusterDescription, error)
 	ListFlexClusters(*atlasv2.ListFlexClustersApiParams) (*atlasv2.PaginatedFlexClusters20241113, error)
 	LatestProjectClusters(string, *store.ListOptions) (*atlasv2.PaginatedClusterDescription20240805, error)
+	GetClusterAutoScalingConfig(string, string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error)
 }
 
 type ListOpts struct {
@@ -69,8 +70,12 @@ func (opts *ListOpts) Run() error {
 
 func (opts *ListOpts) RunDedicatedCluster() error {
 	listOpts := opts.NewAtlasListOptions()
-	if opts.autoScalingMode == independentShardScalingFlag {
+	if isIndependentShardScaling(opts.autoScalingMode) {
 		r, err := opts.store.LatestProjectClusters(opts.ConfigProjectID(), listOpts)
+		if err != nil {
+			return err
+		}
+		r, err = opts.filterClustersByAutoScalingMode(r)
 		if err != nil {
 			return err
 		}
@@ -83,6 +88,22 @@ func (opts *ListOpts) RunDedicatedCluster() error {
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *ListOpts) filterClustersByAutoScalingMode(clusters *atlasv2.PaginatedClusterDescription20240805) (*atlasv2.PaginatedClusterDescription20240805, error) {
+	filteredClusters := make([]atlasv2.ClusterDescription20240805, 0)
+	for _, cluster := range clusters.GetResults() {
+		clusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), *cluster.Name)
+		if err != nil {
+			return nil, err
+		}
+		if isIndependentShardScaling(clusterAutoScalingConfig.GetAutoScalingMode()) {
+			filteredClusters = append(filteredClusters, cluster)
+		}
+	}
+
+	clusters.Results = &filteredClusters
+	return clusters, nil
 }
 
 func (opts *ListOpts) RunFlexCluster() error {
@@ -118,7 +139,11 @@ func ListBuilder() *cobra.Command {
 			"output": listTemplate,
 		},
 		Example: `  # Return a JSON-formatted list of all clusters for the project with ID 5e2211c17a3e5a48f5497de3:
-  atlas clusters list --projectId 5e2211c17a3e5a48f5497de3 --output json`,
+  atlas clusters list --projectId 5e2211c17a3e5a48f5497de3 --output json
+ 
+  # Return a JSON-formatted list of all clusters for the project with ID 5e2211c17a3e5a48f5497de3 and with independent shard scaling mode:
+  atlas clusters list --projectId 5e2211c17a3e5a48f5497de3 --autoScalingMode independentShardScaling --output json
+  `,
 		PreRunE: func(cmd *cobra.Command, _ []string) error {
 			return opts.PreRunE(
 				opts.ValidateProjectID,

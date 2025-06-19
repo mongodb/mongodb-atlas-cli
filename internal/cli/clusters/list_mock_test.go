@@ -42,6 +42,45 @@ func (m *MockClusterLister) EXPECT() *MockClusterListerMockRecorder {
 	return m.recorder
 }
 
+// GetClusterAutoScalingConfig mocks base method.
+func (m *MockClusterLister) GetClusterAutoScalingConfig(arg0, arg1 string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetClusterAutoScalingConfig", arg0, arg1)
+	ret0, _ := ret[0].(*admin0.ClusterDescriptionAutoScalingModeConfiguration)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetClusterAutoScalingConfig indicates an expected call of GetClusterAutoScalingConfig.
+func (mr *MockClusterListerMockRecorder) GetClusterAutoScalingConfig(arg0, arg1 any) *MockClusterListerGetClusterAutoScalingConfigCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClusterAutoScalingConfig", reflect.TypeOf((*MockClusterLister)(nil).GetClusterAutoScalingConfig), arg0, arg1)
+	return &MockClusterListerGetClusterAutoScalingConfigCall{Call: call}
+}
+
+// MockClusterListerGetClusterAutoScalingConfigCall wrap *gomock.Call
+type MockClusterListerGetClusterAutoScalingConfigCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockClusterListerGetClusterAutoScalingConfigCall) Return(arg0 *admin0.ClusterDescriptionAutoScalingModeConfiguration, arg1 error) *MockClusterListerGetClusterAutoScalingConfigCall {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockClusterListerGetClusterAutoScalingConfigCall) Do(f func(string, string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error)) *MockClusterListerGetClusterAutoScalingConfigCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockClusterListerGetClusterAutoScalingConfigCall) DoAndReturn(f func(string, string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error)) *MockClusterListerGetClusterAutoScalingConfigCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // LatestProjectClusters mocks base method.
 func (m *MockClusterLister) LatestProjectClusters(arg0 string, arg1 *store.ListOptions) (*admin0.PaginatedClusterDescription20240805, error) {
 	m.ctrl.T.Helper()

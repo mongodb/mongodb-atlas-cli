@@ -90,6 +90,10 @@ func TestList_RunDedicatedCluster_IndependentShardScaling(t *testing.T) {
 				Name: pointer.Get("test"),
 				Id:   pointer.Get("123"),
 			},
+			{
+				Name: pointer.Get("nonISS"),
+				Id:   pointer.Get("124"),
+			},
 		},
 	}
 
@@ -97,6 +101,22 @@ func TestList_RunDedicatedCluster_IndependentShardScaling(t *testing.T) {
 		store:           mockStore,
 		autoScalingMode: independentShardScalingFlag,
 	}
+
+	mockStore.
+		EXPECT().
+		GetClusterAutoScalingConfig(listOpts.ProjectID, *expected.GetResults()[0].Name).
+		Return(&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+			AutoScalingMode: pointer.Get(independentShardScalingFlag),
+		}, nil).
+		Times(1)
+
+	mockStore.
+		EXPECT().
+		GetClusterAutoScalingConfig(listOpts.ProjectID, *expected.GetResults()[1].Name).
+		Return(&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+			AutoScalingMode: pointer.Get(clusterWideScalingFlag),
+		}, nil).
+		Times(1)
 
 	mockStore.
 		EXPECT().

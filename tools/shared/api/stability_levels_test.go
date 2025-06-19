@@ -5,6 +5,32 @@ import (
 	"testing"
 )
 
+func TestVersionDateLess(t *testing.T) {
+	tests := []struct {
+		a, b VersionDate
+		want bool
+	}{
+		// Test year
+		{VersionDate{2024, 1, 1}, VersionDate{2024, 1, 1}, false},
+		{VersionDate{2024, 1, 1}, VersionDate{2025, 1, 1}, true},
+		{VersionDate{2024, 1, 1}, VersionDate{2023, 1, 1}, false},
+		// Test month
+		{VersionDate{2024, 1, 1}, VersionDate{2024, 2, 1}, true},
+		{VersionDate{2024, 2, 1}, VersionDate{2024, 2, 1}, false},
+		{VersionDate{2024, 2, 1}, VersionDate{2024, 1, 1}, false},
+		// Test day
+		{VersionDate{2024, 1, 1}, VersionDate{2024, 1, 2}, true},
+		{VersionDate{2024, 1, 2}, VersionDate{2024, 1, 2}, false},
+		{VersionDate{2024, 1, 2}, VersionDate{2024, 1, 1}, false},
+	}
+
+	for _, test := range tests {
+		got := test.a.Less(&test.b)
+		if got != test.want {
+			t.Errorf("VersionDate.Less(%s, %s) = %t, want %t", test.a, test.b, got, test.want)
+		}
+	}
+}
 func TestStabilityLevelSorting(t *testing.T) {
 	inputs := []Version{
 		NewStableVersion(2025, 1, 1),

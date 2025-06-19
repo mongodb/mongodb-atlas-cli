@@ -42,12 +42,26 @@ type VersionDate struct {
 
 // Returns true if v(this) is less than other
 func (v VersionDate) Less(other *VersionDate) bool {
-	return v.Year < other.Year || v.Month < other.Month || v.Day < other.Day
+	switch {
+	case v.Year < other.Year:
+		return true
+	case v.Year == other.Year && v.Month < other.Month:
+		return true
+	case v.Year == other.Year && v.Month == other.Month && v.Day < other.Day:
+		return true
+	default:
+		return false
+	}
 }
 
 // Returns true if v(this) is equal to other
 func (v VersionDate) Equal(other *VersionDate) bool {
 	return v.Year == other.Year && v.Month == other.Month && v.Day == other.Day
+}
+
+// Implement Stringer interface
+func (v VersionDate) String() string {
+	return fmt.Sprintf("%04d-%02d-%02d", v.Year, v.Month, v.Day)
 }
 
 type Version interface {
@@ -197,7 +211,7 @@ func (v UpcomingVersion) Equal(other Version) bool {
 }
 
 func (v UpcomingVersion) String() string {
-	return fmt.Sprintf("%04d-%02d-%02d.upcoming", v.Date.Year, v.Date.Month, v.Date.Day)
+	return fmt.Sprintf("%s.upcoming", v.Date)
 }
 
 type StableVersion struct {
@@ -252,5 +266,5 @@ func (v StableVersion) Equal(other Version) bool {
 }
 
 func (v StableVersion) String() string {
-	return fmt.Sprintf("%04d-%02d-%02d", v.Date.Year, v.Date.Month, v.Date.Day)
+	return v.Date.String()
 }

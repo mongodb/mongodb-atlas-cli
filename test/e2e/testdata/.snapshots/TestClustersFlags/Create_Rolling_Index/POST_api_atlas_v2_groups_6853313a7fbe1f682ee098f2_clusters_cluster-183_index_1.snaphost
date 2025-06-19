@@ -1,15 +1,17 @@
-HTTP/2.0 200 OK
-Content-Length: 3
-Content-Type: text/plain
-Date: Wed, 18 Jun 2025 21:35:57 GMT
+HTTP/2.0 202 Accepted
+Content-Length: 2
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Wed, 18 Jun 2025 21:46:42 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 Vary: Accept-Encoding
 X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 985
 X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClustersIndexResource::createRollingIndex
+X-Java-Version: 17.0.14+7
 X-Mongodb-Service-Version: gitHash=c9cc80704805413f1d20ccd4de364bd36cd66b6b; versionString=master
 X-Permitted-Cross-Domain-Policies: none
-X-Xgen-Up-Proto: HTTP/2
 
-8.0
+{}

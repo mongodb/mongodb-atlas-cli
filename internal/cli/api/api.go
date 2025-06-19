@@ -453,7 +453,6 @@ func ensureVersionIsSupported(apiCommand shared_api.Command, versionString *stri
 				return
 			}
 		}
-		return
 	}
 
 	// if we get here it means that the picked version is not supported

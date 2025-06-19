@@ -39,24 +39,24 @@ func TestISSClustersFile(t *testing.T) {
 	req := require.New(t)
 	req.NoError(err)
 
-	clusterIssFileName := g.Memory("clusterIssFileName", internal.Must("cluster-10", nil)).(string)
+	clusterIssFileName := g.Memory("clusterIssFileName", internal.Must(internal.RandClusterName())).(string)
 
-	// g.Run("Create ISS Cluster via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
-	// 	cmd := exec.Command(cliPath,
-	// 		clustersEntity,
-	// 		"create",
-	// 		clusterIssFileName,
-	// 		"--file", "testdata/create_iss_cluster_test.json",
-	// 		"-o=json")
+	g.Run("Create ISS Cluster via file", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"create",
+			clusterIssFileName,
+			"--file", "testdata/create_iss_cluster_test.json",
+			"-o=json")
 
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := internal.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
 
-	// 	var cluster admin.ClusterDescription20240805
-	// 	req.NoError(json.Unmarshal(resp, &cluster))
-	// 	internal.EnsureClusterLatest(t, &cluster, clusterIssFileName, "8.0", 10, false)
-	// })
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+		internal.EnsureClusterLatest(t, &cluster, clusterIssFileName, "8.0", 10, false)
+	})
 
 	g.Run("Get ISS cluster autoScalingMode", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
@@ -74,110 +74,55 @@ func TestISSClustersFile(t *testing.T) {
 		assert.Equal(t, "INDEPENDENT_SHARD_SCALING", config.GetAutoScalingMode())
 	})
 
-	// g.Run("Watch ISS cluster", func(_ *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		clustersEntity,
-	// 		"watch",
-	// 		clusterIssFileName,
-	// 	)
+	g.Run("Watch ISS cluster", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"watch",
+			clusterIssFileName,
+		)
 
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := internal.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
-	// })
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+	})
 
-	// g.Run("Pause ISS cluster", func(_ *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		clustersEntity,
-	// 		"pause",
-	// 		clusterIssFileName,
-	// 		"--autoScalingMode",
-	// 		"independentShardScaling",
-	// 		"--output",
-	// 		"json",
-	// 	)
+	g.Run("Pause ISS cluster", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"pause",
+			clusterIssFileName,
+			"--autoScalingMode",
+			"independentShardScaling",
+			"--output",
+			"json",
+		)
 
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := internal.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
 
-	// 	var cluster admin.ClusterDescription20240805
-	// 	req.NoError(json.Unmarshal(resp, &cluster))
-	// })
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+	})
 
-	// g.Run("Start ISS cluster", func(_ *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		clustersEntity,
-	// 		"start",
-	// 		clusterIssFileName,
-	// 		"--autoScalingMode",
-	// 		"independentShardScaling",
-	// 		"--output",
-	// 		"json",
-	// 	)
+	g.Run("Start ISS cluster", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"start",
+			clusterIssFileName,
+			"--autoScalingMode",
+			"independentShardScaling",
+			"--output",
+			"json",
+		)
 
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := internal.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
 
-	// 	var cluster admin.ClusterDescription20240805
-	// 	req.NoError(json.Unmarshal(resp, &cluster))
-	// })
-
-	// g.Run("Pause ISS cluster with the wrong flag", func(_ *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		clustersEntity,
-	// 		"pause",
-	// 		clusterIssFileName,
-	// 		"--autoScalingMode",
-	// 		"clusterWideScaling",
-	// 		"--output",
-	// 		"json",
-	// 	)
-
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := internal.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
-
-	// 	var cluster admin.ClusterDescription20240805
-	// 	req.NoError(json.Unmarshal(resp, &cluster))
-	// })
-
-	// g.Run("Check that the autoScalingMode is independentShardScaling", func(_ *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		clustersEntity,
-	// 		"autoScalingConfig",
-	// 		clusterIssFileName,
-	// 		"-o=json",
-	// 	)
-
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := internal.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
-
-	// 	var config admin.ClusterDescriptionAutoScalingModeConfiguration
-	// 	req.NoError(json.Unmarshal(resp, &config))
-	// 	assert.Equal(t, "INDEPENDENT_SHARD_SCALING", config.GetAutoScalingMode())
-	// })
-
-	// g.Run("Start ISS cluster", func(_ *testing.T) {
-	// 	cmd := exec.Command(cliPath,
-	// 		clustersEntity,
-	// 		"start",
-	// 		clusterIssFileName,
-	// 		"--autoScalingMode",
-	// 		"independentShardScaling",
-	// 		"--output",
-	// 		"json",
-	// 	)
-
-	// 	cmd.Env = os.Environ()
-	// 	resp, err := internal.RunAndGetStdOut(cmd)
-	// 	req.NoError(err, string(resp))
-
-	// 	var cluster admin.ClusterDescription20240805
-	// 	req.NoError(json.Unmarshal(resp, &cluster))
-	// })
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+	})
 
 	g.Run("Update ISS cluster with file", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,

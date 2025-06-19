@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1844
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 19 Jun 2025 10:33:55 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 64
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasProcessesResource::getAllAtlasProcesses
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=c9cc80704805413f1d20ccd4de364bd36cd66b6b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6853e59dcd32be2bdf8a379b/processes?includeCount=true&pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"created":"2025-06-19T10:33:13Z","groupId":"6853e59dcd32be2bdf8a379b","hostname":"atlas-10ptd3-shard-00-00.8whjsj.mongodb-dev.net","id":"atlas-10ptd3-shard-00-00.8whjsj.mongodb-dev.net:27017","lastPing":"2025-06-19T10:33:44Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6853e59dcd32be2bdf8a379b/processes/atlas-10ptd3-shard-00-00.8whjsj.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-10ptd3-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-267-shard-00-00.8whjsj.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-19T10:33:13Z","groupId":"6853e59dcd32be2bdf8a379b","hostname":"atlas-10ptd3-shard-00-01.8whjsj.mongodb-dev.net","id":"atlas-10ptd3-shard-00-01.8whjsj.mongodb-dev.net:27017","lastPing":"2025-06-19T10:33:44Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6853e59dcd32be2bdf8a379b/processes/atlas-10ptd3-shard-00-01.8whjsj.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-10ptd3-shard-0","typeName":"REPLICA_PRIMARY","userAlias":"logs-267-shard-00-01.8whjsj.mongodb-dev.net","version":"8.0.10"},{"created":"2025-06-19T10:33:13Z","groupId":"6853e59dcd32be2bdf8a379b","hostname":"atlas-10ptd3-shard-00-02.8whjsj.mongodb-dev.net","id":"atlas-10ptd3-shard-00-02.8whjsj.mongodb-dev.net:27017","lastPing":"2025-06-19T10:33:44Z","links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6853e59dcd32be2bdf8a379b/processes/atlas-10ptd3-shard-00-02.8whjsj.mongodb-dev.net:27017","rel":"self"}],"port":27017,"replicaSetName":"atlas-10ptd3-shard-0","typeName":"REPLICA_SECONDARY","userAlias":"logs-267-shard-00-02.8whjsj.mongodb-dev.net","version":"8.0.10"}],"totalCount":3}

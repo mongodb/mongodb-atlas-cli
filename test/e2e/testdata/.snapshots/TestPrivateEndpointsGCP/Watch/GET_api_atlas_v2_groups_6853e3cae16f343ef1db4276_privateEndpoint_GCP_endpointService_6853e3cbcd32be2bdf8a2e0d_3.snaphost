@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1046
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Thu, 19 Jun 2025 10:21:45 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 48
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasPrivateEndpointResource::getEndPointService
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=c9cc80704805413f1d20ccd4de364bd36cd66b6b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProvider":"GCP","endpointGroupNames":[],"errorMessage":null,"id":"6853e3cbcd32be2bdf8a2e0d","regionName":"NORTH_AMERICA_NORTHEAST_1","serviceAttachmentNames":["projects/p-cws7x82kqwtgedrlnvihbw2v/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-6853e3cae16f343ef1db4276-0","projects/p-cws7x82kqwtgedrlnvihbw2v/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-6853e3cae16f343ef1db4276-1","projects/p-cws7x82kqwtgedrlnvihbw2v/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-6853e3cae16f343ef1db4276-2","projects/p-cws7x82kqwtgedrlnvihbw2v/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-6853e3cae16f343ef1db4276-3","projects/p-cws7x82kqwtgedrlnvihbw2v/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-6853e3cae16f343ef1db4276-4","projects/p-cws7x82kqwtgedrlnvihbw2v/regions/northamerica-northeast1/serviceAttachments/sa-northamerica-northeast1-6853e3cae16f343ef1db4276-5"],"status":"AVAILABLE"}

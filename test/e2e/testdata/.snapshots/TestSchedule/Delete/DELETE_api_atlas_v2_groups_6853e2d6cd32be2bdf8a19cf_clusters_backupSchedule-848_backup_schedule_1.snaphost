@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 563
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Thu, 19 Jun 2025 10:21:54 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 110
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDiskBackupScheduleResource::deleteSnapshotSchedule
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=c9cc80704805413f1d20ccd4de364bd36cd66b6b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"autoExportEnabled":false,"clusterId":"6853e2d8cd32be2bdf8a1af5","clusterName":"backupSchedule-848","copySettings":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6853e2d6cd32be2bdf8a19cf/clusters/backupSchedule-848/backup/schedule","rel":"self"},{"href":"http://localhost:8080/api/public/v1.0/groups/6853e2d6cd32be2bdf8a19cf","rel":"https://cloud.mongodb.com/group"}],"policies":[{"id":"6853e497c42d236ede51b8bb","policyItems":[]}],"referenceHourOfDay":10,"referenceMinuteOfHour":21,"restoreWindowDays":7,"useOrgAndGroupNamesInExportPrefix":true}

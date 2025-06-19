@@ -51,7 +51,7 @@ type CommandRequest struct {
 	ContentType string
 	Format      string
 	Parameters  map[string][]string
-	Version     string
+	Version     api.Version
 }
 
 type CommandResponse struct {

@@ -1,0 +1,87 @@
+openapi: 3.0.1
+info:
+  license:
+    name: CC BY-NC-SA 3.0 US
+    url: https://creativecommons.org/licenses/by-nc-sa/3.0/us/
+  termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
+  title: MongoDB Atlas Administration API
+  version: '2.0'
+  x-xgen-sha: 8e91ba6065df0ad2af146ae235e968386798b544
+servers:
+  - url: https://cloud.mongodb.com
+security:
+  - ServiceAccounts: []
+  - DigestAuth: []
+tags:
+  - description: Returns, adds, and edits Charts Dashboard instances. This resource applies only to projects with a Charts tenant, and requires your Project ID.
+    name: Charts Dashboards
+externalDocs:
+  description: Back to Atlas Docs
+  url: https://www.mongodb.com/docs/atlas/
+paths:
+  /api/atlas/v2/groups/{groupId}/chartsDashboards/{dashboardId}:export:
+    get:
+      description: Exports the specified Charts dashboard. To use this resource, the requesting Service Account or API Key must have the Project Read Only role.
+      operationId: exportChartsDashboard
+      parameters:
+        - $ref: '#/components/parameters/envelope'
+        - $ref: '#/components/parameters/groupId'
+        - description: ID of the dashboard to export.
+          in: path
+          name: dashboardId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/vnd.atlas.preview+json:
+              schema:
+                description: This resource returns an exported Charts dashboard. You can use this response to import to the Charts Dashboard Import endpoint.
+                type: string
+              x-xgen-preview:
+                name: charts-dashboards
+                public: 'true'
+              x-xgen-version: preview
+          description: OK
+      summary: Export One Charts Dashboard
+      tags:
+        - Charts Dashboards
+      x-xgen-docs-url: https://mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Charts-Dashboards/operation/exportChartsDashboard
+      x-xgen-hidden-env:
+        envs: qa,stage,prod
+      x-xgen-owner-team: Sydney Cloud Integration
+components:
+  parameters:
+    envelope:
+      description: Flag that indicates whether Application wraps the response in an `envelope` JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.
+      in: query
+      name: envelope
+      schema:
+        default: false
+        type: boolean
+    groupId:
+      description: |-
+        Unique 24-hexadecimal digit string that identifies your project. Use the [/groups](#tag/Projects/operation/listProjects) endpoint to retrieve all projects to which the authenticated user has access.
+
+        **NOTE**: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.
+      in: path
+      name: groupId
+      required: true
+      schema:
+        example: 32b6e34b3d91647abb20e7b8
+        pattern: ^([a-f0-9]{24})$
+        type: string
+      x-xgen-IPA-exception:
+        xgen-IPA-117-description-should-not-use-inline-links: Parameters don't support externalDocs
+  securitySchemes:
+    DigestAuth:
+      scheme: digest
+      type: http
+    ServiceAccounts:
+      description: Learn more about [Service Accounts](https://www.mongodb.com/docs/atlas/api/service-accounts-overview).
+      flows:
+        clientCredentials:
+          scopes: {}
+          tokenUrl: https://cloud.mongodb.com/api/oauth/token
+      type: oauth2

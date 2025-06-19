@@ -20,7 +20,6 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/getkin/kin-openapi/openapi3"
@@ -29,7 +28,7 @@ import (
 )
 
 var (
-	versionRegex = regexp.MustCompile(`^application/vnd\.atlas\.(?P<version>\d{4}-\d{2}-\d{2}|preview|upcoming)\+(?P<contentType>[\w]+)$`)
+	contentTypeHeaderRegex = regexp.MustCompile(`^application/vnd\.atlas\.(?<version>[^+]+)\+(?P<contentType>[\w]+)$`)
 )
 
 func specToCommands(now time.Time, spec *openapi3.T) (api.GroupedAndSortedCommands, error) {
@@ -366,8 +365,8 @@ func extractParameters(parameters openapi3.Parameters) (parameterSet, error) {
 }
 
 // Build versions from responses and request body.
-func buildVersions(now time.Time, operation *openapi3.Operation) ([]api.Version, error) {
-	versionsMap := make(map[string]*api.Version)
+func buildVersions(now time.Time, operation *openapi3.Operation) ([]api.CommandVersion, error) {
+	versionsMap := make(map[string]*api.CommandVersion)
 
 	if err := processResponses(operation.Responses, versionsMap); err != nil {
 		return nil, err
@@ -388,7 +387,7 @@ func buildVersions(now time.Time, operation *openapi3.Operation) ([]api.Version,
 }
 
 // Process response content types.
-func processResponses(responses *openapi3.Responses, versionsMap map[string]*api.Version) error {
+func processResponses(responses *openapi3.Responses, versionsMap map[string]*api.CommandVersion) error {
 	for statusString, responses := range responses.Map() {
 		statusCode, err := strconv.Atoi(statusString)
 		if err != nil {
@@ -400,7 +399,7 @@ func processResponses(responses *openapi3.Responses, versionsMap map[string]*api
 		}
 
 		for versionedContentType, mediaType := range responses.Value.Content {
-			if err := addContentTypeToVersion(versionedContentType, versionsMap, false, extractSunsetDate(mediaType.Extensions)); err != nil {
+			if err := addContentTypeToVersion(versionedContentType, versionsMap, mediaType.Extensions, false); err != nil {
 				return err
 			}
 		}
@@ -409,7 +408,7 @@ func processResponses(responses *openapi3.Responses, versionsMap map[string]*api
 }
 
 // Process request body content types.
-func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[string]*api.Version) error {
+func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[string]*api.CommandVersion) error {
 	if requestBody == nil {
 		return nil
 	}
@@ -419,7 +418,7 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 			continue
 		}
 
-		if err := addContentTypeToVersion(versionedContentType, versionsMap, true, extractSunsetDate(mediaType.Extensions)); err != nil {
+		if err := addContentTypeToVersion(versionedContentType, versionsMap, mediaType.Extensions, true); err != nil {
 			return err
 		}
 	}
@@ -427,46 +426,79 @@ func processRequestBody(requestBody *openapi3.RequestBodyRef, versionsMap map[st
 }
 
 // Helper function to add content type to version map.
-func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.Version, isRequest bool, sunset *time.Time) error {
+func addContentTypeToVersion(versionedContentType string, versionsMap map[string]*api.CommandVersion, extensions map[string]any, isRequest bool) error {
+	// Extract the version and content type from the versioned content type.
 	version, contentType, err := extractVersionAndContentType(versionedContentType)
 	if err != nil {
 		return fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
 	}
 
-	if shouldIgnoreVersion(version) {
-		return nil
-	}
+	// Extract the sunset date and private preview from the extensions.
+	sunset := extractSunsetDate(extensions)
+	publicPreview := extractPublicPreview(extensions)
 
-	if _, ok := versionsMap[version]; !ok {
-		versionsMap[version] = &api.Version{
+	// Add the version to the versions map if it doesn't exist.
+	versionString := version.String()
+	if _, ok := versionsMap[versionString]; !ok {
+		versionsMap[versionString] = &api.CommandVersion{
 			Version:              version,
 			Sunset:               sunset,
 			ResponseContentTypes: []string{},
 		}
 	}
 
+	// If the sunset date is set, update the sunset date if it's before the current sunset date.
 	if sunset != nil {
-		if versionsMap[version].Sunset == nil || sunset.Before(*versionsMap[version].Sunset) {
-			versionsMap[version].Sunset = sunset
+		if versionsMap[versionString].Sunset == nil || sunset.Before(*versionsMap[versionString].Sunset) {
+			versionsMap[versionString].Sunset = sunset
 		}
 	}
 
+	// The default for public preview is false, override it if the extension says we're in a public preview.
+	if publicPreview != nil && *publicPreview {
+		versionsMap[versionString].PublicPreview = true
+	}
+
+	// If the versioned content type is a request, set the request content type.
+	// If the versioned content type is a response, add the content type to the response content types.
 	if isRequest {
-		if versionsMap[version].RequestContentType != "" {
+		if versionsMap[versionString].RequestContentType != "" {
 			return errors.New("multiple request content types is not supported")
 		}
 
-		versionsMap[version].RequestContentType = contentType
+		versionsMap[versionString].RequestContentType = contentType
 	} else {
-		versionsMap[version].ResponseContentTypes = append(versionsMap[version].ResponseContentTypes, contentType)
+		versionsMap[versionString].ResponseContentTypes = append(versionsMap[versionString].ResponseContentTypes, contentType)
+	}
+
+	return nil
+}
+
+// Extract public preview from extensions.
+// Example yaml:
+// ```yaml
+// x-xgen-preview:
+//
+//	public: 'true'
+//
+// ```
+//
+// If the extension is present, return true if the preview is public, false if it's private.
+// If the extension is not present, return nil.
+func extractPublicPreview(extensions map[string]any) *bool {
+	if extensions, ok := extensions["x-xgen-preview"].(map[string]any); ok && extensions != nil {
+		if public, ok := extensions["public"].(string); ok {
+			publicPreview := public == "true"
+			return &publicPreview
+		}
 	}
 
 	return nil
 }
 
 // Sort versions and their content types.
-func sortVersions(versionsMap map[string]*api.Version) []api.Version {
-	versions := make([]api.Version, 0)
+func sortVersions(versionsMap map[string]*api.CommandVersion) []api.CommandVersion {
+	versions := make([]api.CommandVersion, 0)
 
 	for _, version := range versionsMap {
 		sort.Slice(version.ResponseContentTypes, func(i, j int) bool {
@@ -477,7 +509,7 @@ func sortVersions(versionsMap map[string]*api.Version) []api.Version {
 	}
 
 	sort.Slice(versions, func(i, j int) bool {
-		return versions[i].Version < versions[j].Version
+		return versions[i].Version.Less(versions[j].Version)
 	})
 
 	return versions
@@ -501,22 +533,33 @@ func groupForTag(spec *openapi3.T, tag string) (*api.Group, error) {
 	}, nil
 }
 
-func extractVersionAndContentType(input string) (version string, contentType string, err error) {
-	matches := versionRegex.FindStringSubmatch(input)
-	if matches == nil {
-		return "", "", errors.New("invalid format")
+func extractVersionAndContentType(input string) (api.Version, string, error) {
+	matches := contentTypeHeaderRegex.FindStringSubmatch(input)
+	if len(matches) == 0 {
+		return nil, "", fmt.Errorf("invalid content type header: %s", input)
 	}
 
-	// Get the named group indices
-	versionIndex := versionRegex.SubexpIndex("version")
-	contentTypeIndex := versionRegex.SubexpIndex("contentType")
+	versionIndex := contentTypeHeaderRegex.SubexpIndex("version")
+	contentTypeIndex := contentTypeHeaderRegex.SubexpIndex("contentType")
 
-	return matches[versionIndex], matches[contentTypeIndex], nil
-}
+	versionString := matches[versionIndex]
+	contentType := matches[contentTypeIndex]
 
-func shouldIgnoreVersion(version string) bool {
-	// Ignore 'preview' versions
-	return strings.EqualFold(version, "preview")
+	if versionString == "" {
+		return nil, "", errors.New("version is required")
+	}
+
+	if contentType == "" {
+		return nil, "", errors.New("content type is required")
+	}
+
+	version, err := api.ParseVersion(versionString)
+
+	if err != nil {
+		return nil, "", fmt.Errorf("invalid version: %w", err)
+	}
+
+	return version, contentType, nil
 }
 
 func getParameterType(parameter *openapi3.Parameter) (*api.ParameterType, error) {

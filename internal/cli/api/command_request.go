@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func NewCommandRequestFromCobraCommand(cobraCommand *cobra.Command, apiCommand shared_api.Command, content io.Reader, format string, version string) (*api.CommandRequest, error) {
+func NewCommandRequestFromCobraCommand(cobraCommand *cobra.Command, apiCommand shared_api.Command, content io.Reader, format string, version shared_api.Version) (*api.CommandRequest, error) {
 	return &api.CommandRequest{
 		Command:    apiCommand,
 		Content:    content,

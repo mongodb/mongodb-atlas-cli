@@ -16,42 +16,49 @@ package main
 
 import (
 	"testing"
+
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 )
 
 func TestExtractVersionAndContentType(t *testing.T) {
 	tests := []struct {
 		input           string
-		wantVersion     string
+		wantVersion     api.Version
 		wantContentType string
 	}{
 		{
 			"application/vnd.atlas.2025-01-01+json",
-			"2025-01-01",
+			api.NewStableVersion(2025, 1, 1),
 			"json",
 		},
 		{
 			"application/vnd.atlas.2024-08-05+json",
-			"2024-08-05",
+			api.NewStableVersion(2024, 8, 5),
 			"json",
 		},
 		{
 			"application/vnd.atlas.2023-01-01+csv",
-			"2023-01-01",
+			api.NewStableVersion(2023, 1, 1),
 			"csv",
 		},
 		{
 			"application/vnd.atlas.preview+json",
-			"preview",
+			api.NewPreviewVersion(),
 			"json",
 		},
 		{
 			"application/vnd.atlas.preview+csv",
-			"preview",
+			api.NewPreviewVersion(),
 			"csv",
 		},
 		{
-			"application/vnd.atlas.upcoming+csv",
-			"upcoming",
+			"application/vnd.atlas.2024-08-05.upcoming+json",
+			api.NewUpcomingVersion(2024, 8, 5),
+			"json",
+		},
+		{
+			"application/vnd.atlas.2023-01-01.upcoming+csv",
+			api.NewUpcomingVersion(2023, 1, 1),
 			"csv",
 		},
 	}

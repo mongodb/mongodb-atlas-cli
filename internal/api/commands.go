@@ -78,9 +78,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -138,9 +138,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -264,9 +264,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -384,9 +384,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -453,9 +453,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -526,9 +526,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -599,9 +599,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -644,9 +644,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -737,9 +737,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -840,9 +840,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -916,9 +916,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -992,9 +992,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1071,16 +1071,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1151,9 +1151,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1254,9 +1254,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1357,9 +1357,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1433,16 +1433,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1452,7 +1452,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getAtlasSearchDeployment`,
-						Version:     `2024-05-30`,
+						Version:     shared_api.NewStableVersion(2024, 5, 30),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -1528,9 +1528,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1598,9 +1598,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1668,16 +1668,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1687,7 +1687,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getAtlasSearchDeployment`,
-						Version:     `2024-05-30`,
+						Version:     shared_api.NewStableVersion(2024, 5, 30),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -1769,9 +1769,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1869,9 +1869,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -1949,9 +1949,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2019,23 +2019,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2025-03-12`,
+						Version:            shared_api.NewStableVersion(2025, 3, 12),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2113,9 +2113,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2213,9 +2213,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2293,9 +2293,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2383,9 +2383,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2453,9 +2453,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2543,9 +2543,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2613,16 +2613,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2632,7 +2632,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getAtlasSearchDeployment`,
-						Version:     `2024-05-30`,
+						Version:     shared_api.NewStableVersion(2024, 5, 30),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -2718,9 +2718,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2818,9 +2818,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2898,9 +2898,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -2964,9 +2964,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3024,9 +3024,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3110,9 +3110,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3170,9 +3170,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3182,7 +3182,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getBackupExportJob`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`exportId`:    `body:$.id`,
@@ -3264,9 +3264,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3324,16 +3324,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3404,9 +3404,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3464,16 +3464,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3531,9 +3531,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3611,9 +3611,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3623,7 +3623,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getReplicaSetBackup`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -3706,9 +3706,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3766,9 +3766,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3778,7 +3778,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getDataProtectionSettings`,
-						Version:     `2023-10-01`,
+						Version:     shared_api.NewStableVersion(2023, 10, 1),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
 						},
@@ -3853,9 +3853,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -3933,9 +3933,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4003,16 +4003,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4070,16 +4070,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-10-01`,
+						Version:            shared_api.NewStableVersion(2023, 10, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4137,16 +4137,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4224,9 +4224,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4297,9 +4297,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4380,9 +4380,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4460,9 +4460,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4560,9 +4560,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4660,9 +4660,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4750,16 +4750,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4857,9 +4857,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -4960,9 +4960,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5063,9 +5063,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5133,9 +5133,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5206,9 +5206,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5218,7 +5218,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getReplicaSetBackup`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -5296,16 +5296,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5373,16 +5373,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-10-01`,
+						Version:            shared_api.NewStableVersion(2023, 10, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5392,7 +5392,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getDataProtectionSettings`,
-						Version:     `2023-10-01`,
+						Version:     shared_api.NewStableVersion(2023, 10, 1),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
 						},
@@ -5477,9 +5477,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5489,7 +5489,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getReplicaSetBackup`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -5559,9 +5559,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5628,16 +5628,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5705,9 +5705,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5751,9 +5751,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5821,9 +5821,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5881,9 +5881,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5937,9 +5937,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -5997,16 +5997,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6080,9 +6080,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6140,9 +6140,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6220,9 +6220,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6290,9 +6290,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6350,9 +6350,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6426,9 +6426,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6438,7 +6438,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getOutageSimulation`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -6510,9 +6510,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6580,9 +6580,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6592,7 +6592,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getOutageSimulation`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -6674,9 +6674,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6737,30 +6737,30 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-10-23`,
+						Version:            shared_api.NewStableVersion(2024, 10, 23),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6770,7 +6770,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getCluster`,
-						Version:     `2024-08-05`,
+						Version:     shared_api.NewStableVersion(2024, 8, 5),
 						Params: map[string]string{
 							`clusterName`: `body:$.name`,
 							`groupId`:     `body:$.groupId`,
@@ -6859,16 +6859,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -6878,7 +6878,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getCluster`,
-						Version:     `2024-08-05`,
+						Version:     shared_api.NewStableVersion(2024, 8, 5),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -6953,23 +6953,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7037,16 +7037,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7114,9 +7114,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7174,9 +7174,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7244,9 +7244,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7354,9 +7354,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7457,23 +7457,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7546,9 +7546,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7606,9 +7606,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7618,7 +7618,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getSampleDatasetLoadStatus`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`groupId`:         `input:groupId`,
 							`sampleDatasetId`: `body:$.id`,
@@ -7695,9 +7695,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7765,9 +7765,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7835,16 +7835,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7912,9 +7912,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -7982,30 +7982,30 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-10-23`,
+						Version:            shared_api.NewStableVersion(2024, 10, 23),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8015,7 +8015,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getCluster`,
-						Version:     `2024-08-05`,
+						Version:     shared_api.NewStableVersion(2024, 8, 5),
 						Params: map[string]string{
 							`clusterName`: `input:clusterName`,
 							`groupId`:     `input:groupId`,
@@ -8091,16 +8091,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8161,9 +8161,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8297,9 +8297,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8417,9 +8417,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8467,9 +8467,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8567,9 +8567,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8657,9 +8657,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8717,9 +8717,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8777,9 +8777,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8838,9 +8838,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8899,9 +8899,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -8965,9 +8965,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9035,9 +9035,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9105,9 +9105,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9165,9 +9165,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9235,9 +9235,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9328,9 +9328,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9398,9 +9398,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9476,9 +9476,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9546,9 +9546,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9616,9 +9616,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9694,9 +9694,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9764,9 +9764,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`gzip`,
@@ -9834,9 +9834,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9894,9 +9894,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -9984,9 +9984,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10054,9 +10054,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10142,9 +10142,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10212,9 +10212,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10292,9 +10292,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10348,9 +10348,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10360,7 +10360,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getPipeline`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`groupId`:      `input:groupId`,
 							`pipelineName`: `body:$.name`,
@@ -10426,9 +10426,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10438,7 +10438,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getPipeline`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`groupId`:      `input:groupId`,
 							`pipelineName`: `input:pipelineName`,
@@ -10520,9 +10520,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10590,9 +10590,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10670,9 +10670,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10780,9 +10780,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10850,9 +10850,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -10960,9 +10960,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11010,9 +11010,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11080,9 +11080,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11150,9 +11150,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11220,9 +11220,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11280,9 +11280,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11292,7 +11292,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getPipeline`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`groupId`:      `input:groupId`,
 							`pipelineName`: `input:pipelineName`,
@@ -11364,9 +11364,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11457,9 +11457,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11550,9 +11550,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11640,9 +11640,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11733,9 +11733,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11809,9 +11809,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11872,9 +11872,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -11952,9 +11952,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12052,9 +12052,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12132,9 +12132,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12195,9 +12195,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12280,9 +12280,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12363,9 +12363,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12438,9 +12438,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12570,9 +12570,9 @@ IMPORTANT: The complete list of event type values changes frequently.`,
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12729,9 +12729,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12784,9 +12784,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12840,9 +12840,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12875,9 +12875,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -12934,9 +12934,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13000,9 +13000,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13056,9 +13056,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13112,9 +13112,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13168,9 +13168,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13213,9 +13213,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13279,9 +13279,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13345,9 +13345,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13431,9 +13431,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13487,9 +13487,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13543,9 +13543,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13602,9 +13602,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13670,9 +13670,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13729,9 +13729,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13795,9 +13795,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPut,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13861,9 +13861,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13873,7 +13873,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getFlexCluster`,
-						Version:     `2024-11-13`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
 							`name`:    `body:$.name`,
@@ -13950,9 +13950,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -13962,7 +13962,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getFlexCluster`,
-						Version:     `2024-11-13`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
 							`name`:    `input:name`,
@@ -14034,9 +14034,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14124,9 +14124,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14194,9 +14194,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14206,7 +14206,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getFlexCluster`,
-						Version:     `2024-11-13`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
 							`name`:    `input:name`,
@@ -14272,9 +14272,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14348,9 +14348,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14360,7 +14360,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getFlexBackupRestoreJob`,
-						Version:     `2024-11-13`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`:      `input:groupId`,
 							`name`:         `input:name`,
@@ -14448,9 +14448,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14548,9 +14548,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14624,9 +14624,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14694,9 +14694,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14794,9 +14794,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14871,23 +14871,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -14955,23 +14955,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15039,23 +15039,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15143,23 +15143,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15227,23 +15227,23 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15293,9 +15293,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15360,9 +15360,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`csv`,
@@ -15416,9 +15416,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`csv`,
@@ -15484,9 +15484,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`csv`,
@@ -15632,9 +15632,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15688,9 +15688,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15764,9 +15764,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15830,9 +15830,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15890,9 +15890,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -15960,9 +15960,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16023,9 +16023,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16083,9 +16083,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16095,7 +16095,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getLdapConfigurationStatus`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`groupId`:   `input:groupId`,
 							`requestId`: `body:$.requestId`,
@@ -16178,9 +16178,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16258,9 +16258,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16338,9 +16338,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16421,9 +16421,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16501,9 +16501,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16574,9 +16574,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16674,9 +16674,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16787,9 +16787,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16897,9 +16897,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -16977,9 +16977,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17050,9 +17050,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17106,9 +17106,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17166,9 +17166,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17216,9 +17216,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17266,9 +17266,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17316,9 +17316,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17394,9 +17394,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17467,9 +17467,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17537,9 +17537,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17606,9 +17606,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17665,9 +17665,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17716,9 +17716,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17788,9 +17788,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17864,9 +17864,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17920,9 +17920,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -17976,9 +17976,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18088,16 +18088,16 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18231,16 +18231,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18350,16 +18350,16 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18429,9 +18429,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18501,16 +18501,16 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18581,9 +18581,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18657,16 +18657,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
 						},
 					},
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18733,9 +18733,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18805,9 +18805,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-02-19`,
+						Version:            shared_api.NewStableVersion(2025, 2, 19),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18881,9 +18881,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -18961,9 +18961,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -19091,9 +19091,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -19238,9 +19238,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -19328,16 +19328,16 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`gzip`,
 						},
 					},
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`gzip`,
@@ -19475,9 +19475,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -19615,9 +19615,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -19725,9 +19725,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -19815,9 +19815,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -19915,9 +19915,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -19985,9 +19985,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20085,9 +20085,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20215,9 +20215,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20275,9 +20275,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20342,9 +20342,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20402,9 +20402,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20472,9 +20472,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20542,9 +20542,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20602,9 +20602,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20672,9 +20672,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20742,9 +20742,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20842,9 +20842,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -20942,9 +20942,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21032,9 +21032,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21102,9 +21102,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21172,9 +21172,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21232,9 +21232,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21308,9 +21308,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21320,7 +21320,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getOnlineArchive`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`archiveId`:   `body:$.id`,
 							`clusterName`: `input:clusterName`,
@@ -21411,9 +21411,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21423,7 +21423,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getOnlineArchive`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`archiveId`:   `input:archiveId`,
 							`clusterName`: `input:clusterName`,
@@ -21516,9 +21516,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`gzip`,
@@ -21596,9 +21596,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21696,9 +21696,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21776,9 +21776,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21788,7 +21788,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getOnlineArchive`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`archiveId`:   `input:archiveId`,
 							`clusterName`: `input:clusterName`,
@@ -21850,9 +21850,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21909,9 +21909,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -21963,9 +21963,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22032,9 +22032,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22088,9 +22088,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22147,9 +22147,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22203,9 +22203,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22272,9 +22272,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22385,9 +22385,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22470,9 +22470,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22526,9 +22526,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22582,9 +22582,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22648,9 +22648,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22714,9 +22714,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPut,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22770,9 +22770,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22836,9 +22836,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22896,9 +22896,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -22956,9 +22956,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23026,9 +23026,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23130,9 +23130,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23179,9 +23179,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23228,9 +23228,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23382,9 +23382,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23486,9 +23486,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23650,9 +23650,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23720,9 +23720,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23806,9 +23806,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23866,9 +23866,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -23878,7 +23878,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getPrivateEndpointService`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`cloudProvider`:     `body:$.cloudProvider`,
 							`endpointServiceId`: `body:$.id`,
@@ -23976,9 +23976,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24056,9 +24056,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24068,7 +24068,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getPrivateEndpointService`,
-						Version:     `2023-01-01`,
+						Version:     shared_api.NewStableVersion(2023, 1, 1),
 						Params: map[string]string{
 							`cloudProvider`:     `body:$.cloudProvider`,
 							`endpointServiceId`: `body:$.id`,
@@ -24161,9 +24161,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24241,9 +24241,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24301,9 +24301,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24371,9 +24371,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24431,9 +24431,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24507,9 +24507,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24563,9 +24563,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24659,9 +24659,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24719,9 +24719,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24785,9 +24785,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24861,9 +24861,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -24927,9 +24927,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25003,9 +25003,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25099,9 +25099,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25185,9 +25185,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25275,9 +25275,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25345,9 +25345,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25411,9 +25411,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25511,9 +25511,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25607,9 +25607,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25687,9 +25687,9 @@ which protocol (like TCP or UDP) the connection uses.`,
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25757,9 +25757,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25827,9 +25827,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25917,9 +25917,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -25983,9 +25983,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26039,9 +26039,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26099,9 +26099,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26159,9 +26159,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26219,9 +26219,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26306,9 +26306,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26366,9 +26366,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26422,9 +26422,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26492,9 +26492,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26579,9 +26579,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26689,9 +26689,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26749,9 +26749,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26819,9 +26819,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26879,9 +26879,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -26954,9 +26954,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27004,9 +27004,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27064,9 +27064,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27154,9 +27154,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27214,9 +27214,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27274,9 +27274,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27334,9 +27334,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27404,9 +27404,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27464,9 +27464,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27530,9 +27530,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27590,9 +27590,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27650,9 +27650,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27710,9 +27710,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27772,9 +27772,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27838,9 +27838,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27894,9 +27894,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -27960,9 +27960,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28016,9 +28016,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28082,9 +28082,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28138,9 +28138,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28214,9 +28214,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28265,9 +28265,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28300,9 +28300,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					URLParameters: []shared_api.Parameter{},
 					Verb:          http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-11-15`,
+						Version:            shared_api.NewStableVersion(2023, 11, 15),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28369,9 +28369,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28381,7 +28381,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getFlexCluster`,
-						Version:     `2024-11-13`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
 							`name`:    `body:$.name`,
@@ -28460,9 +28460,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28472,7 +28472,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getFlexCluster`,
-						Version:     `2024-11-13`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
 							`name`:    `input:name`,
@@ -28547,9 +28547,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28640,9 +28640,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28713,9 +28713,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28725,7 +28725,7 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 				Watcher: &shared_api.WatcherProperties{
 					Get: shared_api.WatcherGetProperties{
 						OperationID: `getFlexCluster`,
-						Version:     `2024-11-13`,
+						Version:     shared_api.NewStableVersion(2024, 11, 13),
 						Params: map[string]string{
 							`groupId`: `input:groupId`,
 							`name`:    `input:name`,
@@ -28803,9 +28803,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28876,9 +28876,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -28949,9 +28949,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29012,9 +29012,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29085,9 +29085,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29161,9 +29161,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29221,9 +29221,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29321,9 +29321,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29391,9 +29391,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29447,9 +29447,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29543,9 +29543,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29609,9 +29609,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29679,9 +29679,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29759,9 +29759,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29839,9 +29839,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29905,9 +29905,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -29981,9 +29981,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30057,9 +30057,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30127,9 +30127,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30193,9 +30193,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30293,9 +30293,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30373,9 +30373,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30469,9 +30469,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30555,9 +30555,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30631,9 +30631,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30701,9 +30701,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30767,9 +30767,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30846,9 +30846,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -30929,9 +30929,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31002,9 +31002,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31081,9 +31081,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31164,9 +31164,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31237,9 +31237,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31303,9 +31303,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31363,9 +31363,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31433,9 +31433,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31493,9 +31493,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31553,9 +31553,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-08-05`,
+						Version:            shared_api.NewStableVersion(2024, 8, 5),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31623,9 +31623,59 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
+						RequestContentType: `json`,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `createTransitGatewayRoute`,
+				Aliases:     nil,
+				Description: `Creates a route in the default route table associated with Atlas VPC to route all traffic destined for provided CIDR to the provided Transit Gateway.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/createTransitGatewayRoute.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-streams-createTransitGatewayRoute/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streamsTgwRoutes`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+					},
+					Verb: http.MethodPost,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31693,9 +31743,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31773,9 +31823,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31843,9 +31893,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31923,9 +31973,69 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `deleteTransitGatewayRoute`,
+				Aliases:     nil,
+				Description: `Deletes a transit gateway route in the default route table associated with Atlas VPC.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/deleteTransitGatewayRoute.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-streams-deleteTransitGatewayRoute/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streamsTgwRoutes/{routeId}`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+						{
+							Name:        `routeId`,
+							Description: `The Object ID that uniquely identifies a transit gateway route.`,
+							Short:       ``,
+							Required:    true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodDelete,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -31983,9 +32093,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32063,9 +32173,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`gzip`,
@@ -32133,9 +32243,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32213,9 +32323,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-11-13`,
+						Version:            shared_api.NewStableVersion(2024, 11, 13),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32273,9 +32383,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32343,9 +32453,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32413,9 +32523,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32493,9 +32603,69 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `getTransitGatewayRoute`,
+				Aliases:     nil,
+				Description: `Retrieves a transit gateway route in the default route table associated with Atlas VPC.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/getTransitGatewayRoute.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-streams-getTransitGatewayRoute/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streamsTgwRoutes/{routeId}`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+						{
+							Name:        `routeId`,
+							Description: `The Object ID that uniquely identifies a transit gateway route.`,
+							Short:       ``,
+							Required:    true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32583,9 +32753,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32663,9 +32833,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32753,9 +32923,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32833,9 +33003,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -32933,9 +33103,79 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
+						RequestContentType: ``,
+						ResponseContentTypes: []string{
+							`json`,
+						},
+					},
+				},
+			},
+			{
+				OperationID: `listTransitGatewayRoutes`,
+				Aliases:     nil,
+				Description: `List Transit Gateway routes in the default route table associated with Atlas VPC.
+
+This command is autogenerated and corresponds 1:1 with the Atlas API endpoint https://www.mongodb.com/docs/atlas/reference/api-resources-spec/v2/#tag/Streams/operation/listTransitGatewayRoutes.
+
+For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/current/command/atlas-api-streams-listTransitGatewayRoutes/`,
+				RequestParameters: shared_api.RequestParameters{
+					URL: `/api/atlas/v2/groups/{groupId}/streamsTgwRoutes`,
+					QueryParameters: []shared_api.Parameter{
+						{
+							Name:        `envelope`,
+							Description: `Flag that indicates whether Application wraps the response in an envelope JSON object. Some API clients cannot access the HTTP response headers or status code. To remediate this, set envelope=true in the query. Endpoints that return a list of results use the results object as an envelope. Application adds the status parameter to the response body.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `bool`,
+							},
+						},
+						{
+							Name:        `itemsPerPage`,
+							Description: `Number of items that the response returns per page.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+						{
+							Name:        `pageNum`,
+							Description: `Number of the page that displays the current set of the total objects that the response returns.`,
+							Short:       ``,
+							Required:    false,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `int`,
+							},
+						},
+					},
+					URLParameters: []shared_api.Parameter{
+						{
+							Name: `groupId`,
+							Description: `Unique 24-hexadecimal digit string that identifies your project. Use the /groups endpoint to retrieve all projects to which the authenticated user has access.
+
+
+NOTE: Groups and projects are synonymous terms. Your group id is the same as your project id. For existing groups, your group/project id remains the same. The resource and corresponding endpoints use the term groups.`,
+							Short:    ``,
+							Required: true,
+							Type: shared_api.ParameterType{
+								IsArray: false,
+								Type:    `string`,
+							},
+							Aliases: []string{`projectId`},
+						},
+					},
+					Verb: http.MethodGet,
+				},
+				Versions: []shared_api.CommandVersion{
+					{
+						Version:            shared_api.NewPreviewVersion(),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33013,9 +33253,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33073,9 +33313,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33153,9 +33393,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33233,9 +33473,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2025-03-12`,
+						Version:            shared_api.NewStableVersion(2025, 3, 12),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33313,9 +33553,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2024-05-30`,
+						Version:            shared_api.NewStableVersion(2024, 5, 30),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33393,9 +33633,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33463,9 +33703,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-02-01`,
+						Version:            shared_api.NewStableVersion(2023, 2, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33529,9 +33769,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33598,9 +33838,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33654,9 +33894,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33720,9 +33960,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33786,9 +34026,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33852,9 +34092,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -33938,9 +34178,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34028,9 +34268,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34088,9 +34328,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34167,9 +34407,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34233,9 +34473,9 @@ For more information and examples, see: https://www.mongodb.com/docs/atlas/cli/c
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34303,9 +34543,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPatch,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34412,9 +34652,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34482,9 +34722,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34552,9 +34792,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34642,9 +34882,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34742,9 +34982,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPut,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34824,9 +35064,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodPost,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: `json`,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34877,9 +35117,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodDelete,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,
@@ -34977,9 +35217,9 @@ NOTE: Groups and projects are synonymous terms. Your group id is the same as you
 					},
 					Verb: http.MethodGet,
 				},
-				Versions: []shared_api.Version{
+				Versions: []shared_api.CommandVersion{
 					{
-						Version:            `2023-01-01`,
+						Version:            shared_api.NewStableVersion(2023, 1, 1),
 						RequestContentType: ``,
 						ResponseContentTypes: []string{
 							`json`,

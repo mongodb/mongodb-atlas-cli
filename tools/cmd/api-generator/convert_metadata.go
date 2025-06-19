@@ -25,6 +25,7 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/log"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"gopkg.in/yaml.v3"
 )
 
@@ -51,6 +52,11 @@ func extractMetadata(operation *openapi3.Operation) (*metadatatypes.OperationMet
 		return nil, nil
 	}
 
+	onlyPrivatePreview, err := onlyContainsPrivatePreview(operation)
+	if err != nil {
+		return nil, err
+	}
+
 	paramMetadata := extractParameterMetadata(operation.Parameters)
 
 	requestBodyExamples, err := extractRequestBodyExamples(operation.RequestBody)
@@ -66,9 +72,33 @@ func extractMetadata(operation *openapi3.Operation) (*metadatatypes.OperationMet
 	}
 
 	return &metadatatypes.OperationMetadata{
-		Parameters: paramMetadata,
-		Examples:   examples,
+		OnlyPrivatePreview: onlyPrivatePreview,
+		Parameters:         paramMetadata,
+		Examples:           examples,
 	}, nil
+}
+
+func onlyContainsPrivatePreview(operation *openapi3.Operation) (bool, error) {
+	versionsMap := map[string]*api.CommandVersion{}
+
+	if err := processRequestBody(operation.RequestBody, versionsMap); err != nil {
+		return false, err
+	}
+
+	if err := processResponses(operation.Responses, versionsMap); err != nil {
+		return false, err
+	}
+
+	if len(versionsMap) != 1 {
+		return false, nil
+	}
+
+	previewVersion, foundPreview := versionsMap[api.NewPreviewVersion().String()]
+	if !foundPreview {
+		return false, nil
+	}
+
+	return !previewVersion.PublicPreview, nil
 }
 
 func extractParameterMetadata(parameters openapi3.Parameters) map[string]metadatatypes.ParameterMetadata {
@@ -153,11 +183,7 @@ func extractRequestBodyExamples(requestBody *openapi3.RequestBodyRef) (map[strin
 			return nil, fmt.Errorf("unsupported version %q error: %w", versionedContentType, err)
 		}
 
-		if shouldIgnoreVersion(version) {
-			continue
-		}
-
-		results[version] = extractedExamples{
+		results[version.String()] = extractedExamples{
 			Example:  mediaType.Example,
 			Examples: mediaType.Examples,
 		}
@@ -185,7 +211,7 @@ func extractDefaultVersion(operation *openapi3.Operation) (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("unsupported version %q error: %w", mime, err)
 		}
-		versions = append(versions, version)
+		versions = append(versions, version.String())
 	}
 
 	if len(versions) == 0 {

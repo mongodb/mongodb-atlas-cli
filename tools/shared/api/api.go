@@ -34,7 +34,7 @@ type Command struct {
 	Aliases           []string
 	Description       string
 	RequestParameters RequestParameters
-	Versions          []Version
+	Versions          []CommandVersion
 	Watcher           *WatcherProperties
 }
 
@@ -45,9 +45,10 @@ type RequestParameters struct {
 	Verb            string
 }
 
-type Version struct {
-	Version              string
+type CommandVersion struct {
+	Version              Version
 	Sunset               *time.Time
+	PublicPreview        bool
 	RequestContentType   string
 	ResponseContentTypes []string
 }
@@ -102,7 +103,7 @@ type WatcherProperties struct {
 
 type WatcherGetProperties struct {
 	OperationID string
-	Version     string
+	Version     Version
 	Params      map[string]string
 }
 

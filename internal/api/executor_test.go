@@ -58,8 +58,8 @@ func TestExecutorHappyPathNoLogging(t *testing.T) {
 			RequestParameters: api.RequestParameters{
 				URL: "/test/url",
 			},
-			Versions: []api.Version{{
-				Version:              "1991-05-17",
+			Versions: []api.CommandVersion{{
+				Version:              api.NewStableVersion(1991, 5, 17),
 				RequestContentType:   "json",
 				ResponseContentTypes: []string{"json"},
 			}},
@@ -67,7 +67,7 @@ func TestExecutorHappyPathNoLogging(t *testing.T) {
 		ContentType: "json",
 		Format:      "json",
 		Parameters:  nil,
-		Version:     "1991-05-17",
+		Version:     api.NewStableVersion(1991, 5, 17),
 	}
 	response, err := executor.ExecuteCommand(t.Context(), commandRequest)
 
@@ -120,8 +120,8 @@ func TestExecutorHappyPathDebugLogging(t *testing.T) {
 			RequestParameters: api.RequestParameters{
 				URL: "/test/url",
 			},
-			Versions: []api.Version{{
-				Version:              "1991-05-17",
+			Versions: []api.CommandVersion{{
+				Version:              api.NewStableVersion(1991, 5, 17),
 				RequestContentType:   "json",
 				ResponseContentTypes: []string{"json"},
 			}},
@@ -129,7 +129,7 @@ func TestExecutorHappyPathDebugLogging(t *testing.T) {
 		ContentType: "json",
 		Format:      "json",
 		Parameters:  nil,
-		Version:     "1991-05-17",
+		Version:     api.NewStableVersion(1991, 5, 17),
 	}
 	response, err := executor.ExecuteCommand(t.Context(), commandRequest)
 

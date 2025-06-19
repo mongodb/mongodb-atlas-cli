@@ -30,6 +30,7 @@ import (
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadatatypes"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/shared/api"
 	"github.com/spf13/cobra"
 )
 
@@ -167,6 +168,18 @@ func writeCommands[T any](w io.Writer, templateContent string, data T) error {
 			return strings.ReplaceAll(s, o, n)
 		},
 		"sortedKeys": sortedKeys,
+		"createVersion": func(version api.Version) string {
+			switch v := version.(type) {
+			case api.PreviewVersion:
+				return "shared_api.NewPreviewVersion()"
+			case api.UpcomingVersion:
+				return fmt.Sprintf("shared_api.NewUpcomingVersion(%d, %d, %d)", v.Date.Year, v.Date.Month, v.Date.Day)
+			case api.StableVersion:
+				return fmt.Sprintf("shared_api.NewStableVersion(%d, %d, %d)", v.Date.Year, v.Date.Month, v.Date.Day)
+			}
+
+			panic("unreachable")
+		},
 	}).Parse(templateContent)
 	if err != nil {
 		return err

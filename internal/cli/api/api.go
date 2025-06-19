@@ -137,6 +137,9 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 			// This can happen when the profile contains a default version which is not supported for a specific endpoint
 			ensureVersionIsSupported(command, &version)
 
+			// Print a warning if the version is a preview version
+			printPreviewWarning(command, &version)
+
 			// Detect if stdout is being piped (atlas api myTag myOperationId > output.json)
 			isPiped, err := IsStdOutPiped()
 			if err != nil {
@@ -173,8 +176,15 @@ func convertAPIToCobraCommand(command shared_api.Command) (*cobra.Command, error
 				return err
 			}
 
+			// Convert the version string into an api version
+			apiVersion, err := shared_api.ParseVersion(version)
+			if err != nil {
+				// This should never happen, the version is already validated in the prerun function
+				return err
+			}
+
 			// Convert the api command + cobra command into a api command request
-			commandRequest, err := NewCommandRequestFromCobraCommand(cmd, command, content, format, version)
+			commandRequest, err := NewCommandRequestFromCobraCommand(cmd, command, content, format, apiVersion)
 			if err != nil {
 				return err
 			}
@@ -414,7 +424,7 @@ func defaultAPIVersion(command shared_api.Command) (string, error) {
 	}
 
 	lastVersion := command.Versions[nVersions-1]
-	return lastVersion.Version, nil
+	return lastVersion.Version.String(), nil
 }
 
 func remindUserToPinVersion(cmd *cobra.Command) {
@@ -433,10 +443,15 @@ func remindUserToPinVersion(cmd *cobra.Command) {
 	}
 }
 
-func ensureVersionIsSupported(apiCommand shared_api.Command, version *string) {
-	for _, commandVersion := range apiCommand.Versions {
-		if commandVersion.Version == *version {
-			return
+func ensureVersionIsSupported(apiCommand shared_api.Command, versionString *string) {
+	version, err := shared_api.ParseVersion(*versionString)
+
+	// If the version is valid, check if it's supported
+	if err == nil {
+		for _, commandVersion := range apiCommand.Versions {
+			if commandVersion.Version.Equal(version) {
+				return
+			}
 		}
 	}
 
@@ -444,11 +459,47 @@ func ensureVersionIsSupported(apiCommand shared_api.Command, version *string) {
 	defaultVersion, err := defaultAPIVersion(apiCommand)
 	// if we fail to get a version (which should never happen), then quit
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "error in 'ensureVersionIsSupported': default version has an invalid format '%s'\n", *versionString)
 		return
 	}
 
-	fmt.Fprintf(os.Stderr, "warning: version '%s' is not supported for this endpoint, using default API version '%s'; consider pinning a version to ensure consisentcy when updating the CLI\n", *version, defaultVersion)
-	*version = defaultVersion
+	fmt.Fprintf(os.Stderr, "warning: version '%s' is not supported for this endpoint, using default API version '%s'; consider pinning a version to ensure consisentcy when updating the CLI\n", *versionString, defaultVersion)
+	*versionString = defaultVersion
+}
+
+func printPreviewWarning(apiCommand shared_api.Command, versionString *string) {
+	version, err := shared_api.ParseVersion(*versionString)
+
+	// If the version is invalid return, this should never happen
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error in 'printPreviewWarning': received an invalid version '%s'\n", *versionString)
+		return
+	}
+
+	// If the version is not a preview version, return
+	if version.StabilityLevel() != shared_api.StabilityLevelPreview {
+		return
+	}
+
+	// Find the version in the command versions
+	var commandVersion *shared_api.CommandVersion
+	for _, cv := range apiCommand.Versions {
+		if cv.Version.Equal(version) {
+			commandVersion = &cv
+			break
+		}
+	}
+
+	// If the version is not found, return (should also never happen)
+	if commandVersion == nil {
+		return
+	}
+
+	if commandVersion.PublicPreview {
+		fmt.Fprintf(os.Stderr, "warning: you've selected a public preview version of the endpoint, this version is subject to breaking changes.\n")
+	} else {
+		fmt.Fprintf(os.Stderr, "warning: you've selected a private preview version of the endpoint, this version might not be available for your account and is subject to breaking changes.\n")
+	}
 }
 
 func needsFileFlag(apiCommand shared_api.Command) bool {
@@ -474,7 +525,7 @@ func addVersionFlag(cmd *cobra.Command, apiCommand shared_api.Command, version *
 	// Create a unique list of all supported versions
 	versions := make(map[string]struct{}, 0)
 	for _, version := range apiCommand.Versions {
-		versions[version.Version] = struct{}{}
+		versions[version.Version.String()] = struct{}{}
 	}
 
 	// Convert the keys of the map into a list

@@ -23,6 +23,9 @@ import 	"github.com/mongodb/mongodb-atlas-cli/atlascli/tools/internal/metadataty
 var metadata = metadatatypes.Metadata{
 {{- range $operationID := $metadata | sortedKeys }}{{$operationMetadata := index $metadata $operationID}}
 	`{{ $operationID }}`: {
+		{{- if $operationMetadata.OnlyPrivatePreview}}
+		OnlyPrivatePreview: true,
+		{{- end}}
 		Parameters: {{if not $operationMetadata.Parameters}}nil,{{else}}map[string]metadatatypes.ParameterMetadata{
 		{{- range $paramName := $operationMetadata.Parameters | sortedKeys }}{{$paramMetadata := index $operationMetadata.Parameters $paramName}}
 			`{{ $paramName }}`: {

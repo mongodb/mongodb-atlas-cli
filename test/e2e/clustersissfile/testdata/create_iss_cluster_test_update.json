@@ -1,0 +1,46 @@
+{
+  "clusterType": "SHARDED",
+  "mongoDBMajorVersion":"8.0",
+  "backupEnabled":true,
+  "replicationSpecs": [
+   {
+    "regionConfigs": [
+     {
+      "electableSpecs": {
+       "instanceSize": "M30",
+       "nodeCount": 3,
+       "diskSizeGB": 10
+      },
+      "priority": 7,
+      "providerName": "AWS",
+      "backingProviderName": "AWS",
+      "regionName": "EU_WEST_1"
+     }
+    ],
+    "zoneName": "Zone1"
+   },
+   {
+    "regionConfigs": [
+     {
+      "electableSpecs": {
+       "instanceSize": "M30",
+       "nodeCount": 3,
+       "diskSizeGB": 10
+      },
+      "priority": 7,
+      "providerName": "AWS",
+      "backingProviderName": "AWS",
+      "regionName": "EU_WEST_1"
+     }
+    ],
+    "zoneName": "Zone1"
+   }
+  ],
+  "tags": [
+    {
+      "key": "e2e_test",
+      "value": "yes"
+    }
+  ],
+  "terminationProtectionEnabled": false
+ }

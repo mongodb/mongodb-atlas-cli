@@ -1,17 +1,15 @@
 {
   "clusterType": "SHARDED",
-  "name": "AsymmetricCluster",
   "mongoDBMajorVersion":"8.0",
   "backupEnabled":true,
-
   "replicationSpecs": [
    {
     "regionConfigs": [
      {
       "electableSpecs": {
-       "instanceSize": "M40",
+       "instanceSize": "M10",
        "nodeCount": 3,
-       "diskSizeGB": 30
+       "diskSizeGB": 10
       },
       "priority": 7,
       "providerName": "AWS",
@@ -25,9 +23,9 @@
     "regionConfigs": [
      {
       "electableSpecs": {
-       "instanceSize": "M30",
+       "instanceSize": "M10",
        "nodeCount": 3,
-       "diskSizeGB": 30
+       "diskSizeGB": 10
       },
       "priority": 7,
       "providerName": "AWS",

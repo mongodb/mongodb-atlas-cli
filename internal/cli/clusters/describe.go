@@ -19,10 +19,13 @@ import (
 	"fmt"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/commonerrors"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/require"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/config"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/flag"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
@@ -34,14 +37,14 @@ type ClusterDescriber interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
 	LatestAtlasCluster(string, string) (*atlasv2.ClusterDescription20240805, error)
-	GetClusterAutoScalingConfig(string, string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error)
 }
 
 type DescribeOpts struct {
 	cli.ProjectOpts
 	cli.OutputOpts
-	name  string
-	store ClusterDescriber
+	name            string
+	autoScalingMode string
+	store           ClusterDescriber
 }
 
 func (opts *DescribeOpts) initStore(ctx context.Context) func() error {
@@ -57,9 +60,7 @@ var describeTemplate = `ID	NAME	MDB VER	STATE
 `
 
 func (opts *DescribeOpts) Run() error {
-	autoScalingModeConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.name)
-	appendAutoScalingModeTelemetry(autoScalingModeConfig.GetAutoScalingMode())
-	if err == nil && isIndependentShardScaling(autoScalingModeConfig.GetAutoScalingMode()) {
+	if opts.autoScalingMode != "" && isIndependentShardScaling(opts.autoScalingMode) {
 		r, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.name)
 		if err != nil {
 			return err
@@ -82,12 +83,12 @@ func (opts *DescribeOpts) RunFlexCluster(err error) error {
 	}
 
 	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
-		return err
+		return commonerrors.Check(err)
 	}
 
 	r, err := opts.store.FlexCluster(opts.ConfigProjectID(), opts.name)
 	if err != nil {
-		return err
+		return commonerrors.Check(err)
 	}
 
 	return opts.Print(r)
@@ -114,6 +115,7 @@ func DescribeBuilder() *cobra.Command {
 				opts.ValidateProjectID,
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), describeTemplate),
+				validate.AutoScalingMode(opts.autoScalingMode),
 			)
 		},
 		RunE: func(_ *cobra.Command, args []string) error {
@@ -124,6 +126,10 @@ func DescribeBuilder() *cobra.Command {
 
 	opts.AddProjectOptsFlags(cmd)
 	opts.AddOutputOptFlags(cmd)
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, clusterWideScalingFlag, usage.AutoScalingMode)
+	_ = cmd.RegisterFlagCompletionFunc(flag.AutoScalingMode, func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+		return []string{clusterWideScalingFlag, independentShardScalingFlag}, cobra.ShellCompDirectiveDefault
+	})
 
 	return cmd
 }

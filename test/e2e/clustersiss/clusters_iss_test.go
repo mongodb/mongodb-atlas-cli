@@ -89,6 +89,8 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 			clustersEntity,
 			"get",
 			issClusterName,
+			"--autoScalingMode",
+			independentShardScalingFlag,
 			"-o=json")
 
 		cmd.Env = os.Environ()

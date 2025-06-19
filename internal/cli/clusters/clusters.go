@@ -26,7 +26,9 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/onlinearchive"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/clusters/sampledata"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli/search"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/file"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/telemetry"
+	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
 	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
@@ -200,6 +202,27 @@ func isIndependentShardScaling(mode string) bool {
 
 func isClusterWideScaling(mode string) bool {
 	return strings.EqualFold(mode, clusterWideScalingFlag) || strings.EqualFold(mode, clusterWideScalingResponse)
+}
+
+func detectIsFileISS(fs afero.Fs, filename string) string {
+	// First try to load as a default dedicated cluster in strict mode.
+	// If it succeeds, it is a default dedicated cluster.
+	oldCluster := new(atlasClustersPinned.AdvancedClusterDescription)
+	oldLoadErr := file.StrictLoad(fs, filename, oldCluster)
+	if oldLoadErr == nil {
+		return clusterWideScalingFlag
+	}
+
+	// Then try to load as an ISS cluster in strict mode.
+	// If it succeeds, it is an ISS cluster. If it fails, it is a default dedicated cluster.
+	cluster := new(atlasv2.ClusterDescription20240805)
+	latestLoadErr := file.StrictLoad(fs, filename, cluster)
+	if latestLoadErr == nil {
+		return independentShardScalingFlag
+	}
+
+	// default to cluster wide scaling
+	return clusterWideScalingFlag
 }
 
 func appendAutoScalingModeTelemetry(mode string) {

@@ -119,45 +119,6 @@ func (c *MockClusterDescriberFlexClusterCall) DoAndReturn(f func(string, string)
 	return c
 }
 
-// GetClusterAutoScalingConfig mocks base method.
-func (m *MockClusterDescriber) GetClusterAutoScalingConfig(arg0, arg1 string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetClusterAutoScalingConfig", arg0, arg1)
-	ret0, _ := ret[0].(*admin0.ClusterDescriptionAutoScalingModeConfiguration)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetClusterAutoScalingConfig indicates an expected call of GetClusterAutoScalingConfig.
-func (mr *MockClusterDescriberMockRecorder) GetClusterAutoScalingConfig(arg0, arg1 any) *MockClusterDescriberGetClusterAutoScalingConfigCall {
-	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClusterAutoScalingConfig", reflect.TypeOf((*MockClusterDescriber)(nil).GetClusterAutoScalingConfig), arg0, arg1)
-	return &MockClusterDescriberGetClusterAutoScalingConfigCall{Call: call}
-}
-
-// MockClusterDescriberGetClusterAutoScalingConfigCall wrap *gomock.Call
-type MockClusterDescriberGetClusterAutoScalingConfigCall struct {
-	*gomock.Call
-}
-
-// Return rewrite *gomock.Call.Return
-func (c *MockClusterDescriberGetClusterAutoScalingConfigCall) Return(arg0 *admin0.ClusterDescriptionAutoScalingModeConfiguration, arg1 error) *MockClusterDescriberGetClusterAutoScalingConfigCall {
-	c.Call = c.Call.Return(arg0, arg1)
-	return c
-}
-
-// Do rewrite *gomock.Call.Do
-func (c *MockClusterDescriberGetClusterAutoScalingConfigCall) Do(f func(string, string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error)) *MockClusterDescriberGetClusterAutoScalingConfigCall {
-	c.Call = c.Call.Do(f)
-	return c
-}
-
-// DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockClusterDescriberGetClusterAutoScalingConfigCall) DoAndReturn(f func(string, string) (*admin0.ClusterDescriptionAutoScalingModeConfiguration, error)) *MockClusterDescriberGetClusterAutoScalingConfigCall {
-	c.Call = c.Call.DoAndReturn(f)
-	return c
-}
-
 // LatestAtlasCluster mocks base method.
 func (m *MockClusterDescriber) LatestAtlasCluster(arg0, arg1 string) (*admin0.ClusterDescription20240805, error) {
 	m.ctrl.T.Helper()

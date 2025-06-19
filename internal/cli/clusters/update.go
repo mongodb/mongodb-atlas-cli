@@ -29,6 +29,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/store"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/validate"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
@@ -43,9 +44,12 @@ const (
 
 type AtlasClusterGetterUpdater interface {
 	AtlasCluster(string, string) (*atlasClustersPinned.AdvancedClusterDescription, error)
+	LatestAtlasCluster(string, string) (*atlasv2.ClusterDescription20240805, error)
 	FlexCluster(string, string) (*atlasv2.FlexClusterDescription20241113, error)
 	UpdateCluster(string, string, *atlasClustersPinned.AdvancedClusterDescription) (*atlasClustersPinned.AdvancedClusterDescription, error)
 	UpdateFlexCluster(string, string, *atlasv2.FlexClusterDescriptionUpdate20241113) (*atlasv2.FlexClusterDescription20241113, error)
+	UpdateClusterLatest(string, string, *atlasv2.ClusterDescription20240805) (*atlasv2.ClusterDescription20240805, error)
+	GetClusterAutoScalingConfig(string, string) (*atlasv2.ClusterDescriptionAutoScalingModeConfiguration, error)
 }
 
 type UpdateOpts struct {
@@ -55,6 +59,7 @@ type UpdateOpts struct {
 	tier                         string
 	diskSizeGB                   float64
 	mdbVersion                   string
+	autoScalingMode              string
 	enableTerminationProtection  bool
 	disableTerminationProtection bool
 	isFlexCluster                bool
@@ -77,7 +82,49 @@ func (opts *UpdateOpts) Run() error {
 		return opts.RunFlexCluster()
 	}
 
-	return opts.RunDedicatedCluster()
+	// Update will override the autoscaling mode to ISS if the flag is set to ISS
+	if isIndependentShardScaling(opts.autoScalingMode) {
+		return opts.RunDedicatedIndependentShardScaling()
+	}
+
+	// Check the actual cluster auto scaling mode and warn the user if they are using the wrong flag
+	opts.checkISSCluster()
+
+	// If ISS wasn't set, try to update the cluster to cluster wide scaling
+	return opts.RunDedicatedClusterWideScaling()
+}
+
+func (opts *UpdateOpts) checkISSCluster() {
+	targetClusterAutoScalingConfig, err := opts.store.GetClusterAutoScalingConfig(opts.ConfigProjectID(), opts.name)
+	if err != nil {
+		targetClusterAutoScalingConfig = &atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+			AutoScalingMode: &opts.autoScalingMode,
+		}
+	}
+	appendAutoScalingModeTelemetry(opts.autoScalingMode)
+
+	// If the flag is set to cluster wide scaling, warn the user that they are using the wrong flag
+	if isIndependentShardScaling(targetClusterAutoScalingConfig.GetAutoScalingMode()) {
+		if isClusterWideScaling(opts.autoScalingMode) {
+			fmt.Fprintf(os.Stderr, "'independentShardScaling' autoscaling cluster detected, updating it to clusterWideScaling is not possible, use  --autoScalingMode 'independentShardScaling' instead")
+		}
+	}
+}
+
+func (opts *UpdateOpts) RunDedicatedIndependentShardScaling() error {
+	cluster, err := opts.clusterLatest()
+	if err != nil {
+		return err
+	}
+
+	removeReadOnlyAttributesLatest(cluster)
+
+	r, err := opts.store.UpdateClusterLatest(opts.ConfigProjectID(), opts.name, cluster)
+	if err != nil {
+		return err
+	}
+
+	return opts.Print(r)
 }
 
 func (opts *UpdateOpts) RunFlexCluster() error {
@@ -150,7 +197,7 @@ func (opts *UpdateOpts) newFlexClusterDescriptionUpdate20241113(cluster *atlasv2
 	return out
 }
 
-func (opts *UpdateOpts) RunDedicatedCluster() error {
+func (opts *UpdateOpts) RunDedicatedClusterWideScaling() error {
 	cluster, err := opts.cluster()
 	if err != nil {
 		return err
@@ -168,6 +215,23 @@ func (opts *UpdateOpts) RunDedicatedCluster() error {
 	}
 
 	return opts.Print(r)
+}
+
+func (opts *UpdateOpts) clusterLatest() (*atlasv2.ClusterDescription20240805, error) {
+	var cluster *atlasv2.ClusterDescription20240805
+	var err error
+	if opts.filename != "" {
+		err = file.Load(opts.fs, opts.filename, &cluster)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		cluster, err = opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.name)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return cluster, nil
 }
 
 func (opts *UpdateOpts) cluster() (*atlasClustersPinned.AdvancedClusterDescription, error) {
@@ -230,17 +294,13 @@ func (opts *UpdateOpts) addTierToAdvancedCluster(out *atlasClustersPinned.Advanc
 // a FlexCluster. The function uses the AtlasCluster to get the cluster description and in the event of the error
 // cannotUseFlexWithClusterApisErrorCode sets the opts.isFlexCluster to true.
 func (opts *UpdateOpts) newIsFlexCluster() error {
-	_, err := opts.store.AtlasCluster(opts.ConfigProjectID(), opts.name)
+	_, err := opts.store.LatestAtlasCluster(opts.ConfigProjectID(), opts.name)
 	if err == nil {
 		opts.isFlexCluster = false
 		return nil
 	}
 
-	apiError, ok := atlasClustersPinned.AsError(err)
-	if !ok {
-		return err
-	}
-	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+	if !commonerrors.IsCannotUseFlexWithClusterApis(err) {
 		return err
 	}
 
@@ -254,6 +314,14 @@ func (opts *UpdateOpts) validateTier() error {
 		_, _ = fmt.Fprintf(os.Stderr, deprecateMessageSharedTier, opts.tier)
 	}
 	return nil
+}
+
+func (opts *UpdateOpts) validateAutoScalingMode() error {
+	if opts.filename != "" {
+		opts.autoScalingMode = detectIsFileISS(opts.fs, opts.filename)
+	}
+
+	return validate.AutoScalingMode(opts.autoScalingMode)()
 }
 
 // UpdateBuilder builds a cobra.Command that can run as:
@@ -302,6 +370,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 				opts.initStore(cmd.Context()),
 				opts.InitOutput(cmd.OutOrStdout(), updateTmpl),
 				opts.newIsFlexCluster,
+				opts.validateAutoScalingMode,
 			)
 		},
 		RunE: func(_ *cobra.Command, _ []string) error {
@@ -320,6 +389,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 
 	cmd.Flags().BoolVar(&opts.enableTerminationProtection, flag.EnableTerminationProtection, false, usage.EnableTerminationProtection)
 	cmd.Flags().BoolVar(&opts.disableTerminationProtection, flag.DisableTerminationProtection, false, usage.DisableTerminationProtection)
+	cmd.Flags().StringVar(&opts.autoScalingMode, flag.AutoScalingMode, "", usage.AutoScalingMode)
 	cmd.MarkFlagsMutuallyExclusive(flag.EnableTerminationProtection, flag.DisableTerminationProtection)
 	cmd.Flags().StringToStringVar(&opts.tag, flag.Tag, nil, usage.Tag+usage.UpdateWarning)
 
@@ -333,6 +403,7 @@ Deprecation note: the M2 and M5 tiers are now deprecated; when selecting M2 or M
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.EnableTerminationProtection)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.DisableTerminationProtection)
 	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.Tag)
+	cmd.MarkFlagsMutuallyExclusive(flag.File, flag.AutoScalingMode)
 
 	autocomplete := &autoCompleteOpts{}
 	_ = cmd.RegisterFlagCompletionFunc(flag.Tier, autocomplete.autocompleteTier())

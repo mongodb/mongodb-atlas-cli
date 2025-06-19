@@ -21,6 +21,7 @@ import (
 	"testing"
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
+	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -29,7 +30,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestUpdate_Run(t *testing.T) {
+func TestUpdate_Run_ClusterWideScaling(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	mockStore := NewMockAtlasClusterGetterUpdater(ctrl)
 
@@ -37,12 +38,21 @@ func TestUpdate_Run(t *testing.T) {
 
 	t.Run("flags run", func(t *testing.T) {
 		updateOpts := &UpdateOpts{
-			name:       "ProjectBar",
-			tier:       atlasM2,
-			diskSizeGB: 10,
-			mdbVersion: "7.0",
-			store:      mockStore,
+			name:            "ProjectBar",
+			tier:            atlasM2,
+			diskSizeGB:      10,
+			mdbVersion:      "7.0",
+			store:           mockStore,
+			autoScalingMode: clusterWideScalingFlag,
 		}
+
+		mockStore.
+			EXPECT().
+			GetClusterAutoScalingConfig(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+				AutoScalingMode: pointer.Get(clusterWideScalingResponse),
+			}, nil).
+			Times(1)
 
 		mockStore.
 			EXPECT().
@@ -109,6 +119,14 @@ func TestUpdate_Run(t *testing.T) {
 				OutWriter: buf,
 			},
 		}
+
+		mockStore.
+			EXPECT().
+			GetClusterAutoScalingConfig(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(&atlasv2.ClusterDescriptionAutoScalingModeConfiguration{
+				AutoScalingMode: pointer.Get(clusterWideScalingResponse),
+			}, nil).
+			Times(1)
 
 		cluster, _ := updateOpts.cluster()
 		removeReadOnlyAttributes(cluster)
@@ -252,6 +270,66 @@ func TestUpdate_FlexClusterRun(t *testing.T) {
 			Return(expected, nil).
 			Times(1)
 
+		require.NoError(t, updateOpts.Run())
+		assert.Contains(t, buf.String(), "Updating cluster")
+	})
+}
+
+func TestUpdate_Run_IndependentShardScaling(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockStore := NewMockAtlasClusterGetterUpdater(ctrl)
+
+	expected := &atlasv2.ClusterDescription20240805{}
+
+	t.Run("flags run", func(t *testing.T) {
+		updateOpts := &UpdateOpts{
+			name:            "ProjectBar",
+			store:           mockStore,
+			autoScalingMode: independentShardScalingFlag,
+		}
+
+		mockStore.
+			EXPECT().
+			LatestAtlasCluster(updateOpts.ConfigProjectID(), updateOpts.name).
+			Return(expected, nil).
+			Times(1)
+
+		mockStore.
+			EXPECT().
+			UpdateClusterLatest(updateOpts.ConfigProjectID(), updateOpts.name, expected).
+			Return(expected, nil).
+			Times(1)
+
+		require.NoError(t, updateOpts.Run())
+	})
+
+	t.Run("file run (detects ISS format)", func(t *testing.T) {
+		appFS := afero.NewMemMapFs()
+		fileName := "atlas_cluster_update_test_iss.json"
+		_ = afero.WriteFile(appFS, fileName, []byte(issFile), 0600)
+
+		buf := new(bytes.Buffer)
+		updateOpts := &UpdateOpts{
+			filename: fileName,
+			fs:       appFS,
+			store:    mockStore,
+			name:     "ProjectBar",
+			OutputOpts: cli.OutputOpts{
+				Template:  updateTmpl,
+				OutWriter: buf,
+			},
+		}
+
+		cluster, _ := updateOpts.clusterLatest()
+		removeReadOnlyAttributesLatest(cluster)
+
+		mockStore.
+			EXPECT().
+			UpdateClusterLatest(updateOpts.ConfigProjectID(), updateOpts.name, cluster).
+			Return(cluster, nil).
+			Times(1)
+
+		require.NoError(t, updateOpts.validateAutoScalingMode())
 		require.NoError(t, updateOpts.Run())
 		assert.Contains(t, buf.String(), "Updating cluster")
 	})

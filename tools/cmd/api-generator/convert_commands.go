@@ -479,7 +479,6 @@ func addContentTypeToVersion(versionedContentType string, versionsMap map[string
 // ```yaml
 // x-xgen-preview:
 //
-//	name: charts-dashboards
 //	public: 'true'
 //
 // ```

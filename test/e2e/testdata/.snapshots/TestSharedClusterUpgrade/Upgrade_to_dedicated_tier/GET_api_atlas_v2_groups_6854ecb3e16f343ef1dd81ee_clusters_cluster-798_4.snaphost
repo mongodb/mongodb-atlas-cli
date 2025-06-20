@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 1476
+Content-Type: application/vnd.atlas.2024-08-05+json;charset=utf-8
+Date: Fri, 20 Jun 2025 05:09:43 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 57
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionResource20240805::getCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=c9cc80704805413f1d20ccd4de364bd36cd66b6b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{"standardSrv":"mongodb+srv://cluster-798.0wdyerp.mongodb-dev.net"},"createDate":"2025-06-20T05:08:07Z","diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","featureCompatibilityVersion":"8.0","globalClusterSelfManagedSharding":false,"groupId":"6854ecb3e16f343ef1dd81ee","id":"6854ecb7cd32be2bdf8c5ef3","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/6854ecb3e16f343ef1dd81ee/clusters/cluster-798","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/6854ecb3e16f343ef1dd81ee/clusters/cluster-798/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/6854ecb3e16f343ef1dd81ee/clusters/cluster-798/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.10","name":"cluster-798","paused":false,"pitEnabled":false,"redactClientLogData":false,"replicationSpecs":[{"id":"6854ecb7cd32be2bdf8c5ed0","regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0","diskSizeGB":0.5},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_2"}],"zoneId":"6854ecb7cd32be2bdf8c5ecf","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"UPDATING","tags":[],"terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

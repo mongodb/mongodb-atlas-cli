@@ -1,16 +1,16 @@
 HTTP/2.0 200 OK
 Content-Length: 414
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Tue, 17 Jun 2025 13:33:08 GMT
+Date: Fri, 20 Jun 2025 14:37:35 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 36
+X-Envoy-Upstream-Service-Time: 31
 X-Frame-Options: DENY
 X-Java-Method: ApiConnectedOrgConfigsResource::getAllConnectedOrgConfigs
 X-Java-Version: 17.0.14+7
-X-Mongodb-Service-Version: gitHash=1ab676b47c305241bdf9a34bc95947dde225deff; versionString=master
+X-Mongodb-Service-Version: gitHash=c9cc80704805413f1d20ccd4de364bd36cd66b6b; versionString=master
 X-Permitted-Cross-Domain-Policies: none
 
 {"links":[{"href":"http://localhost:8080/api/atlas/v2/federationSettings/656e4d8e91cb7d26db1bc9c6/connectedOrgConfigs?pageNum=1&itemsPerPage=100","rel":"self"}],"results":[{"dataAccessIdentityProviderIds":[],"domainAllowList":[],"domainRestrictionEnabled":false,"identityProviderId":null,"orgId":"a0123456789abcdef012345a","postAuthRoleGrants":["ORG_OWNER"],"roleMappings":[],"userConflicts":null}],"totalCount":1}

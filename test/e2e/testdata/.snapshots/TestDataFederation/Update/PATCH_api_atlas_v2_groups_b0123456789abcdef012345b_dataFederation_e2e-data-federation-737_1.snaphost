@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 567
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Fri, 20 Jun 2025 14:37:41 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 140
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasDataFederationResource::updateTenant
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=c9cc80704805413f1d20ccd4de364bd36cd66b6b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"cloudProviderConfig":{"aws":{"externalId":"c6956c40-f7f3-404e-8123-a122deb6162f","iamAssumedRoleARN":"arn:aws:iam::358363220050:role/mongodb-atlas-apix-atlascli-test","iamUserARN":"arn:aws:iam::299602853325:root","roleId":"c0123456789abcdef012345c"}},"dataProcessRegion":{"cloudProvider":"AWS","region":"VIRGINIA_USA"},"groupId":"b0123456789abcdef012345b","hostnames":["e2e-data-federation-737-g1nxq.virginia-usa.a.query.mongodb-dev.net"],"name":"e2e-data-federation-737","privateEndpointHostnames":[],"state":"ACTIVE","storage":{"stores": null, "databases": null}}

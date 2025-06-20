@@ -32,7 +32,7 @@ core.workflow(
 )
  
 core.workflow(
-    name = "docs-atlas-cli",
+    name = "docs-mongodb-internal",
     origin = git.origin(
         url = source_url,
         ref = release_tag,

@@ -475,12 +475,12 @@ tasks:
       - command: github.generate_token
         params:
           expansion_name: docs_atlas_cli_token
-          owner: mongodb
-          repo: docs-atlas-cli
+          owner: 10gen
+          repo: docs-mongodb-internal
       - func: "run-copybara"
         vars:
           gh_token: ${docs_atlas_cli_token}
-          workflow: docs-atlas-cli
+          workflow: docs-mongodb-internal
       - command: github.generate_token
         params:
           expansion_name: cloud_docs_token

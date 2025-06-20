@@ -1,0 +1,16 @@
+HTTP/2.0 200 OK
+Content-Length: 290
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Fri, 20 Jun 2025 10:40:09 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 155
+X-Frame-Options: DENY
+X-Java-Method: ApiStreamsResource::createTenant
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=c9cc80704805413f1d20ccd4de364bd36cd66b6b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"_id":"68553a89e16f343ef1dddd4a","dataProcessRegion":{"cloudProvider":"AWS","region":"VIRGINIA_USA"},"groupId":"68553890cd32be2bdf8ca6cc","hostnames":["atlas-stream-68553a89e16f343ef1dddd4a-33zxxi.virginia-usa.a.query.mongodb-dev.net"],"name":"instance-835","streamConfig":{"tier":"SP30"}}

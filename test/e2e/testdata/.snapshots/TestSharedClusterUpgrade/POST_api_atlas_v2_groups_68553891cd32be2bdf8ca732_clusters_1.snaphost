@@ -1,0 +1,18 @@
+HTTP/2.0 201 Created
+Content-Length: 1351
+Content-Type: application/vnd.atlas.2023-02-01+json;charset=utf-8
+Date: Fri, 20 Jun 2025 10:31:49 GMT
+Deprecation: Mon, 5 Aug 2024 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Sun, 1 Mar 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 722
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::createCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=c9cc80704805413f1d20ccd4de364bd36cd66b6b; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"backupEnabled":false,"biConnector":{"enabled":false,"readPreference":"secondary"},"clusterType":"REPLICASET","connectionStrings":{},"createDate":"2025-06-20T10:31:49Z","diskSizeGB":0.5,"diskWarmingMode":"FULLY_WARMED","encryptionAtRestProvider":"NONE","globalClusterSelfManagedSharding":false,"groupId":"68553891cd32be2bdf8ca732","id":"68553895cd32be2bdf8ca809","labels":[],"links":[{"href":"http://localhost:8080/api/atlas/v2/groups/68553891cd32be2bdf8ca732/clusters/cluster-703","rel":"self"},{"href":"http://localhost:8080/api/atlas/v2/groups/68553891cd32be2bdf8ca732/clusters/cluster-703/backup/restoreJobs","rel":"https://cloud.mongodb.com/restoreJobs"},{"href":"http://localhost:8080/api/atlas/v2/groups/68553891cd32be2bdf8ca732/clusters/cluster-703/backup/snapshots","rel":"https://cloud.mongodb.com/snapshots"}],"mongoDBMajorVersion":"8.0","mongoDBVersion":"8.0.10","name":"cluster-703","paused":false,"pitEnabled":false,"replicationSpecs":[{"id":"68553895cd32be2bdf8ca7fd","numShards":1,"regionConfigs":[{"electableSpecs":{"effectiveInstanceSize":"M0","instanceSize":"M0"},"backingProviderName":"AWS","priority":7,"providerName":"TENANT","regionName":"US_EAST_1"}],"zoneId":"68553895cd32be2bdf8ca804","zoneName":"Zone 1"}],"rootCertType":"ISRGROOTX1","stateName":"CREATING","terminationProtectionEnabled":false,"versionReleaseSystem":"LTS"}

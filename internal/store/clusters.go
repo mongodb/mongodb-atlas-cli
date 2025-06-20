@@ -108,7 +108,7 @@ func (s *Store) GetClusterAutoScalingConfig(projectID, name string) (*atlasv2.Cl
 
 // DeleteCluster encapsulate the logic to manage different cloud providers.
 func (s *Store) DeleteCluster(projectID, name string) error {
-	_, err := s.clientClusters.ClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
+	_, err := s.clientv2.ClustersApi.DeleteCluster(s.ctx, projectID, name).Execute()
 	return err
 }
 

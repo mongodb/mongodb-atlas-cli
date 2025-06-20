@@ -124,6 +124,25 @@ func TestISSClustersFile(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &cluster))
 	})
 
+	g.Run("Update ISS cluster with file", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"update",
+			clusterIssFileName,
+			"--file",
+			"testdata/create_iss_cluster_test_update.json",
+			"--output",
+			"json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+	})
+
 	g.Run("Delete ISS Cluster - created via file", func(_ *testing.T) {
 		cmd := exec.Command(
 			cliPath,

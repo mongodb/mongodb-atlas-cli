@@ -103,6 +103,61 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		assert.Len(t, cluster.GetReplicationSpecs(), 2)
 	})
 
+	g.Run("Pause ISS cluster with the wrong flag", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"pause",
+			issClusterName,
+			"--autoScalingMode",
+			"clusterWideScaling",
+			"--output",
+			"json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+	})
+
+	g.Run("Check autoScalingMode is independentShardScaling", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"autoScalingConfig",
+			issClusterName,
+			"-o=json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var config admin.ClusterDescriptionAutoScalingModeConfiguration
+		req.NoError(json.Unmarshal(resp, &config))
+		assert.Equal(t, "INDEPENDENT_SHARD_SCALING", config.GetAutoScalingMode())
+	})
+
+	g.Run("Start ISS cluster", func(_ *testing.T) {
+		cmd := exec.Command(cliPath,
+			clustersEntity,
+			"start",
+			issClusterName,
+			"--autoScalingMode",
+			"independentShardScaling",
+			"--output",
+			"json",
+		)
+
+		cmd.Env = os.Environ()
+		resp, err := internal.RunAndGetStdOut(cmd)
+		req.NoError(err, string(resp))
+
+		var cluster admin.ClusterDescription20240805
+		req.NoError(json.Unmarshal(resp, &cluster))
+	})
+
 	g.Run("Get ISS cluster autoScalingMode", func(t *testing.T) { //nolint:thelper // g.Run replaces t.Run
 		cmd := exec.Command(cliPath,
 			clustersEntity,

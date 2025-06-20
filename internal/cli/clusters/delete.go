@@ -27,7 +27,7 @@ import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/usage"
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/watchers"
 	"github.com/spf13/cobra"
-	atlasClustersPinned "go.mongodb.org/atlas-sdk/v20240530005/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
 )
 
 //go:generate go tool go.uber.org/mock/mockgen -typed -destination=delete_mock_test.go -package=clusters . ClusterDeleter
@@ -63,12 +63,12 @@ func (opts *DeleteOpts) Run() error {
 }
 
 func (opts *DeleteOpts) RunFlexCluster(err error) error {
-	apiError, ok := atlasClustersPinned.AsError(err)
+	apiError, ok := atlasv2.AsError(err)
 	if !ok {
 		return err
 	}
 
-	if *apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
+	if apiError.ErrorCode != cannotUseFlexWithClusterApisErrorCode {
 		return err
 	}
 

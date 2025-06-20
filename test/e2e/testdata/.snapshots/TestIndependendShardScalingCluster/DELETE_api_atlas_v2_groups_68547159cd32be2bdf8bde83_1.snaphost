@@ -1,12 +1,12 @@
 HTTP/2.0 202 Accepted
 Content-Length: 2
 Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
-Date: Thu, 19 Jun 2025 18:13:23 GMT
+Date: Thu, 19 Jun 2025 20:25:06 GMT
 Referrer-Policy: strict-origin-when-cross-origin
 Server: mdbws
 Strict-Transport-Security: max-age=31536000; includeSubdomains;
 X-Content-Type-Options: nosniff
-X-Envoy-Upstream-Service-Time: 337
+X-Envoy-Upstream-Service-Time: 570
 X-Frame-Options: DENY
 X-Java-Method: ApiAtlasGroupsResource::deleteGroup
 X-Java-Version: 17.0.14+7

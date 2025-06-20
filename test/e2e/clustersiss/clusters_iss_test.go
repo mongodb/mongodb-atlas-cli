@@ -122,7 +122,7 @@ func TestIndependendShardScalingCluster(t *testing.T) {
 		req.NoError(json.Unmarshal(resp, &cluster))
 	})
 
-	g.Run("Check that the autoScalingMode is independentShardScaling", func(_ *testing.T) {
+	g.Run("Check autoScalingMode is independentShardScaling", func(_ *testing.T) {
 		cmd := exec.Command(cliPath,
 			clustersEntity,
 			"autoScalingConfig",

@@ -56,6 +56,7 @@ jobs:
           - atlas,serverless,instance
           - atlas,streams
           - atlas,streams_with_cluster
+          - atlas,clusters,iss
           - brew
           - config
           - atlas,iam

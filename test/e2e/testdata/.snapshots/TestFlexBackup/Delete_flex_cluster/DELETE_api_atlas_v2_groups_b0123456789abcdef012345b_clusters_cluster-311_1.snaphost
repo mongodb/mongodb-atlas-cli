@@ -1,0 +1,16 @@
+HTTP/2.0 400 Bad Request
+Content-Length: 189
+Content-Type: application/json
+Date: Mon, 23 Jun 2025 05:11:26 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 47
+X-Frame-Options: DENY
+X-Java-Method: ApiAtlasClusterDescriptionV15Resource::deleteCluster
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=56f34eba251f052fa7dc9c04ad9b17806e3b847c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"detail":"Flex cluster cluster-311 cannot be used in the Cluster API.","error":400,"errorCode":"CANNOT_USE_FLEX_CLUSTER_IN_CLUSTER_API","parameters":["cluster-311"],"reason":"Bad Request"}

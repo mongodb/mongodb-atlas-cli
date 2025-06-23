@@ -1,0 +1,18 @@
+HTTP/2.0 200 OK
+Content-Length: 296
+Content-Type: application/vnd.atlas.2023-01-01+json;charset=utf-8
+Date: Mon, 23 Jun 2025 05:09:14 GMT
+Deprecation: Wed, 19 Feb 2025 00:00:00 GMT
+Referrer-Policy: strict-origin-when-cross-origin
+Server: mdbws
+Strict-Transport-Security: max-age=31536000; includeSubdomains;
+Sunset: Fri, 31 Jul 2026 00:00:00 GMT
+X-Content-Type-Options: nosniff
+X-Envoy-Upstream-Service-Time: 34
+X-Frame-Options: DENY
+X-Java-Method: ApiOrganizationInvitationResource::editInvitationsByInvitationId
+X-Java-Version: 17.0.14+7
+X-Mongodb-Service-Version: gitHash=56f34eba251f052fa7dc9c04ad9b17806e3b847c; versionString=master
+X-Permitted-Cross-Domain-Policies: none
+
+{"createdAt":"2025-06-23T05:09:13Z","expiresAt":"2025-07-23T05:09:13Z","groupRoleAssignments":[],"id":"6858e1799c500e6d1cbdbc2a","inviterUsername":"nmtxqlkl","orgId":"a0123456789abcdef012345a","orgName":"Atlas CLI E2E","roles":["ORG_GROUP_CREATOR"],"teamIds":[],"username":"test-811@mongodb.com"}

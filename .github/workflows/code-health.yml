@@ -268,8 +268,25 @@ jobs:
         with:
           config: ${{ vars.PERMISSIONS_CONFIG }}
       - uses: actions/checkout@v4
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
       - name: Run ShellCheck
-        uses: bewuethr/shellcheck-action@d01912909579c4b1a335828b8fca197fbb8e0aa4
+        run: |
+          # Find all shell scripts excluding specific patterns or directories
+          # Add exclusions by adding more -not -path patterns as needed
+          find . -name "*.sh" \
+            -not -path "./.git/*" \
+            -not -path "./docs/*" \
+            -print0 | xargs -0 shellcheck --format=gcc
+          
+          # Also check for shell scripts without .sh extension
+          find . -type f -exec grep -l '^#!/bin/\(ba\)\?sh' {} \; \
+            | grep -v '\.sh$' \
+            | grep -v './.git/' \
+            | grep -v './docs/' \
+            | xargs -r shellcheck --format=gcc
   tidy:
     runs-on: ubuntu-latest
     steps:

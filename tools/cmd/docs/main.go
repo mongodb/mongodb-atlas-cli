@@ -25,13 +25,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	docsPath     = "./docs/command"
+	includesPath = "./docs/command/includes"
+)
+
 func main() {
-	if err := os.RemoveAll("./docs/command"); err != nil {
+	if err := os.RemoveAll(docsPath); err != nil {
 		log.Fatal(err)
 	}
 
 	const docsPermissions = 0766
-	if err := os.MkdirAll("./docs/command", docsPermissions); err != nil {
+	if err := os.MkdirAll(includesPath, docsPermissions); err != nil {
 		log.Fatal(err)
 	}
 
@@ -43,7 +48,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := cobra2snooty.GenTreeDocs(atlasBuilder, "./docs/command", cobra2snooty.WithCustomExampleFormatter(func(w io.Writer, cmd *cobra.Command) {
+	if err := cobra2snooty.GenTreeDocs(atlasBuilder, docsPath, cobra2snooty.WithCustomExampleFormatter(func(w io.Writer, cmd *cobra.Command) {
 		if isAPICommand(cmd) {
 			_, _ = w.Write([]byte(cmd.Example))
 			return

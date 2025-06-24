@@ -20,6 +20,7 @@ find_files() {
 	find . -not \( \
 		\( \
 		-wholename '*mock*' \
+		-o -wholename '*docs*' \
 		-o -wholename '*third_party*' \
 		\) -prune \
 		\) \

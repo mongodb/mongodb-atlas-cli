@@ -19,7 +19,7 @@ package store
 import (
 	"time"
 
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312004/admin"
 )
 
 // Pipelines encapsulates the logic to manage different cloud providers.

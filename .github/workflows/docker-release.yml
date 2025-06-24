@@ -176,7 +176,7 @@ jobs:
           username: "${{ secrets.DOCKERHUB_USER }}"
           password: "${{ secrets.DOCKERHUB_SECRET }}"
       - name: Install Cosign
-        uses: sigstore/cosign-installer@3454372f43399081ed03b604cb2d021dabca52bb
+        uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac
         with:
           cosign-release: 'v2.2.3'
       - name: Verify Signature Docker Image
@@ -215,7 +215,7 @@ jobs:
           username: "${{ secrets.QUAY_USER }}"
           password: "${{ secrets.QUAY_TOKEN }}"
       - name: Install Cosign
-        uses: sigstore/cosign-installer@3454372f43399081ed03b604cb2d021dabca52bb
+        uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac
         with:
           cosign-release: 'v2.2.3'
       - name: Verify Signature Quay Image

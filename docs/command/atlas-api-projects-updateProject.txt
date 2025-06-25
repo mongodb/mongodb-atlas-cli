@@ -104,9 +104,9 @@ Update the value of the existing project to "MongoTube - Production" and change 
 
 Create the file below and save it as ``payload.json``
 
-   literalinclude:: /includes/atlas-api-projects-updateProject-2023-01-01-update_project-payload.json
-   :language: shell
+   .. literalinclude:: /includes/atlas-api-projects-updateProject-2023-01-01-update_project-payload.json
+      :language: shell
 After creating ``payload.json``, run the command below in the same directory.
 
-literalinclude:: /includes/atlas-api-projects-updateProject-2023-01-01-update_project.sh
-:language: shell
+.. literalinclude:: /includes/atlas-api-projects-updateProject-2023-01-01-update_project.sh
+   :language: shell

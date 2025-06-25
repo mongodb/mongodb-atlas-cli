@@ -118,5 +118,5 @@ Inherited Options
 Examples
 --------
 
-literalinclude:: /includes/atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceHostMeasurements-2023-11-15-default.sh
-:language: shell
+.. literalinclude:: /includes/atlas-api-collectionLevelMetrics-getCollStatsLatencyNamespaceHostMeasurements-2023-11-15-default.sh
+   :language: shell

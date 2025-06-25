@@ -96,5 +96,5 @@ Inherited Options
 Examples
 --------
 
-literalinclude:: /includes/atlas-api-streams-getPrivateLinkConnection-2023-02-01-default.sh
-:language: shell
+.. literalinclude:: /includes/atlas-api-streams-getPrivateLinkConnection-2023-02-01-default.sh
+   :language: shell

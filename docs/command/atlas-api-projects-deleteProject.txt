@@ -96,5 +96,5 @@ Inherited Options
 Examples
 --------
 
-literalinclude:: /includes/atlas-api-projects-deleteProject-2023-01-01-delete_project.sh
-:language: shell
+.. literalinclude:: /includes/atlas-api-projects-deleteProject-2023-01-01-delete_project.sh
+   :language: shell

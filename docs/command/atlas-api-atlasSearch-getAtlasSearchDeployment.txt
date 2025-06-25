@@ -98,5 +98,5 @@ Inherited Options
 Examples
 --------
 
-literalinclude:: /includes/atlas-api-atlasSearch-getAtlasSearchDeployment-2025-03-12-default.sh
-:language: shell
+.. literalinclude:: /includes/atlas-api-atlasSearch-getAtlasSearchDeployment-2025-03-12-default.sh
+   :language: shell

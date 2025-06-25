@@ -108,5 +108,5 @@ Inherited Options
 Examples
 --------
 
-literalinclude:: /includes/atlas-api-cloudBackups-listExportBuckets-2024-05-30-default.sh
-:language: shell
+.. literalinclude:: /includes/atlas-api-cloudBackups-listExportBuckets-2024-05-30-default.sh
+   :language: shell

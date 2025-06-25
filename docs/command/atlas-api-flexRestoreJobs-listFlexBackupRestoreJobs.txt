@@ -112,5 +112,5 @@ Inherited Options
 Examples
 --------
 
-literalinclude:: /includes/atlas-api-flexRestoreJobs-listFlexBackupRestoreJobs-2024-11-13-default.sh
-:language: shell
+.. literalinclude:: /includes/atlas-api-flexRestoreJobs-listFlexBackupRestoreJobs-2024-11-13-default.sh
+   :language: shell

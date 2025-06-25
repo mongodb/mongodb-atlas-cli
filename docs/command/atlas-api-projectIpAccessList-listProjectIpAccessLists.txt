@@ -108,5 +108,5 @@ Inherited Options
 Examples
 --------
 
-literalinclude:: /includes/atlas-api-projectIpAccessList-listProjectIpAccessLists-2023-01-01-project_ip_access_list_list.sh
-:language: shell
+.. literalinclude:: /includes/atlas-api-projectIpAccessList-listProjectIpAccessLists-2023-01-01-project_ip_access_list_list.sh
+   :language: shell

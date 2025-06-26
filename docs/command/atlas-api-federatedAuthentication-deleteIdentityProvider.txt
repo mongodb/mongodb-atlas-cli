@@ -97,5 +97,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-federatedAuthentication-deleteIdentityProvider-2023-11-15-default.sh
+.. literalinclude:: /includes/examples/atlas-api-federatedAuthentication-deleteIdentityProvider-2023-11-15-default.sh
    :language: shell

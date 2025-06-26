@@ -103,5 +103,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-clusters-getCluster-2024-08-05-get_cluster.sh
+.. literalinclude:: /includes/examples/atlas-api-clusters-getCluster-2024-08-05-get_cluster.sh
    :language: shell

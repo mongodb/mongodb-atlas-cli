@@ -124,5 +124,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-monitoringAndLogs-getDatabaseMeasurements-2023-01-01-default.sh
+.. literalinclude:: /includes/examples/atlas-api-monitoringAndLogs-getDatabaseMeasurements-2023-01-01-default.sh
    :language: shell

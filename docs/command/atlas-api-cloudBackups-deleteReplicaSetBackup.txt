@@ -112,5 +112,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-cloudBackups-deleteReplicaSetBackup-2023-01-01-default.sh
+.. literalinclude:: /includes/examples/atlas-api-cloudBackups-deleteReplicaSetBackup-2023-01-01-default.sh
    :language: shell

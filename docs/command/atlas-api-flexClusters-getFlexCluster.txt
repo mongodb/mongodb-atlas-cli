@@ -100,5 +100,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-flexClusters-getFlexCluster-2024-11-13-default.sh
+.. literalinclude:: /includes/examples/atlas-api-flexClusters-getFlexCluster-2024-11-13-default.sh
    :language: shell

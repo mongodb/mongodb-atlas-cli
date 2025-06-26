@@ -108,5 +108,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-monitoringAndLogs-listAtlasProcesses-2023-01-01-list_atlas_processes.sh
+.. literalinclude:: /includes/examples/atlas-api-monitoringAndLogs-listAtlasProcesses-2023-01-01-list_atlas_processes.sh
    :language: shell

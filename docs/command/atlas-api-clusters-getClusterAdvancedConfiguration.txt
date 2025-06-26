@@ -100,5 +100,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-clusters-getClusterAdvancedConfiguration-2024-08-05-default.sh
+.. literalinclude:: /includes/examples/atlas-api-clusters-getClusterAdvancedConfiguration-2024-08-05-default.sh
    :language: shell

@@ -112,5 +112,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-streams-listStreamProcessors-2024-05-30-default.sh
+.. literalinclude:: /includes/examples/atlas-api-streams-listStreamProcessors-2024-05-30-default.sh
    :language: shell

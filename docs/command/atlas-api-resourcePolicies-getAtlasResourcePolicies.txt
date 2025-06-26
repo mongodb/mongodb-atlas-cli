@@ -92,5 +92,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-resourcePolicies-getAtlasResourcePolicies-2024-08-05-default.sh
+.. literalinclude:: /includes/examples/atlas-api-resourcePolicies-getAtlasResourcePolicies-2024-08-05-default.sh
    :language: shell

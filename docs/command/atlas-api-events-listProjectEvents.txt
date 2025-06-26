@@ -139,5 +139,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-events-listProjectEvents-2023-01-01-default.sh
+.. literalinclude:: /includes/examples/atlas-api-events-listProjectEvents-2023-01-01-default.sh
    :language: shell

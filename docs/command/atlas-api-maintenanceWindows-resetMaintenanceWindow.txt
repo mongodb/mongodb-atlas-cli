@@ -92,5 +92,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-maintenanceWindows-resetMaintenanceWindow-2023-01-01-default.sh
+.. literalinclude:: /includes/examples/atlas-api-maintenanceWindows-resetMaintenanceWindow-2023-01-01-default.sh
    :language: shell

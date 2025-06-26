@@ -100,5 +100,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-streams-getStreamConnection-2023-02-01-default.sh
+.. literalinclude:: /includes/examples/atlas-api-streams-getStreamConnection-2023-02-01-default.sh
    :language: shell

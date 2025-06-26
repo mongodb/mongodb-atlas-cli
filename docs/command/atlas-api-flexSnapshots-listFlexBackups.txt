@@ -112,5 +112,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-flexSnapshots-listFlexBackups-2024-11-13-default.sh
+.. literalinclude:: /includes/examples/atlas-api-flexSnapshots-listFlexBackups-2024-11-13-default.sh
    :language: shell

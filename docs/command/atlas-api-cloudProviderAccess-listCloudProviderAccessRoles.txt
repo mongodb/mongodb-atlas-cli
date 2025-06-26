@@ -96,5 +96,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-cloudProviderAccess-listCloudProviderAccessRoles-2023-01-01-default.sh
+.. literalinclude:: /includes/examples/atlas-api-cloudProviderAccess-listCloudProviderAccessRoles-2023-01-01-default.sh
    :language: shell

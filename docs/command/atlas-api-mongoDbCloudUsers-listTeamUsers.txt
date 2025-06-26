@@ -120,5 +120,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-mongoDbCloudUsers-listTeamUsers-2025-02-19-default.sh
+.. literalinclude:: /includes/examples/atlas-api-mongoDbCloudUsers-listTeamUsers-2025-02-19-default.sh
    :language: shell

@@ -108,5 +108,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-monitoringAndLogs-getHostLogs-2023-02-01-get_host_logs.sh
+.. literalinclude:: /includes/examples/atlas-api-monitoringAndLogs-getHostLogs-2023-02-01-get_host_logs.sh
    :language: shell

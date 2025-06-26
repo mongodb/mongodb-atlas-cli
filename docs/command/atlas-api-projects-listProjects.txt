@@ -102,5 +102,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-projects-listProjects-2023-01-01-list_projects.sh
+.. literalinclude:: /includes/examples/atlas-api-projects-listProjects-2023-01-01-list_projects.sh
    :language: shell

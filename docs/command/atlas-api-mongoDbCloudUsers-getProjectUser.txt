@@ -106,5 +106,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-mongoDbCloudUsers-getProjectUser-2025-02-19-default.sh
+.. literalinclude:: /includes/examples/atlas-api-mongoDbCloudUsers-getProjectUser-2025-02-19-default.sh
    :language: shell

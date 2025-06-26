@@ -116,9 +116,9 @@ Updates the cluster to increase disk size to 20GB and increase node count to 5
 
 Create the file below and save it as ``payload.json``
 
-   .. literalinclude:: /includes/atlas-api-clusters-updateCluster-2024-10-23-update_cluster-payload.json
+   .. literalinclude:: /includes/examples/atlas-api-clusters-updateCluster-2024-10-23-update_cluster-payload.json
       :language: shell
 After creating ``payload.json``, run the command below in the same directory.
 
-.. literalinclude:: /includes/atlas-api-clusters-updateCluster-2024-10-23-update_cluster.sh
+.. literalinclude:: /includes/examples/atlas-api-clusters-updateCluster-2024-10-23-update_cluster.sh
    :language: shell

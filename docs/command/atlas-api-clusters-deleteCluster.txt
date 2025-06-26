@@ -115,5 +115,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-clusters-deleteCluster-2023-02-01-delete_cluster.sh
+.. literalinclude:: /includes/examples/atlas-api-clusters-deleteCluster-2023-02-01-delete_cluster.sh
    :language: shell

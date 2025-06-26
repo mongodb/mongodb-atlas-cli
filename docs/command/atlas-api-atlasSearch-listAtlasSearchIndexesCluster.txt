@@ -100,5 +100,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-atlasSearch-listAtlasSearchIndexesCluster-2024-05-30-default.sh
+.. literalinclude:: /includes/examples/atlas-api-atlasSearch-listAtlasSearchIndexesCluster-2024-05-30-default.sh
    :language: shell

@@ -116,9 +116,9 @@ Adds multiple access list entries to the specified project
 
 Create the file below and save it as ``payload.json``
 
-   .. literalinclude:: /includes/atlas-api-projectIpAccessList-createProjectIpAccessList-2023-01-01-project_ip_access_list_add-payload.json
+   .. literalinclude:: /includes/examples/atlas-api-projectIpAccessList-createProjectIpAccessList-2023-01-01-project_ip_access_list_add-payload.json
       :language: shell
 After creating ``payload.json``, run the command below in the same directory.
 
-.. literalinclude:: /includes/atlas-api-projectIpAccessList-createProjectIpAccessList-2023-01-01-project_ip_access_list_add.sh
+.. literalinclude:: /includes/examples/atlas-api-projectIpAccessList-createProjectIpAccessList-2023-01-01-project_ip_access_list_add.sh
    :language: shell

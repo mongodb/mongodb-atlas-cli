@@ -94,5 +94,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-collectionLevelMetrics-getPinnedNamespaces-2023-11-15-default.sh
+.. literalinclude:: /includes/examples/atlas-api-collectionLevelMetrics-getPinnedNamespaces-2023-11-15-default.sh
    :language: shell

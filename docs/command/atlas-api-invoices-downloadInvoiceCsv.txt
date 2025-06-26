@@ -99,5 +99,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-invoices-downloadInvoiceCsv-2023-01-01-default.sh
+.. literalinclude:: /includes/examples/atlas-api-invoices-downloadInvoiceCsv-2023-01-01-default.sh
    :language: shell

@@ -98,5 +98,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-streams-getAccountDetails-2024-11-13-default.sh
+.. literalinclude:: /includes/examples/atlas-api-streams-getAccountDetails-2024-11-13-default.sh
    :language: shell

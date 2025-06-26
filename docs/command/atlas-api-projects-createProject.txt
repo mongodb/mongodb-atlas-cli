@@ -102,9 +102,9 @@ Creates a new project named "MongoTube" with an environment tag set to "e2e"
 
 Create the file below and save it as ``payload.json``
 
-   .. literalinclude:: /includes/atlas-api-projects-createProject-2023-01-01-create_project-payload.json
+   .. literalinclude:: /includes/examples/atlas-api-projects-createProject-2023-01-01-create_project-payload.json
       :language: shell
 After creating ``payload.json``, run the command below in the same directory.
 
-.. literalinclude:: /includes/atlas-api-projects-createProject-2023-01-01-create_project.sh
+.. literalinclude:: /includes/examples/atlas-api-projects-createProject-2023-01-01-create_project.sh
    :language: shell

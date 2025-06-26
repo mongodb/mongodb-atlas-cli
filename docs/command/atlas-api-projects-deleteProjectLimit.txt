@@ -117,5 +117,5 @@ Inherited Options
 Examples
 --------
 
-.. literalinclude:: /includes/atlas-api-projects-deleteProjectLimit-2023-01-01-default.sh
+.. literalinclude:: /includes/examples/atlas-api-projects-deleteProjectLimit-2023-01-01-default.sh
    :language: shell

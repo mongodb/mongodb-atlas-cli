@@ -25264,6 +25264,9 @@ components:
                 securityContact:
                     description: String that specifies a single email address for the specified organization to receive security-related notifications. Specifying a security contact does not grant them authorization or access to Atlas for security decisions or approvals. An empty string is valid and clears the existing security contact (if any).
                     type: string
+                streamsCrossGroupEnabled:
+                    description: Flag that indicates whether a group's Atlas Stream Processing instances in this organization can create connections to other group's clusters in the same organization.
+                    type: boolean
             type: object
         OutboundControlPlaneCloudProviderIPAddresses:
             description: List of outbound IP addresses from the Atlas control plane, categorized by cloud provider. If your network allows inbound HTTP requests only from specific IP addresses, you must allow access from the following IP addresses so that Atlas can communicate with your webhooks and KMS.
@@ -31036,6 +31039,9 @@ components:
             allOf:
                 - $ref: '#/components/schemas/StreamsConnection'
                 - properties:
+                    clusterGroupId:
+                        description: The id of the group that the cluster belongs to.
+                        type: string
                     clusterName:
                         description: Name of the cluster configured for this connection.
                         type: string
@@ -34767,9 +34773,6 @@ components:
                     scopes: {}
                     tokenUrl: https://cloud.mongodb.com/api/oauth/token
             type: oauth2
-externalDocs:
-    description: Back to Atlas Docs
-    url: https://www.mongodb.com/docs/atlas/
 info:
     description: |-
         The MongoDB Atlas Administration API allows developers to manage all components in MongoDB Atlas.
@@ -34792,7 +34795,7 @@ info:
     termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
     title: MongoDB Atlas Administration API
     version: "2.0"
-    x-xgen-sha: 8e91ba6065df0ad2af146ae235e968386798b544
+    x-xgen-sha: 26cadc643a40bc7ede7b258112a0df72164b9ce2
 openapi: 3.0.1
 paths:
     /api/atlas/v2:
@@ -56249,3 +56252,8 @@ tags:
         description: Self-Managed X.509 Certificates
         url: https://www.mongodb.com/docs/atlas/security-self-managed-x509/
       name: X.509 Authentication
+x-externalLinks:
+    - label: Back to Atlas Docs
+      url: https://www.mongodb.com/docs/atlas/
+    - label: API Changelog
+      url: https://www.mongodb.com/docs/atlas/reference/api-resources-spec/changelog/

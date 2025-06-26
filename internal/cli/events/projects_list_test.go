@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/atlas-sdk/v20250312003/admin"
+	"go.mongodb.org/atlas-sdk/v20250312004/admin"
 	"go.uber.org/mock/gomock"
 )
 

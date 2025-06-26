@@ -22,7 +22,7 @@ import (
 
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/pointer"
 	"github.com/stretchr/testify/assert"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312004/admin"
 )
 
 func TestDefaultRegion(t *testing.T) {

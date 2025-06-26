@@ -12,7 +12,7 @@ package sampledata
 import (
 	reflect "reflect"
 
-	admin "go.mongodb.org/atlas-sdk/v20250312003/admin"
+	admin "go.mongodb.org/atlas-sdk/v20250312004/admin"
 	gomock "go.uber.org/mock/gomock"
 )
 

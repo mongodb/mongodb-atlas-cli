@@ -17,7 +17,7 @@ package customdbroles
 import (
 	"github.com/mongodb/mongodb-atlas-cli/atlascli/internal/cli"
 	"github.com/spf13/cobra"
-	atlasv2 "go.mongodb.org/atlas-sdk/v20250312003/admin"
+	atlasv2 "go.mongodb.org/atlas-sdk/v20250312004/admin"
 )
 
 func Builder() *cobra.Command {

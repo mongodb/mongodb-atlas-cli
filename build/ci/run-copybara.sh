@@ -75,9 +75,9 @@ docker rm -f copybara-container
 
 echo "Created PR: $PR_URL"
 
-# TARGET="$DOCS_SLACK_CHANNEL"
-# MSG="Hey team :wave: ${PR_URL} is ready for review :thankyou:"
-# curl --header "Api-User:${EVERGREEN_USER:?}" \
-#     --header "Api-Key:${EVERGREEN_API_KEY:?}" \
-#     --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
-#     --data "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"
+TARGET="$DOCS_SLACK_CHANNEL"
+MSG="Hey team :wave: ${PR_URL} is ready for review :thankyou:"
+curl --header "Api-User:${EVERGREEN_USER:?}" \
+    --header "Api-Key:${EVERGREEN_API_KEY:?}" \
+    --request POST "https://evergreen.mongodb.com/rest/v2/notifications/slack" \
+    --data "{\"target\":\"$TARGET\",\"msg\":\"$MSG\"}"

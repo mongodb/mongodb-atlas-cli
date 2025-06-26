@@ -198,7 +198,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 
 				includePayloadFileName := fmt.Sprintf("%s-%s-%s-payload.json", strings.ReplaceAll(cmd.CommandPath(), " ", "-"), version, source)
 				const permissions = 0600
-				err := os.WriteFile(fmt.Sprintf("%s/%s", includesPath, includePayloadFileName), []byte(ex.Value), permissions)
+				err := os.WriteFile(fmt.Sprintf("%s/%s", includesLocalPath, includePayloadFileName), []byte(ex.Value), permissions)
 				if err != nil {
 					return "", fmt.Errorf("failed to write payload file %s: %w", includePayloadFileName, err)
 				}
@@ -206,7 +206,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 				if tabs {
 					sb.WriteString("      ")
 				}
-				sb.WriteString(fmt.Sprintf("   .. literalinclude:: /includes/%s\n", includePayloadFileName))
+				sb.WriteString(fmt.Sprintf("   .. literalinclude:: %s/%s\n", includesImportPath, includePayloadFileName))
 				if tabs {
 					sb.WriteString("      ")
 				}
@@ -230,7 +230,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 
 			includeCommandFileName := fmt.Sprintf("%s-%s-%s.sh", strings.ReplaceAll(cmd.CommandPath(), " ", "-"), version, source)
 			const permissions = 0600
-			err := os.WriteFile(fmt.Sprintf("%s/%s", includesPath, includeCommandFileName), []byte(cmdSB.String()), permissions)
+			err := os.WriteFile(fmt.Sprintf("%s/%s", includesLocalPath, includeCommandFileName), []byte(cmdSB.String()), permissions)
 			if err != nil {
 				return "", fmt.Errorf("failed to write file %s: %w", includeCommandFileName, err)
 			}
@@ -238,7 +238,7 @@ func buildExamples(cmd *cobra.Command, examples map[string][]metadatatypes.Examp
 			if tabs {
 				sb.WriteString("      ")
 			}
-			sb.WriteString(fmt.Sprintf(".. literalinclude:: /includes/%s\n", includeCommandFileName))
+			sb.WriteString(fmt.Sprintf(".. literalinclude:: %s/%s\n", includesImportPath, includeCommandFileName))
 			if tabs {
 				sb.WriteString("      ")
 			}

@@ -26,6 +26,8 @@ jobs:
              ./internal/**/*
              go.mod
              go.sum
+      - run:  make gen-purls
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
       - name: Find JIRA ticket
         id: find
         if: steps.verify-changed-files.outputs.files_changed == 'true'
